@@ -100,7 +100,11 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             pickupLatLng = new LatLng(latitude, longitude);
         } catch (Exception e) {
             e.printStackTrace();
-            pickupLatLng = Data.autoData.getPickupLatLng();
+            try {
+                pickupLatLng = Data.autoData.getPickupLatLng();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
 
         mGoogleApiClient = new GoogleApiClient
@@ -207,20 +211,24 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             }
         });
 
-        if (rideType != RideTypeValue.POOL.getOrdinal() && Data.autoData.getDropLatLng() != null) {
-            getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng());
-        } else {
+        try {
+            if (rideType != RideTypeValue.POOL.getOrdinal() && Data.autoData.getDropLatLng() != null) {
+				getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng());
+			} else {
 
-            PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
-            Bundle bundle = new Bundle();
-            bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
-            bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
-            bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
-            placeSearchListFragment.setArguments(bundle);
+				PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
+				Bundle bundle = new Bundle();
+				bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
+				bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
+				bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
+				placeSearchListFragment.setArguments(bundle);
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.linearLayoutContainer, placeSearchListFragment, PlaceSearchListFragment.class.getSimpleName())
-                    .commitAllowingStateLoss();
+				getSupportFragmentManager().beginTransaction()
+						.add(R.id.linearLayoutContainer, placeSearchListFragment, PlaceSearchListFragment.class.getSimpleName())
+						.commitAllowingStateLoss();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -444,10 +452,14 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
     @Override
     public void onPlaceSearchPost(SearchResult searchResult) {
-        Data.autoData.setDropLatLng(searchResult.getLatLng());
-        getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), searchResult.getLatLng());
-        FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
-        searchResultGlobal = searchResult;
+        try {
+            Data.autoData.setDropLatLng(searchResult.getLatLng());
+            getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), searchResult.getLatLng());
+            FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
+            searchResultGlobal = searchResult;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

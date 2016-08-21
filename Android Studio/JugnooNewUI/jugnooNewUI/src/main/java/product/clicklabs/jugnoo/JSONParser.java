@@ -100,7 +100,7 @@ public class JSONParser implements Constants {
     }
 
 
-    public UserData parseUserData(Context context, JSONObject userData, LoginResponse.UserData loginUserData) throws Exception {
+    public void parseUserData(Context context, JSONObject userData, LoginResponse.UserData loginUserData) throws Exception {
 
         String userName = userData.optString("user_name", "");
         String phoneNo = userData.optString("phone_no", "");
@@ -240,7 +240,7 @@ public class JSONParser implements Constants {
 
 
 
-        UserData userDataObj = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
+        Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance,
                 jugnooFbBanner, numCouponsAvailable,
                 promoSuccess, promoMessage, showJugnooJeanie,
@@ -254,28 +254,26 @@ public class JSONParser implements Constants {
                 mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton);
 
 
-        userDataObj.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
+        Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
 
-        MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData, userDataObj);
+        MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData, Data.userData);
 
         try {
-            userDataObj.setEmergencyContactsList(JSONParser.parseEmergencyContacts(userData));
-            userDataObj.setMenuInfoList((ArrayList<MenuInfo>) loginUserData.getMenuInfoList());
+            Data.userData.setEmergencyContactsList(JSONParser.parseEmergencyContacts(userData));
+            Data.userData.setMenuInfoList((ArrayList<MenuInfo>) loginUserData.getMenuInfoList());
             parsePromoCoupons(loginUserData);
             if(loginUserData.getSupportNumber() != null){
 				Config.saveSupportNumber(context, loginUserData.getSupportNumber());
 			}
-            userDataObj.setReferralMessages(parseReferralMessages(loginUserData));
+            Data.userData.setReferralMessages(parseReferralMessages(loginUserData));
             performUserAppMonitoring(context, userData);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return userDataObj;
     }
 
-    public AutoData parseAutoData(Context context, JSONObject autoData, AutoData autoDataFallback) throws Exception{
-        AutoData autoDataObj = null;
+    public void parseAutoData(Context context, JSONObject autoData) throws Exception{
         try {
             String destinationHelpText = autoData.optString("destination_help_text", "");
             String rideSummaryBadText = autoData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
@@ -303,7 +301,7 @@ public class JSONParser implements Constants {
             String referAllTextLogin = autoData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
             String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
 
-            autoDataObj = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
+            Data.autoData = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
 					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText,
@@ -311,14 +309,9 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(autoDataObj == null){
-            autoDataObj = autoDataFallback;
-        }
-        return autoDataObj;
     }
 
-    public FreshData parseFreshData(JSONObject jFatafatData, FreshData freshDataFallback){
-        FreshData freshData = null;
+    public void parseFreshData(JSONObject jFatafatData){
         try{
             String orderId = jFatafatData.optString(KEY_FEEDBACK_ORDER_ID, "");
             String question = jFatafatData.optString(KEY_QUESTION, "");
@@ -363,15 +356,11 @@ public class JSONParser implements Constants {
                 }
             } catch (Exception e){ e.printStackTrace(); }
 
-            freshData = new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData);
+            Data.setFreshData(new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData));
 
         } catch (Exception e){
             e.printStackTrace();
         }
-        if(freshData == null){
-            freshData = freshDataFallback;
-        }
-        return freshData;
     }
 
 
@@ -385,9 +374,9 @@ public class JSONParser implements Constants {
         JSONObject jAutosObject = jObj.optJSONObject(KEY_AUTOS);
         JSONObject jFreshObject = jObj.optJSONObject(KEY_FRESH);
 
-        Data.userData = parseUserData(context, jUserDataObject, loginResponse.getUserData());
-        Data.autoData = parseAutoData(context, jAutosObject, Data.autoData);
-        Data.setFreshData(parseFreshData(jFreshObject, Data.getFreshData()));
+        parseUserData(context, jUserDataObject, loginResponse.getUserData());
+        parseAutoData(context, jAutosObject);
+        parseFreshData(jFreshObject);
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 
@@ -562,12 +551,12 @@ public class JSONParser implements Constants {
         }
     }
 
-    private static product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
+    public static product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
         return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null);
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
-        if(Data.autoData.getFareStructure() == null) {
+        if(Data.autoData == null || Data.autoData.getFareStructure() == null) {
             return getDefaultFareStructure();
         } else{
             return Data.autoData.getFareStructure();
