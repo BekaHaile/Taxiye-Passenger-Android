@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -74,7 +76,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (viewType == TYPE_HEADER) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_profile_account, parent, false);
 
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, 370);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(585, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
 
             ASSL.DoMagic(v);
@@ -239,7 +241,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         }
         else if(viewholder instanceof ViewHeaderHolder){
-            ViewHeaderHolder holder = (ViewHeaderHolder) viewholder;
+            final ViewHeaderHolder holder = (ViewHeaderHolder) viewholder;
             try {
                 holder.textViewUserName.setText(Data.userData.userName);
                 holder.textViewViewPhone.setText(Data.userData.phoneNo);
@@ -254,14 +256,61 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(holder.imageViewProfile);
                     }
                 }
+                setSubCategories(holder);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            holder.linearLayoutCategories.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(holder.linearLayoutSubCategories.getVisibility() == View.VISIBLE){
+                        holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_down);
+                        holder.imageViewArrow.setRotation(270);
+                        //holder.linearLayoutCategories.startAnimation(animation);
+                    } else {
+                        holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
+                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_up);
+                        holder.imageViewArrow.setRotation(90);
+                        //holder.linearLayoutCategories.startAnimation(animation);
+                    }
+                    //notifyItemChanged(0);
+                }
+            });
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     accountClick();
+                }
+            });
+
+            holder.linearLayoutSubAutos.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                }
+            });
+
+            holder.linearLayoutSubFresh.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                }
+            });
+
+            holder.linearLayoutSubMeals.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                }
+            });
+
+            holder.linearLayoutSubDelivery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
                 }
             });
         }
@@ -482,6 +531,33 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_ACCOUNT);
     }
 
+    private void setSubCategories(ViewHeaderHolder holder){
+        if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)){
+            holder.linearLayoutCategories.setVisibility(View.GONE);
+            holder.linearLayoutSubCategories.setVisibility(View.GONE);
+        } else {
+            holder.linearLayoutCategories.setVisibility(View.VISIBLE);
+            //holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
+            if (Data.userData.getFreshEnabled() == 1) {
+                holder.linearLayoutSubFresh.setVisibility(View.VISIBLE);
+            } else {
+                holder.linearLayoutSubFresh.setVisibility(View.GONE);
+            }
+
+            if (Data.userData.getMealsEnabled() == 1) {
+                holder.linearLayoutSubMeals.setVisibility(View.VISIBLE);
+            } else {
+                holder.linearLayoutSubMeals.setVisibility(View.GONE);
+            }
+
+            if (Data.userData.getDeliveryEnabled() == 1) {
+                holder.linearLayoutSubDelivery.setVisibility(View.VISIBLE);
+            } else {
+                holder.linearLayoutSubDelivery.setVisibility(View.GONE);
+            }
+        }
+    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewMenu, textViewNew, textViewValue;
@@ -500,14 +576,27 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class ViewHeaderHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
-        public ImageView imageViewProfile;
-        public TextView textViewUserName, textViewViewPhone;
+        public ImageView imageViewProfile, imageViewArrow;
+        public TextView textViewUserName, textViewViewPhone, textViewCategories, textViewAutos, textViewFresh, textViewMeals, textViewDelivery;
+        public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubDelivery, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos;
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             imageViewProfile = (ImageView) convertView.findViewById(R.id.imageViewProfile);//textViewUserName
             textViewUserName = (TextView) convertView.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.avenirNext(context));
             textViewViewPhone = (TextView) convertView.findViewById(R.id.textViewViewPhone); textViewViewPhone.setTypeface(Fonts.avenirNext(context));
+            textViewCategories = (TextView) convertView.findViewById(R.id.textViewCategories); textViewCategories.setTypeface(Fonts.mavenRegular(context));
+            textViewAutos = (TextView) convertView.findViewById(R.id.textViewAutos); textViewAutos.setTypeface(Fonts.mavenRegular(context));
+            textViewFresh = (TextView) convertView.findViewById(R.id.textViewFresh); textViewFresh.setTypeface(Fonts.mavenRegular(context));
+            textViewMeals = (TextView) convertView.findViewById(R.id.textViewMeals); textViewMeals.setTypeface(Fonts.mavenRegular(context));
+            textViewDelivery = (TextView) convertView.findViewById(R.id.textViewDelivery); textViewDelivery.setTypeface(Fonts.mavenRegular(context));
+            linearLayoutCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutCategories);
+            linearLayoutSubCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubCategories);
+            imageViewArrow = (ImageView) convertView.findViewById(R.id.imageViewArrow);
+            linearLayoutSubAutos = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubAutos);
+            linearLayoutSubFresh = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubFresh);
+            linearLayoutSubMeals = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubMeals);
+            linearLayoutSubDelivery = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubDelivery);
         }
     }
 

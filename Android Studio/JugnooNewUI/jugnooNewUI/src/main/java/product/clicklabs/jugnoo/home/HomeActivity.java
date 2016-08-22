@@ -67,8 +67,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.google.android.gms.analytics.ecommerce.Product;
@@ -209,6 +207,8 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
+import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
+import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -789,7 +789,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         fabAutos = (FloatingActionButton) findViewById(R.id.fabAutos);
         fabExtra = (View) findViewById(R.id.fabExtra);
         //fabExtra.setVisibility(View.GONE);
-
+        menuLabelsRight.setIconAnimated(false);
+        fabDelivery.setLabelTextColor(getResources().getColor(R.color.black));
+        fabMeals.setLabelTextColor(getResources().getColor(R.color.black));
+        fabFresh.setLabelTextColor(getResources().getColor(R.color.black));
+        fabAutos.setLabelTextColor(getResources().getColor(R.color.black));
         fabDelivery.setOnClickListener(clickListener);
         fabMeals.setOnClickListener(clickListener);
         fabFresh.setOnClickListener(clickListener);
@@ -801,7 +805,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onDrawerSlide(View drawerView, float slideOffset) {
 
             }
-
 
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -1844,7 +1847,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 if(menuLabelsRight.isOpened()){
                     menuLabelsRight.close(true);
-
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

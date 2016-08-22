@@ -156,6 +156,8 @@
     <dimen name="jugnoo_anim_loading_height">92px</dimen>
 
     <dimen name="menu_text_margin_left">121px</dimen>
+    <dimen name="menu_text_margin_left_category">151px</dimen>
+    <dimen name="menu_text_margin_offerings">30px</dimen>
 
     <item name="radius" format="float" type="dimen">326</item>
 
@@ -172,13 +174,6 @@
 
     <!--For fresh Application-->
 
-    <dimen name="fab_size_normal">56dp</dimen>
-    <dimen name="fab_size_mini">40dp</dimen>
-    <dimen name="fab_shadow_size">12dp</dimen>
-
-    <dimen name="fab_scroll_threshold">4dp</dimen>
-    <dimen name="fab_elevation_lollipop">8dp</dimen>
-    <dimen name="fab_press_translation_z">6dp</dimen>
 
 
     <dimen name="activity_margin">16dp</dimen>
