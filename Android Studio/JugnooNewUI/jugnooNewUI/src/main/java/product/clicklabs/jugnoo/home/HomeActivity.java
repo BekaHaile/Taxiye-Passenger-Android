@@ -1895,6 +1895,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     break;
                 case R.id.fabMeals:
                     //Toast.makeText(HomeActivity.this, "Meals", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "Meals", Toast.LENGTH_SHORT).show();
+                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getMealsClientId());
                     break;
                 case R.id.fabFresh:
                     //Toast.makeText(HomeActivity.this, "Fresh", Toast.LENGTH_SHORT).show();
