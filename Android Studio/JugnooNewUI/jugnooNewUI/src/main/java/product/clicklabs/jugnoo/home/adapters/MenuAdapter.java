@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -290,6 +291,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
 
@@ -297,6 +299,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId());
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
 
@@ -304,6 +308,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
 
@@ -311,6 +316,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
         }
