@@ -157,6 +157,7 @@
 
     <dimen name="menu_text_margin_left">121px</dimen>
     <dimen name="menu_text_margin_left_category">151px</dimen>
+    <dimen name="menu_text_margin_offerings">30px</dimen>
 
     <item name="radius" format="float" type="dimen">326</item>
 
