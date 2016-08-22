@@ -19,6 +19,7 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -28,16 +29,16 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     private static final int TYPE_ITEM = 1;
     private Activity activity;
     private int rowLayout;
-    private ArrayList<HistoryResponse.Datum> rideInfosList;
+    private ArrayList<HistoryResponse.Datum> historyData;
     private int totalRides;
     private Callback callback;
 
     private DecimalFormat decimalFormat = new DecimalFormat("#.#");
     private DecimalFormat decimalFormatNoDec = new DecimalFormat("#");
 
-    public RideTransactionsAdapter(ArrayList<HistoryResponse.Datum> rideInfosList, Activity activity, int rowLayout, Callback callback,
+    public RideTransactionsAdapter(ArrayList<HistoryResponse.Datum> historyData, Activity activity, int rowLayout, Callback callback,
                                    int totalRides) {
-        this.rideInfosList = rideInfosList;
+        this.historyData = historyData;
         this.activity = activity;
         this.rowLayout = rowLayout;
         this.callback = callback;
@@ -75,6 +76,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder viewholder, int position) {
         if (viewholder instanceof ViewHolder) {
             HistoryResponse.Datum orderHistory = getItem(position);
+            Log.d("TAG", "orderHistory id = "+orderHistory.getOrderId());
             ViewHolder holder = (ViewHolder) viewholder;
             holder.relative.setTag(position);
             if (orderHistory.getProductType() == ProductType.AUTO.getOrdinal()) {
@@ -108,7 +110,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.textViewStatusValue.setText("Ride Cancelled");
                     holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.red));
                     holder.textViewDetailsValue.setText(orderHistory.getDate() + ",");
-                    holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
+                    holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
+                            Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
                     holder.textViewAmount.setTextColor(activity.getResources().getColor(R.color.red));
                     holder.textViewRideCancelled.setVisibility(View.VISIBLE);
                     holder.relativeLayoutTo.setVisibility(View.GONE);
@@ -124,18 +127,26 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     e.printStackTrace();
                 }
 
-                holder.textViewFrom.setText("Delivery Address : ");
-                holder.textViewTo.setVisibility(View.GONE);
+                holder.textViewFrom.setText("To : ");
 
-                holder.textViewFromValue.setText(orderHistory.getDropAddress());
+
+                holder.textViewFromValue.setText(orderHistory.getDeliveryAddress());
                 holder.textViewDetails.setText("Details: ");
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations
                         .utcToLocalTZ(orderHistory.getOrderTime())));
 
-                holder.textViewAmount.setText(String.format(activity.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
-                        com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount() + orderHistory.getJugnooDeducted())));
+                holder.relativeLayoutTo.setVisibility(View.GONE);
+                holder.textViewRideCancelled.setVisibility(View.GONE);
+                try {
+                    holder.textViewAmount.setText(String.format(activity.getResources()
+                                    .getString(R.string.rupees_value_format_without_space),
+                            com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
 
+//                    holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
+//                            orderHistory.getOrderAmount()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -163,13 +174,13 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        if (rideInfosList == null || rideInfosList.size() == 0) {
+        if (historyData == null || historyData.size() == 0) {
             return 0;
         } else {
-            if (totalRides > rideInfosList.size()) {
-                return rideInfosList.size() + 1;
+            if (totalRides > historyData.size()) {
+                return historyData.size() + 1;
             } else {
-                return rideInfosList.size();
+                return historyData.size();
             }
         }
     }
@@ -183,14 +194,14 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private boolean isPositionFooter(int position) {
-        return position == rideInfosList.size();
+        return position == historyData.size();
     }
 
     private HistoryResponse.Datum getItem(int position) {
         if (isPositionFooter(position)) {
             return null;
         }
-        return rideInfosList.get(position);
+        return historyData.get(position);
     }
 
 

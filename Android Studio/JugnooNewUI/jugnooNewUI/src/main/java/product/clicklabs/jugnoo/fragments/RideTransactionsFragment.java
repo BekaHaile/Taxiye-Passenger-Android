@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.adapters.RideTransactionsAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -120,46 +121,58 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 					@Override
 					public void onClick(int position, HistoryResponse.Datum historyData) {
 						try {
-							Log.v("Ride Amount is ","---> "+historyData.getAmount());
-							if (historyData.getIsCancelledRide() != 1) {
-								if (AppStatus.getInstance(activity).isOnline(activity)) {
-									if(activity instanceof RideTransactionsActivity){
-										new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
-												historyData.getEngagementId(), false);
-									} else if(activity instanceof SupportActivity){
-										new TransactionUtils().openRideIssuesFragment(activity,
-												((SupportActivity) activity).getContainer(),
-												historyData.getEngagementId(), null, null, 0, false);
+							Log.v("Ride Amount is ", "---> " + historyData.getAmount());
+							if (historyData.getProductType() == ProductType.AUTO.getOrdinal()) {
+								if (historyData.getIsCancelledRide() != 1) {
+									if (AppStatus.getInstance(activity).isOnline(activity)) {
+										if (activity instanceof RideTransactionsActivity) {
+											new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
+													historyData.getEngagementId(), false);
+										} else if (activity instanceof SupportActivity) {
+											new TransactionUtils().openRideIssuesFragment(activity,
+													((SupportActivity) activity).getContainer(),
+													historyData.getEngagementId(), null, null, 0, false);
+										}
+										FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+									} else {
+										DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 									}
-									FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+									FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
 								} else {
-									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-								}
-								FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
-							} else{
-								Log.v("Cancelled Ride", "Cancelled Ride");
-								if (AppStatus.getInstance(activity).isOnline(activity)) {
-									if(activity instanceof RideTransactionsActivity) {
+									Log.v("Cancelled Ride", "Cancelled Ride");
+									if (AppStatus.getInstance(activity).isOnline(activity)) {
+										if (activity instanceof RideTransactionsActivity) {
 										/*new TransactionUtils().openRideIssuesFragment(activity,
 												((RideTransactionsActivity) activity).getContainer(),
 												rideInfo.engagementId, null, null, 0, true);*/
-										new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity)activity).getContainer(),
-												historyData.getEngagementId(), true);
-										FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
-									} else if(activity instanceof SupportActivity) {
+											new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
+													historyData.getEngagementId(), true);
+											FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+										} else if (activity instanceof SupportActivity) {
 										/*new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((SupportActivity)activity).getContainer(),
 												rideInfo.engagementId, true);*/
-										new TransactionUtils().openRideIssuesFragment(activity,
-												((SupportActivity) activity).getContainer(),
-												historyData.getEngagementId(), null, null, 0, true);
-										FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+											new TransactionUtils().openRideIssuesFragment(activity,
+													((SupportActivity) activity).getContainer(),
+													historyData.getEngagementId(), null, null, 0, true);
+											FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+										}
+									} else {
+										DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 									}
-								} else {
-									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-								}
-								FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
+									FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
+
 							}
-						} catch (Exception e) {
+						}else if (historyData.getProductType() == ProductType.FRESH.getOrdinal() ||
+									historyData.getProductType() == ProductType.MEALS.getOrdinal()) {
+								new TransactionUtils().openOrderSummaryFragment(activity,
+										((RideTransactionsActivity) activity).getContainer(),
+										historyData);
+
+//								activity.setOrderHistoryOpened(position, historyData);
+//								activity.getTransactionUtils().openOrderSummaryFragment(activity,
+//										((RideTransactionsActivity) activity).getContainer());
+						}
+					}catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
@@ -220,6 +233,10 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		super.onHiddenChanged(hidden);
 		if(!hidden){
 			setActivityTitle();
+			if(Data.isCancelled) {
+				Data.isCancelled = false;
+				getRecentRidesAPI(activity, true);
+			}
 		}
 	}
 
@@ -260,7 +277,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 								int flag = jObj.getInt("flag");
 								if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
 
-									totalRides = jObj.getInt("num_rides");
+									totalRides = jObj.getInt("history_size");
 									rideInfosList.addAll(historyResponse.getData());
 
 //									if (jObj.has("rides")) {

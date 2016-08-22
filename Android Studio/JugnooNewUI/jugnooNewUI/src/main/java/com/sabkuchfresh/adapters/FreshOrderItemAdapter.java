@@ -8,22 +8,22 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.retrofit.model.OrderItem;
-import product.clicklabs.jugnoo.utils.Fonts;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 
 public class FreshOrderItemAdapter extends RecyclerView.Adapter<FreshOrderItemAdapter.ViewHolder> {
 
     private Activity activity;
-    private ArrayList<OrderItem> orderItems;
+    private ArrayList<HistoryResponse.OrderItem> orderItems;
 
-    public FreshOrderItemAdapter(Activity activity, ArrayList<OrderItem> orderItems) {
+    public FreshOrderItemAdapter(Activity activity, ArrayList<HistoryResponse.OrderItem> orderItems) {
         this.orderItems = orderItems;
         this.activity = activity;
     }
@@ -43,7 +43,7 @@ public class FreshOrderItemAdapter extends RecyclerView.Adapter<FreshOrderItemAd
     @Override
     public void onBindViewHolder(FreshOrderItemAdapter.ViewHolder holder, int position) {
         try {
-            OrderItem orderItem = orderItems.get(position);
+            HistoryResponse.OrderItem orderItem = orderItems.get(position);
 
             if(orderItem.getUnit() == null || "".equalsIgnoreCase(orderItem.getUnit())){
                 holder.textViewOrderItemName.setText(String.format(activity.getResources().getString(R.string.x_format),

@@ -123,7 +123,7 @@ public class HistoryResponse {
         private Integer storeId;
         @SerializedName("order_amount")
         @Expose
-        private String orderAmount;
+        private Double orderAmount;
         @SerializedName("jugnoo_deducted")
         @Expose
         private Integer jugnooDeducted;
@@ -437,14 +437,14 @@ public class HistoryResponse {
         /**
          * @return The orderAmount
          */
-        public String getOrderAmount() {
+        public Double getOrderAmount() {
             return orderAmount;
         }
 
         /**
          * @param orderAmount The order_amount
          */
-        public void setOrderAmount(String orderAmount) {
+        public void setOrderAmount(Double orderAmount) {
             this.orderAmount = orderAmount;
         }
 
@@ -724,7 +724,7 @@ public class HistoryResponse {
         private Integer subItemId;
         @SerializedName("item_amount")
         @Expose
-        private String itemAmount;
+        private Double itemAmount;
         @SerializedName("item_refund_amount")
         @Expose
         private Integer itemRefundAmount;
@@ -755,14 +755,14 @@ public class HistoryResponse {
         /**
          * @return The itemAmount
          */
-        public String getItemAmount() {
+        public Double getItemAmount() {
             return itemAmount;
         }
 
         /**
          * @param itemAmount The item_amount
          */
-        public void setItemAmount(String itemAmount) {
+        public void setItemAmount(Double itemAmount) {
             this.itemAmount = itemAmount;
         }
 

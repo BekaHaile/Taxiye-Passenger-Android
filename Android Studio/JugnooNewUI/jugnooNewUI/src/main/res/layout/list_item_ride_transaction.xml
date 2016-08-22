@@ -80,7 +80,6 @@
                         android:layout_marginLeft="10px"
                         android:layout_marginRight="30px"
                         android:layout_toRightOf="@+id/textViewStatus"
-                        android:text="Placed"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
                 </RelativeLayout>

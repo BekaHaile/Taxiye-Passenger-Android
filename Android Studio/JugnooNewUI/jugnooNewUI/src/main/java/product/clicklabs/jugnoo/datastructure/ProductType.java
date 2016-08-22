@@ -1,9 +1,9 @@
 package product.clicklabs.jugnoo.datastructure;
 
 public enum ProductType {
-	AUTO(0),
-	FRESH(1),
-	MEALS(2)
+	AUTO(1),
+	FRESH(2),
+	MEALS(3)
 	;
 
 	private int ordinal;
