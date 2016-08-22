@@ -1895,8 +1895,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     break;
                 case R.id.fabMeals:
                     //Toast.makeText(HomeActivity.this, "Meals", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(HomeActivity.this, "Meals", Toast.LENGTH_SHORT).show();
-                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getMealsClientId());
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getMealsClientId());
+                        }
+                    }, 250);
                     break;
                 case R.id.fabFresh:
                     //Toast.makeText(HomeActivity.this, "Fresh", Toast.LENGTH_SHORT).show();
@@ -1905,7 +1909,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void run() {
                             MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId());
                         }
-                    }, 210);
+                    }, 250);
                     break;
                 case R.id.fabAutos:
                     //Toast.makeText(HomeActivity.this, "Autos", Toast.LENGTH_SHORT).show();

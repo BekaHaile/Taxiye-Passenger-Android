@@ -38,6 +38,7 @@ public class AppSwitcher {
 				Intent intent = new Intent(activity, FreshActivity.class);
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				activity.startActivity(intent);
+				activity.finish();
 			}
 
 			@Override
@@ -60,6 +61,7 @@ public class AppSwitcher {
 								Intent intent = new Intent(activity, HomeActivity.class);
 								intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 								activity.startActivity(intent);
+								activity.finish();
 							}
 
 							@Override
@@ -68,9 +70,10 @@ public class AppSwitcher {
 							}
 						});
 			} else {
-				Intent intent = new Intent(activity, FreshActivity.class);
+				Intent intent = new Intent(activity, HomeActivity.class);
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				activity.startActivity(intent);
+				activity.finish();
 				new ApiUpdateClientId().updateClientId(clientId);
 				Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 			}
@@ -83,6 +86,7 @@ public class AppSwitcher {
 				Intent intent = new Intent(activity, FreshActivity.class);
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				activity.startActivity(intent);
+				activity.finish();
 				new ApiUpdateClientId().updateClientId(clientId);
 				Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 			}
@@ -95,6 +99,7 @@ public class AppSwitcher {
 				Intent intent = new Intent(activity, FreshActivity.class);
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				activity.startActivity(intent);
+				activity.finish();
 				new ApiUpdateClientId().updateClientId(clientId);
 				Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 			}
