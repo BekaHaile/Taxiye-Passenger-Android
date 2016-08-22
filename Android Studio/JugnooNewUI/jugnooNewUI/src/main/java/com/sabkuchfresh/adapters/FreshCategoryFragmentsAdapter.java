@@ -14,15 +14,15 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.fragments.FreshCategoryItemsFragment;
 import com.sabkuchfresh.retrofit.model.Category;
-import com.sabkuchfresh.utils.Constants;
-import product.clicklabs.jugnoo.utils.Fonts;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by Ankit on 12/29/15.

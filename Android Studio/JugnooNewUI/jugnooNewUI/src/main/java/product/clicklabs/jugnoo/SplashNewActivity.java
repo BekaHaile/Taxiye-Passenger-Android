@@ -295,6 +295,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
 
 		RestClient.setupRestClient();
+		RestClient.setupFreshApiRestClient();
 	}
 
 	@Override

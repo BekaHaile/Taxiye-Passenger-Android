@@ -580,4 +580,10 @@ public class UserData {
 	public void setReferralMessages(ReferralMessages referralMessages) {
 		this.referralMessages = referralMessages;
 	}
+
+
+//	"meals_enabled": 1,
+//			"fresh_enabled": 1,
+//			"delivery_enabled": 1,
+//			"default_client_id": "FHkmrtv6zn0KuGcW",
 }

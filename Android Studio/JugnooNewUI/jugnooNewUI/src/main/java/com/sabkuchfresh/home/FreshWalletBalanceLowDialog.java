@@ -5,37 +5,35 @@ import android.graphics.Typeface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.utils.Fonts;
-
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by shankar on 3/4/16.
  */
-public class FreshPaytmBalanceLowDialog {
+public class FreshWalletBalanceLowDialog {
 
-	private final String TAG = FreshPaytmBalanceLowDialog.class.getSimpleName();
+	private final String TAG = FreshWalletBalanceLowDialog.class.getSimpleName();
 	private FreshActivity activity;
 	private Callback callback;
-	private String amount;
 	private Dialog dialog;
 
-	public FreshPaytmBalanceLowDialog(FreshActivity activity, String amount, Callback callback) {
+	public FreshWalletBalanceLowDialog(FreshActivity activity, Callback callback) {
 		this.activity = activity;
-		this.amount = amount;
 		this.callback = callback;
 	}
 
-	public Dialog show() {
+	public Dialog show(int messageRes, String amount, int walletIcon) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-			dialog.setContentView(R.layout.dialog_fresh_paytm_balance_low);
+			dialog.setContentView(R.layout.dialog_fresh_wallet_balance_low);
 
 			RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
 			new ASSL(activity, relative, 1134, 720, false);
@@ -48,7 +46,13 @@ public class FreshPaytmBalanceLowDialog {
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			((TextView)dialog.findViewById(R.id.textViewBalanceRunningLow)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-			((TextView)dialog.findViewById(R.id.textViewLessAmount)).setTypeface(Fonts.mavenRegular(activity));
+
+			ImageView imageViewWalletIcon = (ImageView) dialog.findViewById(R.id.imageViewWalletIcon);
+			imageViewWalletIcon.setImageResource(walletIcon);
+
+			TextView textViewLessAmount = (TextView) dialog.findViewById(R.id.textViewLessAmount);
+			textViewLessAmount.setTypeface(Fonts.mavenRegular(activity));
+			textViewLessAmount.setText(messageRes);
 
 			TextView textViewLessAmountValue = (TextView) dialog.findViewById(R.id.textViewLessAmountValue);
 			textViewLessAmountValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
@@ -56,8 +60,8 @@ public class FreshPaytmBalanceLowDialog {
 
 			Button buttonRechargeNow = (Button) dialog.findViewById(R.id.buttonRechargeNow);
 			buttonRechargeNow.setTypeface(Fonts.mavenRegular(activity));
-			Button buttonPayViaCash = (Button) dialog.findViewById(R.id.buttonPayViaCash);
-			buttonPayViaCash.setTypeface(Fonts.mavenRegular(activity));
+			Button buttonPayViaOther = (Button) dialog.findViewById(R.id.buttonPayViaOther);
+			buttonPayViaOther.setTypeface(Fonts.mavenRegular(activity));
 
 			buttonRechargeNow.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -67,7 +71,7 @@ public class FreshPaytmBalanceLowDialog {
 				}
 			});
 
-			buttonPayViaCash.setOnClickListener(new View.OnClickListener() {
+			buttonPayViaOther.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					callback.onPayByCashClicked();

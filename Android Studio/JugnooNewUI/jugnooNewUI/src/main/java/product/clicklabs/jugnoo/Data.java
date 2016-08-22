@@ -213,9 +213,9 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.ADD_FRIEND);
 			Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
 
-			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
-			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_EMERGENCY_MODE_ENABLED);
-			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_USER_ID);
+			Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
+			Prefs.with(context).remove(Constants.SP_EMERGENCY_MODE_ENABLED);
+			Prefs.with(context).remove(Constants.SP_USER_ID);
 
 			Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
 			Prefs.with(context).remove(SPLabels.APP_MONITORING_TRIGGER_TIME);
@@ -228,14 +228,14 @@ public class Data {
 			Prefs.with(context).remove(SPLabels.BRANCH_IOS_URL);
 			Prefs.with(context).remove(SPLabels.BRANCH_FALLBACK_URL);
 
-			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_EMERGENCY_MODE_ENABLED);
+			Prefs.with(context).remove(Constants.SP_EMERGENCY_MODE_ENABLED);
 
-			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.KEY_SP_T20_WC_SCHEDULE_VERSION);
-			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_T20_DIALOG_BEFORE_START_CROSSED);
-			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_T20_DIALOG_IN_RIDE_CROSSED);
+			Prefs.with(context).remove(Constants.KEY_SP_T20_WC_SCHEDULE_VERSION);
+			Prefs.with(context).remove(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED);
+			Prefs.with(context).remove(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED);
 
 
-			Prefs.with(context).remove(com.sabkuchfresh.utils.Constants.SP_FRESH_CART);
+			Prefs.with(context).remove(Constants.SP_FRESH_CART);
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_address_selected));
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_local_address));
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_loc_lati));

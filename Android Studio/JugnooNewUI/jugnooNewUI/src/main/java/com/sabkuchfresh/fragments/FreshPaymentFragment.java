@@ -1,7 +1,6 @@
 package com.sabkuchfresh.fragments;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -28,12 +27,11 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-import com.sabkuchfresh.home.FreshPaytmBalanceLowDialog;
+import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
 
@@ -45,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
@@ -59,12 +58,14 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -83,12 +84,11 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     private EditText appPromoEdittext;
     private View viewLine;
 
-    private LinearLayout linearLayoutCash;
-    private ImageView imageViewCashRadio;
 
-    private RelativeLayout relativeLayoutPaytm;
-    private ImageView imageViewPaytmRadio;
-    private TextView textViewPaytm, textViewPaytmValue;
+    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik;
+    private LinearLayout linearLayoutWalletContainer, linearLayoutCash;
+    private ImageView imageViewPaytmRadio, imageViewRadioMobikwik, imageViewCashRadio;
+    private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue;
     private Button buttonPlaceOrder, applyButton;
 
     private View rootView;
@@ -174,7 +174,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         ((TextView) rootView.findViewById(R.id.textViewJC)).setTypeface(Fonts.mavenLight(activity));
         ((TextView) rootView.findViewById(R.id.textViewPromo)).setTypeface(Fonts.mavenLight(activity));
         ((TextView) rootView.findViewById(R.id.textViewPayable)).setTypeface(Fonts.mavenLight(activity));
-        textpaymentoption = ((TextView) rootView.findViewById(R.id.textViewPatmentOption));
+        textpaymentoption = ((TextView) rootView.findViewById(R.id.textViewPaymentOption));
         textpaymentoption.setTypeface(Fonts.mavenRegular(activity));
 
         appPromoEdittext = (EditText) rootView.findViewById(R.id.ed_promo_code);
@@ -182,21 +182,28 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
         applyButton = (Button) rootView.findViewById(R.id.apply_button);
 
-        linearLayoutCash = (LinearLayout) rootView.findViewById(R.id.linearLayoutCash);
-        imageViewCashRadio = (ImageView) rootView.findViewById(R.id.imageViewCashRadio);
+
 
         relativeLayoutSubTotalLayout = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSubTotalLayout);
         relativeLayoutJC = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutJC);
         relativeLayoutPromo = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPromo);
-        relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
         relativeLayoutTotalLayout = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTotalLayout);
         relativeLayoutdelivery = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutdelivery);
 
+        linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
+        relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
+        relativeLayoutMobikwik = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutMobikwik);
+        linearLayoutCash = (LinearLayout) rootView.findViewById(R.id.linearLayoutCash);
         imageViewPaytmRadio = (ImageView) rootView.findViewById(R.id.imageViewPaytmRadio);
-        textViewPaytm = (TextView) rootView.findViewById(R.id.textViewPaytm);
-        textViewPaytm.setTypeface(Fonts.mavenLight(activity));
-        textViewPaytmValue = (TextView) rootView.findViewById(R.id.textViewPaytmValue);
-        textViewPaytmValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+        imageViewRadioMobikwik = (ImageView)rootView.findViewById(R.id.imageViewRadioMobikwik);
+        imageViewCashRadio = (ImageView) rootView.findViewById(R.id.imageViewCashRadio);
+
+        textViewPaytmValue = (TextView)rootView.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenLight(activity));
+        textViewPaytm = (TextView)rootView.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenLight(activity));
+        textViewMobikwikValue = (TextView)rootView.findViewById(R.id.textViewMobikwikValue);textViewMobikwikValue.setTypeface(Fonts.mavenLight(activity));
+        textViewMobikwik = (TextView)rootView.findViewById(R.id.textViewMobikwik); textViewMobikwik.setTypeface(Fonts.mavenLight(activity));
+        ((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenLight(activity));
+
         buttonPlaceOrder = (Button) rootView.findViewById(R.id.buttonPlaceOrder);
         buttonPlaceOrder.setTypeface(Fonts.mavenRegular(activity));
 
@@ -229,37 +236,9 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     Toast.makeText(activity, "Please enter code", Toast.LENGTH_SHORT).show();
             }
         });
-        linearLayoutCash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FlurryEventLogger.event(PAYMENT_SCREEN, METHOD_CHANGED, CASH);
-                activity.setPaymentOption(PaymentOption.CASH);
-                setPaymentOptionUI();
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_CASH_CLICKED, null);
-            }
-        });
-
-        relativeLayoutPaytm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    FlurryEventLogger.event(PAYMENT_SCREEN, METHOD_CHANGED, PAYTM);
-                    if (Data.userData.getPaytmBalance() >= getTotalPriceWithDeliveryCharges()) {
-                        activity.setPaymentOption(PaymentOption.PAYTM);
-                        setPaymentOptionUI();
-                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PAYTM_CLICKED, null);
-
-                    } else if (Data.userData.getPaytmBalance() < 0) {
-                        DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
-
-                    } else {
-                        showPaytmBalanceLowDialog();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        linearLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
+        relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
+        relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
 
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,6 +266,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.PAYMENT, activity.productList);
         fetchWalletBalance();
+        orderPaymentModes();
 
 
         return rootView;
@@ -347,6 +327,48 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
     }
 
+
+    private View.OnClickListener onClickListenerPaymentOptionSelector = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            try {
+                Bundle bundle = new Bundle();
+                switch (v.getId()){
+                    case R.id.relativeLayoutPaytm:
+                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                                +FirebaseEvents.PAYTM, bundle);
+                        MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.PAYTM,
+                                callbackPaymentOptionSelector);
+                        break;
+
+                    case R.id.relativeLayoutMobikwik:
+                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                                +FirebaseEvents.MOBIKWIK, bundle);
+                        MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.MOBIKWIK,
+                                callbackPaymentOptionSelector);
+                        break;
+
+                    case R.id.linearLayoutCash:
+                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                                +FirebaseEvents.CASH, bundle);
+                        MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH,
+                                callbackPaymentOptionSelector);
+                        break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    private CallbackPaymentOptionSelector callbackPaymentOptionSelector = new CallbackPaymentOptionSelector() {
+        @Override
+        public void onPaymentOptionSelected(PaymentOption paymentOption) {
+            activity.setPaymentOption(paymentOption);
+            setPaymentOptionUI();
+        }
+    };
+
     @Override
     public void onResume() {
         super.onResume();
@@ -364,6 +386,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                         try {
                             activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             setPaymentOptionUI();
+                            orderPaymentModes();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -374,6 +397,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                         try {
                             activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             setPaymentOptionUI();
+                            orderPaymentModes();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -408,6 +432,9 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             textViewPaytmValue.setText(String.format(activity.getResources()
                     .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
             textViewPaytmValue.setTextColor(Data.userData.getPaytmBalanceColor(activity));
+            textViewMobikwikValue.setText(String.format(activity.getResources()
+                    .getString(R.string.rupees_value_format_without_space), Data.userData.getMobikwikBalanceStr()));
+            textViewMobikwikValue.setTextColor(Data.userData.getMobikwikBalanceColor(activity));
 
             if(Data.userData.getPaytmEnabled() == 1){
                 textViewPaytmValue.setVisibility(View.VISIBLE);
@@ -416,14 +443,28 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 textViewPaytmValue.setVisibility(View.GONE);
                 textViewPaytm.setText(activity.getResources().getString(R.string.nl_add_paytm_wallet));
             }
+            if(Data.userData.getMobikwikEnabled() == 1){
+                textViewMobikwikValue.setVisibility(View.VISIBLE);
+                textViewMobikwik.setText(activity.getResources().getString(R.string.mobikwik_wallet));
+            } else{
+                textViewMobikwikValue.setVisibility(View.GONE);
+                textViewMobikwik.setText(activity.getResources().getString(R.string.add_mobikwik_wallet));
+            }
 
-            if (activity.getPaymentOption() == null
-                    || activity.getPaymentOption() == PaymentOption.CASH) {
-                imageViewCashRadio.setImageResource(R.drawable.radio_selected_icon);
-                imageViewPaytmRadio.setImageResource(R.drawable.radio_unselected_icon);
-            } else {
-                imageViewCashRadio.setImageResource(R.drawable.radio_unselected_icon);
-                imageViewPaytmRadio.setImageResource(R.drawable.radio_selected_icon);
+            if (activity.getPaymentOption() == PaymentOption.PAYTM) {
+                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
+                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
+            }
+            else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
+                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_selected);
+                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
+            }
+            else {
+                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -432,12 +473,22 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
     private void placeOrder() {
         boolean goAhead = true;
-        if (activity.getPaymentOption().getOrdinal() == PaymentOption.PAYTM.getOrdinal()) {
+        if (activity.getPaymentOption() == PaymentOption.PAYTM) {
             if (Data.userData.getPaytmBalance() < getTotalPriceWithDeliveryCharges()) {
                 if (Data.userData.getPaytmBalance() < 0) {
                     DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
                 } else {
-                    showPaytmBalanceLowDialog();
+                    showWalletBalanceLowDialog(PaymentOption.PAYTM);
+                }
+                goAhead = false;
+            }
+        }
+        else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
+            if (Data.userData.getMobikwikBalance() < getTotalPriceWithDeliveryCharges()) {
+                if (Data.userData.getMobikwikBalance() < 0) {
+                    DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.mobikwik_error_select_cash));
+                } else {
+                    showWalletBalanceLowDialog(PaymentOption.MOBIKWIK);
                 }
                 goAhead = false;
             }
@@ -738,25 +789,30 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     }
 
 
-    private void showPaytmBalanceLowDialog() {
+    private void showWalletBalanceLowDialog(final PaymentOption paymentOption) {
         try {
-            if (Data.userData.getPaytmEnabled() == 1) {
-                String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance() - getTotalPriceWithDeliveryCharges());
-                new FreshPaytmBalanceLowDialog(activity, amount, new FreshPaytmBalanceLowDialog.Callback() {
-                    @Override
-                    public void onRechargeNowClicked() {
-                        FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_SCREEN, RECHARGE);
-                        intentToPaytm();
-                    }
+            FreshWalletBalanceLowDialog.Callback callback = new FreshWalletBalanceLowDialog.Callback() {
+                @Override
+                public void onRechargeNowClicked() {
+                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_SCREEN, RECHARGE);
+                    intentToWallet(paymentOption);
+                }
 
-                    @Override
-                    public void onPayByCashClicked() {
-                        FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_SCREEN, PAY_VIA_CASH);
-                        linearLayoutCash.performClick();
-                    }
-                }).show();
-            } else {
-                intentToPaytm();
+                @Override
+                public void onPayByCashClicked() {
+                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_SCREEN, PAY_VIA_CASH);
+                }
+            };
+            if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
+                String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance() - getTotalPriceWithDeliveryCharges());
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, R.drawable.ic_paytm_big);
+            }
+            else if (paymentOption == PaymentOption.MOBIKWIK && Data.userData.getMobikwikEnabled() == 1) {
+                String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getMobikwikBalance() - getTotalPriceWithDeliveryCharges());
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
+            }
+            else {
+                intentToWallet(paymentOption);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -764,19 +820,30 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     }
 
 
-    private void intentToPaytm() {
+    private void intentToWallet(PaymentOption paymentOption) {
         try {
+            DecimalFormat df = new DecimalFormat("#");
             Intent intent = new Intent(activity, PaymentActivity.class);
-            if (Data.userData.getPaytmEnabled() == 1) {
-                DecimalFormat df = new DecimalFormat("#");
-                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-//                intent.putExtra(Constants.KEY_PAYMENT_PATH, 1);
+            if (paymentOption == PaymentOption.PAYTM) {
+                intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption.getOrdinal());
+                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH,
+                        (Data.userData.getPaytmEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
+                                : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
                         df.format(Math.ceil(getTotalPriceWithDeliveryCharges()
                                 - Data.userData.getPaytmBalance())));
-            } else {
-                intent.putExtra(Constants.KEY_PAYMENT_PATH, 1);
-                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+            }
+            else if (paymentOption == PaymentOption.MOBIKWIK) {
+                intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption.getOrdinal());
+                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH,
+                        (Data.userData.getMobikwikEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
+                                : PaymentActivityPath.ADD_WALLET.getOrdinal());
+                intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
+                        df.format(Math.ceil(getTotalPriceWithDeliveryCharges()
+                                - Data.userData.getMobikwikBalance())));
+            }
+            else {
+                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
             }
             activity.startActivity(intent);
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -833,5 +900,30 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         System.gc();
     }
 
+
+
+    public interface CallbackPaymentOptionSelector{
+        void onPaymentOptionSelected(PaymentOption paymentOption);
+    }
+
+    private void orderPaymentModes(){
+        try{
+            ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(Data.userData);
+            if(paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0){
+                linearLayoutWalletContainer.removeAllViews();
+                for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
+                    if(paymentModeConfigData.getEnabled() == 1) {
+                        if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(relativeLayoutPaytm);
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }
