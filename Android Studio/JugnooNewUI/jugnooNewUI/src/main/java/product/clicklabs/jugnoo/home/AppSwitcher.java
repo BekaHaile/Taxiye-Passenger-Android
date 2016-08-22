@@ -25,13 +25,30 @@ public class AppSwitcher {
 		this.context = context;
 	}
 
-	public void switchApp(final Activity activity, String clientId){
+	public void switchApp(final Activity activity, final String clientId){
+
+		ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
+			@Override
+			public void noNet() {
+				DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
+			}
+
+			@Override
+			public void success() {
+				Intent intent = new Intent(activity, FreshActivity.class);
+				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				activity.startActivity(intent);
+				activity.finish();
+			}
+
+			@Override
+			public void failure() {
+
+			}
+		};
 
 		if(clientId.equalsIgnoreCase(Config.getAutosClientId()) && !(activity instanceof HomeActivity)){
-
-		}
-		else if(clientId.equalsIgnoreCase(Config.getFreshClientId()) && !(activity instanceof FreshActivity)){
-			if(Data.getFreshData() == null){
+			if(Data.autoData == null){
 				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, Data.latitude, Data.longitude, clientId,
 						new ApiLoginUsingAccessToken.Callback() {
 							@Override
@@ -41,8 +58,10 @@ public class AppSwitcher {
 
 							@Override
 							public void success() {
-								Intent intent = new Intent(activity, FreshActivity.class);
+								Intent intent = new Intent(activity, HomeActivity.class);
+								intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 								activity.startActivity(intent);
+								activity.finish();
 							}
 
 							@Override
@@ -51,8 +70,48 @@ public class AppSwitcher {
 							}
 						});
 			} else {
-				Intent intent = new Intent(activity, FreshActivity.class);
+				Intent intent = new Intent(activity, HomeActivity.class);
+				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				activity.startActivity(intent);
+				activity.finish();
+				new ApiUpdateClientId().updateClientId(clientId);
+				Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+			}
+		}
+		else if(clientId.equalsIgnoreCase(Config.getFreshClientId()) && !(activity instanceof FreshActivity)){
+			if(Data.getFreshData() == null){
+				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, Data.latitude, Data.longitude, clientId,
+						callback);
+			} else {
+				Intent intent = new Intent(activity, FreshActivity.class);
+				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				activity.startActivity(intent);
+
+				new ApiUpdateClientId().updateClientId(clientId);
+				Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+			}
+		}
+		else if(clientId.equalsIgnoreCase(Config.getMealsClientId()) && !(activity instanceof FreshActivity)){
+			if(Data.getFreshData() == null){
+				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, Data.latitude, Data.longitude, clientId,
+						callback);
+			} else {
+				Intent intent = new Intent(activity, FreshActivity.class);
+				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				activity.startActivity(intent);
+				new ApiUpdateClientId().updateClientId(clientId);
+				Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+			}
+		}
+		else if(activity instanceof FreshActivity && !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))){
+			if(Data.getFreshData() == null){
+				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, Data.latitude, Data.longitude, clientId,
+						callback);
+			} else {
+				Intent intent = new Intent(activity, FreshActivity.class);
+				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				activity.startActivity(intent);
+
 				new ApiUpdateClientId().updateClientId(clientId);
 				Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 			}

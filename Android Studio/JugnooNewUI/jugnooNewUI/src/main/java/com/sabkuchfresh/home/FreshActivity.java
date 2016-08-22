@@ -70,8 +70,10 @@ import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.FABView;
 import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -97,6 +99,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     private MenuBar menuBar;
     private TopBar topBar;
+    private FABView fabView;
     private TransactionUtils transactionUtils;
 
     private ProductsResponse productsResponse;
@@ -170,6 +173,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
         menuBar = new MenuBar(this, drawerLayout);
         topBar = new TopBar(this, drawerLayout);
+        fabView = new FABView(this);
 
 //        if(BuildConfig.DEBUG_MODE)
 //            Utils.showPaystorePopup(FreshActivity.this, "", "please rate us");
@@ -257,33 +261,35 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 
         try {
-//            if(Data.getFreshData().getDefaultStoreId() > 0){
-//				if(Data.getFreshData().getDefaultStoreId() == 1){
-//					addFreshFragment();
-//				} else{
-//					addMealFragment();
-//				}
-//			}else {
-				if (Data.getFreshData().stores.size() > 1) {
-					int fragMentType = Prefs.with(this).getInt(Constants.APP_TYPE, 0);
-					if (fragMentType == AppConstant.ApplicationType.FRESH) {
-						addFreshFragment();
-					} else if (fragMentType == AppConstant.ApplicationType.MEALS) {
-						addMealFragment();
-					} else {
-						addNewFreshFragment();
-					}
-				} else if (Data.getFreshData().stores.size() == 1) {
-					int appType = Data.getFreshData().stores.get(0).getStoreId();
-					if (appType == AppConstant.ApplicationType.FRESH) {
-						addFreshFragment();
-					} else {
-						addMealFragment();
-					}
-				} else {
-					addFreshFragment();
-				}
-//			}
+//            if (Data.getFreshData().stores.size() > 1) {
+//                int fragMentType = Prefs.with(this).getInt(Constants.APP_TYPE, 0);
+//                if (fragMentType == AppConstant.ApplicationType.FRESH) {
+//                    addFreshFragment();
+//                } else if (fragMentType == AppConstant.ApplicationType.MEALS) {
+//                    addMealFragment();
+//                } else {
+//                    addNewFreshFragment();
+//                }
+//            } else if (Data.getFreshData().stores.size() == 1) {
+//                int appType = Data.getFreshData().stores.get(0).getStoreId();
+//                if (appType == AppConstant.ApplicationType.FRESH) {
+//                    addFreshFragment();
+//                } else {
+//                    addMealFragment();
+//                }
+//            } else {
+//                addFreshFragment();
+//            }
+
+            String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+            if(lastClientId.equalsIgnoreCase(Config.getFreshClientId())){
+                addFreshFragment();
+                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
+            }
+            else if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
+                addMealFragment();
+                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             addFreshFragment();

@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -65,10 +67,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_ITEM = 1;
     private Activity activity;
     private ArrayList<MenuInfo> menuList;
+    private DrawerLayout drawerLayout;
 
-    public MenuAdapter(ArrayList<MenuInfo> menuList, Activity activity) {
+    public MenuAdapter(ArrayList<MenuInfo> menuList, Activity activity, DrawerLayout drawerLayout) {
         this.menuList = menuList;
         this.activity = activity;
+        this.drawerLayout = drawerLayout;
     }
 
     @Override
@@ -289,21 +293,27 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutSubAutos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId());
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
 
             holder.linearLayoutSubFresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId());
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
 
             holder.linearLayoutSubMeals.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId());
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
 
@@ -311,6 +321,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
         }
