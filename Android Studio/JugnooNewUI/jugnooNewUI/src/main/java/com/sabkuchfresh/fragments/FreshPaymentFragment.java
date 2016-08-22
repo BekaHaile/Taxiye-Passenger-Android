@@ -261,12 +261,12 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         totalAmount = subTotalAmount - promoAmount + deliveryAmount;
         payableAmount = subTotalAmount - promoAmount + deliveryAmount - jcAmount;
 
-
         updateUI();
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.PAYMENT, activity.productList);
         fetchWalletBalance();
         orderPaymentModes();
+        setPaymentOptionUI();
 
 
         return rootView;
@@ -322,8 +322,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             relativeLayoutJC.setVisibility(View.GONE);
             relativeLayoutTotalLayout.setVisibility(View.GONE);
         }
-
-        setPaymentOptionUI();
 
     }
 
@@ -386,7 +384,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                         try {
                             activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             setPaymentOptionUI();
-                            orderPaymentModes();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -397,7 +394,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                         try {
                             activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             setPaymentOptionUI();
-                            orderPaymentModes();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
