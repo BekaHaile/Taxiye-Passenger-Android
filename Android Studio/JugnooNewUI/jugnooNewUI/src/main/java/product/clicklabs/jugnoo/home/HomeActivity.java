@@ -207,8 +207,6 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
-import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
-import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -228,6 +226,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     MenuBar menuBar;
 
     TopBar topBar;
+
+    FABView fabView;
 
 
     //Passenger main layout
@@ -439,13 +439,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffAssigning, imageViewPokemonOnOffEngaged;
     private Bundle bundle;
 
-    private RelativeLayout relativeLayoutFAB;
+    /*private RelativeLayout relativeLayoutFAB;
     private FloatingActionMenu menuLabelsRight;
     private FloatingActionButton fabDelivery;
     private FloatingActionButton fabMeals;
     private FloatingActionButton fabFresh;
     private FloatingActionButton fabAutos;
-    private View fabExtra;
+    private View fabExtra;*/
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -524,6 +524,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //Top RL
         topBar = new TopBar(this, drawerLayout);
+
+        //FAB View
+        fabView = new FABView(this);
 
 
         //Map Layout
@@ -780,7 +783,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewPokemonOnOffAssigning = (ImageView) findViewById(R.id.imageViewPokemonOnOffAssigning); imageViewPokemonOnOffAssigning.setVisibility(View.GONE);
         imageViewPokemonOnOffEngaged = (ImageView) findViewById(R.id.imageViewPokemonOnOffEngaged); imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
 
-        relativeLayoutFAB = (RelativeLayout) findViewById(R.id.relativeLayoutFAB);
+        /*relativeLayoutFAB = (RelativeLayout) findViewById(R.id.relativeLayoutFAB);
         menuLabelsRight = (FloatingActionMenu) findViewById(R.id.menu_labels_right);
         menuLabelsRight.setIconAnimated(false);
         fabDelivery = (FloatingActionButton) findViewById(R.id.fabDelivery);
@@ -798,7 +801,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         fabMeals.setOnClickListener(clickListener);
         fabFresh.setOnClickListener(clickListener);
         fabAutos.setOnClickListener(clickListener);
-        setFABButtons();
+        setFABButtons();*/
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -1827,7 +1830,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-        menuLabelsRight.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
+        /*menuLabelsRight.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
                 String text;
@@ -1858,10 +1861,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     //fabExtra.setVisibility(View.VISIBLE);
                 }
             }
-        });
+        });*/
     }
 
-    private void setFABButtons(){
+   /* private void setFABButtons(){
         if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)){
             relativeLayoutFAB.setVisibility(View.GONE);
         } else {
@@ -1917,7 +1920,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
             fabExtra.performClick();
         }
-    };
+    };*/
 
     private void endRideWithGif(){
         relativeLayoutGreat.setVisibility(View.VISIBLE);

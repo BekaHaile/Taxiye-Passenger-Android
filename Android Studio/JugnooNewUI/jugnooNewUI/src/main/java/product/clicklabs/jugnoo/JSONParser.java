@@ -268,6 +268,8 @@ public class JSONParser implements Constants {
 			}
             Data.userData.setReferralMessages(parseReferralMessages(loginUserData));
             performUserAppMonitoring(context, userData);
+
+            Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, defaultClientId);
         } catch (Exception e) {
             e.printStackTrace();
         }
