@@ -5,11 +5,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
+import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
@@ -122,6 +125,19 @@ public class TransactionUtils {
 							new RideSummaryFragment(engagementId, rideCancelled),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openOrderSummaryFragment(FragmentActivity activity, View container, HistoryResponse.Datum datum) {
+		if(!checkIfFragmentAdded(activity, FreshOrderSummaryFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+					.add(container.getId(), new FreshOrderSummaryFragment(datum),
+							FreshOrderSummaryFragment.class.getName())
+					.addToBackStack(FreshOrderSummaryFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();

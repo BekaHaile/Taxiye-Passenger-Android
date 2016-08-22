@@ -5,6 +5,7 @@ import java.util.Map;
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
@@ -243,9 +244,9 @@ public interface ApiService {
                    Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/get_recent_rides")
+    @POST("/autos_integrated_order_history")
     void getRecentRides(@FieldMap Map<String, String> params,
-                              Callback<SettleUserDebt> callback);
+                              Callback<HistoryResponse> callback);
 
     @FormUrlEncoded
     @POST("/fare_estimate_for_jeanie")

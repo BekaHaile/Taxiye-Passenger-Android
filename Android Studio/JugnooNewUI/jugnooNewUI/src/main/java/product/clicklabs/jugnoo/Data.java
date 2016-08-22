@@ -119,6 +119,7 @@ public class Data {
 
 	public static int TRANSFER_FROM_JEANIE = 0;
 	public static int AppType = 1;
+	public static boolean isCancelled = false;
 
 
 	public static void clearDataOnLogout(Context context){

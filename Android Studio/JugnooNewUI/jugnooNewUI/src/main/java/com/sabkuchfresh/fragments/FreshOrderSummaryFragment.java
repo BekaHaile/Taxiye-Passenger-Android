@@ -3,6 +3,9 @@ package com.sabkuchfresh.fragments;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,9 +20,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.adapters.FreshOrderItemAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.SupportActivity;
-import com.sabkuchfresh.retrofit.model.OrderHistory;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
-import com.sabkuchfresh.retrofit.model.OrderItem;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
@@ -33,11 +34,13 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -68,14 +71,19 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
     private TextView textViewDiscount, textViewDiscountValue, textViewjc, textViewjcValue, textViewpaytm, textViewpaytmValue;
 
     private Button buttonCancelOrder, reorderBtn, feedbackBtn;
-    private OrderHistory orderHistory;
-
+//    private OrderHistory orderHistory;
     private View rootView;
-    private SupportActivity activity;
+    private FragmentActivity activity;
 
     private int orderType = 0;
 
+    private HistoryResponse.Datum orderHistory;
+
     public FreshOrderSummaryFragment() {
+
+    }
+    public FreshOrderSummaryFragment(HistoryResponse.Datum orderHistory) {
+        this.orderHistory = orderHistory;
     }
 
 
@@ -93,8 +101,10 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_order_summary, container, false);
 
-        activity = (SupportActivity) getActivity();
-        activity.fragmentUISetup(this);
+        activity = (FragmentActivity) getActivity();
+
+//        activity.fragmentUISetup(this);
+        setActivityTitle();
 
         relativeLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRoot);
         try {
@@ -171,8 +181,9 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
         recyclerViewOrderItems.setHasFixedSize(false);
 
         try {
-            if (activity.getOrderHistoryOpened() != null) {
-                orderHistory = activity.getOrderHistoryOpened();
+//            if (activity.getOrderHistoryOpened() != null)
+            {
+//                orderHistory = activity.getOrderHistoryOpened();
 
                 try {
                     orderType = orderHistory.getStoreId();
@@ -180,14 +191,18 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                     orderType = 1;
                 }
 
-                freshOrderItemAdapter = new FreshOrderItemAdapter(activity, (ArrayList<OrderItem>) orderHistory.getOrderItems());
+                freshOrderItemAdapter = new FreshOrderItemAdapter(activity, (ArrayList<HistoryResponse.OrderItem>) orderHistory.getOrderItems());
                 recyclerViewOrderItems.setAdapter(freshOrderItemAdapter);
 
                 textViewOrderIdValue.setText(String.valueOf(orderHistory.getOrderId()));
 
-                textViewTotalAmountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-                        Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount() - orderHistory.getDeliveryCharges() + orderHistory.getJugnooDeducted()
-                                + orderHistory.getDiscount())));
+                try {
+                    textViewTotalAmountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+                            Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount() - orderHistory.getDeliveryCharges() + orderHistory.getJugnooDeducted()
+                                    + orderHistory.getDiscount())));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getDeliveryCharges())));
                 textViewAmountPayableValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
                 if (orderHistory.getPaymentMode().equals(PaymentOption.PAYTM.getOrdinal())) {
@@ -219,7 +234,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 } else {
                     jclayout.setVisibility(View.GONE);
                 }
-                if (orderHistory.getPaytmDeducted() > 0) {
+                if (orderHistory.getPaytmDeducted() != null && orderHistory.getPaytmDeducted() > 0) {
                     textViewpaytmValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getPaytmDeducted())));
                 } else {
                     paytmlayout.setVisibility(View.GONE);
@@ -311,6 +326,15 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
     }
 
 
+    private void setActivityTitle() {
+        if (activity instanceof RideTransactionsActivity) {
+            ((RideTransactionsActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
+        } else if (activity instanceof product.clicklabs.jugnoo.support.SupportActivity) {
+            ((product.clicklabs.jugnoo.support.SupportActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
+        }
+    }
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -323,8 +347,9 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            activity.fragmentUISetup(this);
-            orderHistory = activity.getOrderHistoryOpened();
+            setActivityTitle();
+//            activity.fragmentUISetup(this);
+//            orderHistory = activity.getOrderHistoryOpened();
 
 //            if(orderHistory.getCancellable() == 1){
 //                buttonCancelOrder.setText(R.string.cancel_order);
@@ -392,7 +417,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                         DialogPopup.dismissLoadingDialog();
                         long time = 0L;
                         Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
-//                        activity.resumeMethod();
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = JSONParser.getServerMessage(jObj);
@@ -400,8 +424,17 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                                 DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+
+                                        // TODO: 22/08/16 Get output and check here
+                                        Data.isCancelled = true;
                                         activity.onBackPressed();
-                                        activity.getFreshOrderHistoryFragment().getOrderHistory();
+//                                            if (activity instanceof RideTransactionsActivity) {
+//                                                ((RideTransactionsActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
+//                                            } else if (activity instanceof product.clicklabs.jugnoo.support.SupportActivity) {
+//                                                ((product.clicklabs.jugnoo.support.SupportActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
+//                                            }
+
+//                                        activity.getFreshOrderHistoryFragment().getOrderHistory();
                                     }
                                 });
                             } else {
@@ -441,7 +474,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        cancelOrderApiCall(activity.getOrderHistoryOpened().getOrderId());
+                        cancelOrderApiCall(orderHistory.getOrderId());
                     }
 
                     @Override
@@ -479,7 +512,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                             getResources().getString(R.string.cancel), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    cancelOrderApiCall(activity.getOrderHistoryOpened().getOrderId());
+                                    cancelOrderApiCall(orderHistory.getOrderId());
                                 }
                             }, new View.OnClickListener() {
                                 @Override
@@ -493,19 +526,62 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 break;
             case R.id.feedbackBtn:
                 if (orderHistory.getPendingFeedback() == 1) {
-//                        openFeedBack(orderHistory.getOrderId());
-                    activity.orderId = String.valueOf(orderHistory.getOrderId());
-                    activity.questionType = String.valueOf(orderHistory.getQuestionType());
-                    activity.question = String.valueOf(orderHistory.getQuestion());
-                    activity.skip = true;
-                    activity.openOrderFeedback();
+                    // TODO: 22/08/16 To be done for fresh
+//                    activity.orderId = String.valueOf(orderHistory.getOrderId());
+//                    activity.questionType = String.valueOf(orderHistory.getQuestionType());
+//                    activity.question = String.valueOf(orderHistory.getQuestion());
+//                    activity.skip = true;
+//                    activity.openOrderFeedback();
                 } else {
                     activity.onBackPressed();
                 }
                 break;
             case R.id.reorderBtn:
-                activity.saveHistoryCardToSP(orderHistory);
+                // TODO: 22/08/16 To be done for fresh
+                saveHistoryCardToSP(orderHistory);
                 break;
         }
     }
+
+    public void saveHistoryCardToSP(HistoryResponse.Datum orderHistory) {
+        try {
+            Prefs.with(activity).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
+
+            JSONObject jCart = new JSONObject();
+            if (orderHistory != null && orderHistory.getOrderItems() != null) {
+
+                for (HistoryResponse.OrderItem subItem : orderHistory.getOrderItems()) {
+                    if (subItem.getItemQuantity() > 0) {
+                        try {
+                            jCart.put(String.valueOf(subItem.getSubItemId()), (int) subItem.getItemQuantity());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+            Prefs.with(activity).save(Constants.SP_FRESH_CART, jCart.toString());
+            sendMessage();
+            DialogPopup.showLoadingDialog(activity, "Please wait...");
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    activity.finish();
+                }
+            }, 1000);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendMessage() {
+        Log.d("sender", "Broadcasting message");
+        Intent intent = new Intent(Data.LOCAL_BROADCAST);
+        // You can also include some extra data.
+        intent.putExtra("message", "This is my message!");
+        LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
+    }
+
 }

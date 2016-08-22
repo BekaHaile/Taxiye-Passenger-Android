@@ -83,7 +83,7 @@
                             android:id="@+id/textViewOrderTimeValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="04 Apr, 16"
+                            android:text=""
                             android:layout_marginRight="15px"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
