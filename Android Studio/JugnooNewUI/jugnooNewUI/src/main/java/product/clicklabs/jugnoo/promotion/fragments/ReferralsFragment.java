@@ -128,7 +128,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 					FlurryEventLogger.event(FlurryEventNames.INVITE_EARN_MORE_INFO);
 					FlurryEventLogger.eventGA(Constants.REFERRAL, "free rides", "Details");
                     MyApplication.getInstance().logEvent(REFERRAL+"_"+DETAILS, bundle);
-					DialogPopup.alertPopupWithListener(activity, "", Data.referralMessages.referralMoreInfoMessage, new View.OnClickListener() {
+					DialogPopup.alertPopupWithListener(activity, "", Data.userData.getReferralMessages().referralMoreInfoMessage, new View.OnClickListener() {
 						@Override
 						public void onClick(View view) {
 						}
@@ -140,7 +140,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 		});
 
 		try {
-			if(Data.autoData.getInviteFriendButton() == 1){
+			if(Data.userData.getInviteFriendButton() == 1){
                 buttonInvite.setVisibility(View.VISIBLE);
             } else{
                 buttonInvite.setVisibility(View.GONE);
@@ -255,9 +255,9 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 
 		try {
 			textViewCode.setText(Data.userData.referralCode);
-			textViewDesc.setText(Data.referralMessages.referralShortMessage+ "Details");
+			textViewDesc.setText(Data.userData.getReferralMessages().referralShortMessage+ "Details");
 
-			SpannableString ss = new SpannableString(Data.referralMessages.referralShortMessage+" Details");
+			SpannableString ss = new SpannableString(Data.userData.getReferralMessages().referralShortMessage+" Details");
 			ClickableSpan clickableSpan = new ClickableSpan() {
 				@Override
 				public void onClick(View textView) {

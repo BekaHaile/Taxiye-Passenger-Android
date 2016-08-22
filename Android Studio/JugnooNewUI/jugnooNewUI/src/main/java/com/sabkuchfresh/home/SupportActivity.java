@@ -17,15 +17,14 @@ import com.sabkuchfresh.fragments.FreshOrderHistoryFragment;
 import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 import com.sabkuchfresh.fragments.FreshSupportFragment;
 import com.sabkuchfresh.fragments.PromotionsFragment;
-import com.sabkuchfresh.fragments.ReferralsFragment;
 import com.sabkuchfresh.retrofit.model.OrderHistory;
 import com.sabkuchfresh.retrofit.model.OrderItem;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DialogPopup;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -181,12 +180,12 @@ public class SupportActivity extends BaseFragmentActivity implements View.OnClic
 
 
     public void openShareFragment() {
-        textViewTitle.setText(getResources().getString(R.string.share_fragment));
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new ReferralsFragment(),
-                        ReferralsFragment.class.getName())
-                .addToBackStack(ReferralsFragment.class.getName())
-                .commitAllowingStateLoss();
+//        textViewTitle.setText(getResources().getString(R.string.share_fragment));
+//        getSupportFragmentManager().beginTransaction()
+//                .add(relativeLayoutContainer.getId(), new ReferralsFragment(),
+//                        ReferralsFragment.class.getName())
+//                .addToBackStack(ReferralsFragment.class.getName())
+//                .commitAllowingStateLoss();
     }
 
     public void openPromoFragment() {

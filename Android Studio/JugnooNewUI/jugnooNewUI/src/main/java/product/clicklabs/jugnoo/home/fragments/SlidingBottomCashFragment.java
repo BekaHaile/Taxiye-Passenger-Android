@@ -118,11 +118,11 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
     private void setSelectedPaymentOptionUI(){
         try {
-            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);
-            if(PaymentOption.PAYTM.getOrdinal() == Data.pickupPaymentOption){
+            Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
+            if(PaymentOption.PAYTM.getOrdinal() == Data.autoData.getPickupPaymentOption()){
                 paymentSelection(imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioCash);
-            } else if(PaymentOption.MOBIKWIK.getOrdinal() == Data.pickupPaymentOption){
+            } else if(PaymentOption.MOBIKWIK.getOrdinal() == Data.autoData.getPickupPaymentOption()){
                 paymentSelection(imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash);
             } else{
                 paymentSelection(imageViewRadioCash, imageViewRadioPaytm, imageViewRadioMobikwik);
@@ -144,8 +144,8 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
     public void updatePreferredPaymentOptionUI(){
         try{
-            Data.pickupPaymentOption = MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(Data.pickupPaymentOption);
+            Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
 
             textViewPaytmValue.setText(String.format(activity.getResources()
                     .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));

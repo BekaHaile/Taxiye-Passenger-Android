@@ -4,9 +4,12 @@ import android.content.Context;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -15,12 +18,7 @@ public class UserData {
 	public int emailVerificationStatus;
 	private double jugnooBalance;
 	public int numCouponsAvaliable;
-	public double fareFactor;
 	public int showJugnooJeanie;
-	public int contactSaved;
-    public String referAllText, referAllTitle;
-	private int referAllStatusLogin;
-	private String referAllTextLogin, referAllTitleLogin;
 	private int promoSuccess;
 	private String promoMessage;
 
@@ -43,7 +41,7 @@ public class UserData {
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
 	private String fatafatUrlLink;
-	private double driverFareFactor;
+
 
 	private int paytmEnabled;
 	private double paytmBalance = -1;
@@ -51,14 +49,18 @@ public class UserData {
 	private int mobikwikEnabled;
 	private double mobikwikBalance = -1;
 
-	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled;
+	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton;
 
-	private FatafatUserData fatafatUserData;
+	private ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
+	private int currentCity = 1;
+	private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
+	private ArrayList<MenuInfo> menuInfoList = new ArrayList<>();
+	private ReferralMessages referralMessages;
+
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
-					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
+					String userImage, String referralCode, String phoneNo, double jugnooBalance,
 					String jugnooFbBanner, int numCouponsAvaliable,
-					int contactSaved, String referAllText, String referAllTitle,
 					int promoSuccess, String promoMessage,
 					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
@@ -66,10 +68,11 @@ public class UserData {
 					String userId, String inviteEarnScreenImage,
 					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
 					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew,
-					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
+					int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
-					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled,int mealsEnabled, int freshEnabled, int deliveryEnabled){
+					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled,
+					int mealsEnabled, int freshEnabled, int deliveryEnabled, int inviteFriendButton){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -81,13 +84,9 @@ public class UserData {
 		this.referralCode = referralCode;
 		this.phoneNo = phoneNo;
 		this.jugnooBalance = jugnooBalance;
-		this.fareFactor = fareFactor;
-		
+
 		this.jugnooFbBanner = jugnooFbBanner;
 		this.numCouponsAvaliable = numCouponsAvaliable;
-		this.contactSaved = contactSaved;
-        this.referAllText = referAllText;
-		this.referAllTitle = referAllTitle;
 
 		this.promoSuccess = promoSuccess;
 		this.promoMessage = promoMessage;
@@ -117,9 +116,6 @@ public class UserData {
 		this.gamePredictName = gamePredictName;
 		this.gamePredictNew = gamePredictNew;
 
-		this.referAllStatusLogin = referAllStatusLogin;
-		this.referAllTextLogin = referAllTextLogin;
-		this.referAllTitleLogin = referAllTitleLogin;
 		this.cToDReferralEnabled = cToDReferralEnabled;
 
 		this.city = city;
@@ -127,7 +123,6 @@ public class UserData {
 
 		this.referralLeaderboardEnabled = referralLeaderboardEnabled;
 		this.referralActivityEnabled = referralActivityEnabled;
-		this.driverFareFactor = 1;
 		this.fatafatUrlLink = fatafatUrlLink;
 		this.notificationPreferenceEnabled = notificationPreferenceEnabled;
 
@@ -138,6 +133,8 @@ public class UserData {
 		this.mealsEnabled = mealsEnabled;
 		this.freshEnabled = freshEnabled;
 		this.deliveryEnabled = deliveryEnabled;
+
+		this.inviteFriendButton = inviteFriendButton;
 	}
 
 	private void checkUserImage(){
@@ -380,30 +377,6 @@ public class UserData {
 		this.gamePredictEnable = gamePredictEnable;
 	}
 
-	public String getReferAllTextLogin() {
-		return referAllTextLogin;
-	}
-
-	public void setReferAllTextLogin(String referAllTextLogin) {
-		this.referAllTextLogin = referAllTextLogin;
-	}
-
-	public int getReferAllStatusLogin() {
-		return referAllStatusLogin;
-	}
-
-	public void setReferAllStatusLogin(int referAllStatusLogin) {
-		this.referAllStatusLogin = referAllStatusLogin;
-	}
-
-	public String getReferAllTitleLogin() {
-		return referAllTitleLogin;
-	}
-
-	public void setReferAllTitleLogin(String referAllTitleLogin) {
-		this.referAllTitleLogin = referAllTitleLogin;
-	}
-
 	public int getcToDReferralEnabled() {
 		return cToDReferralEnabled;
 	}
@@ -442,14 +415,6 @@ public class UserData {
 
 	public void setReferralActivityEnabled(int referralActivityEnabled) {
 		this.referralActivityEnabled = referralActivityEnabled;
-	}
-
-	public double getDriverFareFactor() {
-		return driverFareFactor;
-	}
-
-	public void setDriverFareFactor(double driverFareFactor) {
-		this.driverFareFactor = driverFareFactor;
 	}
 
 	public String getFatafatUrlLink() {
@@ -544,14 +509,6 @@ public class UserData {
 		this.notificationPreferenceEnabled = isSettingEnabled;
 	}
 
-	public FatafatUserData getFatafatUserData() {
-		return fatafatUserData;
-	}
-
-	public void setFatafatUserData(FatafatUserData fatafatUserData) {
-		this.fatafatUserData = fatafatUserData;
-	}
-
 	public int getMealsEnabled() {
 		return mealsEnabled;
 	}
@@ -575,4 +532,58 @@ public class UserData {
 	public void setDeliveryEnabled(int deliveryEnabled) {
 		this.deliveryEnabled = deliveryEnabled;
 	}
+
+	public int getInviteFriendButton() {
+		return inviteFriendButton;
+	}
+
+	public void setInviteFriendButton(int inviteFriendButton) {
+		this.inviteFriendButton = inviteFriendButton;
+	}
+
+	public ArrayList<EmergencyContact> getEmergencyContactsList() {
+		return emergencyContactsList;
+	}
+
+	public void setEmergencyContactsList(ArrayList<EmergencyContact> emergencyContactsList) {
+		this.emergencyContactsList = emergencyContactsList;
+	}
+
+	public int getCurrentCity() {
+		return currentCity;
+	}
+
+	public void setCurrentCity(int currentCity) {
+		this.currentCity = currentCity;
+	}
+
+	public ArrayList<PromoCoupon> getPromoCoupons() {
+		return promoCoupons;
+	}
+
+	public void setPromoCoupons(ArrayList<PromoCoupon> promoCoupons) {
+		this.promoCoupons = promoCoupons;
+	}
+
+	public ArrayList<MenuInfo> getMenuInfoList() {
+		return menuInfoList;
+	}
+
+	public void setMenuInfoList(ArrayList<MenuInfo> menuInfoList) {
+		this.menuInfoList = menuInfoList;
+	}
+
+	public ReferralMessages getReferralMessages() {
+		return referralMessages;
+	}
+
+	public void setReferralMessages(ReferralMessages referralMessages) {
+		this.referralMessages = referralMessages;
+	}
+
+
+//	"meals_enabled": 1,
+//			"fresh_enabled": 1,
+//			"delivery_enabled": 1,
+//			"default_client_id": "FHkmrtv6zn0KuGcW",
 }

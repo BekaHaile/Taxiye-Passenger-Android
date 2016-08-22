@@ -5,8 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,7 +29,6 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -62,13 +59,13 @@ public class ReferralActions implements FirebaseEvents {
                                         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                                         intent.setPackage("com.facebook.orca");
                                         intent.setType("text/plain");
-                                        intent.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n" + link);
+                                        intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + "\n" + link);
                                         activity.startActivity(intent);
                                     } else {
 
                                         facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
-                                                Data.referralMessages.fbShareCaption,
-                                                Data.referralMessages.fbShareDescription,
+                                                Data.userData.getReferralMessages().fbShareCaption,
+                                                Data.userData.getReferralMessages().fbShareDescription,
                                                 link,
                                                 Data.userData.jugnooFbBanner);
                                         //30.707810, 76.761957
@@ -85,7 +82,7 @@ public class ReferralActions implements FirebaseEvents {
                         }).getBranchLinkForChannel(channel,
                                 channelLinkSP,
                                 Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                                Data.referralMessages.fbShareDescription, Data.userData.jugnooFbBanner,
+                                Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
                                 Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
                                 Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
                     }
@@ -112,10 +109,10 @@ public class ReferralActions implements FirebaseEvents {
             public void facebookLoginError(String message) {
             }
         });
-		if(Data.userData != null && Data.referralMessages != null) {
+		if(Data.userData != null && Data.userData.getReferralMessages() != null) {
 			facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
-					Data.referralMessages.fbShareCaption,
-					Data.referralMessages.fbShareDescription,
+					Data.userData.getReferralMessages().fbShareCaption,
+					Data.userData.getReferralMessages().fbShareDescription,
 					link,
 					Data.userData.jugnooFbBanner);
 		}
@@ -149,7 +146,7 @@ public class ReferralActions implements FirebaseEvents {
                         for(ResolveInfo info : activities){
                             if(info.activityInfo.packageName.contains("com.whatsapp")){
                                 intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-                                intent.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n"
+                                intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + "\n"
                                         + link);
                                 activity.startActivity(intent);
                                 break;
@@ -168,7 +165,7 @@ public class ReferralActions implements FirebaseEvents {
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP,
                     SPLabels.BRANCH_WHATSAPP_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                    Data.referralMessages.fbShareDescription, Data.userData.jugnooFbBanner,
+                    Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
                     Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
         } catch (Exception e) {
@@ -185,7 +182,7 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchLinkCreated(String link) {
                     Uri sms_uri = Uri.parse("smsto:");
                     Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
-                    sms_intent.putExtra("sms_body", Data.referralMessages.referralSharingMessage + "\n"
+                    sms_intent.putExtra("sms_body", Data.userData.getReferralMessages().referralSharingMessage + "\n"
                             + link);
                     activity.startActivity(sms_intent);
                 }
@@ -197,7 +194,7 @@ public class ReferralActions implements FirebaseEvents {
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_SMS,
                     SPLabels.BRANCH_SMS_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                    Data.referralMessages.fbShareDescription, Data.userData.jugnooFbBanner,
+                    Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
                     Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
         } catch (Exception e) {
@@ -214,8 +211,8 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchLinkCreated(String link) {
                     Intent email = new Intent(Intent.ACTION_SEND);
                     email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
-                    email.putExtra(Intent.EXTRA_SUBJECT, Data.referralMessages.referralEmailSubject);
-                    email.putExtra(Intent.EXTRA_TEXT, Data.referralMessages.referralSharingMessage + "\n"
+                    email.putExtra(Intent.EXTRA_SUBJECT, Data.userData.getReferralMessages().referralEmailSubject);
+                    email.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + "\n"
                             + link); //
                     email.setType("message/rfc822");
                     activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
@@ -228,7 +225,7 @@ public class ReferralActions implements FirebaseEvents {
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_EMAIL,
                     SPLabels.BRANCH_EMAIL_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                    Data.referralMessages.fbShareDescription, Data.userData.jugnooFbBanner,
+                    Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
                     Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
         } catch (Exception e) {
@@ -243,8 +240,8 @@ public class ReferralActions implements FirebaseEvents {
                 public void onBranchLinkCreated(String link) {
 
                     shareGeneric(activity, callbackManager,
-                            Data.referralMessages.referralEmailSubject,
-                            Data.referralMessages.referralSharingMessage + "\n" + link,
+                            Data.userData.getReferralMessages().referralEmailSubject,
+                            Data.userData.getReferralMessages().referralSharingMessage + "\n" + link,
                             link);
                 }
 
@@ -255,7 +252,7 @@ public class ReferralActions implements FirebaseEvents {
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_GENERIC,
                     SPLabels.BRANCH_GENERIC_LINK,
                     Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                    Data.referralMessages.fbShareDescription, Data.userData.jugnooFbBanner,
+                    Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
                     Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
                     Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
         } catch (Exception e) {

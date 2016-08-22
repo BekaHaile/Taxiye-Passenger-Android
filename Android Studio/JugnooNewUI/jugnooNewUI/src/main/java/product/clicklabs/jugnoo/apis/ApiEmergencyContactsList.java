@@ -5,7 +5,6 @@ import android.view.View;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -64,11 +63,7 @@ public class ApiEmergencyContactsList {
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt("flag");
 								if (ApiResponseFlags.EMERGENCY_CONTACTS.getOrdinal() == flag) {
-									if (Data.emergencyContactsList == null) {
-										Data.emergencyContactsList = new ArrayList<>();
-									}
-									Data.emergencyContactsList.clear();
-									Data.emergencyContactsList.addAll(JSONParser.parseEmergencyContacts(jObj));
+									Data.userData.setEmergencyContactsList(JSONParser.parseEmergencyContacts(jObj));
 									callback.onSuccess();
 								} else {
 									DialogPopup.alertPopup(activity, "", message);

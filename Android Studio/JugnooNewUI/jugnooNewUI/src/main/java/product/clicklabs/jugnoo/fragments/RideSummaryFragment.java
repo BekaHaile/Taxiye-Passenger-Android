@@ -273,8 +273,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
         });
 
         try {
-            if (engagementId == -1 && Data.endRideData != null) {
-                endRideData = Data.endRideData;
+            if (engagementId == -1 && Data.autoData.getEndRideData() != null) {
+                endRideData = Data.autoData.getEndRideData();
                 setRideData();
             } else if (engagementId != -1) {
                 if (endRideData != null) {
@@ -493,7 +493,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
-        new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.fareStructure.getFixedFare(),
+        new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.autoData.getFareStructure().getFixedFare(),
                 new ApiGetRideSummary.Callback() {
                     @Override
                     public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {

@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.HomeUtil;
 import com.sabkuchfresh.home.SupportActivity;
-import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
 
@@ -25,6 +24,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;

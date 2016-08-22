@@ -14,7 +14,6 @@ import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.google.android.gms.tagmanager.TagManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.kochava.android.tracker.Feature;
@@ -26,9 +25,10 @@ import java.util.Map;
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.home.AppSwitcher;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
-import product.clicklabs.jugnoo.wallet.WalletCore;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.wallet.WalletCore;
 
 /**
  * Created by socomo20 on 8/22/15.
@@ -353,5 +353,13 @@ public class MyApplication extends Application{
         }
         return kTracker;
     }
+
+	private AppSwitcher appSwitcher;
+	public AppSwitcher getAppSwitcher(){
+		if(appSwitcher == null){
+			appSwitcher = new AppSwitcher(this);
+		}
+		return appSwitcher;
+	}
 
 }

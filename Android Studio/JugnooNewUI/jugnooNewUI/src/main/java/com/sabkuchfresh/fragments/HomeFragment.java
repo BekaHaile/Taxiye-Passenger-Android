@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment {
         recyclerViewStore.setHasFixedSize(false);
 
 
-        listingAdapter = new StoreListingAdapter(activity, Data.userData.getFatafatUserData().stores, new StoreListingAdapter.Callback() {
+        listingAdapter = new StoreListingAdapter(activity, Data.getFreshData().stores, new StoreListingAdapter.Callback() {
             @Override
             public void onSlotSelected(int storeId) {
                 if(storeId == AppConstant.ApplicationType.FRESH) {

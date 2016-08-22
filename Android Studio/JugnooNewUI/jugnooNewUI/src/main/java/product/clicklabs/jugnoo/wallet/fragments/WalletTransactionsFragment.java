@@ -224,7 +224,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 			if(!HomeActivity.checkIfUserDataNull(activity)) {
 				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
-				params.put("client_id", Config.getClientId());
+				params.put("client_id", Config.getAutosClientId());
 				params.put("is_access_token_new", "1");
 				params.put("start_from", "" + transactionInfoList.size());
 

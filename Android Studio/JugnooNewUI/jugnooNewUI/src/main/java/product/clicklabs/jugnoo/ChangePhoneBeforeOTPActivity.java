@@ -192,7 +192,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
             DialogPopup.showLoadingDialog(activity, "Updating...");
 
             HashMap<String, String> params = new HashMap<>();
-            params.put("client_id", Config.getClientId());
+            params.put("client_id", Config.getAutosClientId());
             params.put("access_token", accessToken);
             params.put("is_access_token_new", "1");
             params.put("updated_phone_no", updatedField);

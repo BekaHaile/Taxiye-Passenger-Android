@@ -356,7 +356,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			
 			HashMap<String, String> params = new HashMap<>();
 		
-			params.put("client_id", Config.getClientId());
+			params.put("client_id", Config.getAutosClientId());
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
 			params.put("phone_no", phoneNo);
@@ -467,7 +467,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			
 			HashMap<String, String> params = new HashMap<>();
 		
-			params.put("client_id", Config.getClientId());
+			params.put("client_id", Config.getAutosClientId());
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
 			params.put("phone_no", phoneNo);

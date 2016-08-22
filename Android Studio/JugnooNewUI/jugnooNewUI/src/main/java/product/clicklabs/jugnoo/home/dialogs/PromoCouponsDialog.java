@@ -68,7 +68,7 @@ public class PromoCouponsDialog {
 			recyclerViewPromoCoupons.setHasFixedSize(false);
 			FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "b_offer");
 
-			promoCouponsAdapter = new PromoCouponsAdapter(activity, Data.promoCoupons, new PromoCouponsAdapter.Callback() {
+			promoCouponsAdapter = new PromoCouponsAdapter(activity, Data.userData.getPromoCoupons(), new PromoCouponsAdapter.Callback() {
 				@Override
 				public void onCouponSelected() {
 				}
@@ -76,8 +76,8 @@ public class PromoCouponsDialog {
 //			activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recyclerViewPromoCoupons.getLayoutParams();
-			params.height = Data.promoCoupons.size() > 3 ? (int)(84f * 3f * ASSL.Yscale())
-					: (int)(84f * (float)Data.promoCoupons.size() * ASSL.Yscale());
+			params.height = Data.userData.getPromoCoupons().size() > 3 ? (int)(84f * 3f * ASSL.Yscale())
+					: (int)(84f * (float)Data.userData.getPromoCoupons().size() * ASSL.Yscale());
 			recyclerViewPromoCoupons.setLayoutParams(params);
 			recyclerViewPromoCoupons.setAdapter(promoCouponsAdapter);
 
@@ -92,7 +92,7 @@ public class PromoCouponsDialog {
 			buttonInviteFriends = (Button)dialog.findViewById(R.id.buttonInviteFriends);buttonInviteFriends.setTypeface(Fonts.mavenMedium(activity));
 			imageViewOffers = (ImageView)dialog.findViewById(R.id.imageViewOffers);
 
-			if(Data.promoCoupons.size() > 0){
+			if(Data.userData.getPromoCoupons().size() > 0){
 				recyclerViewPromoCoupons.setVisibility(View.VISIBLE);
 				relativeLayoutBottomButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoCurrentOffers.setVisibility(View.GONE);
@@ -153,7 +153,7 @@ public class PromoCouponsDialog {
 			relative.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(Data.promoCoupons.size() == 0){
+					if(Data.userData.getPromoCoupons().size() == 0){
 						dialog.dismiss();
 					}
 				}

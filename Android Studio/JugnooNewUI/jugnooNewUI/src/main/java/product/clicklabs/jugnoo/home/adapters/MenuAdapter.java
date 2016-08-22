@@ -24,7 +24,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
-import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -33,7 +32,6 @@ import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
-import product.clicklabs.jugnoo.WebActivity;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -44,13 +42,11 @@ import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
@@ -164,9 +160,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fatafat_menu_selector);
                     if(activity instanceof HomeActivity) {
-                        if (1 != Data.freshAvailable) {
-                            hideLayout(holder.relative);
-                        }
+//                        if (1 != Data.freshAvailable) {
+//                            hideLayout(holder.relative);
+//                        }
                     }
                     Data.webActivityTitle = menuInfo.getName();
                 }else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(menuInfo.getTag())){
@@ -199,7 +195,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     try {
                         if(Data.userData.numCouponsAvaliable > 0) {
                             holder.textViewValue.setVisibility(View.VISIBLE);
-                            holder.textViewValue.setText(String.valueOf(Data.promoCoupons.size()));
+                            holder.textViewValue.setText(String.valueOf(Data.userData.getPromoCoupons().size()));
                             holder.textViewValue.setBackgroundResource(R.drawable.circle_theme);
                             setLayoutParamsForValue(holder.textViewValue);
 						}
@@ -341,30 +337,30 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(tag)){
                 if(activity instanceof HomeActivity) {
-                    if(1 == Data.freshAvailable) {
-                        if (((HomeActivity) activity).map != null
-                                && ((HomeActivity)activity).mapStateListener != null
-                                && ((HomeActivity)activity).mapStateListener.isMapSettled()) {
-                            Data.latitude = ((HomeActivity) activity).map.getCameraPosition().target.latitude;
-                            Data.longitude = ((HomeActivity) activity).map.getCameraPosition().target.longitude;
-                        }
-                        try {
-                            if(!Data.userData.getFatafatUrlLink().trim().equalsIgnoreCase("")) {
-                                Log.v("fatafat url link", "---> " + Data.userData.getFatafatUrlLink());
-                                activity.startActivity(new Intent(activity, WebActivity.class));
-                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                            } else{
-                                CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
-                        }
-                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
-                        Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.FRESH, bundle);
-                        FlurryEventLogger.eventGA(Constants.REVENUE+Constants.SLASH+Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Home Screen", "fresh");
-                    }
+//                    if(1 == Data.freshAvailable) {
+//                        if (((HomeActivity) activity).map != null
+//                                && ((HomeActivity)activity).mapStateListener != null
+//                                && ((HomeActivity)activity).mapStateListener.isMapSettled()) {
+//                            Data.latitude = ((HomeActivity) activity).map.getCameraPosition().target.latitude;
+//                            Data.longitude = ((HomeActivity) activity).map.getCameraPosition().target.longitude;
+//                        }
+//                        try {
+//                            if(!Data.userData.getFatafatUrlLink().trim().equalsIgnoreCase("")) {
+//                                Log.v("fatafat url link", "---> " + Data.userData.getFatafatUrlLink());
+//                                activity.startActivity(new Intent(activity, WebActivity.class));
+//                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//                            } else{
+//                                CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
+//                        }
+//                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
+//                        Bundle bundle = new Bundle();
+//                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.FRESH, bundle);
+//                        FlurryEventLogger.eventGA(Constants.REVENUE+Constants.SLASH+Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Home Screen", "fresh");
+//                    }
                 }
             } else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, ShareActivity.class);

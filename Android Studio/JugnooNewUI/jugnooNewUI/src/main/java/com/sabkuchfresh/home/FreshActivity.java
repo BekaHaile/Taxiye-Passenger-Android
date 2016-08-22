@@ -51,7 +51,6 @@ import com.sabkuchfresh.retrofit.model.SubItemComparePrice;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceRev;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
@@ -64,6 +63,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
@@ -257,14 +257,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 
         try {
-//            if(Data.userData.getFatafatUserData().getDefaultStoreId() > 0){
-//				if(Data.userData.getFatafatUserData().getDefaultStoreId() == 1){
+//            if(Data.getFreshData().getDefaultStoreId() > 0){
+//				if(Data.getFreshData().getDefaultStoreId() == 1){
 //					addFreshFragment();
 //				} else{
 //					addMealFragment();
 //				}
 //			}else {
-				if (Data.userData.getFatafatUserData().stores.size() > 1) {
+				if (Data.getFreshData().stores.size() > 1) {
 					int fragMentType = Prefs.with(this).getInt(Constants.APP_TYPE, 0);
 					if (fragMentType == AppConstant.ApplicationType.FRESH) {
 						addFreshFragment();
@@ -273,8 +273,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 					} else {
 						addNewFreshFragment();
 					}
-				} else if (Data.userData.getFatafatUserData().stores.size() == 1) {
-					int appType = Data.userData.getFatafatUserData().stores.get(0).getStoreId();
+				} else if (Data.getFreshData().stores.size() == 1) {
+					int appType = Data.getFreshData().stores.get(0).getStoreId();
 					if (appType == AppConstant.ApplicationType.FRESH) {
 						addFreshFragment();
 					} else {
@@ -533,7 +533,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         if (fragment instanceof FreshFragment) {
             topBar.imageViewMenu.setVisibility(View.VISIBLE);
             topBar.getImageViewSearch().setVisibility(View.VISIBLE);
-            if(Data.userData.getFatafatUserData().stores.size()>1) {
+            if(Data.getFreshData().stores.size()>1) {
                 topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
             } else {
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -559,7 +559,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
         } else if(fragment instanceof MealFragment){
             topBar.imageViewMenu.setVisibility(View.VISIBLE);
-            if(Data.userData.getFatafatUserData().stores.size()>1) {
+            if(Data.getFreshData().stores.size()>1) {
                 topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
             } else {
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);

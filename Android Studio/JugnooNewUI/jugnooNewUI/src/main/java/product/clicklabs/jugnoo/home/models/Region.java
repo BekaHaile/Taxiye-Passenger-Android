@@ -63,7 +63,7 @@ public class Region {
 		this.iconSet = VehicleIconSet.ORANGE_AUTO.getName();
 		this.vehicleIconSet = VehicleIconSet.ORANGE_AUTO;
 		this.eta = "-";
-		this.fareStructure = JSONParser.getFareStructure();
+		this.fareStructure = JSONParser.getDefaultFareStructure();
 		this.rideType = 0;
 		this.maxPeople = 3;
 		this.customerFareFactor = 1.0;

@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -196,9 +195,9 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                     params.put("section", "" + helpSection.getOrdinal());
 
                     if (HelpSection.FARE_DETAILS.getOrdinal() == helpSection.getOrdinal()) {
-                        if (Data.lastRefreshLatLng != null) {
-                            params.put(KEY_LATITUDE, "" + Data.lastRefreshLatLng.latitude);
-                            params.put(KEY_LONGITUDE, "" + Data.lastRefreshLatLng.longitude);
+                        if (Data.autoData.getLastRefreshLatLng() != null) {
+                            params.put(KEY_LATITUDE, "" + Data.autoData.getLastRefreshLatLng().latitude);
+                            params.put(KEY_LONGITUDE, "" + Data.autoData.getLastRefreshLatLng().longitude);
                         } else if (HomeActivity.myLocation != null) {
                             params.put(KEY_LATITUDE, "" + HomeActivity.myLocation.getLatitude());
                             params.put(KEY_LONGITUDE, "" + HomeActivity.myLocation.getLongitude());
@@ -207,9 +206,9 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                         if (HomeActivity.myLocation != null) {
                             params.put(KEY_LATITUDE, "" + HomeActivity.myLocation.getLatitude());
                             params.put(KEY_LONGITUDE, "" + HomeActivity.myLocation.getLongitude());
-                        } else if (Data.lastRefreshLatLng != null) {
-                            params.put(KEY_LATITUDE, "" + Data.lastRefreshLatLng.latitude);
-                            params.put(KEY_LONGITUDE, "" + Data.lastRefreshLatLng.longitude);
+                        } else if (Data.autoData.getLastRefreshLatLng() != null) {
+                            params.put(KEY_LATITUDE, "" + Data.autoData.getLastRefreshLatLng().latitude);
+                            params.put(KEY_LONGITUDE, "" + Data.autoData.getLastRefreshLatLng().longitude);
                         }
                     }
 

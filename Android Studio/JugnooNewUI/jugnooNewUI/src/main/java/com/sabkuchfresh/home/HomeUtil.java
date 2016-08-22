@@ -45,7 +45,7 @@ public class HomeUtil {
 	public static void logoutIntent(Activity cont) {
 		try {
 			FacebookLoginHelper.logoutFacebook();
-			Data.userData = null;
+			Data.clearDataOnLogout(cont);
 			Intent intent = new Intent(cont, SplashNewActivity.class);
 			cont.startActivity(intent);
 			cont.finish();

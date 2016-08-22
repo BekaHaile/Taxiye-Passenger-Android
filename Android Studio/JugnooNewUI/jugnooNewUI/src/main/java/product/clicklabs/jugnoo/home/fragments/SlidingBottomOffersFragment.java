@@ -79,7 +79,7 @@ public class SlidingBottomOffersFragment extends Fragment {
 
     public void setOfferAdapter(){
         try {
-            offersAdapter = new OffersAdapter(Data.promoCoupons);
+            offersAdapter = new OffersAdapter(Data.userData.getPromoCoupons());
             recyclerViewOffers.setAdapter(offersAdapter);
             activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(recyclerViewOffers);
         } catch (Exception e) {
@@ -89,9 +89,9 @@ public class SlidingBottomOffersFragment extends Fragment {
 
     public void update(){
         try {
-            if(Data.promoCoupons != null && Data.promoCoupons.size() >= 2){
+            if(Data.userData.getPromoCoupons() != null && Data.userData.getPromoCoupons().size() >= 2){
                 linearLayoutNoOffers.setVisibility(View.GONE);
-            } else if(Data.promoCoupons != null && Data.promoCoupons.size() == 1){
+            } else if(Data.userData.getPromoCoupons() != null && Data.userData.getPromoCoupons().size() == 1){
                 linearLayoutNoOffers.setVisibility(View.GONE);
             }
             offersAdapter.notifyDataSetChanged();

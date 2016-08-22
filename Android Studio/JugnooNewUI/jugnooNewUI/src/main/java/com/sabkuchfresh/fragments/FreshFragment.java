@@ -23,7 +23,6 @@ import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Constants;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
@@ -36,6 +35,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
@@ -161,9 +161,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         setSortingList();
         getAllProducts(true);
 
-        if(Data.userData.getFatafatUserData().pendingFeedback == 1) {
+        if(Data.getFreshData().pendingFeedback == 1) {
 			//TODO fresh feedback fragment open here
-            Data.userData.getFatafatUserData().pendingFeedback = 0;
+            Data.getFreshData().pendingFeedback = 0;
         }
 
         if(Data.userData.getPromoSuccess() == 0) {
@@ -171,9 +171,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         } else if(Data.isfatafat == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
             Data.isfatafat = AppConstant.IsFatafatEnabled.ENABLED;
             showPopup();
-        } else if(Data.userData.getFatafatUserData().getPopupData() != null) {
+        } else if(Data.getFreshData().getPopupData() != null) {
             pushDialog = new PushDialog(activity, this);
-            pushDialog.show(Data.userData.getFatafatUserData().getPopupData());
+            pushDialog.show(Data.getFreshData().getPopupData());
         }
 
 		return rootView;

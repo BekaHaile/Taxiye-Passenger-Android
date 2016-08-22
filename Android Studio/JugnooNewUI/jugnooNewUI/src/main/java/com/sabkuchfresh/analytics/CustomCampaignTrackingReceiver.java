@@ -6,11 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.analytics.CampaignTrackingReceiver;
-import com.sabkuchfresh.utils.Constants;
-import product.clicklabs.jugnoo.utils.Log;
 
 import java.util.Set;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**

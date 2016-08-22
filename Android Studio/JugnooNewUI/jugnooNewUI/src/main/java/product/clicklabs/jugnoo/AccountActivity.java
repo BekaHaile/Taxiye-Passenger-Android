@@ -660,7 +660,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
 		reloadProfileAPI(this);
         textViewEmergencyContact.setText(getResources()
-                .getString(Data.emergencyContactsList != null && Data.emergencyContactsList.size() > 0 ?
+                .getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
                         R.string.emergency_contacts : R.string.add_emergency_contacts));
 
 		scrollView.scrollTo(0, 0);
@@ -695,7 +695,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
 			HashMap<String, String> params = new HashMap<>();
 
-			params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 			params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
             params.put(Constants.KEY_UPDATED_USER_NAME, updatedName);
@@ -765,7 +765,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             if (AppStatus.getInstance(activity).isOnline(activity)) {
 
                 HashMap<String, String> params = new HashMap<>();
-                params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+                params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
@@ -816,7 +816,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 			DialogPopup.showLoadingDialog(activity, "Updating...");
 
 			HashMap<String, String> params = new HashMap<>();
-            params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+            params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
@@ -867,7 +867,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 			DialogPopup.showLoadingDialog(activity, "Please Wait ...");
 
 			HashMap<String, String> params = new HashMap<>();
-            params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+            params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
@@ -1030,7 +1030,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             DialogPopup.showLoadingDialog(activity, "Updating...");
 
             HashMap<String, String> params = new HashMap<>();
-            params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+            params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
             params.put(Constants.KEY_OLD_PASSWORD, oldPassword);

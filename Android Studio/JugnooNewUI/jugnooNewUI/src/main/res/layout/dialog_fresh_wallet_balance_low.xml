@@ -18,13 +18,13 @@
         >
 
         <ImageView
-            android:id="@+id/imageViewPaytmIcon"
-            android:layout_width="111px"
-            android:layout_height="35px"
+            android:id="@+id/imageViewWalletIcon"
+            android:layout_width="222px"
+            android:layout_height="90px"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30px"
-            android:layout_marginTop="40px"
-            android:src="@drawable/ic_paytm_logo_big"
+            android:layout_marginBottom="10px"
+            android:layout_marginTop="30px"
+            android:src="@drawable/ic_paytm_big"
             android:tag="mwar"/>
 
         <TextView
@@ -82,14 +82,14 @@
             android:text="@string/recharge_now"/>
 
         <Button
-            android:id="@+id/buttonPayViaCash"
+            android:id="@+id/buttonPayViaOther"
             style="@style/ButtonThemeAlternate"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="40px"
             android:layout_marginTop="30px"
-            android:text="@string/pay_via_cash"
+            android:text="@string/choose_other_mode_to_pay"
             android:textAllCaps="true"
-            android:textSize="@dimen/text_size_30"/>
+            android:textSize="@dimen/text_size_26"/>
 
 
     </LinearLayout>

@@ -290,7 +290,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 				params.put(Constants.KEY_EMERGENCY_CONTACTS, jsonArray);
 
 				Log.e("params", "=" + params.toString());
