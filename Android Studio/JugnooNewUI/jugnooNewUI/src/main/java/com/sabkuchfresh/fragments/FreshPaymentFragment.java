@@ -323,7 +323,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             relativeLayoutTotalLayout.setVisibility(View.GONE);
         }
 
-
+        setPaymentOptionUI();
 
     }
 
