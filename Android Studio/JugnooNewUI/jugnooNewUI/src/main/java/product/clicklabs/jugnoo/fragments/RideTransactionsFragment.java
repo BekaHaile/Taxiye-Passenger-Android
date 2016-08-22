@@ -164,13 +164,21 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 							}
 						}else if (historyData.getProductType() == ProductType.FRESH.getOrdinal() ||
 									historyData.getProductType() == ProductType.MEALS.getOrdinal()) {
-								new TransactionUtils().openOrderSummaryFragment(activity,
-										((RideTransactionsActivity) activity).getContainer(),
-										historyData);
+								if (activity instanceof RideTransactionsActivity) {
+									new TransactionUtils().openOrderSummaryFragment(activity,
+											((RideTransactionsActivity) activity).getContainer(),
+											historyData);
+									FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+								} else if (activity instanceof SupportActivity) {
+									new TransactionUtils().openOrderSummaryFragment(activity,
+											((SupportActivity) activity).getContainer(),
+											historyData);
+									FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+								}
 
-//								activity.setOrderHistoryOpened(position, historyData);
-//								activity.getTransactionUtils().openOrderSummaryFragment(activity,
-//										((RideTransactionsActivity) activity).getContainer());
+//								new TransactionUtils().openOrderSummaryFragment(activity,
+//										((RideTransactionsActivity) activity).getContainer(),
+//										historyData);
 						}
 					}catch (Exception e) {
 							e.printStackTrace();
