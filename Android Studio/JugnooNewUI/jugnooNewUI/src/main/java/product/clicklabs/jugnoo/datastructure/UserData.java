@@ -57,6 +57,8 @@ public class UserData {
 	private ArrayList<MenuInfo> menuInfoList = new ArrayList<>();
 	private ReferralMessages referralMessages;
 
+	private String defaultClientId;
+
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -72,7 +74,7 @@ public class UserData {
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
 					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled,
-					int mealsEnabled, int freshEnabled, int deliveryEnabled, int inviteFriendButton){
+					int mealsEnabled, int freshEnabled, int deliveryEnabled, int inviteFriendButton, String defaultClientId){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -135,6 +137,8 @@ public class UserData {
 		this.deliveryEnabled = deliveryEnabled;
 
 		this.inviteFriendButton = inviteFriendButton;
+
+		this.defaultClientId = defaultClientId;
 	}
 
 	private void checkUserImage(){
@@ -579,6 +583,14 @@ public class UserData {
 
 	public void setReferralMessages(ReferralMessages referralMessages) {
 		this.referralMessages = referralMessages;
+	}
+
+	public String getDefaultClientId() {
+		return defaultClientId;
+	}
+
+	public void setDefaultClientId(String defaultClientId) {
+		this.defaultClientId = defaultClientId;
 	}
 
 

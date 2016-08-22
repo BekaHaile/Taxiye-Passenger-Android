@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.FreshData;
+import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
@@ -84,6 +85,7 @@ public class Data {
 	public static UserData userData;
 	public static AutoData autoData;
 	private static FreshData freshData;
+	private static MealsData mealsData;
 
 	
 	public static LocationFetcher locationFetcher;
@@ -389,4 +391,11 @@ public class Data {
 		Data.freshData = freshData;
 	}
 
+	public static MealsData getMealsData() {
+		return mealsData;
+	}
+
+	public static void setMealsData(MealsData mealsData) {
+		Data.mealsData = mealsData;
+	}
 }

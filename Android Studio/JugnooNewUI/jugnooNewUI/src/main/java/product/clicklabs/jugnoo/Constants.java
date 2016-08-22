@@ -416,5 +416,9 @@ public interface Constants {
 	String KEY_UNIQUE_DEVICE_ID = "unique_device_id";
 	String KEY_DEVICE_ROOTED = "device_rooted";
 	String KEY_UPDATED_CLIENT_ID = "updated_client_id";
+	String KEY_DEFAULT_CLIENT_ID = "default_client_id";
+	String KEY_MEALS_ENABLED = "meals_enabled";
+	String KEY_FRESH_ENABLED = "fresh_enabled";
+	String KEY_DELIVERY_ENABLED = "delivery_enabled";
 
 }
