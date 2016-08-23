@@ -16,7 +16,23 @@ public class PromotionInfo extends PromoCoupon{
 	@SerializedName("end_on")
 	@Expose
 	public String endOn;
-	
+	@SerializedName("autos")
+	@Expose
+	public Integer autos;
+	@SerializedName("fresh")
+	@Expose
+	public Integer fresh;
+	@SerializedName("meals")
+	@Expose
+	public Integer meals;
+	@SerializedName("delivery")
+	@Expose
+	public Integer delivery;
+	@SerializedName("master_coupon")
+	@Expose
+	public Integer master_coupon;
+
+
 	public PromotionInfo(int id, String title, String terms, String endOn){
 		this.id = id;
 		this.title = title;
