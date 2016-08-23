@@ -2689,7 +2689,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
-
+                        topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
 
                         if(!firstTimeZoom && !confirmedScreenOpened){
                             if(Data.autoData.getPickupLatLng() != null){
@@ -2908,7 +2908,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         setPaymentOptionInRide();
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.imageViewAppToggle.setVisibility(View.GONE);
+                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         try {
                             if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1){
@@ -2976,7 +2976,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         setPaymentOptionInRide();
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.imageViewAppToggle.setVisibility(View.GONE);
+                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         try {
                             if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1){
@@ -3038,7 +3038,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         setPaymentOptionInRide();
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.imageViewAppToggle.setVisibility(View.GONE);
+                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         try {
                             if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1){
@@ -3067,7 +3067,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         centreLocationRl.setVisibility(View.GONE);
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.imageViewAppToggle.setVisibility(View.GONE);
+                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         setGoogleMapPadding(0);
 
                         linearLayoutRideSummaryContainerSetVisiblity(View.GONE, RideEndFragmentMode.INVOICE);
@@ -3393,7 +3393,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 tag)
                         .addToBackStack(tag)
                         .commitAllowingStateLoss();
-                topBar.setTopBarState(false, title);
+                topBar.setTopBarState(this, false, title);
             }
         } else {
             linearLayoutRideSummaryContainer.setVisibility(View.GONE);
@@ -3403,7 +3403,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         .commit();
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
-            topBar.setTopBarState(true, "");
+            topBar.setTopBarState(this, true, "");
         }
     }
 
@@ -7042,7 +7042,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     topBar.textViewTitle.getPaint().setShader(null);
                     topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_30)*minRatio);
                     topBar.textViewTitle.setTextColor(getResources().getColor(R.color.red));
-                    topBar.imageViewAppToggle.setVisibility(View.GONE);
+                    topBar.relativeLayoutNotification.setVisibility(View.GONE);
                     topBar.imageViewMenu.setImageResource(R.drawable.menu_icon_selector_emergency);
                     localModeEnabled = modeEnabled;
                     return;
@@ -8620,6 +8620,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void openNotification() {
+        menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
     }
 
 }

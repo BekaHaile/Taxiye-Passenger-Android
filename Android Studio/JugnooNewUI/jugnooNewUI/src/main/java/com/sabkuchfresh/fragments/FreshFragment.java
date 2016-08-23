@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -67,6 +68,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private FreshActivity activity;
     private boolean tabClickFlag = false;
 
+    private RelativeLayout searchLayout;
+
     private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
 	public FreshFragment(){}
@@ -103,7 +106,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         }
 
 		activity.fragmentUISetup(this);
-        activity.getTopBar().getImageViewSearch().setVisibility(View.VISIBLE);
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		try {
 			if(linearLayoutRoot != null) {
@@ -112,6 +114,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+        searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
 
 		viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
@@ -156,7 +160,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         });
 
 
-
+        searchLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.searchItem();
+            }
+        });
 
         setSortingList();
         getAllProducts(true);

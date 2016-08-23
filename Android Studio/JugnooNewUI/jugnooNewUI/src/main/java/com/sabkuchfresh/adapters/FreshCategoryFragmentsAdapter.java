@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.sabkuchfresh.fragments.FreshCategoryItemsFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -76,12 +75,12 @@ public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 		TextView textView = (TextView) convertView.findViewById(R.id.textView);
 		textView.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
 		textView.setText(categories.get(position).getCategoryName());
-		try{
-			Picasso.with(context).load(categories.get(position).getCategoryImage())
-					.into(imageView);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+//		try{
+//			Picasso.with(context).load(categories.get(position).getCategoryImage())
+//					.into(imageView);
+//		} catch(Exception e){
+//			e.printStackTrace();
+//		}
 		convertView.setLayoutParams(new LinearLayout.LayoutParams(220, LinearLayout.LayoutParams.MATCH_PARENT));
 		ASSL.DoMagic(convertView);
 		return convertView;

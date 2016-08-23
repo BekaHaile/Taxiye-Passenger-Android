@@ -15,9 +15,6 @@
         android:background="@color/menu_item_selector_color"
         android:layout_below="@+id/topBar">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/my_request_recycler"
@@ -29,41 +26,34 @@
                 android:fadeScrollbars="true"
                 android:scrollbars="vertical" />
 
-            <ImageView
-                android:id="@+id/imageViewLock"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@color/transparent"
-                android:visibility="gone" />
 
-            <LinearLayout
-                android:id="@+id/linearLayoutNoNotifications"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="241px"
-                    android:layout_height="342px"
-                    android:src="@drawable/ic_no_items"
-                    android:tag="mwar" />
-
-                <TextView
-                    android:id="@+id/textViewNoNotifications"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginTop="30px"
-                    android:text="No Current Notifications"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_32" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutNoNotifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="241px"
+            android:layout_height="342px"
+            android:src="@drawable/ic_no_items"
+            android:tag="mwar" />
+
+        <TextView
+            android:id="@+id/textViewNoNotifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="30px"
+            android:text="No Current Notifications"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_32" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayoutContainer"

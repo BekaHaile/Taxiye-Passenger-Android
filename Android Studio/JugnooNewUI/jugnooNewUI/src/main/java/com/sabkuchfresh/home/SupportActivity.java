@@ -30,6 +30,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by Gurmail S. Kang on 5/3/16.
@@ -72,7 +73,7 @@ public class SupportActivity extends BaseFragmentActivity implements View.OnClic
         relativeLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
         backImage = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         backImage.setOnClickListener(this);
         fragmentValue = getIntent().getIntExtra(Constants.FRAGMENT_SELECTED, 0);
 
