@@ -202,14 +202,10 @@ public class ApiFindADriver {
 			if(findADriverResponse.getCoupons() != null) {
 				for (Coupon coupon : findADriverResponse.getCoupons()) {
 					Data.userData.getPromoCoupons().add(new CouponInfo(coupon.getAccountId(),
-							coupon.getCouponType(),
-							coupon.getStatus(),
 							coupon.getTitle(),
 							coupon.getSubtitle(),
 							coupon.getDescription(),
-							coupon.getImage(),
-							coupon.getRedeemedOn(),
-							coupon.getExpiryDate(), "", ""));
+							coupon.getExpiryDate()));
 				}
 			}
 			if(findADriverResponse.getPromotions() != null) {

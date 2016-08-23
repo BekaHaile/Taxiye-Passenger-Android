@@ -529,14 +529,10 @@ public class JSONParser implements Constants {
             if(userData.getCoupons() != null) {
                 for (Coupon coupon : userData.getCoupons()) {
                     Data.userData.getPromoCoupons().add(new CouponInfo(coupon.getAccountId(),
-                            coupon.getCouponType(),
-                            coupon.getStatus(),
                             coupon.getTitle(),
                             coupon.getSubtitle(),
                             coupon.getDescription(),
-                            coupon.getImage(),
-                            coupon.getRedeemedOn(),
-                            coupon.getExpiryDate(), "", ""));
+                            coupon.getExpiryDate()));
                 }
             }
             if(userData.getPromotions() != null) {
@@ -1172,16 +1168,10 @@ public class JSONParser implements Constants {
                         JSONObject coData = couponsData.getJSONObject(i);
 
                         CouponInfo couponInfo = new CouponInfo(coData.getInt("account_id"),
-                            coData.getInt("coupon_type"),
-                            coData.getInt("status"),
                             coData.getString("title"),
                             coData.getString("subtitle"),
                             coData.getString("description"),
-                            coData.getString("image"),
-                            coData.getString("redeemed_on"),
-                            coData.getString("expiry_date"),
-                            coData.getString("start_time"),
-                            coData.getString("end_time")
+                            coData.getString("expiry_date")
                             );
 
                         couponInfoList.add(couponInfo);
@@ -1207,7 +1197,7 @@ public class JSONParser implements Constants {
                         JSONObject poData = promotionsData.getJSONObject(i);
 
                         PromotionInfo promotionInfo = new PromotionInfo(poData.getInt("promo_id"), poData.getString("title"),
-                            poData.getString("terms_n_conds"), poData.getString("validity_text"), poData.getString("end_on"));
+                            poData.getString("terms_n_conds"), poData.getString("end_on"));
 
                         promotionInfoList.add(promotionInfo);
                     }

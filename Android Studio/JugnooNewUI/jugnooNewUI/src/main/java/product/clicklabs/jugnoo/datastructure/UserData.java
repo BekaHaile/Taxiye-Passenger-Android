@@ -55,6 +55,7 @@ public class UserData {
 	private int currentCity = 1;
 	private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 	private ArrayList<MenuInfo> menuInfoList = new ArrayList<>();
+
 	private ReferralMessages referralMessages;
 
 	private String defaultClientId;

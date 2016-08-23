@@ -2398,7 +2398,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
 
                                 FlurryEventLogger.event(FINAL_RIDE_CALL_MADE);
-                                if (promoCouponSelectedForRide.id > 0) {
+                                if (promoCouponSelectedForRide.getId() > 0) {
                                     FlurryEventLogger.event(COUPONS_SELECTED);
                                     FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, TAG, "offer selected");
                                     Bundle bundle = new Bundle();
@@ -6490,12 +6490,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                 if (promoCouponSelectedForRide != null) {
                                     if (promoCouponSelectedForRide instanceof CouponInfo) {
-                                        nameValuePairs.put("coupon_to_apply", "" + promoCouponSelectedForRide.id);
-                                        if (promoCouponSelectedForRide.id == 0) {
-                                            nameValuePairs.put("promo_to_apply", "" + promoCouponSelectedForRide.id);
+                                        nameValuePairs.put("coupon_to_apply", "" + promoCouponSelectedForRide.getId());
+                                        if (promoCouponSelectedForRide.getId() == 0) {
+                                            nameValuePairs.put("promo_to_apply", "" + promoCouponSelectedForRide.getId());
                                         }
                                     } else if (promoCouponSelectedForRide instanceof PromotionInfo) {
-                                        nameValuePairs.put("promo_to_apply", "" + promoCouponSelectedForRide.id);
+                                        nameValuePairs.put("promo_to_apply", "" + promoCouponSelectedForRide.getId());
                                     }
                                 }
 
@@ -6551,7 +6551,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
 
                                 try{
-                                    if(promoCouponSelectedForRide.id > 0) {
+                                    if(promoCouponSelectedForRide.getId() > 0) {
                                         JSONObject map = new JSONObject();
                                         map.put(KEY_COUPON_SELECTED, promoCouponSelectedForRide.getTitle());
                                         NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_OFFER_SELECTED, map);
@@ -8421,7 +8421,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void updateConfirmedStateCoupon(){
         try {
             promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
-            if(promoCouponSelectedForRide.id > 0){
+            if(promoCouponSelectedForRide.getId() > 0){
                 imageViewOfferConfirm.setVisibility(View.VISIBLE);
             } else{
                 imageViewOfferConfirm.setVisibility(View.GONE);

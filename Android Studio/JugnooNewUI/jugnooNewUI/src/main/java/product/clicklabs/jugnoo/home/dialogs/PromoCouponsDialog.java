@@ -174,7 +174,7 @@ public class PromoCouponsDialog {
 
 	public void setContinueButton(){
 		if(buttonContinue != null) {
-			if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id != -1) {
+			if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() != -1) {
 				buttonContinue.setEnabled(true);
 				buttonContinue.setAlpha(1.0f);
 			} else {
