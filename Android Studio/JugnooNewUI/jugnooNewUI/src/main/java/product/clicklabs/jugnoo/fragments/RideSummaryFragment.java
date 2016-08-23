@@ -36,7 +36,9 @@ import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -500,9 +502,9 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
         new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.autoData.getFareStructure().getFixedFare(),
                 new ApiGetRideSummary.Callback() {
                     @Override
-                    public void onSuccess(EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items) {
+                    public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
                         RideSummaryFragment.this.endRideData = endRideData;
-                        RideSummaryFragment.this.items = RideSummaryFragment.this.items;
+                        RideSummaryFragment.this.items = items;
                         setRideData();
                     }
 
@@ -524,7 +526,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
                     public void onNoRetry(View view) {
                         performBackPressed();
                     }
-                }).getRideSummaryAPI(autosStatus);
+                }).getRideSummaryAPI(autosStatus, ProductType.AUTO, false);
     }
 
 

@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -52,7 +53,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-
+@SuppressLint("ValidFragment")
 public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEventNames, Constants, View.OnClickListener {
 
     private final String TAG = FreshOrderSummaryFragment.class.getSimpleName();
@@ -71,7 +72,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
     private TextView textViewDiscount, textViewDiscountValue, textViewjc, textViewjcValue, textViewpaytm, textViewpaytmValue;
 
     private Button buttonCancelOrder, reorderBtn, feedbackBtn;
-//    private OrderHistory orderHistory;
     private View rootView;
     private FragmentActivity activity;
 

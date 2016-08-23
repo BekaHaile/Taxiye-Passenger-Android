@@ -10,11 +10,19 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+
 public class ShowPanelResponse {
 
 	@SerializedName("support_data")
 	@Expose
 	private SupportData supportData;
+
+
+	@SerializedName("order_history_data")
+	@Expose
+	private HistoryResponse.Datum datum;
+
 
 	public SupportData getSupportData() {
 		return supportData;
@@ -22,6 +30,14 @@ public class ShowPanelResponse {
 
 	public void setSupportData(SupportData supportData) {
 		this.supportData = supportData;
+	}
+
+	public HistoryResponse.Datum getDatum() {
+		return datum;
+	}
+
+	public void setDatum(HistoryResponse.Datum datum) {
+		this.datum = datum;
 	}
 
 

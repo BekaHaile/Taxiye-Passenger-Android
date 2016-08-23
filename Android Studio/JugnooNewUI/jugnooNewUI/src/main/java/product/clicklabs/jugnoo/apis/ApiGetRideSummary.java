@@ -18,10 +18,14 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.ParseUtils;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.support.models.SupportCategory;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
@@ -52,9 +56,9 @@ public class ApiGetRideSummary {
 		this.callback = callback;
 	}
 
-	public void getRideSummaryAPI(final int supportCategory) {
+	public void getRideSummaryAPI(int supportCategory, final ProductType productType, final boolean fromOrderHistory) {
 		boolean showRideMenu = true;
-		String savedSupportVersion = Prefs.with(activity).getString(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, "-1");
+		String savedSupportVersion = Prefs.with(activity).getString(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION, "-1");
 		if(savedSupportVersion.equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
 			showRideMenu = false;
 		}
@@ -69,8 +73,21 @@ public class ApiGetRideSummary {
 			if(showRideMenu) {
 				params.put(Constants.KEY_SHOW_RIDE_MENU, "1");
 			}
+			if(fromOrderHistory){
+				params.put(Constants.KEY_ORDER_HISTORY, "1");
+			}
+			if(productType == ProductType.AUTO){
+				if(supportCategory == EngagementStatus.ACCEPTED_THEN_REJECTED.getOrdinal()){
+					supportCategory = SupportCategory.RIDE_CANCELLED_DRIVER_MENU.getOrdinal();
+				} else if(supportCategory == EngagementStatus.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal()){
+					supportCategory = SupportCategory.RIDE_CANCELLED_USER_MENU.getOrdinal();
+				} else {
+					supportCategory = SupportCategory.RIDE_MENU.getOrdinal();
+				}
+			}
 
 			final boolean finalShowRideMenu = showRideMenu;
+			final int finalSupportCategory = supportCategory;
 			RestClient.getApiServices().getRideSummary(params, new retrofit.Callback<ShowPanelResponse>() {
 				@Override
 				public void success(ShowPanelResponse showPanelResponse, Response response) {
@@ -89,6 +106,20 @@ public class ApiGetRideSummary {
 							int flag = jObj.getInt(Constants.KEY_FLAG);
 							String message = JSONParser.getServerMessage(jObj);
 							if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
+								EndRideData endRideData = null;
+								try {
+									endRideData = JSONParser.parseEndRideData(jObj, String.valueOf(engagementId), fixedFare);
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								int supportCategory = finalSupportCategory;
+								if(productType == ProductType.NOT_SURE) {
+									if (endRideData != null) {
+										supportCategory = SupportCategory.RIDE_MENU.getOrdinal();
+									} else if (showPanelResponse.getDatum() != null) {
+										supportCategory = showPanelResponse.getDatum().getSupportCategory();
+									}
+								}
 								ArrayList<ShowPanelResponse.Item> itemsMain = null;
 								if(finalShowRideMenu){
 									itemsMain = new ParseUtils().saveAndParseAllMenu(activity, showPanelResponse, supportCategory);
@@ -97,7 +128,8 @@ public class ApiGetRideSummary {
 								} else{
 									itemsMain = Database2.getInstance(activity).getSupportDataItems(supportCategory);
 								}
-								callback.onSuccess(JSONParser.parseEndRideData(jObj, String.valueOf(engagementId), fixedFare), itemsMain);
+
+								callback.onSuccess(endRideData, showPanelResponse.getDatum(), itemsMain);
 							} else if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
 								if(callback.onActionFailed(message)){
 									retryDialog(message);
@@ -172,7 +204,7 @@ public class ApiGetRideSummary {
 
 
 	public interface Callback{
-		void onSuccess(EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items);
+		void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items);
 		boolean onActionFailed(String message);
 		void onFailure();
 		void onRetry(View view);

@@ -20,8 +20,10 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -176,7 +178,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 			new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.autoData.getFareStructure().getFixedFare(),
 					new ApiGetRideSummary.Callback() {
 						@Override
-						public void onSuccess(EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items) {
+						public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
 							SupportActivity.this.endRideData = endRideData;
 							SupportActivity.this.items = items;
 
@@ -211,7 +213,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 						public void onNoRetry(View view) {
 
 						}
-					}).getRideSummaryAPI(EngagementStatus.ENDED.getOrdinal());
+					}).getRideSummaryAPI(EngagementStatus.ENDED.getOrdinal(), ProductType.NOT_SURE, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

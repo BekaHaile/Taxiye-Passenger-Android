@@ -29,6 +29,8 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
@@ -259,7 +261,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.autoData.getFareStructure().getFixedFare(),
 				new ApiGetRideSummary.Callback() {
 					@Override
-					public void onSuccess(EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items) {
+					public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
 						SupportRideIssuesFragment.this.endRideData = endRideData;
 						SupportRideIssuesFragment.this.items = items;
 						setRideData();
@@ -286,7 +288,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 					public void onNoRetry(View view) {
 						performBackPress();
 					}
-				}).getRideSummaryAPI(autosStatus);
+				}).getRideSummaryAPI(autosStatus, ProductType.AUTO, false);
 	}
 
 

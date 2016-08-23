@@ -164,6 +164,7 @@ public interface Constants {
 	String KEY_RIDE_DATE = "ride_date";
 
 	String KEY_SP_IN_APP_SUPPORT_PANEL_VERSION = "in_app_support_panel_version";
+	String KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION = "transaction_support_panel_version";
 	String KEY_SHOW_RIDE_MENU = "show_ride_menu";
 
 
@@ -414,5 +415,6 @@ public interface Constants {
 	String KEY_UNIQUE_DEVICE_ID = "unique_device_id";
 	String KEY_DEVICE_ROOTED = "device_rooted";
 	String KEY_UPDATED_CLIENT_ID = "updated_client_id";
+	String KEY_ORDER_HISTORY = "order_history";
 
 }
