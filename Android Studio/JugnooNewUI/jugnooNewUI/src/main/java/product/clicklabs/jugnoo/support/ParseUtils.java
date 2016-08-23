@@ -1,0 +1,63 @@
+package product.clicklabs.jugnoo.support;
+
+import android.content.Context;
+
+import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+
+/**
+ * Created by shankar on 8/23/16.
+ */
+public class ParseUtils {
+
+	public ArrayList<ShowPanelResponse.Item> saveAndParseAllMenu(Context context, ShowPanelResponse showPanelResponse, int supportCategory){
+		ArrayList<ShowPanelResponse.Item> itemsMain = null;
+		Database2.getInstance(context).insertUpdateSupportData(1, showPanelResponse.getSupportData().getMenu1());
+		Database2.getInstance(context).insertUpdateSupportData(2, showPanelResponse.getSupportData().getMenu2());
+		Database2.getInstance(context).insertUpdateSupportData(3, showPanelResponse.getSupportData().getMenu3());
+		Database2.getInstance(context).insertUpdateSupportData(4, showPanelResponse.getSupportData().getMenu4());
+		Database2.getInstance(context).insertUpdateSupportData(5, showPanelResponse.getSupportData().getMenu5());
+		Database2.getInstance(context).insertUpdateSupportData(6, showPanelResponse.getSupportData().getMenu6());
+		Database2.getInstance(context).insertUpdateSupportData(7, showPanelResponse.getSupportData().getMenu7());
+		Database2.getInstance(context).insertUpdateSupportData(8, showPanelResponse.getSupportData().getMenu8());
+		Database2.getInstance(context).insertUpdateSupportData(9, showPanelResponse.getSupportData().getMenu9());
+		Database2.getInstance(context).insertUpdateSupportData(10, showPanelResponse.getSupportData().getMenu10());
+
+		switch(supportCategory){
+			case 1:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu1();
+				break;
+			case 2:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu2();
+				break;
+			case 3:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu3();
+				break;
+			case 4:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu4();
+				break;
+			case 5:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu5();
+				break;
+			case 6:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu6();
+				break;
+			case 7:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu7();
+				break;
+			case 8:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu8();
+				break;
+			case 9:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu9();
+				break;
+			case 10:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu10();
+				break;
+		}
+		return itemsMain;
+	}
+
+}

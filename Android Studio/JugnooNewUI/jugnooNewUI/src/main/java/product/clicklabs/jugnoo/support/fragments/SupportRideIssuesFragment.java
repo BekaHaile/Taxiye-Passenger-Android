@@ -32,7 +32,6 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -60,8 +59,9 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 	private int engagementId;
 	private EndRideData endRideData;
-	private GetRideSummaryResponse getRideSummaryResponse;
+	private ArrayList<ShowPanelResponse.Item> items;
 	private boolean rideCancelled;
+	private int autosStatus;
 
     @Override
     public void onStart() {
@@ -78,11 +78,13 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
     }
 
 
-	public SupportRideIssuesFragment(int engagementId, EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse, boolean rideCancelled){
+	public SupportRideIssuesFragment(int engagementId, EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items,
+									 boolean rideCancelled, int autosStatus){
 		this.engagementId = engagementId;
 		this.endRideData = endRideData;
-		this.getRideSummaryResponse = getRideSummaryResponse;
+		this.items = items;
 		this.rideCancelled = rideCancelled;
+		this.autosStatus = autosStatus;
 	}
 
     @Override
@@ -156,7 +158,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
 				recyclerViewSupportFaq.setVisibility(View.VISIBLE);
 				setRideData();
-				updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
+				updateIssuesList(items);
 			}
 		} else if(activity instanceof RideTransactionsActivity){
 			if(endRideData == null){
@@ -167,7 +169,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
 				recyclerViewSupportFaq.setVisibility(View.VISIBLE);
 				setRideData();
-				updateIssuesList((ArrayList<ShowPanelResponse.Item>) getRideSummaryResponse.getMenu());
+				updateIssuesList(items);
 			}
 		}
 
@@ -192,7 +194,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				@Override
 				public void onClick(View v) {
 					if(activity instanceof SupportActivity && endRideData != null) {
-						((SupportActivity) activity).openRideSummaryFragment(endRideData, rideCancelled);
+						((SupportActivity) activity).openRideSummaryFragment(endRideData, rideCancelled, autosStatus);
 					}
 				}
 			});
@@ -257,11 +259,11 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.autoData.getFareStructure().getFixedFare(),
 				new ApiGetRideSummary.Callback() {
 					@Override
-					public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+					public void onSuccess(EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items) {
 						SupportRideIssuesFragment.this.endRideData = endRideData;
-						SupportRideIssuesFragment.this.getRideSummaryResponse = getRideSummaryResponse;
+						SupportRideIssuesFragment.this.items = items;
 						setRideData();
-						updateIssuesList((ArrayList<ShowPanelResponse.Item>) SupportRideIssuesFragment.this.getRideSummaryResponse.getMenu());
+						updateIssuesList(items);
 						linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
 						recyclerViewSupportFaq.setVisibility(View.VISIBLE);
 					}
@@ -284,7 +286,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 					public void onNoRetry(View view) {
 						performBackPress();
 					}
-				}).getRideSummaryAPI(rideCancelled);
+				}).getRideSummaryAPI(autosStatus);
 	}
 
 

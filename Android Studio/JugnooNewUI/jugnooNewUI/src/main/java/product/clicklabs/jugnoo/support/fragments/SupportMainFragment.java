@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.support.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,17 +24,17 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.support.ParseUtils;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.support.models.SupportCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -149,7 +148,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.ISSUES+"_"+FirebaseEvents.ISSUE_WITH_RECENT_RIDE, bundle);
 
-				activity.openSupportRideIssuesFragment();
+				activity.openSupportRideIssuesFragment(EngagementStatus.ENDED.getOrdinal());
 			}
 		});
 
@@ -202,10 +201,11 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 									DialogPopup.dismissLoadingDialog();
 									try {
 										Log.i(TAG, "showPanel reader" + new String(((TypedByteArray) response.getBody()).getBytes()));
-										showPanelSuccess((ArrayList<ShowPanelResponse.Item>) showPanelResponse.getMenu());
-										Database2.getInstance(activity)
-												.insertUpdateSupportData(SupportCategory.MAIN_MENU.getOrdinal(),
-														showPanelResponse.getMenu());
+										ArrayList<ShowPanelResponse.Item> itemsMain = new ParseUtils()
+												.saveAndParseAllMenu(activity, showPanelResponse, SupportCategory.MAIN_MENU.getOrdinal());
+										if(itemsMain != null) {
+											showPanelSuccess(itemsMain);
+										}
 										Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
 												Data.userData.getInAppSupportPanelVersion());
 									} catch (Exception exception) {

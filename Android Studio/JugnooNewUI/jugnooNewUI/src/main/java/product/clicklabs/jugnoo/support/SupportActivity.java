@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -17,10 +19,11 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -38,7 +41,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	private LinearLayout linearLayoutContainer;
 	public int fromBadFeedback = 0;
 	private EndRideData endRideData;
-	private GetRideSummaryResponse getRideSummaryResponse;
+	private ArrayList<ShowPanelResponse.Item> items;
 
 	@Override
 	protected void onResume() {
@@ -132,12 +135,12 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		return null;
 	}
 
-	public void openRideSummaryFragment(EndRideData endRideData, boolean rideCancelled){
+	public void openRideSummaryFragment(EndRideData endRideData, boolean rideCancelled, int autosStatus){
 		if(!new TransactionUtils().checkIfFragmentAdded(this, RideSummaryFragment.class.getName())) {
 			getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(getContainer().getId(),
-							new RideSummaryFragment(endRideData, rideCancelled),
+							new RideSummaryFragment(endRideData, rideCancelled, autosStatus),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
 					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
@@ -146,12 +149,12 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		}
 	}
 
-	public void openSupportRideIssuesFragment(){
+	public void openSupportRideIssuesFragment(int autosStatus){
 		try {
-			if (endRideData != null && getRideSummaryResponse != null) {
+			if (endRideData != null && items != null) {
 				new TransactionUtils().openRideIssuesFragment(this,
 						getContainer(),
-						Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse, fromBadFeedback, false);
+						Integer.parseInt(endRideData.engagementId), endRideData, items, fromBadFeedback, false, autosStatus);
 				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", "Issue with Ride");
 			}
 		} catch (NumberFormatException e) {
@@ -173,12 +176,12 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 			new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.autoData.getFareStructure().getFixedFare(),
 					new ApiGetRideSummary.Callback() {
 						@Override
-						public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+						public void onSuccess(EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items) {
 							SupportActivity.this.endRideData = endRideData;
-							SupportActivity.this.getRideSummaryResponse = getRideSummaryResponse;
+							SupportActivity.this.items = items;
 
 							if(fromBadFeedback == 1){
-								openSupportRideIssuesFragment();
+								openSupportRideIssuesFragment(EngagementStatus.ENDED.getOrdinal());
 							} else{
 								getSupportMainFragment().updateSuccess();
 							}
@@ -208,7 +211,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 						public void onNoRetry(View view) {
 
 						}
-					}).getRideSummaryAPI(false);
+					}).getRideSummaryAPI(EngagementStatus.ENDED.getOrdinal());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

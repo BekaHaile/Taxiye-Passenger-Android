@@ -12,70 +12,131 @@ import java.util.List;
 
 public class ShowPanelResponse {
 
-	@SerializedName("flag")
+	@SerializedName("support_data")
 	@Expose
-	private Integer flag;
-	@SerializedName("menu")
-	@Expose
-	private List<Item> menu = new ArrayList<Item>();
-	@SerializedName("status")
-	@Expose
-	private Integer status;
+	private SupportData supportData;
 
-	/**
-	 *
-	 * @return
-	 * The flag
-	 */
-	public Integer getFlag() {
-		return flag;
+	public SupportData getSupportData() {
+		return supportData;
 	}
 
-	/**
-	 *
-	 * @param flag
-	 * The flag
-	 */
-	public void setFlag(Integer flag) {
-		this.flag = flag;
+	public void setSupportData(SupportData supportData) {
+		this.supportData = supportData;
 	}
 
-	/**
-	 *
-	 * @return
-	 * The menu
-	 */
-	public List<Item> getMenu() {
-		return menu;
-	}
 
-	/**
-	 *
-	 * @param menu
-	 * The menu
-	 */
-	public void setMenu(List<Item> menu) {
-		this.menu = menu;
-	}
+	public class SupportData {
+		@SerializedName("1")
+		@Expose
+		private List<Item> menu1 = new ArrayList<Item>();
+		@SerializedName("2")
+		@Expose
+		private List<Item> menu2 = new ArrayList<Item>();
+		@SerializedName("3")
+		@Expose
+		private List<Item> menu3 = new ArrayList<Item>();
+		@SerializedName("4")
+		@Expose
+		private List<Item> menu4 = new ArrayList<Item>();
+		@SerializedName("5")
+		@Expose
+		private List<Item> menu5 = new ArrayList<Item>();
+		@SerializedName("6")
+		@Expose
+		private List<Item> menu6 = new ArrayList<Item>();
+		@SerializedName("7")
+		@Expose
+		private List<Item> menu7 = new ArrayList<Item>();
+		@SerializedName("8")
+		@Expose
+		private List<Item> menu8 = new ArrayList<Item>();
+		@SerializedName("9")
+		@Expose
+		private List<Item> menu9 = new ArrayList<Item>();
+		@SerializedName("10")
+		@Expose
+		private List<Item> menu10 = new ArrayList<Item>();
 
-	/**
-	 *
-	 * @return
-	 * The status
-	 */
-	public Integer getStatus() {
-		return status;
-	}
+		public List<Item> getMenu1() {
+			return menu1;
+		}
 
-	/**
-	 *
-	 * @param status
-	 * The status
-	 */
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+		public void setMenu1(List<Item> menu1) {
+			this.menu1 = menu1;
+		}
 
+		public List<Item> getMenu2() {
+			return menu2;
+		}
+
+		public void setMenu2(List<Item> menu2) {
+			this.menu2 = menu2;
+		}
+
+		public List<Item> getMenu3() {
+			return menu3;
+		}
+
+		public void setMenu3(List<Item> menu3) {
+			this.menu3 = menu3;
+		}
+
+		public List<Item> getMenu4() {
+			return menu4;
+		}
+
+		public void setMenu4(List<Item> menu4) {
+			this.menu4 = menu4;
+		}
+
+		public List<Item> getMenu5() {
+			return menu5;
+		}
+
+		public void setMenu5(List<Item> menu5) {
+			this.menu5 = menu5;
+		}
+
+		public List<Item> getMenu6() {
+			return menu6;
+		}
+
+		public void setMenu6(List<Item> menu6) {
+			this.menu6 = menu6;
+		}
+
+		public List<Item> getMenu7() {
+			return menu7;
+		}
+
+		public void setMenu7(List<Item> menu7) {
+			this.menu7 = menu7;
+		}
+
+		public List<Item> getMenu8() {
+			return menu8;
+		}
+
+		public void setMenu8(List<Item> menu8) {
+			this.menu8 = menu8;
+		}
+
+		public List<Item> getMenu9() {
+			return menu9;
+		}
+
+		public void setMenu9(List<Item> menu9) {
+			this.menu9 = menu9;
+		}
+
+		public List<Item> getMenu10() {
+			return menu10;
+		}
+
+		public void setMenu10(List<Item> menu10) {
+			this.menu10 = menu10;
+		}
+	}
 
 	public class Item {
 

@@ -136,6 +136,7 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
+import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
@@ -172,7 +173,7 @@ import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
@@ -3360,7 +3361,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             String tag = "", title = "";
             if(RideEndFragmentMode.INVOICE == rideEndFragmentMode) {
                 fragToCheck = getRideSummaryFragment();
-                fragToAdd = new RideSummaryFragment(-1, false);
+                fragToAdd = new RideSummaryFragment(-1, false, EngagementStatus.ENDED.getOrdinal());
                 tag = RideSummaryFragment.class.getName();
                 title = getResources().getString(R.string.receipt);
             }
@@ -5117,9 +5118,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(KEY_ENGAGEMENT_ID, engagementId);
                 params.put(KEY_SHOW_RIDE_MENU, "0");
-                RestClient.getApiServices().getRideSummary(params, new Callback<GetRideSummaryResponse>() {
+                RestClient.getApiServices().getRideSummary(params, new Callback<ShowPanelResponse>() {
                     @Override
-                    public void success(GetRideSummaryResponse getRideSummaryResponse, Response response) {
+                    public void success(ShowPanelResponse showPanelResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getRideSummary response = " + responseStr);
                         DialogPopup.dismissLoadingDialog();

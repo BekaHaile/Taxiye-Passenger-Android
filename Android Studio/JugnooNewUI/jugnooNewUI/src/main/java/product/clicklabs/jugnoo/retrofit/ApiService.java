@@ -11,7 +11,6 @@ import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
 import retrofit.Callback;
@@ -68,7 +67,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/get_ride_summary")
     void getRideSummary(@FieldMap Map<String, String> params,
-                   Callback<GetRideSummaryResponse> callback);
+                   Callback<ShowPanelResponse> callback);
 
     @FormUrlEncoded
     @POST("/generate_support_ticket")
