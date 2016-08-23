@@ -3393,7 +3393,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 tag)
                         .addToBackStack(tag)
                         .commitAllowingStateLoss();
-                topBar.setTopBarState(false, title);
+                topBar.setTopBarState(this, false, title);
             }
         } else {
             linearLayoutRideSummaryContainer.setVisibility(View.GONE);
@@ -3403,7 +3403,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         .commit();
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
-            topBar.setTopBarState(true, "");
+            topBar.setTopBarState(this, true, "");
         }
     }
 

@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 4/8/16.
@@ -62,6 +64,7 @@ public class TopBar implements FirebaseEvents {
         imageViewSearchIcon = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchIcon);
         textViewTitle = (TextView) drawerLayout.findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(activity));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
         buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
         imageViewHelp = (ImageView) drawerLayout.findViewById(R.id.imageViewHelp);
 
@@ -238,7 +241,7 @@ public class TopBar implements FirebaseEvents {
     }
 
 
-    public void setTopBarState(boolean defaultState, String title) {
+    public void setTopBarState(Context context, boolean defaultState, String title) {
         imageViewMenu.setVisibility(View.VISIBLE);
         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_INITIAL
                 || HomeActivity.passengerScreenMode == PassengerScreenMode.P_SEARCH
@@ -251,6 +254,7 @@ public class TopBar implements FirebaseEvents {
         }
         imageViewBack.setVisibility(View.GONE);
         textViewTitle.setText(activity.getResources().getString(R.string.app_name));
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
 
         if (!defaultState) {
             imageViewMenu.setVisibility(View.GONE);
@@ -258,6 +262,7 @@ public class TopBar implements FirebaseEvents {
             imageViewAppToggle.setVisibility(View.GONE);
             imageViewBack.setVisibility(View.VISIBLE);
             textViewTitle.setText(title);
+            textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
         }
     }
 

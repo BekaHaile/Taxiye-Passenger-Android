@@ -15,6 +15,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -34,6 +36,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.sabkuchfresh.retrofit.model.OrderHistory;
@@ -810,6 +813,19 @@ public class Utils {
         }
         return "";
     }
+
+	public static Shader textColorGradient(Context context, TextView textView){
+		textView.measure(0, 0);
+		int mWidth = textView.getMeasuredWidth();
+		Shader shader;
+		Shader.TileMode tile_mode = Shader.TileMode.CLAMP; // or TileMode.REPEAT;
+		LinearGradient lin_grad = new LinearGradient(0, 0, (int)(mWidth/1.3), 0,
+				context.getResources().getColor(R.color.theme_color_start),
+				context.getResources().getColor(R.color.theme_color_end), tile_mode);
+		shader = lin_grad;
+
+		return shader;
+	}
 
 }
 

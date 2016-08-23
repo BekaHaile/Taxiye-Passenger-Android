@@ -561,6 +561,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar.imageViewNotification.setImageResource(R.drawable.ic_meals);
             topBar.title.setVisibility(View.VISIBLE);
             topBar.title.setText(getResources().getString(R.string.app_name));
+            topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
         } else if(fragment instanceof MealFragment){
@@ -584,6 +585,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar.imageViewNotification.setImageResource(R.drawable.toggle);
             topBar.title.setVisibility(View.VISIBLE);
             topBar.title.setText(getResources().getString(R.string.app_name));
+            topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
         } else if (fragment instanceof FreshCartItemsFragment) {
             textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));

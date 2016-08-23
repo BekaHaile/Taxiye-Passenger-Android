@@ -9,18 +9,17 @@
         android:id="@+id/topRl"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@drawable/nl_background_theme_color"
+        android:background="@color/white"
         android:splitMotionEvents="false"
         >
 
         <ImageView
             android:id="@+id/imageViewMenu"
-            android:layout_width="83px"
+            android:layout_width="70px"
             android:layout_height="70px"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/menu_icon_selector"
+            android:src="@drawable/ic_menu_selector"
             android:tag="mwar"/>
 
         <Button
@@ -34,13 +33,7 @@
 
         <ImageView
             android:id="@+id/imageViewBack"
-            android:layout_width="60.7px"
-            android:layout_height="76.9px"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
-            android:padding="20px"
-            android:src="@drawable/back_white_selector"
-            android:visibility="gone"
+            style="@style/back_image"
             />
 
         <TextView
@@ -52,7 +45,7 @@
             android:text="@string/app_name"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"/>
+            android:textSize="@dimen/text_size_40"/>
 
 
         <LinearLayout
@@ -143,7 +136,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="2px"
+        android:layout_height="6px"
         android:layout_below="@+id/topRl"
         android:background="@drawable/shadow_down"
         />
