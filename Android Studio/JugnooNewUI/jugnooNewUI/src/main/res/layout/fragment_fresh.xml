@@ -7,17 +7,50 @@
     android:orientation="vertical"
     >
 
+    <RelativeLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="68px"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Search here |"
+            android:textSize="30px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:gravity="center_vertical"
+            android:padding="16px"
+            android:background="@drawable/background_search_shap"
+            android:drawableRight="@drawable/search_icon"
+            android:textColor="@color/text_color_light"
+            />
+
+    </RelativeLayout>
+
     <com.sabkuchfresh.widgets.PagerSlidingTabStrip
         android:id="@+id/tabs"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="80px"
-        android:background="@color/transparent"
+        android:layout_height="60px"
+        android:background="@color/white"
         android:visibility="visible"
-        app:pstsIndicatorHeight="10px"
+        app:pstsIndicatorHeight="5px"
+        app:pstsIndicatorColor="@color/theme_color"
         app:pstsShouldExpand="true"
         app:pstsUnderlineColor="@color/grey_light"
-        app:pstsUnderlineHeight="2px"
+        app:pstsUnderlineHeight="1px"
+        />
+
+    <ImageView
+        android:id="@+id/below_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topRl"
+        android:background="@drawable/shadow_down"
         />
 
     <android.support.v4.view.ViewPager

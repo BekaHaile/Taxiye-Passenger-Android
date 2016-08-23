@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/mapView"
-        android:name="com.sabkuchfresh.utils.TouchableMapFragment"
+        android:name="product.clicklabs.jugnoo.utils.TouchableMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
@@ -184,14 +184,14 @@
                 android:layout_marginRight="20px"/>
         </RelativeLayout>
 
-        <com.sabkuchfresh.widgets.NonScrollListView
+        <product.clicklabs.jugnoo.utils.NonScrollListView
             android:id="@+id/listViewSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@color/transparent"
             android:dividerHeight="0px"
             android:splitMotionEvents="false">
-        </com.sabkuchfresh.widgets.NonScrollListView>
+        </product.clicklabs.jugnoo.utils.NonScrollListView>
     </LinearLayout>
 
 

@@ -96,7 +96,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             e.printStackTrace();
         }
 
-        activity.getTopBar().getImageViewSearch().setVisibility(View.GONE);
         mealAdapter = new MealAdapter(activity, mealsData, this);
 
         recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);

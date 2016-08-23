@@ -33,12 +33,12 @@ public class TopBar implements FlurryEventNames {
 
 	//Top RL
 	public RelativeLayout topRl;
-	public ImageView imageViewMenu, imageViewSearchCancel;
+	public ImageView imageViewMenu, imageViewSearchCancel, below_shadow;
 	public TextView title;
 	public Button buttonCheckServer;
 	public RelativeLayout relativeLayoutNotification;
 	public TextView textViewNotificationValue;
-	public ImageView imageViewBack, imageViewDelete, imageViewNotification, imageViewSearch;
+	public ImageView imageViewBack, imageViewDelete, imageViewNotification;//, imageViewSearch;
 
 
 	public TopBar(Activity activity, DrawerLayout drawerLayout){
@@ -52,22 +52,24 @@ public class TopBar implements FlurryEventNames {
 		imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
 		imageViewSearchCancel = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchCancel);
 		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(activity));
+
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
 		relativeLayoutNotification = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutNotification);
 		textViewNotificationValue = (TextView) drawerLayout.findViewById(R.id.textViewNotificationValue);
 		textViewNotificationValue.setTypeface(Fonts.latoRegular(activity));
 		textViewNotificationValue.setVisibility(View.GONE);
 
+		below_shadow = (ImageView) drawerLayout.findViewById(R.id.below_shadow);
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
         imageViewNotification = (ImageView) drawerLayout.findViewById(R.id.imageViewNotification);
-		imageViewSearch = (ImageView)drawerLayout.findViewById(R.id.imageViewSearch);
+//		imageViewSearch = (ImageView)drawerLayout.findViewById(R.id.imageViewSearch);
 
 		//Top bar events
 		topRl.setOnClickListener(topBarOnClickListener);
 		imageViewMenu.setOnClickListener(topBarOnClickListener);
 		buttonCheckServer.setOnClickListener(topBarOnClickListener);
-		imageViewSearch.setOnClickListener(topBarOnClickListener);
+//		imageViewSearch.setOnClickListener(topBarOnClickListener);
 
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
@@ -83,27 +85,30 @@ public class TopBar implements FlurryEventNames {
 		imageViewBack.setOnClickListener(topBarOnClickListener);
 		imageViewDelete.setOnClickListener(topBarOnClickListener);
 
+
 		if(activity instanceof FreshActivity){
-			relativeLayoutNotification.setVisibility(View.GONE);
+			relativeLayoutNotification.setVisibility(View.VISIBLE);
 			imageViewSearchCancel.setVisibility(View.GONE);
 			title.setText(activity.getResources().getString(R.string.app_name).toUpperCase());
+		} else {
+			relativeLayoutNotification.setVisibility(View.GONE);
 		}
 
-        try {
-            if(Data.getFreshData().stores.size()>1) {
-                relativeLayoutNotification.setVisibility(View.GONE);
-            } else {
-                relativeLayoutNotification.setVisibility(View.VISIBLE);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if(Data.getFreshData().stores.size()>1) {
+//                relativeLayoutNotification.setVisibility(View.GONE);
+//            } else {
+//                relativeLayoutNotification.setVisibility(View.VISIBLE);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 	}
 
-	public ImageView getImageViewSearch() {
-		return imageViewSearch;
-	}
+//	public ImageView getImageViewSearch() {
+//		return imageViewSearch;
+//	}
 
 	private View.OnClickListener topBarOnClickListener = new View.OnClickListener() {
 		@Override
@@ -123,7 +128,7 @@ public class TopBar implements FlurryEventNames {
 
                 case R.id.relativeLayoutNotification:
                     if(activity instanceof FreshActivity) {
-                        ((FreshActivity)activity).toggle();//searchItem();
+                        ((FreshActivity)activity).openNotification();
                     }
                     break;
 
@@ -139,11 +144,11 @@ public class TopBar implements FlurryEventNames {
 					}
 					break;
 
-				case R.id.imageViewSearch:
-					if(activity instanceof FreshActivity){
-						((FreshActivity)activity).searchItem();
-					}
-					break;
+//				case R.id.imageViewSearch:
+//					if(activity instanceof FreshActivity){
+//						((FreshActivity)activity).searchItem();
+//					}
+//					break;
 
 			}
 		}

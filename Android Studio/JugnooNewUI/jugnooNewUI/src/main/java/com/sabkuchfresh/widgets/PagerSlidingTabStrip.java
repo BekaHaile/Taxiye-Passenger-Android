@@ -96,9 +96,9 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 	private int dividerWidth = 1;
 
 	private int tabTextSize = 32;
-//    private int tabTextColor = 0x000000;
-    private int tabTextColor = 0xffff8162;
-	private int tabTextColorUnSelected = Color.GRAY;
+    private int tabTextColor = 0x000000;
+//    private int tabTextColor = 0xffff8162;
+	private int tabTextColorUnSelected = 0xff000000;
 //    private int tabTextColor = 0x99242424;
 //    private Typeface tabTypeface = Typeface.createFromAsset(getAssets(), "fonts/lato_regular.ttf");
     private Typeface tabTypeface = null;
@@ -294,7 +294,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 			View v = tabsContainer.getChildAt(i);
 
-			v.setBackgroundResource(tabBackgroundResId);
+			v.setBackgroundResource(R.color.transparent);
 
 			if (v instanceof TextView) {
 
@@ -303,7 +303,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 				if(i == selected) {
 					tab.setTextColor(tabTextColor);
-					tab.setTypeface(getLocalTypeface(), Typeface.NORMAL);
+					tab.setTypeface(getLocalTypeface(), Typeface.BOLD);
 				} else{
 					tab.setTextColor(tabTextColorUnSelected);
 					tab.setTypeface(getLocalTypeface());
@@ -361,6 +361,18 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		float lineLeft = currentTab.getLeft();
 		float lineRight = currentTab.getRight();
 
+//		for (int i = 0; i < tabCount; i++) {
+//			View v = tabsContainer.getChildAt(i);
+//			TextView textView = (TextView) v.findViewById(R.id.textView);
+//			if (textView instanceof TextView) {
+//				if(i == currentPosition) {
+//					textView.setTextColor(tabTextColor);
+//				} else {
+//					textView.setTextColor(tabTextColorUnSelected);
+//				}
+//			}
+//		}ail
+
 		// if there is an offset, start interpolating left and right coordinates between current and next tab
 		if (currentPositionOffset > 0f && currentPosition < tabCount - 1) {
 
@@ -387,6 +399,16 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		for (int i = 0; i < tabCount - 1; i++) {
 			View tab = tabsContainer.getChildAt(i);
 			canvas.drawLine(tab.getRight(), dividerPadding, tab.getRight(), height - dividerPadding, dividerPaint);
+
+			View v = tabsContainer.getChildAt(i);
+			TextView textView = (TextView) v.findViewById(R.id.textView);
+			if (textView instanceof TextView) {
+				if(i == currentPosition) {
+					textView.setTextColor(tabTextColor);
+				} else {
+					textView.setTextColor(tabTextColorUnSelected);
+				}
+			}
 		}
 	}
 

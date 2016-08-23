@@ -25,6 +25,11 @@ public class MenuBar {
 	public LinearLayout menuLayout;
 
 	private RecyclerView recyclerViewMenu;
+
+	public MenuAdapter getMenuAdapter() {
+		return menuAdapter;
+	}
+
 	public MenuAdapter menuAdapter;
 
 	public MenuBar(Activity activity, DrawerLayout rootView){

@@ -71,6 +71,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.FABView;
@@ -134,6 +135,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public boolean locationSearchShown = false;
     public boolean canOrder = false;
 
+    public void openNotification() {
+        menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -530,20 +534,15 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void fragmentUISetup(Fragment fragment) {
         textViewMinOrder.setVisibility(View.GONE);
-//        Utils.hideViewByScale(relativeLayoutCartRound);
-//        relativeLayoutCartRound.hide();
         relativeLayoutCartRound.setVisibility(View.GONE);
-        topBar.getImageViewSearch().setVisibility(View.GONE);
 
+        topBar.title.setTypeface(Fonts.avenirNext(this));
         topView.setVisibility(View.VISIBLE);
+        topBar.below_shadow.setVisibility(View.VISIBLE);
         if (fragment instanceof FreshFragment) {
             topBar.imageViewMenu.setVisibility(View.VISIBLE);
-            topBar.getImageViewSearch().setVisibility(View.VISIBLE);
-            if(Data.getFreshData().stores.size()>1) {
-                topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
-            } else {
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            }
+            topBar.below_shadow.setVisibility(View.GONE);
+            topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
             topBar.imageViewBack.setVisibility(View.GONE);
             topBar.imageViewDelete.setVisibility(View.GONE);
             textViewCheckout.setVisibility(View.GONE);
@@ -552,13 +551,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             relativeLayoutSort.setVisibility(View.VISIBLE);
             relativeLayoutCart.setVisibility(View.GONE);
             if (totalPrice > 0) {
-//              relativeLayoutCartRound.show();
-//                Utils.hideShowViewByScale(relativeLayoutCartRound, R.drawable.ic_cart_round);
                 relativeLayoutCartRound.setVisibility(View.VISIBLE);
             }
-
-            //menuBar.relativeLayoutfatafat.setPressed(true);
-            topBar.imageViewNotification.setImageResource(R.drawable.ic_meals);
             topBar.title.setVisibility(View.VISIBLE);
             topBar.title.setText(getResources().getString(R.string.app_name));
             topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
@@ -566,11 +560,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
         } else if(fragment instanceof MealFragment){
             topBar.imageViewMenu.setVisibility(View.VISIBLE);
-            if(Data.getFreshData().stores.size()>1) {
-                topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
-            } else {
-                topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            }
+            topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
             topBar.imageViewBack.setVisibility(View.GONE);
             topBar.imageViewDelete.setVisibility(View.GONE);
             textViewCheckout.setVisibility(View.GONE);
@@ -581,8 +571,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             if (totalPrice > 0) {
                 relativeLayoutCartRound.setVisibility(View.VISIBLE);
             }
-
-            topBar.imageViewNotification.setImageResource(R.drawable.toggle);
             topBar.title.setVisibility(View.VISIBLE);
             topBar.title.setText(getResources().getString(R.string.app_name));
             topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
