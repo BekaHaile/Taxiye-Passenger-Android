@@ -92,10 +92,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private RelativeLayout relativeLayoutContainer;
 
 
-    private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCartRound, relativeLayoutCart, relativeLayoutSort;
-//    private FloatingActionButton relativeLayoutCartRound;
+    private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCart, relativeLayoutSort;
     private LinearLayout linearLayoutCheckout;
-    private TextView textViewCartItemsCountRound, textViewTotalPrice, textViewCheckout, textViewMinOrder, textViewCartItemsCount;
+    private TextView textViewTotalPrice, textViewCheckout, textViewMinOrder, textViewCartItemsCount;
 
 
     private MenuBar menuBar;
@@ -153,17 +152,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
         relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
         relativeLayoutCart = (RelativeLayout) findViewById(R.id.relativeLayoutCart);
-        relativeLayoutCartRound = (RelativeLayout) findViewById(R.id.relativeLayoutCartRound);
         linearLayoutCheckout = (LinearLayout) findViewById(R.id.linearLayoutCheckout);
         relativeLayoutSort = (RelativeLayout) findViewById(R.id.relativeLayoutSort);
 
         textViewCartItemsCount = (TextView) findViewById(R.id.textViewCartItemsCount);
         textViewCartItemsCount.setTypeface(Fonts.mavenRegular(this));
         textViewCartItemsCount.setMinWidth((int) (45f * ASSL.Xscale()));
-
-        textViewCartItemsCountRound = (TextView) findViewById(R.id.textViewCartItemsCountRound);
-        textViewCartItemsCountRound.setTypeface(Fonts.mavenRegular(this));
-        textViewCartItemsCountRound.setMinWidth((int) (45f * ASSL.Xscale()));
 
         textViewTotalPrice = (TextView) findViewById(R.id.textViewTotalPrice);
         textViewTotalPrice.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
@@ -216,18 +210,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
         relativeLayoutCheckoutBar.setOnClickListener(onClickListener);
         linearLayoutCheckout.setOnClickListener(onClickListener);
-
-        relativeLayoutCartRound.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CART, FlurryEventNames.FLOATING_ICON);
-                if(updateCartValuesGetTotalPrice().second > 0) {
-                    getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
-                } else {
-                    Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -485,12 +467,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 if (totalQuantity > 0) {
                     textViewCartItemsCount.setVisibility(View.VISIBLE);
                     if(drawerLayout.getDrawerLockMode(GravityCompat.START)== DrawerLayout.LOCK_MODE_UNLOCKED)
-                    relativeLayoutCartRound.setVisibility(View.VISIBLE);
                     textViewCartItemsCount.setText(String.valueOf(totalQuantity));
-                    textViewCartItemsCountRound.setText(String.valueOf(totalQuantity));
                 } else {
                     textViewCartItemsCount.setVisibility(View.GONE);
-                    relativeLayoutCartRound.setVisibility(View.GONE);
                 }
                 if (getFreshCartItemsFragment() != null) {
                     if (this.getFreshCartItemsFragment().isVisible() && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
@@ -534,7 +513,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void fragmentUISetup(Fragment fragment) {
         textViewMinOrder.setVisibility(View.GONE);
-        relativeLayoutCartRound.setVisibility(View.GONE);
 
         topBar.title.setTypeface(Fonts.avenirNext(this));
         topView.setVisibility(View.VISIBLE);
@@ -550,9 +528,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
             relativeLayoutSort.setVisibility(View.VISIBLE);
             relativeLayoutCart.setVisibility(View.GONE);
-            if (totalPrice > 0) {
-                relativeLayoutCartRound.setVisibility(View.VISIBLE);
-            }
             topBar.title.setVisibility(View.VISIBLE);
             topBar.title.setText(getResources().getString(R.string.app_name));
             topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
@@ -568,9 +543,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
             relativeLayoutSort.setVisibility(View.VISIBLE);
             relativeLayoutCart.setVisibility(View.GONE);
-            if (totalPrice > 0) {
-                relativeLayoutCartRound.setVisibility(View.VISIBLE);
-            }
             topBar.title.setVisibility(View.VISIBLE);
             topBar.title.setText(getResources().getString(R.string.app_name));
             topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));

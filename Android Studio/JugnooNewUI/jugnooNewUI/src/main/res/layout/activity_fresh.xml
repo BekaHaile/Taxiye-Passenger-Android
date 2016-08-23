@@ -73,8 +73,8 @@
 
                         <ImageView
                             android:id="@+id/imageViewSort"
-                            android:layout_width="65px"
-                            android:layout_height="37px"
+                            android:layout_width="60px"
+                            android:layout_height="25px"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="40px"
                             android:src="@drawable/ic_sort"
@@ -136,7 +136,7 @@
                     android:layout_toRightOf="@+id/relativeLayoutLeft"
                     android:gravity="center_horizontal"
                     android:singleLine="true"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/cart_price"
                     android:textSize="@dimen/text_size_38" />
 
 
@@ -187,48 +187,6 @@
 
             </RelativeLayout>
         </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutCartRound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/linearLayoutCheckoutContainer"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="8px"
-            android:layout_marginRight="8px"
-            android:animateLayoutChanges="true"
-            android:gravity="right"
-
-            >
-
-            <ImageView
-                android:id="@+id/imageViewCartRound"
-                android:layout_width="150px"
-                android:layout_height="150px"
-                android:layout_marginBottom="8px"
-                android:layout_marginRight="8px"
-                android:src="@drawable/ic_cart_round"
-                android:tag="mwar"
-                android:visibility="visible"
-
-                />
-
-            <TextView
-                android:id="@+id/textViewCartItemsCountRound"
-                android:layout_width="45px"
-                android:layout_height="45px"
-                android:layout_marginLeft="76px"
-                android:layout_marginTop="32px"
-                android:background="@drawable/circle_cart"
-                android:gravity="center"
-                android:minWidth="45px"
-                android:padding="6px"
-                android:text=""
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_22"
-                android:visibility="visible" />
-
-        </RelativeLayout>
 
         <include layout="@layout/layout_home_activity_fab"/>
 
