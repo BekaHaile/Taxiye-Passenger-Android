@@ -33,7 +33,7 @@ public class CouponInfo extends PromoCoupon{
 	public Integer delivery;
 	@SerializedName("master_coupon")
 	@Expose
-	public Integer master_coupon;
+	private Integer masterCoupon = 0;
 
 	public CouponInfo(int id, String title, String subtitle, String description, String expiryDate){
 		this.id = id;
@@ -71,5 +71,12 @@ public class CouponInfo extends PromoCoupon{
 			return false;
 		}
 	}
-	
+
+	public Integer getMasterCoupon() {
+		return masterCoupon;
+	}
+
+	public void setMasterCoupon(Integer masterCoupon) {
+		this.masterCoupon = masterCoupon;
+	}
 }

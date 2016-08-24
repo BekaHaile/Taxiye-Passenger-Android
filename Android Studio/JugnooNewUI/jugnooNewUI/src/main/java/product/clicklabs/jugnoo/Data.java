@@ -10,6 +10,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.datastructure.AutoData;
+import product.clicklabs.jugnoo.datastructure.DeliveryData;
 import product.clicklabs.jugnoo.datastructure.FreshData;
 import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
@@ -86,6 +87,7 @@ public class Data {
 	public static AutoData autoData;
 	private static FreshData freshData;
 	private static MealsData mealsData;
+	private static DeliveryData DeliveryData;
 
 	
 	public static LocationFetcher locationFetcher;
@@ -129,6 +131,9 @@ public class Data {
 			userData = null;
 			autoData = null;
 			freshData = null;
+			mealsData = null;
+			DeliveryData = null;
+
 			locationFetcher = null;
 			country = ""; deviceName = ""; appVersion = 0; osVersion = "";
 			facebookUserData = null;
@@ -398,4 +403,16 @@ public class Data {
 	public static void setMealsData(MealsData mealsData) {
 		Data.mealsData = mealsData;
 	}
+
+
+	public static DeliveryData getDeliveryData() {
+		return DeliveryData;
+	}
+
+	public static void setDeliveryData(DeliveryData deliveryData) {
+		DeliveryData = deliveryData;
+	}
+
+
+
 }

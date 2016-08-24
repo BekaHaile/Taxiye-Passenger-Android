@@ -89,6 +89,9 @@ public class LoginResponse {
 	@SerializedName("meals")
 	@Expose
 	private Meals meals;
+	@SerializedName("delivery")
+	@Expose
+	private Delivery delivery;
 	/**
 	 * @return The flag
 	 */
@@ -149,7 +152,40 @@ public class LoginResponse {
 		this.meals = meals;
 	}
 
+	public Delivery getDelivery() {
+		return delivery;
+	}
 
+	public void setDelivery(Delivery delivery) {
+		this.delivery = delivery;
+	}
+
+
+
+	public class Delivery{
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+	}
 
 	public class Meals{
 		@SerializedName("promotions")

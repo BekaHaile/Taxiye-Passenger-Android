@@ -604,14 +604,17 @@ public class UserData {
 			if(promoCoupons != null) {
 				count = promoCoupons.size();
 			}
-			if(Data.autoData.getPromoCoupons() != null) {
+			if(Data.autoData != null && Data.autoData.getPromoCoupons() != null) {
 				count += Data.autoData.getPromoCoupons().size();
 			}
-			if(Data.getFreshData().getPromoCoupons() != null) {
+			if(Data.getFreshData() != null && Data.getFreshData().getPromoCoupons() != null) {
 				count += Data.getFreshData().getPromoCoupons().size();
 			}
-			if(Data.getMealsData().getPromoCoupons() != null) {
+			if(Data.getMealsData() != null && Data.getMealsData().getPromoCoupons() != null) {
 				count += Data.getMealsData().getPromoCoupons().size();
+			}
+			if(Data.getDeliveryData() != null && Data.getDeliveryData().getPromoCoupons() != null) {
+				count += Data.getDeliveryData().getPromoCoupons().size();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -660,6 +663,19 @@ public class UserData {
 				}
 			}
 			coupons.addAll(Data.getMealsData().getPromoCoupons());
+		} else if(appType == AppConstant.AppType.DELIVERY) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).delivery.equals(1)) ||
+							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).delivery.equals(1))) {
+						coupons.add(promoCoupon);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.getDeliveryData().getPromoCoupons());
 		}
 
 		return coupons;

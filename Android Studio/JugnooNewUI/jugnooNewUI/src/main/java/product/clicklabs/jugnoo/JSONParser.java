@@ -335,6 +335,22 @@ public class JSONParser implements Constants {
         }
     }
 
+    public void parseDeliveryData(LoginResponse.Delivery deliveryData) {
+        try {
+            if(Data.getDeliveryData().getPromoCoupons() == null){
+                Data.getDeliveryData().setPromoCoupons(new ArrayList<PromoCoupon>());
+            } else{
+                Data.getDeliveryData().getPromoCoupons().clear();
+            }
+            if(deliveryData.getPromotions() != null)
+                Data.getDeliveryData().getPromoCoupons().addAll(deliveryData.getPromotions());
+            if(deliveryData.getCoupons() != null)
+                Data.getDeliveryData().getPromoCoupons().addAll(deliveryData.getCoupons());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void parseMealsData(LoginResponse.Meals mealsData) {
         try {
             if(Data.getMealsData().getPromoCoupons() == null){
@@ -432,6 +448,7 @@ public class JSONParser implements Constants {
         parseAutoData(context, jAutosObject, loginResponse.getAutos());
         parseFreshData(jFreshObject, loginResponse.getFresh());
         parseMealsData(loginResponse.getMeals());
+        parseDeliveryData(loginResponse.getDelivery());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 

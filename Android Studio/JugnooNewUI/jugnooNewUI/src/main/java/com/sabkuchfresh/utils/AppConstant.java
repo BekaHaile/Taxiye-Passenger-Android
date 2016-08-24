@@ -12,7 +12,7 @@ public class AppConstant {
         public static final int AUTO = 0;
         public static final int FRESH = 1;
         public static final int MEALS = 2;
-
+        public static final int DELIVERY = 3;
     }
     /**
      * Constant interface. DO NOT IMPLEMENT.

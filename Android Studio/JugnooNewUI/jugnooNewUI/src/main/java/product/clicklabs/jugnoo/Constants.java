@@ -420,5 +420,6 @@ public interface Constants {
 	String KEY_MEALS_ENABLED = "meals_enabled";
 	String KEY_FRESH_ENABLED = "fresh_enabled";
 	String KEY_DELIVERY_ENABLED = "delivery_enabled";
+	String KEY_MASTER_COUPON = "master_coupon";
 
 }

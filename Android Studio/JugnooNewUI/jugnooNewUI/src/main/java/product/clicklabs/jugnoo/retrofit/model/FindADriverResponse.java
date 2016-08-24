@@ -55,6 +55,119 @@ public class FindADriverResponse {
     @Expose
     private Integer cityId;
 
+    @SerializedName("common_promotions")
+    @Expose
+    private List<PromotionInfo> commonPromotions = new ArrayList<>();
+    @SerializedName("common_coupons")
+    @Expose
+    private List<CouponInfo> commonCoupons = new ArrayList<>();
+    @SerializedName("autos_promotions")
+    @Expose
+    private List<PromotionInfo> autosPromotions = new ArrayList<>();
+    @SerializedName("autos_coupons")
+    @Expose
+    private List<CouponInfo> autosCoupons = new ArrayList<>();
+    @SerializedName("fresh_promotions")
+    @Expose
+    private List<PromotionInfo> freshPromotions = new ArrayList<>();
+    @SerializedName("fresh_coupons")
+    @Expose
+    private List<CouponInfo> freshCoupons = new ArrayList<>();
+    @SerializedName("meals_promotions")
+    @Expose
+    private List<PromotionInfo> mealsPromotions = new ArrayList<>();
+    @SerializedName("meals_coupons")
+    @Expose
+    private List<CouponInfo> mealsCoupons = new ArrayList<>();
+    @SerializedName("delivery_promotions")
+    @Expose
+    private List<PromotionInfo> deliveryPromotions = new ArrayList<>();
+    @SerializedName("delivery_coupons")
+    @Expose
+    private List<CouponInfo> deliveryCoupons = new ArrayList<>();
+
+    public List<CouponInfo> getDeliveryCoupons() {
+        return deliveryCoupons;
+    }
+
+    public void setDeliveryCoupons(List<CouponInfo> deliveryCoupons) {
+        this.deliveryCoupons = deliveryCoupons;
+    }
+
+    public List<PromotionInfo> getCommonPromotions() {
+        return commonPromotions;
+    }
+
+    public void setCommonPromotions(List<PromotionInfo> commonPromotions) {
+        this.commonPromotions = commonPromotions;
+    }
+
+    public List<CouponInfo> getCommonCoupons() {
+        return commonCoupons;
+    }
+
+    public void setCommonCoupons(List<CouponInfo> commonCoupons) {
+        this.commonCoupons = commonCoupons;
+    }
+
+    public List<PromotionInfo> getAutosPromotions() {
+        return autosPromotions;
+    }
+
+    public void setAutosPromotions(List<PromotionInfo> autosPromotions) {
+        this.autosPromotions = autosPromotions;
+    }
+
+    public List<CouponInfo> getAutosCoupons() {
+        return autosCoupons;
+    }
+
+    public void setAutosCoupons(List<CouponInfo> autosCoupons) {
+        this.autosCoupons = autosCoupons;
+    }
+
+    public List<PromotionInfo> getFreshPromotions() {
+        return freshPromotions;
+    }
+
+    public void setFreshPromotions(List<PromotionInfo> freshPromotions) {
+        this.freshPromotions = freshPromotions;
+    }
+
+    public List<CouponInfo> getFreshCoupons() {
+        return freshCoupons;
+    }
+
+    public void setFreshCoupons(List<CouponInfo> freshCoupons) {
+        this.freshCoupons = freshCoupons;
+    }
+
+    public List<PromotionInfo> getMealsPromotions() {
+        return mealsPromotions;
+    }
+
+    public void setMealsPromotions(List<PromotionInfo> mealsPromotions) {
+        this.mealsPromotions = mealsPromotions;
+    }
+
+    public List<CouponInfo> getMealsCoupons() {
+        return mealsCoupons;
+    }
+
+    public void setMealsCoupons(List<CouponInfo> mealsCoupons) {
+        this.mealsCoupons = mealsCoupons;
+    }
+
+    public List<PromotionInfo> getDeliveryPromotions() {
+        return deliveryPromotions;
+    }
+
+    public void setDeliveryPromotions(List<PromotionInfo> deliveryPromotions) {
+        this.deliveryPromotions = deliveryPromotions;
+    }
+
+
+
     /**
      *
      * @return

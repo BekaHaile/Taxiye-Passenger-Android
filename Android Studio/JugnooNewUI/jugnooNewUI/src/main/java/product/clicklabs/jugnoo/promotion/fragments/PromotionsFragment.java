@@ -271,20 +271,30 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 									String message = JSONParser.getServerMessage(jObj);
 									if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
 										promoCoupons.clear();
-										promoCoupons.addAll(promCouponResponse.getCommonPromotions());
-										promoCoupons.addAll(promCouponResponse.getCommonCoupons());
+										if(promCouponResponse.getCommonPromotions() != null)
+											promoCoupons.addAll(promCouponResponse.getCommonPromotions());
+										if(promCouponResponse.getCommonCoupons() != null)
+											promoCoupons.addAll(promCouponResponse.getCommonCoupons());
 
-										promoCoupons.addAll(promCouponResponse.getAutosPromotions());
-										promoCoupons.addAll(promCouponResponse.getAutosCoupons());
+										if(promCouponResponse.getAutosPromotions() != null)
+											promoCoupons.addAll(promCouponResponse.getAutosPromotions());
+										if(promCouponResponse.getAutosCoupons() != null)
+											promoCoupons.addAll(promCouponResponse.getAutosCoupons());
 
-										promoCoupons.addAll(promCouponResponse.getFreshPromotions());
-										promoCoupons.addAll(promCouponResponse.getFreshCoupons());
+										if(promCouponResponse.getFreshPromotions() != null)
+											promoCoupons.addAll(promCouponResponse.getFreshPromotions());
+										if(promCouponResponse.getFreshCoupons() != null)
+											promoCoupons.addAll(promCouponResponse.getFreshCoupons());
 
-										promoCoupons.addAll(promCouponResponse.getMealsPromotions());
-										promoCoupons.addAll(promCouponResponse.getMealsCoupons());
+										if(promCouponResponse.getMealsPromotions() != null)
+											promoCoupons.addAll(promCouponResponse.getMealsPromotions());
+										if(promCouponResponse.getMealsCoupons() != null)
+											promoCoupons.addAll(promCouponResponse.getMealsCoupons());
 
-										promoCoupons.addAll(promCouponResponse.getDeliveryPromotions());
-										promoCoupons.addAll(promCouponResponse.getDeliveryCoupons());
+										if(promCouponResponse.getDeliveryPromotions() != null)
+											promoCoupons.addAll(promCouponResponse.getDeliveryPromotions());
+										if(promCouponResponse.getDeliveryCoupons() != null)
+											promoCoupons.addAll(promCouponResponse.getDeliveryCoupons());
 										updateListData();
 										if (Data.userData != null) {
 											Data.userData.numCouponsAvaliable = promoCoupons.size();
