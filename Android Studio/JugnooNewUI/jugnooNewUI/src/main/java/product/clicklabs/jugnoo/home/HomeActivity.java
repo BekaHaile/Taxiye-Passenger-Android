@@ -417,7 +417,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private int showAllDrivers = 0, showDriverInfo = 0, rating = 0, jugnooPoolFareId = 0;
 
-    private boolean intentFired = false, dropLocationSearched = false, confirmedScreenOpened;
+    public boolean intentFired = false, dropLocationSearched = false, confirmedScreenOpened;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -437,7 +437,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private PokestopHelper pokestopHelper;
     ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffAssigning, imageViewPokemonOnOffEngaged;
+    private ImageView imageViewFabFake, imageViewFabFakeConfirm;
     private Bundle bundle;
+    public float scale = 0f;
 
     /*private RelativeLayout relativeLayoutFAB;
     private FloatingActionMenu menuLabelsRight;
@@ -534,6 +536,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
         mapFragment = ((TouchableMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
         mapTouched = false;
+        scale = getResources().getDisplayMetrics().density;
 
 
         //Passenger main layout
@@ -783,25 +786,30 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewPokemonOnOffAssigning = (ImageView) findViewById(R.id.imageViewPokemonOnOffAssigning); imageViewPokemonOnOffAssigning.setVisibility(View.GONE);
         imageViewPokemonOnOffEngaged = (ImageView) findViewById(R.id.imageViewPokemonOnOffEngaged); imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
 
-        /*relativeLayoutFAB = (RelativeLayout) findViewById(R.id.relativeLayoutFAB);
-        menuLabelsRight = (FloatingActionMenu) findViewById(R.id.menu_labels_right);
-        menuLabelsRight.setIconAnimated(false);
-        fabDelivery = (FloatingActionButton) findViewById(R.id.fabDelivery);
-        fabMeals = (FloatingActionButton) findViewById(R.id.fabMeals);
-        fabFresh = (FloatingActionButton) findViewById(R.id.fabFresh);
-        fabAutos = (FloatingActionButton) findViewById(R.id.fabAutos);
-        fabExtra = (View) findViewById(R.id.fabExtra);
-        //fabExtra.setVisibility(View.GONE);
-        menuLabelsRight.setIconAnimated(false);
-        fabDelivery.setLabelTextColor(getResources().getColor(R.color.black));
-        fabMeals.setLabelTextColor(getResources().getColor(R.color.black));
-        fabFresh.setLabelTextColor(getResources().getColor(R.color.black));
-        fabAutos.setLabelTextColor(getResources().getColor(R.color.black));
-        fabDelivery.setOnClickListener(clickListener);
-        fabMeals.setOnClickListener(clickListener);
-        fabFresh.setOnClickListener(clickListener);
-        fabAutos.setOnClickListener(clickListener);
-        setFABButtons();*/
+        imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
+        imageViewFabFakeConfirm = (ImageView) findViewById(R.id.imageViewFabFakeConfirm);
+
+        imageViewFabFake.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(viewPoolInfoBarAnim.getVisibility() == View.VISIBLE){
+                    fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 8, (int) (162f * ASSL.Yscale()));
+                } else{
+                    fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 8, (int) (235f * ASSL.Yscale()));
+                }
+                openFABView();
+            }
+        });
+
+        imageViewFabFakeConfirm.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                float scale = getResources().getDisplayMetrics().density;
+                int dpAsPixels = (int) (350f*scale + 0.5f);
+                fabView.menuLabelsRight.setPadding((int)(40*ASSL.Yscale()), 0, 8, dpAsPixels);
+                openFABView();
+            }
+        });
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -1922,6 +1930,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     };*/
 
+    private void openFABView(){
+        if (fabView.menuLabelsRight.isOpened()) {
+            fabView.menuLabelsRight.close(true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fabView.fabExtra.setVisibility(View.GONE);
+                    fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                }
+            }, 300);
+        } else {
+            fabView.menuLabelsRight.open(true);
+            fabView.fabExtra.setVisibility(View.VISIBLE);
+        }
+        fabView.setFABMenuDrawable();
+    }
+
     private void endRideWithGif(){
         relativeLayoutGreat.setVisibility(View.VISIBLE);
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageViewThumbsUpGif);
@@ -2589,6 +2614,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void switchPassengerScreen(PassengerScreenMode mode) {
         try {
+            float containerHeight = 180f;
             if (userMode == UserMode.PASSENGER) {
 
                 if (currentLocationMarker != null) {
@@ -2629,6 +2655,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
+                        fabView.setRelativeLayoutFABVisibility(mode);
                         Log.d("RidePath DB", "Deleted");
 
                     } else {
@@ -2668,6 +2695,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.VISIBLE);
                         relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
+                        fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
                         checkForMyLocationButtonVisibility();
@@ -2742,7 +2770,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
                             updateConfirmedStateFare();
-
+                            fabView.setRelativeLayoutFABVisibility(mode);
+                            int dpAsPixels = (int) (200f*scale + 0.5f);
+                            fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
                         } else{
                             if (!zoomedForSearch && map != null) {
                                 getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
@@ -2847,6 +2877,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
+                        fabView.setRelativeLayoutFABVisibility(mode);
+                        int dpAsPixels = (int) (150f*scale + 0.5f);
+                        fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
 
                         try {
                             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
@@ -2923,6 +2956,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
+                        fabView.setRelativeLayoutFABVisibility(mode);
+                        int dpAsPixels1 = 0;
+                        if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
+                            containerHeight = containerHeight + 50f;
+                        }
+                        if(relativeLayoutInRideInfo.getVisibility() == View.VISIBLE){
+                            containerHeight = containerHeight + 40f;
+                        }
+                        dpAsPixels1 = (int) (containerHeight * scale + 0.5f);
+                        fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels1);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -2991,6 +3034,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
+                        fabView.setRelativeLayoutFABVisibility(mode);
+                        int dpAsPixels2 = 0;
+                        if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
+                            containerHeight = containerHeight + 50f;
+                        }
+                        if(relativeLayoutInRideInfo.getVisibility() == View.VISIBLE){
+                            containerHeight = containerHeight + 40f;
+                        }
+                        dpAsPixels2 = (int) (containerHeight * scale + 0.5f);
+                        fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels2);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -3053,6 +3106,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
+                        fabView.setRelativeLayoutFABVisibility(mode);
+                        int dpAsPixels3 = 0;
+                        if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
+                            containerHeight = containerHeight + 50f;
+                        }
+                        if(relativeLayoutInRideInfo.getVisibility() == View.VISIBLE){
+                            containerHeight = containerHeight + 40f;
+                        }
+                        dpAsPixels3 = (int) (containerHeight * scale + 0.5f);
+                        fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels3);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -3077,6 +3140,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         dropLocationSet = false;
                         Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
+                        fabView.setRelativeLayoutFABVisibility(mode);
                         break;
 
                 }
@@ -8583,10 +8647,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(Utils.isAppInstalled(this, POKEMON_GO_APP_PACKAGE)
                     && changeLocalityLayout.getVisibility() == View.GONE
                     && Prefs.with(this).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1){
-                imageViewPokemonOnOffInitial.setVisibility(View.VISIBLE);
-                imageViewPokemonOnOffConfirm.setVisibility(View.VISIBLE);
-                imageViewPokemonOnOffAssigning.setVisibility(View.VISIBLE);
-                imageViewPokemonOnOffEngaged.setVisibility(View.VISIBLE);
+                //imageViewPokemonOnOffInitial.setVisibility(View.VISIBLE);
+                //imageViewPokemonOnOffConfirm.setVisibility(View.VISIBLE);
+                //imageViewPokemonOnOffAssigning.setVisibility(View.VISIBLE);
+                //imageViewPokemonOnOffEngaged.setVisibility(View.VISIBLE);
 
                 ImageView imageView = null;
                 if(mode == PassengerScreenMode.P_REQUEST_FINAL || mode == PassengerScreenMode.P_DRIVER_ARRIVED

@@ -228,7 +228,23 @@
             </RelativeLayout>
         </LinearLayout>
 
+
+        <ImageView
+            android:id="@+id/imageViewFabFake"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:src="@drawable/ic_fab_menu_fake"
+            android:layout_above="@+id/linearLayoutCheckoutContainer"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="25dp"
+            android:tag="DontTouchMe"
+            android:layout_marginLeft="16dp"
+            android:visibility="visible"
+            />
+
         <include layout="@layout/layout_home_activity_fab"/>
+
+
 
     </RelativeLayout>
 

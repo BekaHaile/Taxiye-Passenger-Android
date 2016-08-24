@@ -104,6 +104,10 @@ public class FloatingActionMenu extends ViewGroup {
     private String mMenuLabelText;
     private boolean mUsingMenuLabel;
 
+    public OnMenuToggleListener getmToggleListener() {
+        return mToggleListener;
+    }
+
     public FloatingActionMenu(Context context) {
         this(context, (AttributeSet)null);
     }
@@ -217,7 +221,7 @@ public class FloatingActionMenu extends ViewGroup {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_down));
+                //mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_down));
             }
 
             @Override
@@ -616,7 +620,7 @@ public class FloatingActionMenu extends ViewGroup {
                     FloatingActionMenu.this.mMenuOpened = true;
                     if(FloatingActionMenu.this.mToggleListener != null) {
                         FloatingActionMenu.this.mToggleListener.onMenuToggle(true);
-                        mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_down));
+                        //mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_down));
                     }
 
                 }
@@ -676,7 +680,7 @@ public class FloatingActionMenu extends ViewGroup {
                     FloatingActionMenu.this.mMenuOpened = false;
                     if(FloatingActionMenu.this.mToggleListener != null) {
                         FloatingActionMenu.this.mToggleListener.onMenuToggle(false);
-                        mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_menu));
+                        //mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_menu));
                     }
 
                 }

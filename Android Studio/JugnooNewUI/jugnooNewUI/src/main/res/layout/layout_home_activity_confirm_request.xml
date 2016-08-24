@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <Button
         android:id="@+id/confirmMyLocationBtn"
@@ -25,7 +25,17 @@
         android:tag="mwar"
         android:layout_marginLeft="56px"
         android:layout_marginTop="15px"
-        android:visibility="visible"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/imageViewFabFakeConfirm"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:src="@drawable/ic_fab_menu_fake"
+        android:tag="DontTouchMe"
+        android:layout_marginLeft="20dp"
+        android:visibility="gone"
         />
 
     <RelativeLayout
