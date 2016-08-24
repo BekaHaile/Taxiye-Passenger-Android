@@ -130,17 +130,57 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="35px"
-                    android:layout_marginRight="35px"
-                    android:layout_toLeftOf="@+id/linearLayoutCheckout"
-                    android:layout_toRightOf="@+id/relativeLayoutLeft"
+                    android:layout_marginLeft="150px"
+                    android:layout_marginRight="150px"
                     android:gravity="center_horizontal"
                     android:singleLine="true"
+                    android:text="123"
                     android:textColor="@color/cart_price"
                     android:textSize="@dimen/text_size_38" />
 
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutCartNew"
+                    android:layout_width="132px"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:visibility="visible">
+
+                    <View
+                        android:layout_width="2px"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="20px"
+                        android:layout_marginTop="20px"
+                        android:background="@color/text_color_hint" />
+
+                    <ImageView
+                        android:id="@+id/imageViewCartNew"
+                        android:layout_width="46px"
+                        android:layout_height="36px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="40px"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:id="@+id/textViewCartItemsCountNew"
+                        android:layout_width="45px"
+                        android:layout_height="45px"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="25px"
+                        android:layout_marginTop="10px"
+                        android:background="@drawable/theme_circle_card"
+                        android:gravity="center"
+                        android:minWidth="45px"
+                        android:padding="8px"
+                        android:text="0"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_24"
+                        android:visibility="visible" />
+
+                </RelativeLayout>
 
                 <LinearLayout
+                    android:visibility="gone"
                     android:id="@+id/linearLayoutCheckout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -168,7 +208,7 @@
                         android:text="@string/checkout"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
 
                     <ImageView
