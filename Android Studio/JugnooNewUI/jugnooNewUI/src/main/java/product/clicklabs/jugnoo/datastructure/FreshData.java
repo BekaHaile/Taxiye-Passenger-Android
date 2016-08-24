@@ -14,6 +14,7 @@ public class FreshData {
 	public int pendingFeedback;
 	public ArrayList<Store> stores;
 	private PopupData popupData;
+	private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 
 	public FreshData(String question, String orderId, int questionType, int pendingFeedback,
 					 ArrayList<Store> stores, PopupData popupData) {
@@ -71,5 +72,13 @@ public class FreshData {
 
 	public void setPopupData(PopupData popupData) {
 		this.popupData = popupData;
+	}
+
+	public ArrayList<PromoCoupon> getPromoCoupons() {
+		return promoCoupons;
+	}
+
+	public void setPromoCoupons(ArrayList<PromoCoupon> promoCoupons) {
+		this.promoCoupons = promoCoupons;
 	}
 }

@@ -2,11 +2,14 @@ package product.clicklabs.jugnoo.datastructure;
 
 import android.content.Context;
 
+import com.sabkuchfresh.utils.AppConstant;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -55,6 +58,7 @@ public class UserData {
 	private int currentCity = 1;
 	private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 	private ArrayList<MenuInfo> menuInfoList = new ArrayList<>();
+
 	private ReferralMessages referralMessages;
 
 	private String defaultClientId;
@@ -593,6 +597,89 @@ public class UserData {
 		this.defaultClientId = defaultClientId;
 	}
 
+
+	public String getTotalCouponCount() {
+		int count = 0;
+		try {
+			if(promoCoupons != null) {
+				count = promoCoupons.size();
+			}
+			if(Data.autoData != null && Data.autoData.getPromoCoupons() != null) {
+				count += Data.autoData.getPromoCoupons().size();
+			}
+			if(Data.getFreshData() != null && Data.getFreshData().getPromoCoupons() != null) {
+				count += Data.getFreshData().getPromoCoupons().size();
+			}
+			if(Data.getMealsData() != null && Data.getMealsData().getPromoCoupons() != null) {
+				count += Data.getMealsData().getPromoCoupons().size();
+			}
+			if(Data.getDeliveryData() != null && Data.getDeliveryData().getPromoCoupons() != null) {
+				count += Data.getDeliveryData().getPromoCoupons().size();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return String.valueOf(count);
+	}
+
+	public ArrayList<PromoCoupon> getCoupons(int appType) {
+		ArrayList<PromoCoupon> coupons = new ArrayList<>();
+		if(appType == AppConstant.AppType.AUTO) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).autos.equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).autos.equals(1))) {
+                        coupons.add(promoCoupon);
+                    }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.autoData.getPromoCoupons());
+		} else if(appType == AppConstant.AppType.FRESH) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).fresh.equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).fresh.equals(1))) {
+                        coupons.add(promoCoupon);
+                    }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.getFreshData().getPromoCoupons());
+		} else if(appType == AppConstant.AppType.MEALS) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).meals.equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).meals.equals(1))) {
+                        coupons.add(promoCoupon);
+                    }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.getMealsData().getPromoCoupons());
+		} else if(appType == AppConstant.AppType.DELIVERY) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).delivery.equals(1)) ||
+							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).delivery.equals(1))) {
+						coupons.add(promoCoupon);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.getDeliveryData().getPromoCoupons());
+		}
+
+		return coupons;
+	}
 
 //	"meals_enabled": 1,
 //			"fresh_enabled": 1,

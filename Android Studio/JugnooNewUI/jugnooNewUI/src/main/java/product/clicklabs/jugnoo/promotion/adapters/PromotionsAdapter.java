@@ -54,7 +54,7 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
         holder.textViewCouponTitle.setText(promoCoupon.getTitle());
         if(promoCoupon instanceof CouponInfo){
             holder.textViewExpiryDate.setText(String.format(activity.getResources().getString(R.string.valid_until_format),
-                    DateOperations.getDate(DateOperations.utcToLocal(((CouponInfo)promoCoupon).expiryDate))));
+                    DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(((CouponInfo)promoCoupon).expiryDate))));
         } else if(promoCoupon instanceof PromotionInfo){
             holder.textViewExpiryDate.setText(String.format(activity.getResources().getString(R.string.valid_until_format),
                     DateOperations.getDate(DateOperations.utcToLocalWithTZFallback(((PromotionInfo)promoCoupon).endOn))));

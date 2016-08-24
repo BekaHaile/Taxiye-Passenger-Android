@@ -1,16 +1,42 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class PromotionInfo extends PromoCoupon{
-	
-	private String title;
+	@SerializedName("promo_id")
+	@Expose
+	public Integer id;
+	@SerializedName("title")
+	@Expose
+	public String title;
+	@SerializedName("terms_n_conds")
+	@Expose
 	public String terms;
-    public String expiryDate, endOn;
-	
-	public PromotionInfo(int id, String title, String terms, String expiryDate, String endOn){
+	@SerializedName("end_on")
+	@Expose
+	public String endOn;
+	@SerializedName("autos")
+	@Expose
+	public Integer autos;
+	@SerializedName("fresh")
+	@Expose
+	public Integer fresh;
+	@SerializedName("meals")
+	@Expose
+	public Integer meals;
+	@SerializedName("delivery")
+	@Expose
+	public Integer delivery;
+	@SerializedName("master_coupon")
+	@Expose
+	private Integer masterCoupon;
+
+
+	public PromotionInfo(int id, String title, String terms, String endOn){
 		this.id = id;
 		this.title = title;
 		this.terms = terms;
-        this.expiryDate = expiryDate;
 		this.endOn = endOn;
 	}
 
@@ -18,9 +44,13 @@ public class PromotionInfo extends PromoCoupon{
         this.id = id;
         this.title = title;
         this.terms = terms;
-        this.expiryDate = "";
 		this.endOn = "";
     }
+
+	@Override
+	public int getId() {
+		return id;
+	}
 
 	@Override
 	public String getTitle() {
@@ -30,7 +60,7 @@ public class PromotionInfo extends PromoCoupon{
 	@Override
 	public boolean equals(Object o) {
 		try{
-			if((((PromotionInfo)o).id == this.id)){
+			if((((PromotionInfo)o).id.equals(this.id))){
 				return true;
 			}
 			else{ 
@@ -40,5 +70,12 @@ public class PromotionInfo extends PromoCoupon{
 			return false;
 		}
 	}
-	
+
+	public Integer getMasterCoupon() {
+		return masterCoupon;
+	}
+
+	public void setMasterCoupon(Integer masterCoupon) {
+		this.masterCoupon = masterCoupon;
+	}
 }

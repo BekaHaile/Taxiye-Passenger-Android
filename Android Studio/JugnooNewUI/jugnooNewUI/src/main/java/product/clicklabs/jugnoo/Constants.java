@@ -421,5 +421,6 @@ public interface Constants {
 	String KEY_DELIVERY_ENABLED = "delivery_enabled";
 	String KEY_ORDER_HISTORY = "order_history";
 	String INTENT_KEY_FROM_BAD = "FromBad";
+	String KEY_MASTER_COUPON = "master_coupon";
 
 }

@@ -41,6 +41,8 @@ public class AutoData {
     private boolean supportFeedbackSubmitted = false;
     private LatLng lastRefreshLatLng;
 
+    private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
+
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
                     String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String confirmScreenFareEstimateEnable,
@@ -387,5 +389,13 @@ public class AutoData {
 
     public void setLastRefreshLatLng(LatLng lastRefreshLatLng) {
         this.lastRefreshLatLng = lastRefreshLatLng;
+    }
+
+    public ArrayList<PromoCoupon> getPromoCoupons() {
+        return promoCoupons;
+    }
+
+    public void setPromoCoupons(ArrayList<PromoCoupon> promoCoupons) {
+        this.promoCoupons = promoCoupons;
     }
 }

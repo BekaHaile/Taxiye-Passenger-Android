@@ -7,19 +7,15 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.Coupon;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
-import product.clicklabs.jugnoo.retrofit.model.Promotion;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -194,31 +190,91 @@ public class ApiFindADriver {
 		}
 
 		try {
-			if(Data.userData.getPromoCoupons() == null){
-				Data.userData.setPromoCoupons(new ArrayList<PromoCoupon>());
-			} else{
-				Data.userData.getPromoCoupons().clear();
+			//Common promo and Coupon
+			try {
+				if(Data.userData != null && Data.userData.getPromoCoupons() == null){
+                    Data.userData.setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.userData.getPromoCoupons().clear();
+                }
+				if(findADriverResponse.getCommonPromotions() != null) {
+                    Data.userData.getPromoCoupons().addAll(findADriverResponse.getCommonPromotions());
+                }
+				if(findADriverResponse.getCommonCoupons() != null) {
+                    Data.userData.getPromoCoupons().addAll(findADriverResponse.getCommonCoupons());
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if(findADriverResponse.getCoupons() != null) {
-				for (Coupon coupon : findADriverResponse.getCoupons()) {
-					Data.userData.getPromoCoupons().add(new CouponInfo(coupon.getAccountId(),
-							coupon.getCouponType(),
-							coupon.getStatus(),
-							coupon.getTitle(),
-							coupon.getSubtitle(),
-							coupon.getDescription(),
-							coupon.getImage(),
-							coupon.getRedeemedOn(),
-							coupon.getExpiryDate(), "", ""));
-				}
+
+			// for Auto promo and coupons
+			try {
+				if(Data.autoData != null && Data.autoData.getPromoCoupons() == null){
+                    Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.autoData.getPromoCoupons().clear();
+                }
+				if(findADriverResponse.getAutosPromotions() != null) {
+                    Data.autoData.getPromoCoupons().addAll(findADriverResponse.getAutosPromotions());
+                }
+				if(findADriverResponse.getAutosCoupons() != null) {
+                    Data.autoData.getPromoCoupons().addAll(findADriverResponse.getAutosCoupons());
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if(findADriverResponse.getPromotions() != null) {
-				for (Promotion promotion : findADriverResponse.getPromotions()) {
-					Data.userData.getPromoCoupons().add(new PromotionInfo(promotion.getPromoId(),
-							promotion.getTitle(),
-							promotion.getTermsNConds()));
-				}
+
+			// for Fresh promo and coupons
+			try {
+				if(Data.getFreshData() != null && Data.getFreshData().getPromoCoupons() == null){
+                    Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.getFreshData().getPromoCoupons().clear();
+                }
+				if(findADriverResponse.getFreshPromotions() != null) {
+                    Data.getFreshData().getPromoCoupons().addAll(findADriverResponse.getFreshPromotions());
+                }
+				if(findADriverResponse.getFreshCoupons() != null) {
+                    Data.getFreshData().getPromoCoupons().addAll(findADriverResponse.getFreshCoupons());
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
+			// for Meals promo and coupons
+			try {
+				if(Data.getMealsData() != null && Data.getMealsData().getPromoCoupons() == null){
+                    Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.getMealsData().getPromoCoupons().clear();
+                }
+				if(findADriverResponse.getMealsPromotions() != null) {
+                    Data.getMealsData().getPromoCoupons().addAll(findADriverResponse.getMealsPromotions());
+                }
+				if(findADriverResponse.getMealsCoupons() != null) {
+                    Data.getMealsData().getPromoCoupons().addAll(findADriverResponse.getMealsCoupons());
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			// for Dodo promo and coupons
+			try {
+				if(Data.getDeliveryData() != null && Data.getDeliveryData().getPromoCoupons() == null){
+                    Data.getDeliveryData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.getDeliveryData().getPromoCoupons().clear();
+                }
+				if(findADriverResponse.getDeliveryPromotions() != null) {
+                    Data.getDeliveryData().getPromoCoupons().addAll(findADriverResponse.getDeliveryPromotions());
+                }
+				if(findADriverResponse.getDeliveryCoupons() != null) {
+                    Data.getDeliveryData().getPromoCoupons().addAll(findADriverResponse.getDeliveryCoupons());
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 
 			if(findADriverResponse.getFareStructure() != null) {
 				for (FareStructure fareStructure : findADriverResponse.getFareStructure()) {
