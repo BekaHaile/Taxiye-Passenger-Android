@@ -17,6 +17,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Pair;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -133,6 +134,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public String current_pincode = "";
     public boolean locationSearchShown = false;
     public boolean canOrder = false;
+    private ImageView imageViewFabFake;
 
 
     @Override
@@ -178,6 +180,27 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //        if(BuildConfig.DEBUG_MODE)
 //            Utils.showPaystorePopup(FreshActivity.this, "", "please rate us");
 
+        imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
+
+        imageViewFabFake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fabView.menuLabelsRight.isOpened()) {
+                    fabView.menuLabelsRight.close(true);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fabView.fabExtra.setVisibility(View.GONE);
+                            fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                        }
+                    }, 300);
+                } else {
+                    fabView.menuLabelsRight.open(true);
+                    fabView.fabExtra.setVisibility(View.VISIBLE);
+                }
+                fabView.setFABMenuDrawable();
+            }
+        });
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override

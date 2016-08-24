@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -969,11 +968,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
-			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
-			intent.setData(Data.splashIntentUri);
-			startActivity(intent);
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-			ActivityCompat.finishAffinity(this);
+
+			MyApplication.getInstance().getAppSwitcher().switchApp(OTPConfirmScreen.this,
+					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), Data.splashIntentUri);
+//			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
+//			intent.setData(Data.splashIntentUri);
+//			startActivity(intent);
+//			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//			ActivityCompat.finishAffinity(this);
 		}
 	}
 

@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.sabkuchfresh.home.FreshActivity;
 
@@ -25,7 +26,11 @@ public class AppSwitcher {
 		this.context = context;
 	}
 
-	public void switchApp(final Activity activity, final String clientId){
+	public void switchApp(final Activity activity, final String clientId) {
+		switchApp(activity, clientId, null);
+	}
+
+	public void switchApp(final Activity activity, final String clientId, final Uri data){
 
 		ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
 			@Override
@@ -60,6 +65,9 @@ public class AppSwitcher {
 							public void success() {
 								Intent intent = new Intent(activity, HomeActivity.class);
 								intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+								if(data != null){
+									intent.setData(data);
+								}
 								activity.startActivity(intent);
 								activity.finish();
 							}
@@ -72,6 +80,9 @@ public class AppSwitcher {
 			} else {
 				Intent intent = new Intent(activity, HomeActivity.class);
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				if(data != null){
+					intent.setData(data);
+				}
 				activity.startActivity(intent);
 				activity.finish();
 				new ApiUpdateClientId().updateClientId(clientId);
@@ -86,6 +97,7 @@ public class AppSwitcher {
 				Intent intent = new Intent(activity, FreshActivity.class);
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				activity.startActivity(intent);
+				activity.finish();
 
 				new ApiUpdateClientId().updateClientId(clientId);
 				Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
@@ -99,6 +111,8 @@ public class AppSwitcher {
 				Intent intent = new Intent(activity, FreshActivity.class);
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				activity.startActivity(intent);
+				activity.finish();
+
 				new ApiUpdateClientId().updateClientId(clientId);
 				Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 			}
@@ -111,6 +125,7 @@ public class AppSwitcher {
 				Intent intent = new Intent(activity, FreshActivity.class);
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				activity.startActivity(intent);
+				activity.finish();
 
 				new ApiUpdateClientId().updateClientId(clientId);
 				Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);

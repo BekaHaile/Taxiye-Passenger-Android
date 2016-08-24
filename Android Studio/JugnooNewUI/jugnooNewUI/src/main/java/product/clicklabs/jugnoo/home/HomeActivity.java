@@ -436,7 +436,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private int shakeAnim = 0;
 
     private PokestopHelper pokestopHelper;
-    ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffAssigning, imageViewPokemonOnOffEngaged;
+    ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffAssigning, imageViewPokemonOnOffEngaged, imageViewFabFake;
     private Bundle bundle;
 
     /*private RelativeLayout relativeLayoutFAB;
@@ -783,25 +783,32 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewPokemonOnOffAssigning = (ImageView) findViewById(R.id.imageViewPokemonOnOffAssigning); imageViewPokemonOnOffAssigning.setVisibility(View.GONE);
         imageViewPokemonOnOffEngaged = (ImageView) findViewById(R.id.imageViewPokemonOnOffEngaged); imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
 
-        /*relativeLayoutFAB = (RelativeLayout) findViewById(R.id.relativeLayoutFAB);
-        menuLabelsRight = (FloatingActionMenu) findViewById(R.id.menu_labels_right);
-        menuLabelsRight.setIconAnimated(false);
-        fabDelivery = (FloatingActionButton) findViewById(R.id.fabDelivery);
-        fabMeals = (FloatingActionButton) findViewById(R.id.fabMeals);
-        fabFresh = (FloatingActionButton) findViewById(R.id.fabFresh);
-        fabAutos = (FloatingActionButton) findViewById(R.id.fabAutos);
-        fabExtra = (View) findViewById(R.id.fabExtra);
-        //fabExtra.setVisibility(View.GONE);
-        menuLabelsRight.setIconAnimated(false);
-        fabDelivery.setLabelTextColor(getResources().getColor(R.color.black));
-        fabMeals.setLabelTextColor(getResources().getColor(R.color.black));
-        fabFresh.setLabelTextColor(getResources().getColor(R.color.black));
-        fabAutos.setLabelTextColor(getResources().getColor(R.color.black));
-        fabDelivery.setOnClickListener(clickListener);
-        fabMeals.setOnClickListener(clickListener);
-        fabFresh.setOnClickListener(clickListener);
-        fabAutos.setOnClickListener(clickListener);
-        setFABButtons();*/
+        imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
+
+        imageViewFabFake.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(viewPoolInfoBarAnim.getVisibility() == View.VISIBLE){
+                    fabView.menuLabelsRight.setPadding((int)(40*ASSL.Yscale()), 0, 8, (int)(162f*ASSL.Yscale()));
+                } else{
+                    fabView.menuLabelsRight.setPadding((int)(40*ASSL.Yscale()), 0, 8, (int)(235f*ASSL.Yscale()));
+                }
+                if (fabView.menuLabelsRight.isOpened()) {
+                    fabView.menuLabelsRight.close(true);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fabView.fabExtra.setVisibility(View.GONE);
+                            fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                        }
+                    }, 300);
+                } else {
+                    fabView.menuLabelsRight.open(true);
+                    fabView.fabExtra.setVisibility(View.VISIBLE);
+                }
+                fabView.setFABMenuDrawable();
+            }
+        });
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override

@@ -1649,11 +1649,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				if (State.SPLASH_LS == state || State.SPLASH_INIT == state || State.SPLASH_NO_NET == state) {
 					if (SplashNewActivity.this.hasWindowFocus() && loginDataFetched) {
 						loginDataFetched = false;
-						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
-						intent.setData(getIntent().getData());
-						startActivity(intent);
-						ActivityCompat.finishAffinity(SplashNewActivity.this);
-						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+						MyApplication.getInstance().getAppSwitcher().switchApp(SplashNewActivity.this,
+								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), getIntent().getData());
+//						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
+//						intent.setData(getIntent().getData());
+//						startActivity(intent);
+//						ActivityCompat.finishAffinity(SplashNewActivity.this);
+//						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					}
 				}
 				else if(State.LOGIN == state || State.SIGNUP == state){
@@ -1663,11 +1665,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						FlurryAgent.logEvent("App Login", articleParams);
 
 						loginDataFetched = false;
-						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
-						intent.setData(Data.splashIntentUri);
-						startActivity(intent);
-						ActivityCompat.finishAffinity(SplashNewActivity.this);
-						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+						MyApplication.getInstance().getAppSwitcher().switchApp(SplashNewActivity.this,
+								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), Data.splashIntentUri);
+//						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
+//						intent.setData(Data.splashIntentUri);
+//						startActivity(intent);
+//						ActivityCompat.finishAffinity(SplashNewActivity.this);
+//						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					}
 					else if(SplashNewActivity.this.hasWindowFocus() && emailRegister){
 						emailRegister = false;

@@ -5,10 +5,12 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 
@@ -17,13 +19,13 @@ import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
  */
 public class FABView {
     Activity activity;
-    private RelativeLayout relativeLayoutFAB;
-    private FloatingActionMenu menuLabelsRight;
+    public RelativeLayout relativeLayoutFAB;
+    public FloatingActionMenu menuLabelsRight;
     private FloatingActionButton fabDelivery;
     private FloatingActionButton fabMeals;
     private FloatingActionButton fabFresh;
     private FloatingActionButton fabAutos;
-    private View fabExtra;
+    public View fabExtra;
 
     public FABView(Activity activity) {
         this.activity = activity;
@@ -49,6 +51,7 @@ public class FABView {
         fabMeals.setOnClickListener(clickListener);
         fabFresh.setOnClickListener(clickListener);
         fabAutos.setOnClickListener(clickListener);
+        relativeLayoutFAB.setVisibility(View.INVISIBLE);
         setFABButtons();
 
         menuLabelsRight.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
@@ -58,11 +61,13 @@ public class FABView {
                 if (opened) {
                     text = "Menu opened";
                     fabExtra.setVisibility(View.VISIBLE);
+                    relativeLayoutFAB.setVisibility(View.VISIBLE);
                 } else {
                     text = "Menu closed";
                     fabExtra.setVisibility(View.GONE);
+                    relativeLayoutFAB.setVisibility(View.INVISIBLE);
                 }
-                //Toast.makeText(FreshActivity.this, text, Toast.LENGTH_SHORT).show();
+                setFABMenuDrawable();
             }
         });
 
@@ -75,21 +80,53 @@ public class FABView {
                         @Override
                         public void run() {
                             fabExtra.setVisibility(View.GONE);
+                            relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                            setFABMenuDrawable();
                         }
                     }, 300);
                 } else {
                     //menuLabelsRight.open(true);
                     //fabExtra.setVisibility(View.VISIBLE);
                 }
+
             }
         });
     }
 
-    private void setFABButtons(){
+    public FloatingActionMenu getMenuLabelsRight() {
+        return menuLabelsRight;
+    }
+
+    public void setFABMenuDrawable(){
+        String currentOpenedOffering = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+        if (menuLabelsRight.isOpened()) {
+            if(Config.getAutosClientId().equalsIgnoreCase(currentOpenedOffering)){
+                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_autos_selected);
+            } else if(Config.getFreshClientId().equalsIgnoreCase(currentOpenedOffering)){
+                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_fresh_selected);
+            } else if(Config.getMealsClientId().equalsIgnoreCase(currentOpenedOffering)){
+                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_meals_selected);
+            }
+        } else {
+            menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_menu);
+        }
+
+        if(Config.getAutosClientId().equalsIgnoreCase(currentOpenedOffering)){
+            fabAutos.setVisibility(View.GONE);
+        } else if(Config.getFreshClientId().equalsIgnoreCase(currentOpenedOffering)){
+            fabFresh.setVisibility(View.GONE);
+        } else if(Config.getMealsClientId().equalsIgnoreCase(currentOpenedOffering)){
+            fabMeals.setVisibility(View.GONE);
+        }
+        //setFABButtons();
+    }
+
+    public void setFABButtons(){
         if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)){
             relativeLayoutFAB.setVisibility(View.GONE);
         } else {
-            relativeLayoutFAB.setVisibility(View.VISIBLE);
+            relativeLayoutFAB.setVisibility(View.INVISIBLE);
+            String currentOpenedOffering = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
             if (Data.userData.getFreshEnabled() == 1) {
                 fabFresh.setVisibility(View.VISIBLE);
             } else {
@@ -148,4 +185,5 @@ public class FABView {
             fabExtra.performClick();
         }
     };
+
 }
