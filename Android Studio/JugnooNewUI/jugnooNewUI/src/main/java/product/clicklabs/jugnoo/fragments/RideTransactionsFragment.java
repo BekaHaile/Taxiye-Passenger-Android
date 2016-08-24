@@ -123,56 +123,35 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 						try {
 							Log.v("Ride Amount is ", "---> " + historyData.getAmount());
 							if (historyData.getProductType() == ProductType.AUTO.getOrdinal()) {
-								if (historyData.getIsCancelledRide() != 1) {
-									if (AppStatus.getInstance(activity).isOnline(activity)) {
-										if (activity instanceof RideTransactionsActivity) {
-											new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
-													historyData.getEngagementId(), false);
-										} else if (activity instanceof SupportActivity) {
-											new TransactionUtils().openRideIssuesFragment(activity,
-													((SupportActivity) activity).getContainer(),
-													historyData.getEngagementId(), null, null, 0, false);
-										}
-										FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
-									} else {
-										DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+								if (AppStatus.getInstance(activity).isOnline(activity)) {
+									if (activity instanceof RideTransactionsActivity) {
+										new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
+												historyData.getEngagementId(), historyData.getIsCancelledRide() == 1, historyData.getAutosStatus());
+									} else if (activity instanceof SupportActivity) {
+										new TransactionUtils().openRideIssuesFragment(activity,
+												((SupportActivity) activity).getContainer(),
+												historyData.getEngagementId(), null, null, 0, historyData.getIsCancelledRide() == 1, historyData.getAutosStatus(),
+												null);
 									}
-									FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
 								} else {
-									Log.v("Cancelled Ride", "Cancelled Ride");
-									if (AppStatus.getInstance(activity).isOnline(activity)) {
-										if (activity instanceof RideTransactionsActivity) {
-										/*new TransactionUtils().openRideIssuesFragment(activity,
-												((RideTransactionsActivity) activity).getContainer(),
-												rideInfo.engagementId, null, null, 0, true);*/
-											new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
-													historyData.getEngagementId(), true);
-											FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
-										} else if (activity instanceof SupportActivity) {
-										/*new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((SupportActivity)activity).getContainer(),
-												rideInfo.engagementId, true);*/
-											new TransactionUtils().openRideIssuesFragment(activity,
-													((SupportActivity) activity).getContainer(),
-													historyData.getEngagementId(), null, null, 0, true);
-											FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
-										}
-									} else {
-										DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-									}
-									FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
-
-							}
-						}else if (historyData.getProductType() == ProductType.FRESH.getOrdinal() ||
+									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+								}
+							} else if (historyData.getProductType() == ProductType.FRESH.getOrdinal() ||
 									historyData.getProductType() == ProductType.MEALS.getOrdinal()) {
-								new TransactionUtils().openOrderSummaryFragment(activity,
-										((RideTransactionsActivity) activity).getContainer(),
-										historyData);
+								if (activity instanceof RideTransactionsActivity) {
+									new TransactionUtils().openOrderSummaryFragment(activity,
+											((RideTransactionsActivity) activity).getContainer(), historyData);
+								} else if (activity instanceof SupportActivity) {
+									new TransactionUtils().openRideIssuesFragment(activity,
+											((SupportActivity) activity).getContainer(),
+											-1, null, null, 0, false, 0,
+											historyData);
+								}
+							}
 
-//								activity.setOrderHistoryOpened(position, historyData);
-//								activity.getTransactionUtils().openOrderSummaryFragment(activity,
-//										((RideTransactionsActivity) activity).getContainer());
-						}
-					}catch (Exception e) {
+							FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+							FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
@@ -276,47 +255,8 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt("flag");
 								if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
-
 									totalRides = jObj.getInt("history_size");
 									rideInfosList.addAll(historyResponse.getData());
-
-//									if (jObj.has("rides")) {
-//										JSONArray jRidesArr = jObj.getJSONArray("rides");
-//										for (int i = 0; i < jRidesArr.length(); i++) {
-//											JSONObject jRide = jRidesArr.getJSONObject(i);
-//											int isRatedBefore = 1;
-//											if (jRide.has("is_rated_before")) {
-//												isRatedBefore = jRide.getInt("is_rated_before");
-//											}
-//
-//											int driverId = 0;
-//											if (jRide.has("driver_id")) {
-//												driverId = jRide.getInt("driver_id");
-//											}
-//
-//											int engagementId = 0;
-//											if (jRide.has("engagement_id")) {
-//												engagementId = jRide.getInt("engagement_id");
-//											}
-//
-//											double waitTime = -1;
-//											if(jRide.has("wait_time")){
-//												waitTime = jRide.getDouble("wait_time");
-//											}
-//
-//											int isCancelledRide = 0;
-//											if(jRide.has("is_cancelled_ride")){
-//												isCancelledRide = jRide.getInt("is_cancelled_ride");
-//											}
-//
-//											rideInfosList.add(new RideInfo(jRide.getString("pickup_address"),
-//													jRide.getString("drop_address"),
-//													jRide.getDouble("amount"),
-//													jRide.getDouble("distance"),
-//													jRide.getDouble("ride_time"), waitTime,
-//													jRide.getString("date"), isRatedBefore, driverId, engagementId, isCancelledRide));
-//										}
-//									}
 
 									updateListData("You haven't tried Jugnoo yet.", false);
 

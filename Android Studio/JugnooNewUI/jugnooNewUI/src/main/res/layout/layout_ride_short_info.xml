@@ -4,52 +4,82 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_white_rounded_bordered"
-    android:id="@+id/linearLayoutRideShortInfo"
-    android:layout_marginLeft="30px"
-    android:layout_marginRight="30px"
-    android:layout_marginTop="30px"
     >
 
     <RelativeLayout
-        android:id="@+id/relativeLayoutIssueWithRide"
         android:layout_width="match_parent"
-        android:layout_height="74px"
-        >
-
-        <TextView
-            android:id="@+id/textViewIssueWithRide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_color_light_selector"
-            android:text="@string/issue_with_a_recent_ride"
-            android:textSize="@dimen/text_size_34"
-            android:layout_marginLeft="30px"
-            android:layout_centerVertical="true"
-            />
-
+        android:layout_height="110px">
 
         <ImageView
-            android:layout_width="19px"
-            android:layout_height="34px"
+            android:id="@+id/imageViewProductType"
+            android:layout_width="71px"
+            android:layout_height="71px"
             android:tag="mwar"
-            android:src="@drawable/ic_back_black"
+            android:src="@drawable/ic_support_auto"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="34px"
+            />
+
+        <LinearLayout
+            android:layout_width="400px"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imageViewProductType"
+            android:layout_marginLeft="30px"
+            >
+
+            <TextView
+                android:id="@+id/textViewTransactionId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="@color/text_color"
+                android:text="@string/transaction_id_format"
+                android:textSize="@dimen/text_size_20"
+                />
+
+            <TextView
+                android:id="@+id/textViewDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="@color/text_color_blue"
+                android:text="PB65AC0123"
+                android:textSize="@dimen/text_size_20"
+                android:layout_marginTop="2px"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewTransactionTotal"
+            android:layout_width="200px"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:textColor="@color/text_color"
+            android:text="@string/rupee_0"
+            android:textSize="@dimen/text_size_44"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="30px"
+            android:layout_marginRight="40px"
+            android:gravity="right"
             />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:background="@color/text_color_hint"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
             android:layout_alignParentBottom="true"
             />
+
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="152px"
+        android:layout_height="110px"
         >
 
         <LinearLayout
@@ -64,9 +94,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
-                android:textColor="@color/text_color"
+                android:textColor="@color/text_color_light"
                 android:text="Driver Name"
-                android:textSize="@dimen/text_size_30"
+                android:textSize="@dimen/text_size_20"
                 android:gravity="center"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="20px"
@@ -79,7 +109,7 @@
                 android:maxLines="2"
                 android:textColor="@color/text_color"
                 android:text="PB65AC0123"
-                android:textSize="@dimen/text_size_26"
+                android:textSize="@dimen/text_size_22"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="20px"
                 />
@@ -95,49 +125,52 @@
             >
 
             <TextView
-                android:id="@+id/textViewTripTotal"
+                android:id="@+id/textViewDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
-                android:textColor="@color/text_color"
-                android:text="Trip Total"
-                android:textSize="@dimen/text_size_30"
+                android:textColor="@color/text_color_light"
+                android:text="@string/ride_date"
+                android:textSize="@dimen/text_size_20"
                 android:layout_marginRight="10px"
                 android:layout_marginLeft="10px"
                 />
 
             <TextView
-                android:id="@+id/textViewTripTotalValue"
+                android:id="@+id/textViewDateValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:textColor="@color/text_color"
-                android:text="@string/rupee_0"
-                android:textSize="@dimen/text_size_40"
+                android:text="Aug 15, 2016"
+                android:textSize="@dimen/text_size_22"
                 android:layout_marginRight="10px"
                 android:layout_marginLeft="10px"
                 />
 
         </LinearLayout>
+        
+        <ImageView
+            android:layout_width="2px"
+            android:layout_height="40px"
+            android:layout_centerInParent="true"
+            android:background="@color/text_color_hint"
+            />
 
         <RelativeLayout
             android:id="@+id/relativeLayoutDriverImage"
-            android:layout_width="100px"
-            android:layout_height="100px"
+            android:layout_width="90px"
+            android:layout_height="90px"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:tag="mwar">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/circle_grey"
-                android:tag="mwar" />
-
+            android:tag="mwar"
+            android:visibility="visible"
+            android:background="@drawable/circle_grey"
+            >
             <ImageView
                 android:id="@+id/imageViewDriver"
-                android:layout_width="94px"
-                android:layout_height="94px"
+                android:layout_width="84px"
+                android:layout_height="84px"
                 android:layout_centerInParent="true"
                 android:tag="mwar" />
         </RelativeLayout>
@@ -146,31 +179,24 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/text_color_hint"
+            android:background="@drawable/bg_white_divider_color_gradient"
             android:layout_alignParentBottom="true"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
             />
 
     </RelativeLayout>
     
     <RelativeLayout
+        android:id="@+id/relativeLayoutStartEnd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        >
 
-        <TextView
-            android:id="@+id/textViewDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_color"
-            android:text="@string/date_colon_format"
-            android:textSize="@dimen/text_size_26"
-            android:layout_marginTop="20px"
-            android:layout_marginLeft="40px"
-            />
-        
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textViewDate"
             android:orientation="vertical"
             android:layout_marginLeft="45px"
             android:layout_marginTop="20px"
@@ -187,7 +213,7 @@
             <ImageView
                 android:id="@+id/imageViewStartEndLine"
                 android:layout_width="4px"
-                android:layout_height="78px"
+                android:layout_height="58px"
                 android:tag="mwar"
                 android:src="@drawable/ic_start_end_line"
                 />
@@ -207,7 +233,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@+id/textViewDate"
+            android:layout_marginTop="20px"
+            android:layout_marginBottom="20px"
             >
 
             <TextView
@@ -216,8 +243,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_color"
                 android:text="@string/start"
-                android:textSize="@dimen/text_size_26"
-                android:layout_marginTop="15px"
+                android:textSize="@dimen/text_size_20"
                 android:layout_marginLeft="80px"
                 />
             <TextView
@@ -227,7 +253,7 @@
                 android:maxLines="2"
                 android:textColor="@color/text_color_light"
                 android:text="@string/sample_address"
-                android:textSize="@dimen/text_size_26"
+                android:textSize="@dimen/text_size_20"
                 android:layout_marginTop="5px"
                 android:layout_marginLeft="80px"
                 android:layout_marginRight="20px"
@@ -240,8 +266,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_color"
                 android:text="@string/end"
-                android:textSize="@dimen/text_size_26"
-                android:layout_marginTop="15px"
+                android:textSize="@dimen/text_size_20"
+                android:layout_marginTop="20px"
                 android:layout_marginLeft="80px"
                 />
             <TextView
@@ -251,25 +277,146 @@
                 android:maxLines="2"
                 android:textColor="@color/text_color_light"
                 android:text="@string/sample_address"
-                android:textSize="@dimen/text_size_26"
+                android:textSize="@dimen/text_size_20"
                 android:layout_marginTop="5px"
                 android:layout_marginLeft="80px"
                 android:layout_marginRight="20px"
                 />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/transparent"
-                android:layout_marginTop="15px"
-                />
 
         </LinearLayout>
 
 
     </RelativeLayout>
     
+    
+    <LinearLayout
+        android:id="@+id/linearLayoutOrderData"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20px"
+        android:layout_marginBottom="20px"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageViewOrderLocPin"
+                android:layout_width="31px"
+                android:layout_height="43px"
+                android:tag="mwar"
+                android:src="@drawable/ic_support_location_pin"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="50px"
+                />
+
+            <TextView
+                android:id="@+id/textViewOrderAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="@color/text_color"
+                android:text="PB65AC0123"
+                android:textSize="@dimen/text_size_22"
+                android:layout_marginLeft="24px"
+                android:layout_marginRight="36px"
+                android:layout_toRightOf="@+id/imageViewOrderLocPin"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutOrderItems"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20px"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@drawable/bg_white_divider_color_gradient"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:layout_marginBottom="20px"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textViewOrderItems"
+                    android:layout_width="580px"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:textColor="@color/text_color"
+                    android:text="PB65AC0123"
+                    android:textSize="@dimen/text_size_22"
+                    android:layout_marginLeft="46px"
+                    android:layout_centerVertical="true"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewOrderItemsCount"
+                    android:layout_width="54px"
+                    android:layout_height="54px"
+                    android:maxLines="2"
+                    android:textColor="@color/text_color"
+                    android:text="+3"
+                    android:gravity="center"
+                    android:textSize="@dimen/text_size_22"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="44px"
+                    android:background="@drawable/circle_divider_color"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutIssueWithRide"
+        android:layout_width="match_parent"
+        android:layout_height="84px"
+        >
+
+        <TextView
+            android:id="@+id/textViewIssueWithRide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color_light_selector"
+            android:text="@string/issue_with_the_recent_ride"
+            android:textSize="@dimen/text_size_24"
+            android:layout_marginLeft="30px"
+            android:layout_centerVertical="true"
+            />
 
 
+        <ImageView
+            android:layout_width="19px"
+            android:layout_height="34px"
+            android:tag="mwar"
+            android:src="@drawable/ic_back_black"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30px"
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/text_color_hint"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            />
+    </RelativeLayout>
 
 </LinearLayout>

@@ -164,7 +164,7 @@ public interface Constants {
 	String KEY_RIDE_DATE = "ride_date";
 
 	String KEY_SP_IN_APP_SUPPORT_PANEL_VERSION = "in_app_support_panel_version";
-	String SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION = "in_app_ride_support_panel_version";
+	String KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION = "transaction_support_panel_version";
 	String KEY_SHOW_RIDE_MENU = "show_ride_menu";
 
 
@@ -361,7 +361,6 @@ public interface Constants {
 	String KEY_ENABLED = "enabled";
 	String KEY_JUGNOO_CASH = "jugnoo_cash";
 	String KEY_WALLET_ORDER = "wallet_order";
-	String KEY_CANCEL_RIDE_MENU = "cancel_ride_menu";
 	String KEY_KNOWLARITY_MISSED_CALL_NUMBER = "knowlarity_missed_call_number";
 
 	String SP_OTP_SCREEN_OPEN = "sp_otp_screen_open";
@@ -420,5 +419,7 @@ public interface Constants {
 	String KEY_MEALS_ENABLED = "meals_enabled";
 	String KEY_FRESH_ENABLED = "fresh_enabled";
 	String KEY_DELIVERY_ENABLED = "delivery_enabled";
+	String KEY_ORDER_HISTORY = "order_history";
+	String INTENT_KEY_FROM_BAD = "FromBad";
 
 }

@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -17,10 +19,13 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -38,7 +43,8 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	private LinearLayout linearLayoutContainer;
 	public int fromBadFeedback = 0;
 	private EndRideData endRideData;
-	private GetRideSummaryResponse getRideSummaryResponse;
+	private HistoryResponse.Datum datum;
+	private ArrayList<ShowPanelResponse.Item> items;
 
 	@Override
 	protected void onResume() {
@@ -54,8 +60,8 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		if(getIntent().hasExtra("FromBad")){
-			fromBadFeedback = getIntent().getExtras().getInt("FromBad");
+		if(getIntent().hasExtra(Constants.INTENT_KEY_FROM_BAD)){
+			fromBadFeedback = getIntent().getExtras().getInt(Constants.INTENT_KEY_FROM_BAD);
 		}
 
 		linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
@@ -132,12 +138,12 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		return null;
 	}
 
-	public void openRideSummaryFragment(EndRideData endRideData, boolean rideCancelled){
+	public void openRideSummaryFragment(EndRideData endRideData, boolean rideCancelled, int autosStatus){
 		if(!new TransactionUtils().checkIfFragmentAdded(this, RideSummaryFragment.class.getName())) {
 			getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(getContainer().getId(),
-							new RideSummaryFragment(endRideData, rideCancelled),
+							new RideSummaryFragment(endRideData, rideCancelled, autosStatus),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
 					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
@@ -146,15 +152,18 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		}
 	}
 
-	public void openSupportRideIssuesFragment(){
+	public void openSupportRideIssuesFragment(int autosStatus){
 		try {
-			if (endRideData != null && getRideSummaryResponse != null) {
+			int engagementId = -1;
+			try{engagementId = Integer.parseInt(endRideData.engagementId);} catch (Exception e){}
+			if ((endRideData != null || datum != null) && items != null) {
 				new TransactionUtils().openRideIssuesFragment(this,
 						getContainer(),
-						Integer.parseInt(endRideData.engagementId), endRideData, getRideSummaryResponse, fromBadFeedback, false);
+						engagementId, endRideData, items, fromBadFeedback, false, autosStatus,
+						datum);
 				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", "Issue with Ride");
 			}
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -173,12 +182,13 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 			new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.autoData.getFareStructure().getFixedFare(),
 					new ApiGetRideSummary.Callback() {
 						@Override
-						public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+						public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
 							SupportActivity.this.endRideData = endRideData;
-							SupportActivity.this.getRideSummaryResponse = getRideSummaryResponse;
+							SupportActivity.this.datum = datum;
+							SupportActivity.this.items = items;
 
 							if(fromBadFeedback == 1){
-								openSupportRideIssuesFragment();
+								openSupportRideIssuesFragment(EngagementStatus.ENDED.getOrdinal());
 							} else{
 								getSupportMainFragment().updateSuccess();
 							}
@@ -208,18 +218,19 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 						public void onNoRetry(View view) {
 
 						}
-					}).getRideSummaryAPI(false);
+					}).getRideSummaryAPI(EngagementStatus.ENDED.getOrdinal(), ProductType.NOT_SURE, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 
-	public int getFromBadFeedback() {
-		return fromBadFeedback;
-	}
-
 	public EndRideData getEndRideData() {
 		return endRideData;
 	}
+
+	public HistoryResponse.Datum getDatum() {
+		return datum;
+	}
+
 }
