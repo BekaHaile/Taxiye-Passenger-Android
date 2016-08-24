@@ -50,6 +50,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -528,6 +529,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
                 params.put(Constants.ORDER_AMOUNT, String.valueOf(activity.getTotalPrice()));
                 params.put(Constants.PROMO_CODE, appPromoEdittext.getText().toString().trim());
+                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());
@@ -600,7 +602,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 params.put(Constants.KEY_DELIVERY_SLOT_ID, String.valueOf(activity.getSlotSelected().getDeliverySlotId()));
                 params.put(Constants.KEY_DELIVERY_ADDRESS, String.valueOf(activity.getSelectedAddress()));
                 params.put(Constants.KEY_DELIVERY_NOTES, String.valueOf(activity.getSpecialInst()));
-
+                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 if(!TextUtils.isEmpty(promoCode))
                     params.put(Constants.PROMO_CODE, promoCode);
 
@@ -656,6 +658,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     params.put("store_id", "2");
                     params.put("group_id", ""+activity.getProductsResponse().getCategories().get(0).getSubItems().get(0).getGroupId());
                 }
+                params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());

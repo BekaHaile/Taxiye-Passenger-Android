@@ -400,6 +400,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_FRESH_ORDER_ID, String.valueOf(orderId));
+                params.put(Constants.KEY_CLIENT_ID, orderHistory.getClientId());
 
                 try {
                     if (orderHistory.getStoreId() != null) {
