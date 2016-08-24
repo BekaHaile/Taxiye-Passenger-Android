@@ -16,7 +16,7 @@
         android:maxLines="2"
         android:text="Account"
         android:textColor="@color/text_color_light_selector"
-        android:textSize="@dimen/text_size_36"
+        android:textSize="@dimen/text_size_30"
 
         />
 

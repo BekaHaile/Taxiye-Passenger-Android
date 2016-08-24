@@ -60,8 +60,8 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
-		if(getIntent().hasExtra("FromBad")){
-			fromBadFeedback = getIntent().getExtras().getInt("FromBad");
+		if(getIntent().hasExtra(Constants.INTENT_KEY_FROM_BAD)){
+			fromBadFeedback = getIntent().getExtras().getInt(Constants.INTENT_KEY_FROM_BAD);
 		}
 
 		linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
@@ -154,13 +154,16 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 	public void openSupportRideIssuesFragment(int autosStatus){
 		try {
-			if (endRideData != null && items != null) {
+			int engagementId = -1;
+			try{engagementId = Integer.parseInt(endRideData.engagementId);} catch (Exception e){}
+			if ((endRideData != null || datum != null) && items != null) {
 				new TransactionUtils().openRideIssuesFragment(this,
 						getContainer(),
-						Integer.parseInt(endRideData.engagementId), endRideData, items, fromBadFeedback, false, autosStatus);
+						engagementId, endRideData, items, fromBadFeedback, false, autosStatus,
+						datum);
 				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", "Issue with Ride");
 			}
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -181,6 +184,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 						@Override
 						public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
 							SupportActivity.this.endRideData = endRideData;
+							SupportActivity.this.datum = datum;
 							SupportActivity.this.items = items;
 
 							if(fromBadFeedback == 1){
@@ -220,10 +224,6 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		}
 	}
 
-
-	public int getFromBadFeedback() {
-		return fromBadFeedback;
-	}
 
 	public EndRideData getEndRideData() {
 		return endRideData;

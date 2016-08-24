@@ -19,7 +19,7 @@ public class ShowPanelResponse {
 	private SupportData supportData;
 
 
-	@SerializedName("order_history_data")
+	@SerializedName("fresh_meals_data")
 	@Expose
 	private HistoryResponse.Datum datum;
 

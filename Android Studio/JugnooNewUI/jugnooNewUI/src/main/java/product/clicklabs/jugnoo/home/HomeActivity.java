@@ -1526,7 +1526,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                         rating, "", "");
                 Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
-                intent.putExtra("FromBad", 1);
+                intent.putExtra(INTENT_KEY_FROM_BAD, 1);
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 //imageViewThumbsUp.clearAnimation();

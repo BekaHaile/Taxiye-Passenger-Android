@@ -123,7 +123,7 @@ public class ApiGetRideSummary {
 								ArrayList<ShowPanelResponse.Item> itemsMain = null;
 								if(finalShowRideMenu){
 									itemsMain = new ParseUtils().saveAndParseAllMenu(activity, showPanelResponse, supportCategory);
-									Prefs.with(activity).save(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION,
+									Prefs.with(activity).save(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION,
 											Data.userData.getInAppSupportPanelVersion());
 								} else{
 									itemsMain = Database2.getInstance(activity).getSupportDataItems(supportCategory);

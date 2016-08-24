@@ -95,12 +95,13 @@ public class TransactionUtils {
 
 	public void openRideIssuesFragment(FragmentActivity activity, View container, int engagementId,
 									   EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items,
-									   int fromBadFeedback, boolean rideCancelled, int autosStatus) {
+									   int fromBadFeedback, boolean rideCancelled, int autosStatus,
+									   HistoryResponse.Datum datum) {
 		if(!checkIfFragmentAdded(activity, SupportRideIssuesFragment.class.getName())) {
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 			fragmentTransaction.add(container.getId(),
-					new SupportRideIssuesFragment(engagementId, endRideData, items, rideCancelled, autosStatus),
+					new SupportRideIssuesFragment(engagementId, endRideData, items, rideCancelled, autosStatus, datum),
 					SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName());
 			if(fromBadFeedback == 0){

@@ -416,5 +416,6 @@ public interface Constants {
 	String KEY_DEVICE_ROOTED = "device_rooted";
 	String KEY_UPDATED_CLIENT_ID = "updated_client_id";
 	String KEY_ORDER_HISTORY = "order_history";
+	String INTENT_KEY_FROM_BAD = "FromBad";
 
 }

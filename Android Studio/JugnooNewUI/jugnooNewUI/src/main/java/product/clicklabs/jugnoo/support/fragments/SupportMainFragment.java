@@ -104,7 +104,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		showPanelCalled = 0; getRideSummaryCalled = 0;
 
 		cardViewRideShortInfo = (CardView) rootView.findViewById(R.id.cardViewRideShortInfo);
-		rideOrderShortView = new RideOrderShortView(activity, rootView);
+		rideOrderShortView = new RideOrderShortView(activity, rootView, true);
 
 		cardViewRecycler = (CardView) root.findViewById(R.id.cardViewRecycler);
 		recyclerViewSupportFaq = (RecyclerView)rootView.findViewById(R.id.recyclerViewSupportFaq);
@@ -138,8 +138,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 		cardViewRideShortInfo.setVisibility(View.GONE);
 		cardViewRecycler.setVisibility(View.GONE);
-		activity.getRideSummaryAPI(activity);
 		showPanel();
+		activity.getRideSummaryAPI(activity);
 
 		FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT);
 
@@ -260,7 +260,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 	private void setRideData(){
 		try{
-			rideOrderShortView.updateData(activity.getEndRideData(), activity.getDatum(), true);
+			rideOrderShortView.updateData(activity.getEndRideData(), activity.getDatum());
 		} catch(Exception e){
 			e.printStackTrace();
 		}

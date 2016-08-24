@@ -123,55 +123,35 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 						try {
 							Log.v("Ride Amount is ", "---> " + historyData.getAmount());
 							if (historyData.getProductType() == ProductType.AUTO.getOrdinal()) {
-								if (historyData.getIsCancelledRide() != 1) {
-									if (AppStatus.getInstance(activity).isOnline(activity)) {
-										if (activity instanceof RideTransactionsActivity) {
-											new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
-													historyData.getEngagementId(), false, historyData.getAutosStatus());
-										} else if (activity instanceof SupportActivity) {
-											new TransactionUtils().openRideIssuesFragment(activity,
-													((SupportActivity) activity).getContainer(),
-													historyData.getEngagementId(), null, null, 0, false, historyData.getAutosStatus());
-										}
-										FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
-									} else {
-										DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+								if (AppStatus.getInstance(activity).isOnline(activity)) {
+									if (activity instanceof RideTransactionsActivity) {
+										new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
+												historyData.getEngagementId(), historyData.getIsCancelledRide() == 1, historyData.getAutosStatus());
+									} else if (activity instanceof SupportActivity) {
+										new TransactionUtils().openRideIssuesFragment(activity,
+												((SupportActivity) activity).getContainer(),
+												historyData.getEngagementId(), null, null, 0, historyData.getIsCancelledRide() == 1, historyData.getAutosStatus(),
+												null);
 									}
-									FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
 								} else {
-									Log.v("Cancelled Ride", "Cancelled Ride");
-									if (AppStatus.getInstance(activity).isOnline(activity)) {
-										if (activity instanceof RideTransactionsActivity) {
-											new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
-													historyData.getEngagementId(), true, historyData.getAutosStatus());
-											FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
-										} else if (activity instanceof SupportActivity) {
-											new TransactionUtils().openRideIssuesFragment(activity,
-													((SupportActivity) activity).getContainer(),
-													historyData.getEngagementId(), null, null, 0, true, historyData.getAutosStatus());
-											FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
-										}
-									} else {
-										DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-									}
-									FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
-
-							}
-						}else if (historyData.getProductType() == ProductType.FRESH.getOrdinal() ||
+									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+								}
+							} else if (historyData.getProductType() == ProductType.FRESH.getOrdinal() ||
 									historyData.getProductType() == ProductType.MEALS.getOrdinal()) {
 								if (activity instanceof RideTransactionsActivity) {
 									new TransactionUtils().openOrderSummaryFragment(activity,
-											((RideTransactionsActivity) activity).getContainer(),
-											historyData);
-									FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+											((RideTransactionsActivity) activity).getContainer(), historyData);
 								} else if (activity instanceof SupportActivity) {
-									new TransactionUtils().openOrderSummaryFragment(activity,
+									new TransactionUtils().openRideIssuesFragment(activity,
 											((SupportActivity) activity).getContainer(),
+											-1, null, null, 0, false, 0,
 											historyData);
-									FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
 								}
 							}
-					}catch (Exception e) {
+
+							FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+							FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
