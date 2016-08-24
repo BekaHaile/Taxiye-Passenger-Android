@@ -4606,6 +4606,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setServiceAvailablityUI(Data.autoData.getFarAwayCity());
                     setupFreshUI();
                     setupInAppCampaignUI();
+                    if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)){
+                        imageViewFabFake.setVisibility(View.GONE);
+                        fabView.menuLabelsRight.setVisibility(View.INVISIBLE);
+                    }else{
+                        imageViewFabFake.setVisibility(View.VISIBLE);
+                        fabView.menuLabelsRight.setVisibility(View.VISIBLE);
+                    }
+                    fabView.setFABButtons();
                     if(showPoolIntro) {
 //                        showPoolIntroDialog();
                     }
@@ -4671,10 +4679,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.GONE);
+                imageViewFabFake.setVisibility(View.GONE);
+                fabView.menuLabelsRight.setVisibility(View.INVISIBLE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
+                //imageViewFabFake.setVisibility(View.VISIBLE);
+                fabView.menuLabelsRight.setVisibility(View.VISIBLE);
             }
             showPokestopOnOffButton(passengerScreenMode);
         }

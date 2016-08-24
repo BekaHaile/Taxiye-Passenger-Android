@@ -6,8 +6,10 @@
     <corners android:radius="4px"
         />
 
+
     <solid android:color="@color/search_view_bg"/>
-    <stroke android:color="@color/search_view_radius"/>
+    <stroke android:color="@color/search_view_radius"
+        android:width="2px"/>
 
 
 </shape>

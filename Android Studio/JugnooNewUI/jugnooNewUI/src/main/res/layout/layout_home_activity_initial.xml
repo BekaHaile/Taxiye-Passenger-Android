@@ -239,7 +239,7 @@
                 android:tag="DontTouchMe"
                 android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"
-                android:visibility="visible"
+                android:visibility="gone"
                 />
 
         </RelativeLayout>

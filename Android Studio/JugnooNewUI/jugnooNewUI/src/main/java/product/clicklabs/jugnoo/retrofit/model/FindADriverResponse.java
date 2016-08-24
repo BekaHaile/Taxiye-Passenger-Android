@@ -52,6 +52,15 @@ public class FindADriverResponse {
     @SerializedName("city_id")
     @Expose
     private Integer cityId;
+    @SerializedName("fresh_enabled")
+    @Expose
+    private Integer freshEnabled = 0;
+    @SerializedName("meals_enabled")
+    @Expose
+    private Integer mealsEnabled = 0;
+    @SerializedName("delivery_enabled")
+    @Expose
+    private Integer deliveryEnabled = 0;
 
     /**
      *
@@ -212,5 +221,29 @@ public class FindADriverResponse {
 
     public void setCityId(Integer cityId) {
         this.cityId = cityId;
+    }
+
+    public Integer getDeliveryEnabled() {
+        return deliveryEnabled;
+    }
+
+    public void setDeliveryEnabled(Integer deliveryEnabled) {
+        this.deliveryEnabled = deliveryEnabled;
+    }
+
+    public Integer getFreshEnabled() {
+        return freshEnabled;
+    }
+
+    public void setFreshEnabled(Integer freshEnabled) {
+        this.freshEnabled = freshEnabled;
+    }
+
+    public Integer getMealsEnabled() {
+        return mealsEnabled;
+    }
+
+    public void setMealsEnabled(Integer mealsEnabled) {
+        this.mealsEnabled = mealsEnabled;
     }
 }
