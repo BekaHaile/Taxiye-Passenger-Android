@@ -176,6 +176,10 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 					if (activity instanceof SupportActivity && endRideData != null) {
 						((SupportActivity) activity).openRideSummaryFragment(endRideData, rideCancelled, autosStatus);
 					}
+					else if(activity instanceof SupportActivity && datum != null){
+						new TransactionUtils().openOrderSummaryFragment(activity,
+								((SupportActivity) activity).getContainer(), datum);
+					}
 				}
 			});
 		}

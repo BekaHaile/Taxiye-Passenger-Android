@@ -116,11 +116,11 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		linearLayoutMain = (LinearLayout)rootView.findViewById(R.id.linearLayoutMain);
 
 		textViewSubtitle = (TextView)rootView.findViewById(R.id.textViewSubtitle);
-		textViewSubtitle.setTypeface(Fonts.mavenRegular(activity));
+		textViewSubtitle.setTypeface(Fonts.avenirNext(activity));
 		textViewDescription = (TextView)rootView.findViewById(R.id.textViewDescription);
-		textViewDescription.setTypeface(Fonts.mavenLight(activity));
+		textViewDescription.setTypeface(Fonts.avenirNext(activity));
 		textViewRSOtherError = (TextView) rootView.findViewById(R.id.textViewRSOtherError);
-		textViewRSOtherError.setTypeface(Fonts.mavenLight(activity));
+		textViewRSOtherError.setTypeface(Fonts.avenirNext(activity));
 		textViewRSOtherError.setVisibility(View.GONE);
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 		editTextMessage = (EditText)rootView.findViewById(R.id.editTextMessage);
