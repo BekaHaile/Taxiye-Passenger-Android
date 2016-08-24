@@ -261,6 +261,10 @@ public class ApiFindADriver {
 				}
 			}
 
+			Data.userData.setFreshEnabled(findADriverResponse.getFreshEnabled());
+			Data.userData.setMealsEnabled(findADriverResponse.getMealsEnabled());
+			Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
+
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}

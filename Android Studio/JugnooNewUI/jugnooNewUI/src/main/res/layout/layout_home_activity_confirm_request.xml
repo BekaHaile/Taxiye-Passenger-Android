@@ -25,7 +25,17 @@
         android:tag="mwar"
         android:layout_marginLeft="56px"
         android:layout_marginTop="15px"
-        android:visibility="visible"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/imageViewFabFakeConfirm"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:src="@drawable/ic_fab_menu_fake"
+        android:tag="DontTouchMe"
+        android:layout_marginLeft="20dp"
+        android:visibility="gone"
         />
 
     <RelativeLayout

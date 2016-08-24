@@ -100,7 +100,7 @@
         android:layout_marginLeft="56px"
         android:layout_marginBottom="5px"
         android:layout_above="@+id/relativeLayoutInRideContainer"
-        android:visibility="visible"
+        android:visibility="gone"
         />
 
 

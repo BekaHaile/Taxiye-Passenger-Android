@@ -134,6 +134,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public String current_pincode = "";
     public boolean locationSearchShown = false;
     public boolean canOrder = false;
+    private ImageView imageViewFabFake;
 
     public void openNotification() {
         menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
@@ -183,6 +184,27 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //        if(BuildConfig.DEBUG_MODE)
 //            Utils.showPaystorePopup(FreshActivity.this, "", "please rate us");
 
+        imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
+
+        imageViewFabFake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fabView.menuLabelsRight.isOpened()) {
+                    fabView.menuLabelsRight.close(true);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fabView.fabExtra.setVisibility(View.GONE);
+                            fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                        }
+                    }, 300);
+                } else {
+                    fabView.menuLabelsRight.open(true);
+                    fabView.fabExtra.setVisibility(View.VISIBLE);
+                }
+                fabView.setFABMenuDrawable();
+            }
+        });
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -528,11 +550,15 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         textViewMinOrder.setVisibility(View.GONE);
 
         topBar.title.setTypeface(Fonts.avenirNext(this));
-        topView.setVisibility(View.VISIBLE);
         topBar.below_shadow.setVisibility(View.VISIBLE);
-
         relativeLayoutCartNew.setVisibility(View.GONE);
         linearLayoutCheckout.setVisibility(View.VISIBLE);
+
+//        Utils.hideViewByScale(relativeLayoutCartRound);
+//        relativeLayoutCartRound.hide();
+        topView.setVisibility(View.VISIBLE);
+        fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+        imageViewFabFake.setVisibility(View.GONE);
 
         if (fragment instanceof FreshFragment) {
             topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -542,6 +568,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar.imageViewDelete.setVisibility(View.GONE);
             textViewCheckout.setVisibility(View.GONE);
             relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+            imageViewFabFake.setVisibility(View.VISIBLE);
+            fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
 
             relativeLayoutCartNew.setVisibility(View.VISIBLE);
             linearLayoutCheckout.setVisibility(View.GONE);
@@ -566,6 +594,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
             relativeLayoutSort.setVisibility(View.VISIBLE);
             relativeLayoutCart.setVisibility(View.GONE);
+
+            imageViewFabFake.setVisibility(View.VISIBLE);
+            fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
+
             topBar.title.setVisibility(View.VISIBLE);
             topBar.title.setText(getResources().getString(R.string.app_name));
             topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
