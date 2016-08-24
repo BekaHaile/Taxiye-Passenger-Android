@@ -5,11 +5,14 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.sabkuchfresh.home.FreshActivity;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
@@ -65,7 +68,12 @@ public class FABView {
                 } else {
                     text = "Menu closed";
                     fabExtra.setVisibility(View.GONE);
-                    relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                    //setRelativeLayoutFABVisibility(null);
+                    if(activity instanceof HomeActivity){
+                        setRelativeLayoutFABVisibility(HomeActivity.passengerScreenMode);
+                    } else if(activity instanceof FreshActivity){
+                        setRelativeLayoutFABVisibility(null);
+                    }
                 }
                 setFABMenuDrawable();
             }
@@ -80,7 +88,12 @@ public class FABView {
                         @Override
                         public void run() {
                             fabExtra.setVisibility(View.GONE);
-                            relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                            //setRelativeLayoutFABVisibility(null);
+                            if(activity instanceof HomeActivity){
+                                setRelativeLayoutFABVisibility(HomeActivity.passengerScreenMode);
+                            } else if(activity instanceof FreshActivity){
+                                setRelativeLayoutFABVisibility(null);
+                            }
                             setFABMenuDrawable();
                         }
                     }, 300);
@@ -91,6 +104,21 @@ public class FABView {
 
             }
         });
+    }
+
+    public void setRelativeLayoutFABVisibility(PassengerScreenMode passengerScreenMode){
+        relativeLayoutFAB.setVisibility(View.INVISIBLE);
+        if(passengerScreenMode != null) {
+            if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
+                    && !((HomeActivity)activity).confirmedScreenOpened)
+                    || passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
+                relativeLayoutFAB.setVisibility(View.INVISIBLE);
+            }else{
+                relativeLayoutFAB.setVisibility(View.VISIBLE);
+            }
+        } else{
+            relativeLayoutFAB.setVisibility(View.INVISIBLE);
+        }
     }
 
     public FloatingActionMenu getMenuLabelsRight() {
