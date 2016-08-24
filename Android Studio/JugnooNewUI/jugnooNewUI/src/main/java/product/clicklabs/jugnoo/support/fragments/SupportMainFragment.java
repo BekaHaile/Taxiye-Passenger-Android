@@ -1,21 +1,17 @@
 package product.clicklabs.jugnoo.support.fragments;
 
 import android.annotation.SuppressLint;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
-import com.squareup.picasso.CircleTransform;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,14 +20,14 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.datastructure.EngagementStatus;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.ParseUtils;
+import product.clicklabs.jugnoo.support.RideOrderShortView;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
@@ -43,7 +39,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -60,11 +55,10 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 	private LinearLayout root;
 
-	private LinearLayout linearLayoutRideShortInfo;
-	private ImageView imageViewDriver;
-	private TextView textViewDriverName, textViewDriverCarNumber, textViewTripTotalValue;
-	private TextView textViewDate, textViewStart, textViewEnd, textViewStartValue, textViewEndValue;
+	private CardView cardViewRideShortInfo;
+	private RideOrderShortView rideOrderShortView;
 
+	private CardView cardViewRecycler;
 	private RecyclerView recyclerViewSupportFaq;
 	private SupportFAQItemsAdapter supportFAQItemsAdapter;
 
@@ -109,20 +103,10 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 		showPanelCalled = 0; getRideSummaryCalled = 0;
 
-		linearLayoutRideShortInfo = (LinearLayout)rootView.findViewById(R.id.linearLayoutRideShortInfo);
-		((TextView)rootView.findViewById(R.id.textViewIssueWithRide)).setTypeface(Fonts.mavenRegular(activity));
-		textViewDriverName = (TextView)rootView.findViewById(R.id.textViewDriverName); textViewDriverName.setTypeface(Fonts.mavenLight(activity));
-		textViewDriverCarNumber = (TextView)rootView.findViewById(R.id.textViewDriverCarNumber); textViewDriverCarNumber.setTypeface(Fonts.mavenLight(activity));
-		((TextView)rootView.findViewById(R.id.textViewTripTotal)).setTypeface(Fonts.mavenLight(activity));
-		textViewTripTotalValue = (TextView)rootView.findViewById(R.id.textViewTripTotalValue); textViewTripTotalValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+		cardViewRideShortInfo = (CardView) rootView.findViewById(R.id.cardViewRideShortInfo);
+		rideOrderShortView = new RideOrderShortView(activity, rootView);
 
-		imageViewDriver = (ImageView) rootView.findViewById(R.id.imageViewDriver);
-		textViewDate = (TextView)rootView.findViewById(R.id.textViewDate); textViewDate.setTypeface(Fonts.mavenRegular(activity));
-		textViewStart = (TextView)rootView.findViewById(R.id.textViewStart); textViewStart.setTypeface(Fonts.mavenRegular(activity));
-		textViewEnd = (TextView)rootView.findViewById(R.id.textViewEnd); textViewEnd.setTypeface(Fonts.mavenRegular(activity));
-		textViewStartValue = (TextView)rootView.findViewById(R.id.textViewStartValue); textViewStartValue.setTypeface(Fonts.mavenLight(activity));
-		textViewEndValue = (TextView)rootView.findViewById(R.id.textViewEndValue); textViewEndValue.setTypeface(Fonts.mavenLight(activity));
-
+		cardViewRecycler = (CardView) root.findViewById(R.id.cardViewRecycler);
 		recyclerViewSupportFaq = (RecyclerView)rootView.findViewById(R.id.recyclerViewSupportFaq);
 		recyclerViewSupportFaq.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
 		recyclerViewSupportFaq.setItemAnimator(new DefaultItemAnimator());
@@ -142,7 +126,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
 
-		linearLayoutRideShortInfo.setOnClickListener(new View.OnClickListener() {
+		cardViewRideShortInfo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
                 Bundle bundle = new Bundle();
@@ -152,8 +136,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			}
 		});
 
-		linearLayoutRideShortInfo.setVisibility(View.GONE);
-		recyclerViewSupportFaq.setVisibility(View.GONE);
+		cardViewRideShortInfo.setVisibility(View.GONE);
+		cardViewRecycler.setVisibility(View.GONE);
 		activity.getRideSummaryAPI(activity);
 		showPanel();
 
@@ -218,7 +202,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 								public void failure(RetrofitError error) {
 									Log.e(TAG, "showPanel error=>" + error);
 									DialogPopup.dismissLoadingDialog();
-									recyclerViewSupportFaq.setVisibility(View.GONE);
+									cardViewRecycler.setVisibility(View.GONE);
 									showPanelCalled = -1;
 									retryDialog(DialogErrorType.CONNECTION_LOST);
 								}
@@ -233,7 +217,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	}
 
 	private void showPanelSuccess(ArrayList<ShowPanelResponse.Item> menu){
-		recyclerViewSupportFaq.setVisibility(View.VISIBLE);
+		cardViewRecycler.setVisibility(View.VISIBLE);
 		showPanelCalled = 1;
 		update(menu);
 	}
@@ -276,32 +260,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 	private void setRideData(){
 		try{
-			EndRideData endRideData = activity.getEndRideData();
-			if(endRideData != null){
-				textViewDriverName.setText(endRideData.driverName);
-				textViewDriverCarNumber.setText(endRideData.driverCarNumber);
-
-				textViewStartValue.setText(endRideData.pickupAddress);
-				textViewEndValue.setText(endRideData.dropAddress);
-
-				textViewStart.append(" " + endRideData.pickupTime);
-				textViewEnd.append(" " + endRideData.dropTime);
-
-				if("".equalsIgnoreCase(endRideData.getTripTotal())){
-					textViewTripTotalValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-							Utils.getMoneyDecimalFormat().format(endRideData.fare)));
-				} else{
-					textViewTripTotalValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-							endRideData.getTripTotal()));
-				}
-
-				if(!"".equalsIgnoreCase(endRideData.driverImage)){
-					Picasso.with(activity).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);
-				}
-
-				textViewDate.setText(String.format(activity.getResources().getString(R.string.date_colon_format),
-						endRideData.getRideDate()));
-			}
+			rideOrderShortView.updateData(activity.getEndRideData(), activity.getDatum(), true);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -310,12 +269,12 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 	public void updateSuccess(){
 		setRideData();
-		linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+		cardViewRideShortInfo.setVisibility(View.VISIBLE);
 		getRideSummaryCalled = 1;
 	}
 
 	public void updateFail(){
-		linearLayoutRideShortInfo.setVisibility(View.GONE);
+		cardViewRideShortInfo.setVisibility(View.GONE);
 		getRideSummaryCalled = 1;
 	}
 

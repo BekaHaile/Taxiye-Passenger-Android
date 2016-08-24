@@ -207,6 +207,7 @@
 
     <color name="address_stoke">#EF8F2C</color>
     <color name="off_text">#FF0000</color>
+    <color name="text_color_blue">#2BC9EC</color>
 
 
 </resources>

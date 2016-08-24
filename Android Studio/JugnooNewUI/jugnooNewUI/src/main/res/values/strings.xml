@@ -706,10 +706,12 @@
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
 	<!-- Support Screen-->
-	<string name="issue_with_a_recent_ride">Issue with a recent ride?</string>
+	<string name="issue_with_the_recent_ride">Issue with the recent ride?</string>
+	<string name="issue_with_the_recent_order">Issue with the recent order?</string>
 	<string name="date_colon_format">Date: %s</string>
 	<string name="start">Start</string>
 	<string name="end">End</string>
+	<string name="ride_date">Ride Date</string>
 	<string name="ride_history">Ride History</string>
 	<string name="ride_summary">Ride Summary</string>
 	<string name="support_main_title">How can we help?</string>
@@ -1080,5 +1082,7 @@
 	<string name="your_cart_is_has_available">Your cart contains unavailable item.</string>
 	<string name="sub_total_amount">SubTotal Amount</string>
 	<string name="pay_rupees_using_jc">Paid via Jugnoo cash \u20B9 %s </string>
+	<string name="transaction_id_format">Transaction ID: %s</string>
+	<string name="order_id_format">Order ID: %s</string>
 
 </resources>

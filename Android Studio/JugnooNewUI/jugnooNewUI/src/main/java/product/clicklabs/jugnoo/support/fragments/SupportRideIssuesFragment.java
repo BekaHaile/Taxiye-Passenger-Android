@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.support.RideOrderShortView;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
@@ -49,10 +51,9 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 	private LinearLayout root;
 
 	private LinearLayout linearLayoutRideShortInfo;
-	private ImageView imageViewDriver;
-	private TextView textViewDriverName, textViewDriverCarNumber, textViewTripTotalValue;
-	private TextView textViewDate, textViewStart, textViewEnd, textViewStartValue, textViewEndValue;
+	private RideOrderShortView rideOrderShortView;
 
+	private CardView cardViewRecycler;
 	private RecyclerView recyclerViewSupportFaq;
 	private SupportFAQItemsAdapter supportFAQItemsAdapter;
 
@@ -108,6 +109,9 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 
 		linearLayoutRideShortInfo = (LinearLayout)rootView.findViewById(R.id.linearLayoutRideShortInfo);
+		rideOrderShortView = new RideOrderShortView(activity, rootView);
+
+		rootView.findViewById(R.id.relativeLayoutIssueWithRide).setVisibility(View.GONE);
 		textViewDriverName = (TextView)rootView.findViewById(R.id.textViewDriverName); textViewDriverName.setTypeface(Fonts.mavenLight(activity));
 		textViewDriverCarNumber = (TextView)rootView.findViewById(R.id.textViewDriverCarNumber); textViewDriverCarNumber.setTypeface(Fonts.mavenLight(activity));
 		((TextView)rootView.findViewById(R.id.textViewTripTotal)).setTypeface(Fonts.mavenLight(activity));

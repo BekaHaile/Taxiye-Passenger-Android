@@ -43,6 +43,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	private LinearLayout linearLayoutContainer;
 	public int fromBadFeedback = 0;
 	private EndRideData endRideData;
+	private HistoryResponse.Datum datum;
 	private ArrayList<ShowPanelResponse.Item> items;
 
 	@Override
@@ -227,4 +228,9 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	public EndRideData getEndRideData() {
 		return endRideData;
 	}
+
+	public HistoryResponse.Datum getDatum() {
+		return datum;
+	}
+
 }
