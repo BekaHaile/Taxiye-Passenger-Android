@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -289,6 +290,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                     params.put(Constants.STORE_ID, ""+ Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType));
                     params.put(Constants.GROUP_ID, ""+activity.getProductsResponse().getCategories().get(0).getCurrentGroupId());
                 }
+                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
                 RestClient.getFreshApiService().userCheckoutData(params, new Callback<UserCheckoutResponse>() {

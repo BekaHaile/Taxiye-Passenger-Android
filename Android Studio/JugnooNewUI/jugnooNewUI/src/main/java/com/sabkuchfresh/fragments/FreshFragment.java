@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -255,6 +256,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 				params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
                 params.put(Constants.IS_FATAFAT, "1");
+                params.put(Constants.KEY_CLIENT_ID, ""+ Config.getFreshClientId());
 
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 

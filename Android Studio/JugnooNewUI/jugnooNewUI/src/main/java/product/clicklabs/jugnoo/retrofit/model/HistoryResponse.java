@@ -181,6 +181,9 @@ public class HistoryResponse {
         @SerializedName("question_type")
         @Expose
         private Integer questionType;
+        @SerializedName("client_id")
+        @Expose
+        private String clientId;
 
         /**
          * @return The pickupAddress
@@ -714,6 +717,13 @@ public class HistoryResponse {
             this.questionType = questionType;
         }
 
+        public String getClientId() {
+            return clientId;
+        }
+
+        public void setClientId(String clientId) {
+            this.clientId = clientId;
+        }
     }
 
 
