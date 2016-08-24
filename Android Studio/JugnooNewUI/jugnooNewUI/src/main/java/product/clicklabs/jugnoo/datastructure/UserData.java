@@ -600,8 +600,22 @@ public class UserData {
 
 	public String getTotalCouponCount() {
 		int count = 0;
-		count = promoCoupons.size() + Data.autoData.getPromoCoupons().size() +
-				Data.getFreshData().getPromoCoupons().size() + Data.getMealsData().getPromoCoupons().size();
+		try {
+			if(promoCoupons != null) {
+				count = promoCoupons.size();
+			}
+			if(Data.autoData.getPromoCoupons() != null) {
+				count += Data.autoData.getPromoCoupons().size();
+			}
+			if(Data.getFreshData().getPromoCoupons() != null) {
+				count += Data.getFreshData().getPromoCoupons().size();
+			}
+			if(Data.getMealsData().getPromoCoupons() != null) {
+				count += Data.getMealsData().getPromoCoupons().size();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return String.valueOf(count);
 	}
 

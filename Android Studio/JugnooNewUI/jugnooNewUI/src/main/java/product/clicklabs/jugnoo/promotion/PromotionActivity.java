@@ -37,6 +37,7 @@ import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.promotion.adapters.PromotionsAdapter;
@@ -305,9 +306,9 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                     params.put(Constants.KEY_LATITUDE, "" + Data.latitude);
                     params.put(Constants.KEY_LONGITUDE, "" + Data.longitude);
 
-                    RestClient.getApiServices().getCouponsAndPromotions(params, new Callback<SettleUserDebt>() {
+                    RestClient.getApiServices().getCouponsAndPromotions(params, new Callback<PromCouponResponse>() {
                         @Override
-                        public void success(SettleUserDebt settleUserDebt, Response response) {
+                        public void success(PromCouponResponse promCouponResponse, Response response) {
                             String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                             Log.i(TAG, "getCouponsAndPromotions response = " + responseStr);
                             try {
@@ -318,8 +319,23 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                     String message = JSONParser.getServerMessage(jObj);
                                     if (ApiResponseFlags.COUPONS.getOrdinal() == flag) {
                                         promoCoupons.clear();
-                                        promoCoupons.addAll(JSONParser.parseCouponsArray(jObj));
-                                        promoCoupons.addAll(JSONParser.parsePromotionsArray(jObj));
+                                        promoCoupons.addAll(promCouponResponse.getCommonPromotions());
+                                        promoCoupons.addAll(promCouponResponse.getCommonCoupons());
+
+                                        promoCoupons.addAll(promCouponResponse.getAutosPromotions());
+                                        promoCoupons.addAll(promCouponResponse.getAutosCoupons());
+
+                                        promoCoupons.addAll(promCouponResponse.getFreshPromotions());
+                                        promoCoupons.addAll(promCouponResponse.getFreshCoupons());
+
+                                        promoCoupons.addAll(promCouponResponse.getMealsPromotions());
+                                        promoCoupons.addAll(promCouponResponse.getMealsCoupons());
+
+                                        promoCoupons.addAll(promCouponResponse.getDeliveryPromotions());
+                                        promoCoupons.addAll(promCouponResponse.getDeliveryCoupons());
+
+//                                        promoCoupons.addAll(JSONParser.parseCouponsArray(jObj));
+//                                        promoCoupons.addAll(JSONParser.parsePromotionsArray(jObj));
                                         updateListData();
                                         if (Data.userData != null) {
                                             Data.userData.numCouponsAvaliable = promoCoupons.size();

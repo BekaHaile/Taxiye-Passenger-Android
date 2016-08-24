@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.retrofit;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
+import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -231,7 +232,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/get_coupons_and_promotions")
     void getCouponsAndPromotions(@FieldMap Map<String, String> params,
-                        Callback<SettleUserDebt> callback);
+                        Callback<PromCouponResponse> callback);
 
     @FormUrlEncoded
     @POST("/enter_code")
