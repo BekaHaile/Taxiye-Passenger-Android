@@ -9,7 +9,7 @@ public class CouponInfo extends PromoCoupon{
 	public Integer id;
 	@SerializedName("title")
 	@Expose
-	private String title;
+	public String title;
 	@SerializedName("subtitle")
 	@Expose
 	public String subtitle;
@@ -19,6 +19,21 @@ public class CouponInfo extends PromoCoupon{
 	@SerializedName("expiry_date")
 	@Expose
 	public String expiryDate;
+	@SerializedName("autos")
+	@Expose
+	public Integer autos;
+	@SerializedName("fresh")
+	@Expose
+	public Integer fresh;
+	@SerializedName("meals")
+	@Expose
+	public Integer meals;
+	@SerializedName("delivery")
+	@Expose
+	public Integer delivery;
+	@SerializedName("master_coupon")
+	@Expose
+	public Integer master_coupon;
 
 	public CouponInfo(int id, String title, String subtitle, String description, String expiryDate){
 		this.id = id;

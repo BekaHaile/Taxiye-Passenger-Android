@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 
@@ -81,7 +83,12 @@ public class LoginResponse {
 	@SerializedName("user_data")
 	@Expose
 	private UserData userData;
-
+	@SerializedName("fresh")
+	@Expose
+	private Fresh fresh;
+	@SerializedName("meals")
+	@Expose
+	private Meals meals;
 	/**
 	 * @return The flag
 	 */
@@ -126,7 +133,81 @@ public class LoginResponse {
 		this.userData = userData;
 	}
 
+	public Fresh getFresh() {
+		return fresh;
+	}
+
+	public void setFresh(Fresh fresh) {
+		this.fresh = fresh;
+	}
+
+	public Meals getMeals() {
+		return meals;
+	}
+
+	public void setMeals(Meals meals) {
+		this.meals = meals;
+	}
+
+
+
+	public class Meals{
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+	}
+
+	public class Fresh{
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+	}
+
 	public class Autos{
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
 		@SerializedName("drivers")
 		@Expose
 		private List<Driver> drivers = new ArrayList<>();
@@ -249,6 +330,22 @@ public class LoginResponse {
 		public void setBadRatingReasons(List<String> badRatingReasons) {
 			this.badRatingReasons = badRatingReasons;
 		}
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
 	}
 
 	public class UserData{
@@ -257,10 +354,10 @@ public class LoginResponse {
 		private List<MenuInfo> menuInfoList;
 		@SerializedName("promotions")
 		@Expose
-		private List<Promotion> promotions = new ArrayList<>();
+		private List<PromotionInfo> promotions = new ArrayList<>();
 		@SerializedName("coupons")
 		@Expose
-		private List<Coupon> coupons = new ArrayList<>();
+		private List<CouponInfo> coupons = new ArrayList<>();
 		@SerializedName("city_id")
 		@Expose
 		private Integer cityId;
@@ -312,19 +409,19 @@ public class LoginResponse {
 			this.menuInfoList = menuInfoList;
 		}
 
-		public List<Promotion> getPromotions() {
+		public List<PromotionInfo> getPromotions() {
 			return promotions;
 		}
 
-		public void setPromotions(List<Promotion> promotions) {
+		public void setPromotions(List<PromotionInfo> promotions) {
 			this.promotions = promotions;
 		}
 
-		public List<Coupon> getCoupons() {
+		public List<CouponInfo> getCoupons() {
 			return coupons;
 		}
 
-		public void setCoupons(List<Coupon> coupons) {
+		public void setCoupons(List<CouponInfo> coupons) {
 			this.coupons = coupons;
 		}
 

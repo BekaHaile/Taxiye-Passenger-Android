@@ -52,12 +52,10 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.Coupon;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
-import product.clicklabs.jugnoo.retrofit.model.Promotion;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -239,6 +237,7 @@ public class JSONParser implements Constants {
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
 
+        ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
@@ -262,7 +261,17 @@ public class JSONParser implements Constants {
         try {
             Data.userData.setEmergencyContactsList(JSONParser.parseEmergencyContacts(userData));
             Data.userData.setMenuInfoList((ArrayList<MenuInfo>) loginUserData.getMenuInfoList());
-            parsePromoCoupons(loginUserData);
+            if(Data.userData.getPromoCoupons() == null){
+                Data.userData.setPromoCoupons(new ArrayList<PromoCoupon>());
+            } else{
+                Data.userData.getPromoCoupons().clear();
+            }
+            if(loginUserData.getPromotions() != null)
+                Data.userData.getPromoCoupons().addAll(loginUserData.getPromotions());
+            if(loginUserData.getCoupons() != null)
+                Data.userData.getPromoCoupons().addAll(loginUserData.getCoupons());
+
+            //parsePromoCoupons(loginUserData);
             if(loginUserData.getSupportNumber() != null){
 				Config.saveSupportNumber(context, loginUserData.getSupportNumber());
 			}
@@ -276,7 +285,7 @@ public class JSONParser implements Constants {
 
     }
 
-    public void parseAutoData(Context context, JSONObject autoData) throws Exception{
+    public void parseAutoData(Context context, JSONObject autoData, LoginResponse.Autos autosData) throws Exception{
         try {
             String destinationHelpText = autoData.optString("destination_help_text", "");
             String rideSummaryBadText = autoData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
@@ -309,12 +318,40 @@ public class JSONParser implements Constants {
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText,
 					referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin, referAllTitleLogin);
+
+
+            if(Data.autoData.getPromoCoupons() == null){
+                Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
+            } else{
+                Data.autoData.getPromoCoupons().clear();
+            }
+            if(autosData.getPromotions() != null)
+                Data.autoData.getPromoCoupons().addAll(autosData.getPromotions());
+            if(autosData.getCoupons() != null)
+                Data.autoData.getPromoCoupons().addAll(autosData.getCoupons());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void parseFreshData(JSONObject jFatafatData){
+    public void parseMealsData(LoginResponse.Meals mealsData) {
+        try {
+            if(Data.getMealsData().getPromoCoupons() == null){
+                Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
+            } else{
+                Data.getMealsData().getPromoCoupons().clear();
+            }
+            if(mealsData.getPromotions() != null)
+                Data.getMealsData().getPromoCoupons().addAll(mealsData.getPromotions());
+            if(mealsData.getCoupons() != null)
+                Data.getMealsData().getPromoCoupons().addAll(mealsData.getCoupons());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void parseFreshData(JSONObject jFatafatData, LoginResponse.Fresh freshData){
         try{
             String orderId = jFatafatData.optString(KEY_FEEDBACK_ORDER_ID, "");
             String question = jFatafatData.optString(KEY_QUESTION, "");
@@ -361,6 +398,20 @@ public class JSONParser implements Constants {
 
             Data.setFreshData(new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData));
 
+            try {
+                if(Data.getFreshData().getPromoCoupons() == null){
+                    Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.getFreshData().getPromoCoupons().clear();
+                }
+                if(freshData.getPromotions() != null)
+                    Data.getFreshData().getPromoCoupons().addAll(freshData.getPromotions());
+                if(freshData.getCoupons() != null)
+                    Data.getFreshData().getPromoCoupons().addAll(freshData.getCoupons());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -378,8 +429,9 @@ public class JSONParser implements Constants {
         JSONObject jFreshObject = jObj.optJSONObject(KEY_FRESH);
 
         parseUserData(context, jUserDataObject, loginResponse.getUserData());
-        parseAutoData(context, jAutosObject);
-        parseFreshData(jFreshObject);
+        parseAutoData(context, jAutosObject, loginResponse.getAutos());
+        parseFreshData(jFreshObject, loginResponse.getFresh());
+        parseMealsData(loginResponse.getMeals());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 
@@ -527,19 +579,19 @@ public class JSONParser implements Constants {
                 Data.userData.getPromoCoupons().clear();
             }
             if(userData.getCoupons() != null) {
-                for (Coupon coupon : userData.getCoupons()) {
-                    Data.userData.getPromoCoupons().add(new CouponInfo(coupon.getAccountId(),
-                            coupon.getTitle(),
-                            coupon.getSubtitle(),
-                            coupon.getDescription(),
-                            coupon.getExpiryDate()));
+                for (CouponInfo coupon : userData.getCoupons()) {
+                    Data.userData.getPromoCoupons().add(new CouponInfo(coupon.id,
+                            coupon.title,
+                            coupon.subtitle,
+                            coupon.description,
+                            coupon.expiryDate));
                 }
             }
             if(userData.getPromotions() != null) {
-                for (Promotion promotion : userData.getPromotions()) {
-                    Data.userData.getPromoCoupons().add(new PromotionInfo(promotion.getPromoId(),
-                            promotion.getTitle(),
-                            promotion.getTermsNConds()));
+                for (PromotionInfo promotion : userData.getPromotions()) {
+                    Data.userData.getPromoCoupons().add(new PromotionInfo(promotion.id,
+                            promotion.title,
+                            promotion.terms));
                 }
             }
             if(userData.getCityId() != null){

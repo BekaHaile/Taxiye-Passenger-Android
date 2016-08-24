@@ -2,11 +2,14 @@ package product.clicklabs.jugnoo.datastructure;
 
 import android.content.Context;
 
+import com.sabkuchfresh.utils.AppConstant;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -594,6 +597,52 @@ public class UserData {
 		this.defaultClientId = defaultClientId;
 	}
 
+
+	public ArrayList<PromoCoupon> getCoupons(int appType) {
+		ArrayList<PromoCoupon> coupons = new ArrayList<>();
+		if(appType == AppConstant.AppType.AUTO) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).autos.equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).autos.equals(1))) {
+                        coupons.add(promoCoupon);
+                    }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.autoData.getPromoCoupons());
+		} else if(appType == AppConstant.AppType.FRESH) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).fresh.equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).fresh.equals(1))) {
+                        coupons.add(promoCoupon);
+                    }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.getFreshData().getPromoCoupons());
+		} else if(appType == AppConstant.AppType.MEALS) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).meals.equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).meals.equals(1))) {
+                        coupons.add(promoCoupon);
+                    }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.getMealsData().getPromoCoupons());
+		}
+
+		return coupons;
+	}
 
 //	"meals_enabled": 1,
 //			"fresh_enabled": 1,

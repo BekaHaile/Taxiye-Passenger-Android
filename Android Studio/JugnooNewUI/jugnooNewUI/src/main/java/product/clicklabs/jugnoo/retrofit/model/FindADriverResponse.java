@@ -10,6 +10,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 
 
@@ -35,10 +37,10 @@ public class FindADriverResponse {
     private String farAwayCity;
     @SerializedName("coupons")
     @Expose
-    private List<Coupon> coupons = new ArrayList<Coupon>();
+    private List<CouponInfo> coupons = new ArrayList<>();
     @SerializedName("promotions")
     @Expose
-    private List<Promotion> promotions = new ArrayList<Promotion>();
+    private List<PromotionInfo> promotions = new ArrayList<>();
     @SerializedName("fare_structure")
     @Expose
     private List<FareStructure> fareStructure = new ArrayList<FareStructure>();
@@ -140,7 +142,7 @@ public class FindADriverResponse {
      * @return
      * The coupons
      */
-    public List<Coupon> getCoupons() {
+    public List<CouponInfo> getCoupons() {
         return coupons;
     }
 
@@ -149,7 +151,7 @@ public class FindADriverResponse {
      * @param coupons
      * The coupons
      */
-    public void setCoupons(List<Coupon> coupons) {
+    public void setCoupons(List<CouponInfo> coupons) {
         this.coupons = coupons;
     }
 
@@ -158,7 +160,7 @@ public class FindADriverResponse {
      * @return
      * The promotions
      */
-    public List<Promotion> getPromotions() {
+    public List<PromotionInfo> getPromotions() {
         return promotions;
     }
 
@@ -167,7 +169,7 @@ public class FindADriverResponse {
      * @param promotions
      * The promotions
      */
-    public void setPromotions(List<Promotion> promotions) {
+    public void setPromotions(List<PromotionInfo> promotions) {
         this.promotions = promotions;
     }
 

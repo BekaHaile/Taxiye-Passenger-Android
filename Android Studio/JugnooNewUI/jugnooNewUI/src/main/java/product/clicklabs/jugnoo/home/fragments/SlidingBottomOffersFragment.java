@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.utils.AppConstant;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
@@ -79,7 +81,7 @@ public class SlidingBottomOffersFragment extends Fragment {
 
     public void setOfferAdapter(){
         try {
-            offersAdapter = new OffersAdapter(Data.userData.getPromoCoupons());
+            offersAdapter = new OffersAdapter(Data.userData.getCoupons(AppConstant.AppType.AUTO));
             recyclerViewOffers.setAdapter(offersAdapter);
             activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(recyclerViewOffers);
         } catch (Exception e) {
@@ -89,9 +91,9 @@ public class SlidingBottomOffersFragment extends Fragment {
 
     public void update(){
         try {
-            if(Data.userData.getPromoCoupons() != null && Data.userData.getPromoCoupons().size() >= 2){
+            if(Data.userData.getCoupons(AppConstant.AppType.AUTO) != null && Data.userData.getCoupons(AppConstant.AppType.AUTO).size() >= 2){
                 linearLayoutNoOffers.setVisibility(View.GONE);
-            } else if(Data.userData.getPromoCoupons() != null && Data.userData.getPromoCoupons().size() == 1){
+            } else if(Data.userData.getCoupons(AppConstant.AppType.AUTO) != null && Data.userData.getCoupons(AppConstant.AppType.AUTO).size() == 1){
                 linearLayoutNoOffers.setVisibility(View.GONE);
             }
             offersAdapter.notifyDataSetChanged();

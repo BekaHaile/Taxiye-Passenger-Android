@@ -9,7 +9,7 @@ public class PromotionInfo extends PromoCoupon{
 	public Integer id;
 	@SerializedName("title")
 	@Expose
-	private String title;
+	public String title;
 	@SerializedName("terms_n_conds")
 	@Expose
 	public String terms;
