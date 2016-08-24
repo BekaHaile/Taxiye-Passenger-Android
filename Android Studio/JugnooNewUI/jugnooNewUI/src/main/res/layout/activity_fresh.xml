@@ -237,8 +237,8 @@
             android:src="@drawable/ic_fab_menu_fake"
             android:layout_above="@+id/linearLayoutCheckoutContainer"
             android:layout_alignParentLeft="true"
-            android:layout_marginBottom="24dp"
-            android:tag="mwar"
+            android:layout_marginBottom="25dp"
+            android:tag="DontTouchMe"
             android:layout_marginLeft="16dp"
             android:visibility="visible"
             />

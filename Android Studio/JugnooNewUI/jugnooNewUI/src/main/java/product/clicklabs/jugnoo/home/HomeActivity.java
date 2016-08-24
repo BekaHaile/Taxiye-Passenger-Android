@@ -8590,10 +8590,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(Utils.isAppInstalled(this, POKEMON_GO_APP_PACKAGE)
                     && changeLocalityLayout.getVisibility() == View.GONE
                     && Prefs.with(this).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1){
-                imageViewPokemonOnOffInitial.setVisibility(View.VISIBLE);
-                imageViewPokemonOnOffConfirm.setVisibility(View.VISIBLE);
-                imageViewPokemonOnOffAssigning.setVisibility(View.VISIBLE);
-                imageViewPokemonOnOffEngaged.setVisibility(View.VISIBLE);
+                //imageViewPokemonOnOffInitial.setVisibility(View.VISIBLE);
+                //imageViewPokemonOnOffConfirm.setVisibility(View.VISIBLE);
+                //imageViewPokemonOnOffAssigning.setVisibility(View.VISIBLE);
+                //imageViewPokemonOnOffEngaged.setVisibility(View.VISIBLE);
 
                 ImageView imageView = null;
                 if(mode == PassengerScreenMode.P_REQUEST_FINAL || mode == PassengerScreenMode.P_DRIVER_ARRIVED

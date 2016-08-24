@@ -557,8 +557,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //        relativeLayoutCartRound.hide();
         relativeLayoutCartRound.setVisibility(View.GONE);
         topBar.getImageViewSearch().setVisibility(View.GONE);
-
         topView.setVisibility(View.VISIBLE);
+        fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+        imageViewFabFake.setVisibility(View.GONE);
         if (fragment instanceof FreshFragment) {
             topBar.imageViewMenu.setVisibility(View.VISIBLE);
             topBar.getImageViewSearch().setVisibility(View.VISIBLE);
@@ -571,6 +572,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar.imageViewDelete.setVisibility(View.GONE);
             textViewCheckout.setVisibility(View.GONE);
             relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+            imageViewFabFake.setVisibility(View.VISIBLE);
+            fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
 
             relativeLayoutSort.setVisibility(View.VISIBLE);
             relativeLayoutCart.setVisibility(View.GONE);
@@ -604,6 +607,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 relativeLayoutCartRound.setVisibility(View.VISIBLE);
             }
 
+            imageViewFabFake.setVisibility(View.VISIBLE);
+            fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
             topBar.imageViewNotification.setImageResource(R.drawable.toggle);
             topBar.title.setVisibility(View.VISIBLE);
             topBar.title.setText(getResources().getString(R.string.app_name));
