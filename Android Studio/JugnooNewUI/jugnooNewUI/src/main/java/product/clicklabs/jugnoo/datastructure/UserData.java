@@ -598,6 +598,13 @@ public class UserData {
 	}
 
 
+	public String getTotalCouponCount() {
+		int count = 0;
+		count = promoCoupons.size() + Data.autoData.getPromoCoupons().size() +
+				Data.getFreshData().getPromoCoupons().size() + Data.getMealsData().getPromoCoupons().size();
+		return String.valueOf(count);
+	}
+
 	public ArrayList<PromoCoupon> getCoupons(int appType) {
 		ArrayList<PromoCoupon> coupons = new ArrayList<>();
 		if(appType == AppConstant.AppType.AUTO) {

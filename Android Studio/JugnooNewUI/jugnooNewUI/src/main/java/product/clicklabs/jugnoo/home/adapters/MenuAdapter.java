@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -202,7 +201,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     try {
                         if(Data.userData.numCouponsAvaliable > 0) {
                             holder.textViewValue.setVisibility(View.VISIBLE);
-                            holder.textViewValue.setText(String.valueOf(Data.userData.getCoupons(AppConstant.AppType.AUTO).size()));
+                            holder.textViewValue.setText(String.valueOf(Data.userData.getTotalCouponCount()));
                             holder.textViewValue.setBackgroundResource(R.drawable.circle_theme);
                             setLayoutParamsForValue(holder.textViewValue);
 						}
