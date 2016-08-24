@@ -66,21 +66,11 @@ public class SupportFAQItemsAdapter extends RecyclerView.Adapter<SupportFAQItems
             }
         });
 
-        if(position == 0){
+        if(position == getItemCount()-1){
             holder.imageViewSep.setVisibility(View.GONE);
-            holder.root.setBackgroundResource(R.drawable.background_white_top_rounded_bordered);
-        }
-        else if(position == getItemCount()-2){
-            holder.imageViewSep.setVisibility(View.GONE);
-            holder.root.setBackgroundResource(R.drawable.background_white_side_bordered);
-        }
-        else if(position == getItemCount()-1){
-            holder.imageViewSep.setVisibility(View.GONE);
-            holder.root.setBackgroundResource(R.drawable.background_white_bottom_rounded_bordered);
         }
         else{
             holder.imageViewSep.setVisibility(View.VISIBLE);
-            holder.root.setBackgroundResource(R.drawable.background_white_side_bordered);
         }
 
 	}
@@ -98,7 +88,7 @@ public class SupportFAQItemsAdapter extends RecyclerView.Adapter<SupportFAQItems
             super(itemView);
             root = (LinearLayout) itemView.findViewById(R.id.root);
             textViewFaqItemName = (TextView)itemView.findViewById(R.id.textViewFaqItemName);
-            textViewFaqItemName.setTypeface(Fonts.mavenLight(activity));
+            textViewFaqItemName.setTypeface(Fonts.avenirNext(activity));
             imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
         }
     }

@@ -24,7 +24,30 @@ public enum EngagementStatus {
 	// request was closed when the driver accepted other request
 	CANCELLED_ACCEPTED_REQUEST(10),
 	// request was cancelled after it was accepted by a driver
-    ARRIVED(14);
+    ARRIVED(14),
+	// ride cancelled by customer
+	RIDE_CANCELLED_BY_CUSTOMER(13)
+
+	;
+
+
+//	"REQUESTED",                   0
+//			"ACCEPTED",                    1
+//			"STARTED",                     2
+//			"ENDED",                       3
+//			"REJECTED_BY_DRIVER",          4
+//			"CANCELLED_BY_CUSTOMER",       5
+//			"TIMEOUT",                     6
+//			"ACCEPTED_BY_OTHER_DRIVER",    7
+//			"ACCEPTED_THEN_REJECTED",      8
+//			"CLOSED",                      9
+//			"RIDE_ENDED_BY_CRONE",         11
+//
+//			"RIDE_CANCELLED_BY_CUSTOMER",  13
+//			"CANCELLED_ACCEPTED_REQUEST",  10
+//			"ARRIVED",                     14
+//			"NON_TIMEDOUT",                15
+
 	
 	private int ordinal;
 

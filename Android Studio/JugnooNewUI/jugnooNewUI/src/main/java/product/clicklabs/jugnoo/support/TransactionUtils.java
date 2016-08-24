@@ -7,6 +7,8 @@ import android.view.View;
 
 import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
@@ -17,7 +19,6 @@ import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
 import product.clicklabs.jugnoo.support.models.ActionType;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -93,12 +94,14 @@ public class TransactionUtils {
 
 
 	public void openRideIssuesFragment(FragmentActivity activity, View container, int engagementId,
-									   EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse, int fromBadFeedback, boolean rideCancelled) {
+									   EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items,
+									   int fromBadFeedback, boolean rideCancelled, int autosStatus,
+									   HistoryResponse.Datum datum) {
 		if(!checkIfFragmentAdded(activity, SupportRideIssuesFragment.class.getName())) {
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 			fragmentTransaction.add(container.getId(),
-					new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse, rideCancelled),
+					new SupportRideIssuesFragment(engagementId, endRideData, items, rideCancelled, autosStatus, datum),
 					SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName());
 			if(fromBadFeedback == 0){
@@ -117,12 +120,13 @@ public class TransactionUtils {
 		return (activity.getSupportFragmentManager().findFragmentByTag(tag) != null);
 	}
 
-	public void openRideSummaryFragmentWithRideCancelledFlag(FragmentActivity activity, View container, int engagementId, boolean rideCancelled){
+	public void openRideSummaryFragmentWithRideCancelledFlag(FragmentActivity activity, View container, int engagementId,
+															 boolean rideCancelled, int autosStatus){
 		if(!new TransactionUtils().checkIfFragmentAdded(activity, RideSummaryFragment.class.getName())) {
 			activity.getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(container.getId(),
-							new RideSummaryFragment(engagementId, rideCancelled),
+							new RideSummaryFragment(engagementId, rideCancelled, autosStatus),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

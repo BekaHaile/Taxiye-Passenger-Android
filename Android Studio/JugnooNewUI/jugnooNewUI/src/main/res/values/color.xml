@@ -209,5 +209,7 @@
     <color name="off_text">#FF0000</color>
     <color name="search_view_bg">#f0f0f0</color>
     <color name="search_view_radius">#d5d5d5</color>
+    <color name="text_color_blue">#2BC9EC</color>
+
 
 </resources>

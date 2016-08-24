@@ -81,16 +81,16 @@ public class HistoryResponse {
         private Double distance;
         @SerializedName("wait_time")
         @Expose
-        private Integer waitTime = -1;
+        private Double waitTime = -1d;
         @SerializedName("is_cancelled_ride")
         @Expose
         private Integer isCancelledRide = 0;
         @SerializedName("ride_time")
         @Expose
-        private Integer rideTime;
+        private Double rideTime;
         @SerializedName("amount")
         @Expose
-        private Integer amount;
+        private Double amount;
         @SerializedName("created_at")
         @Expose
         private String createdAt;
@@ -99,10 +99,10 @@ public class HistoryResponse {
         private Integer productType;
         @SerializedName("customer_fare_factor")
         @Expose
-        private Integer customerFareFactor;
+        private Double customerFareFactor;
         @SerializedName("cancellation_charges")
         @Expose
-        private Integer cancellationCharges;
+        private Double cancellationCharges;
         @SerializedName("date")
         @Expose
         private String date;
@@ -126,22 +126,22 @@ public class HistoryResponse {
         private Double orderAmount;
         @SerializedName("jugnoo_deducted")
         @Expose
-        private Integer jugnooDeducted;
+        private Double jugnooDeducted;
         @SerializedName("paytm_deducted")
         @Expose
-        private Integer paytmDeducted;
+        private Double paytmDeducted;
         @SerializedName("discount")
         @Expose
-        private Integer discount;
+        private Double discount;
         @SerializedName("delivery_charges")
         @Expose
-        private Integer deliveryCharges;
+        private Double deliveryCharges;
         @SerializedName("delivery_address")
         @Expose
         private String deliveryAddress;
         @SerializedName("order_refund_amount")
         @Expose
-        private Integer orderRefundAmount;
+        private Double orderRefundAmount;
         @SerializedName("expected_delivery_date")
         @Expose
         private String expectedDeliveryDate;
@@ -184,6 +184,12 @@ public class HistoryResponse {
         @SerializedName("client_id")
         @Expose
         private String clientId;
+        @SerializedName("autos_status")
+        @Expose
+        private Integer autosStatus;
+        @SerializedName("support_category")
+        @Expose
+        private Integer supportCategory;
 
         /**
          * @return The pickupAddress
@@ -244,14 +250,14 @@ public class HistoryResponse {
         /**
          * @return The waitTime
          */
-        public Integer getWaitTime() {
+        public Double getWaitTime() {
             return waitTime;
         }
 
         /**
          * @param waitTime The wait_time
          */
-        public void setWaitTime(Integer waitTime) {
+        public void setWaitTime(Double waitTime) {
             this.waitTime = waitTime;
         }
 
@@ -272,28 +278,28 @@ public class HistoryResponse {
         /**
          * @return The rideTime
          */
-        public Integer getRideTime() {
+        public Double getRideTime() {
             return rideTime;
         }
 
         /**
          * @param rideTime The ride_time
          */
-        public void setRideTime(Integer rideTime) {
+        public void setRideTime(Double rideTime) {
             this.rideTime = rideTime;
         }
 
         /**
          * @return The amount
          */
-        public Integer getAmount() {
+        public Double getAmount() {
             return amount;
         }
 
         /**
          * @param amount The amount
          */
-        public void setAmount(Integer amount) {
+        public void setAmount(Double amount) {
             this.amount = amount;
         }
 
@@ -328,28 +334,28 @@ public class HistoryResponse {
         /**
          * @return The customerFareFactor
          */
-        public Integer getCustomerFareFactor() {
+        public Double getCustomerFareFactor() {
             return customerFareFactor;
         }
 
         /**
          * @param customerFareFactor The customer_fare_factor
          */
-        public void setCustomerFareFactor(Integer customerFareFactor) {
+        public void setCustomerFareFactor(Double customerFareFactor) {
             this.customerFareFactor = customerFareFactor;
         }
 
         /**
          * @return The cancellationCharges
          */
-        public Integer getCancellationCharges() {
+        public Double getCancellationCharges() {
             return cancellationCharges;
         }
 
         /**
          * @param cancellationCharges The cancellation_charges
          */
-        public void setCancellationCharges(Integer cancellationCharges) {
+        public void setCancellationCharges(Double cancellationCharges) {
             this.cancellationCharges = cancellationCharges;
         }
 
@@ -454,56 +460,56 @@ public class HistoryResponse {
         /**
          * @return The jugnooDeducted
          */
-        public Integer getJugnooDeducted() {
+        public Double getJugnooDeducted() {
             return jugnooDeducted;
         }
 
         /**
          * @param jugnooDeducted The jugnoo_deducted
          */
-        public void setJugnooDeducted(Integer jugnooDeducted) {
+        public void setJugnooDeducted(Double jugnooDeducted) {
             this.jugnooDeducted = jugnooDeducted;
         }
 
         /**
          * @return The paytmDeducted
          */
-        public Integer getPaytmDeducted() {
+        public Double getPaytmDeducted() {
             return paytmDeducted;
         }
 
         /**
          * @param paytmDeducted The paytm_deducted
          */
-        public void setPaytmDeducted(Integer paytmDeducted) {
+        public void setPaytmDeducted(Double paytmDeducted) {
             this.paytmDeducted = paytmDeducted;
         }
 
         /**
          * @return The discount
          */
-        public Integer getDiscount() {
+        public Double getDiscount() {
             return discount;
         }
 
         /**
          * @param discount The discount
          */
-        public void setDiscount(Integer discount) {
+        public void setDiscount(Double discount) {
             this.discount = discount;
         }
 
         /**
          * @return The deliveryCharges
          */
-        public Integer getDeliveryCharges() {
+        public Double getDeliveryCharges() {
             return deliveryCharges;
         }
 
         /**
          * @param deliveryCharges The delivery_charges
          */
-        public void setDeliveryCharges(Integer deliveryCharges) {
+        public void setDeliveryCharges(Double deliveryCharges) {
             this.deliveryCharges = deliveryCharges;
         }
 
@@ -524,14 +530,14 @@ public class HistoryResponse {
         /**
          * @return The orderRefundAmount
          */
-        public Integer getOrderRefundAmount() {
+        public Double getOrderRefundAmount() {
             return orderRefundAmount;
         }
 
         /**
          * @param orderRefundAmount The order_refund_amount
          */
-        public void setOrderRefundAmount(Integer orderRefundAmount) {
+        public void setOrderRefundAmount(Double orderRefundAmount) {
             this.orderRefundAmount = orderRefundAmount;
         }
 
@@ -723,6 +729,22 @@ public class HistoryResponse {
 
         public void setClientId(String clientId) {
             this.clientId = clientId;
+        }
+
+        public Integer getAutosStatus() {
+            return autosStatus;
+        }
+
+        public void setAutosStatus(Integer autosStatus) {
+            this.autosStatus = autosStatus;
+        }
+
+        public Integer getSupportCategory() {
+            return supportCategory;
+        }
+
+        public void setSupportCategory(Integer supportCategory) {
+            this.supportCategory = supportCategory;
         }
     }
 
