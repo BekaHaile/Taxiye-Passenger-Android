@@ -210,6 +210,7 @@
     <color name="search_view_bg">#f0f0f0</color>
     <color name="search_view_radius">#d5d5d5</color>
     <color name="text_color_blue">#2BC9EC</color>
+    <color name="text_color_red">#DE5B5B</color>
 
 
 </resources>

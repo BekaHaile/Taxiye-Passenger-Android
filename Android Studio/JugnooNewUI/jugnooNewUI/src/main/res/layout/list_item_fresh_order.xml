@@ -93,7 +93,7 @@
                 android:id="@+id/textViewOrderDate"
                 android:layout_width="220px"
                 android:layout_height="wrap_content"
-                android:text="@string/order_date"
+                android:text="@string/order_date_colon"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_24" />
 

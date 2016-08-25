@@ -72,6 +72,15 @@ public class ShowPanelResponse {
 		@SerializedName("10")
 		@Expose
 		private List<Item> menu10 = new ArrayList<Item>();
+		@SerializedName("11")
+		@Expose
+		private List<Item> menu11 = new ArrayList<Item>();
+		@SerializedName("12")
+		@Expose
+		private List<Item> menu12 = new ArrayList<Item>();
+		@SerializedName("13")
+		@Expose
+		private List<Item> menu13 = new ArrayList<Item>();
 
 		public List<Item> getMenu1() {
 			return menu1;
@@ -151,6 +160,30 @@ public class ShowPanelResponse {
 
 		public void setMenu10(List<Item> menu10) {
 			this.menu10 = menu10;
+		}
+
+		public List<Item> getMenu11() {
+			return menu11;
+		}
+
+		public void setMenu11(List<Item> menu11) {
+			this.menu11 = menu11;
+		}
+
+		public List<Item> getMenu12() {
+			return menu12;
+		}
+
+		public void setMenu12(List<Item> menu12) {
+			this.menu12 = menu12;
+		}
+
+		public List<Item> getMenu13() {
+			return menu13;
+		}
+
+		public void setMenu13(List<Item> menu13) {
+			this.menu13 = menu13;
 		}
 	}
 
@@ -345,6 +378,8 @@ public class ShowPanelResponse {
 		public void setItems(List<Item> items) {
 			this.items = items;
 		}
+
+
 
 	}
 

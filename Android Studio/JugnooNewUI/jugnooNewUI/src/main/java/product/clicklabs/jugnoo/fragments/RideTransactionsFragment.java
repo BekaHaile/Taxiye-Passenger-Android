@@ -121,7 +121,6 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 					@Override
 					public void onClick(int position, HistoryResponse.Datum historyData) {
 						try {
-							Log.v("Ride Amount is ", "---> " + historyData.getAmount());
 							if (historyData.getProductType() == ProductType.AUTO.getOrdinal()) {
 								if (AppStatus.getInstance(activity).isOnline(activity)) {
 									if (activity instanceof RideTransactionsActivity) {

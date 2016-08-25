@@ -8,7 +8,7 @@ import android.graphics.Typeface;
  */
 public class Fonts {
 
-    private static Typeface mavenMedium, mavenRegular, mavenLight, avenirNext;																// fonts declaration
+    private static Typeface mavenMedium, mavenRegular, mavenLight, avenirNext, avenirMedium;																// fonts declaration
 
 
     public static Typeface mavenMedium(Context appContext) {											// accessing fonts functions
@@ -37,6 +37,13 @@ public class Fonts {
             avenirNext = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_next_demi.otf");
         }
         return avenirNext;
+    }
+
+    public static Typeface avenirMedium(Context appContext) {											// accessing fonts functions
+        if (avenirMedium == null) {
+            avenirMedium = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_medium.otf");
+        }
+        return avenirMedium;
     }
 
 
