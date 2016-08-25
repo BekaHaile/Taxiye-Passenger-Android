@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +42,6 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
-import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -66,6 +66,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue,
             textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;
+    private ScrollView scrollViewRideSummary;
 
     private int viewType = -1;
     private String dateValue = "";
@@ -78,7 +79,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         rootView = inflater.inflate(R.layout.layout_feedback, container, false);
 
         activity = (FeedbackActivity) getActivity();
-
+        activity.fragmentUISetup(this);
         if(Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
             viewType = Data.getFreshData().getFeedbackViewType();
             dateValue = Data.getFreshData().getFeedbackDeliveryDate();
@@ -99,6 +100,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
         mainLayout = (RelativeLayout) rootView.findViewById(R.id.mainLayout);
         new ASSL(activity, mainLayout, 1134, 720, false);
+
+        scrollViewRideSummary = (ScrollView) rootView.findViewById(R.id.scrollViewRideSummary);
 
         relativeLayoutGreat = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutGreat);
         relativeLayoutGreat.setVisibility(View.GONE);
@@ -381,17 +384,17 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                             JSONObject jObj = new JSONObject(responseStr);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt("flag");
-                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    openOrderInvoice(historyResponse.getData().get(0));
+                                if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
+                                    activity.openOrderInvoice(historyResponse.getData().get(0));
                                 } else {
-
+                                    updateListData("Some error occurred, tap to retry", true);
                                 }
                             } else {
-
+                                updateListData("Some error occurred, tap to retry", true);
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-
+                            updateListData("Some error occurred, tap to retry", true);
                         }
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -401,57 +404,45 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                         Log.e("TAG", "getRecentRidesAPI error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
 
-                        DialogPopup.dialogNoInternet(activity, DialogErrorType.CONNECTION_LOST,
-                                new Utils.AlertCallBackWithButtonsInterface() {
-                                    @Override
-                                    public void positiveClick(View view) {
-                                        getOrderData();
-                                    }
-
-                                    @Override
-                                    public void neutralClick(View view) {
-
-                                    }
-
-                                    @Override
-                                    public void negativeClick(View view) {
-
-                                    }
-                                });
+                        updateListData("Some error occurred, tap to retry", true);
                     }
                 });
             }
             else {
-                DialogPopup.dialogNoInternet(activity,
-                        Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
-
-                        new Utils.AlertCallBackWithButtonsInterface() {
-                            @Override
-                            public void positiveClick(View v) {
-                                getOrderData();
-                            }
-
-                            @Override
-                            public void neutralClick(View v) {
-
-                            }
-
-                            @Override
-                            public void negativeClick(View v) {
-
-                            }
-                        });
+                updateListData("No internet connection, tap to retry", true);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void openOrderInvoice(HistoryResponse.Datum historyData) {
-        new TransactionUtils().openOrderSummaryFragment(activity,
-                linearLayoutRideSummaryContainer, historyData);
+    public void updateListData(String message, boolean errorOccurred){
+        if(errorOccurred){
+
+            DialogPopup.dialogNoInternet(activity,
+                    "", message,
+
+                    new Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View v) {
+                            getOrderData();
+                        }
+
+                        @Override
+                        public void neutralClick(View v) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View v) {
+
+                        }
+                    });
+        }
 
     }
+
+
 
     /**
      * Method used to open
@@ -460,5 +451,11 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
     }
 
-
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            activity.fragmentUISetup(this);
+        }
+    }
 }

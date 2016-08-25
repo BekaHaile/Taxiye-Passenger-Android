@@ -11,6 +11,7 @@ import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -43,11 +44,11 @@ public class FeedbackActivity extends BaseFragmentActivity implements View.OnCli
     }
 
     public void fragmentUISetup(Fragment fragment) {
-        if(fragment instanceof FeedbackFragment) {
-            imageViewBack.setVisibility(View.GONE);
-        } else if(fragment instanceof FreshOrderSummaryFragment) {
-            imageViewBack.setVisibility(View.VISIBLE);
-        }
+//        if(fragment instanceof FeedbackFragment) {
+//            imageViewBack.setVisibility(View.GONE);
+//        } else if(fragment instanceof FreshOrderSummaryFragment) {
+//            imageViewBack.setVisibility(View.VISIBLE);
+//        }
     }
     /**
      * Method used to open feedback screen
@@ -83,5 +84,16 @@ public class FeedbackActivity extends BaseFragmentActivity implements View.OnCli
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void openOrderInvoice(HistoryResponse.Datum historyData) {
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                .add(linearLayoutContainer.getId(), new FreshOrderSummaryFragment(historyData),
+                        FreshOrderSummaryFragment.class.getName())
+                .addToBackStack(FreshOrderSummaryFragment.class.getName())
+                .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                .commitAllowingStateLoss();
     }
 }
