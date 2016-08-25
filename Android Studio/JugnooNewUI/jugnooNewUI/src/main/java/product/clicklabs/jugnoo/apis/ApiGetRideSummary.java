@@ -77,13 +77,7 @@ public class ApiGetRideSummary {
 				params.put(Constants.KEY_ORDER_HISTORY, "1");
 			}
 			if(productType == ProductType.AUTO){
-				if(supportCategory == EngagementStatus.ACCEPTED_THEN_REJECTED.getOrdinal()){
-					supportCategory = SupportCategory.RIDE_CANCELLED_DRIVER_MENU.getOrdinal();
-				} else if(supportCategory == EngagementStatus.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal()){
-					supportCategory = SupportCategory.RIDE_CANCELLED_USER_MENU.getOrdinal();
-				} else {
-					supportCategory = SupportCategory.RIDE_MENU.getOrdinal();
-				}
+				supportCategory = getSupportCategoryForEngagementStatus(supportCategory);
 			}
 
 			final boolean finalShowRideMenu = showRideMenu;
@@ -115,7 +109,7 @@ public class ApiGetRideSummary {
 								int supportCategory = finalSupportCategory;
 								if(productType == ProductType.NOT_SURE) {
 									if (endRideData != null) {
-										supportCategory = SupportCategory.RIDE_MENU.getOrdinal();
+										supportCategory = getSupportCategoryForEngagementStatus(supportCategory);
 									} else if (showPanelResponse.getDatum() != null) {
 										supportCategory = showPanelResponse.getDatum().getSupportCategory();
 									}
@@ -209,6 +203,30 @@ public class ApiGetRideSummary {
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);
+	}
+
+
+
+	private int getSupportCategoryForEngagementStatus(int supportCategory){
+		if(supportCategory == EngagementStatus.ACCEPTED_THEN_REJECTED.getOrdinal()){
+			supportCategory = SupportCategory.RIDE_CANCELLED_DRIVER_MENU.getOrdinal();
+		}
+		else if(supportCategory == EngagementStatus.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal()){
+			supportCategory = SupportCategory.RIDE_CANCELLED_USER_MENU.getOrdinal();
+		}
+		else if(supportCategory == EngagementStatus.ACCEPTED.getOrdinal()){
+			supportCategory = SupportCategory.RIDE_ACCEPT.getOrdinal();
+		}
+		else if(supportCategory == EngagementStatus.ARRIVED.getOrdinal()){
+			supportCategory = SupportCategory.RIDE_ARRIVED.getOrdinal();
+		}
+		else if(supportCategory == EngagementStatus.STARTED.getOrdinal()){
+			supportCategory = SupportCategory.RIDE_STARTED.getOrdinal();
+		}
+		else {
+			supportCategory = SupportCategory.RIDE_MENU.getOrdinal();
+		}
+		return supportCategory;
 	}
 
 }

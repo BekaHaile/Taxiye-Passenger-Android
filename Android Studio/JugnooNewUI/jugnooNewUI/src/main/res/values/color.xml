@@ -204,12 +204,14 @@
     <color name="cart_price">#303d39</color>
 
     <color name="divider_color">#d9d9d9</color>
+    <color name="divider_color_dark">#acacac</color>
 
     <color name="address_stoke">#EF8F2C</color>
     <color name="off_text">#FF0000</color>
     <color name="search_view_bg">#f0f0f0</color>
     <color name="search_view_radius">#d5d5d5</color>
     <color name="text_color_blue">#2BC9EC</color>
+    <color name="text_color_red">#DE5B5B</color>
 
 
 </resources>

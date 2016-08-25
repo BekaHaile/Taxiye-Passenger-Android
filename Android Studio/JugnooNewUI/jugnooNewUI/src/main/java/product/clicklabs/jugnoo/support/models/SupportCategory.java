@@ -18,6 +18,11 @@ public enum SupportCategory {
 	MEALS_PENDING(8),
 	MEALS_COMPLETED(9),
 	MEALS_CANCELLED(10),
+
+
+	RIDE_ACCEPT(11),
+	RIDE_ARRIVED(12),
+	RIDE_STARTED(13),
 	;
 
 
