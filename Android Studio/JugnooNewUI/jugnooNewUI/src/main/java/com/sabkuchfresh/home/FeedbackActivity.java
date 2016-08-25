@@ -1,15 +1,18 @@
 package com.sabkuchfresh.home;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.fragments.FeedbackFragment;
+import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -32,12 +35,20 @@ public class FeedbackActivity extends BaseFragmentActivity implements View.OnCli
         linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         title = (TextView) findViewById(R.id.title);
+        title.setTypeface(Fonts.avenirNext(FeedbackActivity.this));
         title.getPaint().setShader(Utils.textColorGradient(this, title));
         imageViewBack.setOnClickListener(this);
 
         openFeedback();
     }
 
+    public void fragmentUISetup(Fragment fragment) {
+        if(fragment instanceof FeedbackFragment) {
+            imageViewBack.setVisibility(View.GONE);
+        } else if(fragment instanceof FreshOrderSummaryFragment) {
+            imageViewBack.setVisibility(View.VISIBLE);
+        }
+    }
     /**
      * Method used to open feedback screen
      */

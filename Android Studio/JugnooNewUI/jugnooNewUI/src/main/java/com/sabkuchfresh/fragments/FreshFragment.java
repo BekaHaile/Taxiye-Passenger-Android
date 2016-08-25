@@ -173,14 +173,18 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         setSortingList();
         getAllProducts(true);
 
-        if(Data.getFreshData().pendingFeedback == 1) {
-			//TODO fresh feedback fragment open here
-            Data.getFreshData().pendingFeedback = 0;
-            Intent intent = new Intent(activity, FeedbackActivity.class);
-            intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.FEED_BACK);
-            intent.putExtra(Constants.ORDER_ID, Data.getFreshData().getOrderId());
-            startActivity(intent);
-            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        try {
+            if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
+                //TODO fresh feedback fragment open here
+                Data.getFreshData().pendingFeedback = 0;
+                Intent intent = new Intent(activity, FeedbackActivity.class);
+                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.FEED_BACK);
+                intent.putExtra(Constants.ORDER_ID, Data.getFreshData().getOrderId());
+                startActivity(intent);
+                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if(Data.userData.getPromoSuccess() == 0) {

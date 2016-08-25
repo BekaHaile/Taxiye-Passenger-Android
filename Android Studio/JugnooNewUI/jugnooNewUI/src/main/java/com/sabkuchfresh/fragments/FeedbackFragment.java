@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -27,6 +29,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -64,12 +67,35 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;
 
+    private int viewType = -1;
+    private String dateValue = "";
+    private double orderAmount = 0;
+    private String orderId = "";
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.layout_feedback, container, false);
 
         activity = (FeedbackActivity) getActivity();
+
+        if(Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+            viewType = Data.getFreshData().getFeedbackViewType();
+            dateValue = Data.getFreshData().getFeedbackDeliveryDate();
+            orderAmount = Data.getFreshData().getAmount();
+            orderId = Data.getFreshData().getOrderId();
+        } else if(Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+            viewType = Data.getMealsData().getFeedbackViewType();
+            dateValue = Data.getMealsData().getFeedbackDeliveryDate();
+            orderAmount = Data.getMealsData().getAmount();
+            orderId = Data.getMealsData().getOrderId();
+        } else {
+            activity.finish();
+        }
+
+        if(TextUtils.isEmpty(orderId))
+            activity.finish();
+
 
         mainLayout = (RelativeLayout) rootView.findViewById(R.id.mainLayout);
         new ASSL(activity, mainLayout, 1134, 720, false);
@@ -97,8 +123,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         textViewThumbsUp.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
 
         textViewRSCashPaidValue.setText(getResources().getString(R.string.rupee)
-                + "" + Utils.getMoneyDecimalFormat().format(Data.getFreshData().getAmount()));
-        textViewRSData.setText(""+Data.getFreshData().getFeedbackDeliveryDate());
+                + "" + Utils.getMoneyDecimalFormat().format(orderAmount));
+        textViewRSData.setText(""+dateValue);
 
         linearLayoutRideSummaryContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideSummaryContainer);
         linearLayoutRSViewInvoice = (LinearLayout) rootView.findViewById(R.id.linearLayoutRSViewInvoice);
@@ -128,7 +154,6 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         buttonEndRideInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 25/08/16 open share screen
                 Intent intent = new Intent(Data.LOCAL_BROADCAST);
                 // You can also include some extra data.
                 intent.putExtra("message", "This is my message!");
@@ -157,16 +182,16 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 sendQuery(1);
-                if(Data.getFreshData() != null){
-                    if(Data.getFreshData().getFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
+                if(viewType != -1){
+                    if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
                         endRideWithImages(R.drawable.ride_end_image_1);
-                    } else if(Data.getFreshData().getFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()){
+                    } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()){
                         endRideWithImages(R.drawable.ride_end_image_2);
-                    } else if(Data.getFreshData().getFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()){
+                    } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()){
                         endRideWithImages(R.drawable.ride_end_image_3);
-                    } else if(Data.getFreshData().getFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()){
+                    } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()){
                         endRideWithImages(R.drawable.ride_end_image_4);
-                    } else if(Data.getFreshData().getFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
+                    } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
                         endRideWithGif();
                     }
                 }
@@ -236,11 +261,11 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     private void sendQuery(final int rating) {
         try {
             if (AppStatus.getInstance(MyApplication.getInstance()).isOnline(MyApplication.getInstance())) {
-                DialogPopup.showLoadingDialog(activity, "loading...");
+                //DialogPopup.showLoadingDialog(activity, "loading...");
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.ORDER_ID, ""+Data.getFreshData().getOrderId());
+                params.put(Constants.ORDER_ID, ""+orderId);
                 params.put(Constants.RATING, "" + rating);
                 params.put(Constants.RATING_TYPE, "0");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
@@ -255,20 +280,21 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 if(rating == 1) {
                                     // for Good rating
-                                    if(Data.getFreshData().getFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
+                                    if(viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
                                                 activity.finish();
                                             }
                                         }, 3000);
-                                    } else if(Data.getFreshData().getFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
+                                    } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
                                             ) {
                                         activity.finish();
                                     }
                                 } else if(rating == 0) {
                                     // for bad rating
-
+                                    if(BuildConfig.DEBUG_MODE)
+                                        Toast.makeText(activity, "Bad rating! Open support fragment", Toast.LENGTH_LONG).show();
                                 }
                             }
                         } catch (Exception e) {
@@ -342,10 +368,10 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put("access_token", Data.userData.accessToken);
-                params.put("order_id", "" + Data.getFreshData().getOrderId());
+                params.put("order_id", "" + orderId);
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
-                RestClient.getApiServices().getRecentRides(params, new Callback<HistoryResponse>() {
+                RestClient.getFreshApiService().orderHistory(params, new Callback<HistoryResponse>() {
                     @Override
                     public void success(HistoryResponse historyResponse, Response response) {
                         String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -355,8 +381,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                             JSONObject jObj = new JSONObject(responseStr);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt("flag");
-                                if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
-                                    openOrderInvoice();
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                    openOrderInvoice(historyResponse.getData().get(0));
                                 } else {
 
                                 }
@@ -421,8 +447,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         }
     }
 
-    HistoryResponse.Datum historyData;
-    private void openOrderInvoice() {
+    private void openOrderInvoice(HistoryResponse.Datum historyData) {
         new TransactionUtils().openOrderSummaryFragment(activity,
                 linearLayoutRideSummaryContainer, historyData);
 
