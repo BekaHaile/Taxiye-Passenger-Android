@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearRoot"
-    android:layout_width="match_parent"
+    android:layout_width="720px"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/sliding_bottom_bg_color"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="700px"
+    <android.support.v7.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingLeft="4px"
         android:paddingRight="4px"
         app:cardCornerRadius="8px"
+        android:layout_marginRight="20px"
+        android:layout_marginLeft="20px"
+        android:layout_marginBottom="20px"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true">
 
@@ -27,7 +31,7 @@
             <RelativeLayout
                 android:id="@+id/linearLayoutNotificationImage"
                 android:layout_width="match_parent"
-                android:layout_height="700px"
+                android:layout_height="340px"
                 android:layout_gravity="center_horizontal"
                 android:orientation="vertical"
                 android:tag="mwar">
@@ -52,12 +56,13 @@
 
                 <ImageView
                     android:id="@+id/food_type"
-                    android:layout_width="38px"
-                    android:layout_height="38px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="22px"
-                    android:layout_marginRight="22px" />
+                    android:layout_width="41px"
+                    android:layout_height="41px"
+                    android:tag="mwar"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="22px"
+                    android:layout_marginLeft="22px" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -93,25 +98,27 @@
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginTop="15px"
+                android:background="@drawable/bg_white_divider_color_gradient" />
+
             <TextView
                 android:id="@+id/textViewdetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/text_price"
+                android:layout_marginTop="20px"
                 android:paddingLeft="27px"
                 android:paddingRight="27px"
-                android:text="Title"
-
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"
+                android:text="Description"
+                android:textColor="@color/text_color_light"
+                android:textSize="@dimen/text_size_24"
                 android:visibility="visible" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginTop="15px"
-                android:background="@color/grey_light_alpha" />
+
 
             <RelativeLayout
                 android:id="@+id/below_layout"
@@ -127,8 +134,9 @@
                     android:layout_toLeftOf="@+id/cart_layout"
                     android:paddingLeft="27px"
                     android:text="Time"
+                    android:lineSpacingExtra="5px"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_32" />
+                    android:textSize="@dimen/text_size_22" />
 
 
                 <LinearLayout
@@ -193,11 +201,7 @@
 
             </RelativeLayout>
 
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:src="@color/text_color_hint" />
+ />
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

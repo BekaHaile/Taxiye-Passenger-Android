@@ -98,11 +98,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //                mHolder.deliveryTime.setText(DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()) + "-"
 //                        + DateOperations.convertDayTimeAPViaFormat(subItem.getOrderEnd()));
 
-                if (subItem.isExpanded()) {
+                /*if (subItem.isExpanded()) {
                     mHolder.textViewdetails.setVisibility(View.VISIBLE);
                 } else {
                     mHolder.textViewdetails.setVisibility(View.GONE);
-                }
+                }*/
 
                 mHolder.linear.setTag(position);
                 mHolder.linear.setOnClickListener(new View.OnClickListener() {
@@ -110,11 +110,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     public void onClick(View v) {
                         try {
                             int pos = (int) v.getTag();
-                            if (subItem.isExpanded()) {
+                           /* if (subItem.isExpanded()) {
                                 subItem.setExpanded(false);
                             } else {
                                 subItem.setExpanded(true);
-                            }
+                            }*/
                             notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -305,13 +305,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mAddButton.setTypeface(Fonts.mavenRegular(context));
 
             textViewTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
-            textViewTitle.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
+            textViewTitle.setTypeface(Fonts.avenirNext(context), Typeface.BOLD);
             textPrice = (TextView) itemView.findViewById(R.id.text_price);
-            textPrice.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
+            textPrice.setTypeface(Fonts.avenirNext(context), Typeface.BOLD);
             textViewdetails = (TextView) itemView.findViewById(R.id.textViewdetails);
-            textViewdetails.setTypeface(Fonts.mavenRegular(context));
+            textViewdetails.setTypeface(Fonts.mavenMedium(context));
             deliveryTime = (TextView) itemView.findViewById(R.id.delivery_time);
-            deliveryTime.setTypeface(Fonts.mavenRegular(context));
+            deliveryTime.setTypeface(Fonts.avenirNext(context));
             textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuantity);
             textViewQuantity.setTypeface(Fonts.mavenRegular(context));
 
