@@ -239,7 +239,7 @@
             android:layout_marginBottom="25dp"
             android:tag="DontTouchMe"
             android:layout_marginLeft="16dp"
-            android:visibility="visible"
+            android:visibility="gone"
             />
 
         <include layout="@layout/layout_home_activity_fab"/>
