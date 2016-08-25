@@ -91,7 +91,7 @@ public class RideOrderShortView {
 				textViewDriverName.setText(endRideData.driverName);
 				textViewDriverCarNumber.setText(endRideData.driverCarNumber);
 				textViewDate.setText(context.getString(R.string.ride_date));
-				textViewDateValue.setText(endRideData.getRideDate());
+				textViewDateValue.setText(endRideData.getEngagementDate());
 				if(!"".equalsIgnoreCase(endRideData.driverImage)){
 					Picasso.with(context).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);
 				}

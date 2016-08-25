@@ -54,7 +54,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 	private View rootView;
 	private FragmentActivity activity;
 
-	private int engagementId;
+	private int engagementId, orderId;
 	private EndRideData endRideData;
 	private HistoryResponse.Datum datum;
 	private ArrayList<ShowPanelResponse.Item> items;
@@ -75,10 +75,12 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		FlurryAgent.onEndSession(activity);
 	}
 
+	public SupportRideIssuesFragment(){}
 
-	public SupportRideIssuesFragment(int engagementId, EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items,
+	public SupportRideIssuesFragment(int engagementId, int orderId, EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items,
 									 boolean rideCancelled, int autosStatus, HistoryResponse.Datum datum) {
 		this.engagementId = engagementId;
+		this.orderId = orderId;
 		this.endRideData = endRideData;
 		this.items = items;
 		this.rideCancelled = rideCancelled;
@@ -150,7 +152,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		} else {
 			linearLayoutRideShortInfo.setVisibility(View.GONE);
 			cardViewRecycler.setVisibility(View.GONE);
-			getRideSummaryAPI(activity, String.valueOf(engagementId));
+			getRideSummaryAPI(activity, engagementId, orderId);
 		}
 
 		return rootView;
@@ -210,8 +212,8 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		}
 	}
 
-	public void getRideSummaryAPI(final Activity activity, final String engagementId) {
-		new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.autoData.getFareStructure().getFixedFare(),
+	public void getRideSummaryAPI(final Activity activity, final int engagementId, final int orderId) {
+		new ApiGetRideSummary(activity, Data.userData.accessToken, engagementId, orderId, Data.autoData.getFareStructure().getFixedFare(),
 				new ApiGetRideSummary.Callback() {
 					@Override
 					public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
@@ -235,7 +237,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 					@Override
 					public void onRetry(View view) {
-						getRideSummaryAPI(activity, engagementId);
+						getRideSummaryAPI(activity, engagementId, orderId);
 					}
 
 					@Override

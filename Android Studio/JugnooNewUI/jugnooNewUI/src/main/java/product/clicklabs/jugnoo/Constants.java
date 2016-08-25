@@ -427,4 +427,6 @@ public interface Constants {
 	String KEY_FEEDBACK_AMOUNT = "feedback_order_amount";
 	String KEY_FEEDBACK_DATE = "feedback_delivery_date";
 	String KEY_FEEDBACK_VIEW_TYPE = "feedback_view_type";
+	String KEY_PRODUCT_TYPE = "product_type";
+	String KEY_ORDER_ID = "order_id";
 }

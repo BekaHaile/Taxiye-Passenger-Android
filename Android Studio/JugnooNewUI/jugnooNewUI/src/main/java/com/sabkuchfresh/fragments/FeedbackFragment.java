@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -55,7 +56,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by gurmail on 24/05/16.
  */
-public class FeedbackFragment extends BaseFragment implements View.OnClickListener, FlurryEventNames, Constants {
+public class FeedbackFragment extends BaseFragment implements View.OnClickListener, FlurryEventNames {
 
 
     private View rootView;
@@ -80,12 +81,12 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
         activity = (FeedbackActivity) getActivity();
         activity.fragmentUISetup(this);
-        if(Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+        if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
             viewType = Data.getFreshData().getFeedbackViewType();
             dateValue = Data.getFreshData().getFeedbackDeliveryDate();
             orderAmount = Data.getFreshData().getAmount();
             orderId = Data.getFreshData().getOrderId();
-        } else if(Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+        } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
             viewType = Data.getMealsData().getFeedbackViewType();
             dateValue = Data.getMealsData().getFeedbackDeliveryDate();
             orderAmount = Data.getMealsData().getAmount();
@@ -142,7 +143,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         buttonEndRideInviteFriends = (Button) rootView.findViewById(R.id.buttonEndRideInviteFriends);
 
 
-        if(Config.getFreshClientId().equals(Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+        if(Config.getFreshClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.feedback_fresh);
         } else {
             imageviewType.setImageResource(R.drawable.feedback_meals);
@@ -271,7 +272,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 params.put(Constants.ORDER_ID, ""+orderId);
                 params.put(Constants.RATING, "" + rating);
                 params.put(Constants.RATING_TYPE, "0");
-                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
                 RestClient.getFreshApiService().orderFeedback(params, new Callback<OrderHistoryResponse>() {
                     @Override
@@ -372,7 +373,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 HashMap<String, String> params = new HashMap<>();
                 params.put("access_token", Data.userData.accessToken);
                 params.put("order_id", "" + orderId);
-                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
                 RestClient.getFreshApiService().orderHistory(params, new Callback<HistoryResponse>() {
                     @Override
@@ -448,6 +449,12 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
      * Method used to open
      */
     private void openSupportFragment() {
+
+        Intent intent = new Intent(activity, SupportActivity.class);
+        intent.putExtra(Constants.INTENT_KEY_FROM_BAD, 1);
+        intent.putExtra(Constants.KEY_ORDER_ID, orderId);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
     }
 

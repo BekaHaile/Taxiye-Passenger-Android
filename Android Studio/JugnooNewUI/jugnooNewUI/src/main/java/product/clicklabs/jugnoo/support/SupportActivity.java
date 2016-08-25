@@ -45,6 +45,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	private EndRideData endRideData;
 	private HistoryResponse.Datum datum;
 	private ArrayList<ShowPanelResponse.Item> items;
+	private int engagementId = -1, orderId = -1;
 
 	@Override
 	protected void onResume() {
@@ -61,7 +62,9 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		new ASSL(this, relative, 1134, 720, false);
 
 		if(getIntent().hasExtra(Constants.INTENT_KEY_FROM_BAD)){
-			fromBadFeedback = getIntent().getExtras().getInt(Constants.INTENT_KEY_FROM_BAD);
+			fromBadFeedback = getIntent().getExtras().getInt(Constants.INTENT_KEY_FROM_BAD, -1);
+			engagementId = getIntent().getExtras().getInt(Constants.KEY_ENGAGEMENT_ID, -1);
+			orderId = getIntent().getExtras().getInt(Constants.KEY_ORDER_ID, -1);
 		}
 
 		linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
@@ -155,11 +158,13 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	public void openSupportRideIssuesFragment(int autosStatus){
 		try {
 			int engagementId = -1;
+			int orderId = -1;
 			try{engagementId = Integer.parseInt(endRideData.engagementId);} catch (Exception e){}
+			try{orderId = datum.getOrderId();} catch (Exception e){}
 			if ((endRideData != null || datum != null) && items != null) {
 				new TransactionUtils().openRideIssuesFragment(this,
 						getContainer(),
-						engagementId, endRideData, items, fromBadFeedback, false, autosStatus,
+						engagementId, orderId, endRideData, items, fromBadFeedback, false, autosStatus,
 						datum);
 				FlurryEventLogger.eventGA(Constants.ISSUES, "Customer Support", "Issue with Ride");
 			}
@@ -179,7 +184,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 	public void getRideSummaryAPI(final Activity activity) {
 		try {
-			new ApiGetRideSummary(activity, Data.userData.accessToken, -1, Data.autoData.getFareStructure().getFixedFare(),
+			new ApiGetRideSummary(activity, Data.userData.accessToken, engagementId, orderId, Data.autoData.getFareStructure().getFixedFare(),
 					new ApiGetRideSummary.Callback() {
 						@Override
 						public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
