@@ -2,11 +2,11 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,7 +19,6 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -74,79 +73,61 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewholder, int position) {
-        if (viewholder instanceof ViewHolder) {
-            HistoryResponse.Datum orderHistory = getItem(position);
-            Log.d("TAG", "orderHistory id = "+orderHistory.getOrderId());
+        HistoryResponse.Datum orderHistory = getItem(position);
+        if (viewholder instanceof ViewHolder && orderHistory != null) {
             ViewHolder holder = (ViewHolder) viewholder;
             holder.relative.setTag(position);
             if (orderHistory.getProductType() == ProductType.AUTO.getOrdinal()) {
-
-                holder.textViewIdValue.setText("" + orderHistory.getEngagementId());
+                holder.textViewStatus.setText(R.string.ride_status_colon);
+                holder.textViewId.setText(R.string.transaction_id_colon);
+                holder.textViewIdValue.setText(String.valueOf(orderHistory.getEngagementId()));
+                holder.textViewFrom.setText(R.string.from_colon);
                 holder.textViewFromValue.setText(orderHistory.getPickupAddress());
+                holder.textViewTo.setText(R.string.to_colon);
                 holder.textViewToValue.setText(orderHistory.getDropAddress());
-                holder.textViewDetails.setText("Details: ");
-
-                holder.textViewFrom.setText("From: ");
-                holder.textViewTo.setText("To: ");
-                holder.textViewTo.setVisibility(View.VISIBLE);
+                holder.textViewDetails.setText(R.string.details_colon);
+                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
+                        Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
+                holder.imageViewProductType.setImageResource(R.drawable.ic_support_auto);
 
                 if (0 == orderHistory.getIsCancelledRide()) {
-                    holder.textViewStatusValue.setText("Ride Completed");
-                    holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.theme_color));
-
-                    if (orderHistory.getRideTime() == 1) {
-                        holder.textViewDetailsValue.setText(decimalFormat.format(orderHistory.getDistance()) + " km, "
-                                + decimalFormatNoDec.format(orderHistory.getRideTime()) + " minute, " + orderHistory.getDate());
-                    } else {
-                        holder.textViewDetailsValue.setText(decimalFormat.format(orderHistory.getDistance()) + " km, "
-                                + decimalFormatNoDec.format(orderHistory.getRideTime()) + " minutes, " + orderHistory.getDate());
-                    }
-                    holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
-                    holder.textViewAmount.setTextColor(activity.getResources().getColor(R.color.theme_color));
-
-                    holder.textViewRideCancelled.setVisibility(View.GONE);
+                    holder.textViewStatusValue.setText(R.string.ride_compeleted);
+                    holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.text_color_blue));
+                    holder.textViewDetailsValue.setText(orderHistory.getDate() + ", " + decimalFormat.format(orderHistory.getDistance()) + " km");
                     holder.relativeLayoutTo.setVisibility(View.VISIBLE);
+                    holder.relativeLayoutDetails.setVisibility(View.VISIBLE);
                 } else {
-                    holder.textViewStatusValue.setText("Ride Cancelled");
-                    holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.red));
-                    holder.textViewDetailsValue.setText(orderHistory.getDate() + ",");
-                    holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                            Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
-                    holder.textViewAmount.setTextColor(activity.getResources().getColor(R.color.red));
-                    holder.textViewRideCancelled.setVisibility(View.VISIBLE);
+                    holder.textViewStatusValue.setText(R.string.ride_cancelled);
+                    holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.text_color_red));
+                    holder.textViewDetailsValue.setText(orderHistory.getDate());
                     holder.relativeLayoutTo.setVisibility(View.GONE);
+                    holder.relativeLayoutDetails.setVisibility(View.VISIBLE);
                 }
-
             } else if (orderHistory.getProductType() == ProductType.FRESH.getOrdinal() ||
                     orderHistory.getProductType() == ProductType.MEALS.getOrdinal()) {
-                holder.textViewIdValue.setText(String.valueOf(orderHistory.getOrderId()));
+                holder.textViewStatus.setText(R.string.order_status_colon);
                 holder.textViewStatusValue.setText(orderHistory.getOrderStatus());
                 try{
                     holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
-                } catch(Exception e){
-                    e.printStackTrace();
+                } catch (Exception e){
+                    holder.textViewStatusValue.setTextColor(activity.getResources().getColor(R.color.text_color_blue));
                 }
-
-                holder.textViewFrom.setText("To : ");
-
-
-                holder.textViewFromValue.setText(orderHistory.getDeliveryAddress());
-                holder.textViewDetails.setText("Details: ");
-                holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations
-                        .utcToLocalTZ(orderHistory.getOrderTime())));
-
-                holder.relativeLayoutTo.setVisibility(View.GONE);
-                holder.textViewRideCancelled.setVisibility(View.GONE);
-                try {
-                    holder.textViewAmount.setText(String.format(activity.getResources()
-                                    .getString(R.string.rupees_value_format_without_space),
-                            com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
-
-//                    holder.textViewAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-//                            orderHistory.getOrderAmount()));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                holder.textViewId.setText(R.string.order_id_colon);
+                holder.textViewIdValue.setText(String.valueOf(orderHistory.getOrderId()));
+                holder.textViewFrom.setText(R.string.order_date_colon);
+                holder.textViewFromValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalTZ(orderHistory.getOrderTime())));
+                holder.textViewTo.setText(R.string.delivery_slot_colon);
+                holder.textViewToValue.setText(DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+                holder.textViewDetails.setText(R.string.delivery_address_colon);
+                holder.textViewDetailsValue.setText(orderHistory.getDeliveryAddress());
+                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
+                if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_support_fresh);
+                } else if(orderHistory.getProductType() == ProductType.MEALS.getOrdinal()) {
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_support_meals);
                 }
+                holder.relativeLayoutTo.setVisibility(View.VISIBLE);
+                holder.relativeLayoutDetails.setVisibility(View.VISIBLE);
             }
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -206,44 +187,31 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewIdValue, textViewFrom, textViewFromValue, textViewTo,
-                textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount,
-                textViewRateRide, textViewRideCancelled;
-        public TextView textViewStatus, textViewStatusValue;
-        public RelativeLayout relativeLayoutTo;
+        public TextView textViewId, textViewIdValue, textViewFrom, textViewFromValue, textViewTo,
+                textViewToValue, textViewDetails, textViewDetailsValue, textViewAmount, textViewStatus, textViewStatusValue;
+        public ImageView imageViewProductType;
+        public RelativeLayout relativeLayoutTo, relativeLayoutDetails;
         public RelativeLayout relative;
 
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
-            ((TextView) convertView.findViewById(R.id.textViewId)).setTypeface(Fonts.mavenMedium(context));
-            textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue);
-            textViewIdValue.setTypeface(Fonts.mavenMedium(context));
-            textViewFrom = (TextView) convertView.findViewById(R.id.textViewFrom);
-            textViewFrom.setTypeface(Fonts.mavenMedium(context));
-            textViewFromValue = (TextView) convertView.findViewById(R.id.textViewFromValue);
-            textViewFromValue.setTypeface(Fonts.mavenRegular(context));
-            textViewTo = (TextView) convertView.findViewById(R.id.textViewTo);
-            textViewTo.setTypeface(Fonts.mavenMedium(context));
-            textViewToValue = (TextView) convertView.findViewById(R.id.textViewToValue);
-            textViewToValue.setTypeface(Fonts.mavenRegular(context));
-            textViewDetails = (TextView) convertView.findViewById(R.id.textViewDetails);
-            textViewDetails.setTypeface(Fonts.mavenMedium(context));
-            textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue);
-            textViewDetailsValue.setTypeface(Fonts.mavenRegular(context));
-            textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount);
-            textViewAmount.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
-            textViewRateRide = (TextView) convertView.findViewById(R.id.textViewRateRide);
-            textViewRateRide.setTypeface(Fonts.mavenLight(context));
-            textViewRideCancelled = (TextView) convertView.findViewById(R.id.textViewRideCancelled);
-            textViewRideCancelled.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
+            textViewStatus = (TextView) convertView.findViewById(R.id.textViewStatus); textViewStatus.setTypeface(Fonts.avenirNext(context));
+            textViewStatusValue = (TextView) convertView.findViewById(R.id.textViewStatusValue); textViewStatusValue.setTypeface(Fonts.avenirNext(context));
+            textViewId = (TextView) convertView.findViewById(R.id.textViewId); textViewId.setTypeface(Fonts.avenirNext(context));
+            textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue); textViewIdValue.setTypeface(Fonts.avenirMedium(context));
+            textViewFrom = (TextView) convertView.findViewById(R.id.textViewFrom); textViewFrom.setTypeface(Fonts.avenirNext(context));
+            textViewFromValue = (TextView) convertView.findViewById(R.id.textViewFromValue); textViewFromValue.setTypeface(Fonts.avenirMedium(context));
+            textViewTo = (TextView) convertView.findViewById(R.id.textViewTo); textViewTo.setTypeface(Fonts.avenirNext(context));
+            textViewToValue = (TextView) convertView.findViewById(R.id.textViewToValue); textViewToValue.setTypeface(Fonts.avenirMedium(context));
+            textViewDetails = (TextView) convertView.findViewById(R.id.textViewDetails); textViewDetails.setTypeface(Fonts.avenirNext(context));
+            textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); textViewDetailsValue.setTypeface(Fonts.avenirMedium(context));
 
-            textViewStatus = (TextView) convertView.findViewById(R.id.textViewStatus);
-            textViewStatus.setTypeface(Fonts.mavenRegular(context));
-            textViewStatusValue = (TextView) convertView.findViewById(R.id.textViewStatusValue);
-            textViewStatusValue.setTypeface(Fonts.mavenRegular(context));
+            textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); textViewAmount.setTypeface(Fonts.avenirNext(context));
+            imageViewProductType = (ImageView) convertView.findViewById(R.id.imageViewProductType);
 
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             relativeLayoutTo = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutTo);
+            relativeLayoutDetails = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutDetails);
         }
     }
 

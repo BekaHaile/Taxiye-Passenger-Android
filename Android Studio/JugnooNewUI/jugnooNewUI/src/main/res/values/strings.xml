@@ -861,9 +861,9 @@
 	<string name="try_now">Try Now</string>
 	<string name="order_status">Status:</string>
 	<string name="id">ID:</string>
-	<string name="order_date">Order Date:</string>
+	<string name="order_date_colon">Order Date:</string>
 	<string name="delivery_address_colon">Delivery Address:</string>
-	<string name="order_id">Order ID:</string>
+	<string name="order_id_colon">Order ID:</string>
 	<string name="delivery_date">Delivery Date</string>
 	<string name="delivery_slot">Delivery Slot</string>
 	<string name="order_receipt">Order Receipt</string>
@@ -1083,6 +1083,15 @@
 	<string name="sub_total_amount">SubTotal Amount</string>
 	<string name="pay_rupees_using_jc">Paid via Jugnoo cash \u20B9 %s </string>
 	<string name="transaction_id_format">Transaction ID: %s</string>
+	<string name="transaction_id_colon">Transaction ID:</string>
 	<string name="order_id_format">Order ID: %s</string>
+	<string name="order_status_colon">Order Status:</string>
+	<string name="from_colon">From:</string>
+	<string name="to_colon">To:</string>
+	<string name="details_colon">Details:</string>
+	<string name="ride_status_colon">Ride Status:</string>
+	<string name="ride_compeleted">Ride Completed</string>
+	<string name="ride_cancelled">Ride Cancelled</string>
+	<string name="delivery_slot_colon">Delivery Slot:</string>
 
 </resources>

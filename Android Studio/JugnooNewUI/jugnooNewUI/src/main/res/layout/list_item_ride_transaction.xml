@@ -13,7 +13,7 @@
         android:layout_marginBottom="2px"
         android:layout_marginLeft="25px"
         android:layout_marginRight="25px"
-        android:layout_marginTop="22px"
+        android:layout_marginTop="25px"
         card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="@dimen/button_corner_radius">
 
@@ -31,214 +31,130 @@
                 android:splitMotionEvents="false">
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20px">
-
-                    <TextView
-                        android:id="@+id/textViewId"
-                        android:layout_width="100px"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20px"
-                        android:text="ID: "
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26"/>
-
-                    <TextView
-                        android:id="@+id/textViewIdValue"
-                        android:layout_width="400px"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
-                        android:layout_marginRight="30px"
-                        android:layout_toRightOf="@+id/textViewId"
-                        android:text="1234"
-                        android:textColor="@color/ride_history_item_text_color"
-                        android:textSize="@dimen/text_size_26"/>
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/statusLayout"
-                    android:layout_width="match_parent"
+                    android:layout_width="500px"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20px">
 
                     <TextView
                         android:id="@+id/textViewStatus"
-                        android:layout_width="100px"
+                        android:layout_width="190px"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20px"
-                        android:text="@string/order_status"
+                        android:text="@string/order_status_colon"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26"/>
+                        android:textSize="@dimen/text_size_22"/>
 
                     <TextView
                         android:id="@+id/textViewStatusValue"
-                        android:layout_width="400px"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
-                        android:layout_marginRight="30px"
-                        android:layout_toRightOf="@+id/textViewStatus"
+                        android:layout_marginLeft="210px"
+                        android:textColor="@color/text_color_blue"
+                        android:textSize="@dimen/text_size_22"
+                        android:text="@string/or"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="500px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10px">
+
+                    <TextView
+                        android:id="@+id/textViewId"
+                        android:layout_width="190px"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20px"
+                        android:text="@string/order_id_colon"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_22"/>
+
+                    <TextView
+                        android:id="@+id/textViewIdValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="210px"
+                        android:text="1234"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
                 </RelativeLayout>
 
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="500px"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10px">
 
                     <TextView
                         android:id="@+id/textViewFrom"
-                        android:layout_width="100px"
+                        android:layout_width="190px"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20px"
-                        android:text="From: "
+                        android:text="@string/from_colon"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26"/>
+                        android:textSize="@dimen/text_size_22"/>
 
                     <TextView
                         android:id="@+id/textViewFromValue"
-                        android:layout_width="400px"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
-                        android:layout_marginRight="30px"
-                        android:layout_toRightOf="@+id/textViewFrom"
-                        android:text="Plot No 5, Sector 28 B, \nChandigarh"
+                        android:layout_marginLeft="210px"
+                        android:text="@string/sample_address"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutTo"
-                    android:layout_width="match_parent"
+                    android:layout_width="500px"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10px"
                     android:visibility="visible">
 
                     <TextView
                         android:id="@+id/textViewTo"
-                        android:layout_width="100px"
+                        android:layout_width="190px"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20px"
-                        android:text="To: "
+                        android:text="@string/to_colon"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26"/>
+                        android:textSize="@dimen/text_size_22"/>
 
                     <TextView
                         android:id="@+id/textViewToValue"
-                        android:layout_width="400px"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
-                        android:layout_marginRight="30px"
-                        android:layout_toRightOf="@+id/textViewTo"
-                        android:text="Plot No 5, Sector 28 B, Chandigarh\nabc"
+                        android:layout_marginLeft="210px"
+                        android:text="@string/sample_address"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/relativeLayoutDetails"
+                    android:layout_width="500px"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20px"
                     android:layout_marginTop="10px">
 
                     <TextView
                         android:id="@+id/textViewDetails"
-                        android:layout_width="100px"
+                        android:layout_width="190px"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20px"
-                        android:text="Details: "
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26"/>
-
-                    <TextView
-                        android:id="@+id/textViewDetailsValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
-                        android:layout_toRightOf="@+id/textViewDetails"
-                        android:text="8.5 Km, 20 minutes, Feb 30th 2016"
+                        android:text="@string/delivery_address_colon"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
 
                     <TextView
-                        android:id="@+id/textViewRideCancelled"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/textViewDetailsValue"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5px"
-                        android:layout_toRightOf="@+id/textViewDetailsValue"
-                        android:text="Cancelled"
-                        android:textColor="@color/red"
-                        android:textSize="@dimen/text_size_22"
-                        android:visibility="gone"
-                        />
+                        android:layout_marginLeft="210px"
+                        android:text="15 Aug 2016, 05:30PM, 8.5 Km"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_22"/>
                 </RelativeLayout>
-
-            </LinearLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutRateRide"
-                android:layout_width="match_parent"
-                android:layout_height="80px"
-                android:layout_below="@+id/linearLayoutMain"
-                android:layout_marginTop="0px"
-                android:background="@drawable/background_white_grey_light_selector"
-                android:visibility="gone"
-                >
-
-                <TextView
-                    android:id="@+id/textViewRateRide"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="80px"
-                    android:gravity="center"
-                    android:text="@string/rate_this_ride"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28"/>
-
-                <ImageView
-                    style="@style/forward_image"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="20px"
-                    />
-
-            </RelativeLayout>
-
-
-            <LinearLayout
-                android:id="@+id/linearLayoutRideReceipt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="40px"
-                android:layout_marginTop="20px"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="44px"
-                    android:layout_height="44px"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="10px"
-                    android:layout_marginLeft="10px"
-                    android:layout_marginTop="10px"
-                    android:src="@drawable/ic_ride_receipt"
-                    android:tag="mwar"/>
-
-                <ImageView
-                    style="@style/forward_image"
-                    android:layout_marginLeft="20px"
-                    />
-
 
             </LinearLayout>
 
@@ -249,6 +165,7 @@
                 android:layout_alignBottom="@+id/linearLayoutMain"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/linearLayoutMain"
+                android:layout_marginTop="24px"
                 android:layout_marginBottom="20px"
                 android:layout_marginRight="30px"
                 android:orientation="vertical"
@@ -256,13 +173,13 @@
                 >
 
                 <ImageView
-                    android:id="@+id/rideTypeImageView"
-                    android:layout_width="80px"
-                    android:layout_height="80px"
+                    android:id="@+id/imageViewProductType"
+                    android:layout_width="71px"
+                    android:layout_height="71px"
                     android:layout_alignParentRight="true"
                     android:layout_gravity="right"
-                    android:layout_marginTop="10px"
-                    android:background="@drawable/ic_ride_summary_auto"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/ic_support_auto"
                     android:tag="mwar"
                     />
 
@@ -270,12 +187,12 @@
                     android:id="@+id/textViewAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
                     android:singleLine="true"
                     android:text="@string/rupee_0"
-                    android:textColor="@color/theme_color"
-                    android:textSize="@dimen/text_size_34"/>
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_40"
+                    />
 
             </RelativeLayout>
 
