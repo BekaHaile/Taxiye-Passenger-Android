@@ -24,6 +24,9 @@ public class ParseUtils {
 		Database2.getInstance(context).insertUpdateSupportData(8, showPanelResponse.getSupportData().getMenu8());
 		Database2.getInstance(context).insertUpdateSupportData(9, showPanelResponse.getSupportData().getMenu9());
 		Database2.getInstance(context).insertUpdateSupportData(10, showPanelResponse.getSupportData().getMenu10());
+		Database2.getInstance(context).insertUpdateSupportData(11, showPanelResponse.getSupportData().getMenu11());
+		Database2.getInstance(context).insertUpdateSupportData(12, showPanelResponse.getSupportData().getMenu12());
+		Database2.getInstance(context).insertUpdateSupportData(13, showPanelResponse.getSupportData().getMenu13());
 
 		switch(supportCategory){
 			case 1:
@@ -55,6 +58,15 @@ public class ParseUtils {
 				break;
 			case 10:
 				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu10();
+				break;
+			case 11:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu11();
+				break;
+			case 12:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu12();
+				break;
+			case 13:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu13();
 				break;
 		}
 		return itemsMain;

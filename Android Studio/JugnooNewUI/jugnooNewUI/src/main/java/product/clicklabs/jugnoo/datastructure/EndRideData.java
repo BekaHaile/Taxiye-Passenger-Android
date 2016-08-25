@@ -20,6 +20,7 @@ public class EndRideData {
 	private int vehicleType, isPooled;
 	private VehicleIconSet vehicleIconSet;
 	private int totalRide;
+	private int status;
 	
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
@@ -27,7 +28,7 @@ public class EndRideData {
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
 					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
-					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, int totalRide){
+					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, int totalRide, int status){
 
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
@@ -78,6 +79,7 @@ public class EndRideData {
 
 		this.paidUsingMobikwik = paidUsingMobikwik;
 		this.engagementDate = engagementDate;
+		this.status = status;
 	}
 
 
@@ -156,5 +158,13 @@ public class EndRideData {
 
 	public void setTotalRide(int totalRide) {
 		this.totalRide = totalRide;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 }
