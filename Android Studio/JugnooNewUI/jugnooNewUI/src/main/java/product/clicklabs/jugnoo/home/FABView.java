@@ -24,10 +24,10 @@ public class FABView {
     Activity activity;
     public RelativeLayout relativeLayoutFAB;
     public FloatingActionMenu menuLabelsRight;
-    private FloatingActionButton fabDelivery;
-    private FloatingActionButton fabMeals;
-    private FloatingActionButton fabFresh;
-    private FloatingActionButton fabAutos;
+    public FloatingActionButton fabDelivery;
+    public FloatingActionButton fabMeals;
+    public FloatingActionButton fabFresh;
+    public FloatingActionButton fabAutos;
     public View fabExtra;
 
     public FABView(Activity activity) {
@@ -61,6 +61,8 @@ public class FABView {
             @Override
             public void onMenuToggle(boolean opened) {
                 String text;
+                setFABMenuDrawable();
+                //setFABButtons();
                 if (opened) {
                     text = "Menu opened";
                     fabExtra.setVisibility(View.VISIBLE);
@@ -68,14 +70,12 @@ public class FABView {
                 } else {
                     text = "Menu closed";
                     fabExtra.setVisibility(View.GONE);
-                    //setRelativeLayoutFABVisibility(null);
                     if(activity instanceof HomeActivity){
                         setRelativeLayoutFABVisibility(HomeActivity.passengerScreenMode);
                     } else if(activity instanceof FreshActivity){
                         setRelativeLayoutFABVisibility(null);
                     }
                 }
-                setFABMenuDrawable();
             }
         });
 
@@ -107,17 +107,22 @@ public class FABView {
     }
 
     public void setRelativeLayoutFABVisibility(PassengerScreenMode passengerScreenMode){
-        relativeLayoutFAB.setVisibility(View.INVISIBLE);
+        //relativeLayoutFAB.setVisibility(View.INVISIBLE);
         if(passengerScreenMode != null) {
             if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
                     && !((HomeActivity)activity).confirmedScreenOpened)
                     || passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
                 relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                ((HomeActivity)activity).getImageViewFabFake().setVisibility(View.VISIBLE);
             }else{
                 relativeLayoutFAB.setVisibility(View.VISIBLE);
             }
         } else{
-            relativeLayoutFAB.setVisibility(View.INVISIBLE);
+            if(activity instanceof FreshActivity){
+                relativeLayoutFAB.setVisibility(View.VISIBLE);
+            } else {
+                relativeLayoutFAB.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -139,6 +144,7 @@ public class FABView {
             menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_menu);
         }
 
+        fabDelivery.setVisibility(View.GONE);
         if(Config.getAutosClientId().equalsIgnoreCase(currentOpenedOffering)){
             fabAutos.setVisibility(View.GONE);
         } else if(Config.getFreshClientId().equalsIgnoreCase(currentOpenedOffering)){
@@ -154,7 +160,6 @@ public class FABView {
             relativeLayoutFAB.setVisibility(View.GONE);
         } else {
             relativeLayoutFAB.setVisibility(View.INVISIBLE);
-            String currentOpenedOffering = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
             if (Data.userData.getFreshEnabled() == 1) {
                 fabFresh.setVisibility(View.VISIBLE);
             } else {

@@ -187,7 +187,6 @@
             android:layout_width="match_parent"
             android:layout_height="187px"
             android:layout_marginBottom="10px"
-            android:animateLayoutChanges="true"
             android:soundEffectsEnabled="false">
 
             <ImageView
