@@ -911,9 +911,9 @@ public class JSONParser implements Constants {
                     if(Data.userData != null) {
                         Data.userData.setPaytmRechargeInfo(parsePaytmRechargeInfo(jObject1));
                     }
-                    Data.userData.setFreshEnabled(jObject1.optInt("fresh_enabled", 0));
-                    Data.userData.setMealsEnabled(jObject1.optInt("meals_enabled", 0));
-                    Data.userData.setDeliveryEnabled(jObject1.optInt("delivery_enabled", 0));
+                    Data.userData.setFreshEnabled(jObject1.optInt("fresh_enabled", Data.userData.getFreshEnabled()));
+                    Data.userData.setMealsEnabled(jObject1.optInt("meals_enabled", Data.userData.getMealsEnabled()));
+                    Data.userData.setDeliveryEnabled(jObject1.optInt("delivery_enabled", Data.userData.getDeliveryEnabled()));
 
                     if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
 
