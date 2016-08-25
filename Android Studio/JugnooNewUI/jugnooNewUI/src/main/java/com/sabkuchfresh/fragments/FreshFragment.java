@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -17,6 +18,7 @@ import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
+import com.sabkuchfresh.home.FeedbackActivity;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshDeliverySlotsDialog;
 import com.sabkuchfresh.home.FreshNoDeliveriesDialog;
@@ -174,6 +176,11 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         if(Data.getFreshData().pendingFeedback == 1) {
 			//TODO fresh feedback fragment open here
             Data.getFreshData().pendingFeedback = 0;
+            Intent intent = new Intent(activity, FeedbackActivity.class);
+            intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.FEED_BACK);
+            intent.putExtra(Constants.ORDER_ID, Data.getFreshData().getOrderId());
+            startActivity(intent);
+            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         }
 
         if(Data.userData.getPromoSuccess() == 0) {

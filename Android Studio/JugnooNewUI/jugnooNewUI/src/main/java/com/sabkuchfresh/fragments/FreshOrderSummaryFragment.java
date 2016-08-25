@@ -542,6 +542,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
         Intent intent = new Intent(Data.LOCAL_BROADCAST);
         // You can also include some extra data.
         intent.putExtra("message", "This is my message!");
+        intent.putExtra("open_type", 0);
         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
     }
 

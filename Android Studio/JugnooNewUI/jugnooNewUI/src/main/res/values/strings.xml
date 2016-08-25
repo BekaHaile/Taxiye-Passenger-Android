@@ -260,7 +260,7 @@
 	<string name="upload_contact_no_thanks">No, Thanks</string>
 	<string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
 	<string name="thanks_for_riding_with_jugnoo">Thanks for riding with Jugnoo</string>
-
+	<string name="thanks_for_ordering_with_us">Thanks for ordering with us</string>
 
 
 	<!-- Jugnoo Jeanie Strings-->
@@ -306,7 +306,7 @@
 	<string name="review_must_be_in">Review must be in 300 letters.</string>
 	<string name="two_hifen">--</string>
 	<string name="includes_priority_tip">Includes Priority Tip | Offer will be applied at ride completion</string>
-
+	<string name="order_expereince">How was your Expereince?</string>
 
 	<!-- Add Places -->
 	<string name="remove_place_confirm_dialog_message">Are you sure you want to remove this saved place?</string>

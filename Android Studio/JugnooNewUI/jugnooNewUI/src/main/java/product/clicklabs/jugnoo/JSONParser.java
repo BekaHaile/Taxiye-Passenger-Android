@@ -74,6 +74,7 @@ import retrofit.mime.TypedByteArray;
 
 public class JSONParser implements Constants {
 
+
     private final String TAG = JSONParser.class.getSimpleName();
 
 
@@ -373,6 +374,9 @@ public class JSONParser implements Constants {
             String question = jFatafatData.optString(KEY_QUESTION, "");
             int questionType = jFatafatData.optInt(KEY_QUESTION_TYPE, 0);
             int pendingFeedback = jFatafatData.optInt(KEY_PENDING_FEEDBACK, 0);
+            double amount = jFatafatData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
+            String feedbackDeliveryDate = jFatafatData.optString(KEY_FEEDBACK_DATE, "");
+            int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
 
             PopupData popupData = null;
             try {
@@ -412,7 +416,8 @@ public class JSONParser implements Constants {
                 }
             } catch (Exception e){ e.printStackTrace(); }
 
-            Data.setFreshData(new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData));
+            Data.setFreshData(new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData,
+                    amount, feedbackDeliveryDate, feedbackViewType));
 
             try {
                 if(Data.getFreshData().getPromoCoupons() == null){

@@ -423,4 +423,7 @@ public interface Constants {
 	String INTENT_KEY_FROM_BAD = "FromBad";
 	String KEY_MASTER_COUPON = "master_coupon";
 
+	String KEY_FEEDBACK_AMOUNT = "feedback_order_amount";
+	String KEY_FEEDBACK_DATE = "feedback_delivery_date";
+	String KEY_FEEDBACK_VIEW_TYPE = "feedback_view_type";
 }

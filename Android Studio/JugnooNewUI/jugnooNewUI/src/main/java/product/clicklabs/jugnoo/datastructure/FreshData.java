@@ -15,15 +15,22 @@ public class FreshData {
 	public ArrayList<Store> stores;
 	private PopupData popupData;
 	private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
+	private double amount;
+	private String feedbackDeliveryDate;
+	private int feedbackViewType;
+
 
 	public FreshData(String question, String orderId, int questionType, int pendingFeedback,
-					 ArrayList<Store> stores, PopupData popupData) {
+					 ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate, int feedbackViewType) {
 		this.question = question;
 		this.orderId = orderId;
 		this.questionType = questionType;
 		this.pendingFeedback = pendingFeedback;
 		this.stores = stores;
 		this.popupData = popupData;
+		this.amount = amount;
+		this.feedbackDeliveryDate = feedbackDeliveryDate;
+		this.feedbackViewType = feedbackViewType;
 	}
 
 	public String getQuestion() {
@@ -80,5 +87,29 @@ public class FreshData {
 
 	public void setPromoCoupons(ArrayList<PromoCoupon> promoCoupons) {
 		this.promoCoupons = promoCoupons;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
+
+	public String getFeedbackDeliveryDate() {
+		return feedbackDeliveryDate;
+	}
+
+	public void setFeedbackDeliveryDate(String feedbackDeliveryDate) {
+		this.feedbackDeliveryDate = feedbackDeliveryDate;
+	}
+
+	public int getFeedbackViewType() {
+		return feedbackViewType;
+	}
+
+	public void setFeedbackViewType(int feedbackViewType) {
+		this.feedbackViewType = feedbackViewType;
 	}
 }
