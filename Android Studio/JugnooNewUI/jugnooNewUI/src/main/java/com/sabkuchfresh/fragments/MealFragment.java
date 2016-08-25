@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.home.FeedbackActivity;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshDeliverySlotsDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -117,6 +119,19 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         setSortingList();
         getAllProducts(true);
 
+        try {
+            if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
+                //TODO meals feedback fragment open here
+                Data.getFreshData().pendingFeedback = 0;
+                Intent intent = new Intent(activity, FeedbackActivity.class);
+                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.FEED_BACK);
+                intent.putExtra(Constants.ORDER_ID, Data.getMealsData().getOrderId());
+                startActivity(intent);
+                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return rootView;
     }

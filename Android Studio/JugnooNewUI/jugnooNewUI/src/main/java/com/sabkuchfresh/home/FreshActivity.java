@@ -77,6 +77,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.FABView;
 import product.clicklabs.jugnoo.home.MenuBar;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -320,6 +321,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     }
 
+    public void intentToShareActivity(){
+        Intent intent = new Intent(FreshActivity.this, ShareActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+    }
+
     private boolean isAvailable() {
         boolean flag = false;
 //        if(getProductsResponse() != null
@@ -342,13 +349,18 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             String message = intent.getStringExtra("message");
-            Log.d("receiver", "Got message: " + message);
-            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.closeDrawer(GravityCompat.START);
-            }
-            updateCartFromSP();
+            int type = intent.getIntExtra("open_type", 0);
+            if(type == 0) {
+                Log.d("receiver", "Got message: " + message);
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }
+                updateCartFromSP();
 
-            relativeLayoutCart.performClick();
+                relativeLayoutCart.performClick();
+            } else if(type == 1) {
+                intentToShareActivity();
+            }
 
         }
     };
@@ -599,7 +611,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             relativeLayoutSort.setVisibility(View.VISIBLE);
             relativeLayoutCart.setVisibility(View.GONE);
             topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.app_name));
+            topBar.title.setText(getResources().getString(R.string.fresh));
             topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
@@ -623,7 +635,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             fabView.setFABMenuDrawable();
 
             topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.app_name));
+            topBar.title.setText(getResources().getString(R.string.meals));
             topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
         } else if (fragment instanceof FreshCartItemsFragment) {
@@ -1009,6 +1021,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     @Override
     protected void onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         super.onDestroy();
     }
 

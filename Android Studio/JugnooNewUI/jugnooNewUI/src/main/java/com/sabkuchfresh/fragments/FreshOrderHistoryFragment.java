@@ -20,25 +20,10 @@ import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.Log;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 
 public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNames, Constants, View.OnClickListener {
@@ -148,57 +133,57 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 	}
 
 	public void getOrderHistory() {
-		try {
-			if(AppStatus.getInstance(activity).isOnline(activity)) {
-				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
-
-				HashMap<String, String> params = new HashMap<>();
-				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-
-				RestClient.getFreshApiService().orderHistory(params, new Callback<OrderHistoryResponse>() {
-					@Override
-					public void success(OrderHistoryResponse orderHistoryResponse, Response response) {
-						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "getAllProducts response = " + responseStr);
-
-						try {
-							JSONObject jObj = new JSONObject(responseStr);
-							String message = JSONParser.getServerMessage(jObj);
-							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-								int flag = jObj.getInt(Constants.KEY_FLAG);
-								FreshOrderHistoryFragment.this.orderHistoryResponse = orderHistoryResponse;
-								freshOrderHistoryAdapter.notifyList(getOrdersTotalCount(),
-										(ArrayList<OrderHistory>) orderHistoryResponse.getOrderHistory());
-								if(orderHistoryResponse.getOrderHistory() != null
-									&& orderHistoryResponse.getOrderHistory().size() == 0){
-//									imageViewNoItems.setVisibility(View.VISIBLE);
-                                    mEmptyView.setVisibility(View.VISIBLE);
-								} else{
-                                    mEmptyView.setVisibility(View.GONE);
-//									imageViewNoItems.setVisibility(View.GONE);
-								}
-							}
-						} catch (Exception exception) {
-							exception.printStackTrace();
-							retryDialog(DialogErrorType.SERVER_ERROR);
-						}
-						DialogPopup.dismissLoadingDialog();
-					}
-
-					@Override
-					public void failure(RetrofitError error) {
-						Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
-						DialogPopup.dismissLoadingDialog();
-						retryDialog(DialogErrorType.CONNECTION_LOST);
-					}
-				});
-			}
-			else {
-				retryDialog(DialogErrorType.NO_NET);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			if(AppStatus.getInstance(activity).isOnline(activity)) {
+//				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+//
+//				HashMap<String, String> params = new HashMap<>();
+//				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+//
+//				RestClient.getFreshApiService().orderHistory(params, new Callback<OrderHistoryResponse>() {
+//					@Override
+//					public void success(OrderHistoryResponse orderHistoryResponse, Response response) {
+//						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+//						Log.i(TAG, "getAllProducts response = " + responseStr);
+//
+//						try {
+//							JSONObject jObj = new JSONObject(responseStr);
+//							String message = JSONParser.getServerMessage(jObj);
+//							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+//								int flag = jObj.getInt(Constants.KEY_FLAG);
+//								FreshOrderHistoryFragment.this.orderHistoryResponse = orderHistoryResponse;
+//								freshOrderHistoryAdapter.notifyList(getOrdersTotalCount(),
+//										(ArrayList<OrderHistory>) orderHistoryResponse.getOrderHistory());
+//								if(orderHistoryResponse.getOrderHistory() != null
+//									&& orderHistoryResponse.getOrderHistory().size() == 0){
+////									imageViewNoItems.setVisibility(View.VISIBLE);
+//                                    mEmptyView.setVisibility(View.VISIBLE);
+//								} else{
+//                                    mEmptyView.setVisibility(View.GONE);
+////									imageViewNoItems.setVisibility(View.GONE);
+//								}
+//							}
+//						} catch (Exception exception) {
+//							exception.printStackTrace();
+//							retryDialog(DialogErrorType.SERVER_ERROR);
+//						}
+//						DialogPopup.dismissLoadingDialog();
+//					}
+//
+//					@Override
+//					public void failure(RetrofitError error) {
+//						Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
+//						DialogPopup.dismissLoadingDialog();
+//						retryDialog(DialogErrorType.CONNECTION_LOST);
+//					}
+//				});
+//			}
+//			else {
+//				retryDialog(DialogErrorType.NO_NET);
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	private void retryDialog(DialogErrorType dialogErrorType){

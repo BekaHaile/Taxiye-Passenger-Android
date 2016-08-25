@@ -267,7 +267,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
                 if (activity instanceof RideTransactionsActivity) {
                     new TransactionUtils().openRideIssuesFragment(activity,
                             ((RideTransactionsActivity) activity).getContainer(),
-                            engagementId, endRideData, items, 0, false, autosStatus, null);
+                            engagementId, -1, endRideData, items, 0, false, autosStatus, null);
                     FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
                     Bundle bundle = new Bundle();
                     MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.RIDE_HISTORY+"_"+ FirebaseEvents.NEED_HELP_ON_A_RIDE, bundle);
@@ -499,7 +499,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
-        new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.autoData.getFareStructure().getFixedFare(),
+        new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), -1, Data.autoData.getFareStructure().getFixedFare(),
                 new ApiGetRideSummary.Callback() {
                     @Override
                     public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {

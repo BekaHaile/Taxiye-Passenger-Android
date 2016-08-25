@@ -47,11 +47,13 @@ public class ApiGetRideSummary {
 	private Callback callback;
 	private String accessToken;
 	private int engagementId;
+	private int orderId;
 
-	public ApiGetRideSummary(Activity activity, String accessToken, int engagementId, double fixedFare, Callback callback){
+	public ApiGetRideSummary(Activity activity, String accessToken, int engagementId, int orderId, double fixedFare, Callback callback){
 		this.activity = activity;
 		this.accessToken = accessToken;
 		this.engagementId = engagementId;
+		this.orderId = orderId;
 		this.fixedFare = fixedFare;
 		this.callback = callback;
 	}
@@ -69,6 +71,8 @@ public class ApiGetRideSummary {
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 			if(engagementId != -1) {
 				params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
+			} else if(orderId != -1) {
+				params.put(Constants.KEY_ORDER_ID, String.valueOf(orderId));
 			}
 			if(showRideMenu) {
 				params.put(Constants.KEY_SHOW_RIDE_MENU, "1");
