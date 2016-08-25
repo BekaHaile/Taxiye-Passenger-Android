@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="194px"
     android:orientation="vertical"
-    android:background="@drawable/background_white_grey_light_selector"
+    android:background="@color/sliding_bottom_bg_color"
     >
 
 </RelativeLayout>

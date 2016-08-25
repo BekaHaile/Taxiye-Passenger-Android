@@ -25,9 +25,16 @@
             android:gravity="center_vertical"
             android:padding="16px"
             android:background="@drawable/background_search_shap"
-            android:drawableRight="@drawable/search_icon"
             android:textColor="@color/text_color_light"
             />
+
+        <ImageView
+            android:layout_width="36px"
+            android:layout_height="36px"
+            android:src="@drawable/search_icon"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="46px"/>
 
     </RelativeLayout>
 
@@ -35,7 +42,7 @@
         android:id="@+id/tabs"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="60px"
+        android:layout_height="84px"
         android:background="@color/white"
         android:visibility="visible"
         app:pstsIndicatorHeight="5px"
