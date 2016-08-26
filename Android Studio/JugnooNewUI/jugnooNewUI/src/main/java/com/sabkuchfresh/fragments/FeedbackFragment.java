@@ -266,6 +266,13 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
      */
     private void sendQuery(final int rating) {
         try {
+            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+                Data.getFreshData().setPendingFeedback(0);
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+                Data.getMealsData().setPendingFeedback(0);
+            } else {
+                activity.finish();
+            }
             if (AppStatus.getInstance(MyApplication.getInstance()).isOnline(MyApplication.getInstance())) {
                 //DialogPopup.showLoadingDialog(activity, "loading...");
 

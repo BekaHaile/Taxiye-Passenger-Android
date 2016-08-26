@@ -908,12 +908,16 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
      * Method used to open feedback screen
      */
     public void openFeedback() {
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                .add(relativeLayoutContainer.getId(), new FeedbackFragment(),
-                        FeedbackFragment.class.getName())
-                .addToBackStack(FeedbackFragment.class.getName())
-                .commitAllowingStateLoss();
+        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer);
+
+//        getSupportFragmentManager().beginTransaction()
+//                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+//                .add(relativeLayoutContainer.getId(), new FeedbackFragment(),
+//                        FeedbackFragment.class.getName())
+//                .addToBackStack(FeedbackFragment.class.getName())
+//                .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+//                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+//                .commitAllowingStateLoss();
     }
 
     public void openSupport() {

@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -180,8 +181,13 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 //                intent.putExtra(Constants.ORDER_ID, Data.getFreshData().getOrderId());
 //                startActivity(intent);
 //                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.openFeedback();
+                    }
+                }, 300);
 
-                activity.openFeedback();
             }
         } catch (Exception e) {
             e.printStackTrace();
