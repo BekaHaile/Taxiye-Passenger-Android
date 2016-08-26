@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
@@ -26,11 +27,11 @@ public class AppSwitcher {
 		this.context = context;
 	}
 
-	public void switchApp(final Activity activity, final String clientId) {
-		switchApp(activity, clientId, null);
+	public void switchApp(final Activity activity, final String clientId, LatLng latLng) {
+		switchApp(activity, clientId, null, latLng);
 	}
 
-	public void switchApp(final Activity activity, final String clientId, final Uri data){
+	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng){
 
 		ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
 			@Override
@@ -54,7 +55,7 @@ public class AppSwitcher {
 
 		if(clientId.equalsIgnoreCase(Config.getAutosClientId()) && !(activity instanceof HomeActivity)){
 			if(Data.autoData == null){
-				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, Data.latitude, Data.longitude, clientId,
+				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 						new ApiLoginUsingAccessToken.Callback() {
 							@Override
 							public void noNet() {
@@ -91,7 +92,7 @@ public class AppSwitcher {
 		}
 		else if(clientId.equalsIgnoreCase(Config.getFreshClientId()) && !(activity instanceof FreshActivity)){
 			if(Data.getFreshData() == null){
-				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, Data.latitude, Data.longitude, clientId,
+				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 						callback);
 			} else {
 				Intent intent = new Intent(activity, FreshActivity.class);
@@ -105,7 +106,7 @@ public class AppSwitcher {
 		}
 		else if(clientId.equalsIgnoreCase(Config.getMealsClientId()) && !(activity instanceof FreshActivity)){
 			if(Data.getFreshData() == null){
-				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, Data.latitude, Data.longitude, clientId,
+				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 						callback);
 			} else {
 				Intent intent = new Intent(activity, FreshActivity.class);
@@ -119,7 +120,7 @@ public class AppSwitcher {
 		}
 		else if(activity instanceof FreshActivity && !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))){
 			if(Data.getFreshData() == null){
-				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, Data.latitude, Data.longitude, clientId,
+				new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 						callback);
 			} else {
 				Intent intent = new Intent(activity, FreshActivity.class);

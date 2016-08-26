@@ -69,8 +69,8 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	private View rootView;
     private FragmentActivity activity;
 
-	private int engagementId;
-	private String parentName, phoneNumber, rideDate;
+	private int engagementId, orderId;
+	private String parentName, phoneNumber, rideDate, orderDate;
 	private ShowPanelResponse.Item item;
 
 	public SupportFAQItemFragment(){}
@@ -89,12 +89,15 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
         FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQItemFragment(int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber){
+	public SupportFAQItemFragment(int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber,
+								  int orderId, String orderDate){
 		this.engagementId = engagementId;
 		this.parentName = parentName;
 		this.item = item;
 		this.phoneNumber = phoneNumber;
 		this.rideDate = rideDate;
+		this.orderId = orderId;
+		this.orderDate = orderDate;
 	}
 
     @Override
@@ -116,15 +119,15 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		linearLayoutMain = (LinearLayout)rootView.findViewById(R.id.linearLayoutMain);
 
 		textViewSubtitle = (TextView)rootView.findViewById(R.id.textViewSubtitle);
-		textViewSubtitle.setTypeface(Fonts.avenirNext(activity));
+		textViewSubtitle.setTypeface(Fonts.mavenMedium(activity));
 		textViewDescription = (TextView)rootView.findViewById(R.id.textViewDescription);
-		textViewDescription.setTypeface(Fonts.avenirNext(activity));
+		textViewDescription.setTypeface(Fonts.mavenRegular(activity));
 		textViewRSOtherError = (TextView) rootView.findViewById(R.id.textViewRSOtherError);
-		textViewRSOtherError.setTypeface(Fonts.avenirNext(activity));
+		textViewRSOtherError.setTypeface(Fonts.mavenRegular(activity));
 		textViewRSOtherError.setVisibility(View.GONE);
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 		editTextMessage = (EditText)rootView.findViewById(R.id.editTextMessage);
-		editTextMessage.setTypeface(Fonts.mavenLight(activity));
+		editTextMessage.setTypeface(Fonts.mavenRegular(activity));
 		buttonSubmit = (Button)rootView.findViewById(R.id.buttonSubmit);
 		buttonSubmit.setTypeface(Fonts.mavenRegular(activity));
 		relativeLayoutCallDriver = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutCallDriver);
@@ -177,7 +180,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 								.getString(R.string.support_feedback_lengthy_error_format), "1000"));
 					} else {
 						textViewRSOtherError.setVisibility(View.GONE);
-						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId());
+						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId(), rideDate, orderId, orderDate);
                         Bundle bundle = new Bundle();
                         String str = parentName.replaceAll("\\W", "_");
 						String btnStr = buttonSubmit.getText().toString().replaceAll("\\W", "_");
@@ -293,7 +296,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	}
 
 	public void submitFeedback(final Activity activity, final int engagementId, String feedbackText,
-							   String parentName, int supportId) {
+							   String parentName, int supportId, final String rideDate, final int orderId, final String orderDate) {
 		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
 			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
@@ -306,6 +309,9 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			if(engagementId != -1){
 				params.put(Constants.KEY_ENGAGEMENT_ID, ""+engagementId);
 				params.put(Constants.KEY_RIDE_DATE, rideDate);
+			} else if(orderId != -1){
+				params.put(Constants.KEY_ORDER_ID, ""+engagementId);
+				params.put(Constants.KEY_ORDER_DATE, orderDate);
 			}
 
 			RestClient.getApiServices().generateSupportTicket(params, new Callback<SettleUserDebt>() {

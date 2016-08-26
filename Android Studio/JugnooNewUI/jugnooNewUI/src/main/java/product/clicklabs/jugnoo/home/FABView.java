@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
@@ -183,6 +184,13 @@ public class FABView {
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            LatLng latLng = new LatLng(Data.latitude, Data.longitude);
+            if(activity instanceof HomeActivity){
+                latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
+            } else if(activity instanceof FreshActivity){
+                latLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+            }
+            final LatLng finalLatLng = latLng;
             switch (v.getId()) {
                 case R.id.fabDelivery:
                     //Toast.makeText(HomeActivity.this, "Delivery", Toast.LENGTH_SHORT).show();
@@ -192,7 +200,7 @@ public class FABView {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId());
+                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), finalLatLng);
                         }
                     }, 250);
                     break;
@@ -201,7 +209,7 @@ public class FABView {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId());
+                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), finalLatLng);
                         }
                     }, 250);
                     break;
@@ -210,7 +218,7 @@ public class FABView {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId());
+                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), finalLatLng);
                         }
                     }, 250);
                     break;

@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -119,19 +120,40 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
-						if (activity instanceof SupportActivity) {
-							new TransactionUtils().openItemInFragment(activity,
-									((SupportActivity) activity).getContainer(),
-									Integer.parseInt(endRideData.engagementId),
-									endRideData.getRideDate(),
-									activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber());
+						if(endRideData != null) {
+							if (activity instanceof SupportActivity) {
+								new TransactionUtils().openItemInFragment(activity,
+										((SupportActivity) activity).getContainer(),
+										Integer.parseInt(endRideData.engagementId),
+										endRideData.getRideDate(),
+										activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber(),
+										-1, "");
 
-						} else if (activity instanceof RideTransactionsActivity) {
-							new TransactionUtils().openItemInFragment(activity,
-									((RideTransactionsActivity) activity).getContainer(),
-									Integer.parseInt(endRideData.engagementId),
-									endRideData.getRideDate(),
-									activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber());
+							} else if (activity instanceof RideTransactionsActivity) {
+								new TransactionUtils().openItemInFragment(activity,
+										((RideTransactionsActivity) activity).getContainer(),
+										Integer.parseInt(endRideData.engagementId),
+										endRideData.getRideDate(),
+										activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber(),
+										-1, "");
+							}
+						} else if(datum != null){
+							if (activity instanceof SupportActivity) {
+								new TransactionUtils().openItemInFragment(activity,
+										((SupportActivity) activity).getContainer(),
+										-1, "",
+										activity.getResources().getString(R.string.support_main_title), item, "",
+										datum.getOrderId(), DateOperations.convertDateViaFormat(DateOperations
+												.utcToLocalTZ(datum.getOrderTime())));
+
+							} else if (activity instanceof RideTransactionsActivity) {
+								new TransactionUtils().openItemInFragment(activity,
+										((RideTransactionsActivity) activity).getContainer(),
+										-1, "",
+										activity.getResources().getString(R.string.support_main_title), item, "",
+										datum.getOrderId(), DateOperations.convertDateViaFormat(DateOperations
+												.utcToLocalTZ(datum.getOrderTime())));
+							}
 						}
 						Bundle bundle = new Bundle();
 						String label = item.getText().replaceAll("\\W", "_");
@@ -197,6 +219,11 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 
 	private void updateIssuesList(ArrayList<ShowPanelResponse.Item> items) {
+		if(items != null && items.size() > 0){
+			cardViewRecycler.setVisibility(View.VISIBLE);
+		} else{
+			cardViewRecycler.setVisibility(View.GONE);
+		}
 		supportFAQItemsAdapter.setResults(items);
 	}
 

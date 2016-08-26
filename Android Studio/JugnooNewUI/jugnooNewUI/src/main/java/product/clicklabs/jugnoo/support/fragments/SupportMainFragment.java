@@ -117,7 +117,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
 						new TransactionUtils().openItemInFragment(activity, activity.getContainer(),
-								-1, "", activity.getResources().getString(R.string.support_main_title), item, "");
+								-1, "", activity.getResources().getString(R.string.support_main_title), item, "", -1, "");
 
                         Bundle bundle = new Bundle();
                         String eventName = item.getText().replaceAll("\\W", "_");
@@ -217,8 +217,12 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	}
 
 	private void showPanelSuccess(ArrayList<ShowPanelResponse.Item> menu){
-		cardViewRecycler.setVisibility(View.VISIBLE);
 		showPanelCalled = 1;
+		if(menu != null && menu.size() > 0){
+			cardViewRecycler.setVisibility(View.VISIBLE);
+		} else{
+			cardViewRecycler.setVisibility(View.GONE);
+		}
 		update(menu);
 	}
 

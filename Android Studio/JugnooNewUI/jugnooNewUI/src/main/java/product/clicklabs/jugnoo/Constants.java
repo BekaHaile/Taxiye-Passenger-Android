@@ -429,4 +429,5 @@ public interface Constants {
 	String KEY_FEEDBACK_VIEW_TYPE = "feedback_view_type";
 	String KEY_PRODUCT_TYPE = "product_type";
 	String KEY_ORDER_ID = "order_id";
+	String KEY_ORDER_DATE = "order_date";
 }

@@ -42,7 +42,7 @@
                         android:layout_marginLeft="20px"
                         android:text="@string/status_colon"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_24"/>
 
                     <TextView
                         android:id="@+id/textViewStatusValue"
@@ -50,7 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="140px"
                         android:textColor="@color/text_color_blue"
-                        android:textSize="@dimen/text_size_22"
+                        android:textSize="@dimen/text_size_24"
                         android:text="@string/or"
                         />
                 </RelativeLayout>
@@ -67,7 +67,7 @@
                         android:layout_marginLeft="20px"
                         android:text="@string/id_colon"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_24"/>
 
                     <TextView
                         android:id="@+id/textViewIdValue"
@@ -76,7 +76,7 @@
                         android:layout_marginLeft="140px"
                         android:text="1234"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_24"/>
                 </RelativeLayout>
 
 
@@ -92,7 +92,7 @@
                         android:layout_marginLeft="20px"
                         android:text="@string/from_colon"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_24"/>
 
                     <TextView
                         android:id="@+id/textViewFromValue"
@@ -101,7 +101,7 @@
                         android:layout_marginLeft="140px"
                         android:text="@string/sample_address"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_24"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -144,7 +144,7 @@
                         android:layout_marginLeft="20px"
                         android:text="@string/address_colon"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_24"/>
 
                     <TextView
                         android:id="@+id/textViewDetailsValue"
@@ -153,7 +153,7 @@
                         android:layout_marginLeft="140px"
                         android:text="15 Aug 2016, 05:30PM, 8.5 Km"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_24"/>
                 </RelativeLayout>
 
             </LinearLayout>
