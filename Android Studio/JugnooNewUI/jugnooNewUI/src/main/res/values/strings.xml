@@ -1083,15 +1083,15 @@
 	<string name="sub_total_amount">SubTotal Amount</string>
 	<string name="pay_rupees_using_jc">Paid via Jugnoo cash \u20B9 %s </string>
 	<string name="transaction_id_format">Transaction ID: %s</string>
-	<string name="transaction_id_colon">Transaction ID:</string>
+	<string name="id_colon">ID:</string>
 	<string name="order_id_format">Order ID: %s</string>
-	<string name="order_status_colon">Order Status:</string>
 	<string name="from_colon">From:</string>
 	<string name="to_colon">To:</string>
 	<string name="details_colon">Details:</string>
-	<string name="ride_status_colon">Ride Status:</string>
+	<string name="status_colon">Status:</string>
 	<string name="ride_compeleted">Ride Completed</string>
 	<string name="ride_cancelled">Ride Cancelled</string>
 	<string name="delivery_slot_colon">Delivery Slot:</string>
+	<string name="address_colon">Address:</string>
 
 </resources>

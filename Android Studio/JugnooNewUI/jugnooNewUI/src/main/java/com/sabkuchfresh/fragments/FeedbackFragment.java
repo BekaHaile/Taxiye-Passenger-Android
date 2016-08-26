@@ -452,7 +452,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
         Intent intent = new Intent(activity, SupportActivity.class);
         intent.putExtra(Constants.INTENT_KEY_FROM_BAD, 1);
-        intent.putExtra(Constants.KEY_ORDER_ID, orderId);
+        intent.putExtra(Constants.KEY_ORDER_ID, Integer.parseInt(orderId));
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
