@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -970,7 +971,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			loginDataFetched = false;
 
 			MyApplication.getInstance().getAppSwitcher().switchApp(OTPConfirmScreen.this,
-					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), Data.splashIntentUri);
+					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude));
 //			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
 //			intent.setData(Data.splashIntentUri);
 //			startActivity(intent);

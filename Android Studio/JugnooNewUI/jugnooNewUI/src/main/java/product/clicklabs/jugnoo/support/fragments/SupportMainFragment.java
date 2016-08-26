@@ -217,8 +217,12 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 	}
 
 	private void showPanelSuccess(ArrayList<ShowPanelResponse.Item> menu){
-		cardViewRecycler.setVisibility(View.VISIBLE);
 		showPanelCalled = 1;
+		if(menu != null && menu.size() > 0){
+			cardViewRecycler.setVisibility(View.VISIBLE);
+		} else{
+			cardViewRecycler.setVisibility(View.GONE);
+		}
 		update(menu);
 	}
 

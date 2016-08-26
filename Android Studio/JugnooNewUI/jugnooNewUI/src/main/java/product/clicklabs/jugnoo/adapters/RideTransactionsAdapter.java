@@ -207,7 +207,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
             textViewStatus = (TextView) convertView.findViewById(R.id.textViewStatus); textViewStatus.setTypeface(Fonts.mavenMedium(context));
-            textViewStatusValue = (TextView) convertView.findViewById(R.id.textViewStatusValue); textViewStatusValue.setTypeface(Fonts.mavenRegular(context));
+            textViewStatusValue = (TextView) convertView.findViewById(R.id.textViewStatusValue); textViewStatusValue.setTypeface(Fonts.mavenMedium(context));
             textViewId = (TextView) convertView.findViewById(R.id.textViewId); textViewId.setTypeface(Fonts.mavenMedium(context));
             textViewIdValue = (TextView) convertView.findViewById(R.id.textViewIdValue); textViewIdValue.setTypeface(Fonts.mavenRegular(context));
             textViewFrom = (TextView) convertView.findViewById(R.id.textViewFrom); textViewFrom.setTypeface(Fonts.mavenMedium(context));
@@ -217,7 +217,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             textViewDetails = (TextView) convertView.findViewById(R.id.textViewDetails); textViewDetails.setTypeface(Fonts.mavenMedium(context));
             textViewDetailsValue = (TextView) convertView.findViewById(R.id.textViewDetailsValue); textViewDetailsValue.setTypeface(Fonts.mavenRegular(context));
 
-            textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); textViewAmount.setTypeface(Fonts.mavenMedium(context));
+            textViewAmount = (TextView) convertView.findViewById(R.id.textViewAmount); textViewAmount.setTypeface(Fonts.avenirNext(context));
             imageViewProductType = (ImageView) convertView.findViewById(R.id.imageViewProductType);
 
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);

@@ -46,6 +46,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONArray;
@@ -1650,7 +1651,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					if (SplashNewActivity.this.hasWindowFocus() && loginDataFetched) {
 						loginDataFetched = false;
 						MyApplication.getInstance().getAppSwitcher().switchApp(SplashNewActivity.this,
-								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), getIntent().getData());
+								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude));
 //						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
 //						intent.setData(getIntent().getData());
 //						startActivity(intent);
@@ -1667,7 +1668,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						loginDataFetched = false;
 
 						MyApplication.getInstance().getAppSwitcher().switchApp(SplashNewActivity.this,
-								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), Data.splashIntentUri);
+								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude));
 //						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
 //						intent.setData(Data.splashIntentUri);
 //						startActivity(intent);

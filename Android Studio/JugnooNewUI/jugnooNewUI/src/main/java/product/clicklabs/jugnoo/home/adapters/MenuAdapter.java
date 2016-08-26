@@ -290,7 +290,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     drawerLayout.closeDrawer(GravityCompat.START);
-                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId());
+                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), getLatLng());
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
@@ -299,7 +299,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     drawerLayout.closeDrawer(GravityCompat.START);
-                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId());
+                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), getLatLng());
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
@@ -308,7 +308,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     drawerLayout.closeDrawer(GravityCompat.START);
-                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId());
+                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), getLatLng());
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
@@ -322,6 +322,16 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
         }
 
+    }
+
+    private LatLng getLatLng(){
+        LatLng latLng = new LatLng(Data.latitude, Data.longitude);
+        if(activity instanceof HomeActivity){
+            latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
+        } else if(activity instanceof FreshActivity){
+            latLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+        }
+        return latLng;
     }
 
     private void hideLayout(View view){

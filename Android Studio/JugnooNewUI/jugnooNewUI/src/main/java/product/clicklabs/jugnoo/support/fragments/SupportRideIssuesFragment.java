@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -142,14 +143,16 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 										((SupportActivity) activity).getContainer(),
 										-1, "",
 										activity.getResources().getString(R.string.support_main_title), item, "",
-										datum.getOrderId(), datum.getExpectedDeliveryDate());
+										datum.getOrderId(), DateOperations.convertDateViaFormat(DateOperations
+												.utcToLocalTZ(datum.getOrderTime())));
 
 							} else if (activity instanceof RideTransactionsActivity) {
 								new TransactionUtils().openItemInFragment(activity,
 										((RideTransactionsActivity) activity).getContainer(),
 										-1, "",
 										activity.getResources().getString(R.string.support_main_title), item, "",
-										datum.getOrderId(), datum.getExpectedDeliveryDate());
+										datum.getOrderId(), DateOperations.convertDateViaFormat(DateOperations
+												.utcToLocalTZ(datum.getOrderTime())));
 							}
 						}
 						Bundle bundle = new Bundle();
@@ -216,6 +219,11 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 
 	private void updateIssuesList(ArrayList<ShowPanelResponse.Item> items) {
+		if(items != null && items.size() > 0){
+			cardViewRecycler.setVisibility(View.VISIBLE);
+		} else{
+			cardViewRecycler.setVisibility(View.GONE);
+		}
 		supportFAQItemsAdapter.setResults(items);
 	}
 
