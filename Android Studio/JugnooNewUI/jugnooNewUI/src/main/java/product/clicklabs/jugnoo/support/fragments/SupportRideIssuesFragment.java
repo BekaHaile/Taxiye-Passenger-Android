@@ -119,19 +119,38 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				new SupportFAQItemsAdapter.Callback() {
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
-						if (activity instanceof SupportActivity) {
-							new TransactionUtils().openItemInFragment(activity,
-									((SupportActivity) activity).getContainer(),
-									Integer.parseInt(endRideData.engagementId),
-									endRideData.getRideDate(),
-									activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber());
+						if(endRideData != null) {
+							if (activity instanceof SupportActivity) {
+								new TransactionUtils().openItemInFragment(activity,
+										((SupportActivity) activity).getContainer(),
+										Integer.parseInt(endRideData.engagementId),
+										endRideData.getRideDate(),
+										activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber(),
+										-1, "");
 
-						} else if (activity instanceof RideTransactionsActivity) {
-							new TransactionUtils().openItemInFragment(activity,
-									((RideTransactionsActivity) activity).getContainer(),
-									Integer.parseInt(endRideData.engagementId),
-									endRideData.getRideDate(),
-									activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber());
+							} else if (activity instanceof RideTransactionsActivity) {
+								new TransactionUtils().openItemInFragment(activity,
+										((RideTransactionsActivity) activity).getContainer(),
+										Integer.parseInt(endRideData.engagementId),
+										endRideData.getRideDate(),
+										activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber(),
+										-1, "");
+							}
+						} else if(datum != null){
+							if (activity instanceof SupportActivity) {
+								new TransactionUtils().openItemInFragment(activity,
+										((SupportActivity) activity).getContainer(),
+										-1, "",
+										activity.getResources().getString(R.string.support_main_title), item, "",
+										datum.getOrderId(), datum.getExpectedDeliveryDate());
+
+							} else if (activity instanceof RideTransactionsActivity) {
+								new TransactionUtils().openItemInFragment(activity,
+										((RideTransactionsActivity) activity).getContainer(),
+										-1, "",
+										activity.getResources().getString(R.string.support_main_title), item, "",
+										datum.getOrderId(), datum.getExpectedDeliveryDate());
+							}
 						}
 						Bundle bundle = new Bundle();
 						String label = item.getText().replaceAll("\\W", "_");

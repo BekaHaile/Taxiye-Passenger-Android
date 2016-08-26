@@ -39,9 +39,9 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 	private View rootView;
     private FragmentActivity activity;
 
-	private int engagementId;
+	private int engagementId, orderId;
 	private ShowPanelResponse.Item item;
-	private String phoneNumber, rideDate;
+	private String phoneNumber, rideDate, orderDate;
 
 	public SupportFAQItemsListFragment(){}
 
@@ -60,11 +60,14 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
         FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQItemsListFragment(int engagementId, String rideDate, ShowPanelResponse.Item item, String phoneNumber){
+	public SupportFAQItemsListFragment(int engagementId, String rideDate, ShowPanelResponse.Item item, String phoneNumber,
+									   int orderId, String orderDate){
 		this.engagementId = engagementId;
 		this.item = item;
 		this.phoneNumber = phoneNumber;
 		this.rideDate = rideDate;
+		this.orderId = orderId;
+		this.orderDate = orderDate;
 	}
 
     @Override
@@ -96,12 +99,14 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 						if(activity instanceof SupportActivity){
 							new TransactionUtils().openItemInFragment(activity,
 									((SupportActivity)activity).getContainer(),
-									engagementId, rideDate, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber);
+									engagementId, rideDate, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber,
+									orderId, orderDate);
 
 						} else if(activity instanceof RideTransactionsActivity){
 							new TransactionUtils().openItemInFragment(activity,
 									((RideTransactionsActivity)activity).getContainer(),
-									engagementId, rideDate, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber);
+									engagementId, rideDate, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber,
+									orderId, orderDate);
 						}
 						FlurryEventLogger.eventGA(Constants.ISSUES, SupportFAQItemsListFragment.this.item.getText(), item.getText());
 					}

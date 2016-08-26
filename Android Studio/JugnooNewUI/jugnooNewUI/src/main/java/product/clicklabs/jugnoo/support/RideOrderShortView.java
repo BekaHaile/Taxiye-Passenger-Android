@@ -45,21 +45,21 @@ public class RideOrderShortView {
 		imageViewProductType = (ImageView) rootView.findViewById(R.id.imageViewProductType);
 		imageViewDriver = (ImageView) rootView.findViewById(R.id.imageViewDriver);
 
-		textViewTransactionId = (TextView) rootView.findViewById(R.id.textViewTransactionId); textViewTransactionId.setTypeface(Fonts.avenirNext(context));
-		textViewDetails = (TextView) rootView.findViewById(R.id.textViewDetails); textViewDetails.setTypeface(Fonts.avenirNext(context));
+		textViewTransactionId = (TextView) rootView.findViewById(R.id.textViewTransactionId); textViewTransactionId.setTypeface(Fonts.mavenMedium(context));
+		textViewDetails = (TextView) rootView.findViewById(R.id.textViewDetails); textViewDetails.setTypeface(Fonts.mavenMedium(context));
 		textViewTransactionTotal = (TextView) rootView.findViewById(R.id.textViewTransactionTotal); textViewTransactionTotal.setTypeface(Fonts.avenirNext(context), Typeface.BOLD);
-		textViewDriverName = (TextView) rootView.findViewById(R.id.textViewDriverName); textViewDriverName.setTypeface(Fonts.avenirNext(context));
-		textViewDriverCarNumber = (TextView) rootView.findViewById(R.id.textViewDriverCarNumber); textViewDriverCarNumber.setTypeface(Fonts.avenirNext(context));
-		textViewDate = (TextView) rootView.findViewById(R.id.textViewDate); textViewDate.setTypeface(Fonts.avenirNext(context));
-		textViewDateValue = (TextView) rootView.findViewById(R.id.textViewDateValue); textViewDateValue.setTypeface(Fonts.avenirNext(context));
-		textViewStart = (TextView) rootView.findViewById(R.id.textViewStart); textViewStart.setTypeface(Fonts.avenirNext(context));
-		textViewStartValue = (TextView) rootView.findViewById(R.id.textViewStartValue); textViewStartValue.setTypeface(Fonts.avenirNext(context));
-		textViewEnd = (TextView) rootView.findViewById(R.id.textViewEnd); textViewEnd.setTypeface(Fonts.avenirNext(context));
-		textViewEndValue = (TextView) rootView.findViewById(R.id.textViewEndValue); textViewEndValue.setTypeface(Fonts.avenirNext(context));
-		textViewOrderAddress = (TextView) rootView.findViewById(R.id.textViewOrderAddress); textViewOrderAddress.setTypeface(Fonts.avenirNext(context));
-		textViewOrderItems = (TextView) rootView.findViewById(R.id.textViewOrderItems); textViewOrderItems.setTypeface(Fonts.avenirNext(context));
-		textViewOrderItemsCount = (TextView) rootView.findViewById(R.id.textViewOrderItemsCount); textViewOrderItemsCount.setTypeface(Fonts.avenirNext(context));
-		textViewIssueWithRide = (TextView) rootView.findViewById(R.id.textViewIssueWithRide); textViewIssueWithRide.setTypeface(Fonts.avenirNext(context));
+		textViewDriverName = (TextView) rootView.findViewById(R.id.textViewDriverName); textViewDriverName.setTypeface(Fonts.mavenRegular(context));
+		textViewDriverCarNumber = (TextView) rootView.findViewById(R.id.textViewDriverCarNumber); textViewDriverCarNumber.setTypeface(Fonts.mavenMedium(context));
+		textViewDate = (TextView) rootView.findViewById(R.id.textViewDate); textViewDate.setTypeface(Fonts.mavenRegular(context));
+		textViewDateValue = (TextView) rootView.findViewById(R.id.textViewDateValue); textViewDateValue.setTypeface(Fonts.mavenMedium(context));
+		textViewStart = (TextView) rootView.findViewById(R.id.textViewStart); textViewStart.setTypeface(Fonts.mavenMedium(context));
+		textViewStartValue = (TextView) rootView.findViewById(R.id.textViewStartValue); textViewStartValue.setTypeface(Fonts.mavenRegular(context));
+		textViewEnd = (TextView) rootView.findViewById(R.id.textViewEnd); textViewEnd.setTypeface(Fonts.mavenMedium(context));
+		textViewEndValue = (TextView) rootView.findViewById(R.id.textViewEndValue); textViewEndValue.setTypeface(Fonts.mavenRegular(context));
+		textViewOrderAddress = (TextView) rootView.findViewById(R.id.textViewOrderAddress); textViewOrderAddress.setTypeface(Fonts.mavenRegular(context));
+		textViewOrderItems = (TextView) rootView.findViewById(R.id.textViewOrderItems); textViewOrderItems.setTypeface(Fonts.mavenRegular(context));
+		textViewOrderItemsCount = (TextView) rootView.findViewById(R.id.textViewOrderItemsCount); textViewOrderItemsCount.setTypeface(Fonts.mavenRegular(context));
+		textViewIssueWithRide = (TextView) rootView.findViewById(R.id.textViewIssueWithRide); textViewIssueWithRide.setTypeface(Fonts.mavenMedium(context));
 
 		relativeLayoutDriverImage = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDriverImage);
 		relativeLayoutStartEnd = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutStartEnd);

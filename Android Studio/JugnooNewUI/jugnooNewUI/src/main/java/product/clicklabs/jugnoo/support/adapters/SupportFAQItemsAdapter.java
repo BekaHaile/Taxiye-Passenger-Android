@@ -88,7 +88,7 @@ public class SupportFAQItemsAdapter extends RecyclerView.Adapter<SupportFAQItems
             super(itemView);
             root = (LinearLayout) itemView.findViewById(R.id.root);
             textViewFaqItemName = (TextView)itemView.findViewById(R.id.textViewFaqItemName);
-            textViewFaqItemName.setTypeface(Fonts.avenirNext(activity));
+            textViewFaqItemName.setTypeface(Fonts.mavenRegular(activity));
             imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
         }
     }
