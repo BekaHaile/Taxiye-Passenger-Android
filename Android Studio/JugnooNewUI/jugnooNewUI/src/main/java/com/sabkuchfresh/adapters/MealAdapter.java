@@ -306,13 +306,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mAddButton.setTypeface(Fonts.mavenRegular(context));
 
             textViewTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
-            textViewTitle.setTypeface(Fonts.avenirNext(context), Typeface.BOLD);
+            textViewTitle.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textPrice = (TextView) itemView.findViewById(R.id.text_price);
-            textPrice.setTypeface(Fonts.avenirNext(context), Typeface.BOLD);
+            textPrice.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textViewdetails = (TextView) itemView.findViewById(R.id.textViewdetails);
             textViewdetails.setTypeface(Fonts.mavenMedium(context));
             deliveryTime = (TextView) itemView.findViewById(R.id.delivery_time);
-            deliveryTime.setTypeface(Fonts.avenirNext(context));
+            deliveryTime.setTypeface(Fonts.mavenMedium(context));
             textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuantity);
             textViewQuantity.setTypeface(Fonts.mavenRegular(context));
 
