@@ -239,8 +239,6 @@ public class JSONParser implements Constants {
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
 
-        ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
-
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance,

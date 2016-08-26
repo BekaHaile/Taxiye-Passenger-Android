@@ -190,6 +190,9 @@ public class HistoryResponse {
         @SerializedName("autos_status_color")
         @Expose
         private String autosStatusColor;
+        @SerializedName("autos_status_text")
+        @Expose
+        private String autosStatusText;
         @SerializedName("support_category")
         @Expose
         private Integer supportCategory;
@@ -756,6 +759,14 @@ public class HistoryResponse {
 
         public void setAutosStatusColor(String autosStatusColor) {
             this.autosStatusColor = autosStatusColor;
+        }
+
+        public String getAutosStatusText() {
+            return autosStatusText;
+        }
+
+        public void setAutosStatusText(String autosStatusText) {
+            this.autosStatusText = autosStatusText;
         }
     }
 

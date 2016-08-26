@@ -91,7 +91,11 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.imageViewProductType.setImageResource(R.drawable.ic_support_auto);
 
                 if (0 == orderHistory.getIsCancelledRide()) {
-                    holder.textViewStatusValue.setText(R.string.ride_compeleted);
+                    if(orderHistory.getAutosStatusText() == null) {
+                        holder.textViewStatusValue.setText(R.string.ride_compeleted);
+                    } else {
+                        holder.textViewStatusValue.setText(orderHistory.getAutosStatusText());
+                    }
                     try{
                         holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getAutosStatusColor()));
                     } catch (Exception e){
@@ -100,7 +104,11 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.textViewDetailsValue.setText(orderHistory.getDate() + ", " + decimalFormat.format(orderHistory.getDistance()) + " km, "+decimalFormatNoDec.format(orderHistory.getRideTime()) + " min");
                     holder.relativeLayoutTo.setVisibility(View.VISIBLE);
                 } else {
-                    holder.textViewStatusValue.setText(R.string.ride_cancelled);
+                    if(orderHistory.getAutosStatusText() == null) {
+                        holder.textViewStatusValue.setText(R.string.ride_cancelled);
+                    } else {
+                        holder.textViewStatusValue.setText(orderHistory.getAutosStatusText());
+                    }
                     try{
                         holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getAutosStatusColor()));
                     } catch (Exception e){
