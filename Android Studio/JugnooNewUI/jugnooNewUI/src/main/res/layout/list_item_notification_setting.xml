@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toLeftOf="@+id/imageViewStatus"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="20px"
         android:layout_marginLeft="30px"
         android:layout_marginRight="50px"
         android:layout_marginTop="20px"
-        android:layout_marginBottom="20px"
-        android:layout_centerVertical="true"
-        >
+        android:layout_toLeftOf="@+id/imageViewStatus"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textViewNotiTitle"
@@ -32,9 +29,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:lineSpacingExtra="5px"
             android:text="No Current Notifications"
             android:textColor="@color/text_color"
-            android:lineSpacingExtra="5px"
             android:textSize="@dimen/text_size_28" />
 
     </LinearLayout>

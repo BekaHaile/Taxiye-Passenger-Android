@@ -46,7 +46,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
     private View rootView;
     private RecyclerView recyclerView;
     private NotificationSettingAdapter settingAdapter;
-    private TextView textViewpref;
+    private TextView textViewpref, textViewNotiDesc;
     public NotificationSettingFragment(){}
 
 
@@ -76,7 +76,8 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
         recyclerView.setHasFixedSize(false);
 
         textViewpref = (TextView) rootView.findViewById(R.id.textViewpref);
-        textViewpref.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        textViewpref.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+        textViewNotiDesc = (TextView) rootView.findViewById(R.id.textViewNotiDesc); textViewNotiDesc.setTypeface(Fonts.mavenMedium(activity));
 
         settingAdapter = new NotificationSettingAdapter(activity, R.layout.list_item_notification_setting, this);
         recyclerView.setAdapter(settingAdapter);

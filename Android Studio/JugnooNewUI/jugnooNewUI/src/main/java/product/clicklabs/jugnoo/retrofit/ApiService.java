@@ -439,7 +439,7 @@ public interface ApiService {
 
 
     @FormUrlEncoded
-    @POST("/fetch_push_preference")
+    @POST("/integrated_fetch_push_preference")
     void getNotificationPreference(@FieldMap Map<String, String> params,
                            Callback<NotificationSettingResponseModel> callback);
 

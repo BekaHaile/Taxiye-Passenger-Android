@@ -59,19 +59,6 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
         holder.textViewNoticontent.setText(notificationSetting.getContent());
 
         holder.root.setTag(position);
-        holder.root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    int clickedPosition = (int) v.getTag();
-                    if(notificationPrefDatas.get(clickedPosition).getIsEditable() == 1) {
-						callback.onClick(clickedPosition, notificationPrefDatas.get(clickedPosition));
-					}
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
         if(notificationSetting.getStatus() == 0){
             holder.imageViewStatus.setImageResource(R.drawable.jugnoo_sticky_off);
@@ -84,6 +71,20 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
         } else{
             holder.imageViewStatus.setAlpha(1.0f);
         }
+
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    int clickedPosition = (int) v.getTag();
+                    if(notificationPrefDatas.get(clickedPosition).getIsEditable() == 1) {
+                        callback.onClick(clickedPosition, notificationPrefDatas.get(clickedPosition));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 
@@ -100,10 +101,10 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
             super(itemView);
             root = (RelativeLayout) itemView.findViewById(R.id.root);
             textViewNotiTitle = (TextView)itemView.findViewById(R.id.textViewNotiTitle);
-            textViewNotiTitle.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+            textViewNotiTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 
             textViewNoticontent = (TextView)itemView.findViewById(R.id.textViewNotiText);
-            textViewNoticontent.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+            textViewNoticontent.setTypeface(Fonts.mavenMedium(activity));
 
             imageViewStatus = (ImageView) itemView.findViewById(R.id.imageViewStatus);
         }
