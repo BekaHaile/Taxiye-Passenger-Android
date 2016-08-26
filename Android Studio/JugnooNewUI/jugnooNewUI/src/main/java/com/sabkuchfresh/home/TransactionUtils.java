@@ -3,7 +3,6 @@ package com.sabkuchfresh.home;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
-import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
@@ -14,6 +13,9 @@ import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 import com.sabkuchfresh.fragments.FreshPaymentFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.FreshSupportFragment;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 
 /**
  * Created by shankar on 1/27/16.
@@ -85,11 +87,11 @@ public class TransactionUtils {
 		}
 	}
 
-	public void openOrderSummaryFragment(FragmentActivity activity, View container) {
+	public void openOrderSummaryFragment(FragmentActivity activity, View container, HistoryResponse.Datum historyData) {
 		if(!checkIfFragmentAdded(activity, FreshOrderSummaryFragment.class.getName())) {
 			activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-					.add(container.getId(), new FreshOrderSummaryFragment(),
+					.add(container.getId(), new FreshOrderSummaryFragment(historyData),
 							FreshOrderSummaryFragment.class.getName())
 					.addToBackStack(FreshOrderSummaryFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

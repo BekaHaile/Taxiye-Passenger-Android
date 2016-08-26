@@ -88,9 +88,9 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 					@Override
 					public void onClick(int position, OrderHistory orderHistory) {
 
-						activity.setOrderHistoryOpened(position, orderHistory);
-						activity.getTransactionUtils().openOrderSummaryFragment(activity,
-								activity.getRelativeLayoutContainer());
+//						activity.setOrderHistoryOpened(position, orderHistory);
+//						activity.getTransactionUtils().openOrderSummaryFragment(activity,
+//								activity.getRelativeLayoutContainer(), null);
 					}
 
 					@Override

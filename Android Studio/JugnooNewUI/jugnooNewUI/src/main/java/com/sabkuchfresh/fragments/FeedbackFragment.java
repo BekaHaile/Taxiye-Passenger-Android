@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.home.FeedbackActivity;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
@@ -61,7 +61,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
     private View rootView;
     private ImageView imageViewThumbsDown, imageViewThumbsUp, imageviewType, imageViewThumbsUpGif, imageViewRideEndWithImage;
-    private FeedbackActivity activity;
+    private FreshActivity activity;
     private LinearLayout linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer;
     private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
     private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue,
@@ -79,7 +79,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.layout_feedback, container, false);
 
-        activity = (FeedbackActivity) getActivity();
+        activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
         if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
             viewType = Data.getFreshData().getFeedbackViewType();
@@ -163,7 +163,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 intent.putExtra("message", "This is my message!");
                 intent.putExtra("open_type", 1);
                 LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
-                activity.finish();
+                activity.performBackPressed();
             }
         });
 
@@ -179,6 +179,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             public void onClick(View v) {
                 sendQuery(0);
                 openSupportFragment();
+
             }
         });
 
@@ -386,7 +387,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt("flag");
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
-                                    activity.openOrderInvoice(historyResponse.getData().get(0));
+                                    //activity.openOrderInvoice(historyResponse.getData().get(0));
+                                    activity.getTransactionUtils().openOrderSummaryFragment(activity,
+                                            activity.getRelativeLayoutContainer(), historyResponse.getData().get(0));
                                 } else {
                                     updateListData("Some error occurred, tap to retry", true);
                                 }
@@ -455,7 +458,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         intent.putExtra(Constants.KEY_ORDER_ID, orderId);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-
+        activity.performBackPressed();
     }
 
     @Override
