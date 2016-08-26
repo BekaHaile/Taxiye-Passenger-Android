@@ -37,10 +37,10 @@
 
                     <TextView
                         android:id="@+id/textViewStatus"
-                        android:layout_width="190px"
+                        android:layout_width="120px"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20px"
-                        android:text="@string/order_status_colon"
+                        android:text="@string/status_colon"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
 
@@ -48,7 +48,7 @@
                         android:id="@+id/textViewStatusValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="210px"
+                        android:layout_marginLeft="140px"
                         android:textColor="@color/text_color_blue"
                         android:textSize="@dimen/text_size_22"
                         android:text="@string/or"
@@ -62,10 +62,10 @@
 
                     <TextView
                         android:id="@+id/textViewId"
-                        android:layout_width="190px"
+                        android:layout_width="120px"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20px"
-                        android:text="@string/order_id_colon"
+                        android:text="@string/id_colon"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
 
@@ -73,7 +73,7 @@
                         android:id="@+id/textViewIdValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="210px"
+                        android:layout_marginLeft="140px"
                         android:text="1234"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
@@ -87,7 +87,7 @@
 
                     <TextView
                         android:id="@+id/textViewFrom"
-                        android:layout_width="190px"
+                        android:layout_width="120px"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20px"
                         android:text="@string/from_colon"
@@ -98,7 +98,7 @@
                         android:id="@+id/textViewFromValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="210px"
+                        android:layout_marginLeft="140px"
                         android:text="@string/sample_address"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
@@ -113,7 +113,7 @@
 
                     <TextView
                         android:id="@+id/textViewTo"
-                        android:layout_width="190px"
+                        android:layout_width="120px"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20px"
                         android:text="@string/to_colon"
@@ -124,7 +124,7 @@
                         android:id="@+id/textViewToValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="210px"
+                        android:layout_marginLeft="140px"
                         android:text="@string/sample_address"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
@@ -139,10 +139,10 @@
 
                     <TextView
                         android:id="@+id/textViewDetails"
-                        android:layout_width="190px"
+                        android:layout_width="120px"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20px"
-                        android:text="@string/delivery_address_colon"
+                        android:text="@string/address_colon"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
 
@@ -150,7 +150,7 @@
                         android:id="@+id/textViewDetailsValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="210px"
+                        android:layout_marginLeft="140px"
                         android:text="15 Aug 2016, 05:30PM, 8.5 Km"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22"/>
@@ -158,19 +158,28 @@
 
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/rateLayout"
-                android:layout_width="140px"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/linearLayoutMain"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/linearLayoutMain"
-                android:layout_marginTop="24px"
-                android:layout_marginBottom="20px"
-                android:layout_marginRight="30px"
-                android:orientation="vertical"
+            <View
+                android:id="@+id/viewExtra"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/linearLayoutMain"/>
 
-                >
+
+
+                <TextView
+                    android:id="@+id/textViewAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="30px"
+                    android:layout_marginTop="24px"
+                    android:singleLine="true"
+                    android:text="@string/rupee_0"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_40"
+                    />
+
 
                 <ImageView
                     android:id="@+id/imageViewProductType"
@@ -178,23 +187,13 @@
                     android:layout_height="71px"
                     android:layout_alignParentRight="true"
                     android:layout_gravity="right"
-                    android:layout_alignParentBottom="true"
+                    android:layout_above="@+id/viewExtra"
+                    android:layout_marginRight="30px"
+                    android:layout_marginBottom="20px"
                     android:background="@drawable/ic_support_auto"
                     android:tag="mwar"
                     />
 
-                <TextView
-                    android:id="@+id/textViewAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:singleLine="true"
-                    android:text="@string/rupee_0"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_40"
-                    />
-
-            </RelativeLayout>
 
 
         </RelativeLayout>
