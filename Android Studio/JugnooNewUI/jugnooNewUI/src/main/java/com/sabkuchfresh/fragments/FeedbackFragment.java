@@ -72,6 +72,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     private double orderAmount = 0;
     private String orderId = "";
 
+    public boolean isUpbuttonClicked = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -184,6 +186,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         imageViewThumbsUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isUpbuttonClicked = true;
                 sendQuery(1);
                 if(viewType != -1){
                     if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){

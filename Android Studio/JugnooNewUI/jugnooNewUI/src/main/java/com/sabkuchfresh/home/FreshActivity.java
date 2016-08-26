@@ -934,7 +934,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void performBackPressed() {
 
-        if(getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2) {
+        if(getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finish();
         }
         Utils.hideSoftKeyboard(this, textViewCartItemsCount);
