@@ -10,7 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -60,12 +61,12 @@ import retrofit.mime.TypedByteArray;
 public class MealFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener, MealAdapter.Callback {
     private final String TAG = MealFragment.class.getSimpleName();
 
-    private LinearLayout linearLayoutRoot;
+    private RelativeLayout linearLayoutRoot;
     private MealAdapter mealAdapter;
     private RecyclerView recyclerViewCategoryItems;
 
     private Bus mBus;
-
+    private ImageView noMealsView;
     private View rootView;
     private FreshActivity activity;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -90,7 +91,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         Data.AppType = AppConstant.ApplicationType.MEALS;
         Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
 
-        linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+        linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
         try {
             if (linearLayoutRoot != null) {
                 new ASSL(activity, linearLayoutRoot, 1134, 720, false);
@@ -105,6 +106,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
         recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
         recyclerViewCategoryItems.setHasFixedSize(false);
+
+        noMealsView = (ImageView) rootView.findViewById(R.id.noMealsView);
+        noMealsView.setVisibility(View.GONE);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -257,6 +261,15 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                 mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
                                 mealAdapter.setList(mealsData);
 
+                                if(mealsData.size()>0) {
+                                    noMealsView.setVisibility(View.GONE);
+                                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                                    activity.hideBottomBar(true);
+                                } else {
+                                    noMealsView.setVisibility(View.VISIBLE);
+                                    mSwipeRefreshLayout.setVisibility(View.GONE);
+                                    activity.hideBottomBar(false);
+                                }
 
                                 if (activity.getProductsResponse() != null
                                         && activity.getProductsResponse().getCategories() != null) {

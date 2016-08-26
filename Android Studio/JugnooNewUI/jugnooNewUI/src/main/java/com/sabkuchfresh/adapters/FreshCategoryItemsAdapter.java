@@ -268,7 +268,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                             subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
                         } else {
-                            Toast.makeText(context, "Can't order more than "+subItems.get(pos).getStock() + " units", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"", Toast.LENGTH_SHORT).show();
                         }
                         callback.onPlusClicked(pos, subItems.get(pos));
                         FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
@@ -289,7 +289,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                             subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
                         } else {
-                            Toast.makeText(context, "Can't order more than "+subItems.get(pos).getStock() + " units", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"", Toast.LENGTH_SHORT).show();
                         }
 
                         callback.onPlusClicked(pos, subItems.get(pos));

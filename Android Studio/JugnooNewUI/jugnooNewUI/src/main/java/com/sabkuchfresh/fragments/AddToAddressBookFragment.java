@@ -271,18 +271,18 @@ public class AddToAddressBookFragment extends Fragment {
     private void initComponents() {
 
         houseNumber = (EditText) rootView.findViewById(R.id.edt_houseFlatNo);
-        houseNumber.setTypeface(Fonts.latoRegular(homeActivity));
+        houseNumber.setTypeface(Fonts.mavenRegular(homeActivity));
         buildingStreetName = (EditText) rootView.findViewById(R.id.edt_buildingStreetName);
-        buildingStreetName.setTypeface(Fonts.latoRegular(homeActivity));
+        buildingStreetName.setTypeface(Fonts.mavenRegular(homeActivity));
         area = (EditText) rootView.findViewById(R.id.edt_area);
-        area.setTypeface(Fonts.latoRegular(homeActivity));
+        area.setTypeface(Fonts.mavenRegular(homeActivity));
         city = (EditText) rootView.findViewById(R.id.edt_city);
-        city.setTypeface(Fonts.latoRegular(homeActivity));
+        city.setTypeface(Fonts.mavenRegular(homeActivity));
         pinCode = (EditText) rootView.findViewById(R.id.edt_pinCode);
-        pinCode.setTypeface(Fonts.latoRegular(homeActivity));
+        pinCode.setTypeface(Fonts.mavenRegular(homeActivity));
 
         buttonAddToAddressBook = (Button) rootView.findViewById(R.id.buttonAddToAddressBook);
-        buttonAddToAddressBook.setTypeface(Fonts.latoRegular(homeActivity));
+        buttonAddToAddressBook.setTypeface(Fonts.mavenRegular(homeActivity));
 
 
         scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);

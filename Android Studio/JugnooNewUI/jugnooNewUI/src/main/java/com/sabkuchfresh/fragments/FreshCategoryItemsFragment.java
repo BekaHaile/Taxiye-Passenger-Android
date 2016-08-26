@@ -10,7 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -31,7 +31,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 @SuppressLint("ValidFragment")
 public class FreshCategoryItemsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-	private LinearLayout linearLayoutRoot;
+	private RelativeLayout linearLayoutRoot;
 
 	private RecyclerView recyclerViewCategoryItems;
 	private FreshCategoryItemsAdapter freshCategoryItemsAdapter;
@@ -68,7 +68,7 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 
 				activity = (FreshActivity) getActivity();
                 mBus = (activity).getBus();
-				linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+				linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
 				try {
 					if (linearLayoutRoot != null) {
 						new ASSL(activity, linearLayoutRoot, 1134, 720, false);

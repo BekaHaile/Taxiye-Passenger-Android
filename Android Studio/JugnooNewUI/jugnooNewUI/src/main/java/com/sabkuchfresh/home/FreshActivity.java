@@ -96,7 +96,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 
     private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCart, relativeLayoutSort, relativeLayoutCartNew;
-    private LinearLayout linearLayoutCheckout;
+    private LinearLayout linearLayoutCheckout, linearLayoutCheckoutContainer;
     private TextView textViewTotalPrice, textViewCheckout, textViewMinOrder, textViewCartItemsCount, textViewCartItemsCountNew;
     private ImageView imageViewCartNew;
 
@@ -155,6 +155,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
             mBus = ((MyApplication) getApplication()).getBus();
 
+            linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
             relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
             relativeLayoutCart = (RelativeLayout) findViewById(R.id.relativeLayoutCart);
             relativeLayoutCartNew = (RelativeLayout) findViewById(R.id.relativeLayoutCartNew);
@@ -442,6 +443,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return topBar;
     }
 
+    public void hideBottomBar(boolean flag) {
+        if(flag)
+            relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+        else
+            relativeLayoutCheckoutBar.setVisibility(View.GONE);
+    }
     //	public FreshOrderHistoryFragment getFreshOrderHistoryFragment(){
 //		return (FreshOrderHistoryFragment) getSupportFragmentManager().findFragmentByTag(FreshOrderHistoryFragment.class.getName());
 //	}

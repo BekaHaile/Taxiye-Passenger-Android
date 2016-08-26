@@ -6,7 +6,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="filter_title">Jugnoo</string>
-
+	<string name="no_more_than">Can\'t order more than %d units</string>
 
 	<!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> &lt;!&ndash; Live &ndash;&gt;-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->

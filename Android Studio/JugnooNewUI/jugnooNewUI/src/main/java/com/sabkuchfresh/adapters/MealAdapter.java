@@ -200,7 +200,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                                 subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
                             } else {
-                                Toast.makeText(activity, "Can't order more then " + subItems.get(pos).getStock() + " units", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"", Toast.LENGTH_SHORT).show();
                             }
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
@@ -218,7 +218,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                                 subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
                             } else {
-                                Toast.makeText(activity, "Can't order more then " + subItems.get(pos).getStock() + " units", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"", Toast.LENGTH_SHORT).show();
                             }
 
                             callback.onPlusClicked(pos, subItems.get(pos));
