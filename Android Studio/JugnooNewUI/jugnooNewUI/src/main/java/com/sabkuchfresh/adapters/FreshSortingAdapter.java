@@ -11,12 +11,12 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
-import product.clicklabs.jugnoo.utils.Fonts;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by Gurmail S. Kang on 5/4/16.
@@ -57,9 +57,9 @@ public class FreshSortingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 ((ViewHolderSlot)holder).textViewSlotTime.setText(slot.name);
                 if(!(slot.check)){
-                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.radio_unselected_icon);
+                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 } else{
-                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.radio_selected_icon);
+                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 }
 //                if(slot.check){
 //                    ((ViewHolderSlot)holder).textViewSlotTime.setAlpha(1.0f);

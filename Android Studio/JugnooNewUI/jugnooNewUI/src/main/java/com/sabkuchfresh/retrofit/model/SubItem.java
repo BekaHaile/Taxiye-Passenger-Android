@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 public class SubItem {
     @SerializedName("delivery_time_text")
     @Expose
-    private Integer deliveryTimeText;
+    private String deliveryTimeText;
     @SerializedName("sub_item_id")
     @Expose
     private Integer subItemId;
@@ -508,11 +508,11 @@ public class SubItem {
         this.subItemDesc = subItemDesc;
     }
 
-    public Integer getDeliveryTimeText() {
+    public String getDeliveryTimeText() {
         return deliveryTimeText;
     }
 
-    public void setDeliveryTimeText(Integer deliveryTimeText) {
+    public void setDeliveryTimeText(String deliveryTimeText) {
         this.deliveryTimeText = deliveryTimeText;
     }
 }

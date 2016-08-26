@@ -18,14 +18,14 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Slot;
-import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 
 /**
  * Created by gurmail on 19/05/16.
@@ -182,9 +182,9 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((ViewHolderSlot)holder).textViewSlotTime.setText(slot.getDayName()+", "+ DateOperations.convertDayTimeAPViaFormat(slot.getStartTime())
                         + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime()));
                 if(activity.getSlotToSelect() == null || !activity.getSlotToSelect().getDeliverySlotId().equals(slot.getDeliverySlotId())){
-                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.radio_unselected_icon);
+                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 } else{
-                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.radio_selected_icon);
+                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 }
                 if(slot.isEnabled()){
                     ((ViewHolderSlot)holder).textViewSlotTime.setAlpha(1.0f);
