@@ -129,6 +129,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
         rootView = inflater.inflate(R.layout.fragment_add_address, container, false);
         homeActivity = (FreshActivity) getActivity();
+        homeActivity.fragmentUISetup(this);
         zoomedToMyLoc = false;
         mBus = (homeActivity).getBus();
         relative = (RelativeLayout) rootView.findViewById(R.id.root);
@@ -311,6 +312,13 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         return rootView;
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            homeActivity.fragmentUISetup(this);
+        }
+    }
 
     public void closeLayout() {
         linearLayoutSearch.setVisibility(View.GONE);

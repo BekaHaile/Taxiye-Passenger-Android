@@ -31,6 +31,8 @@ import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
+import com.sabkuchfresh.fragments.AddAddressMapFragment;
+import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
 import com.sabkuchfresh.fragments.FreshCartItemsFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutFragment;
@@ -95,7 +97,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 
     private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCart, relativeLayoutSort, relativeLayoutCartNew;
-    private LinearLayout linearLayoutCheckout;
+    private LinearLayout linearLayoutCheckout, linearLayoutCheckoutContainer;
     private TextView textViewTotalPrice, textViewCheckout, textViewMinOrder, textViewCartItemsCount, textViewCartItemsCountNew;
     private ImageView imageViewCartNew;
 
@@ -144,48 +146,50 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fresh);
+        try {
+            setContentView(R.layout.activity_fresh);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        new ASSL(this, drawerLayout, 1134, 720, false);
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+            new ASSL(this, drawerLayout, 1134, 720, false);
 
-        relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
+            relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
-        mBus = ((MyApplication) getApplication()).getBus();
+            mBus = ((MyApplication) getApplication()).getBus();
 
-        relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
-        relativeLayoutCart = (RelativeLayout) findViewById(R.id.relativeLayoutCart);
-        relativeLayoutCartNew = (RelativeLayout) findViewById(R.id.relativeLayoutCartNew);
-        linearLayoutCheckout = (LinearLayout) findViewById(R.id.linearLayoutCheckout);
-        relativeLayoutSort = (RelativeLayout) findViewById(R.id.relativeLayoutSort);
+            linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
+            relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
+            relativeLayoutCart = (RelativeLayout) findViewById(R.id.relativeLayoutCart);
+            relativeLayoutCartNew = (RelativeLayout) findViewById(R.id.relativeLayoutCartNew);
+            linearLayoutCheckout = (LinearLayout) findViewById(R.id.linearLayoutCheckout);
+            relativeLayoutSort = (RelativeLayout) findViewById(R.id.relativeLayoutSort);
 
-        imageViewCartNew = (ImageView) findViewById(R.id.imageViewCartNew);
+            imageViewCartNew = (ImageView) findViewById(R.id.imageViewCartNew);
 
-        textViewCartItemsCountNew = (TextView) findViewById(R.id.textViewCartItemsCountNew);
-        textViewCartItemsCountNew.setTypeface(Fonts.mavenRegular(this));
+            textViewCartItemsCountNew = (TextView) findViewById(R.id.textViewCartItemsCountNew);
+            textViewCartItemsCountNew.setTypeface(Fonts.mavenRegular(this));
 
-        textViewCartItemsCount = (TextView) findViewById(R.id.textViewCartItemsCount);
-        textViewCartItemsCount.setTypeface(Fonts.mavenRegular(this));
-        textViewCartItemsCount.setMinWidth((int) (45f * ASSL.Xscale()));
+            textViewCartItemsCount = (TextView) findViewById(R.id.textViewCartItemsCount);
+            textViewCartItemsCount.setTypeface(Fonts.mavenRegular(this));
+            textViewCartItemsCount.setMinWidth((int) (45f * ASSL.Xscale()));
 
-        textViewTotalPrice = (TextView) findViewById(R.id.textViewTotalPrice);
-        textViewTotalPrice.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+            textViewTotalPrice = (TextView) findViewById(R.id.textViewTotalPrice);
+            textViewTotalPrice.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
-        textViewCheckout = (TextView) findViewById(R.id.textViewCheckout);
-        textViewCheckout.setTypeface(Fonts.mavenRegular(this));
-        textViewMinOrder = (TextView) findViewById(R.id.textViewMinOrder);
-        textViewMinOrder.setTypeface(Fonts.mavenRegular(this));
+            textViewCheckout = (TextView) findViewById(R.id.textViewCheckout);
+            textViewCheckout.setTypeface(Fonts.mavenRegular(this));
+            textViewMinOrder = (TextView) findViewById(R.id.textViewMinOrder);
+            textViewMinOrder.setTypeface(Fonts.mavenRegular(this));
 
-        topView = (View) findViewById(R.id.topBarMain);
+            topView = (View) findViewById(R.id.topBarMain);
 
-        menuBar = new MenuBar(this, drawerLayout);
-        topBar = new TopBar(this, drawerLayout);
-        fabView = new FABView(this);
+            menuBar = new MenuBar(this, drawerLayout);
+            topBar = new TopBar(this, drawerLayout);
+            fabView = new FABView(this);
 
 //        if(BuildConfig.DEBUG_MODE)
 //            Utils.showPaystorePopup(FreshActivity.this, "", "please rate us");
 
-        imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
+            imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
 
         /*imageViewFabFake.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,117 +211,117 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             }
         });*/
 
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.hideSoftKeyboard(FreshActivity.this, textViewCartItemsCount);
-                FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.CHECKOUT_SCREEN);
-                FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.REVIEW_CART, getProduct());
-                if (updateCartValuesGetTotalPrice().second > 0) {
-                    if (getTransactionUtils().checkIfFragmentAdded(FreshActivity.this, FreshCartItemsFragment.class.getName())) {
-                        int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
-                        if(appType == AppConstant.ApplicationType.MEALS) {
-                            if(isAvailable()) {
-                                Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_has_available), Toast.LENGTH_SHORT).show();
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utils.hideSoftKeyboard(FreshActivity.this, textViewCartItemsCount);
+                    FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.CHECKOUT_SCREEN);
+                    FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.REVIEW_CART, getProduct());
+                    if (updateCartValuesGetTotalPrice().second > 0) {
+                        if (getTransactionUtils().checkIfFragmentAdded(FreshActivity.this, FreshCartItemsFragment.class.getName())) {
+                            int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                            if(appType == AppConstant.ApplicationType.MEALS) {
+                                if(isAvailable()) {
+                                    Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_has_available), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
+                                }
                             } else {
                                 getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
                             }
                         } else {
-                            getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
+                            getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
                         }
                     } else {
-                        getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+                        Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
                 }
-            }
-        };
+            };
 
 
+            relativeLayoutCheckoutBar.setOnClickListener(onClickListener);
+            linearLayoutCheckout.setOnClickListener(onClickListener);
+            relativeLayoutCartNew.setOnClickListener(onClickListener);
 
+            relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utils.hideSoftKeyboard(FreshActivity.this, textViewCartItemsCount);
+                    FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CART, FlurryEventNames.BOTTOM_ICON);
+                    if(!canOrder && Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType) == AppConstant.ApplicationType.MEALS)
+                        return;
 
-
-        relativeLayoutCheckoutBar.setOnClickListener(onClickListener);
-        linearLayoutCheckout.setOnClickListener(onClickListener);
-        relativeLayoutCartNew.setOnClickListener(onClickListener);
-
-        relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.hideSoftKeyboard(FreshActivity.this, textViewCartItemsCount);
-                FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CART, FlurryEventNames.BOTTOM_ICON);
-                if(!canOrder && Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType) == AppConstant.ApplicationType.MEALS)
-                    return;
-
-                if(updateCartValuesGetTotalPrice().second > 0) {
-                    getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
-                } else {
-                    Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
+                    if(updateCartValuesGetTotalPrice().second > 0) {
+                        getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+                    } else {
+                        Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
 
-        relativeLayoutSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FreshFragment fragment = getFreshFragment();
-                MealFragment mealFragment = getMealFragment();
+            relativeLayoutSort.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FreshFragment fragment = getFreshFragment();
+                    MealFragment mealFragment = getMealFragment();
 
-                if (fragment != null && !fragment.isHidden()) {
-                    fragment.getFreshDeliverySlotsDialog().showSorting();
-                } else if(mealFragment != null && !mealFragment.isHidden()) {
-                    mealFragment.getFreshDeliverySlotsDialog().showSorting();
+                    if (fragment != null && !fragment.isHidden()) {
+                        fragment.getFreshDeliverySlotsDialog().showSorting();
+                    } else if(mealFragment != null && !mealFragment.isHidden()) {
+                        mealFragment.getFreshDeliverySlotsDialog().showSorting();
+                    }
                 }
-            }
-        });
+            });
 
 
-        Data.latitude = Data.loginLatitude;
-        Data.longitude = Data.loginLongitude;
+            Data.latitude = Data.loginLatitude;
+            Data.longitude = Data.loginLongitude;
 
 
-        try {
-//            if (Data.getFreshData().stores.size() > 1) {
-//                int fragMentType = Prefs.with(this).getInt(Constants.APP_TYPE, 0);
-//                if (fragMentType == AppConstant.ApplicationType.FRESH) {
-//                    addFreshFragment();
-//                } else if (fragMentType == AppConstant.ApplicationType.MEALS) {
-//                    addMealFragment();
-//                } else {
-//                    addNewFreshFragment();
-//                }
-//            } else if (Data.getFreshData().stores.size() == 1) {
-//                int appType = Data.getFreshData().stores.get(0).getStoreId();
-//                if (appType == AppConstant.ApplicationType.FRESH) {
-//                    addFreshFragment();
-//                } else {
-//                    addMealFragment();
-//                }
-//            } else {
-//                addFreshFragment();
-//            }
+            try {
+    //            if (Data.getFreshData().stores.size() > 1) {
+    //                int fragMentType = Prefs.with(this).getInt(Constants.APP_TYPE, 0);
+    //                if (fragMentType == AppConstant.ApplicationType.FRESH) {
+    //                    addFreshFragment();
+    //                } else if (fragMentType == AppConstant.ApplicationType.MEALS) {
+    //                    addMealFragment();
+    //                } else {
+    //                    addNewFreshFragment();
+    //                }
+    //            } else if (Data.getFreshData().stores.size() == 1) {
+    //                int appType = Data.getFreshData().stores.get(0).getStoreId();
+    //                if (appType == AppConstant.ApplicationType.FRESH) {
+    //                    addFreshFragment();
+    //                } else {
+    //                    addMealFragment();
+    //                }
+    //            } else {
+    //                addFreshFragment();
+    //            }
 
-            String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
-            if(lastClientId.equalsIgnoreCase(Config.getFreshClientId())){
+                String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+                if(lastClientId.equalsIgnoreCase(Config.getFreshClientId())){
+                    addFreshFragment();
+                    Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
+                }
+                else if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
+                    addMealFragment();
+                    Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
                 addFreshFragment();
-                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
             }
-            else if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
-                addMealFragment();
-                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
-            }
+
+
+            // Register to receive messages.
+            // We are registering an observer (mMessageReceiver) to receive Intents
+            // with actions named "custom-event-name".
+            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                    new IntentFilter(Data.LOCAL_BROADCAST));
         } catch (Exception e) {
             e.printStackTrace();
-            addFreshFragment();
         }
-
-
-        // Register to receive messages.
-        // We are registering an observer (mMessageReceiver) to receive Intents
-        // with actions named "custom-event-name".
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                new IntentFilter(Data.LOCAL_BROADCAST));
 
     }
 
@@ -372,7 +376,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     @Override
     protected void onResume() {
         super.onResume();
-        mBus.register(this);
+        try {
+            mBus.register(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (!HomeUtil.checkIfUserDataNull(this)) {
             menuBar.setUserData();
             topBar.setUserData();
@@ -436,6 +444,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return topBar;
     }
 
+    public void hideBottomBar(boolean flag) {
+        if(flag)
+            relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+        else
+            relativeLayoutCheckoutBar.setVisibility(View.GONE);
+    }
     //	public FreshOrderHistoryFragment getFreshOrderHistoryFragment(){
 //		return (FreshOrderHistoryFragment) getSupportFragmentManager().findFragmentByTag(FreshOrderHistoryFragment.class.getName());
 //	}
@@ -443,6 +457,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //	private FreshOrderSummaryFragment getFreshOrderSummaryFragment(){
 //		return (FreshOrderSummaryFragment) getSupportFragmentManager().findFragmentByTag(FreshOrderSummaryFragment.class.getName());
 //	}
+
+    private FeedbackFragment getFeedbackFragment() {
+        return (FeedbackFragment) getSupportFragmentManager().findFragmentByTag(FeedbackFragment.class.getName());
+    }
 
     private FreshPaymentFragment getFreshPaymentFragment() {
         return (FreshPaymentFragment) getSupportFragmentManager().findFragmentByTag(FreshPaymentFragment.class.getName());
@@ -677,7 +695,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar.title.setText(getResources().getString(R.string.checkout));
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-        } else if (fragment instanceof FreshAddressFragment) {
+        } else if (fragment instanceof FreshAddressFragment || fragment instanceof AddAddressMapFragment) {
             topBar.imageViewMenu.setVisibility(View.GONE);
             topBar.relativeLayoutNotification.setVisibility(View.GONE);
             topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -778,6 +796,17 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar.title.setText(getResources().getString(R.string.app_name));
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
+        } else if(fragment instanceof FeedbackFragment) {
+            topBar.imageViewMenu.setVisibility(View.VISIBLE);
+            topBar.relativeLayoutNotification.setVisibility(View.GONE);
+            topBar.imageViewBack.setVisibility(View.GONE);
+            topBar.imageViewDelete.setVisibility(View.GONE);
+            textViewCheckout.setVisibility(View.GONE);
+            relativeLayoutCheckoutBar.setVisibility(View.GONE);
+            topBar.title.setVisibility(View.VISIBLE);
+            topBar.title.setText(getResources().getString(R.string.fresh));
+            topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
         }
     }
 
@@ -883,6 +912,22 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         getTransactionUtils().openOrderHistoryFragment(FreshActivity.this, relativeLayoutContainer);
     }
 
+    /**
+     * Method used to open feedback screen
+     */
+    public void openFeedback() {
+        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer);
+
+//        getSupportFragmentManager().beginTransaction()
+//                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+//                .add(relativeLayoutContainer.getId(), new FeedbackFragment(),
+//                        FeedbackFragment.class.getName())
+//                .addToBackStack(FeedbackFragment.class.getName())
+//                .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+//                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+//                .commitAllowingStateLoss();
+    }
+
     public void openSupport() {
         startActivity(new Intent(this, SupportActivity.class));
 //		getTransactionUtils().openSupportFragment(FreshActivity.this, relativeLayoutContainer);
@@ -901,6 +946,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void performBackPressed() {
 
+        if(getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
+            finish();
+        }
         Utils.hideSoftKeyboard(this, textViewCartItemsCount);
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();

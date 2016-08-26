@@ -7049,12 +7049,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         EmergencyDisableDialog emergencyDisableDialog = new EmergencyDisableDialog(HomeActivity.this);
                         emergencyDisableDialog.show();
                     }
-                    topBar.textViewTitle.setText(getResources().getString(R.string.app_name));
+                    topBar.textViewTitle.setText(getResources().getString(R.string.autos));
                 }
                 localModeEnabled = modeEnabled;
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-                topBar.textViewTitle.setText(getResources().getString(R.string.app_name));
+                topBar.textViewTitle.setText(getResources().getString(R.string.autos));
                 if(confirmedScreenOpened){
                     topBar.textViewTitle.setText(getResources().getString(R.string.confirmation));
                 }

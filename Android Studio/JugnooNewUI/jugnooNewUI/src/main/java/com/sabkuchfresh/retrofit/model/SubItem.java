@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
  * Created by shankar on 4/6/16.
  */
 public class SubItem {
+    @SerializedName("delivery_time_text")
+    @Expose
+    private String deliveryTimeText;
     @SerializedName("sub_item_id")
     @Expose
     private Integer subItemId;
@@ -503,5 +506,13 @@ public class SubItem {
 
     public void setSubItemDesc(String subItemDesc) {
         this.subItemDesc = subItemDesc;
+    }
+
+    public String getDeliveryTimeText() {
+        return deliveryTimeText;
+    }
+
+    public void setDeliveryTimeText(String deliveryTimeText) {
+        this.deliveryTimeText = deliveryTimeText;
     }
 }

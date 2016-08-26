@@ -94,7 +94,7 @@ public class TopBar implements FirebaseEvents {
 
         if (activity instanceof HomeActivity) {
             imageViewSearchIcon.setVisibility(View.GONE);
-            textViewTitle.setText(activity.getResources().getString(R.string.app_name));
+            textViewTitle.setText(activity.getResources().getString(R.string.autos));
         }
 
         setupFreshUI();
@@ -244,7 +244,7 @@ public class TopBar implements FirebaseEvents {
             relativeLayoutNotification.setVisibility(View.GONE);
         }
         imageViewBack.setVisibility(View.GONE);
-        textViewTitle.setText(activity.getResources().getString(R.string.app_name));
+        textViewTitle.setText(activity.getResources().getString(R.string.autos));
         textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
 
         if (!defaultState) {

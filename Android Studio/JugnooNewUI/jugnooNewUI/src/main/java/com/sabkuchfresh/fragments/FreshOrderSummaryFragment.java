@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshOrderItemAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
@@ -251,7 +252,12 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                         orderComplete.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setVisibility(View.GONE);
                         if (orderHistory.getPendingFeedback() == 1) {
-                            feedbackBtn.setText(R.string.feedback);
+                            if(activity instanceof FreshActivity) {
+                                feedbackBtn.setText(R.string.ok);
+                                reorderBtn.setVisibility(View.GONE);
+                            } else {
+                                feedbackBtn.setText(R.string.feedback);
+                            }
                         } else {
                             if (activity instanceof RideTransactionsActivity) {
                                 feedbackBtn.setText(R.string.need_help);
@@ -264,7 +270,12 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                         orderComplete.setVisibility(View.GONE);
 
                         if (orderHistory.getPendingFeedback() == 1) {
-                            buttonCancelOrder.setText(R.string.feedback);
+                            if(activity instanceof FreshActivity) {
+                                feedbackBtn.setText(R.string.ok);
+                                reorderBtn.setVisibility(View.GONE);
+                            } else {
+                                feedbackBtn.setText(R.string.feedback);
+                            }
                         } else {
                             if (activity instanceof RideTransactionsActivity) {
                                 buttonCancelOrder.setText(R.string.need_help);
@@ -291,6 +302,10 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
             ((RideTransactionsActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
         } else if (activity instanceof product.clicklabs.jugnoo.support.SupportActivity) {
             ((product.clicklabs.jugnoo.support.SupportActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
+        } else if(activity instanceof FreshActivity) {
+//            ((FreshActivity) activity).getTopBar().title.setText(getResources().getString(R.string.order_fragment));
+            ((FreshActivity) activity).fragmentUISetup(this);
+
         }
     }
 
@@ -318,7 +333,12 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                     orderComplete.setVisibility(View.VISIBLE);
                     buttonCancelOrder.setVisibility(View.GONE);
                     if (orderHistory.getPendingFeedback() == 1) {
-                        feedbackBtn.setText(R.string.feedback);
+                        if(activity instanceof FreshActivity) {
+                            feedbackBtn.setText(R.string.ok);
+                            reorderBtn.setVisibility(View.GONE);
+                        } else {
+                            feedbackBtn.setText(R.string.feedback);
+                        }
                     } else {
                         if (activity instanceof RideTransactionsActivity) {
                             feedbackBtn.setText(R.string.need_help);
@@ -331,7 +351,12 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                     orderComplete.setVisibility(View.GONE);
 
                     if (orderHistory.getPendingFeedback() == 1) {
-                        buttonCancelOrder.setText(R.string.feedback);
+                        if(activity instanceof FreshActivity) {
+                            feedbackBtn.setText(R.string.ok);
+                            reorderBtn.setVisibility(View.GONE);
+                        } else {
+                            feedbackBtn.setText(R.string.feedback);
+                        }
                     } else {
                         if (activity instanceof RideTransactionsActivity) {
                             buttonCancelOrder.setText(R.string.need_help);
@@ -465,12 +490,9 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 break;
             case R.id.feedbackBtn:
                 if (orderHistory.getPendingFeedback() == 1) {
-                    // TODO: 22/08/16 To be done for fresh
-//                    activity.orderId = String.valueOf(orderHistory.getOrderId());
-//                    activity.questionType = String.valueOf(orderHistory.getQuestionType());
-//                    activity.question = String.valueOf(orderHistory.getQuestion());
-//                    activity.skip = true;
-//                    activity.openOrderFeedback();
+                    if(activity instanceof FreshActivity) {
+                        ((FreshActivity) activity).performBackPressed();
+                    }
                 } else {
                     if (activity instanceof RideTransactionsActivity) {
                         new TransactionUtils().openRideIssuesFragment(activity,

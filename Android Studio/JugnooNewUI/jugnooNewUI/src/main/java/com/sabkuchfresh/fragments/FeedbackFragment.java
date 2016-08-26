@@ -16,12 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.home.FeedbackActivity;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
@@ -30,7 +29,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -61,7 +59,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
     private View rootView;
     private ImageView imageViewThumbsDown, imageViewThumbsUp, imageviewType, imageViewThumbsUpGif, imageViewRideEndWithImage;
-    private FeedbackActivity activity;
+    private FreshActivity activity;
     private LinearLayout linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer;
     private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
     private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue,
@@ -74,12 +72,14 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     private double orderAmount = 0;
     private String orderId = "";
 
+    public boolean isUpbuttonClicked = false;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.layout_feedback, container, false);
 
-        activity = (FeedbackActivity) getActivity();
+        activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
         if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
             viewType = Data.getFreshData().getFeedbackViewType();
@@ -151,7 +151,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         buttonEndRideSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.finish();
+                backPressed();
             }
         });
 
@@ -163,7 +163,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 intent.putExtra("message", "This is my message!");
                 intent.putExtra("open_type", 1);
                 LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
-                activity.finish();
+                backPressed();
             }
         });
 
@@ -179,12 +179,14 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             public void onClick(View v) {
                 sendQuery(0);
                 openSupportFragment();
+
             }
         });
 
         imageViewThumbsUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isUpbuttonClicked = true;
                 sendQuery(1);
                 if(viewType != -1){
                     if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
@@ -264,6 +266,13 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
      */
     private void sendQuery(final int rating) {
         try {
+            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+                Data.getFreshData().setPendingFeedback(0);
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+                Data.getMealsData().setPendingFeedback(0);
+            } else {
+                activity.finish();
+            }
             if (AppStatus.getInstance(MyApplication.getInstance()).isOnline(MyApplication.getInstance())) {
                 //DialogPopup.showLoadingDialog(activity, "loading...");
 
@@ -288,17 +297,16 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                activity.finish();
+                                                backPressed();
                                             }
                                         }, 3000);
                                     } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
                                             ) {
-                                        activity.finish();
+                                        backPressed();
                                     }
                                 } else if(rating == 0) {
                                     // for bad rating
-                                    if(BuildConfig.DEBUG_MODE)
-                                        Toast.makeText(activity, "Bad rating! Open support fragment", Toast.LENGTH_LONG).show();
+
                                 }
                             }
                         } catch (Exception e) {
@@ -386,7 +394,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt("flag");
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
-                                    activity.openOrderInvoice(historyResponse.getData().get(0));
+                                    //activity.openOrderInvoice(historyResponse.getData().get(0));
+                                    activity.getTransactionUtils().openOrderSummaryFragment(activity,
+                                            activity.getRelativeLayoutContainer(), historyResponse.getData().get(0));
                                 } else {
                                     updateListData("Some error occurred, tap to retry", true);
                                 }
@@ -455,7 +465,16 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         intent.putExtra(Constants.KEY_ORDER_ID, Integer.parseInt(orderId));
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        backPressed();
+    }
 
+    private void backPressed() {
+        try {
+            activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            activity.getSupportFragmentManager().popBackStackImmediate();
+        }
     }
 
     @Override

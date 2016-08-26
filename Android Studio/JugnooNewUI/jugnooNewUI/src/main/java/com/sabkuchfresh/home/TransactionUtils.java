@@ -3,9 +3,9 @@ package com.sabkuchfresh.home;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
-import product.clicklabs.jugnoo.R;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
+import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
 import com.sabkuchfresh.fragments.FreshCartItemsFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutFragment;
@@ -14,6 +14,9 @@ import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 import com.sabkuchfresh.fragments.FreshPaymentFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.FreshSupportFragment;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 
 /**
  * Created by shankar on 1/27/16.
@@ -85,11 +88,11 @@ public class TransactionUtils {
 		}
 	}
 
-	public void openOrderSummaryFragment(FragmentActivity activity, View container) {
+	public void openOrderSummaryFragment(FragmentActivity activity, View container, HistoryResponse.Datum historyData) {
 		if(!checkIfFragmentAdded(activity, FreshOrderSummaryFragment.class.getName())) {
 			activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-					.add(container.getId(), new FreshOrderSummaryFragment(),
+					.add(container.getId(), new FreshOrderSummaryFragment(historyData),
 							FreshOrderSummaryFragment.class.getName())
 					.addToBackStack(FreshOrderSummaryFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -149,6 +152,30 @@ public class TransactionUtils {
                     .commitAllowingStateLoss();
         }
     }
+
+	public void openFeedback(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, FeedbackFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+					.add(container.getId(), new FeedbackFragment(),
+							FeedbackFragment.class.getName())
+					.addToBackStack(FeedbackFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+//	public void openFeedback() {
+//		getSupportFragmentManager().beginTransaction()
+//				.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+//				.add(relativeLayoutContainer.getId(), new FeedbackFragment(),
+//						FeedbackFragment.class.getName())
+//				.addToBackStack(FeedbackFragment.class.getName())
+//				.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+//						.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+//				.commitAllowingStateLoss();
+//	}
 
 	public boolean checkIfFragmentAdded(FragmentActivity activity, String tag){
 		return (activity.getSupportFragmentManager().findFragmentByTag(tag) != null);

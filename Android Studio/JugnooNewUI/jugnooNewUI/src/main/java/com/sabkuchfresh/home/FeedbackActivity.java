@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
@@ -44,11 +45,15 @@ public class FeedbackActivity extends BaseFragmentActivity implements View.OnCli
     }
 
     public void fragmentUISetup(Fragment fragment) {
-//        if(fragment instanceof FeedbackFragment) {
-//            imageViewBack.setVisibility(View.GONE);
-//        } else if(fragment instanceof FreshOrderSummaryFragment) {
-//            imageViewBack.setVisibility(View.VISIBLE);
-//        }
+        if(fragment instanceof FeedbackFragment) {
+            imageViewBack.setVisibility(View.GONE);
+            title.setText("RECEIPT");
+            Toast.makeText(this, "R", Toast.LENGTH_LONG).show();
+        } else if(fragment instanceof FreshOrderSummaryFragment) {
+            imageViewBack.setVisibility(View.VISIBLE);
+            title.setText("INVOICE");
+            Toast.makeText(this, "I", Toast.LENGTH_LONG).show();
+        }
     }
     /**
      * Method used to open feedback screen
@@ -80,13 +85,15 @@ public class FeedbackActivity extends BaseFragmentActivity implements View.OnCli
     public void performBackPressed() {
 
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            finish();
+//            finish();
         } else {
             super.onBackPressed();
         }
     }
 
     public void openOrderInvoice(HistoryResponse.Datum historyData) {
+        imageViewBack.setVisibility(View.VISIBLE);
+        title.setText("INVOICE");
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
                 .add(linearLayoutContainer.getId(), new FreshOrderSummaryFragment(historyData),
