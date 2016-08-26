@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_fab_delivery"
             android:layout_marginBottom="0px"
+            fab:fab_colorNormal="@color/theme_color"
             android:tag="DontTouchMe"
             fab:fab_size="mini"
             fab:fab_label="Delivery" />
@@ -59,6 +60,7 @@
             android:layout_height="45dp"
             android:src="@drawable/ic_fab_fresh"
             android:layout_marginBottom="0px"
+            fab:fab_colorNormal="@color/theme_color"
             android:tag="DontTouchMe"
             fab:fab_size="mini"
             fab:fab_label="Fresh" />
@@ -69,6 +71,7 @@
             android:layout_height="45dp"
             android:src="@drawable/ic_fab_autos"
             android:tag="DontTouchMe"
+            fab:fab_colorNormal="@color/theme_color"
             fab:fab_size="mini"
             fab:fab_label="Autos" />
 

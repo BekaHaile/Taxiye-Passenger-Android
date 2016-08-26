@@ -17,7 +17,7 @@
         app:cardCornerRadius="8px"
         android:layout_marginRight="20px"
         android:layout_marginLeft="20px"
-        android:layout_marginBottom="20px"
+        android:layout_marginTop="15px"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true">
 

@@ -3,7 +3,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_fresh">
+    android:background="@color/sliding_bottom_bg_color">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutRoot"
@@ -47,7 +47,7 @@
                 android:id="@+id/relativeLayoutCheckoutBar"
                 android:layout_width="match_parent"
                 android:layout_height="110px"
-                android:background="@drawable/background_white_grey_light_selector">
+                android:background="@color/white">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutLeft"
@@ -222,8 +222,8 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/text_color_hint" />
+                    android:layout_height="6px"
+                    android:background="@drawable/shadow_up" />
 
             </RelativeLayout>
         </LinearLayout>

@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by gurmail on 15/07/16.
@@ -93,7 +94,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 mHolder.textViewTitle.setText(subItem.getSubItemName());
                 mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-                        subItem.getPrice()));
+                        Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getPrice())));
                 mHolder.textViewdetails.setText(subItem.getItemLargeDesc());
 //                mHolder.deliveryTime.setText(DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()) + "-"
 //                        + DateOperations.convertDayTimeAPViaFormat(subItem.getOrderEnd()));
