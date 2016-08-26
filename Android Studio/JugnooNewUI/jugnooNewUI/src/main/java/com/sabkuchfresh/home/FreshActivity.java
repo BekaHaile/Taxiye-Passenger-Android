@@ -31,6 +31,7 @@ import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
+import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
 import com.sabkuchfresh.fragments.FreshCartItemsFragment;
@@ -694,7 +695,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar.title.setText(getResources().getString(R.string.checkout));
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-        } else if (fragment instanceof FreshAddressFragment) {
+        } else if (fragment instanceof FreshAddressFragment || fragment instanceof AddAddressMapFragment) {
             topBar.imageViewMenu.setVisibility(View.GONE);
             topBar.relativeLayoutNotification.setVisibility(View.GONE);
             topBar.imageViewBack.setVisibility(View.VISIBLE);
