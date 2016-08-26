@@ -291,6 +291,7 @@ public class SupportActivity extends BaseFragmentActivity implements View.OnClic
         Intent intent = new Intent(Data.LOCAL_BROADCAST);
         // You can also include some extra data.
         intent.putExtra("message", "This is my message!");
+        intent.putExtra("open_type", 0);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

@@ -129,7 +129,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 									} else if (activity instanceof SupportActivity) {
 										new TransactionUtils().openRideIssuesFragment(activity,
 												((SupportActivity) activity).getContainer(),
-												historyData.getEngagementId(), null, null, 0, historyData.getIsCancelledRide() == 1, historyData.getAutosStatus(),
+												historyData.getEngagementId(), -1, null, null, 0, historyData.getIsCancelledRide() == 1, historyData.getAutosStatus(),
 												null);
 									}
 								} else {
@@ -143,7 +143,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 								} else if (activity instanceof SupportActivity) {
 									new TransactionUtils().openRideIssuesFragment(activity,
 											((SupportActivity) activity).getContainer(),
-											-1, null, null, 0, false, 0,
+											-1, historyData.getOrderId(), null, null, 0, false, 0,
 											historyData);
 								}
 							}

@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -165,11 +166,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_get_a_ride_selector);
                 } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fatafat_menu_selector);
-                    if(activity instanceof HomeActivity) {
-//                        if (1 != Data.freshAvailable) {
-//                            hideLayout(holder.relative);
-//                        }
-                    }
                     Data.webActivityTitle = menuInfo.getName();
                 }else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_share_selector);
@@ -320,7 +316,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutSubDelivery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
+                    drawerLayout.closeDrawer(GravityCompat.START);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
@@ -388,13 +384,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_GAME_CLICKED, null);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "game");
                 }
-            } else if((MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(tag))){
-                if(activity instanceof HomeActivity) {
-                    ((HomeActivity) activity).drawerLayout.closeDrawer(GravityCompat.START);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.GET_A_RIDE, bundle);
-                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Get a Ride");
-                }
+            } else if((MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(tag))) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.GET_A_RIDE, bundle);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Get a Ride");
             } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(tag)){
                 if(activity instanceof HomeActivity) {
 //                    if(1 == Data.freshAvailable) {
@@ -455,6 +449,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 LatLng currLatLng = null;
                 if(activity instanceof HomeActivity){
                     currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
+                } else if(activity instanceof FreshActivity){
+                    currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
                 }
 
                 if(currLatLng != null){
@@ -472,6 +468,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 LatLng currLatLng = null;
                 if (activity instanceof HomeActivity) {
                     currLatLng = ((HomeActivity) activity).getCurrentPlaceLatLng();
+                } else if(activity instanceof FreshActivity){
+                    currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
                 }
                 if (currLatLng != null) {
                     Data.latitude = currLatLng.latitude;
@@ -505,24 +503,20 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             });
                 }
 
-            } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(tag)){
-                if(activity instanceof HomeActivity) {
-                    Intent intent = new Intent(activity, RideTransactionsActivity.class);
-                    activity.startActivity(intent);
-                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    FlurryEventLogger.event(FlurryEventNames.RIDE_HISTORY);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.RIDE_HISTORY, bundle);
-                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Ride History");
-                }
-            } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)){
-                if(activity instanceof HomeActivity) {
-                    activity.startActivity(new Intent(activity, SupportActivity.class));
-                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.SUPPORT, bundle);
-                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Support");
-                }
+            } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(tag)) {
+                Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                FlurryEventLogger.event(FlurryEventNames.RIDE_HISTORY);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.RIDE_HISTORY, bundle);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Ride History");
+            } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
+                activity.startActivity(new Intent(activity, SupportActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.SUPPORT, bundle);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Support");
             } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, AboutActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);

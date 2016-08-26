@@ -39,14 +39,12 @@ public class Fonts {
         return avenirNext;
     }
 
-    public static Typeface avenirMedium(Context appContext) {											// accessing fonts functions
+    public static Typeface avenirMedium(Context appContext) {                                 // accessing fonts functions
         if (avenirMedium == null) {
             avenirMedium = Typeface.createFromAsset(appContext.getAssets(), "fonts/avenir_medium.otf");
         }
         return avenirMedium;
     }
-
-
 
 //    From fresh Application
     private static Typeface latoRegular, latoLight;																// fonts declaration

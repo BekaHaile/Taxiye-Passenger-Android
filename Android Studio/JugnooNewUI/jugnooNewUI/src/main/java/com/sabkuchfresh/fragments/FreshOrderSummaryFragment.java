@@ -20,9 +20,7 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshOrderItemAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.home.SupportActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
-import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
 
@@ -443,20 +441,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 });
     }
 
-    private void openFeedBack(int orderId) {
-
-
-        Intent intent = new Intent(activity, SupportActivity.class);
-        intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.FEED_BACK);
-        intent.putExtra(Constants.QUESTION, String.valueOf(orderHistory.getQuestion()));
-        intent.putExtra(Constants.QUESTION_TYPE, "" + String.valueOf(orderHistory.getQuestionType()));
-        intent.putExtra(Constants.ORDER_ID, String.valueOf(orderId));
-        intent.putExtra(Constants.SKIP, true);
-
-        startActivity(intent);
-        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-    }
-
     @Override
     public void onClick(View v) {
         int tag = v.getId();
@@ -491,7 +475,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                     if (activity instanceof RideTransactionsActivity) {
                         new TransactionUtils().openRideIssuesFragment(activity,
                                 ((RideTransactionsActivity) activity).getContainer(),
-                                -1, null, null, 0, false, 0, orderHistory);
+                                -1, -1, null, null, 0, false, 0, orderHistory);
                     } else{
                         activity.onBackPressed();
                     }
@@ -542,6 +526,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
         Intent intent = new Intent(Data.LOCAL_BROADCAST);
         // You can also include some extra data.
         intent.putExtra("message", "This is my message!");
+        intent.putExtra("open_type", 0);
         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
     }
 

@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.FreshData;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
+import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
@@ -73,6 +74,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 public class JSONParser implements Constants {
+
 
     private final String TAG = JSONParser.class.getSimpleName();
 
@@ -351,7 +353,8 @@ public class JSONParser implements Constants {
         }
     }
 
-    public void parseMealsData(LoginResponse.Meals mealsData) {
+    public void parseMealsData(JSONObject jMealsData, LoginResponse.Meals mealsData) {
+
         try {
             if(Data.getMealsData().getPromoCoupons() == null){
                 Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
@@ -365,6 +368,18 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            int pendingFeedback = jMealsData.optInt(KEY_PENDING_FEEDBACK, 0);
+            String orderId = jMealsData.optString(KEY_FEEDBACK_ORDER_ID, "");
+            double amount = jMealsData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
+            String feedbackDeliveryDate = jMealsData.optString(KEY_FEEDBACK_DATE, "");
+            int feedbackViewType = jMealsData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
+
+            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void parseFreshData(JSONObject jFatafatData, LoginResponse.Fresh freshData){
@@ -373,6 +388,9 @@ public class JSONParser implements Constants {
             String question = jFatafatData.optString(KEY_QUESTION, "");
             int questionType = jFatafatData.optInt(KEY_QUESTION_TYPE, 0);
             int pendingFeedback = jFatafatData.optInt(KEY_PENDING_FEEDBACK, 0);
+            double amount = jFatafatData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
+            String feedbackDeliveryDate = jFatafatData.optString(KEY_FEEDBACK_DATE, "");
+            int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
 
             PopupData popupData = null;
             try {
@@ -412,7 +430,8 @@ public class JSONParser implements Constants {
                 }
             } catch (Exception e){ e.printStackTrace(); }
 
-            Data.setFreshData(new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData));
+            Data.setFreshData(new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData,
+                    amount, feedbackDeliveryDate, feedbackViewType));
 
             try {
                 if(Data.getFreshData().getPromoCoupons() == null){
@@ -443,11 +462,12 @@ public class JSONParser implements Constants {
         JSONObject jUserDataObject = jObj.getJSONObject(KEY_USER_DATA);
         JSONObject jAutosObject = jObj.optJSONObject(KEY_AUTOS);
         JSONObject jFreshObject = jObj.optJSONObject(KEY_FRESH);
+        JSONObject jMealsObject = jObj.optJSONObject(KEY_MEALS);
 
         parseUserData(context, jUserDataObject, loginResponse.getUserData());
         parseAutoData(context, jAutosObject, loginResponse.getAutos());
         parseFreshData(jFreshObject, loginResponse.getFresh());
-        parseMealsData(loginResponse.getMeals());
+        parseMealsData(jMealsObject, loginResponse.getMeals());
         parseDeliveryData(loginResponse.getDelivery());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();

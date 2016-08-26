@@ -402,6 +402,7 @@ public interface Constants {
 	String KEY_USER_DATA = "user_data";
 	String KEY_AUTOS = "autos";
 	String KEY_FRESH = "fresh";
+	String KEY_MEALS = "meals";
 
 	String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
 	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
@@ -423,4 +424,9 @@ public interface Constants {
 	String INTENT_KEY_FROM_BAD = "FromBad";
 	String KEY_MASTER_COUPON = "master_coupon";
 
+	String KEY_FEEDBACK_AMOUNT = "feedback_order_amount";
+	String KEY_FEEDBACK_DATE = "feedback_delivery_date";
+	String KEY_FEEDBACK_VIEW_TYPE = "feedback_view_type";
+	String KEY_PRODUCT_TYPE = "product_type";
+	String KEY_ORDER_ID = "order_id";
 }
