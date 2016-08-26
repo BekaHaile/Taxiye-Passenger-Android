@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -30,7 +29,6 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -151,7 +149,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         buttonEndRideSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.finish();
+                backPressed();
             }
         });
 
@@ -163,7 +161,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 intent.putExtra("message", "This is my message!");
                 intent.putExtra("open_type", 1);
                 LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
-                activity.performBackPressed();
+                backPressed();
             }
         });
 
@@ -289,17 +287,16 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                activity.finish();
+                                                backPressed();
                                             }
                                         }, 3000);
                                     } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
                                             ) {
-                                        activity.finish();
+                                        backPressed();
                                     }
                                 } else if(rating == 0) {
                                     // for bad rating
-                                    if(BuildConfig.DEBUG_MODE)
-                                        Toast.makeText(activity, "Bad rating! Open support fragment", Toast.LENGTH_LONG).show();
+
                                 }
                             }
                         } catch (Exception e) {
@@ -458,7 +455,16 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         intent.putExtra(Constants.KEY_ORDER_ID, orderId);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-        activity.performBackPressed();
+        backPressed();
+    }
+
+    private void backPressed() {
+        try {
+            activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            activity.getSupportFragmentManager().popBackStackImmediate();
+        }
     }
 
     @Override
