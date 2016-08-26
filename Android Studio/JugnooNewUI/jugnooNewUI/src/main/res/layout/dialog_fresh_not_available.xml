@@ -67,23 +67,22 @@
                 android:visibility="gone"
                 />
 
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="322px"
+                android:layout_height="80px"
+                android:background="@drawable/button_theme_round_selector"
+                android:singleLine="true"
+                android:text="@string/ok"
+                android:layout_gravity="center_horizontal"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:layout_marginBottom="20px"
+                android:layout_marginTop="20px"
+                android:textSize="@dimen/text_size_36"/>
 
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnOk"
-            android:layout_width="322px"
-            android:layout_height="80px"
-            android:background="@drawable/button_theme_round_selector"
-            android:singleLine="true"
-            android:text="@string/ok"
-            android:layout_gravity="center_horizontal"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:layout_marginBottom="20px"
-            android:layout_marginTop="20px"
-            android:textSize="@dimen/text_size_36"/>
 
 
     </LinearLayout>
