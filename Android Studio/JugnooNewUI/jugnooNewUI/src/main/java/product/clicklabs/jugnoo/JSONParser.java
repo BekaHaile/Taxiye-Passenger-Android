@@ -389,6 +389,7 @@ public class JSONParser implements Constants {
             double amount = jFatafatData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
             String feedbackDeliveryDate = jFatafatData.optString(KEY_FEEDBACK_DATE, "");
             int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
+            int isFatafatEnabled = jFatafatData.optInt(KEY_FATAFAT_ENABLED, 1);
 
             PopupData popupData = null;
             try {
@@ -429,7 +430,7 @@ public class JSONParser implements Constants {
             } catch (Exception e){ e.printStackTrace(); }
 
             Data.setFreshData(new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType));
+                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled));
 
             try {
                 if(Data.getFreshData().getPromoCoupons() == null){

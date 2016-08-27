@@ -157,7 +157,10 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         linearLayoutSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(editTextSearch.getText().toString().length() < 1) {
+                    linearLayoutSearch.setVisibility(View.GONE);
+                    homeActivity.locationSearchShown = false;
+                }
             }
         });
         mGoogleApiClient = new GoogleApiClient

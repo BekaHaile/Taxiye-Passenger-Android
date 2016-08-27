@@ -234,7 +234,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		if(activity instanceof RideTransactionsActivity){
 			((RideTransactionsActivity)activity).setTitle(MyApplication.getInstance().ACTIVITY_NAME_HISTORY);
 		} else if(activity instanceof SupportActivity){
-			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.ride_history));
+			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.history));
 		}
 	}
 

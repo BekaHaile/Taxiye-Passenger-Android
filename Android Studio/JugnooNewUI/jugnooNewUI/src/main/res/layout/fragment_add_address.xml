@@ -142,7 +142,7 @@
         android:background="@color/white_60"
         android:orientation="vertical"
         android:splitMotionEvents="false"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <RelativeLayout
             android:id="@+id/relativeLayoutSearchBar"
@@ -182,6 +182,7 @@
                 android:layout_height="70px"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:visibility="gone"
                 android:layout_marginRight="20px"/>
         </RelativeLayout>
 
@@ -191,6 +192,7 @@
             android:layout_height="match_parent"
             android:divider="@color/transparent"
             android:dividerHeight="0px"
+            android:background="@color/white"
             android:splitMotionEvents="false">
         </product.clicklabs.jugnoo.utils.NonScrollListView>
     </LinearLayout>
