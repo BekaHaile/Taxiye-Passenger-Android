@@ -189,6 +189,15 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 			}
 		});
 
+		try {
+			if(Data.userData.getMealsEnabled() != 1 && Data.userData.getFreshEnabled() != 1 && Data.userData.getDeliveryEnabled() != 1){
+				buttonGetRide.setVisibility(View.VISIBLE);
+			} else{
+				buttonGetRide.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		getRecentRidesAPI(activity, true);
 		setActivityTitle();

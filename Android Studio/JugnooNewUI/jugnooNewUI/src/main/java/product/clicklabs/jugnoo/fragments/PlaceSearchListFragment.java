@@ -51,7 +51,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	private LinearLayout linearLayoutAddFav;
 	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork;
 	private TextView textViewAddHome, textViewAddWork;
-	private ImageView imageViewSep;
+	private ImageView imageViewSep, imageViewSep2;
 
 	private LinearLayout linearLayoutScrollSearch;
 	private NonScrollListView listViewSearch;
@@ -204,6 +204,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		textViewAddHome = (TextView)header.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
 		textViewAddWork = (TextView)header.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
 		imageViewSep = (ImageView) header.findViewById(R.id.imageViewSep);
+		imageViewSep2 = (ImageView) header.findViewById(R.id.imageViewSep2);
 
 		listViewSearch.setAdapter(searchListAdapter);
 
@@ -294,10 +295,17 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 			relativeLayoutAddWork.setVisibility(View.GONE);
 		}
 
-		if(home.equalsIgnoreCase("") || work.equalsIgnoreCase("")){
+		if(home.equalsIgnoreCase("") && work.equalsIgnoreCase("")){
 			imageViewSep.setVisibility(View.VISIBLE);
-		} else{
+			imageViewSep2.setVisibility(View.VISIBLE);
+		}
+		else if(home.equalsIgnoreCase("") || work.equalsIgnoreCase("")){
 			imageViewSep.setVisibility(View.GONE);
+			imageViewSep2.setVisibility(View.VISIBLE);
+		}
+		else{
+			imageViewSep.setVisibility(View.GONE);
+			imageViewSep2.setVisibility(View.GONE);
 		}
 
 	}
@@ -307,6 +315,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		relativeLayoutAddHome.setVisibility(View.GONE);
 		relativeLayoutAddWork.setVisibility(View.GONE);
 		imageViewSep.setVisibility(View.GONE);
+		imageViewSep2.setVisibility(View.GONE);
 	}
 
 
