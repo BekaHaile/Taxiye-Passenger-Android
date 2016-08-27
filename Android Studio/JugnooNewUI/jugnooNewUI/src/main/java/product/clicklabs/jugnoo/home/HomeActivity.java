@@ -789,6 +789,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
         imageViewFabFakeConfirm = (ImageView) findViewById(R.id.imageViewFabFakeConfirm);
+        imageViewFabFake.setVisibility(View.GONE);
 
         imageViewFabFake.setOnClickListener(new OnClickListener() {
             @Override
@@ -2690,6 +2691,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
                             updateConfirmedStateFare();
+
                             fabView.setRelativeLayoutFABVisibility(mode);
                             int dpAsPixels = (int) (200f*scale + 0.5f);
                             fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
@@ -3998,10 +4000,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            if(Prefs.with(HomeActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
+                    Data.userData.getIntegratedJugnooEnabled() == 1) {
+                imageViewFabFake.setVisibility(View.VISIBLE);
+            } else {
+                imageViewFabFake.setVisibility(View.GONE);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 //        genieLayout.setGenieParams();
     }
@@ -4538,14 +4546,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setServiceAvailablityUI(Data.autoData.getFarAwayCity());
                     setupFreshUI();
                     setupInAppCampaignUI();
-                    if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)){
-                        imageViewFabFake.setVisibility(View.GONE);
-                        fabView.menuLabelsRight.setVisibility(View.INVISIBLE);
-                    }else{
-                        imageViewFabFake.setVisibility(View.VISIBLE);
-                        fabView.menuLabelsRight.setVisibility(View.VISIBLE);
+                    if(Data.userData.getIntegratedJugnooEnabled() == 1) {
+                        if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)) {
+                            imageViewFabFake.setVisibility(View.GONE);
+                            fabView.menuLabelsRight.setVisibility(View.INVISIBLE);
+                        } else {
+                            if (Prefs.with(HomeActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                                imageViewFabFake.setVisibility(View.VISIBLE);
+                                fabView.menuLabelsRight.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        fabView.setFABButtons();
                     }
-                    fabView.setFABButtons();
                     if(showPoolIntro) {
 //                        showPoolIntroDialog();
                     }

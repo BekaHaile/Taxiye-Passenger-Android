@@ -130,6 +130,9 @@ public class JSONParser implements Constants {
         int showJugnooJeanie = userData.optInt("jugnoo_sticky", 0);
         int cToDReferralEnabled = userData.optInt("c2d_referral_enabled", 0);
         Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
+        int fabButtonEnable = userData.optInt("fab_button_enabled", 0);
+        Prefs.with(context).save(SPLabels.SHOW_FAB_SETTING, fabButtonEnable);
+        int integratedJugnooEnabled = userData.optInt("integrated_jugnoo_enabled", 0);
 
         if(userData.has("user_saved_addresses")){
             JSONArray userSavedAddressArray = userData.getJSONArray("user_saved_addresses");
@@ -251,7 +254,7 @@ public class JSONParser implements Constants {
                 cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, notificationPreferenceEnabled,
-                mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton, defaultClientId);
+                mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton, defaultClientId, integratedJugnooEnabled);
 
 
         Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);

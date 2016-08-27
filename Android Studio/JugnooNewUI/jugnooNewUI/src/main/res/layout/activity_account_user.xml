@@ -496,13 +496,14 @@
                 android:layout_height="6px"
                 android:background="@drawable/shadow_down" />
 
+            <!-- Pokemon setting button -->
             <LinearLayout
                 android:id="@+id/relativeLayoutPokemon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="26px"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:orientation="vertical"
                 >
                 <RelativeLayout
@@ -547,8 +548,65 @@
                     android:layout_width="match_parent"
                     android:layout_height="6px"
                     android:background="@drawable/shadow_down" />
+
+
             </LinearLayout>
 
+            <!-- FAB setting button -->
+            <LinearLayout
+                android:id="@+id/relativeLayoutFAB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="26px"
+                android:visibility="visible"
+                android:orientation="vertical"
+                >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/top_bar_height"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/white">
+
+
+                    <TextView
+                        android:id="@+id/textViewFAB"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="40px"
+                        android:gravity="center"
+                        android:text="@string/jugnoo_fab"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="28px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewFAB"
+                        android:layout_width="77px"
+                        android:layout_height="50px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30px"
+                        android:src="@drawable/jugnoo_sticky_off"
+                        android:tag="mwar" />
+
+                    <ImageView
+                        android:layout_width="720px"
+                        android:layout_height="2px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@color/text_color_hint"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="6px"
+                    android:background="@drawable/shadow_down" />
+
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"

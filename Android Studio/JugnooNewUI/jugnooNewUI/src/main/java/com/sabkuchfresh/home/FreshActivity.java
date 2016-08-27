@@ -379,9 +379,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         super.onResume();
         try {
             mBus.register(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         if (!HomeUtil.checkIfUserDataNull(this)) {
             menuBar.setUserData();
             topBar.setUserData();
@@ -394,9 +392,21 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             } else {
                 locationFetcher.connect();
             }
-
         }
 
+        if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
+                Data.userData.getIntegratedJugnooEnabled() == 1) {
+            if((getFreshFragment() != null && !getFreshFragment().isHidden()) ||
+                    (getMealFragment() != null && !getMealFragment().isHidden())) {
+                fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
+                fabView.setFABMenuDrawable();
+            }
+        } else{
+            fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -621,9 +631,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             textViewCheckout.setVisibility(View.GONE);
             relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
             //imageViewFabFake.setVisibility(View.VISIBLE);
-            fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
-            //setFabButtons();
-            fabView.setFABMenuDrawable();
+            if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
+                fabView.setFABMenuDrawable();
+            }
+
 
             relativeLayoutCartNew.setVisibility(View.VISIBLE);
             linearLayoutCheckout.setVisibility(View.GONE);
@@ -649,10 +661,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             relativeLayoutSort.setVisibility(View.VISIBLE);
             relativeLayoutCart.setVisibility(View.GONE);
 
-            //imageViewFabFake.setVisibility(View.VISIBLE);
-            fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
-            //setFabButtons();
-            fabView.setFABMenuDrawable();
+            if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 0) == 1) {
+                fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
+                fabView.setFABMenuDrawable();
+            }
 
             topBar.title.setVisibility(View.VISIBLE);
             topBar.title.setText(getResources().getString(R.string.meals));

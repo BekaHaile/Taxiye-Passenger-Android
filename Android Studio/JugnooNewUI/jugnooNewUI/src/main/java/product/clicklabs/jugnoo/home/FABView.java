@@ -109,21 +109,26 @@ public class FABView {
 
     public void setRelativeLayoutFABVisibility(PassengerScreenMode passengerScreenMode){
         //relativeLayoutFAB.setVisibility(View.INVISIBLE);
-        if(passengerScreenMode != null) {
-            if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
-                    && !((HomeActivity)activity).confirmedScreenOpened)
-                    || passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
-                relativeLayoutFAB.setVisibility(View.INVISIBLE);
-                ((HomeActivity)activity).getImageViewFabFake().setVisibility(View.VISIBLE);
-            }else{
-                relativeLayoutFAB.setVisibility(View.VISIBLE);
+        if(Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
+                Data.userData.getIntegratedJugnooEnabled() == 1) {
+            if (passengerScreenMode != null) {
+                if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
+                        && !((HomeActivity) activity).confirmedScreenOpened)
+                        || passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
+                    relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                    ((HomeActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
+                } else {
+                    relativeLayoutFAB.setVisibility(View.VISIBLE);
+                }
+            } else {
+                if (activity instanceof FreshActivity) {
+                    relativeLayoutFAB.setVisibility(View.VISIBLE);
+                } else {
+                    relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                }
             }
         } else{
-            if(activity instanceof FreshActivity){
-                relativeLayoutFAB.setVisibility(View.VISIBLE);
-            } else {
-                relativeLayoutFAB.setVisibility(View.INVISIBLE);
-            }
+            relativeLayoutFAB.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -157,7 +162,8 @@ public class FABView {
     }
 
     public void setFABButtons(){
-        if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)){
+        if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
+                && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
             relativeLayoutFAB.setVisibility(View.GONE);
         } else {
             relativeLayoutFAB.setVisibility(View.INVISIBLE);
