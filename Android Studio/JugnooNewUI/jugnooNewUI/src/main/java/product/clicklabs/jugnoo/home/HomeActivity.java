@@ -4144,7 +4144,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 menuBar.menuAdapter.onClickAction(MenuInfoTags.GAME.getTag());
             }
             else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == Data.deepLinkIndex){
-                menuBar.menuAdapter.onClickAction(MenuInfoTags.JUGNOO_FRESH.getTag());
+                if(Data.userData.getFreshEnabled() == 1) {
+                    menuBar.menuAdapter.onClickAction(MenuInfoTags.FRESH.getTag());
+                }
+            }
+            else if(AppLinkIndex.MEAL_PAGE.getOrdinal() == Data.deepLinkIndex){
+                if(Data.userData.getMealsEnabled() == 1) {
+                    menuBar.menuAdapter.onClickAction(MenuInfoTags.MEALS.getTag());
+                }
+            }
+            else if(AppLinkIndex.DELIVERY_PAGE.getOrdinal() == Data.deepLinkIndex){
+                if(Data.userData.getDeliveryEnabled() == 1) {
+                    menuBar.menuAdapter.onClickAction(MenuInfoTags.DELIVERY.getTag());
+                }
             }
 
         } catch(Exception e){

@@ -225,6 +225,7 @@ public interface Constants {
 	String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
 	String KEY_LAST_PUSH_TIME_DIFF = "last_push_time_diff";
 	String KEY_PUSH_CLICKED = "push_clicked";
+	String KEY_TAB_INDEX = "tab_index";
 
 
 

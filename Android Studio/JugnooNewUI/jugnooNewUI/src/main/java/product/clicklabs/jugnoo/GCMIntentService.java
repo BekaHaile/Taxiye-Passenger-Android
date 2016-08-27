@@ -121,7 +121,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
     @SuppressWarnings("deprecation")
     private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
-											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush) {
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex) {
 
         try {
             long when = System.currentTimeMillis();
@@ -136,6 +136,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				deepindex = showDialog == 1 ? -1 : deepindex;
 				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
 				notificationIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
+				notificationIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
 
 				if(HomeActivity.appInterruptHandler != null && showDialog == 1){
 					HomeActivity.appInterruptHandler.onShowDialogPush();
@@ -333,7 +334,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 					int deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
 					String message1 = jObj.optString(KEY_MESSAGE, "");
+					int tabIndex = jObj.optInt(KEY_TAB_INDEX, 0);
 					int playSound = jObj.optInt(KEY_PLAY_SOUND, 1);
+
+					if(deepindex == -1 && tabIndex > 0){
+						deepindex = AppLinkIndex.FRESH_PAGE.getOrdinal();
+					}
 
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -475,12 +481,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 							if(!"".equalsIgnoreCase(picture)){
 								deepindex = jObj.optInt(KEY_DEEPINDEX, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
-								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush);
+								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush, tabIndex);
 							}
 							else{
 								deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
 								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
-										null, url, playSound, showDialog, showPush);
+										null, url, playSound, showDialog, showPush, tabIndex);
 							}
 
 							Prefs.with(this).save(SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
@@ -521,7 +527,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							startActivity(otpConfirmScreen);
 						}
 						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1,
-								null, "", playSound, 0, 1);
+								null, "", playSound, 0, 1, 0);
 
 					}
 					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
@@ -628,7 +634,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 	public void bigImageNotifAsync(final String title, final String message, final int deepindex,
 								   final String picture, final String url, final int playSound,
-								   final int showDialog, final int showPush){
+								   final int showDialog, final int showPush, final int tabIndex){
 		try {
 			RequestCreator requestCreator = Picasso.with(GCMIntentService.this).load(picture);
 			Target target = new Target() {
@@ -636,11 +642,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
 					try {
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID,
-								deepindex, bitmap, url, playSound, showDialog, showPush);
+								deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex);
 					} catch (Exception e) {
 						e.printStackTrace();
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex,
-								null, url, playSound, showDialog, showPush);
+								null, url, playSound, showDialog, showPush, tabIndex);
 					}
 				}
 

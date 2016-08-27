@@ -298,8 +298,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutSubFresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), getLatLng());
+                    onClickAction(MenuInfoTags.FRESH.getTag());
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
@@ -307,9 +306,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutSubMeals.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), getLatLng());
+                    onClickAction(MenuInfoTags.MEALS.getTag());
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                    holder.imageViewArrow.setRotation(270);
                 }
             });
 
@@ -318,6 +317,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 public void onClick(View v) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                    holder.imageViewArrow.setRotation(270);
                 }
             });
         }
@@ -534,6 +534,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.ABOUT, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "About");
+            } else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
+                drawerLayout.closeDrawer(GravityCompat.START);
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), getLatLng());
+            } else if(MenuInfoTags.MEALS.getTag().equalsIgnoreCase(tag)){
+                drawerLayout.closeDrawer(GravityCompat.START);
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), getLatLng());
             }
         } catch (Exception e) {
             e.printStackTrace();
