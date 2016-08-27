@@ -7017,7 +7017,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 @Override
                 public void onInAppCustomerSupportClick(View view) {
-                    startActivity(new Intent(HomeActivity.this, SupportActivity.class));
+                    Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
+                    intent.putExtra(INTENT_KEY_FROM_BAD, 1);
+                    intent.putExtra(KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
+                    startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(SUPPORT_OPTIONS_THROUGH_EMERGENCY);
                     FlurryEventLogger.eventGA(HELP, "help pop up", "in app customer supoort");

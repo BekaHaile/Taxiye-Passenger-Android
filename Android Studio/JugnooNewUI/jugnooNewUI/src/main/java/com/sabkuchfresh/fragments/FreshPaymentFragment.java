@@ -266,8 +266,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.PAYMENT, activity.productList);
         fetchWalletBalance();
-        orderPaymentModes();
-        setPaymentOptionUI();
+
 
 
         return rootView;
@@ -366,11 +365,17 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             activity.setPaymentOption(paymentOption);
             setPaymentOptionUI();
         }
+
+        @Override
+        public void onWalletAdd(PaymentOption paymentOption) {
+            activity.setPaymentOption(paymentOption);
+        }
     };
 
     @Override
     public void onResume() {
         super.onResume();
+        orderPaymentModes();
         setPaymentOptionUI();
     }
 
@@ -413,7 +418,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     }
                 });
             }
-            apiFetchWalletBalance.getBalance(false);
+            apiFetchWalletBalance.getBalance(true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -903,6 +908,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
     public interface CallbackPaymentOptionSelector{
         void onPaymentOptionSelected(PaymentOption paymentOption);
+        void onWalletAdd(PaymentOption paymentOption);
     }
 
     private void orderPaymentModes(){

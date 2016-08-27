@@ -22,9 +22,10 @@
         android:id="@+id/linearLayoutNoRides"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:orientation="vertical"
         android:gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250px"
         >
         <ImageView
             android:layout_width="241px"
@@ -44,17 +45,14 @@
             android:layout_marginTop="30px"
             />
 
+        <Button
+            android:id="@+id/buttonGetRide"
+            style="@style/ButtonTheme"
+            android:layout_marginTop="240px"
+            android:text="GET A RIDE"
+            android:visibility="visible"
+            />
+
     </LinearLayout>
-
-
-    <Button
-        android:id="@+id/buttonGetRide"
-        style="@style/ButtonTheme"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="70px"
-        android:text="GET A RIDE"
-        android:visibility="visible"
-        />
 
 </RelativeLayout>
