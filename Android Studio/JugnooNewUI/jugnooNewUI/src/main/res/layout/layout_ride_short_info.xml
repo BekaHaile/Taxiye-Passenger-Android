@@ -7,86 +7,64 @@
     >
 
     <RelativeLayout
+        android:id="@+id/relativeLayoutIssueWithRide"
         android:layout_width="match_parent"
-        android:layout_height="110px">
-
+        android:layout_height="100px"
+        >
         <ImageView
             android:id="@+id/imageViewProductType"
-            android:layout_width="71px"
-            android:layout_height="71px"
+            android:layout_width="45px"
+            android:layout_height="37px"
             android:tag="mwar"
             android:src="@drawable/ic_support_auto"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="34px"
+            android:layout_marginLeft="36px"
             />
 
-        <LinearLayout
-            android:layout_width="400px"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/imageViewProductType"
-            android:layout_marginLeft="30px"
-            >
-
-            <TextView
-                android:id="@+id/textViewTransactionId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:textColor="@color/text_color"
-                android:text="@string/transaction_id_format"
-                android:textSize="@dimen/text_size_24"
-                />
-
-            <TextView
-                android:id="@+id/textViewDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="2"
-                android:textColor="@color/text_color_blue"
-                android:text="PB65AC0123"
-                android:textSize="@dimen/text_size_26"
-                android:layout_marginTop="2px"
-                />
-
-        </LinearLayout>
 
         <TextView
-            android:id="@+id/textViewTransactionTotal"
-            android:layout_width="200px"
+            android:id="@+id/textViewIssueWithRide"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:textColor="@color/text_color"
-            android:text="@string/rupee_0"
-            android:textSize="@dimen/text_size_44"
+            android:layout_toRightOf="@+id/imageViewProductType"
+            android:textColor="@color/text_color_light_selector"
+            android:text="@string/issue_with_the_recent_ride"
+            android:textSize="@dimen/text_size_32"
+            android:layout_marginLeft="24px"
+            android:layout_centerVertical="true"
+            />
+
+
+        <ImageView
+            android:layout_width="18px"
+            android:layout_height="30px"
+            android:tag="mwar"
+            android:src="@drawable/ic_arrow_orange_bold"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="40px"
-            android:gravity="right"
+            android:layout_marginRight="36px"
             />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:background="@color/text_color_hint"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
             android:layout_alignParentBottom="true"
             />
-
     </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="120px"
+        android:layout_height="150px"
         >
 
         <LinearLayout
-            android:layout_width="300px"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
+            android:layout_toLeftOf="@+id/relativeLayoutDriverImage"
             >
 
             <TextView
@@ -96,7 +74,7 @@
                 android:maxLines="2"
                 android:textColor="@color/text_color_light"
                 android:text="Driver Name"
-                android:textSize="@dimen/text_size_24"
+                android:textSize="@dimen/text_size_30"
                 android:gravity="center"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="20px"
@@ -109,7 +87,7 @@
                 android:maxLines="2"
                 android:textColor="@color/text_color"
                 android:text="PB65AC0123"
-                android:textSize="@dimen/text_size_26"
+                android:textSize="@dimen/text_size_30"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="20px"
                 />
@@ -117,33 +95,34 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="300px"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
             android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/relativeLayoutDriverImage"
             >
 
             <TextView
-                android:id="@+id/textViewDate"
+                android:id="@+id/textViewTripTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:textColor="@color/text_color_light"
-                android:text="@string/ride_date"
-                android:textSize="@dimen/text_size_24"
+                android:text="@string/trip_total"
+                android:textSize="@dimen/text_size_30"
                 android:layout_marginRight="10px"
                 android:layout_marginLeft="10px"
                 />
 
             <TextView
-                android:id="@+id/textViewDateValue"
+                android:id="@+id/textViewTripTotalValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:textColor="@color/text_color"
-                android:text="Aug 15, 2016"
-                android:textSize="@dimen/text_size_26"
+                android:text="@string/rupee_0"
+                android:textSize="@dimen/text_size_44"
                 android:layout_marginRight="10px"
                 android:layout_marginLeft="10px"
                 />
@@ -152,15 +131,15 @@
         
         <ImageView
             android:layout_width="2px"
-            android:layout_height="40px"
+            android:layout_height="68px"
             android:layout_centerInParent="true"
             android:background="@color/text_color_hint"
             />
 
         <RelativeLayout
             android:id="@+id/relativeLayoutDriverImage"
-            android:layout_width="90px"
-            android:layout_height="90px"
+            android:layout_width="96px"
+            android:layout_height="96px"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:tag="mwar"
@@ -169,8 +148,8 @@
             >
             <ImageView
                 android:id="@+id/imageViewDriver"
-                android:layout_width="84px"
-                android:layout_height="84px"
+                android:layout_width="94px"
+                android:layout_height="94px"
                 android:layout_centerInParent="true"
                 android:tag="mwar" />
         </RelativeLayout>
@@ -179,10 +158,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@drawable/bg_white_divider_color_gradient"
+            android:background="@color/text_color_hint"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
             />
 
     </RelativeLayout>
@@ -191,8 +168,19 @@
         android:id="@+id/relativeLayoutStartEnd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         >
+
+        <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color_light"
+            android:text="@string/start"
+            android:textSize="@dimen/text_size_24"
+            android:layout_marginLeft="80px"
+            android:layout_marginTop="26px"
+            />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -201,6 +189,7 @@
             android:layout_marginLeft="45px"
             android:layout_marginTop="20px"
             android:gravity="center_horizontal"
+            android:layout_below="@+id/textViewDate"
             >
             <ImageView
                 android:id="@+id/imageViewStart"
@@ -213,7 +202,7 @@
             <ImageView
                 android:id="@+id/imageViewStartEndLine"
                 android:layout_width="4px"
-                android:layout_height="58px"
+                android:layout_height="78px"
                 android:tag="mwar"
                 android:src="@drawable/ic_start_end_line"
                 />
@@ -233,8 +222,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginTop="20px"
-            android:layout_marginBottom="20px"
+            android:layout_marginTop="10px"
+            android:layout_marginBottom="30px"
+            android:layout_below="@+id/textViewDate"
+            android:layout_marginLeft="80px"
             >
 
             <TextView
@@ -243,8 +234,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_color"
                 android:text="@string/start"
-                android:textSize="@dimen/text_size_26"
-                android:layout_marginLeft="80px"
+                android:textSize="@dimen/text_size_28"
                 />
             <TextView
                 android:id="@+id/textViewStartValue"
@@ -253,9 +243,8 @@
                 android:maxLines="2"
                 android:textColor="@color/text_color_light"
                 android:text="@string/sample_address"
-                android:textSize="@dimen/text_size_22"
+                android:textSize="@dimen/text_size_24"
                 android:layout_marginTop="5px"
-                android:layout_marginLeft="80px"
                 android:layout_marginRight="20px"
                 />
 
@@ -266,9 +255,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_color"
                 android:text="@string/end"
-                android:textSize="@dimen/text_size_26"
+                android:textSize="@dimen/text_size_28"
                 android:layout_marginTop="20px"
-                android:layout_marginLeft="80px"
                 />
             <TextView
                 android:id="@+id/textViewEndValue"
@@ -277,9 +265,8 @@
                 android:maxLines="2"
                 android:textColor="@color/text_color_light"
                 android:text="@string/sample_address"
-                android:textSize="@dimen/text_size_22"
+                android:textSize="@dimen/text_size_24"
                 android:layout_marginTop="5px"
-                android:layout_marginLeft="80px"
                 android:layout_marginRight="20px"
                 />
 
@@ -294,10 +281,25 @@
         android:id="@+id/linearLayoutOrderData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20px"
-        android:layout_marginBottom="20px"
+        android:layout_marginTop="22px"
+        android:layout_marginBottom="30px"
         android:orientation="vertical"
+        android:visibility="visible"
         >
+
+        <TextView
+            android:id="@+id/textViewStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:textColor="@color/text_color_blue"
+            android:text="Status"
+            android:textSize="@dimen/text_size_30"
+            android:gravity="center"
+            android:layout_marginLeft="94px"
+            android:layout_marginRight="20px"
+            android:layout_marginBottom="8px"
+            />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -310,7 +312,7 @@
                 android:tag="mwar"
                 android:src="@drawable/ic_support_location_pin"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="50px"
+                android:layout_marginLeft="44px"
                 />
 
             <TextView
@@ -320,7 +322,7 @@
                 android:maxLines="2"
                 android:textColor="@color/text_color"
                 android:text="PB65AC0123"
-                android:textSize="@dimen/text_size_26"
+                android:textSize="@dimen/text_size_30"
                 android:layout_marginLeft="24px"
                 android:layout_marginRight="36px"
                 android:layout_toRightOf="@+id/imageViewOrderLocPin"
@@ -328,95 +330,6 @@
                 />
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayoutOrderItems"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20px"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@drawable/bg_white_divider_color_gradient"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
-                android:layout_marginBottom="20px"
-                />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/textViewOrderItems"
-                    android:layout_width="580px"
-                    android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:textColor="@color/text_color"
-                    android:text="PB65AC0123"
-                    android:textSize="@dimen/text_size_26"
-                    android:layout_marginLeft="46px"
-                    android:layout_centerVertical="true"
-                    />
-
-                <TextView
-                    android:id="@+id/textViewOrderItemsCount"
-                    android:layout_width="54px"
-                    android:layout_height="54px"
-                    android:maxLines="2"
-                    android:textColor="@color/text_color"
-                    android:text="+3"
-                    android:gravity="center"
-                    android:textSize="@dimen/text_size_26"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="44px"
-                    android:background="@drawable/circle_divider_color"
-                    />
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
     </LinearLayout>
-    
-
-    <RelativeLayout
-        android:id="@+id/relativeLayoutIssueWithRide"
-        android:layout_width="match_parent"
-        android:layout_height="84px"
-        >
-
-        <TextView
-            android:id="@+id/textViewIssueWithRide"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/text_color_light_selector"
-            android:text="@string/issue_with_the_recent_ride"
-            android:textSize="@dimen/text_size_30"
-            android:layout_marginLeft="30px"
-            android:layout_centerVertical="true"
-            />
-
-
-        <ImageView
-            android:layout_width="19px"
-            android:layout_height="34px"
-            android:tag="mwar"
-            android:src="@drawable/ic_back_black"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="30px"
-            />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@color/text_color_hint"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
-            />
-    </RelativeLayout>
 
 </LinearLayout>

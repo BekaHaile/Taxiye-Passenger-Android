@@ -125,7 +125,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 								new TransactionUtils().openItemInFragment(activity,
 										((SupportActivity) activity).getContainer(),
 										Integer.parseInt(endRideData.engagementId),
-										endRideData.getRideDate(),
+										endRideData.getEngagementDate(),
 										activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber(),
 										-1, "");
 
@@ -133,7 +133,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 								new TransactionUtils().openItemInFragment(activity,
 										((RideTransactionsActivity) activity).getContainer(),
 										Integer.parseInt(endRideData.engagementId),
-										endRideData.getRideDate(),
+										endRideData.getEngagementDate(),
 										activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber(),
 										-1, "");
 							}
