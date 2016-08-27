@@ -49,7 +49,7 @@ public class UserData {
 	private int paytmEnabled;
 	private double paytmBalance = -1;
 
-	private int mobikwikEnabled;
+	private int mobikwikEnabled, integratedJugnooEnabled;
 	private double mobikwikBalance = -1;
 
 	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton;
@@ -78,7 +78,8 @@ public class UserData {
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
 					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled,
-					int mealsEnabled, int freshEnabled, int deliveryEnabled, int inviteFriendButton, String defaultClientId){
+					int mealsEnabled, int freshEnabled, int deliveryEnabled, int inviteFriendButton, String defaultClientId,
+					int integratedJugnooEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -143,6 +144,7 @@ public class UserData {
 		this.inviteFriendButton = inviteFriendButton;
 
 		this.defaultClientId = defaultClientId;
+		this.integratedJugnooEnabled = integratedJugnooEnabled;
 	}
 
 	private void checkUserImage(){
@@ -597,6 +599,13 @@ public class UserData {
 		this.defaultClientId = defaultClientId;
 	}
 
+	public int getIntegratedJugnooEnabled() {
+		return integratedJugnooEnabled;
+	}
+
+	public void setIntegratedJugnooEnabled(int integratedJugnooEnabled) {
+		this.integratedJugnooEnabled = integratedJugnooEnabled;
+	}
 
 	public String getTotalCouponCount() {
 		int count = 0;

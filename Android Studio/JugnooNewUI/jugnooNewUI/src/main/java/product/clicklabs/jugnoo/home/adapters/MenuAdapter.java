@@ -256,6 +256,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(holder.imageViewProfile);
                     }
                 }
+                holder.linearLayoutCategories.setVisibility(View.GONE);
                 setSubCategories(holder);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -553,29 +554,35 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void setSubCategories(ViewHeaderHolder holder){
-        if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)){
-            holder.linearLayoutCategories.setVisibility(View.GONE);
-            holder.linearLayoutSubCategories.setVisibility(View.GONE);
-        } else {
-            holder.linearLayoutCategories.setVisibility(View.VISIBLE);
-            //holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
-            if (Data.userData.getFreshEnabled() == 1) {
-                holder.linearLayoutSubFresh.setVisibility(View.VISIBLE);
-            } else {
-                holder.linearLayoutSubFresh.setVisibility(View.GONE);
-            }
+        try {
+            if(Data.userData.getIntegratedJugnooEnabled() == 1) {
+                if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)) {
+                    holder.linearLayoutCategories.setVisibility(View.GONE);
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                } else {
+                    holder.linearLayoutCategories.setVisibility(View.VISIBLE);
+                    //holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
+                    if (Data.userData.getFreshEnabled() == 1) {
+                        holder.linearLayoutSubFresh.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.linearLayoutSubFresh.setVisibility(View.GONE);
+                    }
 
-            if (Data.userData.getMealsEnabled() == 1) {
-                holder.linearLayoutSubMeals.setVisibility(View.VISIBLE);
-            } else {
-                holder.linearLayoutSubMeals.setVisibility(View.GONE);
-            }
+                    if (Data.userData.getMealsEnabled() == 1) {
+                        holder.linearLayoutSubMeals.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.linearLayoutSubMeals.setVisibility(View.GONE);
+                    }
 
-            if (Data.userData.getDeliveryEnabled() == 1) {
-                holder.linearLayoutSubDelivery.setVisibility(View.VISIBLE);
-            } else {
-                holder.linearLayoutSubDelivery.setVisibility(View.GONE);
+                    if (Data.userData.getDeliveryEnabled() == 1) {
+                        holder.linearLayoutSubDelivery.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.linearLayoutSubDelivery.setVisibility(View.GONE);
+                    }
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

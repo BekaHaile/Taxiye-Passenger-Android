@@ -85,10 +85,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
     LinearLayout linearLayoutLogout, linearLayoutAbout;
 
-	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie, imageViewPokemon;
+	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie, imageViewPokemon, imageViewFAB;
 	RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
-    LinearLayout relativeLayoutPokemon;
-	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon;
+    LinearLayout relativeLayoutPokemon, relativeLayoutFAB;
+	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
     private boolean setJeanieState;
@@ -175,6 +175,24 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             }
         }
 
+        relativeLayoutFAB = (LinearLayout) findViewById(R.id.relativeLayoutFAB);
+        textViewFAB = (TextView)findViewById(R.id.textViewFAB); textViewFAB.setTypeface(Fonts.mavenMedium(this));
+        imageViewFAB = (ImageView)findViewById(R.id.imageViewFAB);
+        relativeLayoutFAB.setVisibility(View.GONE);
+        try {
+            if(Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_FAB_SETTING, 0) == 1 &&
+                    Data.userData.getIntegratedJugnooEnabled() == 1){
+                relativeLayoutFAB.setVisibility(View.VISIBLE);
+                if(Prefs.with(AccountActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_on);
+                } else {
+                    imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_off);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         imageViewPokemon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,6 +202,19 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                 } else {
                     imageViewPokemon.setImageResource(R.drawable.jugnoo_sticky_on);
                     Prefs.with(AccountActivity.this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 1);
+                }
+            }
+        });
+
+        imageViewFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Prefs.with(AccountActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 0) == 1) {
+                    imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_off);
+                    Prefs.with(AccountActivity.this).save(Constants.FAB_ENABLED_BY_USER, 0);
+                } else {
+                    imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_on);
+                    Prefs.with(AccountActivity.this).save(Constants.FAB_ENABLED_BY_USER, 1);
                 }
             }
         });
