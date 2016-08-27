@@ -87,7 +87,7 @@
                         android:layout_width="156px"
                         android:layout_height="match_parent"
                         android:background="@drawable/background_white_grey_light_selector"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <View
                             android:layout_width="2px"
@@ -99,11 +99,11 @@
 
                         <ImageView
                             android:id="@+id/imageViewCart"
-                            android:layout_width="58px"
-                            android:layout_height="53px"
+                            android:layout_width="46px"
+                            android:layout_height="36px"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="40px"
-                            android:src="@drawable/ic_cart"
+                            android:src="@drawable/ic_cart_empty"
                             android:tag="mwar" />
 
                         <TextView
@@ -111,16 +111,16 @@
                             android:layout_width="45px"
                             android:layout_height="45px"
                             android:layout_alignParentRight="true"
-                            android:layout_marginRight="25px"
+                            android:layout_marginRight="45px"
                             android:layout_marginTop="10px"
                             android:background="@drawable/theme_circle_card"
                             android:gravity="center"
                             android:minWidth="45px"
                             android:padding="8px"
-                            android:text="0"
+                            android:text="2"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_24"
-                            android:visibility="gone" />
+                              />
 
                     </RelativeLayout>
                 </RelativeLayout>

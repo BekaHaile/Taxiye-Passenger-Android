@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="90px"
         android:gravity="center_vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         >
 
         <TextView
@@ -40,9 +40,12 @@
             android:visibility="visible"
             />
 
+
+
     </RelativeLayout>
 
-    <View
+    <ImageView
+        android:id="@+id/delivery_line"
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:background="@color/divider_color"
@@ -54,6 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="90px"
         android:gravity="center_vertical"
+        android:background="@color/white"
         >
 
         <TextView

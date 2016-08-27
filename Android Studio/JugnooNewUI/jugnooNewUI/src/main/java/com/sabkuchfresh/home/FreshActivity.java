@@ -526,15 +526,16 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         Utils.getMoneyDecimalFormat().format(totalPrice)));
                 if (totalQuantity > 0) {
                     textViewCartItemsCount.setVisibility(View.VISIBLE);
-                    if(drawerLayout.getDrawerLockMode(GravityCompat.START)== DrawerLayout.LOCK_MODE_UNLOCKED)
-                    textViewCartItemsCount.setText(String.valueOf(totalQuantity));
-                    imageViewCartNew.setBackgroundResource(R.drawable.ic_cart_fill);
                     textViewCartItemsCountNew.setVisibility(View.VISIBLE);
-                    textViewCartItemsCountNew.setText(String.valueOf(totalQuantity));
+                    if(drawerLayout.getDrawerLockMode(GravityCompat.START)== DrawerLayout.LOCK_MODE_UNLOCKED)
+                    imageViewCartNew.setBackgroundResource(R.drawable.ic_cart_fill);
+                    String total = String.valueOf(totalQuantity);
+                    textViewCartItemsCount.setText(total);
+                    textViewCartItemsCountNew.setText(total);
                 } else {
                     textViewCartItemsCount.setVisibility(View.GONE);
-                    imageViewCartNew.setBackgroundResource(R.drawable.ic_cart_empty);
                     textViewCartItemsCountNew.setVisibility(View.GONE);
+                    imageViewCartNew.setBackgroundResource(R.drawable.ic_cart_empty);
                 }
                 if (getFreshCartItemsFragment() != null) {
                     if (this.getFreshCartItemsFragment().isVisible() && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
@@ -804,7 +805,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             textViewCheckout.setVisibility(View.GONE);
             relativeLayoutCheckoutBar.setVisibility(View.GONE);
             topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.fresh));
             topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
         }

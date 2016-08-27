@@ -1,7 +1,6 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -113,18 +112,20 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                 if(!TextUtils.isEmpty(slots.get(position).getCaddress())) {
                     ((ViewHolderHeader) holder).addressText.setText(slots.get(position).getCaddress());
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setClickable(false);
-                    ((ViewHolderHeader) holder).addressText.setTextColor(Color.parseColor("#595968"));
+                    ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.text_color));
                     ((ViewHolderHeader) holder).textViewDeliveryAddress.setVisibility(View.VISIBLE);
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setText(activity.getResources().getString(R.string.delivery_address));
                 } else {
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setVisibility(View.GONE);
 //                    ((ViewHolderHeader)holder).textViewDeliveryAddress.setText(activity.getResources().getString(R.string.add_address));
-                    ((ViewHolderHeader) holder).addressText.setTextColor(Color.parseColor("#4DB831"));
+                    ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.theme_color));
                     ((ViewHolderHeader) holder).addressText.setText(activity.getResources().getString(R.string.add_address));
                 }
 
-                if(TextUtils.isEmpty(slots.get(position).getIsdelivery()))
-                    ((ViewHolderHeader)holder).deliveryLayout.setVisibility(View.GONE);
+                if(TextUtils.isEmpty(slots.get(position).getIsdelivery())) {
+                    ((ViewHolderHeader) holder).deliveryLayout.setVisibility(View.GONE);
+                    ((ViewHolderHeader) holder).deliveryLayout.setVisibility(View.GONE);
+                }
 
 
 
@@ -260,7 +261,8 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
         public RelativeLayout deliveryAddress, deliveryLayout;
         public TextView textViewTotalAmount, textViewTotalAmountValue, textViewDeliveryCharges, textViewDeliveryChargesValue,
 //                textViewAmountPayable, textViewAmountPayableValue,
-textViewDeliveryTime, textViewDeliveryAddress, addressText;
+            textViewDeliveryTime, textViewDeliveryAddress, addressText;
+        public ImageView delivery_line;
 
 
         public ViewHolderHeader(View itemView, Context context) {
@@ -277,6 +279,7 @@ textViewDeliveryTime, textViewDeliveryAddress, addressText;
             textViewDeliveryAddress = (TextView)itemView.findViewById(R.id.textViewDeliveryAddress); textViewDeliveryAddress.setTypeface(Fonts.mavenRegular(context));
             textViewDeliveryTime = (TextView)itemView.findViewById(R.id.textViewDeliveryTime); textViewDeliveryTime.setTypeface(Fonts.mavenRegular(context));
             addressText = (TextView)itemView.findViewById(R.id.address_text); addressText.setTypeface(Fonts.mavenRegular(context));
+            delivery_line = (ImageView) itemView.findViewById(R.id.delivery_line);
 
         }
     }
