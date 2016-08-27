@@ -77,7 +77,7 @@ public class TransactionUtils {
 			}
 		}
 
-		if(singleItemToOpen != null && singleItemParentName != null){
+		if(singleItemToOpen != null && singleItemParentName != null && singleItemToOpen.getActionType() != ActionType.NEXT_LEVEL.getOrdinal()){
 			if(!checkIfFragmentAdded(activity, SupportFAQItemFragment.class.getName())) {
 				activity.getSupportFragmentManager().beginTransaction()
 						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
@@ -90,6 +90,8 @@ public class TransactionUtils {
 						.commitAllowingStateLoss();
 				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT_ISSUES);
 			}
+		} else{
+			openItemInFragment(activity, container, engagementId, rideDate, parentName, item, phoneNumber, orderId, orderDate);
 		}
 	}
 
