@@ -661,9 +661,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         } else if (fragment instanceof FreshCartItemsFragment) {
             textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));
             try {
-                String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
-                String split_one = splited[1];
-                if (Double.parseDouble(split_one) < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+//                String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
+//                String split_one = splited[1];
+                if (getTotalPrice() < getProductsResponse().getDeliveryInfo().getMinAmount()) {
                     textViewMinOrder.setVisibility(View.VISIBLE);
                 }
             } catch (Exception e) {
@@ -779,7 +779,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             relativeLayoutCart.setVisibility(View.VISIBLE);
 
             topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.support));
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
         } else if (fragment instanceof HomeFragment) {
@@ -820,6 +819,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     public void deleteCart() {
+        final int type = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
         NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_FRESH_CART_DELETE_CLICKED, null);
         DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
                 getResources().getString(R.string.delete_fresh_cart_message),
@@ -833,7 +833,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         if (frag != null) {
                             frag.deleteCart();
                         }
-                        clearCart();
+
+                        if(type == AppConstant.ApplicationType.FRESH) {
+                            clearCart();
+                        } else {
+                            clearMealCart();
+                        }
+
                     }
                 },
                 new View.OnClickListener() {
@@ -1115,7 +1121,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     public String getSpecialInst() {
-        return splInstr;
+        return splInstr.trim();
     }
 
     public void setSplInstr(String splInstr) {

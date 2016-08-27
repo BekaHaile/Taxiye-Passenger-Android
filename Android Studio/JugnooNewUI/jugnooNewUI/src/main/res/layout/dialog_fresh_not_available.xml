@@ -20,10 +20,10 @@
 
         <ImageView
             android:layout_width="644px"
-            android:layout_height="162px"
+            android:layout_height="210px"
             android:tag="mwar"
             android:src="@drawable/fatafat_not_available"
-            android:layout_marginTop="25px"
+            android:layout_marginTop="5px"
             />
 
 

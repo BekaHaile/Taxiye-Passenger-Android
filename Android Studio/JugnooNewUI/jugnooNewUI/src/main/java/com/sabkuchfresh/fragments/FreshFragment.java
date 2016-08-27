@@ -188,8 +188,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
         if(Data.userData.getPromoSuccess() == 0) {
             showPromoFailedAtSignupDialog();
-        } else if(Data.isfatafat == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
-            Data.isfatafat = AppConstant.IsFatafatEnabled.ENABLED;
+        } else if(Data.getFreshData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
+            Data.getFreshData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
             showPopup();
         } else if(Data.getFreshData().getPopupData() != null) {
             pushDialog = new PushDialog(activity, this);

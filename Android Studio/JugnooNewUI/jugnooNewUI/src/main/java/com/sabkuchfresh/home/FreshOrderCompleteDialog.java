@@ -13,10 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.utils.AppConstant;
+
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by shankar on 3/4/16.
@@ -49,7 +54,11 @@ public class FreshOrderCompleteDialog {
 			dialog.setCanceledOnTouchOutside(true);
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
-			((TextView) dialog.findViewById(R.id.textViewThankYou)).setTypeface(Fonts.mavenRegular(activity));
+			TextView textView = (TextView) dialog.findViewById(R.id.textViewThankYou); textView.setTypeface(Fonts.mavenRegular(activity));
+
+			int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+			if(type == AppConstant.ApplicationType.MEALS)
+				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_meals));
 
 			TextView textViewOrderId = (TextView) dialog.findViewById(R.id.textViewOrderId);
 			textViewOrderId.setTypeface(Fonts.mavenRegular(activity));

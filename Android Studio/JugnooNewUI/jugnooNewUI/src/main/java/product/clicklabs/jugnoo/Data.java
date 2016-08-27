@@ -380,7 +380,7 @@ public class Data {
 			PAYTM_STATUS_INACTIVE = "INACTIVE";
 
 
-	public static int isfatafat = 0;
+	//public static int isfatafat = 0;
 
 
 	public static int tabLinkIndex = 0;

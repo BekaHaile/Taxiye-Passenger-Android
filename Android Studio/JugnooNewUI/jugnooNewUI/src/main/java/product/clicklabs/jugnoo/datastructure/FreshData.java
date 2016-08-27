@@ -18,10 +18,12 @@ public class FreshData {
 	private double amount;
 	private String feedbackDeliveryDate;
 	private int feedbackViewType;
+	private int isFatafatEnabled;
 
 
 	public FreshData(String question, String orderId, int questionType, int pendingFeedback,
-					 ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate, int feedbackViewType) {
+					 ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate,
+					 int feedbackViewType, int isFatafatEnabled) {
 		this.question = question;
 		this.orderId = orderId;
 		this.questionType = questionType;
@@ -31,6 +33,7 @@ public class FreshData {
 		this.amount = amount;
 		this.feedbackDeliveryDate = feedbackDeliveryDate;
 		this.feedbackViewType = feedbackViewType;
+		this.isFatafatEnabled = isFatafatEnabled;
 	}
 
 	public String getQuestion() {
@@ -111,5 +114,13 @@ public class FreshData {
 
 	public void setFeedbackViewType(int feedbackViewType) {
 		this.feedbackViewType = feedbackViewType;
+	}
+
+	public int getIsFatafatEnabled() {
+		return isFatafatEnabled;
+	}
+
+	public void setIsFatafatEnabled(int isFatafatEnabled) {
+		this.isFatafatEnabled = isFatafatEnabled;
 	}
 }

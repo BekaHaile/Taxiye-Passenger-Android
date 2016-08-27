@@ -876,6 +876,7 @@
 	<string name="please_contact_the_helpline">Please contact the helpline</string>
 	<string name="place_order_confirmation">Are you sure you want to place your order?</string>
 	<string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
+	<string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith Jugnoo Meals!</string>
 	<string name="your_order_id">Your Order ID:</string>
 	<string name="will_be_delivered_by">will be delivered by</string>
 	<string name="your_cart_is_empty">Your cart is empty</string>
