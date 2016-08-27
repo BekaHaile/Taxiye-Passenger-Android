@@ -9,6 +9,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.DeliveryData;
 import product.clicklabs.jugnoo.datastructure.FreshData;
@@ -295,6 +297,11 @@ public class Data {
 			if(data.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
 				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter(Constants.KEY_DEEPINDEX));
 			}
+
+			if(intent.hasExtra(Constants.KEY_TAB_INDEX)){
+				Data.tabLinkIndex = intent.getIntExtra(Constants.KEY_TAB_INDEX, 0);
+			}
+
 			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
 				Data.deepLinkPickup = 1;
 				Data.deepLinkPickupLatitude = Double.parseDouble(data.getQueryParameter("pickup_lat"));
@@ -326,6 +333,11 @@ public class Data {
 				if(dataTarget.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
 					Data.deepLinkIndex = Integer.parseInt(dataTarget.getQueryParameter(Constants.KEY_DEEPINDEX));
 				}
+
+				if(intent.hasExtra(Constants.KEY_TAB_INDEX)){
+					Data.tabLinkIndex = intent.getIntExtra(Constants.KEY_TAB_INDEX, 0);
+				}
+
 				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){
 					Data.deepLinkPickup = 1;
 					Data.deepLinkPickupLatitude = Double.parseDouble(dataTarget.getQueryParameter("pickup_lat"));
@@ -338,6 +350,21 @@ public class Data {
 			} catch (Exception e1) {
 //				e1.printStackTrace();
 			}
+
+		}
+
+		try {
+			if(AppLinkIndex.FRESH_PAGE.getOrdinal() == Data.deepLinkIndex){
+				Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+			}
+			else if(AppLinkIndex.MEAL_PAGE.getOrdinal() == Data.deepLinkIndex){
+				Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMealsClientId());
+			}
+			else if(AppLinkIndex.DELIVERY_PAGE.getOrdinal() == Data.deepLinkIndex){
+				Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryClientId());
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
 
 		Log.e("Deeplink =", "=" + Data.deepLinkIndex);
@@ -354,35 +381,6 @@ public class Data {
 
 
 	public static int isfatafat = 0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	public static int tabLinkIndex = 0;

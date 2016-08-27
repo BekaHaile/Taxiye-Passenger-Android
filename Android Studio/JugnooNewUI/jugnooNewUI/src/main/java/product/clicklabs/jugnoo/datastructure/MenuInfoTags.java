@@ -15,7 +15,10 @@ public enum MenuInfoTags {
     REFER_A_DRIVER("refer_a_driver"),
     SUPPORT("support"),
     ABOUT("about"),
-    OFFERS("offers");
+    OFFERS("offers"),
+    FRESH("fresh"),
+    MEALS("meals"),
+    DELIVERY("delivery");
 
     private String tag;
 
