@@ -77,10 +77,11 @@ public class RideOrderShortView {
 	public void updateData(EndRideData endRideData, HistoryResponse.Datum datum){
 		try{
 			DecimalFormat df = new DecimalFormat("#.#");
+			DecimalFormat df0 = new DecimalFormat("#");
 			if(endRideData != null){
 				imageViewProductType.setImageResource(R.drawable.ic_support_auto);
 				textViewTransactionId.setText(context.getString(R.string.transaction_id_format, endRideData.engagementId));
-				textViewDetails.setText(df.format(endRideData.distance)+" km, "+endRideData.rideTime+" min");
+				textViewDetails.setText(df.format(endRideData.distance)+" km, "+df0.format(endRideData.rideTime)+" min");
 				if("".equalsIgnoreCase(endRideData.getTripTotal())){
 					textViewTransactionTotal.setText(context.getString(R.string.rupees_value_format,
 							Utils.getMoneyDecimalFormat().format(endRideData.fare)));
