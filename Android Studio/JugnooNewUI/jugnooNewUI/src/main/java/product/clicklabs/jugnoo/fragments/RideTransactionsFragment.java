@@ -114,7 +114,6 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		((TextView) rootView.findViewById(R.id.textViewNoRides)).setTypeface(Fonts.mavenLight(activity));
 		buttonGetRide = (Button) rootView.findViewById(R.id.buttonGetRide); buttonGetRide.setTypeface(Fonts.mavenRegular(activity));
 		linearLayoutNoRides.setVisibility(View.GONE);
-		buttonGetRide.setVisibility(View.GONE);
 
 		rideTransactionsAdapter = new RideTransactionsAdapter(rideInfosList, activity, R.layout.list_item_ride_transaction,
 				new RideTransactionsAdapter.Callback() {
@@ -189,15 +188,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 			}
 		});
 
-		try {
-			if(Data.userData.getMealsEnabled() != 1 && Data.userData.getFreshEnabled() != 1 && Data.userData.getDeliveryEnabled() != 1){
-				buttonGetRide.setVisibility(View.VISIBLE);
-			} else{
-				buttonGetRide.setVisibility(View.GONE);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		updateGetRideButton();
 
 		getRecentRidesAPI(activity, true);
 		setActivityTitle();
@@ -227,6 +218,18 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		}
 	}
 
+	private void updateGetRideButton(){
+		try {
+			if(Data.userData.getMealsEnabled() == 0 && Data.userData.getFreshEnabled() == 0 && Data.userData.getDeliveryEnabled() == 0){
+				buttonGetRide.setVisibility(View.VISIBLE);
+			} else{
+				buttonGetRide.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void setActivityTitle(){
 		if(activity instanceof RideTransactionsActivity){
 			((RideTransactionsActivity)activity).setTitle(MyApplication.getInstance().ACTIVITY_NAME_HISTORY);
@@ -246,7 +249,6 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 				linearLayoutNoRides.setVisibility(View.GONE);
-				buttonGetRide.setVisibility(View.GONE);
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
@@ -301,7 +303,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		if(errorOccurred){
 			linearLayoutNoRides.setVisibility(View.VISIBLE);
 			if(activity instanceof RideTransactionsActivity) {
-				buttonGetRide.setVisibility(View.VISIBLE);
+				updateGetRideButton();
 			} else{
 				buttonGetRide.setVisibility(View.GONE);
 			}
@@ -313,7 +315,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 			if(rideInfosList.size() == 0){
 				linearLayoutNoRides.setVisibility(View.VISIBLE);
 				if(activity instanceof RideTransactionsActivity) {
-					buttonGetRide.setVisibility(View.VISIBLE);
+					updateGetRideButton();
 				} else{
 					buttonGetRide.setVisibility(View.GONE);
 				}

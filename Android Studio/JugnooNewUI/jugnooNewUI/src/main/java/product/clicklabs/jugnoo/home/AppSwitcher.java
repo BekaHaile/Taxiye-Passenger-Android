@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -21,11 +20,8 @@ import product.clicklabs.jugnoo.utils.Prefs;
  */
 public class AppSwitcher {
 
-	private Context context;
 
-	public AppSwitcher(Context context){
-		this.context = context;
-	}
+	public AppSwitcher(){}
 
 	public void switchApp(final Activity activity, final String clientId, LatLng latLng) {
 		switchApp(activity, clientId, null, latLng);
@@ -40,11 +36,14 @@ public class AppSwitcher {
 			}
 
 			@Override
-			public void success() {
-				Intent intent = new Intent(activity, FreshActivity.class);
-				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-				activity.startActivity(intent);
-				activity.finish();
+			public void success(String clientId) {
+				if(!intentSentAfterDataCheck(activity, clientId, data)) {
+					Intent intent = new Intent(activity, FreshActivity.class);
+					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+					activity.startActivity(intent);
+					activity.finish();
+				}
+
 			}
 
 			@Override
@@ -63,14 +62,16 @@ public class AppSwitcher {
 							}
 
 							@Override
-							public void success() {
-								Intent intent = new Intent(activity, HomeActivity.class);
-								intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-								if(data != null){
-									intent.setData(data);
+							public void success(String clientId) {
+								if(!intentSentAfterDataCheck(activity, clientId, data)) {
+									Intent intent = new Intent(activity, HomeActivity.class);
+									intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+									if (data != null) {
+										intent.setData(data);
+									}
+									activity.startActivity(intent);
+									activity.finish();
 								}
-								activity.startActivity(intent);
-								activity.finish();
 							}
 
 							@Override
@@ -133,6 +134,58 @@ public class AppSwitcher {
 			}
 		}
 
+	}
+
+	private boolean intentSentAfterDataCheck(Activity activity, String clientId, Uri data){
+		try {
+			Intent intent = new Intent();
+			if(clientId.equalsIgnoreCase(Config.getAutosClientId()) && Data.autoData == null) {
+				if(Data.getFreshData() != null){
+					clientId = Config.getFreshClientId();
+				}
+				else if(Data.getMealsData() != null){
+					clientId = Config.getMealsClientId();
+				}
+				intent.setClass(activity, FreshActivity.class);
+			}
+			else if(clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null){
+				if(Data.autoData != null) {
+					intent.setClass(activity, HomeActivity.class);
+					clientId = Config.getAutosClientId();
+					if (data != null) {
+						intent.setData(data);
+					}
+				}
+				else if(Data.getMealsData() != null){
+					intent.setClass(activity, FreshActivity.class);
+					clientId = Config.getMealsClientId();
+				}
+			}
+			else if(clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.getMealsData() == null){
+				if(Data.autoData != null) {
+					intent.setClass(activity, HomeActivity.class);
+					clientId = Config.getAutosClientId();
+					if (data != null) {
+						intent.setData(data);
+					}
+				}
+				else if(Data.getFreshData() != null){
+					intent.setClass(activity, FreshActivity.class);
+					clientId = Config.getFreshClientId();
+				}
+			}
+			else{
+				return false;
+			}
+
+			intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+			activity.startActivity(intent);
+			activity.finish();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 

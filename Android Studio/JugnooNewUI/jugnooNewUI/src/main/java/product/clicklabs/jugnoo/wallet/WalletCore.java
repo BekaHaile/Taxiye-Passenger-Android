@@ -707,7 +707,7 @@ public class WalletCore {
 
 
 
-	public void paymentOptionSelectionAtFreshCheckout(final FreshActivity activity, PaymentOption paymentOption, final FreshPaymentFragment.CallbackPaymentOptionSelector callbackPaymentOptionSelector){
+	public void paymentOptionSelectionAtFreshCheckout(final FreshActivity activity, final PaymentOption paymentOption, final FreshPaymentFragment.CallbackPaymentOptionSelector callbackPaymentOptionSelector){
 		try {
 			if(paymentOption == PaymentOption.PAYTM){
 				if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() > 0) {
@@ -738,6 +738,7 @@ public class WalletCore {
 									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 									activity.startActivity(intent);
 									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+									callbackPaymentOptionSelector.onWalletAdd(PaymentOption.PAYTM);
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -758,6 +759,7 @@ public class WalletCore {
 					else{
 						MyApplication.getInstance().getWalletCore()
 								.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.PAYTM.getOrdinal());
+						callbackPaymentOptionSelector.onWalletAdd(PaymentOption.PAYTM);
 					}
 				}
 			}
@@ -789,6 +791,7 @@ public class WalletCore {
 									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
 									activity.startActivity(intent);
 									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+									callbackPaymentOptionSelector.onWalletAdd(PaymentOption.MOBIKWIK);
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -809,6 +812,7 @@ public class WalletCore {
 					else{
 						MyApplication.getInstance().getWalletCore()
 								.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.MOBIKWIK.getOrdinal());
+						callbackPaymentOptionSelector.onWalletAdd(PaymentOption.MOBIKWIK);
 					}
 				}
 			}

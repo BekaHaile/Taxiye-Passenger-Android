@@ -132,7 +132,7 @@ public class ApiLoginUsingAccessToken {
 							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							callback.failure();
 						} else {
-							callback.success();
+							callback.success(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
 						}
 					} else{
 						callback.failure();
@@ -161,7 +161,7 @@ public class ApiLoginUsingAccessToken {
 
 	public interface Callback{
 		void noNet();
-		void success();
+		void success(String clientId);
 		void failure();
 	}
 

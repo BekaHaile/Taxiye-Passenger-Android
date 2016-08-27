@@ -357,7 +357,7 @@ public class MyApplication extends Application{
 	private AppSwitcher appSwitcher;
 	public AppSwitcher getAppSwitcher(){
 		if(appSwitcher == null){
-			appSwitcher = new AppSwitcher(this);
+			appSwitcher = new AppSwitcher();
 		}
 		return appSwitcher;
 	}

@@ -1409,7 +1409,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				}
 
 				@Override
-				public void success() {
+				public void success(String clientId) {
 					loginDataFetched = true;
 				}
 
