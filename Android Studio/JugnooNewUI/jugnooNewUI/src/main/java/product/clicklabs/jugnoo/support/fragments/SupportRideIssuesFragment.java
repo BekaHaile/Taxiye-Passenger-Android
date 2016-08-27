@@ -196,6 +196,9 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		super.onHiddenChanged(hidden);
 		if (!hidden) {
 			setActivityTitle();
+			if(Data.isCancelled) {
+				getRideSummaryAPI(activity, engagementId, orderId);
+			}
 		}
 	}
 
