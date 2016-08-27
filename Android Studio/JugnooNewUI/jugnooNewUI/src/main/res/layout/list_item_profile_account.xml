@@ -9,9 +9,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="312px"
-        android:gravity="center"
-        android:padding="-10px"
+        android:layout_height="340px"
         android:background="@drawable/background_menu_bar_theme"
         android:orientation="vertical">
 
@@ -19,6 +17,7 @@
             android:layout_width="187px"
             android:layout_height="187px"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="28px"
             android:tag="mwar">
 
             <ImageView
@@ -70,7 +69,7 @@
     <View
         android:id="@+id/extraSpace"
         android:layout_width="match_parent"
-        android:layout_height="56px"
+        android:layout_height="50px"
         android:layout_below="@+id/linearLayout"
         android:background="@color/white" />
 

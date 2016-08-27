@@ -131,12 +131,13 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
 
         ((TextView) rootView.findViewById(R.id.textViewDiscount)).setTypeface(Fonts.mavenRegular(activity));
         ((TextView) rootView.findViewById(R.id.textViewjc)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewpaytm)).setTypeface(Fonts.mavenRegular(activity));
 
         textViewDiscountValue = (TextView) rootView.findViewById(R.id.textViewDiscountValue);
         textViewDiscountValue.setTypeface(Fonts.mavenRegular(activity));
         textViewjcValue = (TextView) rootView.findViewById(R.id.textViewjcValue);
         textViewjcValue.setTypeface(Fonts.mavenRegular(activity));
+        textViewpaytm = (TextView) rootView.findViewById(R.id.textViewpaytm);
+        textViewpaytm.setTypeface(Fonts.mavenRegular(activity));
         textViewpaytmValue = (TextView) rootView.findViewById(R.id.textViewpaytmValue);
         textViewpaytmValue.setTypeface(Fonts.mavenRegular(activity));
 
@@ -207,7 +208,13 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 textViewAmountPayableValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
                 if (orderHistory.getPaymentMode().equals(PaymentOption.PAYTM.getOrdinal())) {
                     textViewPaymentMode.setText(activity.getResources().getString(R.string.paytm));
-                } else {
+                    textViewpaytm.setText(activity.getString(R.string.paytm_wallet));
+                }
+                else if (orderHistory.getPaymentMode().equals(PaymentOption.MOBIKWIK.getOrdinal())) {
+                    textViewPaymentMode.setText(activity.getResources().getString(R.string.mobikwik));
+                    textViewpaytm.setText(activity.getString(R.string.mobikwik_wallet));
+                }
+                else {
                     textViewPaymentMode.setText(activity.getResources().getString(R.string.cash));
                 }
                 textViewPaymentModeValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
@@ -234,8 +241,8 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 } else {
                     jclayout.setVisibility(View.GONE);
                 }
-                if (orderHistory.getPaytmDeducted() != null && orderHistory.getPaytmDeducted() > 0) {
-                    textViewpaytmValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getPaytmDeducted())));
+                if (orderHistory.getWalletDeducted() != null && orderHistory.getWalletDeducted() > 0) {
+                    textViewpaytmValue.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(orderHistory.getWalletDeducted())));
                 } else {
                     paytmlayout.setVisibility(View.GONE);
                 }

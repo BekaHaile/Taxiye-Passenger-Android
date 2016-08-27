@@ -80,4 +80,10 @@
 
     </RelativeLayout>
 
+    <ImageView
+        android:id="@+id/imageViewSep2"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/stroke_color_light" />
+
 </LinearLayout>

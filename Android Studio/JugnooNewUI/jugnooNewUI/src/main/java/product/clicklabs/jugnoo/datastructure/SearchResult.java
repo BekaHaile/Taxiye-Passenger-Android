@@ -1,8 +1,5 @@
 package product.clicklabs.jugnoo.datastructure;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -28,6 +25,8 @@ public class SearchResult implements Serializable{
 	@SerializedName("placeId")
 	@Expose
 	private String placeId;
+
+	private Type type = Type.SEARCHED;
 	
 	public SearchResult(String name, String address, LatLng latLng){
 		this.name = name;
@@ -103,6 +102,19 @@ public class SearchResult implements Serializable{
 
 	public void setPlaceId(String placeId) {
 		this.placeId = placeId;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+
+	public enum Type{
+		SEARCHED, LAST_SAVED;
 	}
 
 }

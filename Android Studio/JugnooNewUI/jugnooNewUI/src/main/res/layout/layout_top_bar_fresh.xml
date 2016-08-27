@@ -114,12 +114,12 @@
 
             <ImageView
                 android:id="@+id/imageViewDelete"
-                android:layout_width="67px"
-                android:layout_height="73px"
+                android:layout_width="74px"
+                android:layout_height="82px"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10px"
-                android:src="@drawable/ic_delete_white"
+                android:src="@drawable/ic_delete_selector"
                 android:padding="20px"
                 android:tag="mwar"
                 android:visibility="gone"
