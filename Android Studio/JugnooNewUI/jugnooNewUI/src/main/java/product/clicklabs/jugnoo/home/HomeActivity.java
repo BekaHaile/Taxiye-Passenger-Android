@@ -1309,6 +1309,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutFinalDropLocationClick.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
                 if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() != 1) {
                     initDropLocationSearchUI(true);
                     Bundle bundle = new Bundle();
@@ -2535,7 +2536,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void switchPassengerScreen(PassengerScreenMode mode) {
         try {
-            float containerHeight = 180f;
+
             if (userMode == UserMode.PASSENGER) {
 
                 if (currentLocationMarker != null) {
@@ -2718,7 +2719,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         topBar.imageViewMenu.setVisibility(View.GONE);
 
 //                        genieLayout.setVisibility(View.GONE);
-
+                        //fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                        //fabView.setRelativeLayoutFABVisibility(mode);
 
                         break;
 
@@ -2878,16 +2880,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
-                        fabView.setRelativeLayoutFABVisibility(mode);
-                        int dpAsPixels1 = 0;
-                        if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
-                            containerHeight = containerHeight + 50f;
-                        }
-                        if(relativeLayoutInRideInfo.getVisibility() == View.VISIBLE){
-                            containerHeight = containerHeight + 40f;
-                        }
-                        dpAsPixels1 = (int) (containerHeight * scale + 0.5f);
-                        fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels1);
+                        setFabViewAtRide(mode);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -2956,16 +2949,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
-                        fabView.setRelativeLayoutFABVisibility(mode);
-                        int dpAsPixels2 = 0;
-                        if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
-                            containerHeight = containerHeight + 50f;
-                        }
-                        if(relativeLayoutInRideInfo.getVisibility() == View.VISIBLE){
-                            containerHeight = containerHeight + 40f;
-                        }
-                        dpAsPixels2 = (int) (containerHeight * scale + 0.5f);
-                        fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels2);
+                        setFabViewAtRide(mode);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -3028,16 +3012,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
-                        fabView.setRelativeLayoutFABVisibility(mode);
-                        int dpAsPixels3 = 0;
-                        if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
-                            containerHeight = containerHeight + 50f;
-                        }
-                        if(relativeLayoutInRideInfo.getVisibility() == View.VISIBLE){
-                            containerHeight = containerHeight + 40f;
-                        }
-                        dpAsPixels3 = (int) (containerHeight * scale + 0.5f);
-                        fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels3);
+                        setFabViewAtRide(mode);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -3089,6 +3064,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void setFabViewAtRide(PassengerScreenMode mode){
+        float containerHeight = 160f;
+        fabView.setRelativeLayoutFABVisibility(mode);
+        int dpAsPixels1 = 0;
+        if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
+            containerHeight = containerHeight + 50f;
+        }
+        if(relativeLayoutInRideInfo.getVisibility() == View.VISIBLE){
+            containerHeight = containerHeight + 40f;
+        }
+        dpAsPixels1 = (int) (containerHeight * scale + 0.5f);
+        fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels1);
     }
 
 
@@ -3322,6 +3312,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void relativeLayoutFinalDropLocationParentSetVisibility(int visiblity, String text){
         if(View.VISIBLE == visiblity){
+            fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
             relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL);
             if(frag == null || frag.isRemoving()) {
@@ -3341,6 +3332,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         .commitAllowingStateLoss();
             }
         } else{
+            fabView.setRelativeLayoutFABVisibility(passengerScreenMode);
             relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL);
             if(frag != null) {
@@ -4004,6 +3996,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(Prefs.with(HomeActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
                     Data.userData.getIntegratedJugnooEnabled() == 1) {
                 imageViewFabFake.setVisibility(View.VISIBLE);
+                //fabView.setRelativeLayoutFABVisibility(passengerScreenMode);
             } else {
                 imageViewFabFake.setVisibility(View.GONE);
             }
