@@ -88,14 +88,6 @@ public class EndRideData {
 		this.driverCarNumber = driverCarNumber;
 	}
 
-	public String getRideDate() {
-		return rideDate;
-	}
-
-	public void setRideDate(String rideDate) {
-		this.rideDate = rideDate;
-	}
-
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}

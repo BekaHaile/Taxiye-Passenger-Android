@@ -145,8 +145,13 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 LinearLayoutManager.HORIZONTAL, false));
         recyclerViewVehicles.setItemAnimator(new DefaultItemAnimator());
         recyclerViewVehicles.setHasFixedSize(false);
-        vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.autoData.getRegions());
-        recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
+
+        try {
+            vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.autoData.getRegions());
+            recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         linearLayoutPaymentMode.setOnClickListener(onClickListenerRequestOptions);

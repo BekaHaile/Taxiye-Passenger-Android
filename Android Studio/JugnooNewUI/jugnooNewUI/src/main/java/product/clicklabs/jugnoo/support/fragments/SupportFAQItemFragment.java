@@ -138,33 +138,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		textViewSubtitle.setText(parentName);
 		textViewDescription.setText(item.getText());
 
-		if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()){
-			editTextMessage.setVisibility(View.VISIBLE);
-			buttonSubmit.setVisibility(View.VISIBLE);
-			relativeLayoutCallDriver.setVisibility(View.GONE);
-			relativeLayoutCallJugnoo.setVisibility(View.GONE);
-		} else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
-			editTextMessage.setVisibility(View.GONE);
-			buttonSubmit.setVisibility(View.GONE);
-			if(ViewType.CALL_DRIVER.getOrdinal() == item.getViewType()){
-				relativeLayoutCallDriver.setVisibility(View.VISIBLE);
-				relativeLayoutCallJugnoo.setVisibility(View.GONE);
-			} else if(ViewType.CALL_JUGNOO.getOrdinal() == item.getViewType()){
-				relativeLayoutCallDriver.setVisibility(View.GONE);
-				relativeLayoutCallJugnoo.setVisibility(View.VISIBLE);
-			} else if(ViewType.CALL_DRIVER_AND_JUGNOO.getOrdinal() == item.getViewType()){
-				relativeLayoutCallDriver.setVisibility(View.VISIBLE);
-				relativeLayoutCallJugnoo.setVisibility(View.VISIBLE);
-			} else{
-				relativeLayoutCallDriver.setVisibility(View.GONE);
-				relativeLayoutCallJugnoo.setVisibility(View.GONE);
-			}
-		} else if(ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()){
-			editTextMessage.setVisibility(View.GONE);
-			buttonSubmit.setVisibility(View.GONE);
-			relativeLayoutCallDriver.setVisibility(View.GONE);
-			relativeLayoutCallJugnoo.setVisibility(View.GONE);
-		}
+		showItem();
 
 		buttonSubmit.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -372,6 +346,44 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 
 					}
 				});
+	}
+
+	private void showItem(){
+		if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()){
+			editTextMessage.setVisibility(View.VISIBLE);
+			buttonSubmit.setVisibility(View.VISIBLE);
+			relativeLayoutCallDriver.setVisibility(View.GONE);
+			relativeLayoutCallJugnoo.setVisibility(View.GONE);
+		}
+		else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
+			editTextMessage.setVisibility(View.GONE);
+			buttonSubmit.setVisibility(View.GONE);
+			if(ViewType.CALL_DRIVER.getOrdinal() == item.getViewType()){
+				relativeLayoutCallDriver.setVisibility(View.VISIBLE);
+				relativeLayoutCallJugnoo.setVisibility(View.GONE);
+			} else if(ViewType.CALL_JUGNOO.getOrdinal() == item.getViewType()){
+				relativeLayoutCallDriver.setVisibility(View.GONE);
+				relativeLayoutCallJugnoo.setVisibility(View.VISIBLE);
+			} else if(ViewType.CALL_DRIVER_AND_JUGNOO.getOrdinal() == item.getViewType()){
+				relativeLayoutCallDriver.setVisibility(View.VISIBLE);
+				relativeLayoutCallJugnoo.setVisibility(View.VISIBLE);
+			} else{
+				relativeLayoutCallDriver.setVisibility(View.GONE);
+				relativeLayoutCallJugnoo.setVisibility(View.GONE);
+			}
+		}
+		else if(ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()){
+			editTextMessage.setVisibility(View.GONE);
+			buttonSubmit.setVisibility(View.GONE);
+			relativeLayoutCallDriver.setVisibility(View.GONE);
+			relativeLayoutCallJugnoo.setVisibility(View.GONE);
+		}
+		else if(ActionType.NEXT_LEVEL.getOrdinal() == item.getActionType()){
+			editTextMessage.setVisibility(View.GONE);
+			buttonSubmit.setVisibility(View.GONE);
+			relativeLayoutCallDriver.setVisibility(View.GONE);
+			relativeLayoutCallJugnoo.setVisibility(View.GONE);
+		}
 	}
 
 }

@@ -1,7 +1,7 @@
 package product.clicklabs.jugnoo.support;
 
 import android.content.Context;
-import android.graphics.Typeface;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,7 +17,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
-import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -28,11 +28,11 @@ public class RideOrderShortView {
 
 	private Context context;
 	private ImageView imageViewProductType, imageViewDriver;
-	private TextView textViewTransactionId, textViewDetails, textViewTransactionTotal, textViewDriverName, textViewDriverCarNumber,
-			textViewDate, textViewDateValue, textViewStart, textViewStartValue, textViewEnd, textViewEndValue,
-			textViewOrderAddress, textViewOrderItems, textViewOrderItemsCount, textViewIssueWithRide;
+	private TextView textViewDriverName, textViewDriverCarNumber, textViewTripTotal, textViewTripTotalValue,
+			textViewDate, textViewStart, textViewStartValue, textViewEnd, textViewEndValue, textViewStatus,
+			textViewOrderAddress, textViewIssueWithRide;
 	private RelativeLayout relativeLayoutDriverImage, relativeLayoutStartEnd, relativeLayoutIssueWithRide;
-	private LinearLayout linearLayoutOrderData, linearLayoutOrderItems;
+	private LinearLayout linearLayoutOrderData;
 
 	public RideOrderShortView(Context context, View rootView, boolean supportMain){
 		this.context = context;
@@ -45,27 +45,23 @@ public class RideOrderShortView {
 		imageViewProductType = (ImageView) rootView.findViewById(R.id.imageViewProductType);
 		imageViewDriver = (ImageView) rootView.findViewById(R.id.imageViewDriver);
 
-		textViewTransactionId = (TextView) rootView.findViewById(R.id.textViewTransactionId); textViewTransactionId.setTypeface(Fonts.mavenMedium(context));
-		textViewDetails = (TextView) rootView.findViewById(R.id.textViewDetails); textViewDetails.setTypeface(Fonts.mavenMedium(context));
-		textViewTransactionTotal = (TextView) rootView.findViewById(R.id.textViewTransactionTotal); textViewTransactionTotal.setTypeface(Fonts.avenirNext(context), Typeface.BOLD);
 		textViewDriverName = (TextView) rootView.findViewById(R.id.textViewDriverName); textViewDriverName.setTypeface(Fonts.mavenRegular(context));
 		textViewDriverCarNumber = (TextView) rootView.findViewById(R.id.textViewDriverCarNumber); textViewDriverCarNumber.setTypeface(Fonts.mavenMedium(context));
-		textViewDate = (TextView) rootView.findViewById(R.id.textViewDate); textViewDate.setTypeface(Fonts.mavenRegular(context));
-		textViewDateValue = (TextView) rootView.findViewById(R.id.textViewDateValue); textViewDateValue.setTypeface(Fonts.mavenMedium(context));
+		textViewTripTotal = (TextView) rootView.findViewById(R.id.textViewTripTotal); textViewTripTotal.setTypeface(Fonts.mavenRegular(context));
+		textViewTripTotalValue = (TextView) rootView.findViewById(R.id.textViewTripTotalValue); textViewTripTotalValue.setTypeface(Fonts.avenirNext(context));
+		textViewDate = (TextView) rootView.findViewById(R.id.textViewDate); textViewDate.setTypeface(Fonts.mavenMedium(context));
 		textViewStart = (TextView) rootView.findViewById(R.id.textViewStart); textViewStart.setTypeface(Fonts.mavenMedium(context));
 		textViewStartValue = (TextView) rootView.findViewById(R.id.textViewStartValue); textViewStartValue.setTypeface(Fonts.mavenRegular(context));
 		textViewEnd = (TextView) rootView.findViewById(R.id.textViewEnd); textViewEnd.setTypeface(Fonts.mavenMedium(context));
 		textViewEndValue = (TextView) rootView.findViewById(R.id.textViewEndValue); textViewEndValue.setTypeface(Fonts.mavenRegular(context));
+		textViewStatus = (TextView) rootView.findViewById(R.id.textViewStatus); textViewStatus.setTypeface(Fonts.mavenMedium(context));
 		textViewOrderAddress = (TextView) rootView.findViewById(R.id.textViewOrderAddress); textViewOrderAddress.setTypeface(Fonts.mavenRegular(context));
-		textViewOrderItems = (TextView) rootView.findViewById(R.id.textViewOrderItems); textViewOrderItems.setTypeface(Fonts.mavenRegular(context));
-		textViewOrderItemsCount = (TextView) rootView.findViewById(R.id.textViewOrderItemsCount); textViewOrderItemsCount.setTypeface(Fonts.mavenRegular(context));
 		textViewIssueWithRide = (TextView) rootView.findViewById(R.id.textViewIssueWithRide); textViewIssueWithRide.setTypeface(Fonts.mavenMedium(context));
 
 		relativeLayoutDriverImage = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDriverImage);
 		relativeLayoutStartEnd = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutStartEnd);
 		relativeLayoutIssueWithRide = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutIssueWithRide);
 		linearLayoutOrderData = (LinearLayout) rootView.findViewById(R.id.linearLayoutOrderData);
-		linearLayoutOrderItems = (LinearLayout) rootView.findViewById(R.id.linearLayoutOrderItems);
 
 		if(supportMain){
 			relativeLayoutIssueWithRide.setVisibility(View.VISIBLE);
@@ -80,73 +76,57 @@ public class RideOrderShortView {
 			DecimalFormat df0 = new DecimalFormat("#");
 			if(endRideData != null){
 				imageViewProductType.setImageResource(R.drawable.ic_support_auto);
-				textViewTransactionId.setText(context.getString(R.string.transaction_id_format, endRideData.engagementId));
-				textViewDetails.setText(df.format(endRideData.distance)+" km, "+df0.format(endRideData.rideTime)+" min");
-				if("".equalsIgnoreCase(endRideData.getTripTotal())){
-					textViewTransactionTotal.setText(context.getString(R.string.rupees_value_format,
-							Utils.getMoneyDecimalFormat().format(endRideData.fare)));
-				} else{
-					textViewTransactionTotal.setText(context.getString(R.string.rupees_value_format,
-							endRideData.getTripTotal()));
-				}
+				textViewIssueWithRide.setText(context.getString(R.string.issue_with_the_recent_ride));
 				textViewDriverName.setText(endRideData.driverName);
 				textViewDriverCarNumber.setText(endRideData.driverCarNumber);
-				textViewDate.setText(context.getString(R.string.ride_date));
-				textViewDateValue.setText(endRideData.getEngagementDate());
-				if(!"".equalsIgnoreCase(endRideData.driverImage)){
-					Picasso.with(context).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);
+				textViewTripTotal.setText(R.string.trip_total);
+				if("".equalsIgnoreCase(endRideData.getTripTotal())){
+					textViewTripTotalValue.setText(context.getString(R.string.rupees_value_format,
+							Utils.getMoneyDecimalFormat().format(endRideData.fare)));
+				} else{
+					textViewTripTotalValue.setText(context.getString(R.string.rupees_value_format,
+							endRideData.getTripTotal()));
 				}
+				textViewDate.setText(context.getString(R.string.date_colon_format, endRideData.getEngagementDate()));
 				textViewStart.append(" " + endRideData.pickupTime);
 				textViewEnd.append(" " + endRideData.dropTime);
 				textViewStartValue.setText(endRideData.pickupAddress);
 				textViewEndValue.setText(endRideData.dropAddress);
-				textViewIssueWithRide.setText(context.getString(R.string.issue_with_the_recent_ride));
 
-				relativeLayoutDriverImage.setVisibility(View.VISIBLE);
+				if(!"".equalsIgnoreCase(endRideData.driverImage)){
+					Picasso.with(context).load(endRideData.driverImage).transform(new CircleTransform()).into(imageViewDriver);
+				}
+
+				float ratio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutDriverImage.getLayoutParams();
+				params.width = (int) (ratio * 96f);
+				relativeLayoutDriverImage.setLayoutParams(params);
 				relativeLayoutStartEnd.setVisibility(View.VISIBLE);
 				linearLayoutOrderData.setVisibility(View.GONE);
 			}
 			else if(datum != null){
 				if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
-					imageViewProductType.setImageResource(R.drawable.ic_support_fresh);
-					linearLayoutOrderItems.setVisibility(View.GONE);
+					imageViewProductType.setImageResource(R.drawable.ic_history_fresh);
 				} else if(datum.getProductType() == ProductType.MEALS.getOrdinal()){
-					imageViewProductType.setImageResource(R.drawable.ic_support_meals);
-					linearLayoutOrderItems.setVisibility(View.VISIBLE);
-				}
-
-				textViewTransactionId.setText(context.getString(R.string.order_id_format, datum.getOrderId()));
-				textViewDetails.setText(datum.getOrderStatus());
-				textViewTransactionTotal.setText(context.getString(R.string.rupees_value_format,
-						Utils.getMoneyDecimalFormat().format(datum.getOrderAmount())));
-				textViewDriverName.setText(context.getString(R.string.delivery_date));
-				textViewDriverCarNumber.setText(datum.getExpectedDeliveryDate());
-				textViewDate.setText(context.getString(R.string.delivery_slot));
-				textViewDateValue.setText(DateOperations.convertDayTimeAPViaFormat(datum.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(datum.getEndTime()));
-				textViewOrderAddress.setText(datum.getDeliveryAddress());
-				int extraItems = 0;
-				String itemNames = "";
-				for(int i=0; i<datum.getOrderItems().size(); i++){
-					if(i < 2){
-						itemNames = itemNames + datum.getOrderItems().get(i).getItemName() + ",";
-					} else if(i < 3){
-						itemNames = itemNames + datum.getOrderItems().get(i).getItemName();
-					} else{
-						extraItems++;
-					}
-				}
-				textViewOrderItems.setText(itemNames);
-				if(extraItems > 0){
-					textViewOrderItemsCount.setVisibility(View.VISIBLE);
-					textViewOrderItemsCount.setText(String.valueOf(extraItems));
-				} else{
-					textViewOrderItemsCount.setVisibility(View.GONE);
+					imageViewProductType.setImageResource(R.drawable.ic_history_meals);
 				}
 				textViewIssueWithRide.setText(context.getString(R.string.issue_with_the_recent_order));
+				textViewDriverName.setText(context.getString(R.string.delivery_date));
+				textViewDriverCarNumber.setText(datum.getExpectedDeliveryDate());
+				textViewTripTotal.setText(R.string.order_total);
+				textViewTripTotalValue.setText(context.getString(R.string.rupees_value_format,
+						Utils.getMoneyDecimalFormat().format(datum.getOrderAmount())));
+				textViewStatus.setText(datum.getOrderStatus());
+				try{textViewStatus.setTextColor(Color.parseColor(datum.getOrderStatusColor()));} catch(Exception e){}
+				textViewOrderAddress.setText(datum.getDeliveryAddress());
 
-				relativeLayoutDriverImage.setVisibility(View.GONE);
+
+				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutDriverImage.getLayoutParams();
+				params.width = 0;
+				relativeLayoutDriverImage.setLayoutParams(params);
 				relativeLayoutStartEnd.setVisibility(View.GONE);
 				linearLayoutOrderData.setVisibility(View.VISIBLE);
+
 			}
 		} catch(Exception e){
 			e.printStackTrace();

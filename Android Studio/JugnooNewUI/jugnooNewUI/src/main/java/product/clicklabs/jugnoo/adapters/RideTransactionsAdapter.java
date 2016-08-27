@@ -88,7 +88,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewDetails.setText(R.string.details_colon);
                 holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
                         Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
-                holder.imageViewProductType.setImageResource(R.drawable.ic_support_auto);
+                holder.imageViewProductType.setImageResource(R.drawable.ic_history_auto);
 
                 if (0 == orderHistory.getIsCancelledRide()) {
                     if(orderHistory.getAutosStatusText() == null) {
@@ -134,9 +134,9 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
                 holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
                 if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_support_fresh);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_history_fresh);
                 } else if(orderHistory.getProductType() == ProductType.MEALS.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_support_meals);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_history_meals);
                 }
                 holder.relativeLayoutTo.setVisibility(View.GONE);
             }
