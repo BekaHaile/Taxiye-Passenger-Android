@@ -3,7 +3,7 @@
     android:id="@+id/linearRoot"
     android:layout_width="720px"
     android:layout_height="wrap_content"
-    android:background="@color/sliding_bottom_bg_color"
+    android:background="@color/menu_item_selector_color"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
@@ -19,7 +19,9 @@
         android:layout_marginLeft="20px"
         android:layout_marginTop="15px"
         app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        app:cardBackgroundColor="@color/white"
+        >
 
         <LinearLayout
             android:id="@+id/layout_card_list"

@@ -67,8 +67,8 @@
                             android:layout_width="2px"
                             android:layout_height="match_parent"
                             android:layout_alignParentRight="true"
-                            android:layout_marginBottom="30px"
-                            android:layout_marginTop="30px"
+                            android:layout_marginBottom="25px"
+                            android:layout_marginTop="25px"
                             android:background="@color/text_color_hint" />
 
                         <ImageView
@@ -93,8 +93,8 @@
                             android:layout_width="2px"
                             android:layout_height="match_parent"
                             android:layout_alignParentRight="true"
-                            android:layout_marginBottom="20px"
-                            android:layout_marginTop="20px"
+                            android:layout_marginBottom="25px"
+                            android:layout_marginTop="25px"
                             android:background="@color/text_color_hint" />
 
                         <ImageView
@@ -130,95 +130,105 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="150px"
-                    android:layout_marginRight="150px"
+                    android:layout_toRightOf="@+id/relativeLayoutLeft"
+                    android:layout_toLeftOf="@+id/relativeRight"
                     android:gravity="center_horizontal"
                     android:singleLine="true"
                     android:text="123"
                     android:textColor="@color/cart_price"
-                    android:textSize="@dimen/text_size_38" />
+                    android:textSize="@dimen/text_size_38"
+
+                    />
+
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutCartNew"
-                    android:layout_width="132px"
-                    android:layout_height="match_parent"
+                    android:id="@+id/relativeRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:visibility="visible">
+                    android:layout_centerVertical="true">
 
-                    <View
-                        android:layout_width="2px"
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutCartNew"
+                        android:layout_width="132px"
                         android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginBottom="30px"
-                        android:layout_marginTop="30px"
-                        android:background="@color/text_color_hint" />
+                        android:visibility="visible">
 
-                    <ImageView
-                        android:id="@+id/imageViewCartNew"
-                        android:layout_width="46px"
-                        android:layout_height="36px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="40px"
-                        android:tag="mwar" />
+                        <View
+                            android:layout_width="2px"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginBottom="25px"
+                            android:layout_marginTop="25px"
+                            android:background="@color/text_color_hint" />
 
-                    <TextView
-                        android:id="@+id/textViewCartItemsCountNew"
-                        android:layout_width="45px"
-                        android:layout_height="45px"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="25px"
-                        android:layout_marginTop="10px"
-                        android:background="@drawable/theme_circle_card"
-                        android:gravity="center"
-                        android:minWidth="45px"
-                        android:padding="8px"
-                        android:text="0"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_24"
-                        android:visibility="visible" />
+                        <ImageView
+                            android:id="@+id/imageViewCartNew"
+                            android:layout_width="46px"
+                            android:layout_height="36px"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="40px"
+                            android:tag="mwar" />
+
+                        <TextView
+                            android:id="@+id/textViewCartItemsCountNew"
+                            android:layout_width="45px"
+                            android:layout_height="45px"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="25px"
+                            android:layout_marginTop="10px"
+                            android:background="@drawable/theme_circle_card"
+                            android:gravity="center"
+                            android:minWidth="45px"
+                            android:padding="8px"
+                            android:text="0"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_24"
+                            android:visibility="visible" />
+
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/linearLayoutCheckout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:animateLayoutChanges="true"
+                        android:background="@drawable/background_white_grey_light_selector"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="2px"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="25px"
+                            android:layout_marginRight="40px"
+                            android:layout_marginTop="25px"
+                            android:background="@color/text_color_hint" />
+
+                        <TextView
+                            android:id="@+id/textViewCheckout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="30px"
+                            android:singleLine="true"
+                            android:text="@string/checkout"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_32"
+                            android:visibility="visible" />
+
+
+                        <ImageView
+                            android:id="@+id/imageViewCheckoutForward"
+                            android:layout_width="21px"
+                            android:layout_height="37px"
+                            android:layout_marginRight="35px"
+                            android:src="@drawable/ic_arrow_orange"
+                            android:tag="mwar" />
+                    </LinearLayout>
 
                 </RelativeLayout>
 
-                <LinearLayout
-                    android:visibility="gone"
-                    android:id="@+id/linearLayoutCheckout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:animateLayoutChanges="true"
-                    android:background="@drawable/background_white_grey_light_selector"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="2px"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="20px"
-                        android:layout_marginRight="40px"
-                        android:layout_marginTop="20px"
-                        android:background="@color/text_color_hint" />
-
-                    <TextView
-                        android:id="@+id/textViewCheckout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="30px"
-                        android:singleLine="true"
-                        android:text="@string/checkout"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_32"
-                        android:visibility="visible" />
-
-
-                    <ImageView
-                        android:id="@+id/imageViewCheckoutForward"
-                        android:layout_width="21px"
-                        android:layout_height="37px"
-                        android:layout_marginRight="35px"
-                        android:src="@drawable/ic_arrow_orange"
-                        android:tag="mwar" />
-                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"

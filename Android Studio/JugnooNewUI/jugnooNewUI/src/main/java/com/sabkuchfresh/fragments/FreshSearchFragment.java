@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -47,6 +48,7 @@ public class FreshSearchFragment extends Fragment {
 	private EditText editTextSearch;
 	private ProgressWheel progressBarSearch;
 	private ImageView imageViewSearchCross, imageViewBack;
+	private TextView textViewPlaceholder;
 
 	private View rootView;
     private FreshActivity activity;
@@ -92,8 +94,10 @@ public class FreshSearchFragment extends Fragment {
 		editTextSearch.setTypeface(Fonts.mavenLight(activity));
 		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch);
 		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.imageViewSearchCross);
+		textViewPlaceholder = (TextView) rootView.findViewById(R.id.textViewPlaceholder); textViewPlaceholder.setTypeface(Fonts.mavenRegular(activity));
 		progressBarSearch.setVisibility(View.GONE);
 		imageViewSearchCross.setVisibility(View.GONE);
+		textViewPlaceholder.setVisibility(View.GONE);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -213,6 +217,11 @@ public class FreshSearchFragment extends Fragment {
 			super.onPostExecute(s);
 			progressBarSearch.setVisibility(View.GONE);
 			freshCategoryItemsAdapter.notifyDataSetChanged();
+			if(subItemsInSearch.size() > 0){
+				textViewPlaceholder.setVisibility(View.GONE);
+			} else{
+				textViewPlaceholder.setVisibility(View.VISIBLE);
+			}
 		}
 
 	}

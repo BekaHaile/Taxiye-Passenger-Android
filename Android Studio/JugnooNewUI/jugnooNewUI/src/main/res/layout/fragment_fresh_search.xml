@@ -16,7 +16,6 @@
         android:splitMotionEvents="false">
 
 
-
         <ImageView
             android:id="@+id/imageViewSearchIcon"
             android:layout_width="33px"
@@ -24,12 +23,12 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="30px"
             android:src="@drawable/search_icon"
-            android:visibility="gone"
-            android:tag="mwar"/>
+            android:tag="mwar"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/imageViewBack"
-            style="@style/back_image" />
+            style="@style/back_image"/>
 
 
         <EditText
@@ -38,9 +37,9 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20px"
-            android:layout_toRightOf="@+id/imageViewBack"
-            android:layout_toLeftOf="@+id/linearLayoutCross"
             android:layout_marginRight="20px"
+            android:layout_toLeftOf="@+id/linearLayoutCross"
+            android:layout_toRightOf="@+id/imageViewBack"
             android:background="@color/transparent"
             android:gravity="center_vertical"
             android:hint="@string/search_items"
@@ -56,8 +55,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5px"
-            android:orientation="horizontal"
             android:gravity="right"
+            android:orientation="horizontal"
             >
 
             <product.clicklabs.jugnoo.utils.ProgressWheel
@@ -67,11 +66,11 @@
                 android:layout_height="70px"
                 android:layout_marginRight="5px"
                 android:tag="mwar"
+                android:visibility="gone"
                 wheel:matProg_barColor="@color/theme_color"
                 wheel:matProg_barWidth="3dp"
                 wheel:matProg_fillRadius="true"
                 wheel:matProg_progressIndeterminate="true"
-                android:visibility="gone"
                 />
 
             <ImageView
@@ -96,15 +95,34 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewCategoryItems"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fadeScrollbars="true"
-        android:scrollbars="vertical"
-        android:splitMotionEvents="false"
-        >
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewCategoryItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false"
+            >
+        </android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/textViewPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_26"
+            android:textColor="@color/text_color"
+            android:text="@string/sorry_no_match_found"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40px"
+
+            />
+
+    </RelativeLayout>
 
 
 </LinearLayout>

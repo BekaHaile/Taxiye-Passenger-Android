@@ -1095,5 +1095,6 @@
 	<string name="delivery_slot_colon">Delivery Slot:</string>
 	<string name="address_colon">Address:</string>
 	<string name="no_current_transactions">No Current Transactions</string>
+	<string name="sorry_no_match_found">Sorry! No match found</string>
 
 </resources>

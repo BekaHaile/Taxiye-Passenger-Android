@@ -130,6 +130,9 @@ public class HistoryResponse {
         @SerializedName("paytm_deducted")
         @Expose
         private Double paytmDeducted;
+        @SerializedName("wallet_deducted")
+        @Expose
+        private Double walletDeducted;
         @SerializedName("discount")
         @Expose
         private Double discount;
@@ -767,6 +770,14 @@ public class HistoryResponse {
 
         public void setAutosStatusText(String autosStatusText) {
             this.autosStatusText = autosStatusText;
+        }
+
+        public Double getWalletDeducted() {
+            return walletDeducted;
+        }
+
+        public void setWalletDeducted(Double walletDeducted) {
+            this.walletDeducted = walletDeducted;
         }
     }
 

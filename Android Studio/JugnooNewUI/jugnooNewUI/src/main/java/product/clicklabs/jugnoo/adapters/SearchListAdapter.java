@@ -152,6 +152,9 @@ public class SearchListAdapter extends BaseAdapter{
                 }
                 Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
                 ArrayList<SearchResult> lastPickUp = new Gson().fromJson(json, type);
+				for(int i=0; i<lastPickUp.size(); i++){
+					lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
+				}
                 searchResults.addAll(lastPickUp);
             }
         } catch (Exception e) {
@@ -219,8 +222,12 @@ public class SearchListAdapter extends BaseAdapter{
                 holder.imageViewType.setVisibility(View.VISIBLE);
                 holder.imageViewType.setImageResource(R.drawable.ic_work);
             } else{
-                holder.imageViewType.setVisibility(View.VISIBLE);
-                holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
+				holder.imageViewType.setVisibility(View.VISIBLE);
+				if(searchResults.get(position).getType() == SearchResult.Type.LAST_SAVED) {
+					holder.imageViewType.setImageResource(R.drawable.ic_recent_loc);
+				} else{
+					holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
+				}
             }
 
             if(searchResults.get(position).getAddress().equalsIgnoreCase("")){

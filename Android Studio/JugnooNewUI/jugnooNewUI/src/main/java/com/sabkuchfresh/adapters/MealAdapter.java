@@ -151,7 +151,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         mHolder.cartLayout.setVisibility(View.VISIBLE);
                     }
 
-                    mHolder.deliveryTime.setText(subItem.getDeliveryTimeText()+"\n"+ DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()) + "-"
+                    mHolder.deliveryTime.setText(subItem.getDeliveryTimeText()+"\n"+ DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()) + " to "
                             + DateOperations.convertDayTimeAPViaFormat(subItem.getOrderEnd()));
                 }
 
