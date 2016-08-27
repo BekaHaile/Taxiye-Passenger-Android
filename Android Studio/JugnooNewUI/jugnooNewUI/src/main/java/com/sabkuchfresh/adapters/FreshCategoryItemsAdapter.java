@@ -185,7 +185,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     Log.d("asdasd", "subItem.getBannertextColor() = "+subItem.getBannerTextColor());
 
                     mHolder.offerTagLayout.setVisibility(View.VISIBLE);
-                    int color = Color.parseColor("#4DB831");
+                    int color = Color.parseColor("#FD7945");
 
                     mHolder.bannerBg.setColorFilter(color);
                     mHolder.offerTag.setText(subItem.getBannerText());

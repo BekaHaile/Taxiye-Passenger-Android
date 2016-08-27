@@ -86,11 +86,13 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             dateValue = Data.getFreshData().getFeedbackDeliveryDate();
             orderAmount = Data.getFreshData().getAmount();
             orderId = Data.getFreshData().getOrderId();
+            activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
         } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
             viewType = Data.getMealsData().getFeedbackViewType();
             dateValue = Data.getMealsData().getFeedbackDeliveryDate();
             orderAmount = Data.getMealsData().getAmount();
             orderId = Data.getMealsData().getOrderId();
+            activity.getTopBar().title.setText(getResources().getString(R.string.meals));
         } else {
             activity.finish();
         }
@@ -482,6 +484,11 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+                activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+                activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+            }
         }
     }
 }

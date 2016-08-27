@@ -270,12 +270,13 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                         orderComplete.setVisibility(View.GONE);
 
                         if (orderHistory.getPendingFeedback() == 1) {
-                            if(activity instanceof FreshActivity) {
-                                feedbackBtn.setText(R.string.ok);
-                                reorderBtn.setVisibility(View.GONE);
-                            } else {
-                                feedbackBtn.setText(R.string.feedback);
-                            }
+                            buttonCancelOrder.setText(R.string.ok);
+//                            if(activity instanceof FreshActivity) {
+//                                feedbackBtn.setText(R.string.ok);
+//                                reorderBtn.setVisibility(View.GONE);
+//                            } else {
+//                                feedbackBtn.setText(R.string.feedback);
+//                            }
                         } else {
                             if (activity instanceof RideTransactionsActivity) {
                                 buttonCancelOrder.setText(R.string.need_help);
@@ -351,12 +352,13 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                     orderComplete.setVisibility(View.GONE);
 
                     if (orderHistory.getPendingFeedback() == 1) {
-                        if(activity instanceof FreshActivity) {
-                            feedbackBtn.setText(R.string.ok);
-                            reorderBtn.setVisibility(View.GONE);
-                        } else {
-                            feedbackBtn.setText(R.string.feedback);
-                        }
+//                        if(activity instanceof FreshActivity) {
+//                            feedbackBtn.setText(R.string.ok);
+//                            reorderBtn.setVisibility(View.GONE);
+//                        } else {
+//                            feedbackBtn.setText(R.string.feedback);
+//                        }
+                        buttonCancelOrder.setText(R.string.ok);
                     } else {
                         if (activity instanceof RideTransactionsActivity) {
                             buttonCancelOrder.setText(R.string.need_help);

@@ -23,7 +23,7 @@
             android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
             android:gravity="center_vertical"
-            android:padding="16px"
+            android:paddingLeft="16px"
             android:background="@drawable/background_search_shap"
             android:textColor="@color/text_color_light"
             />
