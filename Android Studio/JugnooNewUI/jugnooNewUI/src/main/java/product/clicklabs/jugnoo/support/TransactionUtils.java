@@ -90,8 +90,12 @@ public class TransactionUtils {
 						.commitAllowingStateLoss();
 				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT_ISSUES);
 			}
-		} else{
-			openItemInFragment(activity, container, engagementId, rideDate, parentName, item, phoneNumber, orderId, orderDate);
+		} else if(singleItemToOpen != null && singleItemParentName != null && singleItemToOpen.getActionType() == ActionType.NEXT_LEVEL.getOrdinal()){
+			if(singleItemToOpen.getItems().size() == 1){
+				singleItemParentName = singleItemToOpen.getText();
+				singleItemToOpen = singleItemToOpen.getItems().get(0);
+				openItemInFragment(activity, container, engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate);
+			}
 		}
 	}
 
