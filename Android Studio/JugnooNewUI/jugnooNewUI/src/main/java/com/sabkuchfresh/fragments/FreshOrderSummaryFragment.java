@@ -414,6 +414,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
 
                                         // TODO: 22/08/16 Get output and check here
                                         Data.isCancelled = true;
+                                        orderHistory.setCancellable(0);
                                         activity.onBackPressed();
 //                                            if (activity instanceof RideTransactionsActivity) {
 //                                                ((RideTransactionsActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
