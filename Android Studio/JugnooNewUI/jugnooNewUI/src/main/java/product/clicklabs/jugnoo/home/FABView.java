@@ -76,6 +76,7 @@ public class FABView {
                     } else if(activity instanceof FreshActivity){
                         setRelativeLayoutFABVisibility(null);
                     }
+
 //                    if (Data.userData.getFreshEnabled() == 1) {
 //                        fabFresh.setVisibility(View.VISIBLE);
 //                    } else {
@@ -163,9 +164,17 @@ public class FABView {
             fabAutos.setVisibility(View.GONE);
         } else if(Config.getFreshClientId().equalsIgnoreCase(currentOpenedOffering)){
             fabFresh.setVisibility(View.GONE);
+            //fabAutos.setVisibility(View.VISIBLE);
         } else if(Config.getMealsClientId().equalsIgnoreCase(currentOpenedOffering)){
             fabMeals.setVisibility(View.GONE);
+            //fabAutos.setVisibility(View.VISIBLE);
         }
+
+        /*if(activity instanceof FreshActivity){
+            fabAutos.setVisibility(View.VISIBLE);
+        } else{
+            fabAutos.setVisibility(View.GONE);
+        }*/
         //setFABButtons();
     }
 
