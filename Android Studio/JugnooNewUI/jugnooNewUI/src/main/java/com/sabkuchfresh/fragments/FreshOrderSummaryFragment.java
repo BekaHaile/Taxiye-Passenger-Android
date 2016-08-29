@@ -278,12 +278,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
 
                         if (orderHistory.getPendingFeedback() == 1) {
                             buttonCancelOrder.setText(R.string.ok);
-//                            if(activity instanceof FreshActivity) {
-//                                feedbackBtn.setText(R.string.ok);
-//                                reorderBtn.setVisibility(View.GONE);
-//                            } else {
-//                                feedbackBtn.setText(R.string.feedback);
-//                            }
                         } else {
                             if (activity instanceof RideTransactionsActivity) {
                                 buttonCancelOrder.setText(R.string.need_help);

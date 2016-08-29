@@ -106,8 +106,7 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
             } else if(holder instanceof ViewHolderHeader) {
 
 
-                ((ViewHolderHeader)holder).textViewTotalAmountValue.setText(slots.get(position).getCamount());
-                ((ViewHolderHeader)holder).textViewDeliveryChargesValue.setText(slots.get(position).getCdelivery());
+                ((ViewHolderHeader)holder).textViewDeliveryChargesValue.setText(slots.get(position).getCamount());
 //                ((ViewHolderHeader)holder).textViewAmountPayableValue.setText(slots.get(position).getCtotal());
                 if(!TextUtils.isEmpty(slots.get(position).getCaddress())) {
                     ((ViewHolderHeader) holder).addressText.setText(slots.get(position).getCaddress());
@@ -117,16 +116,9 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setText(activity.getResources().getString(R.string.delivery_address));
                 } else {
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setVisibility(View.GONE);
-//                    ((ViewHolderHeader)holder).textViewDeliveryAddress.setText(activity.getResources().getString(R.string.add_address));
                     ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.theme_color));
                     ((ViewHolderHeader) holder).addressText.setText(activity.getResources().getString(R.string.add_address));
                 }
-
-                if(TextUtils.isEmpty(slots.get(position).getIsdelivery())) {
-                    ((ViewHolderHeader) holder).deliveryLayout.setVisibility(View.GONE);
-                    ((ViewHolderHeader) holder).deliveryLayout.setVisibility(View.GONE);
-                }
-
 
 
                 ((ViewHolderHeader)holder).deliveryAddress.setTag(position);
@@ -134,9 +126,7 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                     @Override
                     public void onClick(View v) {
                         try {
-//                            int pos = (int) v.getTag();
                             callback.onAddressClick();
-//                            notifyDataSetChanged();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -257,29 +247,21 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     static class ViewHolderHeader extends RecyclerView.ViewHolder {
-//        public LinearLayout deliveryLayout;
-        public RelativeLayout deliveryAddress, deliveryLayout;
-        public TextView textViewTotalAmount, textViewTotalAmountValue, textViewDeliveryCharges, textViewDeliveryChargesValue,
+        public RelativeLayout deliveryAddress;
+        public TextView textViewDeliveryCharges, textViewDeliveryChargesValue,
 //                textViewAmountPayable, textViewAmountPayableValue,
             textViewDeliveryTime, textViewDeliveryAddress, addressText;
-        public ImageView delivery_line;
 
 
         public ViewHolderHeader(View itemView, Context context) {
             super(itemView);
-            deliveryLayout = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutDeliveryCharges);
             deliveryAddress = (RelativeLayout) itemView.findViewById(R.id.delivery_address);
 
-            textViewTotalAmount = (TextView)itemView.findViewById(R.id.textViewTotalAmount); textViewTotalAmount.setTypeface(Fonts.mavenRegular(context));
-            textViewTotalAmountValue = (TextView)itemView.findViewById(R.id.textViewTotalAmountValue); textViewTotalAmountValue.setTypeface(Fonts.mavenRegular(context));
             textViewDeliveryCharges = (TextView)itemView.findViewById(R.id.textViewDeliveryCharges); textViewDeliveryCharges.setTypeface(Fonts.mavenRegular(context));
             textViewDeliveryChargesValue = (TextView)itemView.findViewById(R.id.textViewDeliveryChargesValue); textViewDeliveryChargesValue.setTypeface(Fonts.mavenRegular(context));
-//            textViewAmountPayable = (TextView)itemView.findViewById(R.id.textViewAmountPayable); textViewAmountPayable.setTypeface(Fonts.mavenRegular(context));
-//            textViewAmountPayableValue = (TextView)itemView.findViewById(R.id.textViewAmountPayableValue); textViewAmountPayableValue.setTypeface(Fonts.mavenRegular(context));
             textViewDeliveryAddress = (TextView)itemView.findViewById(R.id.textViewDeliveryAddress); textViewDeliveryAddress.setTypeface(Fonts.mavenRegular(context));
             textViewDeliveryTime = (TextView)itemView.findViewById(R.id.textViewDeliveryTime); textViewDeliveryTime.setTypeface(Fonts.mavenRegular(context));
             addressText = (TextView)itemView.findViewById(R.id.address_text); addressText.setTypeface(Fonts.mavenRegular(context));
-            delivery_line = (ImageView) itemView.findViewById(R.id.delivery_line);
 
         }
     }

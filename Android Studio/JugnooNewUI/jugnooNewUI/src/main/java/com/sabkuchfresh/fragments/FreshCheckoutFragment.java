@@ -123,15 +123,15 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                     && activity.getProductsResponse().getDeliveryInfo() != null) {
                 double totalAmount = activity.updateCartValuesGetTotalPrice().first;
                 double amountPayable = totalAmount;
-                if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount) {
-                    deliveryCharge = String.format(activity.getResources().getString(R.string.rupees_value_format),
-                            Utils.getMoneyDecimalFormat().format(activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges()));
-                    isDeliveryCharger = "yes";
-                    amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
-
-                } else {
+//                if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount) {
+//                    deliveryCharge = String.format(activity.getResources().getString(R.string.rupees_value_format),
+//                            Utils.getMoneyDecimalFormat().format(activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges()));
+//                    isDeliveryCharger = "yes";
+//                    amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+//
+//                } else {
                     isDeliveryCharger = "";
-                }
+//                }
 
                 ctotalAmount = String.format(activity.getResources().getString(R.string.rupees_value_format),
                         Utils.getMoneyDecimalFormat().format(amountPayable));
