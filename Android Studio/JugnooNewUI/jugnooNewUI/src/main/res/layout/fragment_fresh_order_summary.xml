@@ -40,6 +40,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -225,6 +231,7 @@
                     android:layout_marginLeft="8px"
                     android:layout_marginRight="8px"
                     android:background="@color/text_color_hint"/>
+                </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerViewOrderItems"
@@ -236,6 +243,12 @@
                     android:scrollbars="vertical"
                     android:splitMotionEvents="false"/>
 
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2px"
@@ -468,6 +481,7 @@
 
                 </RelativeLayout>
 
+            </LinearLayout>
 
             </LinearLayout>
 
