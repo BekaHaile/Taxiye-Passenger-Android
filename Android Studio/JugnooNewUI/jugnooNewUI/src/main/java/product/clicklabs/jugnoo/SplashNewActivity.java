@@ -441,7 +441,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			editTextEmail.setTypeface(Fonts.mavenMedium(this));
 			editTextEmail.setAdapter(adapter);
 			editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-			editTextPassword.setTypeface(Fonts.mavenMedium(this), Typeface.ITALIC);
+			editTextPassword.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 			textViewEmailRequired = (TextView) findViewById(R.id.textViewEmailRequired);
 			textViewEmailRequired.setTypeface(Fonts.mavenMedium(this));
 			textViewPasswordRequired = (TextView) findViewById(R.id.textViewPasswordRequired);

@@ -399,7 +399,7 @@
                 android:layout_width="@dimen/splash_button_width"
                 android:layout_height="@dimen/splash_button_height"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="58px"
+                android:layout_marginTop="40px"
                 android:background="@drawable/button_theme_alpha_white_stroke_selector"
                 android:text="@string/sign_up"
                 android:textAllCaps="true"

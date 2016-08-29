@@ -641,7 +641,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             relativeLayoutSort.setVisibility(View.VISIBLE);
             relativeLayoutCart.setVisibility(View.GONE);
 
-            if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 0) == 1) {
+            if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                 fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
                 fabView.setFABMenuDrawable();
             }

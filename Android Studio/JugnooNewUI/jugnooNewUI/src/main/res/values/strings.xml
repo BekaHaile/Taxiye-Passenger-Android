@@ -1104,7 +1104,7 @@
 	<string name="switch_to_our_other_services">Switch to our other services in a second like</string>
 	<string name="easy_and_affordable_commute">Easy and affordable commute</string>
 	<string name="variety_of_quality_readymade_meals">Variety of quality readymade meals</string>
-	<string name="affordable_high_quality_fruits_veggies"><![CDATA[Affordable & high Quality fruits & veggies]]></string>
+	<string name="affordable_high_quality_fruits_veggies">Affordable &amp; high Quality fruits &amp; veggies</string>
 	<string name="delivery">Delivery</string>
 
 </resources>
