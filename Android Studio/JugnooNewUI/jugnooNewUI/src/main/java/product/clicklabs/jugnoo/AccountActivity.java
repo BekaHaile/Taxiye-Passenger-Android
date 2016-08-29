@@ -85,7 +85,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
     LinearLayout linearLayoutLogout, linearLayoutAbout;
 
-	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie, imageViewPokemon, imageViewFAB;
+	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie, imageViewPokemon, imageViewFAB, imageViewFABQuestion;
 	RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
     LinearLayout relativeLayoutPokemon, relativeLayoutFAB;
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
@@ -177,6 +177,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
         relativeLayoutFAB = (LinearLayout) findViewById(R.id.relativeLayoutFAB);
         textViewFAB = (TextView)findViewById(R.id.textViewFAB); textViewFAB.setTypeface(Fonts.mavenMedium(this));
+        imageViewFABQuestion = (ImageView)findViewById(R.id.imageViewFABQuestion);
         imageViewFAB = (ImageView)findViewById(R.id.imageViewFAB);
         relativeLayoutFAB.setVisibility(View.GONE);
         try {
@@ -216,6 +217,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                     imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_on);
                     Prefs.with(AccountActivity.this).save(Constants.FAB_ENABLED_BY_USER, 1);
                 }
+            }
+        });
+
+        imageViewFABQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 

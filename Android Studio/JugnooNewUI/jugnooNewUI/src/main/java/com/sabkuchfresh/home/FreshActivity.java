@@ -137,7 +137,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public String current_pincode = "";
     public boolean locationSearchShown = false;
     public boolean canOrder = false;
-    private ImageView imageViewFabFake;
 
     public void openNotification() {
         menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
@@ -189,28 +188,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 //        if(BuildConfig.DEBUG_MODE)
 //            Utils.showPaystorePopup(FreshActivity.this, "", "please rate us");
-
-            imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
-
-        /*imageViewFabFake.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fabView.menuLabelsRight.isOpened()) {
-                    fabView.menuLabelsRight.close(true);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            fabView.fabExtra.setVisibility(View.GONE);
-                            fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
-                        }
-                    }, 300);
-                } else {
-                    fabView.menuLabelsRight.open(true);
-                    fabView.fabExtra.setVisibility(View.VISIBLE);
-                }
-                fabView.setFABMenuDrawable();
-            }
-        });*/
 
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
@@ -404,6 +381,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         } else{
             fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
         }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -582,6 +582,16 @@
                         android:textSize="28px" />
 
                     <ImageView
+                        android:id="@+id/imageViewFABQuestion"
+                        android:layout_width="40px"
+                        android:layout_height="40px"
+                        android:layout_toRightOf="@+id/textViewFAB"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="18px"
+                        android:src="@drawable/ic_question"
+                        android:tag="mwar"/>
+
+                    <ImageView
                         android:id="@+id/imageViewFAB"
                         android:layout_width="77px"
                         android:layout_height="50px"
