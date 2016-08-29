@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.HomeUtil;
 import com.sabkuchfresh.home.SupportActivity;
-import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
@@ -32,6 +31,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import retrofit.Callback;
@@ -232,7 +232,7 @@ public class PromotionsFragment extends Fragment {
 				} else {
 					DialogPopup.dialogNoInternet(activity,
 							Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
-							new Utils.AlertCallBackWithButtonsInterface() {
+							new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
 								@Override
 								public void positiveClick(View v) {
 									applyPromoCodeAPI(activity, promoCode);

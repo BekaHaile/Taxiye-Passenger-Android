@@ -32,7 +32,6 @@ import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONArray;
@@ -59,6 +58,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -772,7 +772,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     private void retryDialog(DialogErrorType dialogErrorType, final int apiHit) {
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
-                new Utils.AlertCallBackWithButtonsInterface() {
+                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
                         if(apiHit == 1)

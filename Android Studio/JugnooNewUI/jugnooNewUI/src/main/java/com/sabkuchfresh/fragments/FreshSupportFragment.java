@@ -18,7 +18,6 @@ import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.SupportActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
-import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.HashMap;
@@ -33,6 +32,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -138,7 +138,7 @@ public class FreshSupportFragment extends Fragment implements FlurryEventNames {
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
                         DialogPopup.dialogNoInternet(activity, DialogErrorType.CONNECTION_LOST,
-                                new Utils.AlertCallBackWithButtonsInterface() {
+                                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                                     @Override
                                     public void positiveClick(View view) {
                                         sendQuery(editText.getText().toString().trim());
@@ -159,7 +159,7 @@ public class FreshSupportFragment extends Fragment implements FlurryEventNames {
             } else {
                 DialogPopup.dialogNoInternet(activity,
                         Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
-                        new Utils.AlertCallBackWithButtonsInterface() {
+                        new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View v) {
                                 sendQuery(editText.getText().toString().trim());

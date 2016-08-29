@@ -17,13 +17,13 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.SupportActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistory;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
-import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 
 
 public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNames, Constants, View.OnClickListener {
@@ -189,7 +189,7 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 	private void retryDialog(DialogErrorType dialogErrorType){
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
-				new Utils.AlertCallBackWithButtonsInterface() {
+				new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
 						getOrderHistory();
