@@ -152,6 +152,10 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		super.onHiddenChanged(hidden);
 		if (!hidden) {
 			activity.setTitle(MyApplication.getInstance().ACTIVITY_NAME_SUPPORT);
+			if(Data.isSupportRideIssueUpdated) {
+				Data.isSupportRideIssueUpdated = false;
+				activity.getRideSummaryAPI(activity);
+			}
 		}
 	}
 

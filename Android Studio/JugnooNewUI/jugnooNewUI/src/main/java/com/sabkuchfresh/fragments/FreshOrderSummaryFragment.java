@@ -278,12 +278,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
 
                         if (orderHistory.getPendingFeedback() == 1) {
                             buttonCancelOrder.setText(R.string.ok);
-//                            if(activity instanceof FreshActivity) {
-//                                feedbackBtn.setText(R.string.ok);
-//                                reorderBtn.setVisibility(View.GONE);
-//                            } else {
-//                                feedbackBtn.setText(R.string.feedback);
-//                            }
                         } else {
                             if (activity instanceof RideTransactionsActivity) {
                                 buttonCancelOrder.setText(R.string.need_help);
@@ -413,7 +407,8 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                                     public void onClick(View v) {
 
                                         // TODO: 22/08/16 Get output and check here
-                                        Data.isCancelled = true;
+                                        Data.isOrderCancelled = true;
+                                        orderHistory.setCancellable(0);
                                         activity.onBackPressed();
 //                                            if (activity instanceof RideTransactionsActivity) {
 //                                                ((RideTransactionsActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
@@ -501,6 +496,8 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 if (orderHistory.getPendingFeedback() == 1) {
                     if(activity instanceof FreshActivity) {
                         ((FreshActivity) activity).performBackPressed();
+                    } else {
+                        activity.onBackPressed();
                     }
                 } else {
                     if (activity instanceof RideTransactionsActivity) {
