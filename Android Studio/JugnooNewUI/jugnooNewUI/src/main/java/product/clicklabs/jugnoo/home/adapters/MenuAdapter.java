@@ -290,6 +290,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutSubAutos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    holder.imageViewArrow.setRotation(270);
                     drawerLayout.closeDrawer(GravityCompat.START);
                     MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), getLatLng());
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
@@ -299,6 +300,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutSubFresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    holder.imageViewArrow.setRotation(270);
                     onClickAction(MenuInfoTags.FRESH.getTag());
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }

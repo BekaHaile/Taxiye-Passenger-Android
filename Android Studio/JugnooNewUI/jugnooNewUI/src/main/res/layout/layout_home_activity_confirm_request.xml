@@ -28,16 +28,6 @@
         android:visibility="gone"
         />
 
-    <ImageView
-        android:id="@+id/imageViewFabFakeConfirm"
-        android:layout_width="68dp"
-        android:layout_height="68dp"
-        android:src="@drawable/ic_fab_menu_fake"
-        android:tag="DontTouchMe"
-        android:layout_marginLeft="20dp"
-        android:visibility="gone"
-        />
-
     <RelativeLayout
         android:id="@+id/relativeLayoutConfirmBottom"
         android:layout_width="match_parent"

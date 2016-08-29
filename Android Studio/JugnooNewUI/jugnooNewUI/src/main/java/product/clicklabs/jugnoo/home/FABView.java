@@ -76,6 +76,11 @@ public class FABView {
                     } else if(activity instanceof FreshActivity){
                         setRelativeLayoutFABVisibility(null);
                     }
+//                    if (Data.userData.getFreshEnabled() == 1) {
+//                        fabFresh.setVisibility(View.VISIBLE);
+//                    } else {
+//                        fabFresh.setVisibility(View.GONE);
+//                    }
                 }
             }
         });
@@ -119,6 +124,9 @@ public class FABView {
                     ((HomeActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
                 } else {
                     relativeLayoutFAB.setVisibility(View.VISIBLE);
+                    menuLabelsRight.close(true);
+                    fabFresh.setVisibility(View.INVISIBLE);
+                    fabMeals.setVisibility(View.INVISIBLE);
                 }
             } else {
                 if (activity instanceof FreshActivity) {
