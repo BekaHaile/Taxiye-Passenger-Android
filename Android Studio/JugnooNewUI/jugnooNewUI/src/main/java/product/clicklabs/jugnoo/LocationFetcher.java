@@ -36,26 +36,22 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			LOCATION_LAT = "location_lat",
 			LOCATION_LNG = "location_lng";
 	
-	public int priority;
-	
 	private Handler checkLocationUpdateStartedHandler;
 	private Runnable checkLocationUpdateStartedRunnable;
 
 	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 2 * 60000;
 
-	public LocationFetcher(LocationUpdate locationUpdate, long requestInterval, int priority) {
+	public LocationFetcher(LocationUpdate locationUpdate, long requestInterval) {
 		this.locationUpdate = locationUpdate;
 		this.context = (Context) locationUpdate;
 		this.requestInterval = requestInterval;
-		this.priority = priority;
 		connect();
 	}
 
-	public LocationFetcher(Context context, LocationUpdate locationUpdate, long requestInterval, int priority){
+	public LocationFetcher(Context context, LocationUpdate locationUpdate, long requestInterval){
 		this.locationUpdate = locationUpdate;
 		this.context = context;
 		this.requestInterval = requestInterval;
-		this.priority = priority;
 		connect();
 	}
 	
@@ -116,19 +112,11 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 
 
 
-	private void createLocationRequest(long interval, int priority) {
+	private void createLocationRequest(long interval) {
         locationrequest = new LocationRequest();
         locationrequest.setInterval(interval);
         locationrequest.setFastestInterval(interval / 2);
-        if(priority == 1){
-            locationrequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        }
-        else if(priority == 2){
-            locationrequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        }
-        else{
-            locationrequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
-        }
+		locationrequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
 
@@ -140,8 +128,8 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
         googleApiClient.connect();
     }
 
-	private void startLocationUpdates(long interval, int priority) {
-        createLocationRequest(interval, priority);
+	private void startLocationUpdates(long interval) {
+        createLocationRequest(interval);
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationrequest, this);
     }
 
@@ -225,7 +213,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 
 	private synchronized void startRequest(){
 		try {
-            startLocationUpdates(requestInterval, priority);
+            startLocationUpdates(requestInterval);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -243,7 +231,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			}
             bundle.putBoolean("cached", true);
             loc.setExtras(bundle);
-			locationUpdate.onLocationChanged(loc, priority);
+			locationUpdate.onLocationChanged(loc);
 		}
 		startRequest();
 	}
@@ -274,7 +262,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			locationUnchecked = location;
 			if(location != null && !Utils.mockLocationEnabled(location)) {
 				this.location = location;
-				locationUpdate.onLocationChanged(location, priority);
+				locationUpdate.onLocationChanged(location);
 				saveLatLngToSP(context, location.getLatitude(), location.getLongitude());
 			}
 		}catch(Exception e){

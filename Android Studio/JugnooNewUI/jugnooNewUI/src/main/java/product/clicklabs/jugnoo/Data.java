@@ -246,6 +246,7 @@ public class Data {
 
 
 			Prefs.with(context).remove(Constants.SP_FRESH_CART);
+			Prefs.with(context).remove(Constants.SP_MEAL_CART);
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_address_selected));
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_local_address));
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_loc_lati));

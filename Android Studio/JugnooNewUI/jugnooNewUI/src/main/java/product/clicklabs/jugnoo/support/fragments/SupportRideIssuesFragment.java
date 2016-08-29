@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 @SuppressLint("ValidFragment")
 public class SupportRideIssuesFragment extends Fragment implements FlurryEventNames, Constants, FirebaseEvents {
@@ -169,12 +170,22 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 			setRideData();
 			if(items == null && datum != null){
 				items = Database2.getInstance(activity).getSupportDataItems(datum.getSupportCategory());
+				if(Prefs.with(activity).getString(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION, "-1").equalsIgnoreCase("-1")){
+					linearLayoutRideShortInfo.setVisibility(View.GONE);
+					cardViewRecycler.setVisibility(View.GONE);
+					int supportCategory = datum.getSupportCategory();
+					if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
+						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.FRESH);
+					} else if (datum.getProductType() == ProductType.MEALS.getOrdinal()){
+						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MEALS);
+					}
+				}
 			}
 			updateIssuesList(items);
 		} else {
 			linearLayoutRideShortInfo.setVisibility(View.GONE);
 			cardViewRecycler.setVisibility(View.GONE);
-			getRideSummaryAPI(activity, engagementId, orderId);
+			getRideSummaryAPI(activity, engagementId, orderId, autosStatus, false, ProductType.AUTO);
 		}
 
 		return rootView;
@@ -239,7 +250,8 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		}
 	}
 
-	public void getRideSummaryAPI(final Activity activity, final int engagementId, final int orderId) {
+	public void getRideSummaryAPI(final Activity activity, final int engagementId, final int orderId, final int supportCategory,
+								  final boolean fromOrderHistory, final ProductType productType) {
 		new ApiGetRideSummary(activity, Data.userData.accessToken, engagementId, orderId, Data.autoData.getFareStructure().getFixedFare(),
 				new ApiGetRideSummary.Callback() {
 					@Override
@@ -264,14 +276,14 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 					@Override
 					public void onRetry(View view) {
-						getRideSummaryAPI(activity, engagementId, orderId);
+						getRideSummaryAPI(activity, engagementId, orderId, supportCategory, fromOrderHistory, productType);
 					}
 
 					@Override
 					public void onNoRetry(View view) {
 						performBackPress();
 					}
-				}).getRideSummaryAPI(autosStatus, ProductType.AUTO, false);
+				}).getRideSummaryAPI(supportCategory, productType, fromOrderHistory);
 	}
 
 

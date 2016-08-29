@@ -97,7 +97,6 @@ public class TopBar implements FirebaseEvents {
             textViewTitle.setText(activity.getResources().getString(R.string.autos));
         }
 
-        setupFreshUI();
 
     }
 
@@ -219,17 +218,6 @@ public class TopBar implements FirebaseEvents {
         return stateListDrawable;
     }
 
-    public void setupFreshUI() {
-        try {
-//            if (1 == Data.freshAvailable) {
-//                imageViewAppToggle.setVisibility(View.VISIBLE);
-//            } else {
-                relativeLayoutNotification.setVisibility(View.GONE);
-//            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void setTopBarState(Context context, boolean defaultState, String title) {
@@ -238,10 +226,8 @@ public class TopBar implements FirebaseEvents {
                 || HomeActivity.passengerScreenMode == PassengerScreenMode.P_SEARCH
                 || HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
             imageViewHelp.setVisibility(View.GONE);
-            relativeLayoutNotification.setVisibility(View.VISIBLE);
         } else {
             imageViewHelp.setVisibility(View.VISIBLE);
-            relativeLayoutNotification.setVisibility(View.GONE);
         }
         imageViewBack.setVisibility(View.GONE);
         textViewTitle.setText(activity.getResources().getString(R.string.autos));
@@ -250,7 +236,6 @@ public class TopBar implements FirebaseEvents {
         if (!defaultState) {
             imageViewMenu.setVisibility(View.GONE);
             imageViewHelp.setVisibility(View.GONE);
-            relativeLayoutNotification.setVisibility(View.GONE);
             imageViewBack.setVisibility(View.VISIBLE);
             textViewTitle.setText(title);
             textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));

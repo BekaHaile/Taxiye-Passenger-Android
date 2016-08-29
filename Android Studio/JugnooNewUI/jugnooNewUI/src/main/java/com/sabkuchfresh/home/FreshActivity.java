@@ -388,7 +388,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             fetchWalletBalance(this);
 
             if (locationFetcher == null) {
-                locationFetcher = new LocationFetcher(this, 60000l, 1);
+                locationFetcher = new LocationFetcher(this, 60000l);
             } else {
                 locationFetcher.connect();
             }
@@ -1309,7 +1309,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     @Override
-    public void onLocationChanged(Location location, int priority) {
+    public void onLocationChanged(Location location) {
         Data.latitude = location.getLatitude();
         Data.longitude = location.getLongitude();
     }

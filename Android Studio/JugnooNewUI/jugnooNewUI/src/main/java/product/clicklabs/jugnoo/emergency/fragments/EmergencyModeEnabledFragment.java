@@ -173,10 +173,10 @@ public class EmergencyModeEnabledFragment extends Fragment {
 
 		locationFetcher = new LocationFetcher(activity, new LocationUpdate() {
 			@Override
-			public void onLocationChanged(Location location, int priority) {
+			public void onLocationChanged(Location location) {
 				EmergencyModeEnabledFragment.this.location = location;
 			}
-		}, 1000, 2);
+		}, 1000);
 
 
 		callEmergencyAlert();

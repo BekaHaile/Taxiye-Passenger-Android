@@ -384,7 +384,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			clickCount = 0;
 
 			if (Data.locationFetcher == null) {
-				Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+				Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
 			} else{
 				Data.locationFetcher.connect();
 			}
@@ -1326,7 +1326,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		super.onResume();
 
 		if (Data.locationFetcher == null) {
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000, 1);
+			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
 		} else{
 			Data.locationFetcher.connect();
 		}
@@ -1830,7 +1830,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 	@Override
-	public void onLocationChanged(Location location, int priority) {
+	public void onLocationChanged(Location location) {
 		Data.loginLatitude = location.getLatitude();
 		Data.loginLongitude = location.getLongitude();
 	}

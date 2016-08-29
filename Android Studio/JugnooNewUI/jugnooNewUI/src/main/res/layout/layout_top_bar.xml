@@ -75,6 +75,7 @@
                 android:layout_height="70px"
                 android:layout_marginLeft="10px"
                 android:layout_gravity="center_vertical"
+                android:visibility="gone"
                 >
 
                 <ImageView
