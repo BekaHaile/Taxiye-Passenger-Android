@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.R;
@@ -263,6 +264,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                     @Override
                     public void onPlaceSearchPost(SearchResult searchResult) {
                         progressBarSearch.setVisibility(View.GONE);
+                        if(BuildConfig.DEBUG_MODE)
+                            Toast.makeText(homeActivity, ""+searchResult.getAddress(), Toast.LENGTH_LONG).show();
 //                        searchAddress.setText(searchResult.name);
                         editTextSearch.setText("");
                         linearLayoutSearch.setVisibility(View.GONE);
@@ -562,11 +565,21 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                             homeActivity.current_latitude = latLng.latitude;
                             homeActivity.current_longitude = latLng.longitude;
 
+                            homeActivity.current_street = ""+geocodeResponse.results.get(0).getStreetNumber();
+                            homeActivity.current_route = ""+geocodeResponse.results.get(0).getRoute();
                             homeActivity.current_area = "" + geocodeResponse.results.get(0).getLocality();
                             homeActivity.current_city = "" + geocodeResponse.results.get(0).getCity();
                             homeActivity.current_pincode = "" + geocodeResponse.results.get(0).getPin();
-                            mAddressName.setText("For\n" + geocodeResponse.results.get(0).getAddAddress()+", "+homeActivity.current_city);
-                            textVeiwSearch.setText("" + geocodeResponse.results.get(0).getAddAddress()+", "+homeActivity.current_city);
+                            String streetNum = homeActivity.current_street;
+                            if(homeActivity.current_street.length()>0)
+                                streetNum = geocodeResponse.results.get(0).getStreetNumber()+", ";
+
+                            String route = homeActivity.current_route;
+                            if(route.length()>0)
+                                route = geocodeResponse.results.get(0).getRoute() + ", ";
+
+                            mAddressName.setText("For\n"+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+homeActivity.current_city);
+                            textVeiwSearch.setText(""+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+homeActivity.current_city);
 
                         } catch (Exception e) {
                             e.printStackTrace();

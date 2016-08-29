@@ -117,6 +117,8 @@ public class AddToAddressBookFragment extends Fragment {
             cityValue = homeActivity.current_city;
             pinCodeValue = homeActivity.current_pincode;
             areaReceived = homeActivity.current_area;
+        homeAddressReceived = homeActivity.current_street;
+        buildingStreetReceived = homeActivity.current_route;
 //
 //
 //
@@ -398,6 +400,8 @@ public class AddToAddressBookFragment extends Fragment {
             }
         });
 
+        houseNumber.setText(homeAddressReceived);
+        buildingStreetName.setText(buildingStreetReceived);
             area.setText(areaReceived);
             city.setText(cityValue);
             pinCode.setText(pinCodeValue);

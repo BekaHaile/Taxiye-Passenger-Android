@@ -252,14 +252,14 @@ public class SearchListAdapter extends BaseAdapter{
                         if(!context.getResources().getString(R.string.no_results_found).equalsIgnoreCase(autoCompleteSearchResult.getName())
                                 && !context.getResources().getString(R.string.no_internet_connection).equalsIgnoreCase(autoCompleteSearchResult.getName())){
                             Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
-                            Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult);
+                            Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult.getAddress());
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (autoCompleteSearchResult.getPlaceId() != null
                                             && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
                                         searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-                                        getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.getPlaceId());
+                                        getSearchResultFromPlaceId(autoCompleteSearchResult.getName(),autoCompleteSearchResult.getAddress(), autoCompleteSearchResult.getPlaceId());
                                     } else{
                                         searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
                                         searchListActionsHandler.onPlaceSearchPre();
@@ -401,7 +401,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 
 
-    private synchronized void getSearchResultFromPlaceId(final String placeName, final String placeId) {
+    private synchronized void getSearchResultFromPlaceId(final String placeName, final String placeAddress, final String placeId) {
         searchListActionsHandler.onPlaceSearchPre();
         Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 		Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
