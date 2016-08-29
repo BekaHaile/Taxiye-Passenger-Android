@@ -376,7 +376,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
     PushDialog pushDialog;
 
-    LocationFetcher lowPowerLF, highAccuracyLF;
+    LocationFetcher highAccuracyLF;
 
     PromoCoupon promoCouponSelectedForRide;
 
@@ -745,18 +745,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove); textViewRSWhatImprove.setTypeface(Fonts.mavenLight(this));
         textViewRSOtherError = (TextView) findViewById(R.id.textViewRSOtherError); textViewRSOtherError.setTypeface(Fonts.mavenLight(this));
         gridViewRSFeedbackReasons = (NonScrollGridView) findViewById(R.id.gridViewRSFeedbackReasons);
-        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.autoData.getFeedbackReasons(),
-                new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
-                    @Override
-                    public void onLastItemSelected(boolean selected) {
-                        if(!selected){
-                            if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
-                                textViewRSOtherError.setText("");
-                            }
-                        }
-                    }
-                });
-        gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
+        try {
+            feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.autoData.getFeedbackReasons(),
+					new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
+						@Override
+						public void onLastItemSelected(boolean selected) {
+							if(!selected){
+								if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
+									textViewRSOtherError.setText("");
+								}
+							}
+						}
+					});
+            gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         editTextRSFeedback = (EditText) findViewById(R.id.editTextRSFeedback); editTextRSFeedback.setTypeface(Fonts.mavenLight(this));
         buttonRSSubmitFeedback = (Button) findViewById(R.id.buttonRSSubmitFeedback); buttonRSSubmitFeedback.setTypeface(Fonts.mavenRegular(this));
         buttonRSSkipFeedback = (Button) findViewById(R.id.buttonRSSkipFeedback); buttonRSSkipFeedback.setTypeface(Fonts.mavenRegular(this));
@@ -770,16 +774,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewRSOtherError.setText("");
 
 
-        if(Data.userData != null){
-            textViewSendInvites.setText(Data.autoData.getInRideSendInviteTextBold());
-            textViewSendInvites2.setText(Data.autoData.getInRideSendInviteTextNormal());
-            if(Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
-                textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
-            } else{
-                textVieGetFareEstimateConfirm.setVisibility(View.GONE);
-            }
+        try {
+            if(Data.autoData != null){
+				textViewSendInvites.setText(Data.autoData.getInRideSendInviteTextBold());
+				textViewSendInvites2.setText(Data.autoData.getInRideSendInviteTextNormal());
+				if(Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
+					textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
+				} else{
+					textVieGetFareEstimateConfirm.setVisibility(View.GONE);
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
 
 
         imageViewPokemonOnOffInitial = (ImageView) findViewById(R.id.imageViewPokemonOnOffInitial); imageViewPokemonOnOffInitial.setVisibility(View.GONE);
@@ -1600,14 +1607,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             //22.971723, 78.754263
 
 
-            if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
-                    || (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
-                forceFarAwayCity();
-                Data.autoData.setLastRefreshLatLng(new LatLng(22.971723, 78.754263));
-            } else {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
-                Data.autoData.setLastRefreshLatLng(new LatLng(Data.latitude, Data.longitude));
+            try {
+                if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
+						|| (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
+					map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
+					forceFarAwayCity();
+					Data.autoData.setLastRefreshLatLng(new LatLng(22.971723, 78.754263));
+				} else {
+					map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
+					Data.autoData.setLastRefreshLatLng(new LatLng(Data.latitude, Data.longitude));
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             /*map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -1725,26 +1736,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onMapSettled() {
                     // Map settled
-                    checkForMyLocationButtonVisibility();
                     boolean refresh = false;
-                    if(Data.autoData.getLastRefreshLatLng() == null){
-                        Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
-                        refresh = true;
-                    }
-                    else{
-                        Log.v("Min Difference is = ","---> "+MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target));
-                        if(MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH){
-                            Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
-                            refresh = true;
-                        }
-                    }
-                    if(!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
-                        if (refresh && mapTouched) {
-                            callMapTouchedRefreshDrivers();
-                        }
-                        if (!zoomedForSearch && map != null) {
-                            getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
-                        }
+                    try {
+                        checkForMyLocationButtonVisibility();
+                        refresh = false;
+                        if(Data.autoData.getLastRefreshLatLng() == null){
+							Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
+							refresh = true;
+						}
+						else{
+							Log.v("Min Difference is = ","---> "+MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target));
+							if(MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH){
+								Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
+								refresh = true;
+							}
+						}
+                        if(!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
+							if (refresh && mapTouched) {
+								callMapTouchedRefreshDrivers();
+							}
+							if (!zoomedForSearch && map != null) {
+								getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
+							}
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
                     try {
@@ -2639,7 +2655,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
-                        topBar.relativeLayoutNotification.setVisibility(View.VISIBLE);
+                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         if(!firstTimeZoom && !confirmedScreenOpened){
                             if(Data.autoData.getPickupLatLng() != null){
@@ -4571,7 +4587,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }*/
 //            }
             menuBar.setupFreshUI();
-            topBar.setupFreshUI();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -6335,36 +6350,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void initializeFusedLocationFetchers() {
         destroyFusedLocationFetchers();
-        if (myLocation == null) {
-            if (lowPowerLF == null) {
-                lowPowerLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 0);
-            }
-            if (highAccuracyLF == null) {
-                highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 2);
-            }
-        } else {
-            if (highAccuracyLF == null) {
-                highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD, 2);
-            }
+        if (highAccuracyLF == null) {
+            highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
         }
     }
 
 
     public void destroyFusedLocationFetchers() {
-        destroyLowPowerFusedLocationFetcher();
         destroyHighAccuracyFusedLocationFetcher();
     }
 
-    public void destroyLowPowerFusedLocationFetcher() {
-        try {
-            if (lowPowerLF != null) {
-                lowPowerLF.destroy();
-                lowPowerLF = null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void destroyHighAccuracyFusedLocationFetcher() {
         try {
@@ -6379,19 +6374,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     @Override
-    public synchronized void onLocationChanged(Location location, int priority) {
+    public synchronized void onLocationChanged(Location location) {
         try {
             Data.latitude = location.getLatitude();
             Data.longitude = location.getLongitude();
-            if (priority == 0) {
-                if (location.getAccuracy() <= LOW_POWER_ACCURACY_CHECK) {
-                    HomeActivity.myLocation = location;
-                }
-            } else if (priority == 2) {
-                destroyLowPowerFusedLocationFetcher();
-                if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
-                    HomeActivity.myLocation = location;
-                }
+            if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
+                HomeActivity.myLocation = location;
             }
 
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){

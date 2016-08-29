@@ -488,7 +488,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     }
 
     @Override
-    public void onLocationChanged(Location location, int priority) {
+    public void onLocationChanged(Location location) {
         Data.latitude = location.getLatitude();
         Data.longitude = location.getLongitude();
     }
