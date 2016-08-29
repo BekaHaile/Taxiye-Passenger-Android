@@ -181,8 +181,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
         imageViewFAB = (ImageView)findViewById(R.id.imageViewFAB);
         relativeLayoutFAB.setVisibility(View.GONE);
         try {
-            if(Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_FAB_SETTING, 0) == 1 &&
-                    Data.userData.getIntegratedJugnooEnabled() == 1){
+            if((Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_FAB_SETTING, 0) == 1) &&
+                    (Data.userData.getIntegratedJugnooEnabled() == 1) &&
+                    (Data.userData.getFreshEnabled() == 1 || Data.userData.getMealsEnabled() == 1 ||
+                    Data.userData.getDeliveryEnabled() == 1)){
                 relativeLayoutFAB.setVisibility(View.VISIBLE);
                 if(Prefs.with(AccountActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_on);

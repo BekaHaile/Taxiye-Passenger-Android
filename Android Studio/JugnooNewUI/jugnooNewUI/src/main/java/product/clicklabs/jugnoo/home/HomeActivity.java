@@ -3075,7 +3075,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     private void setFabViewAtRide(PassengerScreenMode mode){
-        float containerHeight = 160f;
+        float containerHeight = 165f;
         fabView.setRelativeLayoutFABVisibility(mode);
         int dpAsPixels1 = 0;
         if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){

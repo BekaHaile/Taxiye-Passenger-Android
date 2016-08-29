@@ -170,11 +170,6 @@ public class FABView {
             //fabAutos.setVisibility(View.VISIBLE);
         }
 
-        /*if(activity instanceof FreshActivity){
-            fabAutos.setVisibility(View.VISIBLE);
-        } else{
-            fabAutos.setVisibility(View.GONE);
-        }*/
         //setFABButtons();
     }
 
