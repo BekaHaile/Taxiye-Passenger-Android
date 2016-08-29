@@ -102,9 +102,13 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
         activity.setSwipeAvailable(true);
 
-        if(!TextUtils.isEmpty(Data.userData.getUserId())) {
-            MyApplication.getInstance().branch.setIdentity(Data.userData.getUserId());
-        }
+		try {
+			if(!TextUtils.isEmpty(Data.userData.getUserId())) {
+				MyApplication.getInstance().branch.setIdentity(Data.userData.getUserId());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		activity.fragmentUISetup(this);
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
@@ -185,15 +189,19 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
             e.printStackTrace();
         }
 
-        if(Data.userData.getPromoSuccess() == 0) {
-            showPromoFailedAtSignupDialog();
-        } else if(Data.getFreshData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
-            Data.getFreshData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
-            showPopup();
-        } else if(Data.getFreshData().getPopupData() != null) {
-            pushDialog = new PushDialog(activity, this);
-            pushDialog.show(Data.getFreshData().getPopupData());
-        }
+		try {
+			if(Data.userData.getPromoSuccess() == 0) {
+				showPromoFailedAtSignupDialog();
+			} else if(Data.getFreshData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
+				Data.getFreshData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
+				showPopup();
+			} else if(Data.getFreshData().getPopupData() != null) {
+				pushDialog = new PushDialog(activity, this);
+				pushDialog.show(Data.getFreshData().getPopupData());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return rootView;
 	}

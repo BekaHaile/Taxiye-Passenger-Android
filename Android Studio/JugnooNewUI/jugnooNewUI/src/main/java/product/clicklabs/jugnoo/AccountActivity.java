@@ -213,7 +213,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
         imageViewFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Prefs.with(AccountActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 0) == 1) {
+                if(Prefs.with(AccountActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_off);
                     Prefs.with(AccountActivity.this).save(Constants.FAB_ENABLED_BY_USER, 0);
                 } else {
