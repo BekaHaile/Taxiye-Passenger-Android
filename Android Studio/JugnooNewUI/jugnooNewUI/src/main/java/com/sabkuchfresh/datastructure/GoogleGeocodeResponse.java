@@ -210,6 +210,58 @@ public class GoogleGeocodeResponse {
             return city;
         }
 
+        public String getStreetNumber() {
+            String streetNumber = "";
+            if(addressComponents.size()>0) {
+                for(int i=0;i<addressComponents.size(); i++) {
+                    ArrayList<String> addressTypes = new ArrayList<String>();
+                    for (int j = 0; j < addressComponents.get(i).types.size(); j++) {
+                        addressTypes.add(addressComponents.get(i).types.get(j));
+                    }
+                    if (addressTypes.contains("street_number")) {
+                        streetNumber = addressComponents.get(i).longName;
+                    }
+
+
+                }
+                if(!TextUtils.isEmpty(streetNumber)) {
+                    return streetNumber+"";
+                } else {
+                    return "";
+                }
+            } else {
+                String[] address = TextUtils.split(this.formatted_address, ",");
+                streetNumber = address[0].trim()+"";
+            }
+            return streetNumber;
+        }
+
+        public String getRoute() {
+            String route = "";
+            if(addressComponents.size()>0) {
+                for(int i=0;i<addressComponents.size(); i++) {
+                    ArrayList<String> addressTypes = new ArrayList<String>();
+                    for (int j = 0; j < addressComponents.get(i).types.size(); j++) {
+                        addressTypes.add(addressComponents.get(i).types.get(j));
+                    }
+                    if (addressTypes.contains("route")) {
+                        route = addressComponents.get(i).longName;
+                    }
+
+
+                }
+                if(!TextUtils.isEmpty(route)) {
+                    return route+"";
+                } else {
+                    return "";
+                }
+            } else {
+                String[] address = TextUtils.split(this.formatted_address, ",");
+                route = address[1].trim()+"";
+            }
+            return route;
+        }
+
         public String getState() {
             String city = "", locality = "",sublocality = "", state = "";
             if(addressComponents.size()>0) {

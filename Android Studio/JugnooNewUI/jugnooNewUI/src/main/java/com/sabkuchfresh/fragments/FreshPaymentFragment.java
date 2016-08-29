@@ -216,6 +216,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                applyButton.setEnabled(true);
                 if(s.length()==0)
                     applyButton.setBackgroundColor(activity.getResources().getColor(R.color.apply_btn_normal));
                 else
@@ -558,6 +559,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                     promoCode = appPromoEdittext.getText().toString().trim();
                                     promoAmount = jObj.optDouble(Constants.DISCOUNT, 0);
                                     appPromoEdittext.clearFocus();
+                                    applyButton.setEnabled(false);
                                     applyButton.setBackgroundColor(activity.getResources().getColor(R.color.theme_color_pressed));
                                     updateUI();
 

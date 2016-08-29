@@ -54,6 +54,8 @@
                     android:layout_width="156px"
                     android:layout_height="match_parent"
                     android:animateLayoutChanges="true"
+
+                    android:layout_marginTop="6px"
                     android:background="@drawable/background_white_grey_light_selector">
 
 
@@ -133,6 +135,7 @@
                     android:layout_toRightOf="@+id/relativeLayoutLeft"
                     android:layout_toLeftOf="@+id/relativeRight"
                     android:gravity="center_horizontal"
+                    android:layout_marginTop="6px"
                     android:singleLine="true"
                     android:text=""
                     android:textColor="@color/cart_price"
@@ -146,13 +149,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:layout_marginTop="6px"
                     android:layout_centerVertical="true">
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutCartNew"
                         android:layout_width="132px"
                         android:layout_height="match_parent"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <View
                             android:layout_width="2px"

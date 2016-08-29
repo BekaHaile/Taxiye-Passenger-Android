@@ -142,7 +142,7 @@
         android:background="@color/white_60"
         android:orientation="vertical"
         android:splitMotionEvents="false"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/relativeLayoutSearchBar"

@@ -132,6 +132,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public String current_action = "";
     public double current_latitude = 0.0;
     public double current_longitude = 0.0;
+    public String current_street = "";
+    public String current_route = "";
     public String current_area = "";
     public String current_city = "";
     public String current_pincode = "";
