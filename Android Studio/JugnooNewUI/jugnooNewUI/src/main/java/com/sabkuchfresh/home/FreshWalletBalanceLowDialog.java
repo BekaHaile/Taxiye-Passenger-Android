@@ -56,7 +56,17 @@ public class FreshWalletBalanceLowDialog {
 
 			TextView textViewLessAmountValue = (TextView) dialog.findViewById(R.id.textViewLessAmountValue);
 			textViewLessAmountValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-			textViewLessAmountValue.setText(amount);
+			try {
+				if(Double.parseDouble(amount)<0) {
+					amount = amount.replaceAll("-", "");
+					textViewLessAmountValue.setText(activity.getResources().getString(R.string.rupees_minus_value_format_without_space, amount));
+				} else {
+					textViewLessAmountValue.setText(activity.getResources().getString(R.string.rupees_value_format_without_space, amount));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				textViewLessAmountValue.setText(amount);
+			}
 
 			Button buttonRechargeNow = (Button) dialog.findViewById(R.id.buttonRechargeNow);
 			buttonRechargeNow.setTypeface(Fonts.mavenRegular(activity));
