@@ -12,6 +12,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
@@ -63,6 +64,7 @@ public class UserData {
 
 	private String defaultClientId;
 
+	private JeanieIntroDialogContent jeanieIntroDialogContent;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -486,7 +488,7 @@ public class UserData {
 			setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE, getJugnooBalance()));
 			if(jObj.has(Constants.KEY_PAYTM_BALANCE)){
 				setPaytmBalance(jObj.optDouble(Constants.KEY_PAYTM_BALANCE, getPaytmBalance()));
-				if(getPaytmBalance() > 0) {
+				if(getPaytmBalance() > 0 || removeWalletIfNoKey) {
 					setPaytmEnabled(1);
 				}
 			} else{
@@ -497,7 +499,7 @@ public class UserData {
 
 			if(jObj.has(Constants.KEY_MOBIKWIK_BALANCE)){
 				setMobikwikBalance(jObj.optDouble(Constants.KEY_MOBIKWIK_BALANCE, getMobikwikBalance()));
-				if(getMobikwikBalance() > 0) {
+				if(getMobikwikBalance() > 0 || removeWalletIfNoKey) {
 					setMobikwikEnabled(1);
 				}
 			} else{
@@ -688,6 +690,14 @@ public class UserData {
 		}
 
 		return coupons;
+	}
+
+	public JeanieIntroDialogContent getJeanieIntroDialogContent() {
+		return jeanieIntroDialogContent;
+	}
+
+	public void setJeanieIntroDialogContent(JeanieIntroDialogContent jeanieIntroDialogContent) {
+		this.jeanieIntroDialogContent = jeanieIntroDialogContent;
 	}
 
 //	"meals_enabled": 1,

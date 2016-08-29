@@ -47,8 +47,12 @@ public class MenuBar {
 		recyclerViewMenu.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewMenu.setHasFixedSize(false);
 
-		menuAdapter = new MenuAdapter(Data.userData.getMenuInfoList(), activity, drawerLayout);
-		recyclerViewMenu.setAdapter(menuAdapter);
+		try {
+			menuAdapter = new MenuAdapter(Data.userData.getMenuInfoList(), activity, drawerLayout);
+			recyclerViewMenu.setAdapter(menuAdapter);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		setActivityNames();
 

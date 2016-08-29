@@ -259,6 +259,8 @@ public class JSONParser implements Constants {
 
         Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
 
+        Data.userData.setJeanieIntroDialogContent(loginUserData.getJeanieIntroDialogContent());
+
         MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData, Data.userData);
 
         try {
