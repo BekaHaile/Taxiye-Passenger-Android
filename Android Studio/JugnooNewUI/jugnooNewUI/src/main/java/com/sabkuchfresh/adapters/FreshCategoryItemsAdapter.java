@@ -22,7 +22,6 @@ import com.sabkuchfresh.dialogs.BannerDetailDialog;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.DialogPopup;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -31,6 +30,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 

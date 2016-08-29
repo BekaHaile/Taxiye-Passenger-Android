@@ -20,7 +20,6 @@ import com.sabkuchfresh.fragments.PromotionsFragment;
 import com.sabkuchfresh.retrofit.model.OrderHistory;
 import com.sabkuchfresh.retrofit.model.OrderItem;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.DialogPopup;
 
 import org.json.JSONObject;
 
@@ -28,6 +27,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;

@@ -117,7 +117,7 @@
                             android:gravity="center"
                             android:minWidth="45px"
                             android:padding="8px"
-                            android:text="2"
+                            android:text="0"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_24"
                               />
@@ -134,7 +134,7 @@
                     android:layout_toLeftOf="@+id/relativeRight"
                     android:gravity="center_horizontal"
                     android:singleLine="true"
-                    android:text="123"
+                    android:text=""
                     android:textColor="@color/cart_price"
                     android:textSize="@dimen/text_size_38"
 
@@ -152,7 +152,7 @@
                         android:id="@+id/relativeLayoutCartNew"
                         android:layout_width="132px"
                         android:layout_height="match_parent"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <View
                             android:layout_width="2px"

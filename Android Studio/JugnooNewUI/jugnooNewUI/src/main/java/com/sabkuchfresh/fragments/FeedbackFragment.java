@@ -22,7 +22,6 @@ import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
-import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
@@ -43,6 +42,7 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -323,7 +323,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                         DialogPopup.dismissLoadingDialog();
 
                             DialogPopup.dialogNoInternet(activity, DialogErrorType.CONNECTION_LOST,
-                                    new Utils.AlertCallBackWithButtonsInterface() {
+                                    new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                                         @Override
                                         public void positiveClick(View view) {
                                             sendQuery(rating);
@@ -347,7 +347,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                     DialogPopup.dialogNoInternet(activity,
                             Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
 
-                            new Utils.AlertCallBackWithButtonsInterface() {
+                            new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                                 @Override
                                 public void positiveClick(View v) {
                                     sendQuery(rating);
@@ -435,7 +435,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             DialogPopup.dialogNoInternet(activity,
                     "", message,
 
-                    new Utils.AlertCallBackWithButtonsInterface() {
+                    new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                         @Override
                         public void positiveClick(View v) {
                             getOrderData();

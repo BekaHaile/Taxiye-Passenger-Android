@@ -26,8 +26,6 @@ import com.sabkuchfresh.retrofit.model.SubItemCompare;
 import com.sabkuchfresh.retrofit.model.SubItemComparePrice;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceRev;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.DialogPopup;
-import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 
 import org.json.JSONObject;
@@ -47,6 +45,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -307,7 +306,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     private void retryDialog(DialogErrorType dialogErrorType) {
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
-                new Utils.AlertCallBackWithButtonsInterface() {
+                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
                         getAllProducts(true);

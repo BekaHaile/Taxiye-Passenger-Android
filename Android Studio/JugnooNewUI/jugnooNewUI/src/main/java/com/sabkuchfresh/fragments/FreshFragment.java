@@ -25,9 +25,7 @@ import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.DialogPopup;
 import com.sabkuchfresh.utils.PushDialog;
-import com.sabkuchfresh.utils.Utils;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -49,6 +47,7 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -340,7 +339,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	private void retryDialog(DialogErrorType dialogErrorType){
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
-				new Utils.AlertCallBackWithButtonsInterface() {
+				new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
 						getAllProducts(loader);

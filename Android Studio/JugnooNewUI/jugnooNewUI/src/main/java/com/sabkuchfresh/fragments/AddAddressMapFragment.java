@@ -36,7 +36,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.utils.DialogPopup;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -54,6 +53,7 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
