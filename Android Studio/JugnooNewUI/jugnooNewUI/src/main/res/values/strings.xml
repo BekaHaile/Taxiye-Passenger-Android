@@ -832,6 +832,7 @@
 	<string name="checkout">Checkout</string>
 	<string name="my_cart">My Cart</string>
 	<string name="total_amount">Total Amount</string>
+	<string name="order_amount">Order Amount</string>
 	<string name="delivery_charges">Delivery Charges</string>
 	<string name="discount">Discount</string>
 	<string name="delivery_address">Delivery Address</string>

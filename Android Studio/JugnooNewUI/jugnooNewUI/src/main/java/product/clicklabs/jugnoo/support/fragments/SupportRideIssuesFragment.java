@@ -197,7 +197,13 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		if (!hidden) {
 			setActivityTitle();
 			if(Data.isCancelled) {
-				getRideSummaryAPI(activity, engagementId, orderId);
+				int orderId = datum.getOrderId();
+				int supportCategory = datum.getSupportCategory();
+				if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
+					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.FRESH);
+				} else if (datum.getProductType() == ProductType.MEALS.getOrdinal()){
+					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.MEALS);
+				}
 			}
 		}
 	}
