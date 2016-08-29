@@ -981,7 +981,7 @@
 	<string name="choose_other_mode_to_pay">Choose other mode to pay</string>
 
     <string name="jugnoo_pokemon">POKEMON RADAR</string>
-	<string name="jugnoo_fab">JUGNOO JEANIE</string>
+	<string name="jugnoo_fab">SHOW JUGNOO JEANIE</string>
 
 
 
@@ -1101,5 +1101,10 @@
 	<string name="sorry_no_match_found">Sorry! No match found</string>
 	<string name="trip_total">Trip Total</string>
 	<string name="order_total">Order Total</string>
+	<string name="switch_to_our_other_services">Switch to our other services in a second like</string>
+	<string name="easy_and_affordable_commute">Easy and affordable commute</string>
+	<string name="variety_of_quality_readymade_meals">Variety of quality readymade meals</string>
+	<string name="affordable_high_quality_fruits_veggies"><![CDATA[Affordable & high Quality fruits & veggies]]></string>
+	<string name="delivery">Delivery</string>
 
 </resources>

@@ -8,6 +8,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 
@@ -436,6 +437,9 @@ public class LoginResponse {
 		@SerializedName("referral_sharing_message")
 		@Expose
 		private String referralSharingMessage;
+		@SerializedName("jeanie_intro_dialog_content")
+		@Expose
+		private JeanieIntroDialogContent jeanieIntroDialogContent;
 
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
@@ -571,6 +575,14 @@ public class LoginResponse {
 
 		public void setReferralSharingMessage(String referralSharingMessage) {
 			this.referralSharingMessage = referralSharingMessage;
+		}
+
+		public JeanieIntroDialogContent getJeanieIntroDialogContent() {
+			return jeanieIntroDialogContent;
+		}
+
+		public void setJeanieIntroDialogContent(JeanieIntroDialogContent jeanieIntroDialogContent) {
+			this.jeanieIntroDialogContent = jeanieIntroDialogContent;
 		}
 	}
 
