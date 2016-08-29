@@ -805,8 +805,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } else{
                     fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 8, (int) (235f * ASSL.Yscale()));
                 }
-                imageViewFabFake.setVisibility(View.INVISIBLE);
                 openFABView();
+                //imageViewFabFake.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -1033,6 +1033,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutDestSearchBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
                 ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
                 int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
                 if(index == 1 && Data.autoData.getDropLatLng() == null) {
@@ -1871,7 +1872,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }, 300);
         } else {
             fabView.menuLabelsRight.open(true);
-            fabView.fabExtra.setVisibility(View.VISIBLE);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fabView.fabExtra.setVisibility(View.VISIBLE);
+                    imageViewFabFake.setVisibility(View.INVISIBLE);
+                }
+            },300);
+
         }
 
     }
