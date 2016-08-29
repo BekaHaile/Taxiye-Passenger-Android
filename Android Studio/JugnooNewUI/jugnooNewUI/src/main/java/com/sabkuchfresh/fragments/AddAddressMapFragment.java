@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.R;
@@ -264,8 +263,6 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                     @Override
                     public void onPlaceSearchPost(SearchResult searchResult) {
                         progressBarSearch.setVisibility(View.GONE);
-                        if(BuildConfig.DEBUG_MODE)
-                            Toast.makeText(homeActivity, ""+searchResult.getAddress(), Toast.LENGTH_LONG).show();
 //                        searchAddress.setText(searchResult.name);
                         editTextSearch.setText("");
                         linearLayoutSearch.setVisibility(View.GONE);
