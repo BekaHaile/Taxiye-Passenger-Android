@@ -438,7 +438,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private PokestopHelper pokestopHelper;
     ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffAssigning, imageViewPokemonOnOffEngaged;
-    private ImageView imageViewFabFake, imageViewFabFakeConfirm;
+    private ImageView imageViewFabFake;
     private Bundle bundle;
     public float scale = 0f;
 
@@ -795,7 +795,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewPokemonOnOffEngaged = (ImageView) findViewById(R.id.imageViewPokemonOnOffEngaged); imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
 
         imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
-        imageViewFabFakeConfirm = (ImageView) findViewById(R.id.imageViewFabFakeConfirm);
         imageViewFabFake.setVisibility(View.GONE);
 
         imageViewFabFake.setOnClickListener(new OnClickListener() {
@@ -807,16 +806,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 8, (int) (235f * ASSL.Yscale()));
                 }
                 imageViewFabFake.setVisibility(View.INVISIBLE);
-                openFABView();
-            }
-        });
-
-        imageViewFabFakeConfirm.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                float scale = getResources().getDisplayMetrics().density;
-                int dpAsPixels = (int) (350f*scale + 0.5f);
-                fabView.menuLabelsRight.setPadding((int)(40*ASSL.Yscale()), 0, 8, dpAsPixels);
                 openFABView();
             }
         });
@@ -924,6 +913,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewRideNow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                //fabView.menuLabelsRight.close(true);
+                //imageViewFabFake.setVisibility(View.GONE);
                 Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                 if(getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())){
                     Bundle bundle = new Bundle();
