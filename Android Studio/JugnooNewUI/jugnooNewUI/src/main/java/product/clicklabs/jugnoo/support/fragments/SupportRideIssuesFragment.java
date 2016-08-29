@@ -196,7 +196,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		super.onHiddenChanged(hidden);
 		if (!hidden) {
 			setActivityTitle();
-			if(Data.isCancelled) {
+			if(Data.isOrderCancelled) {
 				int orderId = datum.getOrderId();
 				int supportCategory = datum.getSupportCategory();
 				if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
@@ -204,6 +204,8 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				} else if (datum.getProductType() == ProductType.MEALS.getOrdinal()){
 					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.MEALS);
 				}
+				Data.isSupportRideIssueUpdated = true;
+				Data.isOrderCancelled = false;
 			}
 		}
 	}

@@ -407,7 +407,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                                     public void onClick(View v) {
 
                                         // TODO: 22/08/16 Get output and check here
-                                        Data.isCancelled = true;
+                                        Data.isOrderCancelled = true;
                                         orderHistory.setCancellable(0);
                                         activity.onBackPressed();
 //                                            if (activity instanceof RideTransactionsActivity) {
@@ -496,6 +496,8 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 if (orderHistory.getPendingFeedback() == 1) {
                     if(activity instanceof FreshActivity) {
                         ((FreshActivity) activity).performBackPressed();
+                    } else {
+                        activity.onBackPressed();
                     }
                 } else {
                     if (activity instanceof RideTransactionsActivity) {

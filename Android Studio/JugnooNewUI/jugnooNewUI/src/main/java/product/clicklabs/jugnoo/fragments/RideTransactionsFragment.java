@@ -211,8 +211,8 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		super.onHiddenChanged(hidden);
 		if(!hidden){
 			setActivityTitle();
-			if(Data.isCancelled) {
-				Data.isCancelled = false;
+			if(Data.isOrderCancelled) {
+				Data.isOrderCancelled = false;
 				getRecentRidesAPI(activity, true);
 			}
 		}
