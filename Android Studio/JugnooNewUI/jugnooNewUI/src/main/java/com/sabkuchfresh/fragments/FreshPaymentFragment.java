@@ -293,7 +293,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
         if (promoAmount > 0) {
             relativeLayoutPromo.setVisibility(View.VISIBLE);
-            textViewPromoValue.setText("" + promoAmount);
+            textViewPromoValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(promoAmount)));
+            //textViewPromoValue.setText("" + promoAmount);
         } else {
             relativeLayoutPromo.setVisibility(View.GONE);
         }
@@ -310,11 +311,14 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         }
 
         if (jcAmount > 0) {
-            relativeLayoutJC.setVisibility(View.VISIBLE);
             relativeLayoutTotalLayout.setVisibility(View.VISIBLE);
-
-            textViewJCValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-                    Utils.getMoneyDecimalFormat().format(jcAmount)));
+            if(totalAmount>0) {
+                relativeLayoutJC.setVisibility(View.VISIBLE);
+                textViewJCValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+                        Utils.getMoneyDecimalFormat().format(jcAmount)));
+            } else {
+                relativeLayoutJC.setVisibility(View.GONE);
+            }
 
             textViewTotalValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
                     Utils.getMoneyDecimalFormat().format(totalAmount)));
@@ -863,9 +867,13 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount) {
                 amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
             }
+            if(promoAmount>0) {
+                amountPayable = amountPayable - promoAmount;
+            }
             double paid = Math.min(amountPayable, Data.userData.getJugnooBalance());
-
             amountPayable = amountPayable - paid;
+            if(amountPayable<0)
+                amountPayable = 0;
             return amountPayable;
         } catch (Exception e) {
             e.printStackTrace();
