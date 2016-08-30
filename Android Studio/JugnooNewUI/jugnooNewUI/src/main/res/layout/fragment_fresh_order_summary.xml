@@ -68,7 +68,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15px"
         android:text="@string/cancel_order"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/order_complete"
@@ -78,7 +78,7 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="gone"
+        android:visibility="visible"
         android:weightSum="2"
         >
 

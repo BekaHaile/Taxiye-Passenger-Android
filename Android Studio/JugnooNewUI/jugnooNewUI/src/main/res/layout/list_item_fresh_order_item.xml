@@ -14,7 +14,6 @@
         android:layout_marginLeft="20px"
         android:layout_marginTop="10px"
         android:gravity="center_vertical"
-        android:text="item\nabd"
         android:textColor="@color/text_color_light"
         android:textSize="@dimen/text_size_26"/>
 
@@ -27,7 +26,6 @@
         android:layout_marginRight="20px"
         android:layout_marginTop="10px"
         android:gravity="center_vertical|right"
-        android:text="0"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_26"/>
 

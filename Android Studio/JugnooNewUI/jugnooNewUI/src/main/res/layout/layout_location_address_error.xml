@@ -10,35 +10,35 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutLocationErrorSearchBar"
         android:layout_width="match_parent"
-        android:layout_height="100px"
+        android:layout_height="90px"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="20px"
-        android:layout_marginRight="20px"
-        android:layout_marginTop="120px"
-        android:background="@drawable/dropshadow_in_white"
-        android:splitMotionEvents="false">
+        android:layout_margin="20px"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:splitMotionEvents="false"
+        android:visibility="visible">
 
         <ImageView
-            android:id="@+id/imageViewLocationErrorSearchGPSIcon"
-            android:layout_width="16px"
-            android:layout_height="16px"
+            android:id="@+id/textViewSearchGPSIcon"
+            android:layout_width="30px"
+            android:layout_height="44px"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="37px"
-            android:src="@drawable/circle_green"
+            android:layout_marginLeft="18px"
+            android:src="@drawable/search_location_icon"
             android:tag="mwar"/>
 
         <TextView
             android:id="@+id/textViewLocationErrorSearch"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="560px"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="37px"
-            android:layout_toRightOf="@+id/imageViewLocationErrorSearchGPSIcon"
+            android:layout_marginLeft="20px"
+            android:layout_toRightOf="@+id/textViewSearchGPSIcon"
             android:background="@color/transparent"
-            android:gravity="center_vertical"
-            android:hint="@string/set_pickup_location"
+            android:hint="Search address location"
             android:singleLine="true"
-            android:textColor="@color/text_color"
+            android:text=""
+            android:textColor="@color/black_text"
+            android:textCursorDrawable="@null"
             android:textSize="30px"/>
 
 

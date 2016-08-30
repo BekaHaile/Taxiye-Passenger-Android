@@ -321,7 +321,6 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     Picasso.with(context).load(subItem.getSubItemImage())
                             .placeholder(R.drawable.ic_fresh_item_placeholder)
                             .error(R.drawable.ic_fresh_item_placeholder)
-                            .fit()
                             .into(mHolder.imageViewItemImage);
                 } else {
                     mHolder.imageViewItemImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
