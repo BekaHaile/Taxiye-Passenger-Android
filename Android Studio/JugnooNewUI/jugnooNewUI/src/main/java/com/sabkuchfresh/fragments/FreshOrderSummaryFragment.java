@@ -2,7 +2,6 @@ package com.sabkuchfresh.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -16,17 +15,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshOrderItemAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
-import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -36,14 +32,12 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -62,14 +56,14 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
     private RecyclerView recyclerViewOrderItems;
     private FreshOrderItemAdapter freshOrderItemAdapter;
 
-    private TextView textViewOrderIdValue, textViewOrderDeliveryDateValue, textViewOrderDeliverySlotValue,
-            textViewOrderTimeValue, textViewOrderAddressValue,
-            textViewTotalAmountValue, textViewDeliveryChargesValue, textViewAmountPayableValue,
-            textViewPaymentMode, textViewPaymentModeValue;
+//    private TextView textViewOrderIdValue, textViewOrderDeliveryDateValue, textViewOrderDeliverySlotValue,
+//            textViewOrderTimeValue, textViewOrderAddressValue,
+//            textViewTotalAmountValue, textViewDeliveryChargesValue, textViewAmountPayableValue,
+//            textViewPaymentMode, textViewPaymentModeValue;
 
-    private RelativeLayout discountLayout, jclayout, paytmlayout;
+//    private RelativeLayout discountLayout, jclayout, paytmlayout;
     private LinearLayout orderComplete;
-    private TextView textViewDiscount, textViewDiscountValue, textViewjc, textViewjcValue, textViewpaytm, textViewpaytmValue;
+//    private TextView textViewDiscount, textViewDiscountValue, textViewjc, textViewjcValue, textViewpaytm, textViewpaytmValue;
 
     private Button buttonCancelOrder, reorderBtn, feedbackBtn;
     private View rootView;
@@ -115,54 +109,55 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
             e.printStackTrace();
         }
 
-        ((TextView) rootView.findViewById(R.id.textViewOrderId)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewOrderDeliveryDate)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewOrderDeliverySlot)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewOrderReceipt)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewTotalAmount)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewAmountPayable)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewPaymentBy)).setTypeface(Fonts.mavenRegular(activity));
+//        ((TextView) rootView.findViewById(R.id.textViewOrderId)).setTypeface(Fonts.mavenRegular(activity));
+//        ((TextView) rootView.findViewById(R.id.textViewOrderDeliveryDate)).setTypeface(Fonts.mavenRegular(activity));
+//        ((TextView) rootView.findViewById(R.id.textViewOrderDeliverySlot)).setTypeface(Fonts.mavenRegular(activity));
+//        ((TextView) rootView.findViewById(R.id.textViewOrderReceipt)).setTypeface(Fonts.mavenRegular(activity));
+//        ((TextView) rootView.findViewById(R.id.textViewTotalAmount)).setTypeface(Fonts.mavenRegular(activity));
+//        ((TextView) rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenRegular(activity));
+//        ((TextView) rootView.findViewById(R.id.textViewAmountPayable)).setTypeface(Fonts.mavenRegular(activity));
+//        ((TextView) rootView.findViewById(R.id.textViewPaymentBy)).setTypeface(Fonts.mavenRegular(activity));
+//
+//        discountLayout = (RelativeLayout) rootView.findViewById(R.id.discountLayout);
+//        ;
+//        jclayout = (RelativeLayout) rootView.findViewById(R.id.jclayout);
+//        paytmlayout = (RelativeLayout) rootView.findViewById(R.id.paytmlayout);
+//
+//        ((TextView) rootView.findViewById(R.id.textViewDiscount)).setTypeface(Fonts.mavenRegular(activity));
+//        ((TextView) rootView.findViewById(R.id.textViewjc)).setTypeface(Fonts.mavenRegular(activity));
+//
+//        textViewDiscountValue = (TextView) rootView.findViewById(R.id.textViewDiscountValue);
+//        textViewDiscountValue.setTypeface(Fonts.mavenRegular(activity));
+//        textViewjcValue = (TextView) rootView.findViewById(R.id.textViewjcValue);
+//        textViewjcValue.setTypeface(Fonts.mavenRegular(activity));
+//        textViewpaytm = (TextView) rootView.findViewById(R.id.textViewpaytm);
+//        textViewpaytm.setTypeface(Fonts.mavenRegular(activity));
+//        textViewpaytmValue = (TextView) rootView.findViewById(R.id.textViewpaytmValue);
+//        textViewpaytmValue.setTypeface(Fonts.mavenRegular(activity));
+//
+//        textViewOrderIdValue = (TextView) rootView.findViewById(R.id.textViewOrderIdValue);
+//        textViewOrderIdValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+//        textViewOrderDeliveryDateValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliveryDateValue);
+//        textViewOrderDeliveryDateValue.setTypeface(Fonts.mavenRegular(activity));
+//        textViewOrderDeliverySlotValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliverySlotValue);
+//        textViewOrderDeliverySlotValue.setTypeface(Fonts.mavenRegular(activity));
+//
+//        textViewOrderTimeValue = (TextView) rootView.findViewById(R.id.textViewOrderTimeValue);
+//        textViewOrderTimeValue.setTypeface(Fonts.mavenRegular(activity));
+//        textViewOrderAddressValue = (TextView) rootView.findViewById(R.id.textViewOrderAddressValue);
+//        textViewOrderAddressValue.setTypeface(Fonts.mavenRegular(activity));
+//
+//        textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue);
+//        textViewTotalAmountValue.setTypeface(Fonts.mavenRegular(activity));
+//        textViewDeliveryChargesValue = (TextView) rootView.findViewById(R.id.textViewDeliveryChargesValue);
+//        textViewDeliveryChargesValue.setTypeface(Fonts.mavenRegular(activity));
+//        textViewAmountPayableValue = (TextView) rootView.findViewById(R.id.textViewAmountPayableValue);
+//        textViewAmountPayableValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+//        textViewPaymentMode = (TextView) rootView.findViewById(R.id.textViewPaymentMode);
+//        textViewPaymentMode.setTypeface(Fonts.mavenRegular(activity));
+//        textViewPaymentModeValue = (TextView) rootView.findViewById(R.id.textViewPaymentModeValue);
+//        textViewPaymentModeValue.setTypeface(Fonts.mavenRegular(activity));
 
-        discountLayout = (RelativeLayout) rootView.findViewById(R.id.discountLayout);
-        ;
-        jclayout = (RelativeLayout) rootView.findViewById(R.id.jclayout);
-        paytmlayout = (RelativeLayout) rootView.findViewById(R.id.paytmlayout);
-
-        ((TextView) rootView.findViewById(R.id.textViewDiscount)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewjc)).setTypeface(Fonts.mavenRegular(activity));
-
-        textViewDiscountValue = (TextView) rootView.findViewById(R.id.textViewDiscountValue);
-        textViewDiscountValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewjcValue = (TextView) rootView.findViewById(R.id.textViewjcValue);
-        textViewjcValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewpaytm = (TextView) rootView.findViewById(R.id.textViewpaytm);
-        textViewpaytm.setTypeface(Fonts.mavenRegular(activity));
-        textViewpaytmValue = (TextView) rootView.findViewById(R.id.textViewpaytmValue);
-        textViewpaytmValue.setTypeface(Fonts.mavenRegular(activity));
-
-        textViewOrderIdValue = (TextView) rootView.findViewById(R.id.textViewOrderIdValue);
-        textViewOrderIdValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-        textViewOrderDeliveryDateValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliveryDateValue);
-        textViewOrderDeliveryDateValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewOrderDeliverySlotValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliverySlotValue);
-        textViewOrderDeliverySlotValue.setTypeface(Fonts.mavenRegular(activity));
-
-        textViewOrderTimeValue = (TextView) rootView.findViewById(R.id.textViewOrderTimeValue);
-        textViewOrderTimeValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewOrderAddressValue = (TextView) rootView.findViewById(R.id.textViewOrderAddressValue);
-        textViewOrderAddressValue.setTypeface(Fonts.mavenRegular(activity));
-
-        textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue);
-        textViewTotalAmountValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewDeliveryChargesValue = (TextView) rootView.findViewById(R.id.textViewDeliveryChargesValue);
-        textViewDeliveryChargesValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewAmountPayableValue = (TextView) rootView.findViewById(R.id.textViewAmountPayableValue);
-        textViewAmountPayableValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-        textViewPaymentMode = (TextView) rootView.findViewById(R.id.textViewPaymentMode);
-        textViewPaymentMode.setTypeface(Fonts.mavenRegular(activity));
-        textViewPaymentModeValue = (TextView) rootView.findViewById(R.id.textViewPaymentModeValue);
-        textViewPaymentModeValue.setTypeface(Fonts.mavenRegular(activity));
         buttonCancelOrder = (Button) rootView.findViewById(R.id.buttonCancelOrder);
         buttonCancelOrder.setTypeface(Fonts.mavenRegular(activity));
         reorderBtn = (Button) rootView.findViewById(R.id.reorderBtn);
@@ -186,68 +181,68 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
             {
 //                orderHistory = activity.getOrderHistoryOpened();
 
-                try {
-                    orderType = orderHistory.getStoreId();
-                } catch (Exception w) {
-                    orderType = 1;
-                }
+//                try {
+//                    orderType = orderHistory.getStoreId();
+//                } catch (Exception w) {
+//                    orderType = 1;
+//                }
 
-                freshOrderItemAdapter = new FreshOrderItemAdapter(activity, (ArrayList<HistoryResponse.OrderItem>) orderHistory.getOrderItems());
+                freshOrderItemAdapter = new FreshOrderItemAdapter(activity, orderHistory);
                 recyclerViewOrderItems.setAdapter(freshOrderItemAdapter);
 
-                textViewOrderIdValue.setText(String.valueOf(orderHistory.getOrderId()));
+//                textViewOrderIdValue.setText(String.valueOf(orderHistory.getOrderId()));
 
-                try {
-                    textViewTotalAmountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-                            Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount() - orderHistory.getDeliveryCharges() + orderHistory.getJugnooDeducted()
-                                    + orderHistory.getDiscount())));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getDeliveryCharges())));
-                textViewAmountPayableValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
-                if (orderHistory.getPaymentMode().equals(PaymentOption.PAYTM.getOrdinal())) {
-                    textViewPaymentMode.setText(activity.getResources().getString(R.string.paytm));
-                    textViewpaytm.setText(activity.getString(R.string.paytm_wallet));
-                }
-                else if (orderHistory.getPaymentMode().equals(PaymentOption.MOBIKWIK.getOrdinal())) {
-                    textViewPaymentMode.setText(activity.getResources().getString(R.string.mobikwik));
-                    textViewpaytm.setText(activity.getString(R.string.mobikwik_wallet));
-                }
-                else {
-                    textViewPaymentMode.setText(activity.getResources().getString(R.string.cash));
-                }
-                textViewPaymentModeValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
-
-                if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
-                    textViewOrderDeliverySlotValue.setText(DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
-                } else {
-                    textViewOrderDeliverySlotValue.setText("");
-                }
-                if (orderHistory.getExpectedDeliveryDate() != null) {
-                    textViewOrderDeliveryDateValue.setText(orderHistory.getExpectedDeliveryDate());
-//                    textViewOrderDeliveryDateValue.setText(DateOperations.getDate(orderHistory.getExpectedDeliveryDate()));
-                } else {
-                    textViewOrderDeliveryDateValue.setText("");
-                }
-
-                if (orderHistory.getDiscount() > 0) {
-                    textViewDiscountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getDiscount())));
-                } else {
-                    discountLayout.setVisibility(View.GONE);
-                }
-                if (orderHistory.getJugnooDeducted() > 0) {
-                    textViewjcValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getJugnooDeducted())));
-                } else {
-                    jclayout.setVisibility(View.GONE);
-                }
-                if (orderHistory.getWalletDeducted() != null && orderHistory.getWalletDeducted() > 0) {
-                    textViewpaytmValue.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(orderHistory.getWalletDeducted())));
-                } else {
-                    paytmlayout.setVisibility(View.GONE);
-                }
-                textViewOrderTimeValue.setText(DateOperations.getDate(DateOperations.utcToLocalTZ(orderHistory.getOrderTime())));
-                textViewOrderAddressValue.setText(orderHistory.getDeliveryAddress());
+//                try {
+//                    textViewTotalAmountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+//                            Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount() - orderHistory.getDeliveryCharges() + orderHistory.getJugnooDeducted()
+//                                    + orderHistory.getDiscount())));
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getDeliveryCharges())));
+//                textViewAmountPayableValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
+//                if (orderHistory.getPaymentMode().equals(PaymentOption.PAYTM.getOrdinal())) {
+//                    textViewPaymentMode.setText(activity.getResources().getString(R.string.paytm));
+//                    textViewpaytm.setText(activity.getString(R.string.paytm_wallet));
+//                }
+//                else if (orderHistory.getPaymentMode().equals(PaymentOption.MOBIKWIK.getOrdinal())) {
+//                    textViewPaymentMode.setText(activity.getResources().getString(R.string.mobikwik));
+//                    textViewpaytm.setText(activity.getString(R.string.mobikwik_wallet));
+//                }
+//                else {
+//                    textViewPaymentMode.setText(activity.getResources().getString(R.string.cash));
+//                }
+//                textViewPaymentModeValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
+//
+////                if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
+////                    textViewOrderDeliverySlotValue.setText(DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+////                } else {
+////                    textViewOrderDeliverySlotValue.setText("");
+////                }
+////                if (orderHistory.getExpectedDeliveryDate() != null) {
+////                    textViewOrderDeliveryDateValue.setText(orderHistory.getExpectedDeliveryDate());
+//////                    textViewOrderDeliveryDateValue.setText(DateOperations.getDate(orderHistory.getExpectedDeliveryDate()));
+////                } else {
+////                    textViewOrderDeliveryDateValue.setText("");
+////                }
+//
+//                if (orderHistory.getDiscount() > 0) {
+//                    textViewDiscountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getDiscount())));
+//                } else {
+//                    discountLayout.setVisibility(View.GONE);
+//                }
+//                if (orderHistory.getJugnooDeducted() > 0) {
+//                    textViewjcValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getJugnooDeducted())));
+//                } else {
+//                    jclayout.setVisibility(View.GONE);
+//                }
+//                if (orderHistory.getWalletDeducted() != null && orderHistory.getWalletDeducted() > 0) {
+//                    textViewpaytmValue.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(orderHistory.getWalletDeducted())));
+//                } else {
+//                    paytmlayout.setVisibility(View.GONE);
+//                }
+//                textViewOrderTimeValue.setText(DateOperations.getDate(DateOperations.utcToLocalTZ(orderHistory.getOrderTime())));
+//                textViewOrderAddressValue.setText(orderHistory.getDeliveryAddress());
 
                 if (orderHistory.getCancellable() == 1) {
                     buttonCancelOrder.setVisibility(View.VISIBLE);
