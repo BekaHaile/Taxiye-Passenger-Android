@@ -1063,6 +1063,7 @@ public class JSONParser implements Constants {
             } else if (Data.P_ASSIGNING.equalsIgnoreCase(screenMode)) {
                 HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
                 Data.autoData.setcSessionId(sessionId);
+                Prefs.with(context).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 clearSPData(context);
             } else {
 
@@ -1095,12 +1096,15 @@ public class JSONParser implements Constants {
 
                 if (Data.P_REQUEST_FINAL.equalsIgnoreCase(screenMode)) {
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
+                    Prefs.with(context).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 }
                 else if (Data.P_DRIVER_ARRIVED.equalsIgnoreCase(screenMode)) {
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
+                    Prefs.with(context).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 }
                 else if (Data.P_IN_RIDE.equalsIgnoreCase(screenMode)) {
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+                    Prefs.with(context).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 }
             }
         }
