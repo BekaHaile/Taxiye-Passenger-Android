@@ -1603,7 +1603,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(Prefs.with(HomeActivity.this).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()).equals(Config.getAutosClientId())) {
 //                    updateCartFromSP();
 //                    relativeLayoutCart.performClick();
-
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, true);
+                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
+                            getCurrentPlaceLatLng(), bundle);
                 }
             }
 

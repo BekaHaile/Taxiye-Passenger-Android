@@ -28,18 +28,39 @@ public class AppSwitcher {
 
 	public AppSwitcher(){}
 
+	/**
+	 *
+	 * @param activity
+	 * @param clientId client id for the app
+	 * @param latLng
+     */
 	public void switchApp(final Activity activity, final String clientId, LatLng latLng) {
 		Bundle bundle = new Bundle();
 		bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, true);
 		switchApp(activity, clientId, null, latLng, bundle);
 	}
 
+	/**
+	 *
+	 * @param activity
+	 * @param clientId client id for the app
+	 * @param data
+     * @param latLng
+     */
 	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng) {
 		Bundle bundle = new Bundle();
 		bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false);
 		switchApp(activity, clientId, data, latLng, bundle);
 	}
 
+	/**
+	 *
+	 * @param activity
+	 * @param clientId client id for the app
+	 * @param data
+	 * @param latLng
+     * @param bundle
+     */
 	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle){
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 			ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
