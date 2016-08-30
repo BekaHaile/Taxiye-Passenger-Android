@@ -200,6 +200,13 @@ public class HistoryResponse {
         @Expose
         private Integer supportCategory;
 
+        @SerializedName("vehicle_type")
+        @Expose
+        private Integer vehicleType;
+        @SerializedName("ride_type")
+        @Expose
+        private Integer rideType;
+
         /**
          * @return The pickupAddress
          */
@@ -778,6 +785,22 @@ public class HistoryResponse {
 
         public void setWalletDeducted(Double walletDeducted) {
             this.walletDeducted = walletDeducted;
+        }
+
+        public Integer getVehicleType() {
+            return vehicleType;
+        }
+
+        public void setVehicleType(Integer vehicleType) {
+            this.vehicleType = vehicleType;
+        }
+
+        public Integer getRideType() {
+            return rideType;
+        }
+
+        public void setRideType(Integer rideType) {
+            this.rideType = rideType;
         }
     }
 

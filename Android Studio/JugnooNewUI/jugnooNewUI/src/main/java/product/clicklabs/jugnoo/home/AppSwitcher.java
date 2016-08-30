@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -28,10 +29,18 @@ public class AppSwitcher {
 	public AppSwitcher(){}
 
 	public void switchApp(final Activity activity, final String clientId, LatLng latLng) {
-		switchApp(activity, clientId, null, latLng);
+		Bundle bundle = new Bundle();
+		bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, true);
+		switchApp(activity, clientId, null, latLng, bundle);
 	}
 
-	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng){
+	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng) {
+		Bundle bundle = new Bundle();
+		bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false);
+		switchApp(activity, clientId, data, latLng, bundle);
+	}
+
+	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle){
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 			ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
 				@Override
@@ -41,9 +50,10 @@ public class AppSwitcher {
 
 				@Override
 				public void success(String clientId) {
-					if (!intentSentAfterDataCheck(activity, clientId, data)) {
+					if (!intentSentAfterDataCheck(activity, clientId, data, bundle)) {
 						Intent intent = new Intent(activity, FreshActivity.class);
 						intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+						intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 						activity.startActivity(intent);
 						activity.finish();
 					}
@@ -67,9 +77,10 @@ public class AppSwitcher {
 
 								@Override
 								public void success(String clientId) {
-									if (!intentSentAfterDataCheck(activity, clientId, data)) {
+									if (!intentSentAfterDataCheck(activity, clientId, data, bundle)) {
 										Intent intent = new Intent(activity, HomeActivity.class);
 										intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+										intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 										if (data != null) {
 											intent.setData(data);
 										}
@@ -86,6 +97,7 @@ public class AppSwitcher {
 				} else {
 					Intent intent = new Intent(activity, HomeActivity.class);
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					if (data != null) {
 						intent.setData(data);
 					}
@@ -101,6 +113,7 @@ public class AppSwitcher {
 				} else {
 					Intent intent = new Intent(activity, FreshActivity.class);
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					activity.startActivity(intent);
 					activity.finish();
 
@@ -114,6 +127,7 @@ public class AppSwitcher {
 				} else {
 					Intent intent = new Intent(activity, FreshActivity.class);
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					activity.startActivity(intent);
 					activity.finish();
 
@@ -127,6 +141,7 @@ public class AppSwitcher {
 				} else {
 					Intent intent = new Intent(activity, FreshActivity.class);
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					activity.startActivity(intent);
 					activity.finish();
 
@@ -135,18 +150,18 @@ public class AppSwitcher {
 				}
 			}
 		} else {
-			retryDialog(DialogErrorType.NO_NET, activity, clientId, data, latLng);
+			retryDialog(DialogErrorType.NO_NET, activity, clientId, data, latLng, bundle);
 		}
 
 	}
 
-	private void retryDialog(DialogErrorType dialogErrorType, final Activity activity, final String clientId, final Uri data, final LatLng latLng){
+	private void retryDialog(DialogErrorType dialogErrorType, final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle){
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
 				new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
-						switchApp(activity, clientId, data, latLng);
+						switchApp(activity, clientId, data, latLng, bundle);
 					}
 
 					@Override
@@ -160,7 +175,7 @@ public class AppSwitcher {
 				});
 	}
 
-	private boolean intentSentAfterDataCheck(Activity activity, String clientId, Uri data){
+	private boolean intentSentAfterDataCheck(Activity activity, String clientId, Uri data, Bundle bundle){
 		try {
 			Intent intent = new Intent();
 			if(clientId.equalsIgnoreCase(Config.getAutosClientId()) && Data.autoData == null) {
@@ -203,6 +218,7 @@ public class AppSwitcher {
 			}
 
 			intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+			intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 			activity.startActivity(intent);
 			activity.finish();
 			return true;
