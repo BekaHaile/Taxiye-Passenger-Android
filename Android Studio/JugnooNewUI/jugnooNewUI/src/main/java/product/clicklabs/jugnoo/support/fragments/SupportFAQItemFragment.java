@@ -284,7 +284,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				params.put(Constants.KEY_ENGAGEMENT_ID, ""+engagementId);
 				params.put(Constants.KEY_RIDE_DATE, rideDate);
 			} else if(orderId != -1){
-				params.put(Constants.KEY_ORDER_ID, ""+engagementId);
+				params.put(Constants.KEY_ORDER_ID, ""+orderId);
 				params.put(Constants.KEY_ORDER_DATE, orderDate);
 			}
 
