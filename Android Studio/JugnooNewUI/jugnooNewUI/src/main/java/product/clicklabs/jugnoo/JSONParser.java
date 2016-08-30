@@ -668,6 +668,7 @@ public class JSONParser implements Constants {
         String referralEmailSubject = "Hey! Have you used Jugnoo Autos yet?";
 		String referralPopupText = "Up to Rs. 100 in Jugnoo Cash";
         String referralShortMessage = "", referralMoreInfoMessage = "";
+        String title = Constants.FB_LINK_SHARE_NAME;
 
         try {
             if (userData.getReferralMessage() != null) {
@@ -698,12 +699,15 @@ public class JSONParser implements Constants {
             if(userData.getInviteEarnMoreInfo() != null){
                 referralMoreInfoMessage = userData.getInviteEarnMoreInfo();
             }
+            if(userData.getSharingOgTitle() != null){
+                title = userData.getSharingOgTitle();
+            }
 		} catch (Exception e) {
             e.printStackTrace();
         }
 
         ReferralMessages referralMessages = new ReferralMessages(referralMessage, referralSharingMessage, fbShareCaption, fbShareDescription, referralCaption, referralCaptionEnabled,
-            referralEmailSubject, referralPopupText, referralShortMessage, referralMoreInfoMessage);
+            referralEmailSubject, referralPopupText, referralShortMessage, referralMoreInfoMessage, title);
 
         return referralMessages;
     }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -25,14 +26,14 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -302,7 +303,18 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 							DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
 								@Override
 								public void onClick(View v) {
-									performBackPressed();
+									try {
+										FragmentManager fm = getActivity().getSupportFragmentManager();
+										for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+											fm.popBackStack();
+											if(fm.getFragments().get(i).getTag().equalsIgnoreCase(SupportRideIssuesFragment.class.getName())){
+												break;
+											}
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+
 								}
 							});
 							FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_FEEDBACK_SUBMITTED);

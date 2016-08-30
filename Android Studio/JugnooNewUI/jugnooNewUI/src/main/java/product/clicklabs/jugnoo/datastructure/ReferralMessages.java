@@ -11,10 +11,12 @@ public class ReferralMessages{
     public String referralEmailSubject, referralPopupText;
     public String referralShortMessage;
     public String referralMoreInfoMessage;
+	private String title;
 
 
 	public ReferralMessages(String referralMessage, String referralSharingMessage, String fbShareCaption, String fbShareDescription, String referralCaption, int referralCaptionEnabled,
-                            String referralEmailSubject, String referralPopupText, String referralShortMessage, String referralMoreInfoMessage){
+                            String referralEmailSubject, String referralPopupText, String referralShortMessage, String referralMoreInfoMessage,
+							String title){
 		this.referralMessage = referralMessage;
 		this.referralSharingMessage = referralSharingMessage;
 		this.fbShareCaption = fbShareCaption;
@@ -25,6 +27,14 @@ public class ReferralMessages{
 		this.referralPopupText = referralPopupText;
 		this.referralShortMessage = referralShortMessage;
 		this.referralMoreInfoMessage = referralMoreInfoMessage;
+		this.title = title;
 	}
-	
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 }
