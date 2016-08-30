@@ -910,6 +910,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 FreshFragment frag = getFreshFragment();
                 if (frag != null) {
                     frag.getAllProducts(true);
+                } else {
+                    MealFragment mealFragment = getMealFragment();
+                    if(mealFragment != null) {
+                        mealFragment.getAllProducts(true);
+                    }
                 }
             }
         }, 1000);

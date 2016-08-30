@@ -320,14 +320,20 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         relativeLayoutLocationErrorSearchBar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                relativeLayoutSearchBarText.performClick();
-                locationGotNow();
+                searchAddress.performClick();
+                relativeLayoutLocationError.setVisibility(View.GONE);
+                searchAddress.setVisibility(View.VISIBLE);
+//                layoutAddLocation.setVisibility(View.VISIBLE);
+//                centerPivot.setVisibility(View.VISIBLE);
+//                locationPointer.setVisibility(View.VISIBLE);
+                getMyLocation.setVisibility(View.VISIBLE);
+//                locationGotNow();
             }
         });
 
         if(Data.locationSettingsNoPressed){
             relativeLayoutLocationError.setVisibility(View.VISIBLE);
-            relativeLayoutSearchBarText.setVisibility(View.GONE);
+            searchAddress.setVisibility(View.GONE);
             layoutAddLocation.setVisibility(View.GONE);
             centerPivot.setVisibility(View.GONE);
             locationPointer.setVisibility(View.GONE);
@@ -361,7 +367,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
     private void locationGotNow() {
         relativeLayoutLocationError.setVisibility(View.GONE);
-        relativeLayoutSearchBarText.setVisibility(View.VISIBLE);
+        searchAddress.setVisibility(View.VISIBLE);
         layoutAddLocation.setVisibility(View.VISIBLE);
         centerPivot.setVisibility(View.VISIBLE);
         locationPointer.setVisibility(View.VISIBLE);

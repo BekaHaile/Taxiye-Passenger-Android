@@ -13,7 +13,7 @@
         android:layout_height="120px"
         android:layout_centerVertical="true"
         android:layout_marginLeft="30px"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_fresh_item_placeholder"
         android:tag="mwar"/>
 
