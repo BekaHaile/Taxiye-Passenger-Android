@@ -234,7 +234,7 @@
                 android:id="@+id/imageViewFabFake"
                 android:layout_width="68dp"
                 android:layout_height="68dp"
-                android:src="@drawable/ic_fab_menu_fake"
+                android:src="@drawable/ic_fab_fake_selector"
                 android:tag="DontTouchMe"
                 android:layout_marginLeft="20dp"
                 android:layout_centerVertical="true"

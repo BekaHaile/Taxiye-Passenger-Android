@@ -56,6 +56,9 @@ public class FABView {
         fabFresh.setOnClickListener(clickListener);
         fabAutos.setOnClickListener(clickListener);
         relativeLayoutFAB.setVisibility(View.INVISIBLE);
+        menuLabelsRight.setMenuButtonColorNormal(activity.getResources().getColor(R.color.theme_color));
+        menuLabelsRight.setMenuButtonColorPressed(activity.getResources().getColor(R.color.theme_color_alpha));
+        menuLabelsRight.setMenuButtonColorRipple(activity.getResources().getColor(R.color.theme_color_end));
         setFABButtons();
 
         menuLabelsRight.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
@@ -115,29 +118,33 @@ public class FABView {
 
     public void setRelativeLayoutFABVisibility(PassengerScreenMode passengerScreenMode){
         //relativeLayoutFAB.setVisibility(View.INVISIBLE);
-        if(Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
-                Data.userData.getIntegratedJugnooEnabled() == 1) {
-            if (passengerScreenMode != null) {
-                if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
-                        && !((HomeActivity) activity).confirmedScreenOpened)
-                        || passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
-                    relativeLayoutFAB.setVisibility(View.INVISIBLE);
-                    ((HomeActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
+        try {
+            if(Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
+                    Data.userData.getIntegratedJugnooEnabled() == 1) {
+                if (passengerScreenMode != null) {
+                    if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
+                            && !((HomeActivity) activity).confirmedScreenOpened)
+                            || passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
+                        relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                        ((HomeActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
+                    } else {
+                        relativeLayoutFAB.setVisibility(View.VISIBLE);
+                        menuLabelsRight.close(true);
+                        fabFresh.setVisibility(View.INVISIBLE);
+                        fabMeals.setVisibility(View.INVISIBLE);
+                    }
                 } else {
-                    relativeLayoutFAB.setVisibility(View.VISIBLE);
-                    menuLabelsRight.close(true);
-                    fabFresh.setVisibility(View.INVISIBLE);
-                    fabMeals.setVisibility(View.INVISIBLE);
+                    if (activity instanceof FreshActivity) {
+                        relativeLayoutFAB.setVisibility(View.VISIBLE);
+                    } else {
+                        relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                    }
                 }
-            } else {
-                if (activity instanceof FreshActivity) {
-                    relativeLayoutFAB.setVisibility(View.VISIBLE);
-                } else {
-                    relativeLayoutFAB.setVisibility(View.INVISIBLE);
-                }
+            } else{
+                relativeLayoutFAB.setVisibility(View.INVISIBLE);
             }
-        } else{
-            relativeLayoutFAB.setVisibility(View.INVISIBLE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -149,14 +156,14 @@ public class FABView {
         String currentOpenedOffering = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
         if (menuLabelsRight.isOpened()) {
             if(Config.getAutosClientId().equalsIgnoreCase(currentOpenedOffering)){
-                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_autos_selected);
+                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_auto_test);
             } else if(Config.getFreshClientId().equalsIgnoreCase(currentOpenedOffering)){
-                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_fresh_selected);
+                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_fresh_test);
             } else if(Config.getMealsClientId().equalsIgnoreCase(currentOpenedOffering)){
-                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_meals_selected);
+                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_meals_test);
             }
         } else {
-            menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_menu);
+            menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_menu_selector);
         }
 
         fabDelivery.setVisibility(View.GONE);
@@ -174,28 +181,32 @@ public class FABView {
     }
 
     public void setFABButtons(){
-        if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
-                && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
-            relativeLayoutFAB.setVisibility(View.GONE);
-        } else {
-            relativeLayoutFAB.setVisibility(View.INVISIBLE);
-            if (Data.userData.getFreshEnabled() == 1) {
-                fabFresh.setVisibility(View.VISIBLE);
+        try {
+            if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
+                    && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
+                relativeLayoutFAB.setVisibility(View.GONE);
             } else {
-                fabFresh.setVisibility(View.GONE);
-            }
+                relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                if (Data.userData.getFreshEnabled() == 1) {
+                    fabFresh.setVisibility(View.VISIBLE);
+                } else {
+                    fabFresh.setVisibility(View.GONE);
+                }
 
-            if (Data.userData.getMealsEnabled() == 1) {
-                fabMeals.setVisibility(View.VISIBLE);
-            } else {
-                fabMeals.setVisibility(View.GONE);
-            }
+                if (Data.userData.getMealsEnabled() == 1) {
+                    fabMeals.setVisibility(View.VISIBLE);
+                } else {
+                    fabMeals.setVisibility(View.GONE);
+                }
 
-            if (Data.userData.getDeliveryEnabled() == 1) {
-                fabDelivery.setVisibility(View.VISIBLE);
-            } else {
-                fabDelivery.setVisibility(View.GONE);
+                if (Data.userData.getDeliveryEnabled() == 1) {
+                    fabDelivery.setVisibility(View.VISIBLE);
+                } else {
+                    fabDelivery.setVisibility(View.GONE);
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

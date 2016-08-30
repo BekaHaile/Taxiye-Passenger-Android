@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 	<string name="no_more_than">Can\'t order more than %d units</string>
 
-	<!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> &lt;!&ndash; Live &ndash;&gt;-->
+	<!-- <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live -->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	 <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General
+	 <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -890,7 +890,7 @@
 	<string name="name_of_driver">Name of Driver</string>
 	<string name="contact_number">Contact Number</string>
 	<string name="refer">Refer</string>
-	<string name="want_free_rides">Want Free Rides ?</string>
+	<string name="want_free_rides">Get Free Jugnoo Cash</string>
 
 	<string name="inbox">Inbox</string>
 	<string name="play">Play</string>
@@ -981,7 +981,7 @@
 	<string name="choose_other_mode_to_pay">Choose other mode to pay</string>
 
     <string name="jugnoo_pokemon">POKEMON RADAR</string>
-	<string name="jugnoo_fab">SHOW JUGNOO JEANIE</string>
+	<string name="jugnoo_fab">JUGNOO JEANIE</string>
 
 
 
