@@ -156,7 +156,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
             relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
-            mBus = ((MyApplication) getApplication()).getBus();
+            try {
+                mBus = ((MyApplication) getApplication()).getBus();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
             relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
@@ -390,7 +394,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         super.onResume();
         try {
         if (!HomeUtil.checkIfUserDataNull(this)) {
-            mBus.register(this);
+            try {
+                mBus.register(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             menuBar.setUserData();
             topBar.setUserData();
@@ -988,7 +996,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             finish();
         } else if(locationSearchShown) {
             locationSearchShown = false;
-            mBus.post(new AddressSearch(1));
+            try {
+                mBus.post(new AddressSearch(1));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             if (getFreshPaymentFragment() != null) {
                 NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_FRESH_BACK_ON_PAYMENT_CLICKED, null);
@@ -1199,7 +1211,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     @Override
     protected void onPause() {
         super.onPause();
-        mBus.unregister(this);
+        try {
+            mBus.unregister(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         saveCartToSP();
         Log.e(TAG, "cart saved=" + Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
 
@@ -1287,7 +1303,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     Collections.sort(category.getSubItems(), new SubItemCompare());
                 }
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.A_Z);
-                mBus.post(new UpdateMainList(true));
+                try {
+                    mBus.post(new UpdateMainList(true));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case 1:
                 for (Category category : productsResponse.getCategories()) {
@@ -1301,21 +1321,33 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //                    Collections.sort(category.getSubItems(), new SubItemComparePriority());
                 }
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
-                mBus.post(new UpdateMainList(true));
+                try {
+                    mBus.post(new UpdateMainList(true));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case 2:
                 for (Category category : productsResponse.getCategories()) {
                     Collections.sort(category.getSubItems(), new SubItemComparePrice());
                 }
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-                mBus.post(new UpdateMainList(true));
+                try {
+                    mBus.post(new UpdateMainList(true));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case 3:
                 for (Category category : productsResponse.getCategories()) {
                     Collections.sort(category.getSubItems(), new SubItemComparePriceRev());
                 }
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-                mBus.post(new UpdateMainList(true));
+                try {
+                    mBus.post(new UpdateMainList(true));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 // should not happened
