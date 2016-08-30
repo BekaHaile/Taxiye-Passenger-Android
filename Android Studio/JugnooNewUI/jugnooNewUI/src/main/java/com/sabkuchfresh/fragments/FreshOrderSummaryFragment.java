@@ -56,20 +56,11 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
     private RecyclerView recyclerViewOrderItems;
     private FreshOrderItemAdapter freshOrderItemAdapter;
 
-//    private TextView textViewOrderIdValue, textViewOrderDeliveryDateValue, textViewOrderDeliverySlotValue,
-//            textViewOrderTimeValue, textViewOrderAddressValue,
-//            textViewTotalAmountValue, textViewDeliveryChargesValue, textViewAmountPayableValue,
-//            textViewPaymentMode, textViewPaymentModeValue;
-
-//    private RelativeLayout discountLayout, jclayout, paytmlayout;
     private LinearLayout orderComplete;
-//    private TextView textViewDiscount, textViewDiscountValue, textViewjc, textViewjcValue, textViewpaytm, textViewpaytmValue;
 
     private Button buttonCancelOrder, reorderBtn, feedbackBtn;
     private View rootView;
     private FragmentActivity activity;
-
-    private int orderType = 0;
 
     private HistoryResponse.Datum orderHistory;
 
@@ -109,54 +100,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
             e.printStackTrace();
         }
 
-//        ((TextView) rootView.findViewById(R.id.textViewOrderId)).setTypeface(Fonts.mavenRegular(activity));
-//        ((TextView) rootView.findViewById(R.id.textViewOrderDeliveryDate)).setTypeface(Fonts.mavenRegular(activity));
-//        ((TextView) rootView.findViewById(R.id.textViewOrderDeliverySlot)).setTypeface(Fonts.mavenRegular(activity));
-//        ((TextView) rootView.findViewById(R.id.textViewOrderReceipt)).setTypeface(Fonts.mavenRegular(activity));
-//        ((TextView) rootView.findViewById(R.id.textViewTotalAmount)).setTypeface(Fonts.mavenRegular(activity));
-//        ((TextView) rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenRegular(activity));
-//        ((TextView) rootView.findViewById(R.id.textViewAmountPayable)).setTypeface(Fonts.mavenRegular(activity));
-//        ((TextView) rootView.findViewById(R.id.textViewPaymentBy)).setTypeface(Fonts.mavenRegular(activity));
-//
-//        discountLayout = (RelativeLayout) rootView.findViewById(R.id.discountLayout);
-//        ;
-//        jclayout = (RelativeLayout) rootView.findViewById(R.id.jclayout);
-//        paytmlayout = (RelativeLayout) rootView.findViewById(R.id.paytmlayout);
-//
-//        ((TextView) rootView.findViewById(R.id.textViewDiscount)).setTypeface(Fonts.mavenRegular(activity));
-//        ((TextView) rootView.findViewById(R.id.textViewjc)).setTypeface(Fonts.mavenRegular(activity));
-//
-//        textViewDiscountValue = (TextView) rootView.findViewById(R.id.textViewDiscountValue);
-//        textViewDiscountValue.setTypeface(Fonts.mavenRegular(activity));
-//        textViewjcValue = (TextView) rootView.findViewById(R.id.textViewjcValue);
-//        textViewjcValue.setTypeface(Fonts.mavenRegular(activity));
-//        textViewpaytm = (TextView) rootView.findViewById(R.id.textViewpaytm);
-//        textViewpaytm.setTypeface(Fonts.mavenRegular(activity));
-//        textViewpaytmValue = (TextView) rootView.findViewById(R.id.textViewpaytmValue);
-//        textViewpaytmValue.setTypeface(Fonts.mavenRegular(activity));
-//
-//        textViewOrderIdValue = (TextView) rootView.findViewById(R.id.textViewOrderIdValue);
-//        textViewOrderIdValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-//        textViewOrderDeliveryDateValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliveryDateValue);
-//        textViewOrderDeliveryDateValue.setTypeface(Fonts.mavenRegular(activity));
-//        textViewOrderDeliverySlotValue = (TextView) rootView.findViewById(R.id.textViewOrderDeliverySlotValue);
-//        textViewOrderDeliverySlotValue.setTypeface(Fonts.mavenRegular(activity));
-//
-//        textViewOrderTimeValue = (TextView) rootView.findViewById(R.id.textViewOrderTimeValue);
-//        textViewOrderTimeValue.setTypeface(Fonts.mavenRegular(activity));
-//        textViewOrderAddressValue = (TextView) rootView.findViewById(R.id.textViewOrderAddressValue);
-//        textViewOrderAddressValue.setTypeface(Fonts.mavenRegular(activity));
-//
-//        textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue);
-//        textViewTotalAmountValue.setTypeface(Fonts.mavenRegular(activity));
-//        textViewDeliveryChargesValue = (TextView) rootView.findViewById(R.id.textViewDeliveryChargesValue);
-//        textViewDeliveryChargesValue.setTypeface(Fonts.mavenRegular(activity));
-//        textViewAmountPayableValue = (TextView) rootView.findViewById(R.id.textViewAmountPayableValue);
-//        textViewAmountPayableValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-//        textViewPaymentMode = (TextView) rootView.findViewById(R.id.textViewPaymentMode);
-//        textViewPaymentMode.setTypeface(Fonts.mavenRegular(activity));
-//        textViewPaymentModeValue = (TextView) rootView.findViewById(R.id.textViewPaymentModeValue);
-//        textViewPaymentModeValue.setTypeface(Fonts.mavenRegular(activity));
 
         buttonCancelOrder = (Button) rootView.findViewById(R.id.buttonCancelOrder);
         buttonCancelOrder.setTypeface(Fonts.mavenRegular(activity));
@@ -177,72 +120,8 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
         recyclerViewOrderItems.setHasFixedSize(false);
 
         try {
-//            if (activity.getOrderHistoryOpened() != null)
-            {
-//                orderHistory = activity.getOrderHistoryOpened();
-
-//                try {
-//                    orderType = orderHistory.getStoreId();
-//                } catch (Exception w) {
-//                    orderType = 1;
-//                }
-
                 freshOrderItemAdapter = new FreshOrderItemAdapter(activity, orderHistory);
                 recyclerViewOrderItems.setAdapter(freshOrderItemAdapter);
-
-//                textViewOrderIdValue.setText(String.valueOf(orderHistory.getOrderId()));
-
-//                try {
-//                    textViewTotalAmountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-//                            Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount() - orderHistory.getDeliveryCharges() + orderHistory.getJugnooDeducted()
-//                                    + orderHistory.getDiscount())));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getDeliveryCharges())));
-//                textViewAmountPayableValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
-//                if (orderHistory.getPaymentMode().equals(PaymentOption.PAYTM.getOrdinal())) {
-//                    textViewPaymentMode.setText(activity.getResources().getString(R.string.paytm));
-//                    textViewpaytm.setText(activity.getString(R.string.paytm_wallet));
-//                }
-//                else if (orderHistory.getPaymentMode().equals(PaymentOption.MOBIKWIK.getOrdinal())) {
-//                    textViewPaymentMode.setText(activity.getResources().getString(R.string.mobikwik));
-//                    textViewpaytm.setText(activity.getString(R.string.mobikwik_wallet));
-//                }
-//                else {
-//                    textViewPaymentMode.setText(activity.getResources().getString(R.string.cash));
-//                }
-//                textViewPaymentModeValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
-//
-////                if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
-////                    textViewOrderDeliverySlotValue.setText(DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
-////                } else {
-////                    textViewOrderDeliverySlotValue.setText("");
-////                }
-////                if (orderHistory.getExpectedDeliveryDate() != null) {
-////                    textViewOrderDeliveryDateValue.setText(orderHistory.getExpectedDeliveryDate());
-//////                    textViewOrderDeliveryDateValue.setText(DateOperations.getDate(orderHistory.getExpectedDeliveryDate()));
-////                } else {
-////                    textViewOrderDeliveryDateValue.setText("");
-////                }
-//
-//                if (orderHistory.getDiscount() > 0) {
-//                    textViewDiscountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getDiscount())));
-//                } else {
-//                    discountLayout.setVisibility(View.GONE);
-//                }
-//                if (orderHistory.getJugnooDeducted() > 0) {
-//                    textViewjcValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getJugnooDeducted())));
-//                } else {
-//                    jclayout.setVisibility(View.GONE);
-//                }
-//                if (orderHistory.getWalletDeducted() != null && orderHistory.getWalletDeducted() > 0) {
-//                    textViewpaytmValue.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(orderHistory.getWalletDeducted())));
-//                } else {
-//                    paytmlayout.setVisibility(View.GONE);
-//                }
-//                textViewOrderTimeValue.setText(DateOperations.getDate(DateOperations.utcToLocalTZ(orderHistory.getOrderTime())));
-//                textViewOrderAddressValue.setText(orderHistory.getDeliveryAddress());
 
                 if (orderHistory.getCancellable() == 1) {
                     buttonCancelOrder.setVisibility(View.VISIBLE);
@@ -284,7 +163,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 }
 
 
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -300,7 +178,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
         } else if (activity instanceof product.clicklabs.jugnoo.support.SupportActivity) {
             ((product.clicklabs.jugnoo.support.SupportActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
         } else if(activity instanceof FreshActivity) {
-//            ((FreshActivity) activity).getTopBar().title.setText(getResources().getString(R.string.order_fragment));
             ((FreshActivity) activity).fragmentUISetup(this);
 
         }
@@ -348,12 +225,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                     orderComplete.setVisibility(View.GONE);
 
                     if (orderHistory.getPendingFeedback() == 1) {
-//                        if(activity instanceof FreshActivity) {
-//                            feedbackBtn.setText(R.string.ok);
-//                            reorderBtn.setVisibility(View.GONE);
-//                        } else {
-//                            feedbackBtn.setText(R.string.feedback);
-//                        }
                         buttonCancelOrder.setText(R.string.ok);
                     } else {
                         if (activity instanceof RideTransactionsActivity) {
@@ -401,17 +272,9 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                                     @Override
                                     public void onClick(View v) {
 
-                                        // TODO: 22/08/16 Get output and check here
                                         Data.isOrderCancelled = true;
                                         orderHistory.setCancellable(0);
                                         activity.onBackPressed();
-//                                            if (activity instanceof RideTransactionsActivity) {
-//                                                ((RideTransactionsActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
-//                                            } else if (activity instanceof product.clicklabs.jugnoo.support.SupportActivity) {
-//                                                ((product.clicklabs.jugnoo.support.SupportActivity) activity).setTitle(activity.getResources().getString(R.string.order_fragment));
-//                                            }
-
-//                                        activity.getFreshOrderHistoryFragment().getOrderHistory();
                                     }
                                 });
                             } else {

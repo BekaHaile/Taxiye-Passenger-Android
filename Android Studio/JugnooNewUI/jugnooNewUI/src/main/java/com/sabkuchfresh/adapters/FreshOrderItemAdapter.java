@@ -123,7 +123,7 @@ public class FreshOrderItemAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 }
             } else if(holder instanceof ViewListHolder){
                 try {
-                    HistoryResponse.OrderItem orderItem = orderItems.get(position);
+                    HistoryResponse.OrderItem orderItem = orderItems.get(position-1);
 
                     if(orderItem.getUnit() == null || "".equalsIgnoreCase(orderItem.getUnit())){
                         ((ViewListHolder)holder).textViewOrderItemName.setText(String.format(activity.getResources().getString(R.string.x_format),

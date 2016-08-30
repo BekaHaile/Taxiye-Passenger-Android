@@ -92,6 +92,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
         activity = (SupportActivity) getActivity();
 		activity.setTitle(MyApplication.getInstance().ACTIVITY_NAME_SUPPORT);
 
+		Data.isSupportRideIssueUpdated = false;
+
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {
 			if(root != null) {
