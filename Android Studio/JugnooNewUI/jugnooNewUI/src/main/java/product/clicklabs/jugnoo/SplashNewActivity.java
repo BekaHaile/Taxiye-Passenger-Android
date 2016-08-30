@@ -1366,6 +1366,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			if (LocationInit.LOCATION_REQUEST_CODE == requestCode) {
 				if (0 == resultCode) {
 					Data.locationSettingsNoPressed = true;
+					Data.locationAddressSettingsNoPressed = true;
 				}
 			} else if (requestCode == GOOGLE_SIGNIN_REQ_CODE_LOGIN) {
 				if (RESULT_OK == resultCode) {
