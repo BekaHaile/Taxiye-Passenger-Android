@@ -1883,12 +1883,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
         try{
-            if(getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false)){
+            if(getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false)
+                    && Prefs.with(this).getInt(KEY_STATE_RESTORE_NEEDED, 0) == 1){
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            callAndHandleStateRestoreAPI(true);
+                            callAndHandleStateRestoreAPI(false);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1898,6 +1899,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         } catch (Exception e){
             e.printStackTrace();
+        } finally {
+            Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 0);
         }
 
     }
