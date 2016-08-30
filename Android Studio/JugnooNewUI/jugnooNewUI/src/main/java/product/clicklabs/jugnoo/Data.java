@@ -114,7 +114,7 @@ public class Data {
 	public static int deepLinkIndex;
 	public static int deepLinkPickup = -1;
 	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
-	public static boolean locationSettingsNoPressed = false;
+	public static boolean locationSettingsNoPressed = false, locationAddressSettingsNoPressed = false;
 
 
 
