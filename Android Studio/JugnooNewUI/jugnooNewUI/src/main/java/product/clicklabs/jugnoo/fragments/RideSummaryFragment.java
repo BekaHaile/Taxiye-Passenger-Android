@@ -38,6 +38,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
@@ -373,12 +374,13 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
                     relativeLayoutConvenienceCharge.setVisibility(View.GONE);
                 }
 
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewEndRideAutoIcon.getLayoutParams();
                 if (endRideData.getIsPooled() == 1) {
-                    imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_invoice_pool);
-                    params.width = (int) (ASSL.Xscale() * 67);
-                    params.height = (int) (ASSL.Xscale() * 37);
-                    imageViewEndRideAutoIcon.setLayoutParams(params);
+                    if(endRideData.getVehicleType() == VehicleTypeValue.AUTOS.getOrdinal()){
+                        imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_history_pool);
+                    }
+                    else if(endRideData.getVehicleType() == VehicleTypeValue.TAXI.getOrdinal()){
+                        imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_history_carpool);
+                    }
                 }
 
                 if (endRideData.discountTypes.size() > 0) {

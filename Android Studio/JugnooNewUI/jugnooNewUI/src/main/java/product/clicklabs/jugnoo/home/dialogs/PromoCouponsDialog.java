@@ -155,9 +155,7 @@ public class PromoCouponsDialog {
 			relative.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(Data.userData.getCoupons(AppConstant.AppType.AUTO).size() == 0){
-						dialog.dismiss();
-					}
+					dialog.dismiss();
 				}
 			});
 
