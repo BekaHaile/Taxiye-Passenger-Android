@@ -60,6 +60,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -405,15 +406,16 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
 
     private void moveCamera() {
-        CameraPosition cameraPosition;
         try {
-            cameraPosition = new CameraPosition.Builder().target(
-                    new LatLng(Data.locationFetcher.getLatitude(), Data.locationFetcher.getLongitude())).zoom(14).build();
-            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            if ((Data.locationAddressSettingsNoPressed)
+                    || (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
+            } else {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void initializeMap() {
