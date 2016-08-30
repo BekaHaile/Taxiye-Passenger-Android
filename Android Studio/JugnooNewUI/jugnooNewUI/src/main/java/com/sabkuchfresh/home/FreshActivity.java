@@ -281,6 +281,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
                 if(lastClientId.equalsIgnoreCase(Config.getFreshClientId())){
+                    openCart();
                     addFreshFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
                 }
@@ -326,6 +327,27 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return flag;
     }
 
+    private void openCart() {
+                try{
+                    if(getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false)){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    updateCartFromSP();
+                                    relativeLayoutCart.performClick();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, 500);
+
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+    }
+
     // Our handler for received Intents. This will be called whenever an Intent
 // with an action named "custom-event-name" is broadcasted.
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -339,9 +361,19 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                 }
-                updateCartFromSP();
-
-                relativeLayoutCart.performClick();
+                String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+                if(lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
+                    updateCartFromSP();
+                    relativeLayoutCart.performClick();
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, true);
+                    MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
+                            getCurrentPlaceLatLng(), bundle);
+//                    openCart();
+//                    addFreshFragment();
+//                    Prefs.with(context).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
+                }
             } else if(type == 1) {
                 intentToShareActivity();
             }

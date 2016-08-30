@@ -340,6 +340,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+            if(!loader)
+                mBus.post(new SwipeCheckout(1));
 		}
 
 	}

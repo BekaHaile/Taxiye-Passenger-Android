@@ -27,6 +27,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
@@ -1580,7 +1581,37 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewPokemonOnOffEngaged.setOnClickListener(onClickListenerPokeOnOff);
 
 
+        try {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                    new IntentFilter(Data.LOCAL_BROADCAST));
+        } catch(Exception e) {
+
+        }
     }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String message = intent.getStringExtra("message");
+            int type = intent.getIntExtra("open_type", 0);
+            if(type == 0) {
+                Log.d("receiver", "Got message: " + message);
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }
+                if(Prefs.with(HomeActivity.this).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()).equals(Config.getAutosClientId())) {
+//                    updateCartFromSP();
+//                    relativeLayoutCart.performClick();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, true);
+                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
+                            getCurrentPlaceLatLng(), bundle);
+                }
+            }
+
+        }
+    };
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -4431,7 +4462,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             appInterruptHandler = null;
 
             FacebookLoginHelper.logoutFacebook();
-
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
             System.gc();
         } catch (Exception e) {
             e.printStackTrace();
