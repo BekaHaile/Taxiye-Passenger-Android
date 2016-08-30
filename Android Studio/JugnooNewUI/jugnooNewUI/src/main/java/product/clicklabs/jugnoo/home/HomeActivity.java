@@ -2725,7 +2725,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //							genieLayout.setVisibility(View.GONE);
                             centreLocationRl.setVisibility(View.GONE);
                             changeLocalityLayout.setVisibility(View.GONE);
-
+                            Data.locationAddressSettingsNoPressed = true;
                             Data.locationSettingsNoPressed = false;
                         }
                         else{

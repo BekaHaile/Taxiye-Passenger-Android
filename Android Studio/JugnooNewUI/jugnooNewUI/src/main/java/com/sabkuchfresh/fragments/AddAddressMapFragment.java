@@ -331,7 +331,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             }
         });
 
-        if(Data.locationSettingsNoPressed){
+        if(Data.locationAddressSettingsNoPressed){
+            Data.locationAddressSettingsNoPressed = false;
             relativeLayoutLocationError.setVisibility(View.VISIBLE);
             searchAddress.setVisibility(View.GONE);
             layoutAddLocation.setVisibility(View.GONE);
