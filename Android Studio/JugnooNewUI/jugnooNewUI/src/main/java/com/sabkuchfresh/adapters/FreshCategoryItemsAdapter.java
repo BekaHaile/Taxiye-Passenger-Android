@@ -320,6 +320,8 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 if (subItem.getSubItemImage() != null && !"".equalsIgnoreCase(subItem.getSubItemImage())) {
                     Picasso.with(context).load(subItem.getSubItemImage())
                             .placeholder(R.drawable.ic_fresh_item_placeholder)
+                            .fit()
+                            .centerCrop()
                             .error(R.drawable.ic_fresh_item_placeholder)
                             .into(mHolder.imageViewItemImage);
                 } else {
