@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
+import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -89,6 +91,14 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
                         Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
                 holder.imageViewProductType.setImageResource(R.drawable.ic_history_auto);
+
+                try {
+                    int vehicleType = orderHistory.getVehicleType();
+                    int rideType = orderHistory.getRideType();
+                    holder.imageViewProductType.setImageResource(getVehicleTypeDrawable(vehicleType, rideType));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 if (0 == orderHistory.getIsCancelledRide()) {
                     if(orderHistory.getAutosStatusText() == null) {
@@ -245,6 +255,36 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
         void onShowMoreClick();
 
         void onRateRideClick(int position, HistoryResponse.Datum rideInfo);
+    }
+
+    private int getVehicleTypeDrawable(int vehicleType, int rideType){
+        if (vehicleType == VehicleTypeValue.AUTOS.getOrdinal()) {
+            if(rideType == RideTypeValue.POOL.getOrdinal()) {
+                return R.drawable.ic_history_pool;
+            } else {
+                return R.drawable.ic_history_auto;
+            }
+        }
+        else if (vehicleType == VehicleTypeValue.BIKES.getOrdinal()) {
+            if(rideType == RideTypeValue.POOL.getOrdinal()) {
+                return R.drawable.ic_history_pool;
+            } else {
+                return R.drawable.ic_history_bike;
+            }
+        }
+        else if (vehicleType == VehicleTypeValue.TAXI.getOrdinal()) {
+            if(rideType == RideTypeValue.POOL.getOrdinal()) {
+                return R.drawable.ic_history_carpool;
+            } else {
+                return R.drawable.ic_history_car;
+            }
+        }
+        else if (vehicleType == VehicleTypeValue.HELICOPTER.getOrdinal()) {
+            return R.drawable.ic_helicopter_invoice;
+        }
+        else {
+            return R.drawable.ic_history_auto;
+        }
     }
 
 }
