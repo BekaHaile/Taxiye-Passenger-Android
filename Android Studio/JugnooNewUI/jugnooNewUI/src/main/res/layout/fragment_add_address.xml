@@ -197,5 +197,6 @@
         </product.clicklabs.jugnoo.utils.NonScrollListView>
     </LinearLayout>
 
+    <include layout="@layout/layout_location_address_error"/>
 
 </RelativeLayout>

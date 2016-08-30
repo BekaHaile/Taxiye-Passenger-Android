@@ -124,6 +124,10 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     private NonScrollListView listViewSearch;
     private boolean unsatflag = false;
 
+    //Location Error layout
+    RelativeLayout relativeLayoutLocationError;
+    RelativeLayout relativeLayoutLocationErrorSearchBar;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -301,8 +305,36 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         listViewSearch.setAdapter(searchListAdapter);
 
 
+        relativeLayoutLocationError = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLocationError);
+        relativeLayoutLocationErrorSearchBar = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLocationErrorSearchBar);
+        ((TextView) rootView.findViewById(R.id.textViewLocationErrorSearch)).setTypeface(Fonts.mavenMedium(homeActivity));
 
+        //Location error layout
+        relativeLayoutLocationError.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locationGotNow();
+            }
+        });
 
+        relativeLayoutLocationErrorSearchBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutSearchBarText.performClick();
+                locationGotNow();
+            }
+        });
+
+        if(Data.locationSettingsNoPressed){
+            relativeLayoutLocationError.setVisibility(View.VISIBLE);
+            relativeLayoutSearchBarText.setVisibility(View.GONE);
+            layoutAddLocation.setVisibility(View.GONE);
+            centerPivot.setVisibility(View.GONE);
+            locationPointer.setVisibility(View.GONE);
+            getMyLocation.setVisibility(View.GONE);
+        } else {
+            locationGotNow();
+        }
 
         getMyLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -327,6 +359,14 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         return rootView;
     }
 
+    private void locationGotNow() {
+        relativeLayoutLocationError.setVisibility(View.GONE);
+        relativeLayoutSearchBarText.setVisibility(View.VISIBLE);
+        layoutAddLocation.setVisibility(View.VISIBLE);
+        centerPivot.setVisibility(View.VISIBLE);
+        locationPointer.setVisibility(View.VISIBLE);
+        getMyLocation.setVisibility(View.VISIBLE);
+    }
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);

@@ -329,7 +329,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     private void openCart() {
                 try{
-                    if(getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false)){
+                    if(getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, false)){
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {

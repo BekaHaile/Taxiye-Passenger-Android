@@ -1604,7 +1604,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                    updateCartFromSP();
 //                    relativeLayoutCart.performClick();
                     Bundle bundle = new Bundle();
-                    bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, true);
+                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
                             getCurrentPlaceLatLng(), bundle);
                 }

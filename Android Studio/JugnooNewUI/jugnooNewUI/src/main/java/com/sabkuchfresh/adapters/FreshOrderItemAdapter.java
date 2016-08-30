@@ -91,7 +91,12 @@ public class FreshOrderItemAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                ((ViewHolderFooter)holder).textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getDeliveryCharges())));
+                if(orderHistory.getDeliveryCharges() != null && orderHistory.getDeliveryCharges()>0) {
+                    ((ViewHolderFooter) holder).deliveryLayout.setVisibility(View.VISIBLE);
+                    ((ViewHolderFooter) holder).textViewDeliveryChargesValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getDeliveryCharges())));
+                } else {
+                    ((ViewHolderFooter) holder).deliveryLayout.setVisibility(View.GONE);
+                }
                 ((ViewHolderFooter)holder).textViewAmountPayableValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
                 if (orderHistory.getPaymentMode().equals(PaymentOption.PAYTM.getOrdinal())) {
                     ((ViewHolderFooter)holder).textViewPaymentMode.setText(activity.getResources().getString(R.string.paytm));
@@ -209,7 +214,7 @@ public class FreshOrderItemAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 textViewPaymentMode, textViewPaymentModeValue, textViewDiscountValue,
                 textViewjcValue, textViewpaytm, textViewpaytmValue;
 
-        public RelativeLayout discountLayout, jclayout, paytmlayout;
+        public RelativeLayout discountLayout, jclayout, paytmlayout, deliveryLayout;
 
         public ViewHolderFooter(View rootView, Context activity) {
             super(rootView);
@@ -217,6 +222,7 @@ public class FreshOrderItemAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             discountLayout = (RelativeLayout) rootView.findViewById(R.id.discountLayout);
             jclayout = (RelativeLayout) rootView.findViewById(R.id.jclayout);
             paytmlayout = (RelativeLayout) rootView.findViewById(R.id.paytmlayout);
+            deliveryLayout = (RelativeLayout) rootView.findViewById(R.id.delivery_layout);
 
             textViewTotalAmountValue = (TextView) rootView.findViewById(R.id.textViewTotalAmountValue);
             textViewTotalAmountValue.setTypeface(Fonts.mavenRegular(activity));

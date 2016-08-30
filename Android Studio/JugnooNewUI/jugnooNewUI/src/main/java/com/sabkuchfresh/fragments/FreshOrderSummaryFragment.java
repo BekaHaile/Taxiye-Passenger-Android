@@ -123,44 +123,75 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 freshOrderItemAdapter = new FreshOrderItemAdapter(activity, orderHistory);
                 recyclerViewOrderItems.setAdapter(freshOrderItemAdapter);
 
-                if (orderHistory.getCancellable() == 1) {
-                    buttonCancelOrder.setVisibility(View.VISIBLE);
-                    orderComplete.setVisibility(View.GONE);
-                    buttonCancelOrder.setText(R.string.cancel_order);
+            if (orderHistory.getCancellable() == 1) {
+                buttonCancelOrder.setVisibility(View.VISIBLE);
+                orderComplete.setVisibility(View.GONE);
+                buttonCancelOrder.setText(R.string.cancel_order);
 
-                } else {
+            } else {
+                orderComplete.setVisibility(View.VISIBLE);
+                buttonCancelOrder.setVisibility(View.GONE);
+                if (activity instanceof RideTransactionsActivity) {
+                    feedbackBtn.setText(R.string.need_help);
                     if (orderHistory.getCanReorder() == 1) {
-                        orderComplete.setVisibility(View.VISIBLE);
-                        buttonCancelOrder.setVisibility(View.GONE);
-                        if (orderHistory.getPendingFeedback() == 1) {
-                            if(activity instanceof FreshActivity) {
-                                feedbackBtn.setText(R.string.ok);
-                                reorderBtn.setVisibility(View.GONE);
-                            } else {
-                                feedbackBtn.setText(R.string.feedback);
-                            }
-                        } else {
-                            if (activity instanceof RideTransactionsActivity) {
-                                feedbackBtn.setText(R.string.need_help);
-                            } else{
-                                feedbackBtn.setText(R.string.ok);
-                            }
-                        }
+                        reorderBtn.setVisibility(View.VISIBLE);
                     } else {
-                        buttonCancelOrder.setVisibility(View.VISIBLE);
                         orderComplete.setVisibility(View.GONE);
-
-                        if (orderHistory.getPendingFeedback() == 1) {
-                            buttonCancelOrder.setText(R.string.ok);
-                        } else {
-                            if (activity instanceof RideTransactionsActivity) {
-                                buttonCancelOrder.setText(R.string.need_help);
-                            } else{
-                                buttonCancelOrder.setText(R.string.ok);
-                            }
-                        }
+                        buttonCancelOrder.setVisibility(View.VISIBLE);
+                        buttonCancelOrder.setText(R.string.need_help);
                     }
+                } else {
+                    if (orderHistory.getCanReorder() == 1 && !(activity instanceof FreshActivity)) {
+                        reorderBtn.setVisibility(View.VISIBLE);
+                        feedbackBtn.setVisibility(View.GONE);
+                    } else {
+                        orderComplete.setVisibility(View.GONE);
+                        buttonCancelOrder.setVisibility(View.VISIBLE);
+                        buttonCancelOrder.setText(R.string.need_help);
+                    }
+
                 }
+            }
+
+
+//                if (orderHistory.getCancellable() == 1) {
+//                    buttonCancelOrder.setVisibility(View.VISIBLE);
+//                    orderComplete.setVisibility(View.GONE);
+//                    buttonCancelOrder.setText(R.string.cancel_order);
+//
+//                } else {
+//                    if (orderHistory.getCanReorder() == 1) {
+//                        orderComplete.setVisibility(View.VISIBLE);
+//                        buttonCancelOrder.setVisibility(View.GONE);
+//                        if (orderHistory.getPendingFeedback() == 1) {
+//                            if(activity instanceof FreshActivity) {
+//                                feedbackBtn.setText(R.string.ok);
+//                                reorderBtn.setVisibility(View.GONE);
+//                            } else {
+//                                feedbackBtn.setText(R.string.ok);
+//                            }
+//                        } else {
+//                            if (activity instanceof RideTransactionsActivity) {
+//                                feedbackBtn.setText(R.string.need_help);
+//                            } else{
+//                                feedbackBtn.setText(R.string.ok);
+//                            }
+//                        }
+//                    } else {
+//                        buttonCancelOrder.setVisibility(View.VISIBLE);
+//                        orderComplete.setVisibility(View.GONE);
+//
+//                        if (orderHistory.getPendingFeedback() == 1) {
+//                            buttonCancelOrder.setText(R.string.ok);
+//                        } else {
+//                            if (activity instanceof RideTransactionsActivity) {
+//                                buttonCancelOrder.setText(R.string.need_help);
+//                            } else{
+//                                buttonCancelOrder.setText(R.string.ok);
+//                            }
+//                        }
+//                    }
+//                }
 
 
         } catch (Exception e) {
@@ -203,38 +234,64 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 buttonCancelOrder.setText(R.string.cancel_order);
 
             } else {
-                if (orderHistory.getCanReorder() == 1) {
-                    orderComplete.setVisibility(View.VISIBLE);
-                    buttonCancelOrder.setVisibility(View.GONE);
-                    if (orderHistory.getPendingFeedback() == 1) {
-                        if(activity instanceof FreshActivity) {
-                            feedbackBtn.setText(R.string.ok);
-                            reorderBtn.setVisibility(View.GONE);
-                        } else {
-                            feedbackBtn.setText(R.string.feedback);
-                        }
+                orderComplete.setVisibility(View.VISIBLE);
+                buttonCancelOrder.setVisibility(View.GONE);
+                if (activity instanceof RideTransactionsActivity) {
+                    feedbackBtn.setText(R.string.need_help);
+                    if (orderHistory.getCanReorder() == 1) {
+                        reorderBtn.setVisibility(View.VISIBLE);
                     } else {
-                        if (activity instanceof RideTransactionsActivity) {
-                            feedbackBtn.setText(R.string.need_help);
-                        } else{
-                            feedbackBtn.setText(R.string.ok);
-                        }
+                        reorderBtn.setVisibility(View.GONE);
                     }
                 } else {
-                    buttonCancelOrder.setVisibility(View.VISIBLE);
-                    orderComplete.setVisibility(View.GONE);
-
-                    if (orderHistory.getPendingFeedback() == 1) {
-                        buttonCancelOrder.setText(R.string.ok);
+                    if (orderHistory.getCanReorder() == 1) {
+                        reorderBtn.setVisibility(View.VISIBLE);
+                        feedbackBtn.setVisibility(View.GONE);
                     } else {
-                        if (activity instanceof RideTransactionsActivity) {
-                            buttonCancelOrder.setText(R.string.need_help);
-                        } else{
-                            buttonCancelOrder.setText(R.string.ok);
-                        }
+                        reorderBtn.setVisibility(View.GONE);
+                        feedbackBtn.setText(R.string.ok);
                     }
+
                 }
             }
+//            if (orderHistory.getCancellable() == 1) {
+//                buttonCancelOrder.setVisibility(View.VISIBLE);
+//                orderComplete.setVisibility(View.GONE);
+//                buttonCancelOrder.setText(R.string.cancel_order);
+//
+//            } else {
+//                if (orderHistory.getCanReorder() == 1) {
+//                    orderComplete.setVisibility(View.VISIBLE);
+//                    buttonCancelOrder.setVisibility(View.GONE);
+//                    if (orderHistory.getPendingFeedback() == 1) {
+//                        if(activity instanceof FreshActivity) {
+//                            feedbackBtn.setText(R.string.ok);
+//                            reorderBtn.setVisibility(View.GONE);
+//                        } else {
+//                            feedbackBtn.setText(R.string.feedback);
+//                        }
+//                    } else {
+//                        if (activity instanceof RideTransactionsActivity) {
+//                            feedbackBtn.setText(R.string.need_help);
+//                        } else{
+//                            feedbackBtn.setText(R.string.ok);
+//                        }
+//                    }
+//                } else {
+//                    buttonCancelOrder.setVisibility(View.VISIBLE);
+//                    orderComplete.setVisibility(View.GONE);
+//
+//                    if (orderHistory.getPendingFeedback() == 1) {
+//                        buttonCancelOrder.setText(R.string.ok);
+//                    } else {
+//                        if (activity instanceof RideTransactionsActivity) {
+//                            buttonCancelOrder.setText(R.string.need_help);
+//                        } else{
+//                            buttonCancelOrder.setText(R.string.ok);
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
@@ -351,24 +408,30 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 }
                 break;
             case R.id.feedbackBtn:
-                if (orderHistory.getPendingFeedback() == 1) {
-                    if(activity instanceof FreshActivity) {
-                        ((FreshActivity) activity).performBackPressed();
-                    } else {
-                        activity.onBackPressed();
-                    }
-                } else {
-                    if (activity instanceof RideTransactionsActivity) {
-                        new TransactionUtils().openRideIssuesFragment(activity,
-                                ((RideTransactionsActivity) activity).getContainer(),
-                                -1, -1, null, null, 0, false, 0, orderHistory);
-                    } else{
-                        activity.onBackPressed();
-                    }
+                if (activity instanceof RideTransactionsActivity) {
+                    new TransactionUtils().openRideIssuesFragment(activity,
+                            ((RideTransactionsActivity) activity).getContainer(),
+                            -1, -1, null, null, 0, false, 0, orderHistory);
+                } else{
+                    activity.onBackPressed();
                 }
+//                if (orderHistory.getPendingFeedback() == 1) {
+//                    if(activity instanceof FreshActivity) {
+//                        ((FreshActivity) activity).performBackPressed();
+//                    } else {
+//                        activity.onBackPressed();
+//                    }
+//                } else {
+//                    if (activity instanceof RideTransactionsActivity) {
+//                        new TransactionUtils().openRideIssuesFragment(activity,
+//                                ((RideTransactionsActivity) activity).getContainer(),
+//                                -1, -1, null, null, 0, false, 0, orderHistory);
+//                    } else{
+//                        activity.onBackPressed();
+//                    }
+//                }
                 break;
             case R.id.reorderBtn:
-                // TODO: 22/08/16 To be done for fresh
                 saveHistoryCardToSP(orderHistory);
                 break;
         }
