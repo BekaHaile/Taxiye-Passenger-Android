@@ -88,18 +88,22 @@ public class HomeFragment extends Fragment {
         recyclerViewStore.setHasFixedSize(false);
 
 
-        listingAdapter = new StoreListingAdapter(activity, Data.getFreshData().stores, new StoreListingAdapter.Callback() {
-            @Override
-            public void onSlotSelected(int storeId) {
-                if(storeId == AppConstant.ApplicationType.FRESH) {
-                    addFreshFragment();
-                } else {
-                    addMealFragment();
-                }
-            }
-        });
+        try {
+            listingAdapter = new StoreListingAdapter(activity, Data.getFreshData().stores, new StoreListingAdapter.Callback() {
+				@Override
+				public void onSlotSelected(int storeId) {
+					if(storeId == AppConstant.ApplicationType.FRESH) {
+						addFreshFragment();
+					} else {
+						addMealFragment();
+					}
+				}
+			});
 
-        recyclerViewStore.setAdapter(listingAdapter);
+            recyclerViewStore.setAdapter(listingAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 

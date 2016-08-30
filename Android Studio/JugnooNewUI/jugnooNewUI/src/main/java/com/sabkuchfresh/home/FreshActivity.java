@@ -357,9 +357,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     protected void onResume() {
         super.onResume();
         try {
+        if (!HomeUtil.checkIfUserDataNull(this)) {
             mBus.register(this);
 
-        if (!HomeUtil.checkIfUserDataNull(this)) {
             menuBar.setUserData();
             topBar.setUserData();
 
@@ -371,19 +371,18 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             } else {
                 locationFetcher.connect();
             }
-        }
 
-        if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
-                Data.userData.getIntegratedJugnooEnabled() == 1) {
-            if((getFreshFragment() != null && !getFreshFragment().isHidden()) ||
-                    (getMealFragment() != null && !getMealFragment().isHidden())) {
-                fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
-                fabView.setFABMenuDrawable();
+            if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
+                    Data.userData.getIntegratedJugnooEnabled() == 1) {
+                if((getFreshFragment() != null && !getFreshFragment().isHidden()) ||
+                        (getMealFragment() != null && !getMealFragment().isHidden())) {
+                    fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
+                    fabView.setFABMenuDrawable();
+                }
+            } else{
+                fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
             }
-        } else{
-            fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
         }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

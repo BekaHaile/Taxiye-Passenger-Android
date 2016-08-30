@@ -81,20 +81,24 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
-        if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
-            viewType = Data.getFreshData().getFeedbackViewType();
-            dateValue = Data.getFreshData().getFeedbackDeliveryDate();
-            orderAmount = Data.getFreshData().getAmount();
-            orderId = Data.getFreshData().getOrderId();
-            activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
-        } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
-            viewType = Data.getMealsData().getFeedbackViewType();
-            dateValue = Data.getMealsData().getFeedbackDeliveryDate();
-            orderAmount = Data.getMealsData().getAmount();
-            orderId = Data.getMealsData().getOrderId();
-            activity.getTopBar().title.setText(getResources().getString(R.string.meals));
-        } else {
-            activity.finish();
+        try {
+            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+				viewType = Data.getFreshData().getFeedbackViewType();
+				dateValue = Data.getFreshData().getFeedbackDeliveryDate();
+				orderAmount = Data.getFreshData().getAmount();
+				orderId = Data.getFreshData().getOrderId();
+				activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
+			} else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+				viewType = Data.getMealsData().getFeedbackViewType();
+				dateValue = Data.getMealsData().getFeedbackDeliveryDate();
+				orderAmount = Data.getMealsData().getAmount();
+				orderId = Data.getMealsData().getOrderId();
+				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+			} else {
+				activity.finish();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if(TextUtils.isEmpty(orderId))

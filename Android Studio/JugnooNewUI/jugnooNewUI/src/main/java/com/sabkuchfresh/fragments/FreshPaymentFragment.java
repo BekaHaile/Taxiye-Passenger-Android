@@ -479,50 +479,54 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     }
 
     private void placeOrder() {
-        boolean goAhead = true;
-        if (activity.getPaymentOption() == PaymentOption.PAYTM) {
-            if (Data.userData.getPaytmBalance() < getTotalPriceWithDeliveryCharges()) {
-                if (Data.userData.getPaytmBalance() < 0) {
-                    DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
-                } else {
-                    showWalletBalanceLowDialog(PaymentOption.PAYTM);
-                }
-                goAhead = false;
-            }
-        }
-        else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
-            if (Data.userData.getMobikwikBalance() < getTotalPriceWithDeliveryCharges()) {
-                if (Data.userData.getMobikwikBalance() < 0) {
-                    DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.mobikwik_error_select_cash));
-                } else {
-                    showWalletBalanceLowDialog(PaymentOption.MOBIKWIK);
-                }
-                goAhead = false;
-            }
-        }
-        if (goAhead) {
-            buttonPlaceOrder.setEnabled(false);
-            DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-                    activity.getResources().getString(R.string.place_order_confirmation),
-                    activity.getResources().getString(R.string.ok),
-                    activity.getResources().getString(R.string.cancel),
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (activity.getPaymentOption().getOrdinal() == 1) {
-                                FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
-                            } else {
-                                FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
-                            }
-                            placeOrderApi();
-                        }
-                    },
-                    new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            buttonPlaceOrder.setEnabled(true);
-                        }
-                    }, false, false);
+        try {
+            boolean goAhead = true;
+            if (activity.getPaymentOption() == PaymentOption.PAYTM) {
+				if (Data.userData.getPaytmBalance() < getTotalPriceWithDeliveryCharges()) {
+					if (Data.userData.getPaytmBalance() < 0) {
+						DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
+					} else {
+						showWalletBalanceLowDialog(PaymentOption.PAYTM);
+					}
+					goAhead = false;
+				}
+			}
+			else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
+				if (Data.userData.getMobikwikBalance() < getTotalPriceWithDeliveryCharges()) {
+					if (Data.userData.getMobikwikBalance() < 0) {
+						DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.mobikwik_error_select_cash));
+					} else {
+						showWalletBalanceLowDialog(PaymentOption.MOBIKWIK);
+					}
+					goAhead = false;
+				}
+			}
+            if (goAhead) {
+				buttonPlaceOrder.setEnabled(false);
+				DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+						activity.getResources().getString(R.string.place_order_confirmation),
+						activity.getResources().getString(R.string.ok),
+						activity.getResources().getString(R.string.cancel),
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								if (activity.getPaymentOption().getOrdinal() == 1) {
+									FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
+								} else {
+									FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
+								}
+								placeOrderApi();
+							}
+						},
+						new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								buttonPlaceOrder.setEnabled(true);
+							}
+						}, false, false);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
