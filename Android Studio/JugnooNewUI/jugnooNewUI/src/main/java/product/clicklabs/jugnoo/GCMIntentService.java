@@ -34,7 +34,6 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
@@ -344,7 +343,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
-						Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
 						}
@@ -367,7 +366,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 
 					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
-						Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						String driverArrivedMessage = jObj.getString(KEY_MESSAGE);
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
@@ -383,7 +382,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
-						Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(0, message1);
@@ -416,7 +415,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						FbEvents.logEvent(this, FlurryEventNames.FB_EVENT_RIDE_STARTED);
 
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
-						Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
 						String engagementId = jObj.getString("engagement_id");
 
@@ -431,7 +430,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						stopService(intent);
 
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
-						Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.ride_cancelled_by_driver));
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
