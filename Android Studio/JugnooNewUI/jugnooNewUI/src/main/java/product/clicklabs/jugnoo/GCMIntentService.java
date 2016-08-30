@@ -344,6 +344,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
 						}
@@ -367,6 +368,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String driverArrivedMessage = jObj.getString(KEY_MESSAGE);
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
@@ -383,6 +385,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(0, message1);
@@ -416,6 +419,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
 						String engagementId = jObj.getString("engagement_id");
 
@@ -431,6 +435,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.ride_cancelled_by_driver));
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
@@ -444,11 +449,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						notificationManager(this, title, "" + message1, playSound);
 
 					} else if (PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String log = jObj.getString("log");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log);
 						}
 					} else if (PushFlags.CHANGE_STATE.getOrdinal() == flag) {
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String logMessage = jObj.getString("message");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onChangeStatePushReceived();
@@ -562,6 +569,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, eta, playSound);
                         }
                     } else if(PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag){
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						if(HomeActivity.appInterruptHandler != null){
 							HomeActivity.appInterruptHandler.onPaytmRechargePush(jObj);
 						}
@@ -574,6 +582,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						startService(synIntent);
 
 					} else if(PushFlags.UPDATE_POOL_RIDE_STATUS.getOrdinal() == flag){
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onUpdatePoolRideStatus(jObj);
 						}
