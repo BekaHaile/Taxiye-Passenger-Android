@@ -588,216 +588,220 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     public void fragmentUISetup(Fragment fragment) {
-        textViewMinOrder.setVisibility(View.GONE);
+        try {
+            textViewMinOrder.setVisibility(View.GONE);
 
-        topBar.title.setTypeface(Fonts.avenirNext(this));
-        topBar.below_shadow.setVisibility(View.VISIBLE);
-        relativeLayoutCartNew.setVisibility(View.GONE);
-        linearLayoutCheckout.setVisibility(View.VISIBLE);
+            topBar.title.setTypeface(Fonts.avenirNext(this));
+            topBar.below_shadow.setVisibility(View.VISIBLE);
+            relativeLayoutCartNew.setVisibility(View.GONE);
+            linearLayoutCheckout.setVisibility(View.VISIBLE);
 
 //        Utils.hideViewByScale(relativeLayoutCartRound);
 //        relativeLayoutCartRound.hide();
-        topView.setVisibility(View.VISIBLE);
-        fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
-        //imageViewFabFake.setVisibility(View.GONE);
+            topView.setVisibility(View.VISIBLE);
+            fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+            //imageViewFabFake.setVisibility(View.GONE);
 
-        if (fragment instanceof FreshFragment) {
-            topBar.imageViewMenu.setVisibility(View.VISIBLE);
-            topBar.below_shadow.setVisibility(View.GONE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.GONE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            textViewCheckout.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
-            //imageViewFabFake.setVisibility(View.VISIBLE);
-            if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
-                fabView.setFABMenuDrawable();
-            }
-
-
-            relativeLayoutCartNew.setVisibility(View.VISIBLE);
-            linearLayoutCheckout.setVisibility(View.GONE);
-
-            relativeLayoutSort.setVisibility(View.VISIBLE);
-            relativeLayoutCart.setVisibility(View.GONE);
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.fresh));
-            topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-
-        } else if(fragment instanceof MealFragment){
-            topBar.imageViewMenu.setVisibility(View.VISIBLE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.GONE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            textViewCheckout.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
-
-            relativeLayoutCartNew.setVisibility(View.VISIBLE);
-            linearLayoutCheckout.setVisibility(View.GONE);
-
-            relativeLayoutSort.setVisibility(View.VISIBLE);
-            relativeLayoutCart.setVisibility(View.GONE);
-
-            if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
-                fabView.setFABMenuDrawable();
-            }
-
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.meals));
-            topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-        } else if (fragment instanceof FreshCartItemsFragment) {
-            textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));
-            try {
-//                String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
-//                String split_one = splited[1];
-                if (getTotalPrice() < getProductsResponse().getDeliveryInfo().getMinAmount()) {
-                    textViewMinOrder.setVisibility(View.VISIBLE);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            topBar.imageViewMenu.setVisibility(View.GONE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.VISIBLE);
-            topBar.imageViewDelete.setVisibility(View.VISIBLE);
-            textViewCheckout.setVisibility(View.VISIBLE);
-            relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
-
-            relativeLayoutSort.setVisibility(View.GONE);
-            relativeLayoutCart.setVisibility(View.VISIBLE);
-
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.my_cart));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-        } else if (fragment instanceof FreshCheckoutFragment) {
-            topBar.imageViewMenu.setVisibility(View.GONE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.VISIBLE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-            relativeLayoutSort.setVisibility(View.GONE);
-            relativeLayoutCart.setVisibility(View.VISIBLE);
-
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.checkout));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-        } else if (fragment instanceof FreshAddressFragment || fragment instanceof AddAddressMapFragment) {
-            topBar.imageViewMenu.setVisibility(View.GONE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.VISIBLE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-            relativeLayoutSort.setVisibility(View.GONE);
-            relativeLayoutCart.setVisibility(View.VISIBLE);
-
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.address));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-        } else if (fragment instanceof FreshPaymentFragment) {
-            topBar.imageViewMenu.setVisibility(View.GONE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.VISIBLE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-            relativeLayoutSort.setVisibility(View.GONE);
-            relativeLayoutCart.setVisibility(View.VISIBLE);
-
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.payment));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-        } else if (fragment instanceof FreshOrderHistoryFragment) {
-            topBar.imageViewMenu.setVisibility(View.GONE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.VISIBLE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-            relativeLayoutSort.setVisibility(View.GONE);
-            relativeLayoutCart.setVisibility(View.VISIBLE);
-
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.order_history));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-        } else if (fragment instanceof FreshOrderSummaryFragment) {
-            topBar.imageViewMenu.setVisibility(View.GONE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.VISIBLE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-            relativeLayoutSort.setVisibility(View.GONE);
-            relativeLayoutCart.setVisibility(View.VISIBLE);
-
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.order_summary));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-        } else if (fragment instanceof FreshSupportFragment) {
-            topBar.imageViewMenu.setVisibility(View.GONE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.VISIBLE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-            relativeLayoutSort.setVisibility(View.GONE);
-            relativeLayoutCart.setVisibility(View.VISIBLE);
-
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.support));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-        } else if (fragment instanceof FreshSearchFragment) {
-            topView.setVisibility(View.GONE);
-            topBar.imageViewMenu.setVisibility(View.GONE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.VISIBLE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
-
-            relativeLayoutSort.setVisibility(View.GONE);
-            relativeLayoutCart.setVisibility(View.VISIBLE);
-
-            topBar.title.setVisibility(View.VISIBLE);
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-        } else if (fragment instanceof HomeFragment) {
-            topBar.imageViewMenu.setVisibility(View.VISIBLE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.GONE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            textViewCheckout.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-            relativeLayoutSort.setVisibility(View.VISIBLE);
-            relativeLayoutCart.setVisibility(View.GONE);
+            if (fragment instanceof FreshFragment) {
+				topBar.imageViewMenu.setVisibility(View.VISIBLE);
+				topBar.below_shadow.setVisibility(View.GONE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.GONE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				textViewCheckout.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+				//imageViewFabFake.setVisibility(View.VISIBLE);
+				if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+					fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
+					fabView.setFABMenuDrawable();
+				}
 
 
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.setText(getResources().getString(R.string.app_name));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+				relativeLayoutCartNew.setVisibility(View.VISIBLE);
+				linearLayoutCheckout.setVisibility(View.GONE);
 
-        } else if(fragment instanceof FeedbackFragment) {
-            topBar.imageViewMenu.setVisibility(View.VISIBLE);
-            topBar.relativeLayoutNotification.setVisibility(View.GONE);
-            topBar.imageViewBack.setVisibility(View.GONE);
-            topBar.imageViewDelete.setVisibility(View.GONE);
-            textViewCheckout.setVisibility(View.GONE);
-            relativeLayoutCheckoutBar.setVisibility(View.GONE);
-            topBar.title.setVisibility(View.VISIBLE);
-            topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+				relativeLayoutSort.setVisibility(View.VISIBLE);
+				relativeLayoutCart.setVisibility(View.GONE);
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.setText(getResources().getString(R.string.fresh));
+				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+
+			} else if(fragment instanceof MealFragment){
+				topBar.imageViewMenu.setVisibility(View.VISIBLE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.GONE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				textViewCheckout.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+
+				relativeLayoutCartNew.setVisibility(View.VISIBLE);
+				linearLayoutCheckout.setVisibility(View.GONE);
+
+				relativeLayoutSort.setVisibility(View.VISIBLE);
+				relativeLayoutCart.setVisibility(View.GONE);
+
+				if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+					fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
+					fabView.setFABMenuDrawable();
+				}
+
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.setText(getResources().getString(R.string.meals));
+				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+			} else if (fragment instanceof FreshCartItemsFragment) {
+				textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));
+				try {
+	//                String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
+	//                String split_one = splited[1];
+					if (getTotalPrice() < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+						textViewMinOrder.setVisibility(View.VISIBLE);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+				topBar.imageViewDelete.setVisibility(View.VISIBLE);
+				textViewCheckout.setVisibility(View.VISIBLE);
+				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+
+				relativeLayoutSort.setVisibility(View.GONE);
+				relativeLayoutCart.setVisibility(View.VISIBLE);
+
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.setText(getResources().getString(R.string.my_cart));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+			} else if (fragment instanceof FreshCheckoutFragment) {
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+				relativeLayoutSort.setVisibility(View.GONE);
+				relativeLayoutCart.setVisibility(View.VISIBLE);
+
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.setText(getResources().getString(R.string.checkout));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+			} else if (fragment instanceof FreshAddressFragment || fragment instanceof AddAddressMapFragment) {
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+				relativeLayoutSort.setVisibility(View.GONE);
+				relativeLayoutCart.setVisibility(View.VISIBLE);
+
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.setText(getResources().getString(R.string.address));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+			} else if (fragment instanceof FreshPaymentFragment) {
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+				relativeLayoutSort.setVisibility(View.GONE);
+				relativeLayoutCart.setVisibility(View.VISIBLE);
+
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.setText(getResources().getString(R.string.payment));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+			} else if (fragment instanceof FreshOrderHistoryFragment) {
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+				relativeLayoutSort.setVisibility(View.GONE);
+				relativeLayoutCart.setVisibility(View.VISIBLE);
+
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.setText(getResources().getString(R.string.order_history));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+			} else if (fragment instanceof FreshOrderSummaryFragment) {
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+				relativeLayoutSort.setVisibility(View.GONE);
+				relativeLayoutCart.setVisibility(View.VISIBLE);
+
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.setText(getResources().getString(R.string.order_summary));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+			} else if (fragment instanceof FreshSupportFragment) {
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+				relativeLayoutSort.setVisibility(View.GONE);
+				relativeLayoutCart.setVisibility(View.VISIBLE);
+
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.setText(getResources().getString(R.string.support));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+			} else if (fragment instanceof FreshSearchFragment) {
+				topView.setVisibility(View.GONE);
+				topBar.imageViewMenu.setVisibility(View.GONE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.VISIBLE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+
+				relativeLayoutSort.setVisibility(View.GONE);
+				relativeLayoutCart.setVisibility(View.VISIBLE);
+
+				topBar.title.setVisibility(View.VISIBLE);
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+			} else if (fragment instanceof HomeFragment) {
+				topBar.imageViewMenu.setVisibility(View.VISIBLE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.GONE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				textViewCheckout.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+				relativeLayoutSort.setVisibility(View.VISIBLE);
+				relativeLayoutCart.setVisibility(View.GONE);
+
+
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.setText(getResources().getString(R.string.app_name));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+
+			} else if(fragment instanceof FeedbackFragment) {
+				topBar.imageViewMenu.setVisibility(View.VISIBLE);
+				topBar.relativeLayoutNotification.setVisibility(View.GONE);
+				topBar.imageViewBack.setVisibility(View.GONE);
+				topBar.imageViewDelete.setVisibility(View.GONE);
+				textViewCheckout.setVisibility(View.GONE);
+				relativeLayoutCheckoutBar.setVisibility(View.GONE);
+				topBar.title.setVisibility(View.VISIBLE);
+				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -433,4 +433,6 @@ public interface Constants {
 	String KEY_ORDER_ID = "order_id";
 	String KEY_ORDER_DATE = "order_date";
 	String KEY_FATAFAT_ENABLED = "fatafat_enabled";
+	String KEY_INTERNAL_APP_SWITCH = "internal_app_switch";
+	String KEY_APP_SWITCH_BUNDLE = "app_switch_bundle";
 }
