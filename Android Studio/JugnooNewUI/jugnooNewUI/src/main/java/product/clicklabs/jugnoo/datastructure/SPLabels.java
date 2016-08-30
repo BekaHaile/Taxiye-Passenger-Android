@@ -22,6 +22,7 @@ public class SPLabels {
         PENDING_CALLS_RETRY_COUNT = "pendingCallsRetryCount",
 
     USER_IDENTIFIER = "userIdentifier",
+            BRANCH_LINK_TITLE = "branch_link_title",
     BRANCH_LINK_DESCRIPTION = "branch_link_description",
             BRANCH_LINK_IMAGE = "branch_link_image",
 

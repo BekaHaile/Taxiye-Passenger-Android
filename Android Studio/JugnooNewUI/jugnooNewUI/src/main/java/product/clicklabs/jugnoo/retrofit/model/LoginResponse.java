@@ -437,6 +437,9 @@ public class LoginResponse {
 		@SerializedName("referral_sharing_message")
 		@Expose
 		private String referralSharingMessage;
+		@SerializedName("sharing_og_title")
+		@Expose
+		private String sharingOgTitle;
 		@SerializedName("jeanie_intro_dialog_content")
 		@Expose
 		private JeanieIntroDialogContent jeanieIntroDialogContent;
@@ -583,6 +586,14 @@ public class LoginResponse {
 
 		public void setJeanieIntroDialogContent(JeanieIntroDialogContent jeanieIntroDialogContent) {
 			this.jeanieIntroDialogContent = jeanieIntroDialogContent;
+		}
+
+		public String getSharingOgTitle() {
+			return sharingOgTitle;
+		}
+
+		public void setSharingOgTitle(String sharingOgTitle) {
+			this.sharingOgTitle = sharingOgTitle;
 		}
 	}
 
