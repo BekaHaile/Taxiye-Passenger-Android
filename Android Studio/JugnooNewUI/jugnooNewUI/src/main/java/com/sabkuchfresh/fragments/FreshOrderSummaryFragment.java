@@ -153,47 +153,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 }
             }
 
-
-//                if (orderHistory.getCancellable() == 1) {
-//                    buttonCancelOrder.setVisibility(View.VISIBLE);
-//                    orderComplete.setVisibility(View.GONE);
-//                    buttonCancelOrder.setText(R.string.cancel_order);
-//
-//                } else {
-//                    if (orderHistory.getCanReorder() == 1) {
-//                        orderComplete.setVisibility(View.VISIBLE);
-//                        buttonCancelOrder.setVisibility(View.GONE);
-//                        if (orderHistory.getPendingFeedback() == 1) {
-//                            if(activity instanceof FreshActivity) {
-//                                feedbackBtn.setText(R.string.ok);
-//                                reorderBtn.setVisibility(View.GONE);
-//                            } else {
-//                                feedbackBtn.setText(R.string.ok);
-//                            }
-//                        } else {
-//                            if (activity instanceof RideTransactionsActivity) {
-//                                feedbackBtn.setText(R.string.need_help);
-//                            } else{
-//                                feedbackBtn.setText(R.string.ok);
-//                            }
-//                        }
-//                    } else {
-//                        buttonCancelOrder.setVisibility(View.VISIBLE);
-//                        orderComplete.setVisibility(View.GONE);
-//
-//                        if (orderHistory.getPendingFeedback() == 1) {
-//                            buttonCancelOrder.setText(R.string.ok);
-//                        } else {
-//                            if (activity instanceof RideTransactionsActivity) {
-//                                buttonCancelOrder.setText(R.string.need_help);
-//                            } else{
-//                                buttonCancelOrder.setText(R.string.ok);
-//                            }
-//                        }
-//                    }
-//                }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -241,57 +200,22 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                     if (orderHistory.getCanReorder() == 1) {
                         reorderBtn.setVisibility(View.VISIBLE);
                     } else {
-                        reorderBtn.setVisibility(View.GONE);
+                        orderComplete.setVisibility(View.GONE);
+                        buttonCancelOrder.setVisibility(View.VISIBLE);
+                        buttonCancelOrder.setText(R.string.need_help);
                     }
                 } else {
-                    if (orderHistory.getCanReorder() == 1) {
+                    if (orderHistory.getCanReorder() == 1 && !(activity instanceof FreshActivity)) {
                         reorderBtn.setVisibility(View.VISIBLE);
                         feedbackBtn.setVisibility(View.GONE);
                     } else {
-                        reorderBtn.setVisibility(View.GONE);
-                        feedbackBtn.setText(R.string.ok);
+                        orderComplete.setVisibility(View.GONE);
+                        buttonCancelOrder.setVisibility(View.VISIBLE);
+                        buttonCancelOrder.setText(R.string.need_help);
                     }
 
                 }
             }
-//            if (orderHistory.getCancellable() == 1) {
-//                buttonCancelOrder.setVisibility(View.VISIBLE);
-//                orderComplete.setVisibility(View.GONE);
-//                buttonCancelOrder.setText(R.string.cancel_order);
-//
-//            } else {
-//                if (orderHistory.getCanReorder() == 1) {
-//                    orderComplete.setVisibility(View.VISIBLE);
-//                    buttonCancelOrder.setVisibility(View.GONE);
-//                    if (orderHistory.getPendingFeedback() == 1) {
-//                        if(activity instanceof FreshActivity) {
-//                            feedbackBtn.setText(R.string.ok);
-//                            reorderBtn.setVisibility(View.GONE);
-//                        } else {
-//                            feedbackBtn.setText(R.string.feedback);
-//                        }
-//                    } else {
-//                        if (activity instanceof RideTransactionsActivity) {
-//                            feedbackBtn.setText(R.string.need_help);
-//                        } else{
-//                            feedbackBtn.setText(R.string.ok);
-//                        }
-//                    }
-//                } else {
-//                    buttonCancelOrder.setVisibility(View.VISIBLE);
-//                    orderComplete.setVisibility(View.GONE);
-//
-//                    if (orderHistory.getPendingFeedback() == 1) {
-//                        buttonCancelOrder.setText(R.string.ok);
-//                    } else {
-//                        if (activity instanceof RideTransactionsActivity) {
-//                            buttonCancelOrder.setText(R.string.need_help);
-//                        } else{
-//                            buttonCancelOrder.setText(R.string.ok);
-//                        }
-//                    }
-//                }
-//            }
         }
     }
 
@@ -415,21 +339,6 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 } else{
                     activity.onBackPressed();
                 }
-//                if (orderHistory.getPendingFeedback() == 1) {
-//                    if(activity instanceof FreshActivity) {
-//                        ((FreshActivity) activity).performBackPressed();
-//                    } else {
-//                        activity.onBackPressed();
-//                    }
-//                } else {
-//                    if (activity instanceof RideTransactionsActivity) {
-//                        new TransactionUtils().openRideIssuesFragment(activity,
-//                                ((RideTransactionsActivity) activity).getContainer(),
-//                                -1, -1, null, null, 0, false, 0, orderHistory);
-//                    } else{
-//                        activity.onBackPressed();
-//                    }
-//                }
                 break;
             case R.id.reorderBtn:
                 saveHistoryCardToSP(orderHistory);
