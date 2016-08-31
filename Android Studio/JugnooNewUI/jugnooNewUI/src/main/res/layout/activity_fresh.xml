@@ -9,7 +9,7 @@
         android:id="@+id/relativeLayoutRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true">
+        >
 
         <!-- top bar layout -->
         <include
@@ -28,7 +28,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:animateLayoutChanges="true"
             android:orientation="vertical">
 
 
@@ -53,7 +52,6 @@
                     android:id="@+id/relativeLayoutLeft"
                     android:layout_width="156px"
                     android:layout_height="match_parent"
-                    android:animateLayoutChanges="true"
 
                     android:layout_marginTop="6px"
                     android:background="@drawable/background_white_grey_light_selector">
@@ -198,7 +196,6 @@
                         android:id="@+id/linearLayoutCheckout"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:animateLayoutChanges="true"
                         android:background="@drawable/background_white_grey_light_selector"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">

@@ -73,7 +73,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
     private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
-	public FreshFragment(){}
+
+    public FreshFragment(){}
     private boolean loader = true;
     protected Bus mBus;
     PushDialog pushDialog;

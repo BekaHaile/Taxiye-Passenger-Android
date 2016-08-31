@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
@@ -39,6 +40,7 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 	private View rootView;
     private FreshActivity activity;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+	private ImageView noMealsView;
 
 	public FreshCategoryItemsFragment(){
 	}
@@ -76,6 +78,9 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+
+				noMealsView = (ImageView) rootView.findViewById(R.id.noMealsView);
+				noMealsView.setVisibility(View.GONE);
 
 				recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
 				recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
