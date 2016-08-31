@@ -267,9 +267,15 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				new ApiGetRideSummary.Callback() {
 					@Override
 					public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
-						SupportRideIssuesFragment.this.endRideData = endRideData;
-						SupportRideIssuesFragment.this.datum = datum;
-						SupportRideIssuesFragment.this.items = items;
+						if(endRideData != null && endRideData.driverName != null) {
+							SupportRideIssuesFragment.this.endRideData = endRideData;
+						}
+						if(datum != null && datum.getOrderId() != null) {
+							SupportRideIssuesFragment.this.datum = datum;
+						}
+						if(items != null) {
+							SupportRideIssuesFragment.this.items = items;
+						}
 						setRideData();
 						updateIssuesList(items);
 						linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
