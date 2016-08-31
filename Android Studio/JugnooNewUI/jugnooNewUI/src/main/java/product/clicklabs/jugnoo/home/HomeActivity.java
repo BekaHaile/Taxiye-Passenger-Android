@@ -844,7 +844,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textVieGetFareEstimateConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Gson gson = new Gson();
                 Intent intent = new Intent(HomeActivity.this, FareEstimateActivity.class);
+                intent.putExtra(Constants.KEY_REGION, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
                 intent.putExtra(KEY_RIDE_TYPE, slidingBottomPanel
                         .getRequestRideOptionsFragment().getRegionSelected().getRideType());
                 try {
@@ -7385,6 +7387,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
     }
 
+    private DeepLinkAction deepLinkAction = new DeepLinkAction();
     private void openPushDialog(){
         dismissPushDialog(false);
         PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
@@ -7392,7 +7395,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onButtonClicked(int deepIndex, String url) {
                 if("".equalsIgnoreCase(url)) {
                     Data.deepLinkIndex = deepIndex;
-                    openDeepLink();
+                    deepLinkAction.openDeepLink(menuBar);
                 } else{
                     Utils.openUrl(HomeActivity.this, url);
                 }
@@ -7484,7 +7487,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     textViewIncludes.setText(text);
                 }
-            }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, callFareEstimate);
+            }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, callFareEstimate,
+                    getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
         } else{
             textViewDestSearch.setText(getResources().getString(R.string.destination_required));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.red));

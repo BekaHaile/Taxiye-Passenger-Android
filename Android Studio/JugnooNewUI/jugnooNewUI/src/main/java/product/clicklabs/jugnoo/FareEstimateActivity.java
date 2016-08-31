@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -73,6 +74,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     private int isPooled = 0, rideType = RideTypeValue.NORMAL.getOrdinal();
     private LatLng pickupLatLng;
     private SearchResult searchResultGlobal;
+    private Region region;
 
     @Override
     protected void onResume() {
@@ -86,6 +88,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         setContentView(R.layout.activity_fare_estimate);
 
         try {
+            Gson gson = new Gson();
+            region = gson.fromJson(getIntent().getStringExtra(Constants.KEY_REGION), Region.class);
             rideType = getIntent().getIntExtra(Constants.KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
             if (rideType == RideTypeValue.POOL.getOrdinal()) {
                 isPooled = 1;
@@ -364,7 +368,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 @Override
                 public void onRetry() {
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true);
+            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region);
 
         } catch (Exception e) {
             e.printStackTrace();

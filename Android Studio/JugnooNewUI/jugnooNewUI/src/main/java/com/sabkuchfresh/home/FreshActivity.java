@@ -75,9 +75,12 @@ import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABView;
 import product.clicklabs.jugnoo.home.MenuBar;
+import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -304,6 +307,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             // with actions named "custom-event-name".
             LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                     new IntentFilter(Data.LOCAL_BROADCAST));
+
+            openPushDialog();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -358,28 +363,36 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         @Override
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
-            String message = intent.getStringExtra("message");
-            int type = intent.getIntExtra("open_type", 0);
-            if(type == 0) {
-                Log.d("receiver", "Got message: " + message);
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                }
-                String lastClientId = Prefs.with(context).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
-                if(lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
-                    updateCartFromSP();
-                    relativeLayoutCart.performClick();
-                } else {
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
-                    MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
-                            getCurrentPlaceLatLng(), bundle);
+            int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
+            if(flag == -1) {
+                String message = intent.getStringExtra("message");
+                int type = intent.getIntExtra("open_type", 0);
+                if (type == 0) {
+                    Log.d("receiver", "Got message: " + message);
+                    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                    }
+                    String lastClientId = Prefs.with(context).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+                    if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
+                        updateCartFromSP();
+                        relativeLayoutCart.performClick();
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+                        MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
+                                getCurrentPlaceLatLng(), bundle);
 //                    openCart();
 //                    addFreshFragment();
 //                    Prefs.with(context).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
+                    }
+                } else if (type == 1) {
+                    intentToShareActivity();
                 }
-            } else if(type == 1) {
-                intentToShareActivity();
+            } else {
+                if(flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()){
+                    Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
+                    openPushDialog();
+                }
             }
 
         }
@@ -1539,6 +1552,38 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public MenuBar getMenuBar(){
         return menuBar;
+    }
+
+
+
+    private DeepLinkAction deepLinkAction = new DeepLinkAction();
+    private PushDialog pushDialog;
+    private void openPushDialog(){
+        dismissPushDialog(false);
+        PushDialog dialog = new PushDialog(FreshActivity.this, new PushDialog.Callback() {
+            @Override
+            public void onButtonClicked(int deepIndex, String url) {
+                if("".equalsIgnoreCase(url)) {
+                    Data.deepLinkIndex = deepIndex;
+                    deepLinkAction.openDeepLink(menuBar);
+                } else{
+                    Utils.openUrl(FreshActivity.this, url);
+                }
+            }
+        }).show();
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        if(dialog != null){
+            pushDialog = dialog;
+        }
+    }
+
+    private void dismissPushDialog(boolean clearDialogContent){
+        if(pushDialog != null){
+            pushDialog.dismiss(clearDialogContent);
+            pushDialog = null;
+        }
     }
 
 }

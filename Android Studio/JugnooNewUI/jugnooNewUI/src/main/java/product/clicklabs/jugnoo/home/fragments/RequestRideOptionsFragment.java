@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -224,7 +225,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
 
             } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
+                Gson gson = new Gson();
                 Intent intent = new Intent(activity, FareEstimateActivity.class);
+                intent.putExtra(Constants.KEY_REGION, gson.toJson(getRegionSelected(), Region.class));
                 intent.putExtra(Constants.KEY_RIDE_TYPE, getRegionSelected().getRideType());
                 try {
                     intent.putExtra(Constants.KEY_LATITUDE, activity.map.getCameraPosition().target.latitude);

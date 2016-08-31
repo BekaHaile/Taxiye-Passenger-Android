@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.TextView;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -121,7 +122,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
     @SuppressWarnings("deprecation")
     private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
-											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex) {
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag) {
 
         try {
             long when = System.currentTimeMillis();
@@ -129,6 +130,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             Intent notificationIntent = new Intent();
+			Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
 			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
 			if("".equalsIgnoreCase(url)){
 				notificationIntent.setClass(context, SplashNewActivity.class);
@@ -138,12 +140,19 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				notificationIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
 				notificationIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
 
-				if(HomeActivity.appInterruptHandler != null && showDialog == 1){
-					HomeActivity.appInterruptHandler.onShowDialogPush();
-				}
+				broadcastIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
+				broadcastIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
+				broadcastIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
 			} else{
 				notificationIntent.setData(Uri.parse(url));
+				broadcastIntent.setData(Uri.parse(url));
 			}
+			broadcastIntent.putExtra(Constants.KEY_FLAG, flag);
+
+			if(HomeActivity.appInterruptHandler != null && showDialog == 1){
+				HomeActivity.appInterruptHandler.onShowDialogPush();
+			}
+			LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
 
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -493,12 +502,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 							if(!"".equalsIgnoreCase(picture)){
 								deepindex = jObj.optInt(KEY_DEEPINDEX, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
-								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush, tabIndex);
+								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush, tabIndex, flag);
 							}
 							else{
 								deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
 								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
-										null, url, playSound, showDialog, showPush, tabIndex);
+										null, url, playSound, showDialog, showPush, tabIndex, flag);
 							}
 
 							Prefs.with(this).save(SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
@@ -539,7 +548,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							startActivity(otpConfirmScreen);
 						}
 						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1,
-								null, "", playSound, 0, 1, 0);
+								null, "", playSound, 0, 1, 0, flag);
 
 					}
 					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
@@ -648,7 +657,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 	public void bigImageNotifAsync(final String title, final String message, final int deepindex,
 								   final String picture, final String url, final int playSound,
-								   final int showDialog, final int showPush, final int tabIndex){
+								   final int showDialog, final int showPush, final int tabIndex, final int flag){
 		try {
 			RequestCreator requestCreator = Picasso.with(GCMIntentService.this).load(picture);
 			Target target = new Target() {
@@ -656,11 +665,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
 					try {
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID,
-								deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex);
+								deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag);
 					} catch (Exception e) {
 						e.printStackTrace();
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex,
-								null, url, playSound, showDialog, showPush, tabIndex);
+								null, url, playSound, showDialog, showPush, tabIndex, flag);
 					}
 				}
 
