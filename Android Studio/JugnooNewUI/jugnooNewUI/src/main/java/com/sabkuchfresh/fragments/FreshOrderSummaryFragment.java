@@ -144,6 +144,10 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                     if (orderHistory.getCanReorder() == 1 && !(activity instanceof FreshActivity)) {
                         reorderBtn.setVisibility(View.VISIBLE);
                         feedbackBtn.setVisibility(View.GONE);
+                    } else if (orderHistory.getCanReorder() == 1 && (activity instanceof FreshActivity)) {
+                        orderComplete.setVisibility(View.GONE);
+                        buttonCancelOrder.setVisibility(View.VISIBLE);
+                        buttonCancelOrder.setText(R.string.ok);
                     } else {
                         orderComplete.setVisibility(View.GONE);
                         buttonCancelOrder.setVisibility(View.VISIBLE);
@@ -208,6 +212,10 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                     if (orderHistory.getCanReorder() == 1 && !(activity instanceof FreshActivity)) {
                         reorderBtn.setVisibility(View.VISIBLE);
                         feedbackBtn.setVisibility(View.GONE);
+                    } else if (orderHistory.getCanReorder() == 1 && (activity instanceof FreshActivity)) {
+                        orderComplete.setVisibility(View.GONE);
+                        buttonCancelOrder.setVisibility(View.VISIBLE);
+                        buttonCancelOrder.setText(R.string.ok);
                     } else {
                         orderComplete.setVisibility(View.GONE);
                         buttonCancelOrder.setVisibility(View.VISIBLE);
