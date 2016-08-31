@@ -73,7 +73,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
     private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
-	public FreshFragment(){}
+
+    public FreshFragment(){}
     private boolean loader = true;
     protected Bus mBus;
     PushDialog pushDialog;
@@ -302,7 +303,11 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                     viewPager.setCurrentItem(Data.tabLinkIndex);
                                     Data.tabLinkIndex = 0;
 									tabs.setBackgroundColor(activity.getResources().getColor(R.color.white_light_grey));
-
+                                    if(activity.updateCart) {
+                                        activity.updateCart = false;
+                                        activity.openCart();
+                                        activity.relativeLayoutCart.performClick();
+                                    }
 									if(productsResponse.getShowMessage() != null
 											&& productsResponse.getShowMessage().equals(1)) {
 										new FreshNoDeliveriesDialog(activity, new FreshNoDeliveriesDialog.Callback() {
