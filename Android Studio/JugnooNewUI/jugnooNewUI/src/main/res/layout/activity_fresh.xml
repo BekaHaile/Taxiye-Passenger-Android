@@ -156,6 +156,7 @@
                         android:id="@+id/relativeLayoutCartNew"
                         android:layout_width="132px"
                         android:layout_height="match_parent"
+                        android:background="@drawable/background_white_grey_light_selector"
                         android:visibility="visible">
 
                         <View
