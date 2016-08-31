@@ -95,8 +95,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     private RelativeLayout relativeLayoutContainer;
 
-
-    private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutCart, relativeLayoutSort, relativeLayoutCartNew;
+    public RelativeLayout relativeLayoutCart;
+    private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutSort, relativeLayoutCartNew;
     private LinearLayout linearLayoutCheckout, linearLayoutCheckoutContainer;
     private TextView textViewTotalPrice, textViewCheckout, textViewMinOrder, textViewCartItemsCount, textViewCartItemsCountNew;
     private ImageView imageViewCartNew;
@@ -125,6 +125,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
      */
     protected Bus mBus;
     private double totalPrice = 0;
+
+    public boolean updateCart = false;
 
     private LocationFetcher locationFetcher;
 
@@ -331,15 +333,19 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return flag;
     }
 
-    private void openCart() {
+    public void openCart() {
                 try{
                     if(getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, false)){
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 try {
-                                    updateCartFromSP();
-                                    relativeLayoutCart.performClick();
+                                    if(productsResponse.getCategories() != null) {
+                                        updateCartFromSP();
+                                        relativeLayoutCart.performClick();
+                                    } else {
+                                        updateCart = true;
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -649,7 +655,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.imageViewBack.setVisibility(View.GONE);
 				topBar.imageViewDelete.setVisibility(View.GONE);
 				textViewCheckout.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+				if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
+                    relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 				//imageViewFabFake.setVisibility(View.VISIBLE);
 				if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
 					fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
