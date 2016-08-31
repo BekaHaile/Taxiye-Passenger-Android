@@ -77,7 +77,8 @@ public class TransactionUtils {
 			}
 		}
 
-		if(singleItemToOpen != null && singleItemParentName != null && singleItemToOpen.getActionType() != ActionType.NEXT_LEVEL.getOrdinal()){
+		if(singleItemToOpen != null && singleItemParentName != null && (singleItemToOpen.getActionType() != ActionType.NEXT_LEVEL.getOrdinal()
+				|| singleItemToOpen.getItems() == null)){
 			if(!checkIfFragmentAdded(activity, SupportFAQItemFragment.class.getName())) {
 				activity.getSupportFragmentManager().beginTransaction()
 						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
@@ -91,7 +92,7 @@ public class TransactionUtils {
 				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT_ISSUES);
 			}
 		} else if(singleItemToOpen != null && singleItemParentName != null && singleItemToOpen.getActionType() == ActionType.NEXT_LEVEL.getOrdinal()){
-			if(singleItemToOpen.getItems().size() == 1){
+			if(singleItemToOpen.getItems() != null && singleItemToOpen.getItems().size() == 1){
 				singleItemParentName = singleItemToOpen.getText();
 				singleItemToOpen = singleItemToOpen.getItems().get(0);
 				openItemInFragment(activity, container, engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate);

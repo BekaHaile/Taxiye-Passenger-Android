@@ -170,7 +170,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 			setRideData();
 			if(items == null && datum != null){
 				items = Database2.getInstance(activity).getSupportDataItems(datum.getSupportCategory());
-				if(Prefs.with(activity).getString(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION, "-1").equalsIgnoreCase("-1")){
+				if(!Prefs.with(activity).getString(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION, "-1").equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
 					linearLayoutRideShortInfo.setVisibility(View.GONE);
 					cardViewRecycler.setVisibility(View.GONE);
 					int supportCategory = datum.getSupportCategory();
@@ -200,9 +200,9 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				int orderId = datum.getOrderId();
 				int supportCategory = datum.getSupportCategory();
 				if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
-					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.FRESH);
+					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.NOT_SURE);
 				} else if (datum.getProductType() == ProductType.MEALS.getOrdinal()){
-					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.MEALS);
+					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.NOT_SURE);
 				}
 				Data.isSupportRideIssueUpdated = true;
 				Data.isOrderCancelled = false;
