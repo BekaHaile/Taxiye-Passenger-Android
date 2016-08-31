@@ -164,8 +164,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         slots.clear();
         slots.add(new SortResponseModel(0, "A-Z", false));
         slots.add(new SortResponseModel(1, "Popularity", false));
-        slots.add(new SortResponseModel(1, "Price: Low to High", false));
-        slots.add(new SortResponseModel(2, "Price: High to Low", false));
+        slots.add(new SortResponseModel(2, "Price: Low to High", false));
+        slots.add(new SortResponseModel(3, "Price: High to Low", false));
 
 
     }

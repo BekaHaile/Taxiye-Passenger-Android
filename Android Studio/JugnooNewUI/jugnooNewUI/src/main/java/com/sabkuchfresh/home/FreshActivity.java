@@ -365,13 +365,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                 }
-                String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+                String lastClientId = Prefs.with(context).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
                 if(lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
                     updateCartFromSP();
                     relativeLayoutCart.performClick();
                 } else {
                     Bundle bundle = new Bundle();
-                    bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, true);
+                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                     MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
                             getCurrentPlaceLatLng(), bundle);
 //                    openCart();
