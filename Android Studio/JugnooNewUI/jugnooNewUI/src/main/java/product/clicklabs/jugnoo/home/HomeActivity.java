@@ -3346,6 +3346,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void relativeLayoutAssigningDropLocationParentSetVisibility(int visiblity){
         if(View.VISIBLE == visiblity){
+            fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
             relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
             if(frag == null || frag.isRemoving()) {
@@ -3365,6 +3366,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         .commitAllowingStateLoss();
             }
         } else{
+            fabView.setRelativeLayoutFABVisibility(passengerScreenMode);
             relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
             if(frag != null) {
