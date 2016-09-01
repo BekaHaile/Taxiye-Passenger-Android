@@ -318,14 +318,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			}
 
 			Data.splashIntentUri = getIntent().getData();
-			try {
-				if(getIntent().getExtras() != null && getIntent().hasExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID)) {
-                    Prefs.with(SplashNewActivity.this).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
-                    Prefs.with(SplashNewActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
-                }
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+
 
 			Data.getDeepLinkIndexFromIntent(this, getIntent());
 

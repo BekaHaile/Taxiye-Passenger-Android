@@ -305,10 +305,10 @@ public class Data {
 				Data.tabLinkIndex = intent.getIntExtra(Constants.KEY_TAB_INDEX, 0);
 			}
 
-			if(intent.hasExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID)){
-				Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
-				Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
-			}
+//			if(intent.hasExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID)){
+//				Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+//				Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+//			}
 
 			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
 				Data.deepLinkPickup = 1;
@@ -346,10 +346,10 @@ public class Data {
 					Data.tabLinkIndex = intent.getIntExtra(Constants.KEY_TAB_INDEX, 0);
 				}
 
-				if(intent.hasExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID)){
-					Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
-					Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
-				}
+//				if(intent.hasExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID)){
+//					Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+//					Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+//				}
 
 				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){
 					Data.deepLinkPickup = 1;
@@ -382,6 +382,14 @@ public class Data {
 
 		Log.e("Deeplink =", "=" + Data.deepLinkIndex);
 		Log.e("deepLinkReferralCode =", "=" + Data.deepLinkReferralCode);
+
+		try {
+			if(newIntent.getExtras() != null && newIntent.hasExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID)) {
+				Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, newIntent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
