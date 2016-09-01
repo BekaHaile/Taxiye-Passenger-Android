@@ -116,7 +116,7 @@ public class FreshSupportFragment extends Fragment implements FlurryEventNames {
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.TEXT, text);
-
+                params.put(Constants.INTERATED, "1");
                 RestClient.getFreshApiService().supportQuery(params, new Callback<OrderHistoryResponse>() {
                     @Override
                     public void success(final OrderHistoryResponse notificationInboxResponse, Response response) {

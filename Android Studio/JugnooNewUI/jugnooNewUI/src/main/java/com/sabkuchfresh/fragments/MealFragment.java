@@ -225,7 +225,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
                 params.put(Constants.STORE_ID, "" + 2);
                 params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
-
+                params.put(Constants.INTERATED, "1");
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
                 RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {

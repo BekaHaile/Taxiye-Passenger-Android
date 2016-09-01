@@ -287,6 +287,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 params.put(Constants.ORDER_ID, ""+orderId);
                 params.put(Constants.RATING, "" + rating);
                 params.put(Constants.RATING_TYPE, "0");
+                params.put(Constants.INTERATED, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
                 RestClient.getFreshApiService().orderFeedback(params, new Callback<OrderHistoryResponse>() {
@@ -388,7 +389,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 params.put("access_token", Data.userData.accessToken);
                 params.put("order_id", "" + orderId);
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-
+                params.put(Constants.INTERATED, "1");
                 RestClient.getFreshApiService().orderHistory(params, new Callback<HistoryResponse>() {
                     @Override
                     public void success(HistoryResponse historyResponse, Response response) {

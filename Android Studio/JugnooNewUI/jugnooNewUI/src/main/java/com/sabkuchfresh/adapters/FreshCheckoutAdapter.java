@@ -129,6 +129,7 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                             callback.onAddressClick();
                         } catch (Exception e) {
                             e.printStackTrace();
+
                         }
                     }
                 });

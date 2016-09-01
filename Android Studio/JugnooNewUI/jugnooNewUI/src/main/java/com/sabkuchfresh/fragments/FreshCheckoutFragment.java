@@ -151,7 +151,8 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         slotDay.setSlotViewType(FreshCheckoutAdapter.SlotViewType.HEADER);
 
         checkout.add(slotDay);
-        checkoutAdapter.notifyDataSetChanged();
+//        checkoutAdapter.setList(checkout);
+//        checkoutAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -183,11 +184,13 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
 
         checkout.clear();
         activity.setSplInstr("");
-        checkoutAdapter = new FreshCheckoutAdapter(activity, checkout, this);
-
-        recyclerViewDeliverySlots.setAdapter(checkoutAdapter);
 
         setCheckoutScreen();
+
+        checkoutAdapter = new FreshCheckoutAdapter(activity, checkout, this);
+        recyclerViewDeliverySlots.setAdapter(checkoutAdapter);
+
+
 
         buttonProceedToPayment = (Button) rootView.findViewById(R.id.buttonProceedToPayment);
         buttonProceedToPayment.setTypeface(Fonts.mavenRegular(activity));
@@ -290,6 +293,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                     params.put(Constants.STORE_ID, ""+ Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType));
                     params.put(Constants.GROUP_ID, ""+activity.getProductsResponse().getCategories().get(0).getCurrentGroupId());
                 }
+                params.put(Constants.INTERATED, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
@@ -408,8 +412,8 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
             Slot slotDay = new Slot();
             slotDay.setSlotViewType(FreshCheckoutAdapter.SlotViewType.FEED);
             checkout.add(slotDay);
-
-            checkoutAdapter.notifyDataSetChanged();
+            checkoutAdapter.setList(checkout);
+//            checkoutAdapter.notifyDataSetChanged();
         }
     }
 
@@ -462,7 +466,8 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
             // New Address added
             activity.setSelectedAddress(Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_local_address), ""));
             checkout.get(0).setCaddress(Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_local_address), ""));
-            checkoutAdapter.notifyDataSetChanged();
+            checkoutAdapter.setList(checkout);
+//            checkoutAdapter.notifyDataSetChanged();
         }
     }
 

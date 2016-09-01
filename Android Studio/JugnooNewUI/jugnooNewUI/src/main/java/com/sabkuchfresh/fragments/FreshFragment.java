@@ -4,14 +4,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
+import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
@@ -24,6 +30,7 @@ import com.sabkuchfresh.home.FreshNoDeliveriesDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
+import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
@@ -56,15 +63,17 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener, PushDialog.Callback {
+public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener, PushDialog.Callback,
+        SwipeRefreshLayout.OnRefreshListener{
 
 	private final String TAG = FreshFragment.class.getSimpleName();
-	private LinearLayout linearLayoutRoot;
-
+	private RelativeLayout linearLayoutRoot;
+    private LinearLayout mainLayout;
+    private ImageView noFreshsView;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
-
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
@@ -73,7 +82,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
     private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
-
+    private ArrayList<SubItem> freshData = new ArrayList<>();
     public FreshFragment(){}
     private boolean loader = true;
     protected Bus mBus;
@@ -112,7 +121,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		}
 
 		activity.fragmentUISetup(this);
-		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		try {
 			if(linearLayoutRoot != null) {
 				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
@@ -122,6 +131,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		}
 
         searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
+        mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
+        noFreshsView = (ImageView) rootView.findViewById(R.id.noFreshsView);
 
 		viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
@@ -131,6 +142,24 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
 		tabs.setBackgroundColor(activity.getResources().getColor(R.color.transparent));
         tabs.setOnMyTabClickListener(this);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.white);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+        mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
+        mSwipeRefreshLayout.setEnabled(true);
+        mSwipeRefreshLayout.setVisibility(View.GONE);
+
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setHasFixedSize(false);
+
+        MealAdapter freshAdapter = new MealAdapter(activity, freshData);
+        recyclerView.setAdapter(freshAdapter);
 
 		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -275,7 +304,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
                 params.put(Constants.IS_FATAFAT, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Config.getFreshClientId());
-
+                params.put(Constants.INTERATED, "1");
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 
 				RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
@@ -288,6 +317,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                noFreshsView.setVisibility(View.GONE);
+                                mSwipeRefreshLayout.setVisibility(View.GONE);
+                                activity.getTopBar().below_shadow.setVisibility(View.GONE);
+
+                                activity.hideBottomBar(true);
+                                mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 int sortedBy = jObj.getInt(Constants.SORTED_BY);
                                 //Prefs.with(activity).save(Constants.SORTED_BY, sortedBy);
@@ -318,7 +353,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 										}).show(message);
 									}
 								}
-							}
+							} else {
+                                noFreshsView.setVisibility(View.VISIBLE);
+                                mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                                activity.hideBottomBar(false);
+                                mainLayout.setVisibility(View.GONE);
+                            }
 						} catch (Exception exception) {
 							exception.printStackTrace();
 							retryDialog(DialogErrorType.SERVER_ERROR);
@@ -348,10 +388,14 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
             if(!loader)
                 mBus.post(new SwipeCheckout(1));
 		}
-
+        mSwipeRefreshLayout.setRefreshing(false);
 	}
 
 	private void retryDialog(DialogErrorType dialogErrorType){
+        noFreshsView.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+        activity.hideBottomBar(false);
+        mainLayout.setVisibility(View.GONE);
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
 				new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
@@ -439,5 +483,10 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		//TOD implement deep links
 
 
+    }
+
+    @Override
+    public void onRefresh() {
+        getAllProducts(false);
     }
 }

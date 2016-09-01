@@ -256,7 +256,7 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_FRESH_ORDER_ID, String.valueOf(orderId));
                 params.put(Constants.KEY_CLIENT_ID, orderHistory.getClientId());
-
+                params.put(Constants.INTERATED, "1");
                 try {
                     if (orderHistory.getStoreId() != null) {
                         params.put(Constants.STORE_ID, "" + orderHistory.getStoreId());
