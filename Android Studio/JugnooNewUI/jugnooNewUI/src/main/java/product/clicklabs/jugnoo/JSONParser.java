@@ -1494,6 +1494,31 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        loginClevertap();
+    }
+
+
+    private void loginClevertap(){
+        try{
+            // each of the below mentioned fields are optional
+            // if set, these populate demographic information in the Dashboard
+            HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+            profileUpdate.put("Name", Data.userData.userName);                  // String
+            profileUpdate.put("Identity", Data.userData.getUserId());                    // String or number
+            profileUpdate.put("Email", Data.userData.userEmail);               // Email address of the user
+            profileUpdate.put("Phone", Data.userData.phoneNo);                     // Phone (without the country code)
+            profileUpdate.put("Photo", Data.userData.userImage);    // URL to the Image
+
+            // optional fields. controls whether the user will be sent email, push etc.
+            profileUpdate.put("MSG-email", true);                      // Disable email notifications
+            profileUpdate.put("MSG-push", true);                        // Enable push notifications
+            profileUpdate.put("MSG-sms", true);                        // Disable SMS notifications
+
+            MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

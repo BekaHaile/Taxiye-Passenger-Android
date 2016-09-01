@@ -7,6 +7,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
+import com.clevertap.android.sdk.ActivityLifecycleCallback;
+import com.clevertap.android.sdk.CleverTapAPI;
+import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
+import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -65,8 +69,12 @@ public class MyApplication extends Application{
 	 */
 	private Bus mBus;
 	public Branch branch;
+
+	private CleverTapAPI cleverTap;
+
 	@Override
 	public void onCreate() {
+		ActivityLifecycleCallback.register(this);
 		super.onCreate();
 		try {
 			Fabric.with(this, new Crashlytics());
@@ -100,6 +108,7 @@ public class MyApplication extends Application{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		getCleverTap();
 	}
 
 	public Bus getBus() {
@@ -369,4 +378,18 @@ public class MyApplication extends Application{
 		return appSwitcher;
 	}
 
+	public CleverTapAPI getCleverTap() {
+		if(cleverTap == null) {
+			try {
+				cleverTap = CleverTapAPI.getInstance(getApplicationContext());
+			} catch (CleverTapMetaDataNotFoundException e) {
+				// thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
+			} catch (CleverTapPermissionsNotSatisfied e) {
+				// thrown if you haven’t requested the required permissions in your AndroidManifest.xml
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return cleverTap;
+	}
 }
