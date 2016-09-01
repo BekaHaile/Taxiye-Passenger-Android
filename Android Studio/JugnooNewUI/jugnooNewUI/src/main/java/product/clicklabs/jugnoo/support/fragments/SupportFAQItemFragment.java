@@ -306,11 +306,16 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 								@Override
 								public void onClick(View v) {
 									try {
-										FragmentManager fm = getActivity().getSupportFragmentManager();
-										for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-											fm.popBackStack();
-											if(fm.getFragments().get(i).getTag().equalsIgnoreCase(SupportRideIssuesFragment.class.getName())){
-												break;
+										if(activity instanceof SupportActivity && ((SupportActivity)activity).fromBadFeedback == 1){
+											activity.finish();
+											activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+										} else {
+											FragmentManager fm = getActivity().getSupportFragmentManager();
+											for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+												fm.popBackStack();
+												if (fm.getFragments().get(i).getTag().equalsIgnoreCase(SupportRideIssuesFragment.class.getName())) {
+													break;
+												}
 											}
 										}
 									} catch (Exception e) {
