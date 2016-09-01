@@ -318,6 +318,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			}
 
 			Data.splashIntentUri = getIntent().getData();
+			try {
+				if(getIntent().getExtras() != null && getIntent().hasExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID)) {
+                    Prefs.with(SplashNewActivity.this).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+                    Prefs.with(SplashNewActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			Data.getDeepLinkIndexFromIntent(this, getIntent());
 
@@ -1651,6 +1659,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				if (State.SPLASH_LS == state || State.SPLASH_INIT == state || State.SPLASH_NO_NET == state) {
 					if (SplashNewActivity.this.hasWindowFocus() && loginDataFetched) {
 						loginDataFetched = false;
+
 						MyApplication.getInstance().getAppSwitcher().switchApp(SplashNewActivity.this,
 								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude));
 //						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);

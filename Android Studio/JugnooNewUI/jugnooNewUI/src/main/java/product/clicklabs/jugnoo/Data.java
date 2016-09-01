@@ -127,6 +127,7 @@ public class Data {
 	public static int AppType = 1;
 	public static boolean isOrderCancelled = false;
 	public static boolean isSupportRideIssueUpdated = false;
+	public static String currentActivity = null;
 
 
 	public static void clearDataOnLogout(Context context){
@@ -304,6 +305,11 @@ public class Data {
 				Data.tabLinkIndex = intent.getIntExtra(Constants.KEY_TAB_INDEX, 0);
 			}
 
+			if(intent.hasExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID)){
+				Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+				Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+			}
+
 			else if(data.getQueryParameter("pickup_lat") != null && data.getQueryParameter("pickup_lng") != null){
 				Data.deepLinkPickup = 1;
 				Data.deepLinkPickupLatitude = Double.parseDouble(data.getQueryParameter("pickup_lat"));
@@ -338,6 +344,11 @@ public class Data {
 
 				if(intent.hasExtra(Constants.KEY_TAB_INDEX)){
 					Data.tabLinkIndex = intent.getIntExtra(Constants.KEY_TAB_INDEX, 0);
+				}
+
+				if(intent.hasExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID)){
+					Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+					Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, intent.getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
 				}
 
 				else if(dataTarget.getQueryParameter("pickup_lat") != null && dataTarget.getQueryParameter("pickup_lng") != null){

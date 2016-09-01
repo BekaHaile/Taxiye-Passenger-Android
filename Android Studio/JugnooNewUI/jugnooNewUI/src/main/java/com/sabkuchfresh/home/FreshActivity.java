@@ -155,7 +155,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         try {
             setContentView(R.layout.activity_fresh);
             Log.e("", "");
-
+            Data.currentActivity = FreshActivity.class.getName();
             drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
             new ASSL(this, drawerLayout, 1134, 720, false);
 
@@ -289,15 +289,16 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     //            }
 
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
-                if(lastClientId.equalsIgnoreCase(Config.getFreshClientId())){
+                if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
+                    addMealFragment();
+                    Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
+                } else {
                     openCart();
                     addFreshFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
+                    lastClientId = Config.getFreshClientId();
                 }
-                else if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
-                    addMealFragment();
-                    Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
-                }
+                Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             } catch (Exception e) {
                 e.printStackTrace();
                 addFreshFragment();
