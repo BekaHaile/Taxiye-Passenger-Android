@@ -30,7 +30,7 @@ public class TransactionUtils {
 
 	public void openItemInFragment(FragmentActivity activity, View container,
 								   int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber,
-								   int orderId, String orderDate){
+								   int orderId, String orderDate, String supportNumber){
 		ShowPanelResponse.Item singleItemToOpen = null;
 		String singleItemParentName = null;
 		if(ActionType.OPEN_RIDE_HISTORY.getOrdinal() == item.getActionType()){
@@ -60,7 +60,7 @@ public class TransactionUtils {
 					activity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 							.add(container.getId(),
-									new SupportFAQItemsListFragment(engagementId, rideDate, item, phoneNumber, orderId, orderDate),
+									new SupportFAQItemsListFragment(engagementId, rideDate, item, phoneNumber, orderId, orderDate, supportNumber),
 									SupportFAQItemsListFragment.class.getName()+item.getSupportId())
 							.addToBackStack(SupportFAQItemsListFragment.class.getName()+item.getSupportId())
 							.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -83,7 +83,7 @@ public class TransactionUtils {
 				activity.getSupportFragmentManager().beginTransaction()
 						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 						.add(container.getId(),
-								new SupportFAQItemFragment(engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate),
+								new SupportFAQItemFragment(engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate, supportNumber),
 								SupportFAQItemFragment.class.getName())
 						.addToBackStack(SupportFAQItemFragment.class.getName())
 						.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -95,7 +95,7 @@ public class TransactionUtils {
 			if(singleItemToOpen.getItems() != null && singleItemToOpen.getItems().size() == 1){
 				singleItemParentName = singleItemToOpen.getText();
 				singleItemToOpen = singleItemToOpen.getItems().get(0);
-				openItemInFragment(activity, container, engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate);
+				openItemInFragment(activity, container, engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate, supportNumber);
 			}
 		}
 	}

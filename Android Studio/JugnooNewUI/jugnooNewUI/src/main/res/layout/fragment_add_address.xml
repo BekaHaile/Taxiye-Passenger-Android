@@ -22,7 +22,7 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutSearchBarText"
             android:layout_width="match_parent"
-            android:layout_height="90px"
+            android:layout_height="100px"
             android:layout_gravity="center_horizontal"
             android:layout_margin="20px"
             android:background="@drawable/background_white_rounded_bordered"
@@ -31,11 +31,11 @@
 
             <ImageView
                 android:id="@+id/textViewSearchGPSIcon"
-                android:layout_width="30px"
-                android:layout_height="44px"
+                android:layout_width="50px"
+                android:layout_height="50px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="18px"
-                android:src="@drawable/search_location_icon"
+                android:layout_marginLeft="20px"
+                android:src="@drawable/ic_loc_other"
                 android:tag="mwar"/>
 
             <TextView
@@ -135,67 +135,93 @@
     </RelativeLayout>
 
 
-    <LinearLayout
-        android:id="@+id/linearLayoutSearch"
+    <ScrollView
+        android:id="@+id/scrollViewSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white_60"
-        android:orientation="vertical"
-        android:splitMotionEvents="false"
-        android:visibility="gone">
+        android:background="@color/sliding_bottom_bg_color"
+        android:visibility="gone"
+        >
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutSearchBar"
-            android:layout_width="match_parent"
-            android:layout_height="90px"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="20px"
-            android:background="@drawable/background_white_rounded_bordered"
-            android:splitMotionEvents="false">
-
-            <ImageView
-                android:id="@+id/imageViewSearchGPSIcon"
-                android:layout_width="30px"
-                android:layout_height="44px"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="18px"
-                android:src="@drawable/search_location_icon"
-                android:tag="mwar"/>
-
-            <EditText
-                android:id="@+id/editTextSearch"
-                android:layout_width="510px"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20px"
-                android:layout_toRightOf="@+id/imageViewSearchGPSIcon"
-                android:background="@color/transparent"
-                android:hint="Search address location"
-                android:singleLine="true"
-                android:textColor="@color/black_text"
-                android:textCursorDrawable="@null"
-                android:textSize="30px"/>
-
-            <ProgressBar
-                android:id="@+id/progressBarSearch"
-                android:layout_width="70px"
-                android:layout_height="70px"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:visibility="gone"
-                android:layout_marginRight="20px"/>
-        </RelativeLayout>
-
-        <product.clicklabs.jugnoo.utils.NonScrollListView
-            android:id="@+id/listViewSearch"
+        <LinearLayout
+            android:id="@+id/linearLayoutSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@color/transparent"
-            android:dividerHeight="0px"
-            android:background="@color/white"
-            android:splitMotionEvents="false">
-        </product.clicklabs.jugnoo.utils.NonScrollListView>
-    </LinearLayout>
+            android:orientation="vertical"
+            android:splitMotionEvents="false"
+            >
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutSearchBar"
+                android:layout_width="match_parent"
+                android:layout_height="100px"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20px"
+                android:background="@drawable/background_white_rounded_bordered"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewSearchGPSIcon"
+                    android:layout_width="50px"
+                    android:layout_height="50px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:src="@drawable/ic_loc_other"
+                    android:tag="mwar"/>
+
+
+                <EditText
+                    android:id="@+id/editTextSearch"
+                    android:layout_width="510px"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_toRightOf="@+id/imageViewSearchGPSIcon"
+                    android:background="@color/transparent"
+                    android:hint="Search address location"
+                    android:singleLine="true"
+                    android:textColor="@color/black_text"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30px"/>
+
+                <ProgressBar
+                    android:id="@+id/progressBarSearch"
+                    android:layout_width="70px"
+                    android:layout_height="70px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone"
+                    android:layout_marginRight="20px"/>
+            </RelativeLayout>
+
+            <product.clicklabs.jugnoo.utils.NonScrollListView
+                android:id="@+id/listViewSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:dividerHeight="0px"
+                android:layout_marginTop="20px"
+                android:background="@drawable/background_white_rounded_bordered"
+                android:splitMotionEvents="false">
+            </product.clicklabs.jugnoo.utils.NonScrollListView>
+            <ImageView
+                android:id="@+id/imageViewPoweredByGoogleSearch"
+                android:layout_width="240px"
+                android:layout_height="28px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16px"
+                android:layout_marginTop="24px"
+                android:tag="mwar"
+                android:src="@drawable/powered_by_google_light"/>
+            <TextView
+                android:id="@+id/textViewScrollSearch"
+                android:layout_width="10px"
+                android:layout_height="10px"
+                android:textSize="28px" />
+        </LinearLayout>
+
+    </ScrollView>
 
     <include layout="@layout/layout_location_address_error"/>
 

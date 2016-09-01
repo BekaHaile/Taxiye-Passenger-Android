@@ -71,7 +71,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
     private FragmentActivity activity;
 
 	private int engagementId, orderId;
-	private String parentName, phoneNumber, rideDate, orderDate;
+	private String parentName, phoneNumber, rideDate, orderDate, supportNumber;
 	private ShowPanelResponse.Item item;
 
 	public SupportFAQItemFragment(){}
@@ -91,7 +91,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
     }
 
 	public SupportFAQItemFragment(int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber,
-								  int orderId, String orderDate){
+								  int orderId, String orderDate, String supportNumber){
 		this.engagementId = engagementId;
 		this.parentName = parentName;
 		this.item = item;
@@ -99,6 +99,8 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		this.rideDate = rideDate;
 		this.orderId = orderId;
 		this.orderDate = orderDate;
+		this.supportNumber = supportNumber;
+
 	}
 
     @Override
@@ -182,7 +184,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			@Override
 			public void onClick(View v) {
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
-					Utils.openCallIntent(activity, Config.getSupportNumber(activity));
+					Utils.openCallIntent(activity, supportNumber);
 					FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_CALL_JUGNOO);
                     Bundle bundle = new Bundle();
                     MyApplication.getInstance().logEvent(ISSUES+"_"+FirebaseEvents.FORGOT_AN_ITEM+"_"+FirebaseEvents.CALL_JUGNOO, bundle);

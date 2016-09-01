@@ -206,6 +206,12 @@ public class HistoryResponse {
         @SerializedName("ride_type")
         @Expose
         private Integer rideType;
+        @SerializedName("support_number")
+        @Expose
+        private String supportNumber;
+        @SerializedName("phone_no")
+        @Expose
+        private String phoneNo;
 
         /**
          * @return The pickupAddress
@@ -801,6 +807,22 @@ public class HistoryResponse {
 
         public void setRideType(Integer rideType) {
             this.rideType = rideType;
+        }
+
+        public String getSupportNumber() {
+            return supportNumber;
+        }
+
+        public void setSupportNumber(String supportNumber) {
+            this.supportNumber = supportNumber;
+        }
+
+        public String getPhoneNo() {
+            return phoneNo;
+        }
+
+        public void setPhoneNo(String phoneNo) {
+            this.phoneNo = phoneNo;
         }
     }
 
