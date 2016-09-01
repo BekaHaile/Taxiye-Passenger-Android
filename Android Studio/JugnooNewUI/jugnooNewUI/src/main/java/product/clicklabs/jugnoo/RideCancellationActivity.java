@@ -336,7 +336,12 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 
 		@Override
 		public int getCount() {
-			return Data.autoData.getCancelOptionsList().cancelOptions.size();
+			try {
+				return Data.autoData.getCancelOptionsList().cancelOptions.size();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
 		}
 
 		@Override

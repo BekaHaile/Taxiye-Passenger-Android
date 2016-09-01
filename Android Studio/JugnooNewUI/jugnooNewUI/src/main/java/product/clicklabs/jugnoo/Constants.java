@@ -439,5 +439,6 @@ public interface Constants {
 	String KEY_OPEN_CART = "open_cart";
 	String KEY_STATE_RESTORE_NEEDED = "state_restore_needed";
 	String KEY_REGION = "region";
+	String KEY_SUPPORT_NUMBER = "support_number";
 
 }

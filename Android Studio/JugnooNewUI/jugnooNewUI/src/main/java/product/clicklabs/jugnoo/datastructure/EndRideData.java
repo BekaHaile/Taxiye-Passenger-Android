@@ -21,6 +21,7 @@ public class EndRideData {
 	private VehicleIconSet vehicleIconSet;
 	private int totalRide;
 	private int status;
+	private String supportNumber;
 	
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
@@ -28,7 +29,7 @@ public class EndRideData {
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
 					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
-					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, int totalRide, int status){
+					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, int totalRide, int status, String supportNumber){
 
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
@@ -80,6 +81,9 @@ public class EndRideData {
 		this.paidUsingMobikwik = paidUsingMobikwik;
 		this.engagementDate = engagementDate;
 		this.status = status;
+
+		this.supportNumber = supportNumber;
+
 	}
 
 
@@ -158,5 +162,13 @@ public class EndRideData {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public String getSupportNumber() {
+		return supportNumber;
+	}
+
+	public void setSupportNumber(String supportNumber) {
+		this.supportNumber = supportNumber;
 	}
 }

@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,6 +113,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     TouchableMapFragment mapFragment;
     public MapStateListener mapStateListener;
     boolean mapTouched = false;
+    private ScrollView scrollViewSearch;
     private LinearLayout linearLayoutSearch;
 
 //    private ImageView imageViewSearchCross;
@@ -158,15 +160,16 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
 
         layoutAddLocation = (LinearLayout) rootView.findViewById(R.id.layoutAddLocation);
+        scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
         linearLayoutSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutSearch);
-        linearLayoutSearch.setVisibility(View.GONE);
+        scrollViewSearch.setVisibility(View.GONE);
         centerPivot = (ImageView) rootView.findViewById(R.id.centerPivot);
         locationPointer = (ImageView) rootView.findViewById(R.id.locationPointer);
         linearLayoutSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(editTextSearch.getText().toString().length() < 1) {
-                    linearLayoutSearch.setVisibility(View.GONE);
+                    scrollViewSearch.setVisibility(View.GONE);
                     layoutAddLocation.setVisibility(View.VISIBLE);
                     centerPivot.setVisibility(View.VISIBLE);
                     locationPointer.setVisibility(View.VISIBLE);
@@ -202,7 +205,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         searchAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                linearLayoutSearch.setVisibility(View.VISIBLE);
+                scrollViewSearch.setVisibility(View.VISIBLE);
                 layoutAddLocation.setVisibility(View.GONE);
                 centerPivot.setVisibility(View.GONE);
                 locationPointer.setVisibility(View.GONE);
@@ -279,7 +282,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         progressBarSearch.setVisibility(View.GONE);
 //                        searchAddress.setText(searchResult.name);
                         editTextSearch.setText("");
-                        linearLayoutSearch.setVisibility(View.GONE);
+                        scrollViewSearch.setVisibility(View.GONE);
                         layoutAddLocation.setVisibility(View.VISIBLE);
                         centerPivot.setVisibility(View.VISIBLE);
                         locationPointer.setVisibility(View.VISIBLE);
@@ -384,7 +387,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     }
 
     public void closeLayout() {
-        linearLayoutSearch.setVisibility(View.GONE);
+        scrollViewSearch.setVisibility(View.GONE);
         layoutAddLocation.setVisibility(View.VISIBLE);
         centerPivot.setVisibility(View.VISIBLE);
         locationPointer.setVisibility(View.VISIBLE);
@@ -701,7 +704,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     public void onAddressClose(AddressSearch addressSearch) {
         if(addressSearch.selection == 1) {
             editTextSearch.setText("");
-            linearLayoutSearch.setVisibility(View.GONE);
+            scrollViewSearch.setVisibility(View.GONE);
             layoutAddLocation.setVisibility(View.VISIBLE);
             centerPivot.setVisibility(View.VISIBLE);
             locationPointer.setVisibility(View.VISIBLE);
