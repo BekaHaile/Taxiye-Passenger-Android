@@ -12,9 +12,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
@@ -55,6 +55,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -69,7 +70,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	private final String TAG = FreshFragment.class.getSimpleName();
 	private RelativeLayout linearLayoutRoot;
     private LinearLayout mainLayout;
-    private ImageView noFreshsView;
+    private LinearLayout noFreshsView;
+    private TextView swipe_text;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
@@ -132,7 +134,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
         searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
-        noFreshsView = (ImageView) rootView.findViewById(R.id.noFreshsView);
+        noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
+        swipe_text = (TextView) rootView.findViewById(R.id.swipe_text);
+        swipe_text.setTypeface(Fonts.mavenRegular(activity));
 
 		viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
