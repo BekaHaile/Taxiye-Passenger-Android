@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     android:id="@+id/linearLayoutRoot"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:visibility="gone"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -67,3 +73,29 @@
         />
 
 </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewCategoryItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false">
+        </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ImageView
+        android:id="@+id/noFreshsView"
+        android:layout_width="376px"
+        android:layout_height="404px"
+        android:tag="mwar"
+        android:visibility="gone"
+        android:background="@drawable/ic_no_meals"
+        android:layout_centerInParent="true"
+        />
+
+</RelativeLayout>

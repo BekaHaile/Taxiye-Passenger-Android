@@ -40,6 +40,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
 
+    public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems) {
+        this.activity = activity;
+        this.subItems = subItems;
+    }
+
     public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems, Callback callback) {
         this.activity = activity;
         this.subItems = subItems;
