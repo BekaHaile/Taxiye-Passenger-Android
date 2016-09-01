@@ -95,13 +95,14 @@
         android:orientation="vertical"
         android:gravity="center_vertical"
         android:layout_centerInParent="true"
+        android:visibility="gone"
         >
     <ImageView
         android:layout_width="376px"
         android:layout_height="270px"
         android:tag="mwar"
         android:background="@drawable/img_no_items_fresh"
-        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
         />
 
         <TextView
