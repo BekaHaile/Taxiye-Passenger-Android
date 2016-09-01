@@ -481,7 +481,10 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     @Override
     public void onAddressClick() {
         FlurryEventLogger.event(CHECKOUT_SCREEN, SCREEN_TRANSITION, ADDRESS_SCREEN);
-        if(activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses().size()>0) {
+        if(activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getCheckoutData() != null
+                && activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses() != null
+                && activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses().size() > 0) {
             activity.getTransactionUtils().openAddressFragment(activity, activity.getRelativeLayoutContainer());
         } else {
             activity.openMapAddress();
