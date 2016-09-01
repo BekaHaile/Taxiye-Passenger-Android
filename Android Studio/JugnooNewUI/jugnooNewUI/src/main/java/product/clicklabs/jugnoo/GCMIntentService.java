@@ -23,6 +23,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -200,7 +201,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 	@SuppressWarnings("deprecation")
 	private void generateNotificationForCall(Context context, String title, String message, int notificationId,
-											 String callNumber, String eta, int playSound) {
+											 String callNumber, String eta, int playSound, String clientID) {
 
 		try {
 			long when = System.currentTimeMillis();
@@ -208,17 +209,31 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 			Intent notificationIntent;
-			if(HomeActivity.appInterruptHandler != null){
-				notificationIntent = new Intent(context, HomeActivity.class);
-			} else{
-				notificationIntent = new Intent(context, SplashNewActivity.class);
+			Log.d("clientID", "clientID = "+clientID);
+			if(TextUtils.isEmpty(clientID)) {
+				if (HomeActivity.appInterruptHandler != null) {
+					notificationIntent = new Intent(context, HomeActivity.class);
+				} else {
+					notificationIntent = new Intent(context, SplashNewActivity.class);
+				}
+			} else {
+//				if(!TextUtils.isEmpty(Data.currentActivity)) {
+//					notificationIntent = new Intent(context, FreshActivity.class);
+//				} else {
+					notificationIntent = new Intent(context, SplashNewActivity.class);
+//				}
+				notificationIntent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientID);
 			}
 
 			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-			builder.setAutoCancel(false);
+			if(TextUtils.isEmpty(clientID)) {
+				builder.setAutoCancel(false);
+			} else {
+				builder.setAutoCancel(true);
+			}
 			builder.setContentTitle(title);
 			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 			builder.setContentText(message);
@@ -363,7 +378,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
-							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound);
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, "");
 						} else{
 							notificationManager(this, title, message1, playSound);
 						}
@@ -387,7 +402,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
 							generateNotificationForCall(this, title, driverArrivedMessage, NOTIFICATION_ID, phoneNo,
-									null, playSound);
+									null, playSound, "");
 						} else{
 							notificationManager(this, title, driverArrivedMessage, playSound);
 						}
@@ -575,7 +590,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
                         String eta = jObj.optString(KEY_ETA, "-1");
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
                         if(!"-1".equalsIgnoreCase(eta) && !"".equalsIgnoreCase(phoneNo)){
-							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, eta, playSound);
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, eta, playSound, "");
                         }
                     } else if(PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag){
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
@@ -608,6 +623,16 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							intent1.putExtra(KEY_LONGITUDE, LocationFetcher.getSavedLngFromSP(this));
 							intent1.putExtra(KEY_EMERGENCY_LOC, true);
 							sendBroadcast(intent1);
+						}
+					} else if (PushFlags.ORDER_DISPATCH.getOrdinal() == flag) {
+
+						String clientId = jObj.optString(KEY_CLIENT_ID, "");
+						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
+						if(!TextUtils.isEmpty(phoneNo)){
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, clientId);
+						} else{
+							notificationManager(this, title, message1, playSound);
 						}
 					}
 

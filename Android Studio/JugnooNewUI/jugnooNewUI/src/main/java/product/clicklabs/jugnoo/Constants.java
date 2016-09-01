@@ -407,6 +407,7 @@ public interface Constants {
 	String KEY_MEALS = "meals";
 
 	String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
+	String KEY_SP_PUSH_OPENED_CLIENT_ID = "push_opened_client_id";
 	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
 
 	String KEY_FEEDBACK_ORDER_ID = "feedback_order_id";

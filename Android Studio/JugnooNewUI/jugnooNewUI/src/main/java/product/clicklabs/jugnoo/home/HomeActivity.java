@@ -456,6 +456,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         super.onCreate(savedInstanceState);
 
         MyApplication.getInstance().trackScreenView(TAG);
+        Data.currentActivity = HomeActivity.class.getName();
 
         try {
             setContentView(R.layout.activity_home);
