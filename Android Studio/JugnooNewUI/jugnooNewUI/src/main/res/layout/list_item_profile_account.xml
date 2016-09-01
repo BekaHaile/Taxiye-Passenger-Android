@@ -157,7 +157,7 @@
             android:layout_height="81px"
             android:layout_centerVertical="true"
             android:paddingLeft="@dimen/menu_text_margin_offerings"
-            android:text="Auto"
+            android:text="@string/autos"
             android:gravity="center_vertical"
             android:textColor="@color/text_color_white_theme_selector"
             android:textSize="@dimen/text_size_38"/>
