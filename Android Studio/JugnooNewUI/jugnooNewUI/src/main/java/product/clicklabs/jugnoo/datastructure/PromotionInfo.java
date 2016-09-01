@@ -30,7 +30,7 @@ public class PromotionInfo extends PromoCoupon{
 	public Integer delivery;
 	@SerializedName("master_coupon")
 	@Expose
-	private Integer masterCoupon;
+	private Integer masterCoupon = 0;
 
 
 	public PromotionInfo(int id, String title, String terms, String endOn){
@@ -72,6 +72,9 @@ public class PromotionInfo extends PromoCoupon{
 	}
 
 	public Integer getMasterCoupon() {
+		if(masterCoupon == null){
+			return 0;
+		}
 		return masterCoupon;
 	}
 

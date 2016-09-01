@@ -73,6 +73,9 @@ public class CouponInfo extends PromoCoupon{
 	}
 
 	public Integer getMasterCoupon() {
+		if(masterCoupon == null){
+			return 0;
+		}
 		return masterCoupon;
 	}
 
