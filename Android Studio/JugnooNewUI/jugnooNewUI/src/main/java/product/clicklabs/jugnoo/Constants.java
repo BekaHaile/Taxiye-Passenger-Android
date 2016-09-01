@@ -440,4 +440,5 @@ public interface Constants {
 	String KEY_STATE_RESTORE_NEEDED = "state_restore_needed";
 	String KEY_REGION = "region";
 
+	String INTERATED = "integrated";
 }

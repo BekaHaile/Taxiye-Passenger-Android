@@ -275,7 +275,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
                 params.put(Constants.IS_FATAFAT, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Config.getFreshClientId());
-
+                params.put(Constants.INTERATED, "1");
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 
 				RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {

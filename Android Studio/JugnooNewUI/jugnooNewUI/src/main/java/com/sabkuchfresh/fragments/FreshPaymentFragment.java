@@ -544,7 +544,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 params.put(Constants.ORDER_AMOUNT, String.valueOf(activity.getTotalPrice()));
                 params.put(Constants.PROMO_CODE, appPromoEdittext.getText().toString().trim());
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-
+                params.put(Constants.INTERATED, "1");
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
@@ -674,7 +674,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     params.put("group_id", ""+activity.getProductsResponse().getCategories().get(0).getSubItems().get(0).getGroupId());
                 }
                 params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-
+                params.put(Constants.INTERATED, "1");
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
