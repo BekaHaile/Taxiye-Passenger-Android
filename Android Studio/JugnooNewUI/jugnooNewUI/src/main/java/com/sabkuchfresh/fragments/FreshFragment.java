@@ -316,16 +316,17 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 					public void success(ProductsResponse productsResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
-						DialogPopup.dismissLoadingDialog();
+
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 noFreshsView.setVisibility(View.GONE);
                                 mSwipeRefreshLayout.setVisibility(View.GONE);
-                                activity.getTopBar().below_shadow.setVisibility(View.GONE);
-
-                                activity.hideBottomBar(true);
+                                if(!isHidden()) {
+                                    activity.hideBottomBar(true);
+                                    activity.getTopBar().below_shadow.setVisibility(View.GONE);
+                                }
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 int sortedBy = jObj.getInt(Constants.SORTED_BY);

@@ -9,7 +9,7 @@
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
     android:animateLayoutChanges="true"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <LinearLayout
         android:id="@+id/linearLayoutRideSummaryContainer"
@@ -370,7 +370,7 @@
         android:id="@+id/relativeLayoutRideEndWithImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:soundEffectsEnabled="false">
 
         <ImageView

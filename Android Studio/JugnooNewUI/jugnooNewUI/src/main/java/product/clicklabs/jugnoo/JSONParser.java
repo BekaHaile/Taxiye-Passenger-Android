@@ -360,7 +360,7 @@ public class JSONParser implements Constants {
         }
     }
 
-    public void parseMealsData(JSONObject jMealsData, LoginResponse.Meals mealsData) {
+    public void parseMealsData(Context context, JSONObject jMealsData, LoginResponse.Meals mealsData) {
 
         try {
             if(Data.getMealsData().getPromoCoupons() == null){
@@ -382,14 +382,15 @@ public class JSONParser implements Constants {
             double amount = jMealsData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
             String feedbackDeliveryDate = jMealsData.optString(KEY_FEEDBACK_DATE, "");
             int feedbackViewType = jMealsData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
+            String rideEndGoodFeedbackText = jMealsData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
 
-            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType));
+            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void parseFreshData(JSONObject jFatafatData, LoginResponse.Fresh freshData){
+    public void parseFreshData(Context context, JSONObject jFatafatData, LoginResponse.Fresh freshData){
         try{
             String orderId = jFatafatData.optString(KEY_FEEDBACK_ORDER_ID, "");
             String question = jFatafatData.optString(KEY_QUESTION, "");
@@ -399,6 +400,7 @@ public class JSONParser implements Constants {
             String feedbackDeliveryDate = jFatafatData.optString(KEY_FEEDBACK_DATE, "");
             int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
             int isFatafatEnabled = jFatafatData.optInt(KEY_FATAFAT_ENABLED, 1);
+            String rideEndGoodFeedbackText = jFatafatData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
 
             PopupData popupData = null;
             try {
@@ -439,7 +441,7 @@ public class JSONParser implements Constants {
             } catch (Exception e){ e.printStackTrace(); }
 
             Data.setFreshData(new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled));
+                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText));
 
             try {
                 if(Data.getFreshData().getPromoCoupons() == null){
@@ -474,8 +476,8 @@ public class JSONParser implements Constants {
 
         parseUserData(context, jUserDataObject, loginResponse.getUserData());
         parseAutoData(context, jAutosObject, loginResponse.getAutos());
-        parseFreshData(jFreshObject, loginResponse.getFresh());
-        parseMealsData(jMealsObject, loginResponse.getMeals());
+        parseFreshData(context, jFreshObject, loginResponse.getFresh());
+        parseMealsData(context, jMealsObject, loginResponse.getMeals());
         parseDeliveryData(loginResponse.getDelivery());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();

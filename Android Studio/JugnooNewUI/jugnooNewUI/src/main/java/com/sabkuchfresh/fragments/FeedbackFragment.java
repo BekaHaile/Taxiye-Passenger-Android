@@ -63,12 +63,12 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     private LinearLayout linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer;
     private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
     private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue,
-            textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp;
+            textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp, textViewRideEndWithImage;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;
     private ScrollView scrollViewRideSummary;
 
     private int viewType = -1;
-    private String dateValue = "";
+    private String dateValue = "", endRideGoodFeedbackText;
     private double orderAmount = 0;
     private String orderId = "";
 
@@ -88,12 +88,14 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 				orderAmount = Data.getFreshData().getAmount();
 				orderId = Data.getFreshData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
+                endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
 			} else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
 				viewType = Data.getMealsData().getFeedbackViewType();
 				dateValue = Data.getMealsData().getFeedbackDeliveryDate();
 				orderAmount = Data.getMealsData().getAmount();
 				orderId = Data.getMealsData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+                endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
 			} else {
 				activity.finish();
 			}
@@ -140,6 +142,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         linearLayoutRSViewInvoice = (LinearLayout) rootView.findViewById(R.id.linearLayoutRSViewInvoice);
 
         imageViewRideEndWithImage = (ImageView) rootView.findViewById(R.id.imageViewRideEndWithImage);
+        textViewRideEndWithImage = (TextView) rootView.findViewById(R.id.textViewRideEndWithImage); textViewRideEndWithImage.setTypeface(Fonts.mavenMedium(activity));
         imageViewThumbsUpGif = (ImageView) rootView.findViewById(R.id.imageViewThumbsUpGif);
         imageviewType = (ImageView) rootView.findViewById(R.id.imageview_type);
         imageViewThumbsDown = (ImageView) rootView.findViewById(R.id.imageViewThumbsDown);
@@ -230,8 +233,13 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void endRideWithImages(int drawable){
-        relativeLayoutRideEndWithImage.setVisibility(View.VISIBLE);
-        imageViewRideEndWithImage.setImageResource(drawable);
+        try {
+            relativeLayoutRideEndWithImage.setVisibility(View.VISIBLE);
+            imageViewRideEndWithImage.setImageResource(drawable);
+            textViewRideEndWithImage.setText(endRideGoodFeedbackText);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
