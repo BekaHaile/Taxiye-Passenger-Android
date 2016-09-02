@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 	<string name="no_more_than">Can\'t order more than %d units</string>
 
-	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live
+	<!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	 <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string>&lt;!&ndash; General&ndash;&gt;-->
+	 <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -199,7 +199,7 @@
 	<string name="resume_after_24_hours">Your ride booking will resume\nafter 24 hours.</string>
 	<string name="ride_summary_bad_text">Apologies for the inconvenience caused. We regret any difficulty you faced with us. Please let us know about the issue.</string>
 	<string name="no_current_offer_popup_text">Get free rides by referring Jugnoo to friends.Every successful referral gets you a free ride.</string>
-	<string name="end_ride_with_image_text">Gift your friend a Jugnoo Ride worth 50 &amp; Get one for yourself as well. </string>
+	<string name="end_ride_with_image_text">Gift your friend a Jugnoo transaction worth 50 &amp; Get one for yourself as well. </string>
 
 
     <!-- wallet screen-->
@@ -730,7 +730,7 @@
 
 
 	<string name="no_net_title">CONNECTION LOST</string>
-	<string name="no_net_text">Oops! Your Internet in not working.\nPlease try again.</string>
+	<string name="no_net_text">Oops! Your Internet is not working.\nPlease try again.</string>
 	<string name="conn_lost_title">CONNECTION LOST</string>
 	<string name="conn_lost_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
 	<string name="server_error_title">CONNECTION LOST</string>

@@ -545,6 +545,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 params.put(Constants.PROMO_CODE, appPromoEdittext.getText().toString().trim());
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.INTERATED, "1");
+                params.put(Constants.KEY_CART, cartItems());
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
@@ -599,6 +600,57 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         }
     }
 
+    private String cartItems(){
+        JSONArray jCart = new JSONArray();
+        if (activity.getProductsResponse() != null
+                && activity.getProductsResponse().getCategories() != null) {
+            for (Category category : activity.getProductsResponse().getCategories()) {
+                Log.d(TAG, "" + category.getCategoryName());
+                for (SubItem subItem : category.getSubItems()) {
+                    if (subItem.getSubItemQuantitySelected() > 0) {
+                        try {
+                            JSONObject jItem = new JSONObject();
+                            //subItem.getSubItemName();
+                            jItem.put(Constants.KEY_SUB_ITEM_ID, subItem.getSubItemId());
+                            jItem.put(Constants.KEY_QUANTITY, subItem.getSubItemQuantitySelected());
+                            jCart.put(jItem);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return "";
+                        }
+
+                        try {
+                            String categoryName = "", itemName = "";
+                            double price = 0.0;
+                            int qty = 0, itemId = 0;
+
+                            qty = subItem.getSubItemQuantitySelected();
+                            categoryName = category.getCategoryName();
+                            itemId = subItem.getSubItemId();
+                            itemName = subItem.getSubItemName();
+                            price = subItem.getPrice();
+
+                            Product product = new Product()
+                                    .setCategory(categoryName)
+                                    .setId("" + itemId)
+                                    .setName(itemName)
+                                    .setPrice(price)
+                                    .setQuantity(qty);
+//                                                                .setPosition(4);
+                            productList.add(product);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return "";
+                        }
+                    }
+                }
+            }
+        }
+        return jCart.toString();
+    }
+
     public void placeOrderApi() {
         try {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
@@ -620,53 +672,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 if(!TextUtils.isEmpty(promoCode))
                     params.put(Constants.PROMO_CODE, promoCode);
-
-                JSONArray jCart = new JSONArray();
-                if (activity.getProductsResponse() != null
-                        && activity.getProductsResponse().getCategories() != null) {
-                    for (Category category : activity.getProductsResponse().getCategories()) {
-                        Log.d(TAG, "" + category.getCategoryName());
-                        for (SubItem subItem : category.getSubItems()) {
-                            if (subItem.getSubItemQuantitySelected() > 0) {
-                                try {
-                                    JSONObject jItem = new JSONObject();
-                                    //subItem.getSubItemName();
-                                    jItem.put(Constants.KEY_SUB_ITEM_ID, subItem.getSubItemId());
-                                    jItem.put(Constants.KEY_QUANTITY, subItem.getSubItemQuantitySelected());
-                                    jCart.put(jItem);
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                try {
-                                    String categoryName = "", itemName = "";
-                                    double price = 0.0;
-                                    int qty = 0, itemId = 0;
-
-                                    qty = subItem.getSubItemQuantitySelected();
-                                    categoryName = category.getCategoryName();
-                                    itemId = subItem.getSubItemId();
-                                    itemName = subItem.getSubItemName();
-                                    price = subItem.getPrice();
-
-                                    Product product = new Product()
-                                            .setCategory(categoryName)
-                                            .setId("" + itemId)
-                                            .setName(itemName)
-                                            .setPrice(price)
-                                            .setQuantity(qty);
-//                                                                .setPosition(4);
-                                    productList.add(product);
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                }
-                params.put(Constants.KEY_CART, jCart.toString());
+                params.put(Constants.KEY_CART, cartItems());
 
                 int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                 if(type == AppConstant.ApplicationType.MEALS) {

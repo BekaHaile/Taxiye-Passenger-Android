@@ -11,14 +11,16 @@ public class MealsData {
 	private String orderId;
 	private int pendingFeedback;
 	private double amount;
-	private String feedbackDeliveryDate;
+	private String feedbackDeliveryDate, rideEndGoodFeedbackText;
 	private int feedbackViewType;
-	public MealsData(String orderId, int pendingFeedback, double amount, String feedbackDeliveryDate, int feedbackViewType) {
+	public MealsData(String orderId, int pendingFeedback, double amount, String feedbackDeliveryDate, int feedbackViewType,
+					 String rideEndGoodFeedbackText) {
 		this.orderId = orderId;
 		this.pendingFeedback = pendingFeedback;
 		this.amount = amount;
 		this.feedbackDeliveryDate = feedbackDeliveryDate;
 		this.feedbackViewType = feedbackViewType;
+		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 	}
 
 	public ArrayList<PromoCoupon> getPromoCoupons() {
@@ -67,5 +69,13 @@ public class MealsData {
 
 	public void setPendingFeedback(int pendingFeedback) {
 		this.pendingFeedback = pendingFeedback;
+	}
+
+	public String getRideEndGoodFeedbackText() {
+		return rideEndGoodFeedbackText;
+	}
+
+	public void setRideEndGoodFeedbackText(String rideEndGoodFeedbackText) {
+		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 	}
 }
