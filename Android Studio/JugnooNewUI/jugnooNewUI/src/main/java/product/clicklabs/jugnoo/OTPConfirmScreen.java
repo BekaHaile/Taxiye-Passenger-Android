@@ -402,8 +402,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
 			imageViewWalletIcon.setVisibility(View.VISIBLE);
 			imageViewWalletIcon.setImageResource(R.drawable.ic_freecharge_big);
-			textViewCounter.setText("0:60");
-			timerDuration = 60000;
 			buttonOtpViaCall.setText(getResources().getString(R.string.resend_otp));
 		}
 		else{

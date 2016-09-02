@@ -353,7 +353,7 @@ public interface Constants {
 	String SP_DRIVER_BEARING = "driver_bearing";
 
     String KEY_FREECHARGE = "freecharge";
-    String KEY_FREECHAGE_BALANCE = "freecharge_balance";
+    String KEY_FREECHARGE_BALANCE = "freecharge_balance";
     String KEY_FREECHARGE_ENABLED = "freecharge_enabled";
 
 

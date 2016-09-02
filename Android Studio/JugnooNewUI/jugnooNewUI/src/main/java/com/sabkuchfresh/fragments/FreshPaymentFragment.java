@@ -86,10 +86,11 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     private View viewLine;
 
 
-    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik;
+    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge;
     private LinearLayout linearLayoutWalletContainer, linearLayoutCash;
-    private ImageView imageViewPaytmRadio, imageViewRadioMobikwik, imageViewCashRadio;
-    private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue;
+    private ImageView imageViewPaytmRadio, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewCashRadio;
+    private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue,
+            textViewFreeCharge, textViewFreeChargeValue;
     private Button buttonPlaceOrder, applyButton;
 
     private View rootView;
@@ -194,15 +195,19 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
         relativeLayoutMobikwik = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutMobikwik);
+        relativeLayoutFreeCharge = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutFreeCharge);
         linearLayoutCash = (LinearLayout) rootView.findViewById(R.id.linearLayoutCash);
         imageViewPaytmRadio = (ImageView) rootView.findViewById(R.id.imageViewPaytmRadio);
         imageViewRadioMobikwik = (ImageView)rootView.findViewById(R.id.imageViewRadioMobikwik);
+        imageViewRadioFreeCharge = (ImageView)rootView.findViewById(R.id.imageViewRadioFreeCharge);
         imageViewCashRadio = (ImageView) rootView.findViewById(R.id.imageViewCashRadio);
 
         textViewPaytmValue = (TextView)rootView.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenLight(activity));
         textViewPaytm = (TextView)rootView.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenLight(activity));
         textViewMobikwikValue = (TextView)rootView.findViewById(R.id.textViewMobikwikValue);textViewMobikwikValue.setTypeface(Fonts.mavenLight(activity));
         textViewMobikwik = (TextView)rootView.findViewById(R.id.textViewMobikwik); textViewMobikwik.setTypeface(Fonts.mavenLight(activity));
+        textViewFreeChargeValue = (TextView)rootView.findViewById(R.id.textViewFreeChargeValue);textViewFreeChargeValue.setTypeface(Fonts.mavenLight(activity));
+        textViewFreeCharge = (TextView)rootView.findViewById(R.id.textViewFreeCharge); textViewFreeCharge.setTypeface(Fonts.mavenLight(activity));
         ((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenLight(activity));
 
         buttonPlaceOrder = (Button) rootView.findViewById(R.id.buttonPlaceOrder);
@@ -249,6 +254,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         linearLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
+        relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
 
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -457,6 +463,9 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             textViewMobikwikValue.setText(String.format(activity.getResources()
                     .getString(R.string.rupees_value_format_without_space), Data.userData.getMobikwikBalanceStr()));
             textViewMobikwikValue.setTextColor(Data.userData.getMobikwikBalanceColor(activity));
+            textViewFreeChargeValue.setText(String.format(activity.getResources()
+                    .getString(R.string.rupees_value_format_without_space), Data.userData.getFreeChargeBalanceStr()));
+            textViewFreeChargeValue.setTextColor(Data.userData.getFreeChargeBalanceColor(activity));
 
             if(Data.userData.getPaytmEnabled() == 1){
                 textViewPaytmValue.setVisibility(View.VISIBLE);
@@ -472,21 +481,37 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 textViewMobikwikValue.setVisibility(View.GONE);
                 textViewMobikwik.setText(activity.getResources().getString(R.string.add_mobikwik_wallet));
             }
+            if(Data.userData.getFreeChargeEnabled() == 1){
+                textViewFreeChargeValue.setVisibility(View.VISIBLE);
+                textViewFreeCharge.setText(activity.getResources().getString(R.string.freecharge_wallet));
+            } else{
+                textViewFreeChargeValue.setVisibility(View.GONE);
+                textViewFreeCharge.setText(activity.getResources().getString(R.string.add_freecharge_wallet));
+            }
 
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
             }
             else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_selected);
+                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
+            }
+            else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
+                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_selected);
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
             }
             else {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
+                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -517,6 +542,16 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 					goAhead = false;
 				}
 			}
+            else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
+                if (Data.userData.getFreeChargeBalance() < getTotalPriceWithDeliveryCharges()) {
+                    if (Data.userData.getFreeChargeBalance() < 0) {
+                        DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.freecharge_error_case_select_cash));
+                    } else {
+                        showWalletBalanceLowDialog(PaymentOption.FREECHARGE);
+                    }
+                    goAhead = false;
+                }
+            }
             if (goAhead) {
 				buttonPlaceOrder.setEnabled(false);
 				DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
@@ -858,6 +893,10 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - getTotalPriceWithDeliveryCharges()));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
             }
+            else if (paymentOption == PaymentOption.FREECHARGE && Data.userData.getFreeChargeEnabled() == 1) {
+                String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getFreeChargeBalance() - getTotalPriceWithDeliveryCharges());
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, R.drawable.ic_freecharge_big);
+            }
             else {
                 intentToWallet(paymentOption);
             }
@@ -888,6 +927,15 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
                         df.format(Math.ceil(getTotalPriceWithDeliveryCharges()
                                 - Data.userData.getMobikwikBalance())));
+            }
+            else if (paymentOption == PaymentOption.FREECHARGE) {
+                intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption.getOrdinal());
+                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH,
+                        (Data.userData.getFreeChargeEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
+                                : PaymentActivityPath.ADD_WALLET.getOrdinal());
+                intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
+                        df.format(Math.ceil(getTotalPriceWithDeliveryCharges()
+                                - Data.userData.getFreeChargeBalance())));
             }
             else {
                 intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
@@ -969,6 +1017,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                             linearLayoutWalletContainer.addView(relativeLayoutPaytm);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
                         }
                     }
                 }

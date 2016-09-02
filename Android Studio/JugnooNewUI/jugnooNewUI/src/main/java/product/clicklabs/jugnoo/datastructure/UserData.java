@@ -46,6 +46,7 @@ public class UserData {
 	private String fatafatUrlLink;
 
 
+
 	private int paytmEnabled;
 	private double paytmBalance = -1;
 
@@ -558,8 +559,8 @@ public class UserData {
 				}
 			}
 
-            if(jObj.has(Constants.KEY_FREECHAGE_BALANCE)) {
-                setFreeChargeBalance(jObj.optDouble(Constants.KEY_FREECHAGE_BALANCE, getFreeChargeBalance()));
+            if(jObj.has(Constants.KEY_FREECHARGE_BALANCE)) {
+                setFreeChargeBalance(jObj.optDouble(Constants.KEY_FREECHARGE_BALANCE, getFreeChargeBalance()));
                 if(getFreeChargeBalance() > 0) {
                     setFreeChargeEnabled(1);
                 }

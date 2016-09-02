@@ -856,6 +856,7 @@
 	<string name="balance_running_low">Balance is running low!</string>
 	<string name="dont_have_enough_paytm_balance">You don\'t have enough money for\ntransaction in your Paytm wallet.</string>
 	<string name="dont_have_enough_mobikwik_balance">You don\'t have enough money for\ntransaction in your Mobikwik wallet.</string>
+	<string name="dont_have_enough_freecharge_balance">You don\'t have enough money for\ntransaction in your FreeCharge wallet.</string>
 	<string name="get_fresh">Get Fresh</string>
 	<string name="fruits_and_vegetables">FRUITS AND VEGETABLES</string>
 	<string name="delivered_at_your_doorstep">delivered at your doorstep</string>

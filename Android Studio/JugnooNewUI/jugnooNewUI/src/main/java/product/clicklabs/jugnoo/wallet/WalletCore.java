@@ -63,7 +63,8 @@ public class WalletCore {
             MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+ FirebaseEvents.MOBIKWIK_WALLET+"_"+FirebaseEvents.ADD_MOBIKWIK_CASH, bundle);
 			NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_MOBIKWIK_ADD_MONEY_CLICKED, null);
 			FlurryEventLogger.eventGA(Constants.REVENUE, "Mobikwik Wallet", "Add Mobikwik Cash " + amount);
-		} else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
+		}
+		else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
 			Bundle bundle = new Bundle();
 			bundle.putString("amount", amount);
 			MyApplication.getInstance().logEvent(Constants.REVENUE+"_"+ FirebaseEvents.FREECHARGE_WALLET+"_"+FirebaseEvents.ADD_FREECHARGE_CASH, bundle);
