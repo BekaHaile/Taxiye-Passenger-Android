@@ -6633,6 +6633,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                             GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
 
+                                                    String offerCode = "NA";
+                                                    if (promoCouponSelectedForRide != null) {
+                                                        if (promoCouponSelectedForRide instanceof CouponInfo) {
+                                                            offerCode = ""+((CouponInfo) promoCouponSelectedForRide).title;
+                                                        } else if (promoCouponSelectedForRide instanceof PromotionInfo) {
+                                                            offerCode = ""+((PromotionInfo) promoCouponSelectedForRide).title;
+                                                        }
+                                                    } else {
+                                                        offerCode = "NA";
+                                                    }
+
+                                                    //For Clever Tap
+                                                    MyApplication.getInstance().getCleverTapUtils().
+                                                            rideRequested(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType(),
+                                                                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType(),
+                                                                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor(),
+                                                                    offerCode);
+
                                                     if(Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
                                                         Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.autoData.getPickupPaymentOption());
                                                     }

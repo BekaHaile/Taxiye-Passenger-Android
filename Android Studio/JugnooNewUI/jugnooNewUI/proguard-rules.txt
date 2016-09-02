@@ -76,6 +76,9 @@
     @com.squareup.otto.Produce public *;
 }
 
+# For CleverTap SDK
+-dontwarn com.clevertap.android.sdk.**
+
 #-keep class com.google.gson.stream.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson

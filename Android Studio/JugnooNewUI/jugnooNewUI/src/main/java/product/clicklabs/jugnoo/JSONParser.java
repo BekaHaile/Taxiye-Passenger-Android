@@ -1469,6 +1469,7 @@ public class JSONParser implements Constants {
     }
 
     public void loginAnalyticEvents(Context context, LoginVia loginVia){
+        loginClevertap();
         try {
             FlurryEventLogger.setGAUserId(Data.userData.getUserId());
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
@@ -1486,6 +1487,12 @@ public class JSONParser implements Constants {
                 BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
                 FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
                 FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
+
+                String walletSelected = Prefs.with(context).getString(SP_WALLET_AT_SIGNUP, "NA");
+                Prefs.with(context).save(SP_WALLET_AT_SIGNUP, "");
+
+                MyApplication.getInstance().getCleverTapUtils().signUp(String.valueOf(loginVia), walletSelected, referralCodeEntered);
+
             }
             JSONObject map = new JSONObject();
             map.put(KEY_SOURCE, getAppSource(context));
@@ -1495,7 +1502,7 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
 
-        loginClevertap();
+
     }
 
 

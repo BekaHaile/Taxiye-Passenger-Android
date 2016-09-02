@@ -23,6 +23,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.kochava.android.tracker.Feature;
 import com.squareup.otto.Bus;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.AppSwitcher;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
+import product.clicklabs.jugnoo.utils.CleverTapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 
@@ -94,6 +96,7 @@ public class MyApplication extends Application{
 			if(BuildConfig.DEBUG_MODE) {
 //				Feature.setErrorDebug(true);
 //				Feature.enableDebug(true);
+				CleverTapAPI.setDebugLevel(1);
 			}
             kTracker = new Feature( this , Config.KOCHAVA_KEY );
 
@@ -392,4 +395,22 @@ public class MyApplication extends Application{
 		}
 		return cleverTap;
 	}
+
+	/**
+	 * Method used to send event on clever tap
+	 * @param eventName
+	 * @param prodViewedAction
+     */
+	public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
+		getCleverTap().event.push(eventName, prodViewedAction);
+	}
+
+	private CleverTapUtils cleverTapUtils;
+	public CleverTapUtils getCleverTapUtils(){
+		if(cleverTapUtils == null){
+			cleverTapUtils = new CleverTapUtils();
+		}
+		return cleverTapUtils;
+	}
+
 }

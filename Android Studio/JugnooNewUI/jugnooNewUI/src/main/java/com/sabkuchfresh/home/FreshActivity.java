@@ -272,6 +272,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+
                 }
             });
 

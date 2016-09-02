@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -102,8 +103,19 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
                 }
 			}
 		}
-
-
+		if(Data.AppType == AppConstant.ApplicationType.MEALS) {
+			for (int i = 0; i < subItemsInCart.size(); i++) {
+				MyApplication.getInstance().getCleverTapUtils().addToCart(subItemsInCart.get(i).getSubItemName(),
+						subItemsInCart.get(i).getSubItemId(), subItemsInCart.get(i).getStock(), subItemsInCart.get(i).getPrice(),
+						AppConstant.ApplicationType.MEALS);
+			}
+		} else {
+			for (int i = 0; i < subItemsInCart.size(); i++) {
+				MyApplication.getInstance().getCleverTapUtils().addToCart(subItemsInCart.get(i).getSubItemName(),
+						subItemsInCart.get(i).getSubItemId(), subItemsInCart.get(i).getStock(), subItemsInCart.get(i).getPrice(),
+						AppConstant.ApplicationType.FRESH);
+			}
+		}
 
 
 		freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity,
