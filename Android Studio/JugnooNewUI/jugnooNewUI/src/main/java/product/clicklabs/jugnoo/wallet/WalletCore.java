@@ -578,6 +578,7 @@ public class WalletCore {
 						ji.getInt(Constants.KEY_ENABLED));
 				paymentModeConfigDatas.add(paymentModeConfigData);
 			}
+//			paymentModeConfigDatas.add(new PaymentModeConfigData(Constants.KEY_FREECHARGE, 1));
 		} catch (Exception e){
 			e.printStackTrace();
 		}

@@ -1893,6 +1893,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 0);
         }
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    menuBar.setUserData();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
+
     }
 
 
