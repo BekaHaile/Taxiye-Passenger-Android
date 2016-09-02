@@ -72,7 +72,7 @@ public class Data {
 	public static final String SERVER_ERROR_MSG = "Connection lost. Please try again later.";
 	public static final String SERVER_NOT_RESOPNDING_MSG = "Connection lost. Please try again later.";
 	public static final String CHECK_INTERNET_TITLE = "CONNECTION LOST";
-	public static final String CHECK_INTERNET_MSG = "Oops! Your Internet in not working.\nPlease try again.";
+	public static final String CHECK_INTERNET_MSG = "Oops! Your Internet is not working.\nPlease try again.";
 	
 	
 	

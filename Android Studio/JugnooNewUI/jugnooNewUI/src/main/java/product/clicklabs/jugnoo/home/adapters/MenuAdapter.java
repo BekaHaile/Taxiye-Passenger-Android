@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,13 +126,18 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewMenuIcon.setImageDrawable(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal));
                     try {
                         String icon = "";
-                        if(menuInfo.getIcon() != null && !"".equalsIgnoreCase(menuInfo.getIcon())){
-                            icon = menuInfo.getIcon();
-                        } else if(!"".equalsIgnoreCase(Data.userData.getGamePredictIconUrl())){
+                        if(!TextUtils.isEmpty(Data.userData.getGamePredictIconUrl())){
                             icon = Data.userData.getGamePredictIconUrl();
+                        } else if(!TextUtils.isEmpty(menuInfo.getIcon())){
+                            icon = menuInfo.getIcon();
                         }
-
-                        if(menuInfo.getIconNormal() != null && menuInfo.getIconHighlighted() != null) {
+                        if(!"".equalsIgnoreCase(icon)){
+                            Picasso.with(activity)
+                                    .load(icon)
+                                    .placeholder(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal))
+                                    .error(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal))
+                                    .into(holder.imageViewMenuIcon);
+                        } else if(menuInfo.getIconNormal() != null && menuInfo.getIconHighlighted() != null) {
                             new SelectorBitmapLoader(activity).loadSelector(holder.imageViewMenuIcon, menuInfo.getIconNormal(), menuInfo.getIconHighlighted(),
                                     new SelectorBitmapLoader.Callback() {
                                         @Override
@@ -139,24 +145,16 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                                         }
                                     }, true);
-                        } else{
-                            if(!"".equalsIgnoreCase(icon)){
-                                Picasso.with(activity)
-                                        .load(icon)
-                                        .placeholder(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal))
-                                        .error(getSelector(activity, R.drawable.ic_play_pressed, R.drawable.ic_play_normal))
-                                        .into(holder.imageViewMenuIcon);
-                            }
                         }
 
-                        holder.textViewMenu.setText(Data.userData.getGamePredictName());
-                        if(!"".equalsIgnoreCase(Data.userData.getGamePredictNew())){
-                            holder.textViewNew.setText(Data.userData.getGamePredictNew());
-                        } else{
-                            holder.textViewNew.setVisibility(View.GONE);
+                        if(!"".equalsIgnoreCase(Data.userData.getGamePredictName())) {
+                            holder.textViewMenu.setText(Data.userData.getGamePredictName());
                         }
-                        if(Data.userData.getGamePredictEnable() != 1
-                                || "".equalsIgnoreCase(Data.userData.getGamePredictName())){
+                        if(!"".equalsIgnoreCase(Data.userData.getGamePredictNew())){
+                            holder.textViewNew.setVisibility(View.VISIBLE);
+                            holder.textViewNew.setText(Data.userData.getGamePredictNew());
+                        }
+                        if(Data.userData.getGamePredictEnable() != 1){
                             hideLayout(holder.relative);
                         }
                     } catch (Exception e) {

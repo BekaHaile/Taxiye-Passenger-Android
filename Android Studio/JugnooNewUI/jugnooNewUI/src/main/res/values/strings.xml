@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 	<string name="no_more_than">Can\'t order more than %d units</string>
 
-	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live
+	<!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	 <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string>&lt;!&ndash; General&ndash;&gt;-->
+	 <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -431,7 +431,7 @@
 	<string name="no_results_found">No results found</string>
 	<string name="i_want_to_cancel_my_ride_because">I WANT TO CANCEL MY RIDE BECAUSE</string>
 	<string name="connection_lost_title">CONNECTION LOST</string>
-	<string name="connection_lost_desc">Oops! Your Internet in not working.\nPlease try again.</string>
+	<string name="connection_lost_desc">Oops! Your Internet is not working.\nPlease try again.</string>
 	<string name="connection_lost_try_again">TRY AGAIN</string>
 
 	<string-array name="CountryCodes" >
@@ -730,7 +730,7 @@
 
 
 	<string name="no_net_title">CONNECTION LOST</string>
-	<string name="no_net_text">Oops! Your Internet in not working.\nPlease try again.</string>
+	<string name="no_net_text">Oops! Your Internet is not working.\nPlease try again.</string>
 	<string name="conn_lost_title">CONNECTION LOST</string>
 	<string name="conn_lost_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
 	<string name="server_error_title">CONNECTION LOST</string>
