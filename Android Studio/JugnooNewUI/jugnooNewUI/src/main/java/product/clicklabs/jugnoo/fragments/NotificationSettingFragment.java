@@ -114,7 +114,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                                 try {
                                     HashMap<String, Object> profileUpdate = new HashMap<>();
                                     for(int i=0;i<notificationPrefResponse.getData().size();i++) {
-                                        profileUpdate.put(notificationPrefResponse.getData().get(i).getName(), notificationPrefResponse.getData().get(i).getStatus());
+                                        profileUpdate.put(notificationPrefResponse.getData().get(i).getTitle(), notificationPrefResponse.getData().get(i).getStatus());
                                     }
                                     MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                                 } catch (Exception e) {
