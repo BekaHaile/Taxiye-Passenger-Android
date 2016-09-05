@@ -179,6 +179,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                         public void onOkClicked(int position) {
                             //setSelectedSlotToView();
 //                            activity.sortArray(position);
+                            Data.mealSort = position;
                             onSortEvent(position);
 //                            mBus.post(new SortSelection(position));
                         }
@@ -240,10 +241,19 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 int sortedBy = jObj.getInt(Constants.SORTED_BY);
-                                //Prefs.with(activity).save(Constants.SORTED_BY, sortedBy);
-                                setSortingList();
-                                slots.get(sortedBy).setCheck(true);
+
+                                mealsData.clear();
+                                mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
                                 activity.setProductsResponse(productsResponse);
+                                setSortingList();
+                                if (Data.mealSort == -1) {
+                                    slots.get(sortedBy).setCheck(true);
+                                    Data.mealSort = sortedBy;
+                                } else {
+                                    slots.get(Data.mealSort).setCheck(true);
+                                    onSortEvent(Data.mealSort);
+                                }
+
 
                                 activity.canOrder = false;
                                 int size = productsResponse.getCategories().get(0).getSubItems().size();
@@ -255,8 +265,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
                                 }
 
-                                mealsData.clear();
-                                mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
                                 mealAdapter.setList(mealsData);
 
                                 if(mealsData.size()>0) {
