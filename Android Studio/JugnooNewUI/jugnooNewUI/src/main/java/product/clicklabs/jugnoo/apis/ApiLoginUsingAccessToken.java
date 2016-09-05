@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
+import android.view.View;
 
 import org.json.JSONObject;
 
@@ -11,9 +12,11 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -101,7 +104,7 @@ public class ApiLoginUsingAccessToken {
 				@Override
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingAccessToken error="+error.toString());
-					performLoginFailure(activity, callback);
+					performLoginFailure(callback);
 				}
 			});
 
@@ -112,7 +115,7 @@ public class ApiLoginUsingAccessToken {
 
 	}
 
-	public void performLoginSuccess(Activity activity, String response, LoginResponse loginResponse, Callback callback) {
+	public void performLoginSuccess(Activity activity, String response, LoginResponse loginResponse, final Callback callback) {
 		try {
 			JSONObject jObj = new JSONObject(response);
 
@@ -129,7 +132,7 @@ public class ApiLoginUsingAccessToken {
 							resp = Constants.SERVER_TIMEOUT;
 						}
 						if (resp.contains(Constants.SERVER_TIMEOUT)) {
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							retryDialog(DialogErrorType.SERVER_ERROR, callback);
 							callback.failure();
 						} else {
 							callback.success(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
@@ -138,7 +141,21 @@ public class ApiLoginUsingAccessToken {
 						callback.failure();
 					}
 				} else {
-					DialogPopup.alertPopup(activity, "", message);
+					DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+							activity.getString(R.string.retry),
+							activity.getString(R.string.cancel),
+							new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									callback.onRetry(v);
+								}
+							}, new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									callback.onNoRetry(v);
+								}
+							}
+							, false, false);
 					callback.failure();
 				}
 			} else{
@@ -147,22 +164,45 @@ public class ApiLoginUsingAccessToken {
 			DialogPopup.dismissLoadingDialog();
 		} catch (Exception exception) {
 			exception.printStackTrace();
-			DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+			retryDialog(DialogErrorType.SERVER_ERROR, callback);
 			DialogPopup.dismissLoadingDialog();
 			callback.failure();
 		}
 	}
 
-	public void performLoginFailure(Activity activity, Callback callback) {
-		DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+	public void performLoginFailure(Callback callback) {
+		retryDialog(DialogErrorType.CONNECTION_LOST, callback);
 		DialogPopup.dismissLoadingDialog();
 		callback.failure();
+	}
+
+	private void retryDialog(DialogErrorType dialogErrorType, final Callback callback){
+		DialogPopup.dialogNoInternet(activity,
+				dialogErrorType,
+				new Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick(View view) {
+						callback.onRetry(view);
+					}
+
+					@Override
+					public void neutralClick(View view) {
+
+					}
+
+					@Override
+					public void negativeClick(View view) {
+						callback.onNoRetry(view);
+					}
+				});
 	}
 
 	public interface Callback{
 		void noNet();
 		void success(String clientId);
 		void failure();
+		void onRetry(View view);
+		void onNoRetry(View view);
 	}
 
 }

@@ -824,11 +824,11 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 }
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
-                String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance() - getTotalPriceWithDeliveryCharges());
+                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - getTotalPriceWithDeliveryCharges()));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, R.drawable.ic_paytm_big);
             }
             else if (paymentOption == PaymentOption.MOBIKWIK && Data.userData.getMobikwikEnabled() == 1) {
-                String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getMobikwikBalance() - getTotalPriceWithDeliveryCharges());
+                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - getTotalPriceWithDeliveryCharges()));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
             }
             else {

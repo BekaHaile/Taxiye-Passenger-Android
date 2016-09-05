@@ -1419,7 +1419,18 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void failure() {
 					loginDataFetched = false;
 				}
-			});
+
+						@Override
+						public void onRetry(View view) {
+							accessTokenLogin(activity);
+						}
+
+						@Override
+						public void onNoRetry(View view) {
+							ActivityCompat.finishAffinity(activity);
+						}
+
+					});
 
 		} else {
 			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {

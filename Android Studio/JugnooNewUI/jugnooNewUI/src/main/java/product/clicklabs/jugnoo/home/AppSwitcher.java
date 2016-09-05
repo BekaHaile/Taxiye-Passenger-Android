@@ -85,6 +85,16 @@ public class AppSwitcher {
 				public void failure() {
 
 				}
+
+				@Override
+				public void onRetry(View view) {
+					switchApp(activity, clientId, data, latLng, bundle);
+				}
+
+				@Override
+				public void onNoRetry(View view) {
+
+				}
 			};
 
 			if (clientId.equalsIgnoreCase(Config.getAutosClientId()) && !(activity instanceof HomeActivity)) {
@@ -112,6 +122,16 @@ public class AppSwitcher {
 
 								@Override
 								public void failure() {
+
+								}
+
+								@Override
+								public void onRetry(View view) {
+									switchApp(activity, clientId, data, latLng, bundle);
+								}
+
+								@Override
+								public void onNoRetry(View view) {
 
 								}
 							});

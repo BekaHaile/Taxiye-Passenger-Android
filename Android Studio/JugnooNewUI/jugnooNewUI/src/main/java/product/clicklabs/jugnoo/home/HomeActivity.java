@@ -146,6 +146,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PendingCall;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -1586,36 +1587,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         try {
-            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+            LocalBroadcastManager.getInstance(this).registerReceiver(pushBroadcastReceiver,
                     new IntentFilter(Data.LOCAL_BROADCAST));
         } catch(Exception e) {
 
         }
     }
-
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            String message = intent.getStringExtra("message");
-            int type = intent.getIntExtra("open_type", 0);
-            if(type == 0) {
-                Log.d("receiver", "Got message: " + message);
-                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                }
-                if(Prefs.with(HomeActivity.this).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()).equals(Config.getAutosClientId())) {
-//                    updateCartFromSP();
-//                    relativeLayoutCart.performClick();
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
-                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
-                            getCurrentPlaceLatLng(), bundle);
-                }
-            }
-
-        }
-    };
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -4471,7 +4448,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             appInterruptHandler = null;
 
             FacebookLoginHelper.logoutFacebook();
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(pushBroadcastReceiver);
             System.gc();
         } catch (Exception e) {
             e.printStackTrace();
@@ -7959,21 +7936,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         placeAdded = true;
     }
 
-    @Override
-    public void onPaytmRechargePush(final JSONObject jObj) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(jObj));
-                    openPaytmRechargeDialog();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
     private void saveLastDestinations(SearchResult searchResult){
         try {
             if(!searchResult.getName().equalsIgnoreCase("")) {
@@ -8690,5 +8652,46 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void openNotification() {
         menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
     }
+
+    private BroadcastReceiver pushBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+            // Get extra data included in the Intent
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
+                        if(flag == -1) {
+                            String message = intent.getStringExtra("message");
+                            int type = intent.getIntExtra("open_type", 0);
+                            if (type == 0) {
+                                Log.d("receiver", "Got message: " + message);
+                                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                                    drawerLayout.closeDrawer(GravityCompat.START);
+                                }
+                                if (Prefs.with(HomeActivity.this).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()).equals(Config.getAutosClientId())) {
+                                    //                    updateCartFromSP();
+                                    //                    relativeLayoutCart.performClick();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+                                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
+                                            getCurrentPlaceLatLng(), bundle);
+                                }
+                            }
+                        } else {
+                            if(PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag) {
+                                String message = intent.getStringExtra(KEY_MESSAGE);
+                                Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
+                                openPaytmRechargeDialog();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
 
 }
