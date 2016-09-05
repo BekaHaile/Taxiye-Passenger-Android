@@ -198,7 +198,7 @@ public class JSONParser implements Constants {
 
 
         int gamePredictEnable = userData.optInt(KEY_GAME_PREDICT_ENABLE, 0);
-        String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "https://jugnoo.in/wct20");
+        String gamePredictUrl = userData.optString(KEY_GAME_PREDICT_URL, "");
         String gamePredictIconUrl = "", gamePredictName = "", gamePredictNew = "";
 
 

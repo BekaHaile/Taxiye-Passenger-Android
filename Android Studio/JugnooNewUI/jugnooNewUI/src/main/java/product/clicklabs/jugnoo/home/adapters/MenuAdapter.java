@@ -154,7 +154,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             holder.textViewNew.setVisibility(View.VISIBLE);
                             holder.textViewNew.setText(Data.userData.getGamePredictNew());
                         }
-                        if(Data.userData.getGamePredictEnable() != 1){
+                        if(Data.userData.getGamePredictEnable() != 1
+                                || "".equalsIgnoreCase(Data.userData.getGamePredictUrl())){
                             hideLayout(holder.relative);
                         }
                     } catch (Exception e) {

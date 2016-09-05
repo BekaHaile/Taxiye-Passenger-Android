@@ -63,6 +63,10 @@ public class FindADriverResponse {
     @SerializedName("delivery_enabled")
     @Expose
     private Integer deliveryEnabled = 0;
+    @SerializedName("game_predict_url")
+    @Expose
+    private String gamePredictUrl = "";
+
 
     @SerializedName("common_promotions")
     @Expose
@@ -360,5 +364,13 @@ public class FindADriverResponse {
 
     public void setMealsEnabled(Integer mealsEnabled) {
         this.mealsEnabled = mealsEnabled;
+    }
+
+    public String getGamePredictUrl() {
+        return gamePredictUrl;
+    }
+
+    public void setGamePredictUrl(String gamePredictUrl) {
+        this.gamePredictUrl = gamePredictUrl;
     }
 }

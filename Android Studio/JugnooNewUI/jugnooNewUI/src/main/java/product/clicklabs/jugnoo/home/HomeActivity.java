@@ -2652,6 +2652,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if(!dropLocationSet) {
                             Data.autoData.setDropLatLng(null);
                         }
+                        Data.autoData.setAssignedDriverInfo(null);
 
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
 
@@ -5999,10 +6000,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         @Override
                         public void run() {
                             Log.i("in in herestartRideForCustomer  run class", "=");
-                            initializeStartRideVariables();
-
-                            passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-                            switchPassengerScreen(passengerScreenMode);
+                            if(Data.autoData.getAssignedDriverInfo() != null) {
+                                initializeStartRideVariables();
+                                passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+                                switchPassengerScreen(passengerScreenMode);
+                            } else{
+                                callAndHandleStateRestoreAPI(true);
+                            }
                         }
                     });
                 } else {
@@ -6969,8 +6973,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void run() {
-                passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
-                switchPassengerScreen(passengerScreenMode);
+                if(Data.autoData.getAssignedDriverInfo() != null) {
+                    passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
+                    switchPassengerScreen(passengerScreenMode);
+                } else{
+                    callAndHandleStateRestoreAPI(true);
+                }
             }
         });
     }
