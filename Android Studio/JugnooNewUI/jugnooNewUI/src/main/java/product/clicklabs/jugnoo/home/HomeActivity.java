@@ -2605,6 +2605,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         ratingBarRSFeedback.setRating(0f);
                         setZeroRatingView();
                         linearLayoutRideSummary.setLayoutTransition(new LayoutTransition());
+                        relativeLayoutRideEndWithImage.setVisibility(View.GONE);
 
                         editTextRSFeedback.setText("");
                         for(int i=0; i<Data.autoData.getFeedbackReasons().size(); i++){
