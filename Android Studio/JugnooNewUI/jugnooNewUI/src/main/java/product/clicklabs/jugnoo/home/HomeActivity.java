@@ -6636,7 +6636,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     String offerCode = "NA";
                                                     if (promoCouponSelectedForRide != null) {
                                                         if (promoCouponSelectedForRide instanceof CouponInfo) {
-                                                            offerCode = ""+((CouponInfo) promoCouponSelectedForRide).title;
+                                                            offerCode = ""+((CouponInfo) promoCouponSelectedForRide).title + " "+((CouponInfo) promoCouponSelectedForRide).subtitle;
                                                         } else if (promoCouponSelectedForRide instanceof PromotionInfo) {
                                                             offerCode = ""+((PromotionInfo) promoCouponSelectedForRide).title;
                                                         }

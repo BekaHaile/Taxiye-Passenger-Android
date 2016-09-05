@@ -29,6 +29,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.BaseActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -346,6 +347,27 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                             promoCoupons.addAll(promCouponResponse.getDeliveryCoupons());
 
                                         updateListData();
+                                        try{
+                                            ArrayList<String> coupons = new ArrayList<>();
+                                            if(promoCoupons != null) {
+                                                for(int i=0;i<promoCoupons.size();i++) {
+                                                    coupons.add(promoCoupons.get(i).getTitle());
+                                                    String[] promo = promoCoupons.get(i).getTitle().split(" ");
+                                                    for (int j = 0; j < promo.length; j++) {
+                                                        String s = promo[i];
+                                                        s = s.replaceAll("\\D+", "");
+                                                        if (s.length() > 0) {
+                                                            coupons.add(s);
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
+                                        } catch(Exception e) {
+                                            e.printStackTrace();
+                                        }
+
                                     } else {
                                         updateListData();
                                         retryDialog(DialogErrorType.OTHER, message);

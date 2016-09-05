@@ -52,16 +52,38 @@ public class CleverTapUtils {
             if(Data.userData != null && Data.userData.getPromoCoupons() != null) {
                 for(int i=0;i<Data.userData.getPromoCoupons().size();i++) {
                     coupons.add(Data.userData.getPromoCoupons().get(i).getTitle());
+                    String value = getCouponValue(Data.userData.getPromoCoupons().get(i).getTitle());
+                    if(value.length()>0) {
+                        coupons.add(value);
+                    }
                 }
             }
             if(Data.getFreshData() != null && Data.getFreshData().getPromoCoupons() != null) {
                 for(int i=0;i<Data.getFreshData().getPromoCoupons().size();i++) {
                     coupons.add(Data.getFreshData().getPromoCoupons().get(i).getTitle());
+                    String value = getCouponValue(Data.getFreshData().getPromoCoupons().get(i).getTitle());
+                    if(value.length()>0) {
+                        coupons.add(value);
+                    }
                 }
             }
             if(Data.getMealsData() != null && Data.getMealsData().getPromoCoupons() != null) {
                 for(int i=0;i<Data.getMealsData().getPromoCoupons().size();i++) {
                     coupons.add(Data.getMealsData().getPromoCoupons().get(i).getTitle());
+                    String value = getCouponValue(Data.getMealsData().getPromoCoupons().get(i).getTitle());
+                    if(value.length()>0) {
+                        coupons.add(value);
+                    }
+                }
+            }
+
+            if(Data.getDeliveryData() != null && Data.getDeliveryData().getPromoCoupons() != null) {
+                for(int i=0;i<Data.getDeliveryData().getPromoCoupons().size();i++) {
+                    coupons.add(Data.getDeliveryData().getPromoCoupons().get(i).getTitle());
+                    String value = getCouponValue(Data.getDeliveryData().getPromoCoupons().get(i).getTitle());
+                    if(value.length()>0) {
+                        coupons.add(value);
+                    }
                 }
             }
 
@@ -71,6 +93,18 @@ public class CleverTapUtils {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String getCouponValue(String coupon) {
+        String[] promo = coupon.split(" ");
+        for(int j=0;j<promo.length;j++) {
+            String s = promo[j];
+            s = s.replaceAll("\\D+","");
+            if(s.length()>0) {
+                return s;
+            }
+        }
+        return "";
     }
 
     public void setWalletData() {

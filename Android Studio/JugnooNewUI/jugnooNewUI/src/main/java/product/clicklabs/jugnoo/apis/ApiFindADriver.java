@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -276,6 +277,8 @@ public class ApiFindADriver {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
+			MyApplication.getInstance().getCleverTapUtils().setCoupons();
 
 
 			if(findADriverResponse.getFareStructure() != null) {
