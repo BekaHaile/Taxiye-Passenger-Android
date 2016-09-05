@@ -349,7 +349,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                             @Override
                             public void run() {
                                 try {
-                                    if(productsResponse.getCategories() != null) {
+                                    if(productsResponse != null && productsResponse.getCategories() != null) {
                                         updateCartFromSP();
                                         relativeLayoutCart.performClick();
                                     } else {
@@ -359,7 +359,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                     e.printStackTrace();
                                 }
                             }
-                        }, 500);
+                        }, 400);
 
                     }
                 } catch (Exception e){

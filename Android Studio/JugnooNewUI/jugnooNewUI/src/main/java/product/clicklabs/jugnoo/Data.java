@@ -57,12 +57,13 @@ public class Data {
 	
 	public static String P_RIDE_END = "P_RIDE_END", P_IN_RIDE = "P_IN_RIDE", P_DRIVER_ARRIVED = "P_DRIVER_ARRIVED",  P_REQUEST_FINAL = "P_REQUEST_FINAL",
 			P_ASSIGNING = "P_ASSIGNING";
-	
-	
 
-	
 
-	
+
+
+
+	public static int freshSort = -1;
+	public static int mealSort = -1;
 	
 	
 	

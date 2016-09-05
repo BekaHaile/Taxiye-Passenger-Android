@@ -329,20 +329,31 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                 }
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);
-                                int sortedBy = jObj.getInt(Constants.SORTED_BY);
-                                //Prefs.with(activity).save(Constants.SORTED_BY, sortedBy);
+                                activity.setProductsResponse(productsResponse);
                                 setSortingList();
-                                slots.get(sortedBy).setCheck(true);
-								activity.setProductsResponse(productsResponse);
+                                if(Data.freshSort == -1) {
+                                    int sortedBy = jObj.getInt(Constants.SORTED_BY);
+                                    Data.freshSort = sortedBy;
+                                    slots.get(sortedBy).setCheck(true);
+                                } else {
+                                    slots.get(Data.freshSort).setCheck(true);
+                                    activity.onSortEvent(new SortSelection(Data.freshSort));
+                                }
+
 								if(activity.getProductsResponse() != null
 										&& activity.getProductsResponse().getCategories() != null) {
 									activity.updateCartFromSP();
 									activity.updateCartValuesGetTotalPrice();
-									freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
-									tabs.setViewPager(viewPager);
-                                    viewPager.setCurrentItem(Data.tabLinkIndex);
-                                    Data.tabLinkIndex = 0;
-									tabs.setBackgroundColor(activity.getResources().getColor(R.color.white_light_grey));
+                                    if(loader) {
+                                        freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
+                                        tabs.setViewPager(viewPager);
+                                        viewPager.setCurrentItem(Data.tabLinkIndex);
+                                        Data.tabLinkIndex = 0;
+                                        tabs.setBackgroundColor(activity.getResources().getColor(R.color.white_light_grey));
+                                    } else {
+                                        freshCategoryFragmentsAdapter.notifyDataSetChanged();
+                                    }
+
                                     if(activity.updateCart) {
                                         activity.updateCart = false;
                                         activity.openCart();
@@ -438,6 +449,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                         public void onOkClicked(int position) {
                             //setSelectedSlotToView();
 //                            activity.sortArray(position);
+                            Data.freshSort = position;
                             activity.getBus().post(new SortSelection(position));
                         }
                     });
