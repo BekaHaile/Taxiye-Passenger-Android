@@ -594,9 +594,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
                         }
                     } else if(PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag){
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
-						if(HomeActivity.appInterruptHandler != null){
-							HomeActivity.appInterruptHandler.onPaytmRechargePush(jObj);
-						}
+						Intent intent = new Intent(Data.LOCAL_BROADCAST);
+						intent.putExtra(Constants.KEY_FLAG, flag);
+						intent.putExtra(Constants.KEY_MESSAGE, message);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 						notificationManager(this, title, message1, playSound);
 
 					} else if(PushFlags.SYNC_PARA.getOrdinal() == flag){

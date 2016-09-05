@@ -67,6 +67,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
@@ -79,7 +80,9 @@ import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABView;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.MenuBar;
+import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -368,40 +371,52 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 // with an action named "custom-event-name" is broadcasted.
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, final Intent intent) {
             // Get extra data included in the Intent
-            int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
-            if(flag == -1) {
-                String message = intent.getStringExtra("message");
-                int type = intent.getIntExtra("open_type", 0);
-                if (type == 0) {
-                    Log.d("receiver", "Got message: " + message);
-                    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                        drawerLayout.closeDrawer(GravityCompat.START);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
+                        if(flag == -1) {
+							String message = intent.getStringExtra("message");
+							int type = intent.getIntExtra("open_type", 0);
+							if (type == 0) {
+								Log.d("receiver", "Got message: " + message);
+								if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+									drawerLayout.closeDrawer(GravityCompat.START);
+								}
+								String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+								if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
+									updateCartFromSP();
+									relativeLayoutCart.performClick();
+								} else {
+									Bundle bundle = new Bundle();
+									bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+									MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
+											getCurrentPlaceLatLng(), bundle);
+	//                    openCart();
+	//                    addFreshFragment();
+	//                    Prefs.with(context).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
+								}
+							} else if (type == 1) {
+								intentToShareActivity();
+							}
+						} else {
+							if(flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()){
+								Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
+								openPushDialog();
+							} else if(PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag) {
+                                String message = intent.getStringExtra(Constants.KEY_MESSAGE);
+                                Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
+                                openPaytmRechargeDialog();
+                            }
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    String lastClientId = Prefs.with(context).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
-                    if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
-                        updateCartFromSP();
-                        relativeLayoutCart.performClick();
-                    } else {
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
-                        MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
-                                getCurrentPlaceLatLng(), bundle);
-//                    openCart();
-//                    addFreshFragment();
-//                    Prefs.with(context).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
-                    }
-                } else if (type == 1) {
-                    intentToShareActivity();
                 }
-            } else {
-                if(flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()){
-                    Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
-                    openPushDialog();
-                }
-            }
-
+            });
         }
     };
 
@@ -1591,6 +1606,50 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         if(pushDialog != null){
             pushDialog.dismiss(clearDialogContent);
             pushDialog = null;
+        }
+    }
+
+
+    private PaytmRechargeDialog paytmRechargeDialog;
+    private void openPaytmRechargeDialog(){
+        try {
+            if(Data.userData.getPaytmRechargeInfo() != null) {
+                if (paytmRechargeDialog != null
+                        && paytmRechargeDialog.getDialog() != null
+                        && paytmRechargeDialog.getDialog().isShowing()) {
+                    paytmRechargeDialog.updateDialogDataAndContent(Data.userData.getPaytmRechargeInfo().getTransferId(),
+                            Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
+                            Data.userData.getPaytmRechargeInfo().getTransferPhone(),
+                            Data.userData.getPaytmRechargeInfo().getTransferAmount());
+                } else{
+                    paytmRechargeDialog = new PaytmRechargeDialog(FreshActivity.this,
+                            Data.userData.getPaytmRechargeInfo().getTransferId(),
+                            Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
+                            Data.userData.getPaytmRechargeInfo().getTransferPhone(),
+                            Data.userData.getPaytmRechargeInfo().getTransferAmount(),
+                            new PaytmRechargeDialog.Callback() {
+                                @Override
+                                public void onOk() {
+                                    if (Data.userData != null) {
+                                        Data.userData.setPaytmRechargeInfo(null);
+                                        Prefs.with(FreshActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME,
+                                                (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
+                                        fetchWalletBalance(FreshActivity.this);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancel() {
+                                    if (Data.userData != null) {
+                                        Data.userData.setPaytmRechargeInfo(null);
+                                    }
+                                }
+                            });
+                    paytmRechargeDialog.show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
