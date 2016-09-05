@@ -317,9 +317,18 @@ public class ApiFindADriver {
 				}
 			}
 
-			Data.userData.setFreshEnabled(findADriverResponse.getFreshEnabled());
-			Data.userData.setMealsEnabled(findADriverResponse.getMealsEnabled());
-			Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
+			if(findADriverResponse.getFreshEnabled() != null) {
+				Data.userData.setFreshEnabled(findADriverResponse.getFreshEnabled());
+			}
+			if(findADriverResponse.getMealsEnabled() != null) {
+				Data.userData.setMealsEnabled(findADriverResponse.getMealsEnabled());
+			}
+			if(findADriverResponse.getDeliveryEnabled() != null) {
+				Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
+			}
+			if(findADriverResponse.getGamePredictUrl() != null) {
+				Data.userData.setGamePredictUrl(findADriverResponse.getGamePredictUrl());
+			}
 
 		} catch (Exception exception) {
 			exception.printStackTrace();
