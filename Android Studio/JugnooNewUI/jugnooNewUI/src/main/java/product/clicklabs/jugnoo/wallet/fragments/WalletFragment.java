@@ -136,7 +136,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 			@Override
 			public void onClick(View v) {
 				if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
-					DialogPopup.alertPopupLeftOriented(paymentActivity, "", Data.userData.getJugnooCashTNC());
+					DialogPopup.alertPopupLeftOriented(paymentActivity, "", Data.userData.getJugnooCashTNC(), true, false, false);
 					FlurryEventLogger.event(JUGNOO_CASH_CHECKED);
                     Bundle bundle = new Bundle();
                     MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+JUGNOO_CASH, bundle);

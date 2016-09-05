@@ -157,9 +157,9 @@ public class SlidingBottomOffersFragment extends Fragment {
                         int position = (int) v.getTag();
                         PromoCoupon promoCoupon = offerList.get(position);
                         if (promoCoupon instanceof CouponInfo) {
-							DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo)promoCoupon).description);
+							DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo)promoCoupon).description, true, true, false);
 						} else if (promoCoupon instanceof PromotionInfo) {
-							DialogPopup.alertPopupHtml(activity, "", ((PromotionInfo)promoCoupon).terms);
+							DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo)promoCoupon).terms, false, true, true);
 						}
                         FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "offer t&c");
                     } catch (Exception e) {
