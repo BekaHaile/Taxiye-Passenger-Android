@@ -176,4 +176,37 @@ public interface FirebaseEvents {
     String DIALOG_MOBILE_SMS = "Dialog_mobile_sms";
     String DIALOG_OTHERS = "Dialog_others";
 
+
+    String M_CART = "m_cart";
+    String TRASH="trash";
+    String BUTTON = "button";
+    String MEALS = "meals";
+    String M_ADD = "m_add";
+    String M_SORT = "m_sort";
+    String A_Z = "a-z";
+    String M_PAY = "m_pay";
+    String POPULARITY = "popularity";
+    String LOW_TO_HIGH_PRICE = "low_to_high_price";
+    String HIGH_TO_LOW_PRICE = "high_to_low_price";
+    String NO = "No";
+    String CHECKOUT = "checkout";
+    String SLOT1 = "slot1";
+    String SLOT2 = "slot2";
+    String SLOT3 = "slot3";
+    String PAY = "pay";
+    String ADD_PROMO = "add_promo";
+    String FRUITS = "fruits";
+    String VEGETABLES = "vegetables";
+    String ICE_CREAM = "ice_cream";
+    String PREMIUM = "pre";
+    String DRY = "dry";
+    String BASKETS = "baskets";
+    String F_SORT = "f_sort";
+    String F_ADD = "f_add";
+    String F_SEARCH_CART = "f_search_cart";
+    String F_SEARCH_GO = "f_search_go";
+    String F_CART = "f_cart";
+    String F_PAY = "f_pay";
+    String PLACE_ORDER = "place_order";
+
 }

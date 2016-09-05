@@ -116,7 +116,12 @@ public class MyApplication extends Application{
 		if(content.length()>31) {
 			content = content.substring(0, 31);
 		}
-        getFirebaseAnalytics().logEvent(content, bundle);
+		if(bundle != null) {
+			getFirebaseAnalytics().logEvent(content, bundle);
+		} else{
+			Bundle bundle1 = new Bundle();
+			getFirebaseAnalytics().logEvent(content, bundle1);
+		}
     }
 
 	@Override

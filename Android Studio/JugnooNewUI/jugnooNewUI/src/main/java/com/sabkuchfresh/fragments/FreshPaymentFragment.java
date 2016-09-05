@@ -232,10 +232,18 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(appPromoEdittext.getText().toString().trim()))
+                if (!TextUtils.isEmpty(appPromoEdittext.getText().toString().trim())) {
                     applyPromo();
-                else
+                    int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                    if(appType == AppConstant.ApplicationType.MEALS){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.ADD_PROMO, null);
+                    }else{
+                        MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.ADD_PROMO, null);
+                    }
+                }
+                else {
                     Toast.makeText(activity, "Please enter code", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         linearLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -245,7 +253,14 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                if(appType == AppConstant.ApplicationType.MEALS){
+                    MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+activity.getPaymentOption(), null);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+                }else{
+                    MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+activity.getPaymentOption(), null);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+                }
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PLACE_ORDER_CLICKED, null);
                 FlurryEventLogger.event(PAYMENT_SCREEN, ORDER_PLACED, ORDER_PLACED);
                 placeOrder();
@@ -480,6 +495,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
     private void placeOrder() {
         try {
+            final int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
             boolean goAhead = true;
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
 				if (Data.userData.getPaytmBalance() < getTotalPriceWithDeliveryCharges()) {
@@ -515,6 +531,12 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 								} else {
 									FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
 								}
+
+                                if(appType == AppConstant.ApplicationType.MEALS){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+                                }else{
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+                                }
 								placeOrderApi();
 							}
 						},
@@ -522,6 +544,11 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 							@Override
 							public void onClick(View v) {
 								buttonPlaceOrder.setEnabled(true);
+                                if(appType == AppConstant.ApplicationType.MEALS){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
+                                }else{
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
+                                }
 							}
 						}, false, false);
 			}

@@ -51,6 +51,8 @@ public interface Constants {
 	String FRAGMENT_SELECTED = "fragment_selected";
 	String ORDER_CONTACT = "order_contact";
 
+	String FRESH_FRAGMENT = "fresh_fragment";
+	String MEALS_FRAGMENT = "meals_fragment";
 
 
 

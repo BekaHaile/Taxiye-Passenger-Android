@@ -20,9 +20,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -210,6 +212,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
+                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.FRESH, null);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

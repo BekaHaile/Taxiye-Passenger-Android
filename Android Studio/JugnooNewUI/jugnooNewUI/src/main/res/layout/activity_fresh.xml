@@ -52,7 +52,6 @@
                     android:id="@+id/relativeLayoutLeft"
                     android:layout_width="156px"
                     android:layout_height="match_parent"
-
                     android:layout_marginTop="6px"
                     android:background="@drawable/background_white_grey_light_selector">
 
