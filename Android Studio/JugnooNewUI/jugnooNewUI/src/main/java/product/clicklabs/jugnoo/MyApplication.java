@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
@@ -395,6 +396,15 @@ public class MyApplication extends Application{
 			}
 		}
 		return cleverTap;
+	}
+
+	public void setLocationToCleverTap() {
+		try {
+			Location location = getCleverTap().getLocation();
+			getCleverTap().setLocation(location);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

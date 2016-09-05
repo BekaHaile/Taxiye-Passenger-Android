@@ -73,8 +73,18 @@ public class CleverTapUtils {
         }
     }
 
-    public void setPrefData() {
+    public void setWalletData() {
         try {
+            ArrayList<String> wallet = new ArrayList<>();
+            if(Data.userData != null) {
+                if(Data.userData.getPaytmEnabled() == 1) {
+                    wallet.add("Paytm");
+                }
+                if(Data.userData.getMobikwikEnabled() == 1) {
+                    wallet.add("Mobikwik");
+                }
+            }
+            MyApplication.getInstance().udpateUserData(Events.WALLET, wallet);
 
         } catch(Exception e) {
             e.printStackTrace();

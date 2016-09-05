@@ -42,7 +42,6 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
     private FreshActivity activity;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private int currentGroupId = 1;
-	private ArrayList<SubItem> subItemsInCart;
 
 	public FreshCartItemsFragment(){}
 
@@ -87,15 +86,17 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
         mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         mSwipeRefreshLayout.setEnabled(false);
 
-		if(subItemsInCart == null) {
-			subItemsInCart = new ArrayList<>();
+		if(activity.subItemsInCart == null) {
+			activity.subItemsInCart = new ArrayList<>();
 		}
+		activity.subItemsInCart.clear();
+
 		if(activity.getProductsResponse() != null
 				&& activity.getProductsResponse().getCategories() != null) {
 			for (Category category : activity.getProductsResponse().getCategories()) {
 				for (SubItem subItem : category.getSubItems()) {
 					if (subItem.getSubItemQuantitySelected() > 0) {
-						subItemsInCart.add(subItem);
+						activity.subItemsInCart.add(subItem);
 					}
 				}
                 if(Data.AppType == AppConstant.ApplicationType.MEALS) {
@@ -103,23 +104,23 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
                 }
 			}
 		}
-		if(Data.AppType == AppConstant.ApplicationType.MEALS) {
-			for (int i = 0; i < subItemsInCart.size(); i++) {
-				MyApplication.getInstance().getCleverTapUtils().addToCart(subItemsInCart.get(i).getSubItemName(),
-						subItemsInCart.get(i).getSubItemId(), subItemsInCart.get(i).getStock(), subItemsInCart.get(i).getPrice(),
-						AppConstant.ApplicationType.MEALS);
-			}
-		} else {
-			for (int i = 0; i < subItemsInCart.size(); i++) {
-				MyApplication.getInstance().getCleverTapUtils().addToCart(subItemsInCart.get(i).getSubItemName(),
-						subItemsInCart.get(i).getSubItemId(), subItemsInCart.get(i).getStock(), subItemsInCart.get(i).getPrice(),
-						AppConstant.ApplicationType.FRESH);
-			}
-		}
+//		if(Data.AppType == AppConstant.ApplicationType.MEALS) {
+//			for (int i = 0; i < activity.subItemsInCart.size(); i++) {
+//				MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
+//						activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(), activity.subItemsInCart.get(i).getPrice(),
+//						AppConstant.ApplicationType.MEALS);
+//			}
+//		} else {
+//			for (int i = 0; i < activity.subItemsInCart.size(); i++) {
+//				MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
+//						activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(), activity.subItemsInCart.get(i).getPrice(),
+//						AppConstant.ApplicationType.FRESH);
+//			}
+//		}
 
 
 		freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity,
-				subItemsInCart, null, 0,
+				activity.subItemsInCart, null, 0,
 				FreshCategoryItemsAdapter.OpenMode.CART,
 				new FreshCategoryItemsAdapter.Callback() {
 					@Override
@@ -131,7 +132,7 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 					public void onMinusClicked(int position, SubItem subItem) {
 						activity.updateCartValuesGetTotalPrice();
 						if(subItem.getSubItemQuantitySelected() == 0){
-							subItemsInCart.remove(position);
+							activity.subItemsInCart.remove(position);
 							checkIfEmpty();
 						}
 					}
@@ -140,7 +141,7 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 					public void onDeleteClicked(int position, SubItem subItem) {
 						activity.updateCartValuesGetTotalPrice();
 						if(subItem.getSubItemQuantitySelected() == 0){
-							subItemsInCart.remove(position);
+							activity.subItemsInCart.remove(position);
 							checkIfEmpty();
 						}
 					}
@@ -165,18 +166,18 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 	}
 
 	public void deleteCart() {
-		for(SubItem subItem : subItemsInCart){
+		for(SubItem subItem : activity.subItemsInCart){
 			subItem.setSubItemQuantitySelected(0);
 		}
 		activity.updateCartValuesGetTotalPrice();
-		subItemsInCart.clear();
+		activity.subItemsInCart.clear();
 		freshCategoryItemsAdapter.notifyDataSetChanged();
 		checkIfEmpty();
 
 	}
 
 	private void checkIfEmpty(){
-		if(subItemsInCart.size() == 0){
+		if(activity.subItemsInCart.size() == 0){
 			activity.performBackPressed();
 		}
 	}

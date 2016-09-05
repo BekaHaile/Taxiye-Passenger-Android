@@ -179,6 +179,25 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
             e.printStackTrace();
         }
 
+        try {
+            if(Data.AppType == AppConstant.ApplicationType.MEALS) {
+                for (int i = 0; i < activity.subItemsInCart.size(); i++) {
+                    MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
+                            activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(), activity.subItemsInCart.get(i).getPrice(),
+                            AppConstant.ApplicationType.MEALS);
+                }
+            } else {
+                for (int i = 0; i < activity.subItemsInCart.size(); i++) {
+                    MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
+                            activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(), activity.subItemsInCart.get(i).getPrice(),
+                            AppConstant.ApplicationType.FRESH);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         RecyclerView recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
         recyclerViewDeliverySlots.setLayoutManager(new LinearLayoutManager(activity));
         recyclerViewDeliverySlots.setItemAnimator(new DefaultItemAnimator());
@@ -191,6 +210,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
 
         checkoutAdapter = new FreshCheckoutAdapter(activity, checkout, this);
         recyclerViewDeliverySlots.setAdapter(checkoutAdapter);
+
 
 
 
