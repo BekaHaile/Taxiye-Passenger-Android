@@ -372,6 +372,13 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                 callbackPaymentOptionSelector);
                         break;
 
+                    case R.id.relativeLayoutFreeCharge:
+                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+                                +FirebaseEvents.FREECHARGE, bundle);
+                        MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.FREECHARGE,
+                                callbackPaymentOptionSelector);
+                        break;
+
                     case R.id.linearLayoutCash:
                         MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
                                 +FirebaseEvents.CASH, bundle);
@@ -510,8 +517,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             else {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
-                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -910,8 +917,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         try {
             DecimalFormat df = new DecimalFormat("#");
             Intent intent = new Intent(activity, PaymentActivity.class);
+            intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption.getOrdinal());
             if (paymentOption == PaymentOption.PAYTM) {
-                intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH,
                         (Data.userData.getPaytmEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
@@ -920,7 +927,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                 - Data.userData.getPaytmBalance())));
             }
             else if (paymentOption == PaymentOption.MOBIKWIK) {
-                intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH,
                         (Data.userData.getMobikwikEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
@@ -929,7 +935,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                 - Data.userData.getMobikwikBalance())));
             }
             else if (paymentOption == PaymentOption.FREECHARGE) {
-                intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH,
                         (Data.userData.getFreeChargeEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());

@@ -83,8 +83,10 @@ public class MyApplication extends Application{
 				branch = Branch.getTestInstance(this);
 			}
 
-            Feature.setErrorDebug(true);
-            Feature.enableDebug(true);
+			if(BuildConfig.DEBUG_MODE) {
+//				Feature.setErrorDebug(true);
+//				Feature.enableDebug(true);
+			}
             kTracker = new Feature( this , Config.KOCHAVA_KEY );
 
 			mInstance = this;
