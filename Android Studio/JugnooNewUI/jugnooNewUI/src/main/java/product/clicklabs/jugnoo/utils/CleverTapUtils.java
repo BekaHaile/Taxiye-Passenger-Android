@@ -5,6 +5,7 @@ import com.sabkuchfresh.utils.AppConstant;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 
@@ -13,11 +14,11 @@ import product.clicklabs.jugnoo.MyApplication;
  */
 public class CleverTapUtils {
 
-    public void rideRequested(int vehicle_type, int type, double surge, String offerCode) {
+    public void rideRequested(int vehicle_type, int type, double surge, String offerCode, String eta) {
 
         HashMap<String, Object> prodViewedAction = new HashMap<>();
         prodViewedAction.put(Events.VEHICLE_TYPE, vehicle_type);
-        //prodViewedAction.put(Events.ETA, eta);
+        prodViewedAction.put(Events.ETA, eta);
         prodViewedAction.put(Events.SURGE, surge);
         prodViewedAction.put(Events.TYPE, type);
         prodViewedAction.put(Events.OFFER_CODE, offerCode);
@@ -45,26 +46,39 @@ public class CleverTapUtils {
             MyApplication.getInstance().sendCleverTapEvent(Events.FRESH_ADDED_TO_CART, prodViewedAction);
     }
 
-    public void charged(ArrayList<String> productName, ArrayList<String> productId, ArrayList<String> qty, double totalAmount, double discountAmount,
-                        String typeName, String chargedId, String promoCode, String startTime, String endTime, int type) {
-        HashMap<String, Object> prodViewedAction = new HashMap<>();
-        prodViewedAction.put(Events.PRODUCT_NAME, productName);
-        prodViewedAction.put(Events.PRODUCT_ID, productId);
-        prodViewedAction.put(Events.QUANTITY, qty);
-        prodViewedAction.put(Events.TOTAL_AMOUNT, totalAmount);
-        prodViewedAction.put(Events.DISCOUNT_AMOUNT, discountAmount);
-        prodViewedAction.put(Events.TYPE, typeName);
-        prodViewedAction.put(Events.CHARGED_ID, chargedId);
-        prodViewedAction.put(Events.PROMOCODE, promoCode);
-        prodViewedAction.put(Events.START_TIME, startTime);
-        prodViewedAction.put(Events.END_TIME, endTime);
+    public void setCoupons() {
+        try {
+            ArrayList<String> coupons = new ArrayList<>();
+            if(Data.userData != null && Data.userData.getPromoCoupons() != null) {
+                for(int i=0;i<Data.userData.getPromoCoupons().size();i++) {
+                    coupons.add(Data.userData.getPromoCoupons().get(i).getTitle());
+                }
+            }
+            if(Data.getFreshData() != null && Data.getFreshData().getPromoCoupons() != null) {
+                for(int i=0;i<Data.getFreshData().getPromoCoupons().size();i++) {
+                    coupons.add(Data.getFreshData().getPromoCoupons().get(i).getTitle());
+                }
+            }
+            if(Data.getMealsData() != null && Data.getMealsData().getPromoCoupons() != null) {
+                for(int i=0;i<Data.getMealsData().getPromoCoupons().size();i++) {
+                    coupons.add(Data.getMealsData().getPromoCoupons().get(i).getTitle());
+                }
+            }
 
-        if(type == AppConstant.ApplicationType.MEALS)
-            MyApplication.getInstance().sendCleverTapEvent(Events.MEALS_CHARGED, prodViewedAction);
-        else
-            MyApplication.getInstance().sendCleverTapEvent(Events.FRESH_CHARGED, prodViewedAction);
+            MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
 
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    public void setPrefData() {
+        try {
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -1469,7 +1469,7 @@ public class JSONParser implements Constants {
     }
 
     public void loginAnalyticEvents(Context context, LoginVia loginVia){
-        loginClevertap();
+        loginClevertap(context);
         try {
             FlurryEventLogger.setGAUserId(Data.userData.getUserId());
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
@@ -1506,23 +1506,45 @@ public class JSONParser implements Constants {
     }
 
 
-    private void loginClevertap(){
+    private void loginClevertap(Context context){
         try{
             // each of the below mentioned fields are optional
             // if set, these populate demographic information in the Dashboard
             HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
-            profileUpdate.put("Name", Data.userData.userName);                  // String
-            profileUpdate.put("Identity", Data.userData.getUserId());                    // String or number
-            profileUpdate.put("Email", Data.userData.userEmail);               // Email address of the user
-            profileUpdate.put("Phone", Data.userData.phoneNo);                     // Phone (without the country code)
-            profileUpdate.put("Photo", Data.userData.userImage);    // URL to the Image
+            profileUpdate.put(Events.NAME, Data.userData.userName);                  // String
+            profileUpdate.put(Events.USER_ID, Data.userData.getUserId());                    // String or number
+            profileUpdate.put(Events.EMAIL, Data.userData.userEmail);               // Email address of the user
+            profileUpdate.put(Events.PHONE, Data.userData.phoneNo);                     // Phone (without the country code)
+            //profileUpdate.put("Photo", Data.userData.userImage);    // URL to the Image
+            profileUpdate.put(Events.SOURCE, getAppSource(context));
+            profileUpdate.put(Events.REFERRAL_CODE, Data.userData.referralCode);
+            profileUpdate.put(Events.JUGNOO_CASH, Data.userData.getJugnooBalance());
+            profileUpdate.put(Events.IS_VERIFIED, "True");
+
+//            profileUpdate.put(Events.COUPONS_USED, Data.userData.);
+            try {
+                int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+                profileUpdate.put(Events.OS_VERSION, currentapiVersion);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            profileUpdate.put(Events.WALLET, Data.userData.);
+            if(Prefs.with(context).getString(SPLabels.ADD_HOME, "").length()>0) {
+                profileUpdate.put(Events.HOME, Prefs.with(context).getString(SPLabels.ADD_HOME, ""));
+            }
+            if(Prefs.with(context).getString(SPLabels.ADD_WORK, "").length()>0) {
+                profileUpdate.put(Events.WORK, Prefs.with(context).getString(SPLabels.ADD_WORK, ""));
+            }
 
             // optional fields. controls whether the user will be sent email, push etc.
-            profileUpdate.put("MSG-email", true);                      // Disable email notifications
-            profileUpdate.put("MSG-push", true);                        // Enable push notifications
-            profileUpdate.put("MSG-sms", true);                        // Disable SMS notifications
+//            profileUpdate.put("MSG-email", true);                      // Disable email notifications
+//            profileUpdate.put("MSG-push", true);                        // Enable push notifications
+//            profileUpdate.put("MSG-sms", true);                        // Disable SMS notifications
 
             MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+
+            MyApplication.getInstance().getCleverTapUtils().setCoupons();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -23,6 +23,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.kochava.android.tracker.Feature;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -403,6 +404,29 @@ public class MyApplication extends Application{
      */
 	public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
 		getCleverTap().event.push(eventName, prodViewedAction);
+	}
+
+	public void charged(HashMap<String, Object> chargeDetails, ArrayList<HashMap<String, Object>> items) {
+		try {
+			getCleverTap().event.push(CleverTapAPI.CHARGED_EVENT, chargeDetails, items);
+		} catch (Exception e) {
+			// You have to specify the first parameter to push()
+			// as CleverTapAPI.CHARGED_EVENT
+		}
+	}
+
+	public void udpateUserData(String key, ArrayList<String> coupons) {
+		try {
+			if(coupons.size()>0)
+				getCleverTap().profile.setMultiValuesForKey(key, coupons);
+			else {
+				HashMap<String, Object> profileUpdate = new HashMap<>();
+				profileUpdate.put(key, "NA");
+				getCleverTap().profile.push(profileUpdate);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private CleverTapUtils cleverTapUtils;

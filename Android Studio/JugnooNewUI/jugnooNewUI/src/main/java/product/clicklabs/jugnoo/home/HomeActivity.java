@@ -6649,7 +6649,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                             rideRequested(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType(),
                                                                     slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType(),
                                                                     slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor(),
-                                                                    offerCode);
+                                                                    offerCode, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta());
 
                                                     if(Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
                                                         Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.autoData.getPickupPaymentOption());

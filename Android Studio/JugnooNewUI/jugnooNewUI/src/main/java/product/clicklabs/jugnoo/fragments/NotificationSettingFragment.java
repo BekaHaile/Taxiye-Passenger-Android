@@ -17,6 +17,8 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.NotificationSettingAdapter;
@@ -109,6 +111,16 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                         try {
                             if (notificationPrefResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 settingAdapter.setResults((ArrayList<NotificationSettingResponseModel.NotificationPrefData>) notificationPrefResponse.getData());
+                                try {
+                                    HashMap<String, Object> profileUpdate = new HashMap<>();
+                                    for(int i=0;i<notificationPrefResponse.getData().size();i++) {
+                                        profileUpdate.put(notificationPrefResponse.getData().get(i).getName(), notificationPrefResponse.getData().get(i).getStatus());
+                                    }
+                                    MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
