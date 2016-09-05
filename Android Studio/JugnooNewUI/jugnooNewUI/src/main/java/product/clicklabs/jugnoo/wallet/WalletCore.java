@@ -733,6 +733,8 @@ public class WalletCore {
 			return PaymentOption.PAYTM;
 		} else if(PaymentOption.MOBIKWIK.getOrdinal() == paymentOption){
 			return PaymentOption.MOBIKWIK;
+		}  else if(PaymentOption.FREECHARGE.getOrdinal() == paymentOption){
+			return PaymentOption.FREECHARGE;
 		} else{
 			return PaymentOption.CASH;
 		}

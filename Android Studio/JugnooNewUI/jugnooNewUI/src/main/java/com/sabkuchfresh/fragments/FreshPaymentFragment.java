@@ -901,7 +901,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
             }
             else if (paymentOption == PaymentOption.FREECHARGE && Data.userData.getFreeChargeEnabled() == 1) {
-                String amount = Utils.getMoneyDecimalFormat().format(Data.userData.getFreeChargeBalance() - getTotalPriceWithDeliveryCharges());
+                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - getTotalPriceWithDeliveryCharges()));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, R.drawable.ic_freecharge_big);
             }
             else {
