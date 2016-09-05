@@ -27,12 +27,16 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 /**
@@ -273,6 +277,10 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         callback.onPlusClicked(pos, subItems.get(pos));
                         FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
                         notifyDataSetChanged();
+                        int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
+                        if(appType == AppConstant.ApplicationType.FRESH){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -17,14 +17,20 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Slot;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by gurmail on 19/05/16.
@@ -94,7 +100,7 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         try {
             if(holder instanceof ViewHolderSlotDay){
                 ((ViewHolderSlotDay)holder).textViewSlotDay.setText(slots.get(position).getDayName());
@@ -169,7 +175,7 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 
             } else if(holder instanceof ViewHolderSlot){
-                Slot slot = slots.get(position);
+                final Slot slot = slots.get(position);
                 Log.d("position", "position = "+(position));
                 ((ViewHolderSlot)holder).textViewSlotTime.setText(slot.getDayName()+", "+ DateOperations.convertDayTimeAPViaFormat(slot.getStartTime())
                         + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime()));
@@ -195,6 +201,12 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                             //pos = pos - 2;
                             callback.onSlotSelected(pos, slots.get(pos));
                             notifyDataSetChanged();
+                            int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                            if(appType == AppConstant.ApplicationType.MEALS){
+                                MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
+                            }else{
+                                MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

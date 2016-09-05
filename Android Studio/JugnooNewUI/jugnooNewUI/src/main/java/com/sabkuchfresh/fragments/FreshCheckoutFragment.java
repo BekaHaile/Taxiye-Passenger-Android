@@ -39,6 +39,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
@@ -49,6 +50,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -210,6 +212,12 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                 } else {
                     activity.getTransactionUtils().openPaymentFragment(activity, activity.getRelativeLayoutContainer());
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PROCEED_TO_PAYMENT_CLICKED, null);
+                    int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                    if(appType == AppConstant.ApplicationType.MEALS){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
+                    }else{
+                        MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
+                    }
                 }
             }
         });

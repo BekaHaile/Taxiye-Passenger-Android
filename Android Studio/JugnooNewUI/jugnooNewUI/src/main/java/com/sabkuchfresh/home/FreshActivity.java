@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
@@ -84,6 +85,7 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -206,20 +208,34 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     Utils.hideSoftKeyboard(FreshActivity.this, textViewCartItemsCount);
                     FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.CHECKOUT_SCREEN);
                     FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.REVIEW_CART, getProduct());
+
+                    int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                     if (updateCartValuesGetTotalPrice().second > 0) {
                         if (getTransactionUtils().checkIfFragmentAdded(FreshActivity.this, FreshCartItemsFragment.class.getName())) {
-                            int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                            //int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                             if(appType == AppConstant.ApplicationType.MEALS) {
                                 if(isAvailable()) {
                                     Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_has_available), Toast.LENGTH_SHORT).show();
                                 } else {
                                     getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.CHECKOUT, null);
                                 }
                             } else {
                                 getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
+                                MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.CHECKOUT, null);
                             }
                         } else {
                             getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+
+                            if(appType == AppConstant.ApplicationType.MEALS){
+                                MyApplication.getInstance().logEvent(FirebaseEvents.M_CART, null);
+                            }else{
+                                if((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_GO, null);
+                                } else{
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_CART, null);
+                                }
+                            }
                         }
                     } else {
                         Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
@@ -235,15 +251,23 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Utils.hideSoftKeyboard(FreshActivity.this, textViewCartItemsCount);
-                    FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CART, FlurryEventNames.BOTTOM_ICON);
-                    if(!canOrder && Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType) == AppConstant.ApplicationType.MEALS)
-                        return;
+                    try {
+                        Utils.hideSoftKeyboard(FreshActivity.this, textViewCartItemsCount);
+                        FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CART, FlurryEventNames.BOTTOM_ICON);
+                        if(!canOrder && Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType) == AppConstant.ApplicationType.MEALS)
+                            return;
 
-                    if(updateCartValuesGetTotalPrice().second > 0) {
-                        getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
-                    } else {
-                        Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
+                        if(updateCartValuesGetTotalPrice().second > 0) {
+                            getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+                        } else {
+                            Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
+                        }
+
+                        if((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_CART, null);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             });
@@ -470,11 +494,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return (HomeFragment) getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getName());
     }
 
-    private FreshFragment getFreshFragment() {
+    public FreshFragment getFreshFragment() {
         return (FreshFragment) getSupportFragmentManager().findFragmentByTag(FreshFragment.class.getName());
     }
 
-    private MealFragment getMealFragment() {
+    public MealFragment getMealFragment() {
         return (MealFragment) getSupportFragmentManager().findFragmentByTag(MealFragment.class.getName());
     }
 
@@ -499,6 +523,19 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
         else
             relativeLayoutCheckoutBar.setVisibility(View.GONE);
+    }
+
+    public String getCurrentFragment(){
+        String fragmentName = "";
+        FreshFragment fragment = getFreshFragment();
+        MealFragment mealFragment = getMealFragment();
+
+        if (fragment != null && !fragment.isHidden()) {
+            fragmentName = Constants.FRESH_FRAGMENT;
+        } else if(mealFragment != null && !mealFragment.isHidden()) {
+            fragmentName = Constants.MEALS_FRAGMENT;
+        }
+        return fragmentName;
     }
     //	public FreshOrderHistoryFragment getFreshOrderHistoryFragment(){
 //		return (FreshOrderHistoryFragment) getSupportFragmentManager().findFragmentByTag(FreshOrderHistoryFragment.class.getName());
@@ -885,6 +922,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     @Override
                     public void onClick(View v) {
                         FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.DELETE, FlurryEventNames.ALL);
+
                         FreshCartItemsFragment frag = getFreshCartItemsFragment();
                         if (frag != null) {
                             frag.deleteCart();
@@ -895,7 +933,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         } else {
                             clearMealCart();
                         }
-
+                        if(type == AppConstant.ApplicationType.MEALS){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
+                        }else{
+                            MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
+                        }
                     }
                 },
                 new View.OnClickListener() {
@@ -903,6 +945,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     public void onClick(View v) {
                         NudgeClient.trackEventUserId(FreshActivity.this,
                                 FlurryEventNames.NUDGE_FRESH_CART_DELETE_CANCEL_CLICKED, null);
+                        if(type == AppConstant.ApplicationType.MEALS){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
+                        }else{
+                            MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
+                        }
                     }
                 }, true, false);
     }

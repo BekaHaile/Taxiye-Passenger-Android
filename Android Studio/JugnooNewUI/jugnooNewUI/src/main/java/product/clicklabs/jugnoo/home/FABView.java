@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
@@ -229,6 +230,7 @@ public class FABView {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.MEALS, null);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), finalLatLng);
                         }
                     }, 250);
@@ -238,6 +240,7 @@ public class FABView {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.FRESH, null);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), finalLatLng);
                         }
                     }, 250);
@@ -247,6 +250,7 @@ public class FABView {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.AUTO, null);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), finalLatLng);
                         }
                     }, 250);
