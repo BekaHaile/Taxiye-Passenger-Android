@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 
+import com.sabkuchfresh.home.FreshActivity;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.UserData;
@@ -50,7 +53,11 @@ public class UserDebtDialog {
 	public void showUserDebtDialog(double userDebt, String message) {
 		this.userDebt = userDebt;
 		if(message.length() == 0){
-			message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message), userDebt);
+			if(activity instanceof HomeActivity) {
+				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message), userDebt);
+			} else if(activity instanceof FreshActivity){
+				message = String.format(activity.getResources().getString(R.string.user_debt_settle_balance_message_fresh), userDebt);
+			}
 		}
 		DialogPopup.alertPopupWithListener(activity, "", message,
 				activity.getResources().getString(R.string.user_debt_pay_via_wallet),
