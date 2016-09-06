@@ -403,8 +403,8 @@
 
 	<!-- User Debt-->
 	<string name="user_debt_pay_via_wallet">Pay via Wallet</string>
-	<string name="user_debt_settle_balance_message">Please settle outstanding balance of \u20B9%s to do a new transaction with us</string>
-	<string name="user_debt_settle_balance_message_fresh">Please settle outstanding balance of \u20B9%s to do a new transaction with us</string>
+	<string name="user_debt_settle_balance_message">Please settle your outstanding balance of \u20B9%s before a new transaction</string>
+	<string name="user_debt_settle_balance_message_fresh">Please settle your outstanding balance of \u20B9%s before a new transaction</string>
 	<string name="user_debt_recharge_time_error">Recharge amount must be greater than the debt amount</string>
 
 
