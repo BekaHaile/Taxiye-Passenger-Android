@@ -9,6 +9,7 @@
         android:id="@+id/relativeLayoutRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:splitMotionEvents="false"
         >
 
         <!-- top bar layout -->
@@ -28,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:splitMotionEvents="false"
             android:orientation="vertical">
 
 
@@ -46,6 +48,7 @@
                 android:id="@+id/relativeLayoutCheckoutBar"
                 android:layout_width="match_parent"
                 android:layout_height="110px"
+                android:splitMotionEvents="false"
                 android:background="@color/white">
 
                 <RelativeLayout
