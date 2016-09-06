@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -300,8 +301,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		try {
             this.loader = loader;
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
+                ProgressDialog progressDialog = null;
                 if(loader)
-				    DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+                    progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -312,7 +314,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 params.put(Constants.INTERATED, "1");
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 
-				RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
+                final ProgressDialog finalProgressDialog = progressDialog;
+                RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
 					@Override
 					public void success(ProductsResponse productsResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -380,7 +383,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 							exception.printStackTrace();
 							retryDialog(DialogErrorType.SERVER_ERROR);
 						}
-						DialogPopup.dismissLoadingDialog();
+                        try {
+                            if(finalProgressDialog != null)
+                            finalProgressDialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         if(!loader)
                             mBus.post(new SwipeCheckout(1));
 					}
@@ -388,8 +396,13 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 					@Override
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
-						DialogPopup.dismissLoadingDialog();
-						retryDialog(DialogErrorType.CONNECTION_LOST);
+                        try {
+                            if(finalProgressDialog != null)
+                            finalProgressDialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        retryDialog(DialogErrorType.CONNECTION_LOST);
                         if(!loader)
                             mBus.post(new SwipeCheckout(1));
 					}

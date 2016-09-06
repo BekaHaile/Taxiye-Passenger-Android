@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -226,8 +227,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     public void getAllProducts(final boolean loader) {
         try {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
+                ProgressDialog progressDialog = null;
                 if (loader)
-                    DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+                    progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -238,6 +240,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 params.put(Constants.INTERATED, "1");
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
+                final ProgressDialog finalProgressDialog = progressDialog;
                 RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
                     @Override
                     public void success(ProductsResponse productsResponse, Response response) {
@@ -297,7 +300,12 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             exception.printStackTrace();
                             retryDialog(DialogErrorType.SERVER_ERROR);
                         }
-                        DialogPopup.dismissLoadingDialog();
+                        try {
+                            if(finalProgressDialog != null)
+                            finalProgressDialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
 
@@ -305,7 +313,12 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                     public void failure(RetrofitError error) {
                         noFreshsView.setVisibility(View.GONE);
                         Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
-                        DialogPopup.dismissLoadingDialog();
+                        try {
+                            if(finalProgressDialog != null)
+                            finalProgressDialog.dismiss();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                         mSwipeRefreshLayout.setRefreshing(false);
                         retryDialog(DialogErrorType.CONNECTION_LOST);
 
