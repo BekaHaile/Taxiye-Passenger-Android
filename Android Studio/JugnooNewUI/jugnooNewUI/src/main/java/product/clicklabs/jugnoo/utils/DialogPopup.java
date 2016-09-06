@@ -123,7 +123,7 @@ public class DialogPopup {
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 				dialog.setContentView(R.layout.dialog_custom_one_button);
 
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, false);
 
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -173,7 +173,7 @@ public class DialogPopup {
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 				dialog.setContentView(R.layout.dialog_custom_one_button);
 
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, false);
 
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -414,7 +414,7 @@ public class DialogPopup {
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 				dialog.setContentView(R.layout.dialog_custom_one_button);
 
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, false);
 
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -1015,7 +1015,7 @@ public class DialogPopup {
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
 				dialog.setContentView(R.layout.dialog_custom_one_button);
 
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, false);
 
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
