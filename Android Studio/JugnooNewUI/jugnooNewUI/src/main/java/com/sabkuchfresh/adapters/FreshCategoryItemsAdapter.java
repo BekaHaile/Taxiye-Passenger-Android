@@ -37,6 +37,7 @@ import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -131,14 +132,14 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.textViewItemName.setText(subItem.getSubItemName());
             mHolder.textViewItemUnit.setText(subItem.getBaseUnit());
             mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
-                    subItem.getPrice()));
+                    Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
 
             if(TextUtils.isEmpty(subItem.getOldPrice())) {
                 mHolder.textViewItemCost.setVisibility(View.GONE);
             } else {
                 mHolder.textViewItemCost.setVisibility(View.VISIBLE);
                 mHolder.textViewItemCost.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
-                        subItem.getOldPrice()));//subItem.getOldPrice());
+                        Utils.getMoneyDecimalFormat().format(subItem.getOldPrice())));
             }
 
             mHolder.textViewItemOff.setText(subItem.getSubItemName());
