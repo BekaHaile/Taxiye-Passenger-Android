@@ -3927,6 +3927,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
 //                                    showPoolIntroDialog();
+                                    showPromoFailedAtSignupDialog();
                                 }
                             });
                 } else{
