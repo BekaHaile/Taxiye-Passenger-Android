@@ -86,7 +86,12 @@ public class CleverTapUtils {
                     }
                 }
             }
+            Log.d("TAG", "Coupon counts = "+coupons.size());
 
+            for(int i=0;i<coupons.size();i++) {
+                Log.d("Coupon", ""+coupons.get(i));
+//                coupons.add("Test Coupon dskjfh fksdfh kshdf qwe qwe"+i);
+            }
             MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
 
 

@@ -285,6 +285,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
             recyclerViewOffers.setVisibility(View.VISIBLE);
             linearLayoutNoOffers.setVisibility(View.GONE);
             promotionsAdapter.notifyDataSetChanged();
+            updateUserCoupons();
         }
     }
 
@@ -347,26 +348,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                             promoCoupons.addAll(promCouponResponse.getDeliveryCoupons());
 
                                         updateListData();
-                                        try{
-                                            ArrayList<String> coupons = new ArrayList<>();
-                                            if(promoCoupons != null) {
-                                                for(int i=0;i<promoCoupons.size();i++) {
-                                                    coupons.add(promoCoupons.get(i).getTitle());
-                                                    String[] promo = promoCoupons.get(i).getTitle().split(" ");
-                                                    for (int j = 0; j < promo.length; j++) {
-                                                        String s = promo[i];
-                                                        s = s.replaceAll("\\D+", "");
-                                                        if (s.length() > 0) {
-                                                            coupons.add(s);
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
-                                        } catch(Exception e) {
-                                            e.printStackTrace();
-                                        }
 
                                     } else {
                                         updateListData();
@@ -400,6 +381,26 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
             e.printStackTrace();
         }
     }
+
+    private void updateUserCoupons() {
+        try{
+            ArrayList<String> coupons = new ArrayList<>();
+            if(promoCoupons != null) {
+                for(int i=0;i<promoCoupons.size();i++) {
+                    coupons.add(promoCoupons.get(i).getTitle());
+                    String value = MyApplication.getInstance().getCleverTapUtils().getCouponValue(promoCoupons.get(i).getTitle());
+                    if(value.length()>0) {
+                        coupons.add(value);
+                    }
+                }
+            }
+            MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     private void retryDialog(DialogErrorType dialogErrorType, String message){
         if(dialogErrorType == DialogErrorType.OTHER){

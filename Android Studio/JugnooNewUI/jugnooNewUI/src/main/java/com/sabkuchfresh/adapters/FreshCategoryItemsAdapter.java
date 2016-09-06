@@ -134,7 +134,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
                     Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
 
-            if(TextUtils.isEmpty(subItem.getOldPrice())) {
+            if(subItem.getOldPrice() == null) {
                 mHolder.textViewItemCost.setVisibility(View.GONE);
             } else {
                 mHolder.textViewItemCost.setVisibility(View.VISIBLE);
