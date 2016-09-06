@@ -296,9 +296,6 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 										if(promCouponResponse.getDeliveryCoupons() != null)
 											promoCoupons.addAll(promCouponResponse.getDeliveryCoupons());
 										updateListData();
-										if (Data.userData != null) {
-											Data.userData.numCouponsAvaliable = promoCoupons.size();
-										}
 									} else {
 										updateListData();
 										retryDialog(DialogErrorType.OTHER, message);

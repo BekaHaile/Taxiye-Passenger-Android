@@ -21,7 +21,6 @@ public class UserData {
 	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, jugnooFbBanner;
 	public int emailVerificationStatus;
 	private double jugnooBalance;
-	public int numCouponsAvaliable;
 	public int showJugnooJeanie;
 	private int promoSuccess;
 	private String promoMessage;
@@ -68,7 +67,7 @@ public class UserData {
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
-					String jugnooFbBanner, int numCouponsAvaliable,
+					String jugnooFbBanner,
 					int promoSuccess, String promoMessage,
 					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
@@ -95,7 +94,6 @@ public class UserData {
 		this.jugnooBalance = jugnooBalance;
 
 		this.jugnooFbBanner = jugnooFbBanner;
-		this.numCouponsAvaliable = numCouponsAvaliable;
 
 		this.promoSuccess = promoSuccess;
 		this.promoMessage = promoMessage;
@@ -609,7 +607,7 @@ public class UserData {
 		this.integratedJugnooEnabled = integratedJugnooEnabled;
 	}
 
-	public String getTotalCouponCount() {
+	public int getTotalCouponCount() {
 		int count = 0;
 		try {
 			if(promoCoupons != null) {
@@ -630,7 +628,7 @@ public class UserData {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return String.valueOf(count);
+		return count;
 	}
 
 	public ArrayList<PromoCoupon> getCoupons(int appType) {

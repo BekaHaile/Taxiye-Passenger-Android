@@ -346,9 +346,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                             promoCoupons.addAll(promCouponResponse.getDeliveryCoupons());
 
                                         updateListData();
-                                        if (Data.userData != null) {
-                                            Data.userData.numCouponsAvaliable = promoCoupons.size();
-                                        }
                                     } else {
                                         updateListData();
                                         retryDialog(DialogErrorType.OTHER, message);

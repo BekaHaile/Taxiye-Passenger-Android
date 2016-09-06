@@ -194,9 +194,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_promotion_selector);
                     try {
-                        if(Data.userData.numCouponsAvaliable > 0) {
+                        int couponsCount = Data.userData.getTotalCouponCount();
+                        if(couponsCount > 0) {
                             holder.textViewValue.setVisibility(View.VISIBLE);
-                            holder.textViewValue.setText(String.valueOf(Data.userData.getTotalCouponCount()));
+                            holder.textViewValue.setText(String.valueOf(couponsCount));
                             holder.textViewValue.setBackgroundResource(R.drawable.circle_theme);
                             setLayoutParamsForValue(holder.textViewValue);
 						}

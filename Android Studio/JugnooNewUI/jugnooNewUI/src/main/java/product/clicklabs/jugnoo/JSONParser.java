@@ -110,7 +110,6 @@ public class JSONParser implements Constants {
         String userEmail = userData.optString("user_email", "");
         int emailVerificationStatus = userData.optInt("email_verification_status", 1);
         String jugnooFbBanner = userData.optString("jugnoo_fb_banner", "");
-        int numCouponsAvailable = userData.optInt("num_coupons_available", 0);
         String authKey = userData.optString("auth_key", "");
         AccessTokenGenerator.saveAuthKey(context, authKey);
         String authSecret = authKey + Config.getClientSharedSecret();
@@ -245,7 +244,7 @@ public class JSONParser implements Constants {
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance,
-                jugnooFbBanner, numCouponsAvailable,
+                jugnooFbBanner,
                 promoSuccess, promoMessage, showJugnooJeanie,
                 branchDesktopUrl, branchAndroidUrl, branchIosUrl, branchFallbackUrl,
                 jugnooCashTNC, inAppSupportPanelVersion, getGogu, userId, inviteEarnScreenImage,

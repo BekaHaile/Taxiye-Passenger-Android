@@ -66,10 +66,10 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
                 int pos = (int) v.getTag();
                 PromoCoupon promoCoupon = promoCoupons.get(pos);
                 if(promoCoupon instanceof CouponInfo){
-                    DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo)promoCoupon).description);
+                    DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo)promoCoupon).description, true, true, false);
                     FlurryEventLogger.event(activity, FlurryEventNames.TNC_VIEWS);
                 } else if(promoCoupon instanceof PromotionInfo){
-                    DialogPopup.alertPopupHtml(activity, "", ((PromotionInfo)promoCoupon).terms);
+                    DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo)promoCoupon).terms, false, true, true);
                     FlurryEventLogger.event(activity, FlurryEventNames.TNC_VIEWS_PROMO);
                 }
             }

@@ -78,9 +78,9 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 					int position = (int) v.getTag();
 					PromoCoupon promoCoupon = offerList.get(position);
 					if (promoCoupon instanceof CouponInfo) {
-						DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description);
+						DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description, true, true, false);
 					} else if (promoCoupon instanceof PromotionInfo) {
-						DialogPopup.alertPopupHtml(activity, "", ((PromotionInfo) promoCoupon).terms);
+						DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, false, true, true);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
