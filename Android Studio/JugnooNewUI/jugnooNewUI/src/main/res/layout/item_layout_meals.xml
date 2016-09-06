@@ -106,19 +106,7 @@
                 android:layout_marginTop="15px"
                 android:background="@drawable/bg_white_divider_color_gradient" />
 
-            <TextView
-                android:id="@+id/textViewdetails"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/text_price"
-                android:layout_marginTop="20px"
-                android:paddingLeft="27px"
-                android:paddingRight="27px"
-                android:text="Description"
-                android:textColor="@color/text_color_light"
-                android:textSize="@dimen/text_size_24"
-                android:visibility="visible" />
+
 
 
 
@@ -127,30 +115,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="100px">
 
+
+
                 <TextView
-                    android:id="@+id/delivery_time"
+                    android:id="@+id/textViewdetails"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="10px"
                     android:layout_toLeftOf="@+id/cart_layout"
+                    android:layout_marginTop="20px"
                     android:paddingLeft="27px"
-                    android:text="Time"
-                    android:lineSpacingExtra="5px"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_24" />
-
+                    android:paddingRight="20px"
+                    android:text="Description"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_24"
+                    android:visibility="visible" />
 
                 <LinearLayout
                     android:id="@+id/cart_layout"
-                    android:layout_width="218px"
+                    android:layout_width="208px"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20px"
                     android:animateLayoutChanges="true"
                     android:gravity="center_vertical"
+                    android:visibility="visible"
                     android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/delivery_time"
+                        android:layout_width="208px"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:paddingLeft="27px"
+                        android:text="Timeksdjfsjdf ksdjfkdsj"
+                        android:gravity="right"
+                        android:visibility="gone"
+                        android:lineSpacingExtra="5px"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24" />
 
                     <Button
                         android:id="@+id/add_button"
@@ -159,6 +164,7 @@
                         android:layout_gravity="right"
                         android:background="@drawable/button_theme"
                         android:gravity="center"
+                        android:visibility="visible"
                         android:text="ADD"
                         android:textColor="@color/white"
                         android:textSize="32px" />
@@ -168,6 +174,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
+                        android:layout_gravity="right"
                         android:orientation="horizontal"
                         android:visibility="gone">
 
@@ -181,11 +188,11 @@
 
                         <TextView
                             android:id="@+id/textViewQuantity"
-                            android:layout_width="70px"
+                            android:layout_width="50px"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:singleLine="true"
-                            android:text="998"
+                            android:text="99"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_34" />
 
