@@ -27,7 +27,7 @@ public class SubItem {
     private Double price;
     @SerializedName("old_price")
     @Expose
-    private Double oldPrice;
+    private String oldPrice;
     @SerializedName("stock")
     @Expose
     private Integer stock;
@@ -205,7 +205,7 @@ public class SubItem {
      * @return
      * The oldPrice
      */
-    public Double getOldPrice() {
+    public String getOldPrice() {
         return oldPrice;
     }
 
@@ -214,7 +214,7 @@ public class SubItem {
      * @param oldPrice
      * The old_price
      */
-    public void setOldPrice(Double oldPrice) {
+    public void setOldPrice(String oldPrice) {
         this.oldPrice = oldPrice;
     }
 
