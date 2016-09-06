@@ -1592,6 +1592,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch(Exception e) {
 
         }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    menuBar.setUserData();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
     }
 
     @Override
@@ -3639,7 +3650,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.autoData.getAssignedDriverInfo().image = Data.autoData.getAssignedDriverInfo().image.replace("http://graph.facebook", "https://graph.facebook");
             try {
                 if(!"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().image)) {
-                    Picasso.with(HomeActivity.this).load(Data.autoData.getAssignedDriverInfo().image).transform(new CircleTransform()).into(imageViewInRideDriver);
+                    float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                    Picasso.with(HomeActivity.this).load(Data.autoData.getAssignedDriverInfo().image)
+                            .placeholder(R.drawable.ic_profile_img_placeholder)
+                            .transform(new CircleTransform())
+                            .resize((int)(130f * minRatio), (int)(130f * minRatio))
+                            .into(imageViewInRideDriver);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

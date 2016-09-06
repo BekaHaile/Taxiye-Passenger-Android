@@ -245,15 +245,19 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             try {
                 holder.textViewUserName.setText(Data.userData.userName);
                 holder.textViewViewPhone.setText(Data.userData.phoneNo);
-
+                float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                 if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
                     if(!"".equalsIgnoreCase(Data.userData.userImage)) {
-                        Picasso.with(activity).load(Data.userData.userImage).transform(new CircleTransform()).into(holder.imageViewProfile);
+                        Picasso.with(activity).load(Data.userData.userImage).transform(new CircleTransform())
+                                .resize((int)(160f * minRatio), (int)(160f * minRatio))
+                                .into(holder.imageViewProfile);
                     }
                 }
                 else{
                     if(!"".equalsIgnoreCase(Data.userData.userImage)) {
-                        Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform()).into(holder.imageViewProfile);
+                        Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform())
+                                .resize((int)(160f * minRatio), (int)(160f * minRatio))
+                                .into(holder.imageViewProfile);
                     }
                 }
                 holder.linearLayoutCategories.setVisibility(View.GONE);
