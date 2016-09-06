@@ -104,7 +104,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_marginTop="15px"
-                android:background="@drawable/bg_white_divider_color_gradient" />
+                android:background="@color/stroke_color_light" />
 
 
 
@@ -127,6 +127,7 @@
                     android:paddingLeft="27px"
                     android:paddingRight="20px"
                     android:text="Description"
+                    android:maxLines="2"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/text_size_24"
                     android:visibility="visible" />
@@ -150,7 +151,7 @@
                         android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
                         android:paddingLeft="27px"
-                        android:text="Timeksdjfsjdf ksdjfkdsj"
+                        android:text="Order at\n12:00pm"
                         android:gravity="right"
                         android:visibility="gone"
                         android:lineSpacingExtra="5px"
