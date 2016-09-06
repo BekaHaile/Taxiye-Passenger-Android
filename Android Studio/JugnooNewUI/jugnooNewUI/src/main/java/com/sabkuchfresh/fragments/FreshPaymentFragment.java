@@ -637,7 +637,9 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                     applyButton.setEnabled(false);
                                     applyButton.setBackgroundColor(activity.getResources().getColor(R.color.theme_color_pressed));
                                     updateUI();
-
+                                    HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+                                    profileUpdate.put(Events.COUPONS_USED, promoCode);
+                                    MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                     promoCode = "";

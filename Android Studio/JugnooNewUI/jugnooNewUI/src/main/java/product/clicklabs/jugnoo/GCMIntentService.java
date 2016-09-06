@@ -328,7 +328,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
-
 		try {
 			String from = remoteMessage.getFrom();
 			Map data = remoteMessage.getData();

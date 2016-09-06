@@ -452,7 +452,7 @@
 
         <meta-data
             android:name="CLEVERTAP_NOTIFICATION_ICON"
-            android:value="@drawable/notification_icon"/>
+            android:value="notification_icon"/>
 
         <activity
             android:name="com.clevertap.android.sdk.InAppNotificationActivity"

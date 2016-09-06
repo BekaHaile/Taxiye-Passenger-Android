@@ -115,6 +115,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database;
 import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
 import product.clicklabs.jugnoo.JSONParser;
@@ -6650,6 +6651,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                                     slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType(),
                                                                     slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor(),
                                                                     offerCode, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta());
+
+                                                    if(!offerCode.equalsIgnoreCase("NA")) {
+                                                        HashMap<String, Object> profileUpdate = new HashMap<>();
+                                                        profileUpdate.put(Events.COUPONS_USED, offerCode);
+                                                        MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+                                                    }
 
                                                     if(Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
                                                         Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.autoData.getPickupPaymentOption());
