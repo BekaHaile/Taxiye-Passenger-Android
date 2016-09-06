@@ -642,7 +642,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
 			try{
 				if(!"".equalsIgnoreCase(Data.userData.userImage)){
-					Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform()).into(imageViewProfileImage);
+                    float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+					Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform())
+                            .resize((int)(160f * minRatio), (int)(160f * minRatio)).into(imageViewProfileImage);
 				}
 			} catch(Exception e){
 				e.printStackTrace();
