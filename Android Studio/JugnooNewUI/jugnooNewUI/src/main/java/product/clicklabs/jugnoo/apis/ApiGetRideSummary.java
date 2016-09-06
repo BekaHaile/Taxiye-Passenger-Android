@@ -113,7 +113,7 @@ public class ApiGetRideSummary {
 								int supportCategory = finalSupportCategory;
 								if(productType == ProductType.NOT_SURE) {
 									if (endRideData != null) {
-										supportCategory = getSupportCategoryForEngagementStatus(supportCategory);
+										supportCategory = getSupportCategoryForEngagementStatus(endRideData.getStatus());
 									} else if (showPanelResponse.getDatum() != null) {
 										supportCategory = showPanelResponse.getDatum().getSupportCategory();
 									}

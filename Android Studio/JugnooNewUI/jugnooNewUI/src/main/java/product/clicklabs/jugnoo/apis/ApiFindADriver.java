@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.apis;
 
+import android.text.TextUtils;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -326,7 +328,7 @@ public class ApiFindADriver {
 			if(findADriverResponse.getDeliveryEnabled() != null) {
 				Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
 			}
-			if(findADriverResponse.getGamePredictUrl() != null) {
+			if(!TextUtils.isEmpty(findADriverResponse.getGamePredictUrl())) {
 				Data.userData.setGamePredictUrl(findADriverResponse.getGamePredictUrl());
 			}
 
