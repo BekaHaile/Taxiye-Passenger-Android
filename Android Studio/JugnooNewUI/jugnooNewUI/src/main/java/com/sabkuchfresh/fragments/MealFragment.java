@@ -11,7 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -46,6 +48,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -68,6 +71,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     private View rootView;
     private FreshActivity activity;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private LinearLayout noFreshsView;
+    private TextView swipe_text;
 
     private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
     private ArrayList<SubItem> mealsData = new ArrayList<>();
@@ -107,6 +113,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         noMealsView = (ImageView) rootView.findViewById(R.id.noMealsView);
         noMealsView.setVisibility(View.GONE);
+
+        noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView); noFreshsView.setVisibility(View.GONE);
+        swipe_text = (TextView) rootView.findViewById(R.id.swipe_text);
+        swipe_text.setTypeface(Fonts.mavenRegular(activity));
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -215,7 +225,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
     public void getAllProducts(final boolean loader) {
         try {
-
             if (AppStatus.getInstance(activity).isOnline(activity)) {
                 if (loader)
                     DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
@@ -232,9 +241,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
                     @Override
                     public void success(ProductsResponse productsResponse, Response response) {
+                        noFreshsView.setVisibility(View.GONE);
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
-                        DialogPopup.dismissLoadingDialog();
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = JSONParser.getServerMessage(jObj);
@@ -294,6 +303,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
                     @Override
                     public void failure(RetrofitError error) {
+                        noFreshsView.setVisibility(View.GONE);
                         Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
                         DialogPopup.dismissLoadingDialog();
                         mSwipeRefreshLayout.setRefreshing(false);
@@ -302,7 +312,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                     }
                 });
             } else {
-
                 retryDialog(DialogErrorType.NO_NET);
             }
         } catch (Exception e) {
@@ -312,6 +321,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {
+        noFreshsView.setVisibility(View.VISIBLE);
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
