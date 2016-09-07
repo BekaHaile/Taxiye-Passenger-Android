@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.AppSwitcher;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
 import product.clicklabs.jugnoo.utils.CleverTapUtils;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 
@@ -387,8 +388,6 @@ public class MyApplication extends Application{
 		if(cleverTap == null) {
 			try {
 				cleverTap = CleverTapAPI.getInstance(getApplicationContext());
-				if(!getDeviceToken().equalsIgnoreCase("not_found"))
-					cleverTap.data.pushFcmRegistrationId(getDeviceToken(), true);
 			} catch (CleverTapMetaDataNotFoundException e) {
 				// thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
 			} catch (CleverTapPermissionsNotSatisfied e) {
