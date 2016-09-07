@@ -294,9 +294,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutSubAutos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    onClickAction(MenuInfoTags.GET_A_RIDE.getTag());
                     holder.imageViewArrow.setRotation(270);
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), getLatLng());
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
@@ -304,8 +303,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutSubFresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    holder.imageViewArrow.setRotation(270);
                     onClickAction(MenuInfoTags.FRESH.getTag());
+                    holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 }
             });
@@ -403,7 +402,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             } else if((MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(tag))) {
                 drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), getLatLng());
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), getLatLng(), false);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.GET_A_RIDE, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Get a Ride");
@@ -542,12 +541,14 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.ABOUT, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "About");
-            } else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
+            }
+            else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), getLatLng());
-            } else if(MenuInfoTags.MEALS.getTag().equalsIgnoreCase(tag)){
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), getLatLng(), false);
+            }
+            else if(MenuInfoTags.MEALS.getTag().equalsIgnoreCase(tag)){
                 drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), getLatLng());
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), getLatLng(), false);
             }
         } catch (Exception e) {
             e.printStackTrace();
