@@ -339,6 +339,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     new IntentFilter(Data.LOCAL_BROADCAST));
 
             openPushDialog();
+            deepLinkAction.openDeepLink(menuBar);
         } catch (Exception e) {
             e.printStackTrace();
         }

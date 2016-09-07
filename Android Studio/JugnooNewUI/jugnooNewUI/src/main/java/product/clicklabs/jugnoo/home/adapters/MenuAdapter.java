@@ -403,6 +403,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             } else if((MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(tag))) {
                 drawerLayout.closeDrawer(GravityCompat.START);
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), getLatLng());
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.GET_A_RIDE, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Get a Ride");
