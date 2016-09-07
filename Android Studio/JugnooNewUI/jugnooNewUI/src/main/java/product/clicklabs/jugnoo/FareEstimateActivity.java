@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -73,6 +74,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     private int isPooled = 0, rideType = RideTypeValue.NORMAL.getOrdinal();
     private LatLng pickupLatLng;
     private SearchResult searchResultGlobal;
+    private Region region;
 
     @Override
     protected void onResume() {
@@ -86,6 +88,8 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         setContentView(R.layout.activity_fare_estimate);
 
         try {
+            Gson gson = new Gson();
+            region = gson.fromJson(getIntent().getStringExtra(Constants.KEY_REGION), Region.class);
             rideType = getIntent().getIntExtra(Constants.KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
             if (rideType == RideTypeValue.POOL.getOrdinal()) {
                 isPooled = 1;
@@ -95,12 +99,16 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
         }
 
         try {
-            double latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.pickupLatLng.latitude);
-            double longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.pickupLatLng.longitude);
+            double latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.autoData.getPickupLatLng().latitude);
+            double longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.autoData.getPickupLatLng().longitude);
             pickupLatLng = new LatLng(latitude, longitude);
         } catch (Exception e) {
             e.printStackTrace();
-            pickupLatLng = Data.pickupLatLng;
+            try {
+                pickupLatLng = Data.autoData.getPickupLatLng();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
 
         mGoogleApiClient = new GoogleApiClient
@@ -207,20 +215,24 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
             }
         });
 
-        if (rideType != RideTypeValue.POOL.getOrdinal() && Data.dropLatLng != null) {
-            getDirectionsAndComputeFare(Data.pickupLatLng, Data.dropLatLng);
-        } else {
+        try {
+            if (rideType != RideTypeValue.POOL.getOrdinal() && Data.autoData.getDropLatLng() != null) {
+				getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng());
+			} else {
 
-            PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
-            Bundle bundle = new Bundle();
-            bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
-            bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
-            bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
-            placeSearchListFragment.setArguments(bundle);
+				PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
+				Bundle bundle = new Bundle();
+				bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
+				bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
+				bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
+				placeSearchListFragment.setArguments(bundle);
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.linearLayoutContainer, placeSearchListFragment, PlaceSearchListFragment.class.getSimpleName())
-                    .commitAllowingStateLoss();
+				getSupportFragmentManager().beginTransaction()
+						.add(R.id.linearLayoutContainer, placeSearchListFragment, PlaceSearchListFragment.class.getSimpleName())
+						.commitAllowingStateLoss();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -356,7 +368,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 @Override
                 public void onRetry() {
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true);
+            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -444,10 +456,14 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
     @Override
     public void onPlaceSearchPost(SearchResult searchResult) {
-        Data.dropLatLng = searchResult.getLatLng();
-        getDirectionsAndComputeFare(Data.pickupLatLng, searchResult.getLatLng());
-        FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
-        searchResultGlobal = searchResult;
+        try {
+            Data.autoData.setDropLatLng(searchResult.getLatLng());
+            getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), searchResult.getLatLng());
+            FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
+            searchResultGlobal = searchResult;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -1,10 +1,15 @@
 package product.clicklabs.jugnoo.retrofit;
 
+import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
+
+import java.util.Map;
+
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.GET;
 import retrofit.http.Query;
+import retrofit.http.QueryMap;
 
 /**
  * Created by aneeshbansal on 08/09/15.
@@ -39,5 +44,8 @@ public interface GoogleAPIServices {
 	void geocode(@Query("latlng") String latLng,
 					 @Query("language") String language,
 					 @Query("sensor") Boolean sensor, Callback<SettleUserDebt> callback);
+
+	@GET("/geocode/json")
+	void getMyAddress(@QueryMap Map<String, String> params, Callback<GoogleGeocodeResponse> cb);
 
 }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/linearLayoutRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <RelativeLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="68px"
+            android:background="@color/white"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:background="@drawable/background_search_shap"
+                android:gravity="center_vertical"
+                android:paddingLeft="16px"
+                android:text="@string/search_items"
+                android:textColor="@color/text_color_light"
+                android:textSize="30px"
+                />
+
+            <ImageView
+                android:layout_width="36px"
+                android:layout_height="36px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="46px"
+                android:src="@drawable/search_icon"/>
+
+        </RelativeLayout>
+
+        <com.sabkuchfresh.widgets.PagerSlidingTabStrip
+            android:id="@+id/tabs"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="84px"
+            android:background="@color/white"
+            android:visibility="visible"
+            app:pstsIndicatorColor="@color/theme_color"
+            app:pstsIndicatorHeight="5px"
+            app:pstsShouldExpand="true"
+            app:pstsUnderlineColor="@color/grey_light"
+            app:pstsUnderlineHeight="1px"
+            />
+
+        <ImageView
+            android:id="@+id/below_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:layout_below="@+id/topRl"
+            android:background="@drawable/shadow_down"
+            />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </LinearLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewCategoryItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false">
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/noFreshsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="376px"
+            android:layout_height="270px"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/img_no_items_fresh"
+            android:tag="mwar"
+            />
+
+        <TextView
+            android:id="@+id/swipe_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38px"
+            android:text="@string/please_swipe_down_to_reload"
+            android:textColor="@color/text_color"
+            android:textSize="36px"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

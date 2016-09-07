@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/linear"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_white"
+    android:orientation="vertical"
+    >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_up"
+        android:layout_marginTop="20px"
+        />
+
+    <TextView
+        android:id="@+id/textViewDeliveryAddress"
+        android:layout_width="match_parent"
+        android:layout_height="80px"
+        android:singleLine="true"
+        android:text="@string/delivery_date_time"
+        android:textColor="@color/theme_color"
+        android:textSize="@dimen/text_size_28"
+        android:visibility="visible"
+        android:drawablePadding="30px"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/checkout_margin"
+        android:drawableLeft="@drawable/ic_checkout_time_slot"
+        android:layout_centerInParent="true"
+
+        />
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="2px"-->
+        <!--android:layout_marginLeft="60px"-->
+        <!--android:layout_marginRight="60px"-->
+        <!--android:background="@color/text_color_hint"-->
+        <!--/>-->
+
+
+</LinearLayout>

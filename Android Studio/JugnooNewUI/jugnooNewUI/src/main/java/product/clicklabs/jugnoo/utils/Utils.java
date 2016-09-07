@@ -20,6 +20,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
@@ -34,6 +35,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.tagmanager.DataLayer;
+import com.google.android.gms.tagmanager.TagManager;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -60,9 +63,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
-
-import com.google.android.gms.tagmanager.DataLayer;
-import com.google.android.gms.tagmanager.TagManager;
 
 
 public class Utils {
@@ -740,6 +740,20 @@ public class Utils {
         DataLayer dataLayer = TagManager.getInstance(context).getDataLayer();
         dataLayer.pushEvent("closeScreen", DataLayer.mapOf("screenName", screenName));
     }
+
+	public static int dpToPx(Context context, float dp) {
+		int temp = (int)dp;
+		final float scale = context.getResources().getDisplayMetrics().density;
+		return Math.round(dp * scale);
+	}
+
+	public static boolean hasJellyBean() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
+	}
+
+	public static boolean hasLollipop() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+	}
 
 }
 

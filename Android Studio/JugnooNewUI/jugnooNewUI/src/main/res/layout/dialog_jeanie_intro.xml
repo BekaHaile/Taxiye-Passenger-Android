@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:soundEffectsEnabled="false">
+
+
+        <LinearLayout
+            android:id="@+id/linearLayoutInner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="36px"
+            android:background="@drawable/background_white_rounded"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:splitMotionEvents="false"
+            android:soundEffectsEnabled="false">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="236px"
+                android:background="@drawable/bg_menu_item_selector_tlrr"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewJugnooJeanie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="100px"
+                    android:textAllCaps="true"
+                    android:text="@string/jugnoo_jeanie"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_44" />
+
+                <TextView
+                    android:id="@+id/textViewSwitchTo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10px"
+                    android:text="@string/switch_to_our_other_services"
+                    android:textColor="@color/stroke_color_dark"
+                    android:textSize="@dimen/text_size_26" />
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginLeft="4px"
+                android:layout_marginRight="4px"
+                android:tag="mwar"
+                android:src="@color/stroke_color_light"/>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="38px"
+                android:layout_marginBottom="30px"
+                >
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutAutos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="30px"
+                    >
+                    <TextView
+                        android:id="@+id/textViewAutos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/autos"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34" />
+                    <TextView
+                        android:id="@+id/textViewAutosDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5px"
+                        android:text="@string/easy_and_affordable_commute"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutMeals"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="30px"
+                    >
+                    <TextView
+                        android:id="@+id/textViewMeals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/meals"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34" />
+                    <TextView
+                        android:id="@+id/textViewMealsDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5px"
+                        android:text="@string/variety_of_quality_readymade_meals"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutFresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="30px"
+                    >
+                    <TextView
+                        android:id="@+id/textViewFresh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/fresh"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34" />
+                    <TextView
+                        android:id="@+id/textViewFreshDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5px"
+                        android:text="@string/affordable_high_quality_fruits_veggies"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutDelivery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="30px"
+                    >
+                    <TextView
+                        android:id="@+id/textViewDelivery"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/delivery"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34" />
+                    <TextView
+                        android:id="@+id/textViewDeliveryDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5px"
+                        android:text="@string/affordable_high_quality_fruits_veggies"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+            
+        </LinearLayout>
+    
+    <ImageView
+        android:layout_width="139px"
+        android:layout_height="139px"
+        android:tag="mwar"
+        android:src="@drawable/ic_jeanie_big"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/linearLayoutInner"
+        android:layout_marginTop="-60px"
+        />
+
+
+</RelativeLayout>

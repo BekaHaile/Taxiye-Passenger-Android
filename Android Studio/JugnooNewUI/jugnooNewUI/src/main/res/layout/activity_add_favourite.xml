@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@color/yellow">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="FAVOURITE PLACES"
+            android:textColor="@color/white"
+            android:textSize="@dimen/top_bar_title_text_size"/>
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="60.7px"
+            android:layout_height="76.9px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10px"
+            android:padding="20px"
+            android:src="@drawable/back_white_selector"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutPlaces"
+        android:layout_width="660px"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="30px">
+
+        <TextView
+            android:id="@+id/textViewHome"
+            android:layout_width="match_parent"
+            android:layout_height="90px"
+            android:text="Add Home"
+            android:layout_marginLeft="20px"
+            android:maxLines="2"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:textSize="28px"
+            android:tag="mwar"
+            android:drawableRight="@drawable/edit_icon_selector"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:layout_width="660px"
+            android:layout_height="2px"
+            android:src="@color/yellow_alpha"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/textViewWork"
+            android:layout_width="match_parent"
+            android:layout_height="90px"
+            android:text="Add Work"
+            android:layout_marginLeft="20px"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20px"
+            android:maxLines="2"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:textSize="28px"
+            android:tag="mwar"
+            android:drawableRight="@drawable/edit_icon_selector"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:layout_width="660px"
+            android:layout_height="2px"
+            android:src="@color/yellow_alpha"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/textViewGym"
+            android:layout_width="match_parent"
+            android:layout_height="90px"
+            android:text="Add Gym"
+            android:layout_marginLeft="20px"
+            android:layout_marginTop="20px"
+            android:maxLines="2"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:textSize="28px"
+            android:tag="mwar"
+            android:drawableRight="@drawable/edit_icon_selector"
+            android:layout_centerVertical="true"/>
+
+        <ImageView
+            android:layout_width="660px"
+            android:layout_height="2px"
+            android:src="@color/yellow_alpha"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/textViewFriend"
+            android:layout_width="match_parent"
+            android:layout_height="90px"
+            android:text="Add Friend"
+            android:layout_marginLeft="20px"
+            android:layout_marginTop="20px"
+            android:maxLines="2"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:onClick="onClick"
+            android:textSize="28px"
+            android:tag="mwar"
+            android:drawableRight="@drawable/edit_icon_selector"
+            android:layout_centerVertical="true"/>
+
+    </LinearLayout>
+
+</LinearLayout>

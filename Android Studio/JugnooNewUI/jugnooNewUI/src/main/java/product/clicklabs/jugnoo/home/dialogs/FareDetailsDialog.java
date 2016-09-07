@@ -99,11 +99,11 @@ public class FareDetailsDialog {
 			});
 
 			textViewMinimumFare.setText(Html.fromHtml(String.format(activity.getResources().getString(R.string.base_fare_format),
-					Data.fareStructure.getDisplayBaseFare(activity))));
+					Data.autoData.getFareStructure().getDisplayBaseFare(activity))));
 			textViewKMValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-					Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerKm)));
+					Utils.getMoneyDecimalFormat().format(Data.autoData.getFareStructure().farePerKm)));
 			textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-					Utils.getMoneyDecimalFormat().format(Data.fareStructure.farePerMin)));
+					Utils.getMoneyDecimalFormat().format(Data.autoData.getFareStructure().farePerMin)));
 
 			Region region = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected();
 			double fareFactor = region.getCustomerFareFactor();
@@ -116,17 +116,17 @@ public class FareDetailsDialog {
 			}
 
 			if(region.getRideType() == RideTypeValue.POOL.getOrdinal()
-					&& !"".equalsIgnoreCase(Data.userData.getBaseFarePoolText())){
+					&& !"".equalsIgnoreCase(Data.autoData.getBaseFarePoolText())){
 				textViewPoolMessage.setVisibility(View.VISIBLE);
-				textViewPoolMessage.setText(Data.userData.getBaseFarePoolText());
+				textViewPoolMessage.setText(Data.autoData.getBaseFarePoolText());
 			} else{
 				textViewPoolMessage.setVisibility(View.GONE);
 			}
 
 			textViewThreshold.setVisibility(View.GONE);
-			if(!"".equalsIgnoreCase(Data.fareStructure.getDisplayFareText(activity))){
+			if(!"".equalsIgnoreCase(Data.autoData.getFareStructure().getDisplayFareText(activity))){
 				textViewThreshold.setVisibility(View.VISIBLE);
-				textViewThreshold.setText(Data.fareStructure.getDisplayFareText(activity));
+				textViewThreshold.setText(Data.autoData.getFareStructure().getDisplayFareText(activity));
 			}
 
 			dialog.show();

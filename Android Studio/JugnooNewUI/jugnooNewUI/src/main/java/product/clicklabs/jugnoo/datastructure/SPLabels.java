@@ -5,6 +5,9 @@ package product.clicklabs.jugnoo.datastructure;
  */
 public class SPLabels {
 
+
+
+
     public static final String SETTINGS_SP = "settingsPref",
         SHOW_ALL_DRIVERS = "showAllDrivers",
         SHOW_DRIVER_INFO = "showDriverInfo",
@@ -19,6 +22,7 @@ public class SPLabels {
         PENDING_CALLS_RETRY_COUNT = "pendingCallsRetryCount",
 
     USER_IDENTIFIER = "userIdentifier",
+            BRANCH_LINK_TITLE = "branch_link_title",
     BRANCH_LINK_DESCRIPTION = "branch_link_description",
             BRANCH_LINK_IMAGE = "branch_link_image",
 
@@ -58,6 +62,7 @@ public class SPLabels {
     public static final String UPLOAD_CONTACTS_ERROR = "upload_contacts_error";
     public static final String JUGNOO_JEANIE_STATE = "jugnoo_jeanie_state";
     public static final String SHOW_JUGNOO_JEANIE = "show_jugnoo_jeanie";
+    public static final String SHOW_FAB_SETTING = "show_fab_setting";
     public static final String APP_MONITORING_TRIGGER_TIME = "app_monitoring_trigger_time";
 
 

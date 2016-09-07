@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="194px"
+    android:orientation="vertical"
+    android:background="@color/sliding_bottom_bg_color"
+    >
+
+</RelativeLayout>

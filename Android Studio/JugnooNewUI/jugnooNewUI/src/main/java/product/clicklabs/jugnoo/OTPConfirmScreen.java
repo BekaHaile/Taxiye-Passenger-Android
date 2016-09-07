@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.flurry.android.FlurryAgent;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -560,7 +560,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		Utils.enableSMSReceiver(this);
 
 		if(Data.locationFetcher == null){
-			Data.locationFetcher = new LocationFetcher(OTPConfirmScreen.this, 1000, 1);
+			Data.locationFetcher = new LocationFetcher(OTPConfirmScreen.this, 1000);
 		}
 		HomeActivity.checkForAccessTokenChange(this);
 
@@ -627,7 +627,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("unique_device_id", Data.uniqueDeviceId);
                 params.put("latitude", "" + Data.loginLatitude);
                 params.put("longitude", "" + Data.loginLongitude);
-                params.put("client_id", Config.getClientId());
+                params.put("client_id", Config.getAutosClientId());
                 params.put("otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
@@ -732,7 +732,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("unique_device_id", Data.uniqueDeviceId);
                 params.put("latitude", "" + Data.loginLatitude);
                 params.put("longitude", "" + Data.loginLongitude);
-                params.put("client_id", Config.getClientId());
+                params.put("client_id", Config.getAutosClientId());
                 params.put("otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
@@ -830,7 +830,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("unique_device_id", Data.uniqueDeviceId);
 				params.put("latitude", "" + Data.loginLatitude);
 				params.put("longitude", "" + Data.loginLongitude);
-				params.put("client_id", Config.getClientId());
+				params.put("client_id", Config.getAutosClientId());
 				params.put("otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
@@ -969,11 +969,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		if(hasFocus && loginDataFetched){
 			loginDataFetched = false;
-			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
-			intent.setData(Data.splashIntentUri);
-			startActivity(intent);
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-			ActivityCompat.finishAffinity(this);
+
+			MyApplication.getInstance().getAppSwitcher().switchApp(OTPConfirmScreen.this,
+					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude));
+//			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
+//			intent.setData(Data.splashIntentUri);
+//			startActivity(intent);
+//			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//			ActivityCompat.finishAffinity(this);
 		}
 	}
 
@@ -1020,7 +1023,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 
 	@Override
-	public void onLocationChanged(Location location, int priority) {
+	public void onLocationChanged(Location location) {
 		Data.loginLatitude = location.getLatitude();
 		Data.loginLongitude = location.getLongitude();
 	}
@@ -1054,7 +1057,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", accessToken);
-				params.put("client_id", Config.getClientId());
+				params.put("client_id", Config.getAutosClientId());
 				params.put("is_access_token_new", "1");
 
 				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {

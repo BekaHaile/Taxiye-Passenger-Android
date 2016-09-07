@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.text.Html;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -17,7 +16,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 5/2/16.
@@ -55,14 +53,14 @@ public class PoolDestinationDialog {
 			TextView textViewNotAble = (TextView) dialog.findViewById(R.id.textViewNotAble);textViewNotAble.setTypeface(Fonts.mavenRegular(activity));
 
 			if(Data.userData != null) {
-				textViewDestination.setText(Data.userData.getPoolDestinationPopupText1());
-				if(!Data.userData.getPoolDestinationPopupText2().equalsIgnoreCase("")){
+				textViewDestination.setText(Data.autoData.getPoolDestinationPopupText1());
+				if(!Data.autoData.getPoolDestinationPopupText2().equalsIgnoreCase("")){
 					textViewLocation.setVisibility(View.VISIBLE);
-					textViewLocation.setText(Data.userData.getPoolDestinationPopupText2());
+					textViewLocation.setText(Data.autoData.getPoolDestinationPopupText2());
 				}else{
 					textViewLocation.setVisibility(View.GONE);
 				}
-				textViewNotAble.setText(Data.userData.getPoolDestinationPopupText3());
+				textViewNotAble.setText(Data.autoData.getPoolDestinationPopupText3());
 			}
 
 			Button buttonEnterDestination = (Button) dialog.findViewById(R.id.buttonEnterDestination);

@@ -204,10 +204,10 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 			
 			@Override
 			public void onClick(View v) {
-                if(Data.cancelOptionsList != null) {
+                if(Data.autoData.getCancelOptionsList() != null) {
                     String cancelReasonsStr = "";
 
-                    if("".equalsIgnoreCase(Data.cancelOptionsList.additionalReason)){
+                    if("".equalsIgnoreCase(Data.autoData.getCancelOptionsList().additionalReason)){
                         otherChecked = false;
                     }
 
@@ -216,12 +216,12 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
                         if ("".equalsIgnoreCase(cancelReasonsStr)) {
 							relativeLayoutOtherError.setVisibility(View.VISIBLE);
                         } else {
-                            cancelRideAPI(RideCancellationActivity.this, Data.cancelOptionsList.additionalReason, cancelReasonsStr);
+                            cancelRideAPI(RideCancellationActivity.this, Data.autoData.getCancelOptionsList().additionalReason, cancelReasonsStr);
                         }
                     } else {
-                        for (int i = 0; i < Data.cancelOptionsList.cancelOptions.size(); i++) {
-                            if (Data.cancelOptionsList.cancelOptions.get(i).checked) {
-                                cancelReasonsStr = Data.cancelOptionsList.cancelOptions.get(i).name;
+                        for (int i = 0; i < Data.autoData.getCancelOptionsList().cancelOptions.size(); i++) {
+                            if (Data.autoData.getCancelOptionsList().cancelOptions.get(i).checked) {
+                                cancelReasonsStr = Data.autoData.getCancelOptionsList().cancelOptions.get(i).name;
                                 break;
                             }
                         }
@@ -240,7 +240,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
         relativeLayoutOtherCancelOptionInner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Data.cancelOptionsList != null && !"".equalsIgnoreCase(Data.cancelOptionsList.additionalReason)) {
+                if(Data.autoData.getCancelOptionsList() != null && !"".equalsIgnoreCase(Data.autoData.getCancelOptionsList().additionalReason)) {
                     otherChecked = true;
                     updateCheckBoxes();
                 }
@@ -262,21 +262,21 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 
     private void setCancellationOptions() {
         try {
-            if(Data.cancelOptionsList != null){
-                for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
-                    Data.cancelOptionsList.cancelOptions.get(i).checked = false;
+            if(Data.autoData.getCancelOptionsList() != null){
+                for(int i=0; i<Data.autoData.getCancelOptionsList().cancelOptions.size(); i++){
+                    Data.autoData.getCancelOptionsList().cancelOptions.get(i).checked = false;
                 }
 
-                textViewCancelInfo.setText(Data.cancelOptionsList.message);
+                textViewCancelInfo.setText(Data.autoData.getCancelOptionsList().message);
 
-                if("".equalsIgnoreCase(Data.cancelOptionsList.additionalReason)){
+                if("".equalsIgnoreCase(Data.autoData.getCancelOptionsList().additionalReason)){
                     relativeLayoutOtherCancelOptionInner.setVisibility(View.GONE);
                     editTextOtherCancelOption.setVisibility(View.GONE);
                 }
                 else{
                     relativeLayoutOtherCancelOptionInner.setVisibility(View.VISIBLE);
                     editTextOtherCancelOption.setVisibility(View.VISIBLE);
-                    textViewOtherCancelOption.setText(Data.cancelOptionsList.additionalReason);
+                    textViewOtherCancelOption.setText(Data.autoData.getCancelOptionsList().additionalReason);
                 }
 
                 otherChecked = false;
@@ -336,7 +336,12 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 
 		@Override
 		public int getCount() {
-			return Data.cancelOptionsList.cancelOptions.size();
+			try {
+				return Data.autoData.getCancelOptionsList().cancelOptions.size();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
 		}
 
 		@Override
@@ -372,7 +377,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 			
 			holder.id = position;
 			
-			CancelOption cancelOption = Data.cancelOptionsList.cancelOptions.get(position);
+			CancelOption cancelOption = Data.autoData.getCancelOptionsList().cancelOptions.get(position);
 
 			holder.textViewCancelOption.setText(cancelOption.name);
 			
@@ -390,12 +395,12 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 				@Override
 				public void onClick(View v) {
 					holder = (ViewHolderCancelOption) v.getTag();
-					for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
+					for(int i=0; i<Data.autoData.getCancelOptionsList().cancelOptions.size(); i++){
 						if(holder.id == i){
-							Data.cancelOptionsList.cancelOptions.get(i).checked = true;
+							Data.autoData.getCancelOptionsList().cancelOptions.get(i).checked = true;
 						}
 						else{
-							Data.cancelOptionsList.cancelOptions.get(i).checked = false;
+							Data.autoData.getCancelOptionsList().cancelOptions.get(i).checked = false;
 						}
 					}
                     otherChecked = false;
@@ -414,8 +419,8 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 
     private void updateCheckBoxes(){
         if(otherChecked){
-            for(int i=0; i<Data.cancelOptionsList.cancelOptions.size(); i++){
-                Data.cancelOptionsList.cancelOptions.get(i).checked = false;
+            for(int i=0; i<Data.autoData.getCancelOptionsList().cancelOptions.size(); i++){
+                Data.autoData.getCancelOptionsList().cancelOptions.get(i).checked = false;
             }
             relativeLayoutOtherCancelOptionInner.setBackgroundColor(Color.WHITE);
             imageViewOtherCancelOptionCheck.setImageResource(R.drawable.check_box_checked);

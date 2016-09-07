@@ -233,7 +233,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
             params.put("user_email", email);
             params.put("phone_no", phone);
 			params.put("user_message", ""+messageStr);
-			params.put("client_id", Config.getClientId());
+			params.put("client_id", Config.getAutosClientId());
 
             try {
                 if (SplashNewActivity.multipleCaseJSON != null) {

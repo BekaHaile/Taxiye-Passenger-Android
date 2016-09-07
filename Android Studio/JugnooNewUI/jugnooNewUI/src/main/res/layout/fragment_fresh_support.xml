@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sliding_bottom_bg_color"
+    android:orientation="vertical"
+    >
+
+    <EditText
+        android:id="@+id/edittext_view"
+        android:layout_width="600px"
+        android:layout_height="300px"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30px"
+        android:background="@drawable/edittext_background"
+        android:gravity="left|top"
+        android:hint="Leave your query"
+        android:inputType="textCapSentences|textMultiLine"
+        android:padding="20px"
+        android:text=""
+        android:textSize="@dimen/text_size_30"
+        />
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/textViewSend"-->
+        <!--android:layout_width="@dimen/button_width"-->
+        <!--android:layout_height="@dimen/button_height"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_marginBottom="80px"-->
+        <!--android:layout_marginLeft="10px"-->
+        <!--android:layout_marginTop="80px"-->
+        <!--android:background="@drawable/button_theme"-->
+        <!--android:gravity="center"-->
+        <!--android:text="Submit"-->
+        <!--android:textAllCaps="true"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:textSize="@dimen/text_size_34"-->
+        <!--/>-->
+
+    <Button
+        android:id="@+id/buttonSubmit"
+        style="@style/ButtonTheme"
+        android:layout_marginTop="50px"
+        android:layout_marginBottom="30px"
+        android:text="Submit"
+        android:layout_gravity="center_horizontal"
+        />
+
+
+    <TextView
+        android:id="@+id/textViewJustContact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10px"
+        android:text="--- OR ---"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_34"
+
+        />
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutCallSupport"
+        android:layout_width="@dimen/button_width"
+        android:layout_height="@dimen/button_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30px"
+        android:layout_marginTop="80px"
+        android:background="@drawable/button_theme"
+        android:gravity="center"
+        >
+
+
+        <ImageView
+            android:id="@+id/imageViewCallSupport"
+            android:layout_width="30px"
+            android:layout_height="35px"
+            android:src="@drawable/ic_phone_white_filled"
+            android:tag="mwar"
+            />
+
+        <TextView
+            android:id="@+id/textViewCallSupport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10px"
+            android:layout_toRightOf="@+id/imageViewCallSupport"
+            android:text="@string/call_us"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_34"
+            />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

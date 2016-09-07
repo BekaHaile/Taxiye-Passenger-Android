@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -25,14 +26,14 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -69,8 +70,8 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	private View rootView;
     private FragmentActivity activity;
 
-	private int engagementId;
-	private String parentName, phoneNumber, rideDate;
+	private int engagementId, orderId;
+	private String parentName, phoneNumber, rideDate, orderDate, supportNumber;
 	private ShowPanelResponse.Item item;
 
 	public SupportFAQItemFragment(){}
@@ -89,12 +90,17 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
         FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQItemFragment(int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber){
+	public SupportFAQItemFragment(int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber,
+								  int orderId, String orderDate, String supportNumber){
 		this.engagementId = engagementId;
 		this.parentName = parentName;
 		this.item = item;
 		this.phoneNumber = phoneNumber;
 		this.rideDate = rideDate;
+		this.orderId = orderId;
+		this.orderDate = orderDate;
+		this.supportNumber = supportNumber;
+
 	}
 
     @Override
@@ -116,15 +122,15 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		linearLayoutMain = (LinearLayout)rootView.findViewById(R.id.linearLayoutMain);
 
 		textViewSubtitle = (TextView)rootView.findViewById(R.id.textViewSubtitle);
-		textViewSubtitle.setTypeface(Fonts.mavenRegular(activity));
+		textViewSubtitle.setTypeface(Fonts.mavenMedium(activity));
 		textViewDescription = (TextView)rootView.findViewById(R.id.textViewDescription);
-		textViewDescription.setTypeface(Fonts.mavenLight(activity));
+		textViewDescription.setTypeface(Fonts.mavenRegular(activity));
 		textViewRSOtherError = (TextView) rootView.findViewById(R.id.textViewRSOtherError);
-		textViewRSOtherError.setTypeface(Fonts.mavenLight(activity));
+		textViewRSOtherError.setTypeface(Fonts.mavenRegular(activity));
 		textViewRSOtherError.setVisibility(View.GONE);
 		textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 		editTextMessage = (EditText)rootView.findViewById(R.id.editTextMessage);
-		editTextMessage.setTypeface(Fonts.mavenLight(activity));
+		editTextMessage.setTypeface(Fonts.mavenRegular(activity));
 		buttonSubmit = (Button)rootView.findViewById(R.id.buttonSubmit);
 		buttonSubmit.setTypeface(Fonts.mavenRegular(activity));
 		relativeLayoutCallDriver = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutCallDriver);
@@ -135,33 +141,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		textViewSubtitle.setText(parentName);
 		textViewDescription.setText(item.getText());
 
-		if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()){
-			editTextMessage.setVisibility(View.VISIBLE);
-			buttonSubmit.setVisibility(View.VISIBLE);
-			relativeLayoutCallDriver.setVisibility(View.GONE);
-			relativeLayoutCallJugnoo.setVisibility(View.GONE);
-		} else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
-			editTextMessage.setVisibility(View.GONE);
-			buttonSubmit.setVisibility(View.GONE);
-			if(ViewType.CALL_DRIVER.getOrdinal() == item.getViewType()){
-				relativeLayoutCallDriver.setVisibility(View.VISIBLE);
-				relativeLayoutCallJugnoo.setVisibility(View.GONE);
-			} else if(ViewType.CALL_JUGNOO.getOrdinal() == item.getViewType()){
-				relativeLayoutCallDriver.setVisibility(View.GONE);
-				relativeLayoutCallJugnoo.setVisibility(View.VISIBLE);
-			} else if(ViewType.CALL_DRIVER_AND_JUGNOO.getOrdinal() == item.getViewType()){
-				relativeLayoutCallDriver.setVisibility(View.VISIBLE);
-				relativeLayoutCallJugnoo.setVisibility(View.VISIBLE);
-			} else{
-				relativeLayoutCallDriver.setVisibility(View.GONE);
-				relativeLayoutCallJugnoo.setVisibility(View.GONE);
-			}
-		} else if(ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()){
-			editTextMessage.setVisibility(View.GONE);
-			buttonSubmit.setVisibility(View.GONE);
-			relativeLayoutCallDriver.setVisibility(View.GONE);
-			relativeLayoutCallJugnoo.setVisibility(View.GONE);
-		}
+		showItem();
 
 		buttonSubmit.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -177,7 +157,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 								.getString(R.string.support_feedback_lengthy_error_format), "1000"));
 					} else {
 						textViewRSOtherError.setVisibility(View.GONE);
-						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId());
+						submitFeedback(activity, engagementId, feedbackText, parentName, item.getSupportId(), rideDate, orderId, orderDate);
                         Bundle bundle = new Bundle();
                         String str = parentName.replaceAll("\\W", "_");
 						String btnStr = buttonSubmit.getText().toString().replaceAll("\\W", "_");
@@ -204,7 +184,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			@Override
 			public void onClick(View v) {
 				if (ActionType.INAPP_CALL.getOrdinal() == item.getActionType()) {
-					Utils.openCallIntent(activity, Config.getSupportNumber(activity));
+					Utils.openCallIntent(activity, supportNumber);
 					FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_CALL_JUGNOO);
                     Bundle bundle = new Bundle();
                     MyApplication.getInstance().logEvent(ISSUES+"_"+FirebaseEvents.FORGOT_AN_ITEM+"_"+FirebaseEvents.CALL_JUGNOO, bundle);
@@ -293,7 +273,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	}
 
 	public void submitFeedback(final Activity activity, final int engagementId, String feedbackText,
-							   String parentName, int supportId) {
+							   String parentName, int supportId, final String rideDate, final int orderId, final String orderDate) {
 		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
 			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
@@ -306,6 +286,9 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			if(engagementId != -1){
 				params.put(Constants.KEY_ENGAGEMENT_ID, ""+engagementId);
 				params.put(Constants.KEY_RIDE_DATE, rideDate);
+			} else if(orderId != -1){
+				params.put(Constants.KEY_ORDER_ID, ""+orderId);
+				params.put(Constants.KEY_ORDER_DATE, orderDate);
 			}
 
 			RestClient.getApiServices().generateSupportTicket(params, new Callback<SettleUserDebt>() {
@@ -322,7 +305,23 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 							DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
 								@Override
 								public void onClick(View v) {
-									performBackPressed();
+									try {
+										if(activity instanceof SupportActivity && ((SupportActivity)activity).fromBadFeedback == 1){
+											activity.finish();
+											activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+										} else {
+											FragmentManager fm = getActivity().getSupportFragmentManager();
+											for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+												fm.popBackStack();
+												if (fm.getFragments().get(i).getTag().equalsIgnoreCase(SupportRideIssuesFragment.class.getName())) {
+													break;
+												}
+											}
+										}
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+
 								}
 							});
 							FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_FEEDBACK_SUBMITTED);
@@ -366,6 +365,44 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 
 					}
 				});
+	}
+
+	private void showItem(){
+		if(ActionType.GENERATE_FRESHDESK_TICKET.getOrdinal() == item.getActionType()){
+			editTextMessage.setVisibility(View.VISIBLE);
+			buttonSubmit.setVisibility(View.VISIBLE);
+			relativeLayoutCallDriver.setVisibility(View.GONE);
+			relativeLayoutCallJugnoo.setVisibility(View.GONE);
+		}
+		else if(ActionType.INAPP_CALL.getOrdinal() == item.getActionType()){
+			editTextMessage.setVisibility(View.GONE);
+			buttonSubmit.setVisibility(View.GONE);
+			if(ViewType.CALL_DRIVER.getOrdinal() == item.getViewType()){
+				relativeLayoutCallDriver.setVisibility(View.VISIBLE);
+				relativeLayoutCallJugnoo.setVisibility(View.GONE);
+			} else if(ViewType.CALL_JUGNOO.getOrdinal() == item.getViewType()){
+				relativeLayoutCallDriver.setVisibility(View.GONE);
+				relativeLayoutCallJugnoo.setVisibility(View.VISIBLE);
+			} else if(ViewType.CALL_DRIVER_AND_JUGNOO.getOrdinal() == item.getViewType()){
+				relativeLayoutCallDriver.setVisibility(View.VISIBLE);
+				relativeLayoutCallJugnoo.setVisibility(View.VISIBLE);
+			} else{
+				relativeLayoutCallDriver.setVisibility(View.GONE);
+				relativeLayoutCallJugnoo.setVisibility(View.GONE);
+			}
+		}
+		else if(ActionType.TEXT_ONLY.getOrdinal() == item.getActionType()){
+			editTextMessage.setVisibility(View.GONE);
+			buttonSubmit.setVisibility(View.GONE);
+			relativeLayoutCallDriver.setVisibility(View.GONE);
+			relativeLayoutCallJugnoo.setVisibility(View.GONE);
+		}
+		else if(ActionType.NEXT_LEVEL.getOrdinal() == item.getActionType()){
+			editTextMessage.setVisibility(View.GONE);
+			buttonSubmit.setVisibility(View.GONE);
+			relativeLayoutCallDriver.setVisibility(View.GONE);
+			relativeLayoutCallJugnoo.setVisibility(View.GONE);
+		}
 	}
 
 }

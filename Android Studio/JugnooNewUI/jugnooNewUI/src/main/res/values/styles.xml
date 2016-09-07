@@ -149,4 +149,41 @@
         <item name="android:tag">mwar</item>
     </style>
 
+
+
+
+
+
+
+
+
+
+
+    <!--For fresh Application-->
+
+
+
+
+    <style name="Animations.LoadingDialogDown">
+        <item name="@android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="@android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <style name="sabkuchfresh" />
+
+    <style name="sabkuchfresh.Text" />
+
+
+    <style name="sabkuchfresh.Text.RobotoRegularSmall_blueLink" parent="sabkuchfresh.Text">
+        <item name="fontStyle">regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/blue_btn</item>
+    </style>
+
+    <style name="sabkuchfresh.Text.RobotoRegularSmall_address" parent="sabkuchfresh.Text">
+        <item name="fontStyle">regular</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+
 </resources>

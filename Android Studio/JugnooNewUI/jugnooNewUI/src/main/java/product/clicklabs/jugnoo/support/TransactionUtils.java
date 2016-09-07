@@ -5,16 +5,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
+import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
+
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
 import product.clicklabs.jugnoo.support.models.ActionType;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -25,7 +29,8 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 public class TransactionUtils {
 
 	public void openItemInFragment(FragmentActivity activity, View container,
-								   int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber){
+								   int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber,
+								   int orderId, String orderDate, String supportNumber){
 		ShowPanelResponse.Item singleItemToOpen = null;
 		String singleItemParentName = null;
 		if(ActionType.OPEN_RIDE_HISTORY.getOrdinal() == item.getActionType()){
@@ -55,7 +60,7 @@ public class TransactionUtils {
 					activity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 							.add(container.getId(),
-									new SupportFAQItemsListFragment(engagementId, rideDate, item, phoneNumber),
+									new SupportFAQItemsListFragment(engagementId, rideDate, item, phoneNumber, orderId, orderDate, supportNumber),
 									SupportFAQItemsListFragment.class.getName()+item.getSupportId())
 							.addToBackStack(SupportFAQItemsListFragment.class.getName()+item.getSupportId())
 							.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -72,12 +77,13 @@ public class TransactionUtils {
 			}
 		}
 
-		if(singleItemToOpen != null && singleItemParentName != null){
+		if(singleItemToOpen != null && singleItemParentName != null && (singleItemToOpen.getActionType() != ActionType.NEXT_LEVEL.getOrdinal()
+				|| singleItemToOpen.getItems() == null)){
 			if(!checkIfFragmentAdded(activity, SupportFAQItemFragment.class.getName())) {
 				activity.getSupportFragmentManager().beginTransaction()
 						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 						.add(container.getId(),
-								new SupportFAQItemFragment(engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber),
+								new SupportFAQItemFragment(engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate, supportNumber),
 								SupportFAQItemFragment.class.getName())
 						.addToBackStack(SupportFAQItemFragment.class.getName())
 						.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -85,21 +91,31 @@ public class TransactionUtils {
 						.commitAllowingStateLoss();
 				FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT_ISSUES);
 			}
+		} else if(singleItemToOpen != null && singleItemParentName != null && singleItemToOpen.getActionType() == ActionType.NEXT_LEVEL.getOrdinal()){
+			if(singleItemToOpen.getItems() != null && singleItemToOpen.getItems().size() == 1){
+				singleItemParentName = singleItemToOpen.getText();
+				singleItemToOpen = singleItemToOpen.getItems().get(0);
+				openItemInFragment(activity, container, engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate, supportNumber);
+			}
 		}
 	}
 
 
-	public void openRideIssuesFragment(FragmentActivity activity, View container, int engagementId,
-									   EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse, int fromBadFeedback, boolean rideCancelled) {
+	public void openRideIssuesFragment(FragmentActivity activity, View container, int engagementId, int orderId,
+									   EndRideData endRideData, ArrayList<ShowPanelResponse.Item> items,
+									   int fromBadFeedback, boolean rideCancelled, int autosStatus,
+									   HistoryResponse.Datum datum) {
 		if(!checkIfFragmentAdded(activity, SupportRideIssuesFragment.class.getName())) {
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			if(fromBadFeedback == 0){
+				fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+			}
 			fragmentTransaction.add(container.getId(),
-					new SupportRideIssuesFragment(engagementId, endRideData, getRideSummaryResponse, rideCancelled),
+					new SupportRideIssuesFragment(engagementId, orderId, endRideData, items, rideCancelled, autosStatus, datum),
 					SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName());
 			if(fromBadFeedback == 0){
-				fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
 				fragmentTransaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 						.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
 			}
@@ -114,14 +130,28 @@ public class TransactionUtils {
 		return (activity.getSupportFragmentManager().findFragmentByTag(tag) != null);
 	}
 
-	public void openRideSummaryFragmentWithRideCancelledFlag(FragmentActivity activity, View container, int engagementId, boolean rideCancelled){
+	public void openRideSummaryFragmentWithRideCancelledFlag(FragmentActivity activity, View container, int engagementId,
+															 boolean rideCancelled, int autosStatus){
 		if(!new TransactionUtils().checkIfFragmentAdded(activity, RideSummaryFragment.class.getName())) {
 			activity.getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(container.getId(),
-							new RideSummaryFragment(engagementId, rideCancelled),
+							new RideSummaryFragment(engagementId, rideCancelled, autosStatus),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openOrderSummaryFragment(FragmentActivity activity, View container, HistoryResponse.Datum datum) {
+		if(!checkIfFragmentAdded(activity, FreshOrderSummaryFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+					.add(container.getId(), new FreshOrderSummaryFragment(datum),
+							FreshOrderSummaryFragment.class.getName())
+					.addToBackStack(FreshOrderSummaryFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();

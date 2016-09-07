@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="644px"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="15px"
+        android:background="@drawable/background_grey_rounded_bordered"
+        android:splitMotionEvents="false"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:layout_width="644px"
+            android:layout_height="210px"
+            android:tag="mwar"
+            android:src="@drawable/fatafat_not_available"
+            android:layout_marginTop="5px"
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3px"
+            android:layout_marginLeft="3px"
+            android:layout_marginRight="3px"
+            android:background="@drawable/button_white_br"
+            android:orientation="vertical"
+            android:splitMotionEvents="false">
+
+
+
+
+            <TextView
+                android:id="@+id/textViewtop"
+                android:layout_width="match_parent"
+                android:layout_height="142px"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_28"
+                android:gravity="center"
+                android:layout_marginTop="40px"
+                android:text="@string/delivery_pop_text"
+                android:paddingBottom="40px"
+
+                />
+
+
+            <TextView
+                android:id="@+id/textViewletus"
+                android:layout_width="match_parent"
+                android:layout_height="142px"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_36"
+                android:gravity="center_vertical"
+                android:paddingLeft="40px"
+                android:text="@string/in_app_customer_support"
+                android:textAllCaps="true"
+                android:visibility="gone"
+                />
+
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="322px"
+                android:layout_height="80px"
+                android:background="@drawable/button_theme_round_selector"
+                android:singleLine="true"
+                android:text="@string/ok"
+                android:layout_gravity="center_horizontal"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:layout_marginBottom="20px"
+                android:layout_marginTop="20px"
+                android:textSize="@dimen/text_size_36"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:layout_width="74px"
+        android:layout_height="74px"
+        android:layout_alignRight="@+id/linearLayoutInner"
+        android:layout_alignTop="@+id/linearLayoutInner"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingBottom="20px"
+        android:paddingLeft="20px"
+        android:layout_marginRight="-20px"
+        android:layout_marginTop="-20px"
+        android:src="@drawable/close_icon_selector"
+        android:visibility="gone"
+        android:tag="mwar"/>
+
+</RelativeLayout>

@@ -57,7 +57,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 
 		holder.textViewOfferName.setText(promoCoupon.getTitle());
 		if(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() != null &&
-				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id == promoCoupon.id){
+				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() == promoCoupon.getId()){
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
 		} else{
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
@@ -78,9 +78,9 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 					int position = (int) v.getTag();
 					PromoCoupon promoCoupon = offerList.get(position);
 					if (promoCoupon instanceof CouponInfo) {
-						DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description);
+						DialogPopup.alertPopupLeftOriented(activity, "", ((CouponInfo) promoCoupon).description, true, true, false);
 					} else if (promoCoupon instanceof PromotionInfo) {
-						DialogPopup.alertPopupHtml(activity, "", ((PromotionInfo) promoCoupon).terms);
+						DialogPopup.alertPopupLeftOriented(activity, "", ((PromotionInfo) promoCoupon).terms, false, true, true);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -94,7 +94,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 				try {
 					int position = (int) v.getTag();
 					PromoCoupon promoCoupon = offerList.get(position);
-					if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().id == promoCoupon.id) {
+					if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() == promoCoupon.getId()) {
 						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 					} else {
 						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);

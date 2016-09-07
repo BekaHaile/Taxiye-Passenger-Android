@@ -12,18 +12,19 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
-import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
@@ -32,7 +33,6 @@ import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.CustomAppLauncher;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -266,7 +266,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     activity.startActivity(intent);
                 }
             } else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == deepInt){
-                CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), new LatLng(Data.latitude, Data.longitude), true);
+            } else if(AppLinkIndex.MEAL_PAGE.getOrdinal() == deepInt){
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), new LatLng(Data.latitude, Data.longitude), true);
+            }
+            else if(AppLinkIndex.AUTO_PAGE.getOrdinal() == deepInt){
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), new LatLng(Data.latitude, Data.longitude), true);
             }
 
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);

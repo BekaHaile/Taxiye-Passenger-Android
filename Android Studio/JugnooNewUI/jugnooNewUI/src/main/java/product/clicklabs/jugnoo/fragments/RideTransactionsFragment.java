@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -35,9 +34,9 @@ import product.clicklabs.jugnoo.adapters.RideTransactionsAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.FeedbackMode;
-import product.clicklabs.jugnoo.datastructure.RideInfo;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -64,7 +63,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 
 	private RideTransactionsAdapter rideTransactionsAdapter;
 
-	ArrayList<RideInfo> rideInfosList = new ArrayList<>();
+	ArrayList<HistoryResponse.Datum> rideInfosList = new ArrayList<>();
 	int totalRides = 0;
 
 	private View rootView;
@@ -115,65 +114,54 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		((TextView) rootView.findViewById(R.id.textViewNoRides)).setTypeface(Fonts.mavenLight(activity));
 		buttonGetRide = (Button) rootView.findViewById(R.id.buttonGetRide); buttonGetRide.setTypeface(Fonts.mavenRegular(activity));
 		linearLayoutNoRides.setVisibility(View.GONE);
-		buttonGetRide.setVisibility(View.GONE);
 
 		rideTransactionsAdapter = new RideTransactionsAdapter(rideInfosList, activity, R.layout.list_item_ride_transaction,
 				new RideTransactionsAdapter.Callback() {
 					@Override
-					public void onClick(int position, RideInfo rideInfo) {
+					public void onClick(int position, HistoryResponse.Datum historyData) {
 						try {
-							Log.v("Ride Amount is ","---> "+rideInfo.amount);
-							if (rideInfo.isCancelledRide != 1) {
+							if (historyData.getProductType() == ProductType.AUTO.getOrdinal()) {
 								if (AppStatus.getInstance(activity).isOnline(activity)) {
-									if(activity instanceof RideTransactionsActivity){
+									if (activity instanceof RideTransactionsActivity) {
 										new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
-												rideInfo.engagementId, false);
-									} else if(activity instanceof SupportActivity){
+												historyData.getEngagementId(), historyData.getIsCancelledRide() == 1, historyData.getAutosStatus());
+									} else if (activity instanceof SupportActivity) {
 										new TransactionUtils().openRideIssuesFragment(activity,
 												((SupportActivity) activity).getContainer(),
-												rideInfo.engagementId, null, null, 0, false);
-									}
-									FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
-								} else {
-									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-								}
-								FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
-							} else{
-								Log.v("Cancelled Ride", "Cancelled Ride");
-								if (AppStatus.getInstance(activity).isOnline(activity)) {
-									if(activity instanceof RideTransactionsActivity) {
-										/*new TransactionUtils().openRideIssuesFragment(activity,
-												((RideTransactionsActivity) activity).getContainer(),
-												rideInfo.engagementId, null, null, 0, true);*/
-										new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity)activity).getContainer(),
-												rideInfo.engagementId, true);
-										FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
-									} else if(activity instanceof SupportActivity) {
-										/*new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((SupportActivity)activity).getContainer(),
-												rideInfo.engagementId, true);*/
-										new TransactionUtils().openRideIssuesFragment(activity,
-												((SupportActivity) activity).getContainer(),
-												rideInfo.engagementId, null, null, 0, true);
-										FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+												historyData.getEngagementId(), -1, null, null, 0, historyData.getIsCancelledRide() == 1, historyData.getAutosStatus(),
+												null);
 									}
 								} else {
 									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 								}
-								FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
+							} else if (historyData.getProductType() == ProductType.FRESH.getOrdinal() ||
+									historyData.getProductType() == ProductType.MEALS.getOrdinal()) {
+								if (activity instanceof RideTransactionsActivity) {
+									new TransactionUtils().openOrderSummaryFragment(activity,
+											((RideTransactionsActivity) activity).getContainer(), historyData);
+								} else if (activity instanceof SupportActivity) {
+									new TransactionUtils().openRideIssuesFragment(activity,
+											((SupportActivity) activity).getContainer(),
+											-1, historyData.getOrderId(), null, null, 0, false, 0,
+											historyData);
+								}
 							}
+
+							FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
+							FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
 
 					@Override
-					public void onRateRideClick(int position, RideInfo rideInfo) {
+					public void onRateRideClick(int position, HistoryResponse.Datum rideInfo) {
 						try {
 							Intent intent = new Intent(activity, FeedbackActivity.class);
 							intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.PAST_RIDE.getOrdinal());
 							intent.putExtra("position", position);
-							intent.putExtra(Constants.KEY_DRIVER_ID, rideInfo.driverId);
-							intent.putExtra(Constants.KEY_ENGAGEMENT_ID, rideInfo.engagementId);
+							intent.putExtra(Constants.KEY_DRIVER_ID, rideInfo.getDriverId());
+							intent.putExtra(Constants.KEY_ENGAGEMENT_ID, rideInfo.getEngagementId());
 							activity.startActivity(intent);
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 							FlurryEventLogger.event(FlurryEventNames.RIDE_RATED_ON_RIDE_HISTORY);
@@ -200,6 +188,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 			}
 		});
 
+		updateGetRideButton();
 
 		getRecentRidesAPI(activity, true);
 		setActivityTitle();
@@ -222,6 +211,22 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		super.onHiddenChanged(hidden);
 		if(!hidden){
 			setActivityTitle();
+			if(Data.isOrderCancelled || Data.isSupportRideIssueUpdated) {
+				Data.isOrderCancelled = false;
+				getRecentRidesAPI(activity, true);
+			}
+		}
+	}
+
+	private void updateGetRideButton(){
+		try {
+			if(Data.userData.getMealsEnabled() == 0 && Data.userData.getFreshEnabled() == 0 && Data.userData.getDeliveryEnabled() == 0){
+				buttonGetRide.setVisibility(View.VISIBLE);
+			} else{
+				buttonGetRide.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -229,7 +234,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		if(activity instanceof RideTransactionsActivity){
 			((RideTransactionsActivity)activity).setTitle(MyApplication.getInstance().ACTIVITY_NAME_HISTORY);
 		} else if(activity instanceof SupportActivity){
-			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.ride_history));
+			((SupportActivity)activity).setTitle(activity.getResources().getString(R.string.history));
 		}
 	}
 
@@ -244,15 +249,14 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 				linearLayoutNoRides.setVisibility(View.GONE);
-				buttonGetRide.setVisibility(View.GONE);
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", Data.userData.accessToken);
 				params.put("start_from", "" + rideInfosList.size());
 
-				RestClient.getApiServices().getRecentRides(params, new Callback<SettleUserDebt>() {
+				RestClient.getApiServices().getRecentRides(params, new Callback<HistoryResponse>() {
 					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
+					public void success(HistoryResponse historyResponse, Response response) {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 						Log.i("Server response", "response = " + responseStr);
 						try {
@@ -261,46 +265,8 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								int flag = jObj.getInt("flag");
 								if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
-
-									totalRides = jObj.getInt("num_rides");
-
-									if (jObj.has("rides")) {
-										JSONArray jRidesArr = jObj.getJSONArray("rides");
-										for (int i = 0; i < jRidesArr.length(); i++) {
-											JSONObject jRide = jRidesArr.getJSONObject(i);
-											int isRatedBefore = 1;
-											if (jRide.has("is_rated_before")) {
-												isRatedBefore = jRide.getInt("is_rated_before");
-											}
-
-											int driverId = 0;
-											if (jRide.has("driver_id")) {
-												driverId = jRide.getInt("driver_id");
-											}
-
-											int engagementId = 0;
-											if (jRide.has("engagement_id")) {
-												engagementId = jRide.getInt("engagement_id");
-											}
-
-											double waitTime = -1;
-											if(jRide.has("wait_time")){
-												waitTime = jRide.getDouble("wait_time");
-											}
-
-											int isCancelledRide = 0;
-											if(jRide.has("is_cancelled_ride")){
-												isCancelledRide = jRide.getInt("is_cancelled_ride");
-											}
-
-											rideInfosList.add(new RideInfo(jRide.getString("pickup_address"),
-													jRide.getString("drop_address"),
-													jRide.getDouble("amount"),
-													jRide.getDouble("distance"),
-													jRide.getDouble("ride_time"), waitTime,
-													jRide.getString("date"), isRatedBefore, driverId, engagementId, isCancelledRide));
-										}
-									}
+									totalRides = jObj.getInt("history_size");
+									rideInfosList.addAll(historyResponse.getData());
 
 									updateListData("You haven't tried Jugnoo yet.", false);
 
@@ -337,7 +303,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 		if(errorOccurred){
 			linearLayoutNoRides.setVisibility(View.VISIBLE);
 			if(activity instanceof RideTransactionsActivity) {
-				buttonGetRide.setVisibility(View.VISIBLE);
+				updateGetRideButton();
 			} else{
 				buttonGetRide.setVisibility(View.GONE);
 			}
@@ -349,12 +315,11 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 			if(rideInfosList.size() == 0){
 				linearLayoutNoRides.setVisibility(View.VISIBLE);
 				if(activity instanceof RideTransactionsActivity) {
-					buttonGetRide.setVisibility(View.VISIBLE);
+					updateGetRideButton();
 				} else{
 					buttonGetRide.setVisibility(View.GONE);
 				}
-			}
-			else{
+			} else{
 				linearLayoutNoRides.setVisibility(View.GONE);
 				buttonGetRide.setVisibility(View.GONE);
 			}

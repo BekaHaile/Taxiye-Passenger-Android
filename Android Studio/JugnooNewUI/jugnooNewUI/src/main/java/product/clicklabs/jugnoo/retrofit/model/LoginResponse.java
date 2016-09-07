@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 
@@ -72,46 +75,24 @@ public class LoginResponse {
 	@SerializedName("flag")
 	@Expose
 	private Integer flag;
-	@SerializedName("login")
-	@Expose
-	private Login login;
 	@SerializedName("drivers")
 	@Expose
 	private List<Driver> drivers = new ArrayList<>();
-	@SerializedName("cancellation")
+	@SerializedName("autos")
 	@Expose
-	private Cancellation cancellation;
-	@SerializedName("referral_message")
+	private Autos autos;
+	@SerializedName("user_data")
 	@Expose
-	private String referralMessage;
-	@SerializedName("fb_share_caption")
+	private UserData userData;
+	@SerializedName("fresh")
 	@Expose
-	private String fbShareCaption;
-	@SerializedName("fb_share_description")
+	private Fresh fresh;
+	@SerializedName("meals")
 	@Expose
-	private String fbShareDescription;
-	@SerializedName("referral_caption")
+	private Meals meals;
+	@SerializedName("delivery")
 	@Expose
-	private String referralCaption;
-	@SerializedName("referral_email_subject")
-	@Expose
-	private String referralEmailSubject;
-	@SerializedName("referral_popup_text")
-	@Expose
-	private String referralPopupText;
-	@SerializedName("invite_earn_short_msg")
-	@Expose
-	private String inviteEarnShortMsg;
-	@SerializedName("invite_earn_more_info")
-	@Expose
-	private String inviteEarnMoreInfo;
-	@SerializedName("bad_rating_reasons")
-	@Expose
-	private List<String> badRatingReasons = new ArrayList<>();
-	@SerializedName("referral_sharing_message")
-	@Expose
-	private String referralSharingMessage;
-
+	private Delivery delivery;
 	/**
 	 * @return The flag
 	 */
@@ -124,20 +105,6 @@ public class LoginResponse {
 	 */
 	public void setFlag(Integer flag) {
 		this.flag = flag;
-	}
-
-	/**
-	 * @return The login
-	 */
-	public Login getLogin() {
-		return login;
-	}
-
-	/**
-	 * @param login The login
-	 */
-	public void setLogin(Login login) {
-		this.login = login;
 	}
 
 	/**
@@ -154,318 +121,171 @@ public class LoginResponse {
 		this.drivers = drivers;
 	}
 
-	/**
-	 * @return The cancellation
-	 */
-	public Cancellation getCancellation() {
-		return cancellation;
+	public Autos getAutos() {
+		return autos;
 	}
 
-	/**
-	 * @param cancellation The cancellation
-	 */
-	public void setCancellation(Cancellation cancellation) {
-		this.cancellation = cancellation;
+	public void setAutos(Autos autos) {
+		this.autos = autos;
 	}
 
-	/**
-	 * @return The referralMessage
-	 */
-	public String getReferralMessage() {
-		return referralMessage;
+	public UserData getUserData() {
+		return userData;
 	}
 
-	/**
-	 * @param referralMessage The referral_message
-	 */
-	public void setReferralMessage(String referralMessage) {
-		this.referralMessage = referralMessage;
+	public void setUserData(UserData userData) {
+		this.userData = userData;
 	}
 
-	/**
-	 * @return The fbShareCaption
-	 */
-	public String getFbShareCaption() {
-		return fbShareCaption;
+	public Fresh getFresh() {
+		return fresh;
 	}
 
-	/**
-	 * @param fbShareCaption The fb_share_caption
-	 */
-	public void setFbShareCaption(String fbShareCaption) {
-		this.fbShareCaption = fbShareCaption;
+	public void setFresh(Fresh fresh) {
+		this.fresh = fresh;
 	}
 
-	/**
-	 * @return The fbShareDescription
-	 */
-	public String getFbShareDescription() {
-		return fbShareDescription;
+	public Meals getMeals() {
+		return meals;
 	}
 
-	/**
-	 * @param fbShareDescription The fb_share_description
-	 */
-	public void setFbShareDescription(String fbShareDescription) {
-		this.fbShareDescription = fbShareDescription;
+	public void setMeals(Meals meals) {
+		this.meals = meals;
 	}
 
-	/**
-	 * @return The referralCaption
-	 */
-	public String getReferralCaption() {
-		return referralCaption;
+	public Delivery getDelivery() {
+		return delivery;
 	}
 
-	/**
-	 * @param referralCaption The referral_caption
-	 */
-	public void setReferralCaption(String referralCaption) {
-		this.referralCaption = referralCaption;
+	public void setDelivery(Delivery delivery) {
+		this.delivery = delivery;
 	}
 
-	/**
-	 * @return The referralEmailSubject
-	 */
-	public String getReferralEmailSubject() {
-		return referralEmailSubject;
-	}
 
-	/**
-	 * @param referralEmailSubject The referral_email_subject
-	 */
-	public void setReferralEmailSubject(String referralEmailSubject) {
-		this.referralEmailSubject = referralEmailSubject;
-	}
 
-	/**
-	 * @return The referralPopupText
-	 */
-	public String getReferralPopupText() {
-		return referralPopupText;
-	}
-
-	/**
-	 * @param referralPopupText The referral_popup_text
-	 */
-	public void setReferralPopupText(String referralPopupText) {
-		this.referralPopupText = referralPopupText;
-	}
-
-	/**
-	 * @return The inviteEarnShortMsg
-	 */
-	public String getInviteEarnShortMsg() {
-		return inviteEarnShortMsg;
-	}
-
-	/**
-	 * @param inviteEarnShortMsg The invite_earn_short_msg
-	 */
-	public void setInviteEarnShortMsg(String inviteEarnShortMsg) {
-		this.inviteEarnShortMsg = inviteEarnShortMsg;
-	}
-
-	/**
-	 * @return The inviteEarnMoreInfo
-	 */
-	public String getInviteEarnMoreInfo() {
-		return inviteEarnMoreInfo;
-	}
-
-	/**
-	 * @param inviteEarnMoreInfo The invite_earn_more_info
-	 */
-	public void setInviteEarnMoreInfo(String inviteEarnMoreInfo) {
-		this.inviteEarnMoreInfo = inviteEarnMoreInfo;
-	}
-
-	/**
-	 * @return The badRatingReasons
-	 */
-	public List<String> getBadRatingReasons() {
-		return badRatingReasons;
-	}
-
-	/**
-	 * @param badRatingReasons The bad_rating_reasons
-	 */
-	public void setBadRatingReasons(List<String> badRatingReasons) {
-		this.badRatingReasons = badRatingReasons;
-	}
-
-	/**
-	 * @return The referralSharingMessage
-	 */
-	public String getReferralSharingMessage() {
-		return referralSharingMessage;
-	}
-
-	/**
-	 * @param referralSharingMessage The referral_sharing_message
-	 */
-	public void setReferralSharingMessage(String referralSharingMessage) {
-		this.referralSharingMessage = referralSharingMessage;
-	}
-
-	public class Login {
-
-		@SerializedName("current_user_status")
+	public class Delivery{
+		@SerializedName("promotions")
 		@Expose
-		private Integer currentUserStatus;
-		@SerializedName("support_number")
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
 		@Expose
-		private String supportNumber;
+		private List<CouponInfo> coupons = new ArrayList<>();
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+	}
+
+	public class Meals{
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+	}
+
+	public class Fresh{
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+	}
+
+	public class Autos{
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
+		@SerializedName("drivers")
+		@Expose
+		private List<Driver> drivers = new ArrayList<>();
+		@SerializedName("regions")
+		@Expose
+		private List<Region> regions = new ArrayList<>();
+
 		@SerializedName("priority_tip_category")
 		@Expose
 		private Integer priorityTipCategory;
-		@SerializedName("promotions")
-		@Expose
-		private List<Promotion> promotions = new ArrayList<>();
-		@SerializedName("coupons")
-		@Expose
-		private List<Coupon> coupons = new ArrayList<>();
-		@SerializedName("fare_structure")
-		@Expose
-		private List<FareStructure> fareStructure = new ArrayList<>();
-		@SerializedName("far_away_city")
-		@Expose
-		private String farAwayCity;
 		@SerializedName("fare_factor")
 		@Expose
 		private Double fareFactor;
 		@SerializedName("driver_fare_factor")
 		@Expose
 		private Double driverFareFactor;
-		@SerializedName("regions")
+		@SerializedName("far_away_city")
 		@Expose
-		private List<Region> regions = new ArrayList<>();
-		@SerializedName("fresh_available")
-		@Expose
-		private Integer freshAvailable;
-		@SerializedName("menu")
-		@Expose
-		private List<MenuInfo> menuInfoList;
-
+		private String farAwayCity;
 		@SerializedName("campaigns")
 		@Expose
 		private Campaigns campaigns;
-        @SerializedName("city_id")
-        @Expose
-        private Integer cityId;
+		@SerializedName("fare_structure")
+		@Expose
+		private List<FareStructure> fareStructure = new ArrayList<>();
+		@SerializedName("current_user_status")
+		@Expose
+		private Integer currentUserStatus;
+		@SerializedName("cancellation")
+		@Expose
+		private Cancellation cancellation;
+		@SerializedName("bad_rating_reasons")
+		@Expose
+		private List<String> badRatingReasons = new ArrayList<>();
 
-
-
-		/**
-		 *
-		 * @return
-		 * The campaigns
-		 */
-		public Campaigns getCampaigns() {
-			return campaigns;
+		public List<Driver> getDrivers() {
+			return drivers;
 		}
 
-		/**
-		 *
-		 * @param campaigns
-		 * The campaigns
-		 */
-		public void setCampaigns(Campaigns campaigns) {
-			this.campaigns = campaigns;
-		}
-
-		/**
-		 * @return The currentUserStatus
-		 */
-		public Integer getCurrentUserStatus() {
-			return currentUserStatus;
-		}
-
-		/**
-		 * @param currentUserStatus The current_user_status
-		 */
-		public void setCurrentUserStatus(Integer currentUserStatus) {
-			this.currentUserStatus = currentUserStatus;
-		}
-
-		/**
-		 * @return The priorityTipCategory
-		 */
-		public Integer getPriorityTipCategory() {
-			return priorityTipCategory;
-		}
-
-		/**
-		 * @param priorityTipCategory The priority_tip_category
-		 */
-		public void setPriorityTipCategory(Integer priorityTipCategory) {
-			this.priorityTipCategory = priorityTipCategory;
-		}
-
-		/**
-		 * @return The promotions
-		 */
-		public List<Promotion> getPromotions() {
-			return promotions;
-		}
-
-		/**
-		 * @param promotions The promotions
-		 */
-		public void setPromotions(List<Promotion> promotions) {
-			this.promotions = promotions;
-		}
-
-		/**
-		 * @return The coupons
-		 */
-		public List<Coupon> getCoupons() {
-			return coupons;
-		}
-
-		/**
-		 * @param coupons The coupons
-		 */
-		public void setCoupons(List<Coupon> coupons) {
-			this.coupons = coupons;
-		}
-
-		/**
-		 * @return The fareStructure
-		 */
-		public List<FareStructure> getFareStructure() {
-			return fareStructure;
-		}
-
-		/**
-		 * @param fareStructure The fare_structure
-		 */
-		public void setFareStructure(List<FareStructure> fareStructure) {
-			this.fareStructure = fareStructure;
-		}
-
-		public String getFarAwayCity() {
-			return farAwayCity;
-		}
-
-		public void setFarAwayCity(String farAwayCity) {
-			this.farAwayCity = farAwayCity;
-		}
-
-		public String getSupportNumber() {
-			return supportNumber;
-		}
-
-		public void setSupportNumber(String supportNumber) {
-			this.supportNumber = supportNumber;
-		}
-
-		public Double getFareFactor() {
-			return fareFactor;
-		}
-
-		public void setFareFactor(Double fareFactor) {
-			this.fareFactor = fareFactor;
+		public void setDrivers(List<Driver> drivers) {
+			this.drivers = drivers;
 		}
 
 		public List<Region> getRegions() {
@@ -476,20 +296,20 @@ public class LoginResponse {
 			this.regions = regions;
 		}
 
-		public Integer getFreshAvailable() {
-			return freshAvailable;
+		public Integer getPriorityTipCategory() {
+			return priorityTipCategory;
 		}
 
-		public void setFreshAvailable(Integer freshAvailable) {
-			this.freshAvailable = freshAvailable;
+		public void setPriorityTipCategory(Integer priorityTipCategory) {
+			this.priorityTipCategory = priorityTipCategory;
 		}
 
-		public List<MenuInfo> getMenuInfoList() {
-			return menuInfoList;
+		public Double getFareFactor() {
+			return fareFactor;
 		}
 
-		public void setMenuInfoList(List<MenuInfo> menuInfoList) {
-			this.menuInfoList = menuInfoList;
+		public void setFareFactor(Double fareFactor) {
+			this.fareFactor = fareFactor;
 		}
 
 		public Double getDriverFareFactor() {
@@ -500,12 +320,281 @@ public class LoginResponse {
 			this.driverFareFactor = driverFareFactor;
 		}
 
-        public Integer getCityId() {
-            return cityId;
-        }
+		public String getFarAwayCity() {
+			return farAwayCity;
+		}
 
-        public void setCityId(Integer cityId) {
-            this.cityId = cityId;
-        }
-    }
+		public void setFarAwayCity(String farAwayCity) {
+			this.farAwayCity = farAwayCity;
+		}
+
+		public Campaigns getCampaigns() {
+			return campaigns;
+		}
+
+		public void setCampaigns(Campaigns campaigns) {
+			this.campaigns = campaigns;
+		}
+
+		public List<FareStructure> getFareStructure() {
+			return fareStructure;
+		}
+
+		public void setFareStructure(List<FareStructure> fareStructure) {
+			this.fareStructure = fareStructure;
+		}
+
+		public Integer getCurrentUserStatus() {
+			return currentUserStatus;
+		}
+
+		public void setCurrentUserStatus(Integer currentUserStatus) {
+			this.currentUserStatus = currentUserStatus;
+		}
+
+		public Cancellation getCancellation() {
+			return cancellation;
+		}
+
+		public void setCancellation(Cancellation cancellation) {
+			this.cancellation = cancellation;
+		}
+
+		public List<String> getBadRatingReasons() {
+			return badRatingReasons;
+		}
+
+		public void setBadRatingReasons(List<String> badRatingReasons) {
+			this.badRatingReasons = badRatingReasons;
+		}
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+	}
+
+	public class UserData{
+		@SerializedName("menu")
+		@Expose
+		private List<MenuInfo> menuInfoList;
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
+		@SerializedName("city_id")
+		@Expose
+		private Integer cityId;
+		@SerializedName("support_number")
+		@Expose
+		private String supportNumber;
+		@SerializedName("meals_enabled")
+		@Expose
+		private Integer mealsEnabled;
+		@SerializedName("fresh_enabled")
+		@Expose
+		private Integer freshEnabled;
+		@SerializedName("delivery_enabled")
+		@Expose
+		private Integer deliveryEnabled;
+		@SerializedName("referral_message")
+		@Expose
+		private String referralMessage;
+		@SerializedName("fb_share_caption")
+		@Expose
+		private String fbShareCaption;
+		@SerializedName("fb_share_description")
+		@Expose
+		private String fbShareDescription;
+		@SerializedName("referral_caption")
+		@Expose
+		private String referralCaption;
+		@SerializedName("referral_email_subject")
+		@Expose
+		private String referralEmailSubject;
+		@SerializedName("referral_popup_text")
+		@Expose
+		private String referralPopupText;
+		@SerializedName("invite_earn_short_msg")
+		@Expose
+		private String inviteEarnShortMsg;
+		@SerializedName("invite_earn_more_info")
+		@Expose
+		private String inviteEarnMoreInfo;
+		@SerializedName("referral_sharing_message")
+		@Expose
+		private String referralSharingMessage;
+		@SerializedName("sharing_og_title")
+		@Expose
+		private String sharingOgTitle;
+		@SerializedName("jeanie_intro_dialog_content")
+		@Expose
+		private JeanieIntroDialogContent jeanieIntroDialogContent;
+
+		public List<MenuInfo> getMenuInfoList() {
+			return menuInfoList;
+		}
+
+		public void setMenuInfoList(List<MenuInfo> menuInfoList) {
+			this.menuInfoList = menuInfoList;
+		}
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+
+		public Integer getCityId() {
+			return cityId;
+		}
+
+		public void setCityId(Integer cityId) {
+			this.cityId = cityId;
+		}
+
+		public String getSupportNumber() {
+			return supportNumber;
+		}
+
+		public void setSupportNumber(String supportNumber) {
+			this.supportNumber = supportNumber;
+		}
+
+		public Integer getMealsEnabled() {
+			return mealsEnabled;
+		}
+
+		public void setMealsEnabled(Integer mealsEnabled) {
+			this.mealsEnabled = mealsEnabled;
+		}
+
+		public Integer getFreshEnabled() {
+			return freshEnabled;
+		}
+
+		public void setFreshEnabled(Integer freshEnabled) {
+			this.freshEnabled = freshEnabled;
+		}
+
+		public Integer getDeliveryEnabled() {
+			return deliveryEnabled;
+		}
+
+		public void setDeliveryEnabled(Integer deliveryEnabled) {
+			this.deliveryEnabled = deliveryEnabled;
+		}
+
+		public String getReferralMessage() {
+			return referralMessage;
+		}
+
+		public void setReferralMessage(String referralMessage) {
+			this.referralMessage = referralMessage;
+		}
+
+		public String getFbShareCaption() {
+			return fbShareCaption;
+		}
+
+		public void setFbShareCaption(String fbShareCaption) {
+			this.fbShareCaption = fbShareCaption;
+		}
+
+		public String getFbShareDescription() {
+			return fbShareDescription;
+		}
+
+		public void setFbShareDescription(String fbShareDescription) {
+			this.fbShareDescription = fbShareDescription;
+		}
+
+		public String getReferralCaption() {
+			return referralCaption;
+		}
+
+		public void setReferralCaption(String referralCaption) {
+			this.referralCaption = referralCaption;
+		}
+
+		public String getReferralEmailSubject() {
+			return referralEmailSubject;
+		}
+
+		public void setReferralEmailSubject(String referralEmailSubject) {
+			this.referralEmailSubject = referralEmailSubject;
+		}
+
+		public String getReferralPopupText() {
+			return referralPopupText;
+		}
+
+		public void setReferralPopupText(String referralPopupText) {
+			this.referralPopupText = referralPopupText;
+		}
+
+		public String getInviteEarnShortMsg() {
+			return inviteEarnShortMsg;
+		}
+
+		public void setInviteEarnShortMsg(String inviteEarnShortMsg) {
+			this.inviteEarnShortMsg = inviteEarnShortMsg;
+		}
+
+		public String getInviteEarnMoreInfo() {
+			return inviteEarnMoreInfo;
+		}
+
+		public void setInviteEarnMoreInfo(String inviteEarnMoreInfo) {
+			this.inviteEarnMoreInfo = inviteEarnMoreInfo;
+		}
+
+		public String getReferralSharingMessage() {
+			return referralSharingMessage;
+		}
+
+		public void setReferralSharingMessage(String referralSharingMessage) {
+			this.referralSharingMessage = referralSharingMessage;
+		}
+
+		public JeanieIntroDialogContent getJeanieIntroDialogContent() {
+			return jeanieIntroDialogContent;
+		}
+
+		public void setJeanieIntroDialogContent(JeanieIntroDialogContent jeanieIntroDialogContent) {
+			this.jeanieIntroDialogContent = jeanieIntroDialogContent;
+		}
+
+		public String getSharingOgTitle() {
+			return sharingOgTitle;
+		}
+
+		public void setSharingOgTitle(String sharingOgTitle) {
+			this.sharingOgTitle = sharingOgTitle;
+		}
+	}
+
 }

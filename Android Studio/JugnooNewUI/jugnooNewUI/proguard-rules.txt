@@ -69,6 +69,13 @@
 -keep class com.squareup.okhttp.** { *; }
 -keep class com.sothree.slidinguppanel.** { *; }
 -keep class sun.misc.Unsafe { *; }
+
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @com.squareup.otto.Subscribe public *;
+    @com.squareup.otto.Produce public *;
+}
+
 #-keep class com.google.gson.stream.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson

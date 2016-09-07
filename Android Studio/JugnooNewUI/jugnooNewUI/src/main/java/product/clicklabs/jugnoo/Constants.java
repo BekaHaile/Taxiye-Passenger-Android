@@ -5,6 +5,65 @@ package product.clicklabs.jugnoo;
  */
 public interface Constants {
 
+	// For feedback
+	String ORDER_ID = "feedback_order_id";
+	String RATING = "rating";
+	String RATING_TYPE = "rating_type";
+	String COMMENT = "comment";
+	String QUESTION_TYPE = "question_type";
+	String SKIP = "skip_feedback";
+	String QUESTION = "question";
+
+	//For Submit
+	String TEXT = "support_query";
+
+	String IS_FATAFAT = "is_fatafat";
+
+
+	String DELIVERY_LATITUDE = "delivery_latitude";
+	String DELIVERY_LONGITUDE = "delivery_longitude";
+
+	String KEY_ADD_PAYMENT_PATH = "addPaymentPath";
+	String KEY_PAYMENT_PATH = "paymentPath";
+
+	String DISCOUNT = "discount";
+
+	String SORTED_BY = "sorted_by";
+
+
+
+	String ORDER_AMOUNT = "order_amount";
+	String PROMO_CODE = "promo_code";
+
+	String KEY_PAYMENT_MODE = "payment_mode";
+	String KEY_DELIVERY_SLOT_ID = "delivery_slot_id";
+	String KEY_DELIVERY_NOTES = "delivery_notes";
+	String KEY_DELIVERY_ADDRESS = "delivery_address";
+	String KEY_CART = "cart";
+	String KEY_SUB_ITEM_ID = "sub_item_id";
+	String KEY_QUANTITY = "quantity";
+	String SP_FRESH_CART= "fresh_cart";
+	String SP_MEAL_CART= "meal_cart";
+	String KEY_CATEGORY_POSITION = "category_position";
+
+
+
+	String FRAGMENT_SELECTED = "fragment_selected";
+	String ORDER_CONTACT = "order_contact";
+
+	String FRESH_FRAGMENT = "fresh_fragment";
+	String MEALS_FRAGMENT = "meals_fragment";
+
+
+
+	String KEY_STORE_RATE = "rate_on_playstore";
+
+	String GROUP_ID = "group_id";
+	String STORE_ID = "store_id";
+
+	String APP_TYPE = "sp_apptype";
+
+
 	String KEY_FLAG = "flag";
 	String KEY_MESSAGE = "message";
 	String KEY_TITLE = "title";
@@ -18,17 +77,10 @@ public interface Constants {
 	String KEY_DRIVER_ID = "driver_id";
 	String KEY_PHONE_NO = "phone_no";
 	String KEY_PUSH_CALL_DRIVER = "push_call_driver";
-	String KEY_DRIVER_CAR_NO = "driver_car_no";
-	String KEY_END_RIDE_DATA = "end_ride_data";
 	String KEY_APP_MONITORING_TIME_TO_SAVE = "app_monitoring_time";
-	String KEY_GOOGLE_NAME = "google_name";
-	String KEY_GOOGLE_EMAIL = "google_email";
-	String KEY_GOOGLE_ID = "google_id";
-	String KEY_GOOGLE_IMAGE = "google_image";
 	String KEY_GOOGLE_PARCEL = "google_parcel";
 	String KEY_ETA = "eta";
 	int ADD_HOME = 2, ADD_WORK = 3;
-	String COMMA = ", ";
 	String KEY_LATITUDE = "latitude";
 	String KEY_LONGITUDE = "longitude";
 
@@ -70,7 +122,6 @@ public interface Constants {
 	String KEY_REFERRAL_CODE_ENTERED = "referral_code_entered";
 	String KEY_BRANCH_REFERRING_USER_NAME = "referring_user_name";
 	String FB_LINK_SHARE_NAME = "Jugnoo";
-//	String BRANCH_END_LINK = "https://get.jugnoo.in/#/register";
 
 
 	String DOMAIN_SHARE_JUGNOO_IN = "share.jugnoo.in";
@@ -97,7 +148,6 @@ public interface Constants {
 	String SP_ANALYTICS_LAST_MESSAGE_READ_TIME = "sp_analytics_last_message_read_time";
 
 
-	String FIRST_TIME_DB= "first_time_db";
 	String SECOND_TIME_DB= "second_time_db";
 
 
@@ -116,7 +166,7 @@ public interface Constants {
 	String KEY_RIDE_DATE = "ride_date";
 
 	String KEY_SP_IN_APP_SUPPORT_PANEL_VERSION = "in_app_support_panel_version";
-	String SP_IN_APP_RIDE_SUPPORT_PANEL_VERSION = "in_app_ride_support_panel_version";
+	String KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION = "transaction_support_panel_version";
 	String KEY_SHOW_RIDE_MENU = "show_ride_menu";
 
 
@@ -177,6 +227,7 @@ public interface Constants {
 	String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
 	String KEY_LAST_PUSH_TIME_DIFF = "last_push_time_diff";
 	String KEY_PUSH_CLICKED = "push_clicked";
+	String KEY_TAB_INDEX = "tab_index";
 
 
 
@@ -218,30 +269,14 @@ public interface Constants {
 	String KEY_ICON_SET = "icon_set";
 
 	int VEHICLE_AUTO = 1;
-	int POOL_RIDE = 2;
 
 	String KEY_GIVEN_RATING = "given_rating";
-	String KEY_COUPONS = "coupons";
 
-	String KEY_SIGNED_UP_AT = "signed_up_at";
-	String KEY_CONTACTS = "contacts";
-	String KEY_CONTACT_TYPE = "contact_type";
-	String KEY_CONTACT_VALUE = "contact_value";
-	String KEY_SUBSCRIPTION_STATUS = "subscription_status";
-	String KEY_ACTIVE = "active";
-	String KEY_PHONE = "phone";
-
-	String KEY_PAYMENT_MODE = "payment_mode";
-	String KEY_DELIVERY_SLOT_ID = "delivery_slot_id";
-	String KEY_DELIVERY_ADDRESS = "delivery_address";
-	String KEY_CART = "cart";
-	String KEY_SUB_ITEM_ID = "sub_item_id";
-	String KEY_QUANTITY = "quantity";
-	String SP_FRESH_INTRO_SHOWN = "fresh_intro_shown";
-	String SP_FRESH_CART= "fresh_cart";
 	String EMPTY_JSON_OBJECT = "{}";
-	String KEY_CATEGORY_POSITION = "category_position";
 
+	String KEY_REFER_ALL_STATUS = "refer_all_status";
+	String KEY_REFER_ALL_TEXT = "refer_all_text";
+	String KEY_REFER_ALL_TITLE = "refer_all_title";
 	String KEY_REFER_ALL_STATUS_LOGIN = "refer_all_status_login";
 	String KEY_REFER_ALL_TEXT_LOGIN = "refer_all_text_login";
 	String KEY_REFER_ALL_TITLE_LOGIN = "refer_all_title_login";
@@ -329,7 +364,6 @@ public interface Constants {
 	String KEY_ENABLED = "enabled";
 	String KEY_JUGNOO_CASH = "jugnoo_cash";
 	String KEY_WALLET_ORDER = "wallet_order";
-	String KEY_CANCEL_RIDE_MENU = "cancel_ride_menu";
 	String KEY_KNOWLARITY_MISSED_CALL_NUMBER = "knowlarity_missed_call_number";
 
 	String SP_OTP_SCREEN_OPEN = "sp_otp_screen_open";
@@ -355,6 +389,7 @@ public interface Constants {
 
     String KEY_SHOW_POKEMON_DATA = "show_pokemon_data";
     String SP_POKESTOP_ENABLED_BY_USER = "sp_pokestop_enabled_by_user";
+	String FAB_ENABLED_BY_USER = "fab_enabled_by_user";
     String POKEMON_GO_APP_PACKAGE = "com.nianticlabs.pokemongo";
     String HOME_SCREEN = "Home Screen";
     String KEY_TOTAL_RIDES_AS_USER = "total_rides_as_user";
@@ -366,4 +401,47 @@ public interface Constants {
 	String KEY_PUSH_TYPE = "push_type";
 	String KEY_PUSH_STATUS = "push_status";
 	String KEY_NOTIFICATION_PREFERENCE_ENABLED = "notification_preference_enabled";
+
+	String KEY_INVITE_FRIEND_BUTTON = "invite_friend_button";
+	String KEY_USER_DATA = "user_data";
+	String KEY_AUTOS = "autos";
+	String KEY_FRESH = "fresh";
+	String KEY_MEALS = "meals";
+
+	String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
+	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
+
+	String KEY_FEEDBACK_ORDER_ID = "feedback_order_id";
+	String KEY_QUESTION = "question";
+	String KEY_QUESTION_TYPE = "question_type";
+	String KEY_PENDING_FEEDBACK = "pending_feedback";
+	String KEY_APP_VERSION = "app_version";
+	String KEY_DEVICE_TYPE = "device_type";
+	String KEY_UNIQUE_DEVICE_ID = "unique_device_id";
+	String KEY_DEVICE_ROOTED = "device_rooted";
+	String KEY_UPDATED_CLIENT_ID = "updated_client_id";
+	String KEY_DEFAULT_CLIENT_ID = "default_client_id";
+	String KEY_MEALS_ENABLED = "meals_enabled";
+	String KEY_FRESH_ENABLED = "fresh_enabled";
+	String KEY_DELIVERY_ENABLED = "delivery_enabled";
+	String KEY_ORDER_HISTORY = "order_history";
+	String INTENT_KEY_FROM_BAD = "FromBad";
+	String KEY_MASTER_COUPON = "master_coupon";
+
+	String KEY_FEEDBACK_AMOUNT = "feedback_order_amount";
+	String KEY_FEEDBACK_DATE = "feedback_delivery_date";
+	String KEY_FEEDBACK_VIEW_TYPE = "feedback_view_type";
+	String KEY_PRODUCT_TYPE = "product_type";
+	String KEY_ORDER_ID = "order_id";
+	String KEY_ORDER_DATE = "order_date";
+	String KEY_FATAFAT_ENABLED = "fatafat_enabled";
+	String KEY_INTERNAL_APP_SWITCH = "internal_app_switch";
+	String KEY_APP_SWITCH_BUNDLE = "app_switch_bundle";
+	String KEY_APP_CART_SWITCH_BUNDLE = "app_cart_switch_bundle";
+	String KEY_OPEN_CART = "open_cart";
+	String KEY_STATE_RESTORE_NEEDED = "state_restore_needed";
+	String KEY_REGION = "region";
+	String KEY_SUPPORT_NUMBER = "support_number";
+
+	String INTERATED = "integrated";
 }

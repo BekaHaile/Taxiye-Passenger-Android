@@ -4,42 +4,25 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flurry.android.FlurryAgent;
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.promotion.ReferralActions;
-import product.clicklabs.jugnoo.promotion.ShareActivity;
-import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.NudgeClient;
-import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class BadFeedbackFragment extends Fragment implements FlurryEventNames, Constants{
@@ -89,13 +72,13 @@ public class BadFeedbackFragment extends Fragment implements FlurryEventNames, C
         textViewMatter = (TextView)rootView.findViewById(R.id.textViewMatter);textViewMatter.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         buttonSupport = (Button)rootView.findViewById(R.id.buttonSupport);buttonSupport.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
 
-        textViewDesc.setText(Data.userData.getRideSummaryBadText());
+        textViewDesc.setText(Data.autoData.getRideSummaryBadText());
 
         buttonSupport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int rating = 1;
-                activity.submitFeedbackToDriverAsync(activity, Data.cEngagementId, Data.cDriverId,
+                activity.submitFeedbackToDriverAsync(activity, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                         rating, "", "");
                 activity.startActivity(new Intent(activity, SupportActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -106,7 +89,7 @@ public class BadFeedbackFragment extends Fragment implements FlurryEventNames, C
             @Override
             public void onClick(View v) {
                 activity.performBackpressed();
-                activity.skipFeedbackForCustomerAsync(activity, Data.cEngagementId);
+                activity.skipFeedbackForCustomerAsync(activity, Data.autoData.getcEngagementId());
                 FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_NO);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "ride completed", "skip");
                 activity.flurryEventGAForTransaction();

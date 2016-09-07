@@ -38,6 +38,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.dialogs.JeanieIntroDialog;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -85,10 +86,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
     LinearLayout linearLayoutLogout, linearLayoutAbout;
 
-	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie, imageViewPokemon;
+	ImageView imageViewEditHome, imageViewEditWork, imageViewJugnooJeanie, imageViewPokemon, imageViewFAB, imageViewFABQuestion;
 	RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutJugnooJeanie;
-    LinearLayout relativeLayoutPokemon;
-	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon;
+    LinearLayout relativeLayoutPokemon, relativeLayoutFAB;
+	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
     private boolean setJeanieState;
@@ -175,6 +176,27 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             }
         }
 
+        relativeLayoutFAB = (LinearLayout) findViewById(R.id.relativeLayoutFAB);
+        textViewFAB = (TextView)findViewById(R.id.textViewFAB); textViewFAB.setTypeface(Fonts.mavenMedium(this));
+        imageViewFABQuestion = (ImageView)findViewById(R.id.imageViewFABQuestion);
+        imageViewFAB = (ImageView)findViewById(R.id.imageViewFAB);
+        relativeLayoutFAB.setVisibility(View.GONE);
+        try {
+            if((Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_FAB_SETTING, 0) == 1) &&
+                    (Data.userData.getIntegratedJugnooEnabled() == 1) &&
+                    (Data.userData.getFreshEnabled() == 1 || Data.userData.getMealsEnabled() == 1 ||
+                    Data.userData.getDeliveryEnabled() == 1)){
+                relativeLayoutFAB.setVisibility(View.VISIBLE);
+                if(Prefs.with(AccountActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_on);
+                } else {
+                    imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_off);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         imageViewPokemon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,6 +207,26 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                     imageViewPokemon.setImageResource(R.drawable.jugnoo_sticky_on);
                     Prefs.with(AccountActivity.this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 1);
                 }
+            }
+        });
+
+        imageViewFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Prefs.with(AccountActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_off);
+                    Prefs.with(AccountActivity.this).save(Constants.FAB_ENABLED_BY_USER, 0);
+                } else {
+                    imageViewFAB.setImageResource(R.drawable.jugnoo_sticky_on);
+                    Prefs.with(AccountActivity.this).save(Constants.FAB_ENABLED_BY_USER, 1);
+                }
+            }
+        });
+
+        imageViewFABQuestion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new JeanieIntroDialog(AccountActivity.this).show();
             }
         });
 
@@ -600,7 +642,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
 			try{
 				if(!"".equalsIgnoreCase(Data.userData.userImage)){
-					Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform()).into(imageViewProfileImage);
+                    float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+					Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform())
+                            .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop().into(imageViewProfileImage);
 				}
 			} catch(Exception e){
 				e.printStackTrace();
@@ -660,7 +704,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
 		reloadProfileAPI(this);
         textViewEmergencyContact.setText(getResources()
-                .getString(Data.emergencyContactsList != null && Data.emergencyContactsList.size() > 0 ?
+                .getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
                         R.string.emergency_contacts : R.string.add_emergency_contacts));
 
 		scrollView.scrollTo(0, 0);
@@ -695,7 +739,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
 			HashMap<String, String> params = new HashMap<>();
 
-			params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 			params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
             params.put(Constants.KEY_UPDATED_USER_NAME, updatedName);
@@ -765,7 +809,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             if (AppStatus.getInstance(activity).isOnline(activity)) {
 
                 HashMap<String, String> params = new HashMap<>();
-                params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+                params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
@@ -816,7 +860,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 			DialogPopup.showLoadingDialog(activity, "Updating...");
 
 			HashMap<String, String> params = new HashMap<>();
-            params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+            params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
@@ -867,7 +911,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 			DialogPopup.showLoadingDialog(activity, "Please Wait ...");
 
 			HashMap<String, String> params = new HashMap<>();
-            params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+            params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
@@ -1030,7 +1074,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             DialogPopup.showLoadingDialog(activity, "Updating...");
 
             HashMap<String, String> params = new HashMap<>();
-            params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+            params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
             params.put(Constants.KEY_OLD_PASSWORD, oldPassword);

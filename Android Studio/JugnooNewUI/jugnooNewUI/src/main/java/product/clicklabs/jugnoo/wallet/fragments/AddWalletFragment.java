@@ -322,7 +322,7 @@ public class AddWalletFragment extends Fragment {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
 				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
@@ -396,7 +396,7 @@ public class AddWalletFragment extends Fragment {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 				params.put(Constants.KEY_OTP, otp);
 

@@ -341,9 +341,9 @@ public class EmergencyContactOperationsFragment extends Fragment {
 
 
 	private void setEmergencyContactsToList(){
-		if(Data.emergencyContactsList != null) {
+		if(Data.userData.getEmergencyContactsList() != null) {
 			emergencyContactBeans.clear();
-			for (EmergencyContact emergencyContact : Data.emergencyContactsList) {
+			for (EmergencyContact emergencyContact : Data.userData.getEmergencyContactsList()) {
 				ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo, "",
 						ContactBean.ContactBeanViewType.CONTACT);
 				contactBean.setId(emergencyContact.id);

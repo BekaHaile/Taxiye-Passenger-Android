@@ -2,11 +2,18 @@ package product.clicklabs.jugnoo.datastructure;
 
 import android.content.Context;
 
+import com.sabkuchfresh.utils.AppConstant;
+
 import org.json.JSONObject;
 
-import product.clicklabs.jugnoo.R;
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -14,13 +21,7 @@ public class UserData {
 	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, jugnooFbBanner;
 	public int emailVerificationStatus;
 	private double jugnooBalance;
-	public int numCouponsAvaliable;
-	public double fareFactor;
 	public int showJugnooJeanie;
-	public int contactSaved;
-    public String referAllText, referAllTitle;
-	private int referAllStatusLogin;
-	private String referAllTextLogin, referAllTitleLogin;
 	private int promoSuccess;
 	private String promoMessage;
 
@@ -33,33 +34,40 @@ public class UserData {
 
 	private int t20WCEnable;
 	private String t20WCScheduleVersion, t20WCInfoText;
-	private String publicAccessToken, confirmScreenFareEstimateEnable;
+	private String publicAccessToken;
 
 	private int gamePredictEnable, cToDReferralEnabled;
 	private String gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew;
 
 	private PaytmRechargeInfo paytmRechargeInfo = null;
-	private String city, cityReg, destinationHelpText, inRideSendInviteTextBold, inRideSendInviteTextNormal;
+	private String city, cityReg;
 
 	private int referralLeaderboardEnabled, referralActivityEnabled;
-	private int inviteFriendButton, rideEndGoodFeedbackViewType;
-	private String cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, rideSummaryBadText, fatafatUrlLink,
-			poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackText,
-			baseFarePoolText;
-	private double driverFareFactor;
+	private String fatafatUrlLink;
+
 
 	private int paytmEnabled;
 	private double paytmBalance = -1;
 
-	private int mobikwikEnabled;
+	private int mobikwikEnabled, integratedJugnooEnabled;
 	private double mobikwikBalance = -1;
 
-	private int notificationPreferenceEnabled = 0;
+	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton;
+
+	private ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
+	private int currentCity = 1;
+	private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
+	private ArrayList<MenuInfo> menuInfoList = new ArrayList<>();
+
+	private ReferralMessages referralMessages;
+
+	private String defaultClientId;
+
+	private JeanieIntroDialogContent jeanieIntroDialogContent;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
-					String userImage, String referralCode, String phoneNo, double jugnooBalance, double fareFactor,
-					String jugnooFbBanner, int numCouponsAvaliable,
-					int contactSaved, String referAllText, String referAllTitle,
+					String userImage, String referralCode, String phoneNo, double jugnooBalance,
+					String jugnooFbBanner,
 					int promoSuccess, String promoMessage,
 					int showJugnooJeanie,
 					String branchDesktopUrl, String branchAndroidUrl, String branchIosUrl, String branchFallbackUrl,
@@ -67,13 +75,12 @@ public class UserData {
 					String userId, String inviteEarnScreenImage,
 					int t20WCEnable, String t20WCScheduleVersion, String t20WCInfoText, String publicAccessToken,
 					int gamePredictEnable, String gamePredictUrl, String gamePredictIconUrl, String gamePredictName, String gamePredictNew,
-					int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin, int cToDReferralEnabled,
-					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled, String destinationHelpText,
-					String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2, String rideSummaryBadText,
-					String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String fatafatUrlLink, String confirmScreenFareEstimateEnable,
-					String poolDestinationPopupText1, String poolDestinationPopupText2, String poolDestinationPopupText3, int inviteFriendButton,
-					int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText,
-					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled){
+					int cToDReferralEnabled,
+					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
+					String fatafatUrlLink,
+					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled,
+					int mealsEnabled, int freshEnabled, int deliveryEnabled, int inviteFriendButton, String defaultClientId,
+					int integratedJugnooEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -85,13 +92,8 @@ public class UserData {
 		this.referralCode = referralCode;
 		this.phoneNo = phoneNo;
 		this.jugnooBalance = jugnooBalance;
-		this.fareFactor = fareFactor;
-		
+
 		this.jugnooFbBanner = jugnooFbBanner;
-		this.numCouponsAvaliable = numCouponsAvaliable;
-		this.contactSaved = contactSaved;
-        this.referAllText = referAllText;
-		this.referAllTitle = referAllTitle;
 
 		this.promoSuccess = promoSuccess;
 		this.promoMessage = promoMessage;
@@ -121,9 +123,6 @@ public class UserData {
 		this.gamePredictName = gamePredictName;
 		this.gamePredictNew = gamePredictNew;
 
-		this.referAllStatusLogin = referAllStatusLogin;
-		this.referAllTextLogin = referAllTextLogin;
-		this.referAllTitleLogin = referAllTitleLogin;
 		this.cToDReferralEnabled = cToDReferralEnabled;
 
 		this.city = city;
@@ -131,28 +130,21 @@ public class UserData {
 
 		this.referralLeaderboardEnabled = referralLeaderboardEnabled;
 		this.referralActivityEnabled = referralActivityEnabled;
-		this.destinationHelpText = destinationHelpText;
-		this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
-		this.cancellationChargesPopupTextLine2 = cancellationChargesPopupTextLine2;
-		this.rideSummaryBadText = rideSummaryBadText;
-		this.driverFareFactor = 1;
-		this.inRideSendInviteTextBold = inRideSendInviteTextBold;
-		this.inRideSendInviteTextNormal = inRideSendInviteTextNormal;
 		this.fatafatUrlLink = fatafatUrlLink;
-		this.confirmScreenFareEstimateEnable = confirmScreenFareEstimateEnable;
-		this.poolDestinationPopupText1 = poolDestinationPopupText1;
-		this.poolDestinationPopupText2 = poolDestinationPopupText2;
-		this.poolDestinationPopupText3 = poolDestinationPopupText3;
-		this.inviteFriendButton = inviteFriendButton;
-		this.rideEndGoodFeedbackViewType = rideEndGoodFeedbackViewType;
-		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
-		this.baseFarePoolText = baseFarePoolText;
 		this.notificationPreferenceEnabled = notificationPreferenceEnabled;
 
 		checkUserImage();
 
 		this.paytmEnabled = paytmEnabled;
 		this.mobikwikEnabled = mobikwikEnabled;
+		this.mealsEnabled = mealsEnabled;
+		this.freshEnabled = freshEnabled;
+		this.deliveryEnabled = deliveryEnabled;
+
+		this.inviteFriendButton = inviteFriendButton;
+
+		this.defaultClientId = defaultClientId;
+		this.integratedJugnooEnabled = integratedJugnooEnabled;
 	}
 
 	private void checkUserImage(){
@@ -395,30 +387,6 @@ public class UserData {
 		this.gamePredictEnable = gamePredictEnable;
 	}
 
-	public String getReferAllTextLogin() {
-		return referAllTextLogin;
-	}
-
-	public void setReferAllTextLogin(String referAllTextLogin) {
-		this.referAllTextLogin = referAllTextLogin;
-	}
-
-	public int getReferAllStatusLogin() {
-		return referAllStatusLogin;
-	}
-
-	public void setReferAllStatusLogin(int referAllStatusLogin) {
-		this.referAllStatusLogin = referAllStatusLogin;
-	}
-
-	public String getReferAllTitleLogin() {
-		return referAllTitleLogin;
-	}
-
-	public void setReferAllTitleLogin(String referAllTitleLogin) {
-		this.referAllTitleLogin = referAllTitleLogin;
-	}
-
 	public int getcToDReferralEnabled() {
 		return cToDReferralEnabled;
 	}
@@ -459,76 +427,12 @@ public class UserData {
 		this.referralActivityEnabled = referralActivityEnabled;
 	}
 
-	public String getDestinationHelpText() {
-		return destinationHelpText;
-	}
-
-	public void setDestinationHelpText(String destinationHelpText) {
-		this.destinationHelpText = destinationHelpText;
-	}
-
-	public String getCancellationChargesPopupTextLine2() {
-		return cancellationChargesPopupTextLine2;
-	}
-
-	public void setCancellationChargesPopupTextLine2(String cancellationChargesPopupTextLine2) {
-		this.cancellationChargesPopupTextLine2 = cancellationChargesPopupTextLine2;
-	}
-
-	public String getCancellationChargesPopupTextLine1() {
-		return cancellationChargesPopupTextLine1;
-	}
-
-	public void setCancellationChargesPopupTextLine1(String cancellationChargesPopupTextLine1) {
-		this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
-	}
-
-	public String getRideSummaryBadText() {
-		return rideSummaryBadText;
-	}
-
-	public void setRideSummaryBadText(String rideSummaryBadText) {
-		this.rideSummaryBadText = rideSummaryBadText;
-	}
-
-	public double getDriverFareFactor() {
-		return driverFareFactor;
-	}
-
-	public void setDriverFareFactor(double driverFareFactor) {
-		this.driverFareFactor = driverFareFactor;
-	}
-
-	public String getInRideSendInviteTextNormal() {
-		return inRideSendInviteTextNormal;
-	}
-
-	public void setInRideSendInviteTextNormal(String inRideSendInviteTextNormal) {
-		this.inRideSendInviteTextNormal = inRideSendInviteTextNormal;
-	}
-
-	public String getInRideSendInviteTextBold() {
-		return inRideSendInviteTextBold;
-	}
-
-	public void setInRideSendInviteTextBold(String inRideSendInviteTextBold) {
-		this.inRideSendInviteTextBold = inRideSendInviteTextBold;
-	}
-
 	public String getFatafatUrlLink() {
 		return fatafatUrlLink;
 	}
 
 	public void setFatafatUrlLink(String fatafatUrlLink) {
 		this.fatafatUrlLink = fatafatUrlLink;
-	}
-
-	public String getConfirmScreenFareEstimateEnable() {
-		return confirmScreenFareEstimateEnable;
-	}
-
-	public void setConfirmScreenFareEstimateEnable(String confirmScreenFareEstimateEnable) {
-		this.confirmScreenFareEstimateEnable = confirmScreenFareEstimateEnable;
 	}
 
 	public int getMobikwikEnabled() {
@@ -582,7 +486,7 @@ public class UserData {
 			setJugnooBalance(jObj.optDouble(Constants.KEY_JUGNOO_BALANCE, getJugnooBalance()));
 			if(jObj.has(Constants.KEY_PAYTM_BALANCE)){
 				setPaytmBalance(jObj.optDouble(Constants.KEY_PAYTM_BALANCE, getPaytmBalance()));
-				if(getPaytmBalance() > 0) {
+				if(getPaytmBalance() > 0 || removeWalletIfNoKey) {
 					setPaytmEnabled(1);
 				}
 			} else{
@@ -593,7 +497,7 @@ public class UserData {
 
 			if(jObj.has(Constants.KEY_MOBIKWIK_BALANCE)){
 				setMobikwikBalance(jObj.optDouble(Constants.KEY_MOBIKWIK_BALANCE, getMobikwikBalance()));
-				if(getMobikwikBalance() > 0) {
+				if(getMobikwikBalance() > 0 || removeWalletIfNoKey) {
 					setMobikwikEnabled(1);
 				}
 			} else{
@@ -606,28 +510,37 @@ public class UserData {
 		}
 	}
 
-	public String getPoolDestinationPopupText1() {
-		return poolDestinationPopupText1;
+
+	public int getNotificationSettingEnabled() {
+		return notificationPreferenceEnabled;
 	}
 
-	public void setPoolDestinationPopupText1(String poolDestinationPopupText1) {
-		this.poolDestinationPopupText1 = poolDestinationPopupText1;
+	public void setNotificationSettingEnabled(int isSettingEnabled) {
+		this.notificationPreferenceEnabled = isSettingEnabled;
 	}
 
-	public String getPoolDestinationPopupText2() {
-		return poolDestinationPopupText2;
+	public int getMealsEnabled() {
+		return mealsEnabled;
 	}
 
-	public void setPoolDestinationPopupText2(String poolDestinationPopupText2) {
-		this.poolDestinationPopupText2 = poolDestinationPopupText2;
+	public void setMealsEnabled(int mealsEnabled) {
+		this.mealsEnabled = mealsEnabled;
 	}
 
-	public String getPoolDestinationPopupText3() {
-		return poolDestinationPopupText3;
+	public int getFreshEnabled() {
+		return freshEnabled;
 	}
 
-	public void setPoolDestinationPopupText3(String poolDestinationPopupText3) {
-		this.poolDestinationPopupText3 = poolDestinationPopupText3;
+	public void setFreshEnabled(int freshEnabled) {
+		this.freshEnabled = freshEnabled;
+	}
+
+	public int getDeliveryEnabled() {
+		return deliveryEnabled;
+	}
+
+	public void setDeliveryEnabled(int deliveryEnabled) {
+		this.deliveryEnabled = deliveryEnabled;
 	}
 
 	public int getInviteFriendButton() {
@@ -638,37 +551,155 @@ public class UserData {
 		this.inviteFriendButton = inviteFriendButton;
 	}
 
-	public int getRideEndGoodFeedbackViewType() {
-		return rideEndGoodFeedbackViewType;
+	public ArrayList<EmergencyContact> getEmergencyContactsList() {
+		return emergencyContactsList;
 	}
 
-	public void setRideEndGoodFeedbackViewType(int rideEndGoodFeedbackViewType) {
-		this.rideEndGoodFeedbackViewType = rideEndGoodFeedbackViewType;
+	public void setEmergencyContactsList(ArrayList<EmergencyContact> emergencyContactsList) {
+		this.emergencyContactsList = emergencyContactsList;
 	}
 
-	public String getRideEndGoodFeedbackText() {
-		return rideEndGoodFeedbackText;
+	public int getCurrentCity() {
+		return currentCity;
 	}
 
-	public void setRideEndGoodFeedbackText(String rideEndGoodFeedbackText) {
-		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+	public void setCurrentCity(int currentCity) {
+		this.currentCity = currentCity;
 	}
 
-	public String getBaseFarePoolText() {
-		return baseFarePoolText;
+	public ArrayList<PromoCoupon> getPromoCoupons() {
+		return promoCoupons;
 	}
 
-	public void setBaseFarePoolText(String baseFarePoolText) {
-		this.baseFarePoolText = baseFarePoolText;
+	public void setPromoCoupons(ArrayList<PromoCoupon> promoCoupons) {
+		this.promoCoupons = promoCoupons;
 	}
 
-
-	public int getNotificationSettingEnabled() {
-		return notificationPreferenceEnabled;
+	public ArrayList<MenuInfo> getMenuInfoList() {
+		return menuInfoList;
 	}
 
-	public void setNotificationSettingEnabled(int isSettingEnabled) {
-		this.notificationPreferenceEnabled = isSettingEnabled;
+	public void setMenuInfoList(ArrayList<MenuInfo> menuInfoList) {
+		this.menuInfoList = menuInfoList;
 	}
 
+	public ReferralMessages getReferralMessages() {
+		return referralMessages;
+	}
+
+	public void setReferralMessages(ReferralMessages referralMessages) {
+		this.referralMessages = referralMessages;
+	}
+
+	public String getDefaultClientId() {
+		return defaultClientId;
+	}
+
+	public void setDefaultClientId(String defaultClientId) {
+		this.defaultClientId = defaultClientId;
+	}
+
+	public int getIntegratedJugnooEnabled() {
+		return integratedJugnooEnabled;
+	}
+
+	public void setIntegratedJugnooEnabled(int integratedJugnooEnabled) {
+		this.integratedJugnooEnabled = integratedJugnooEnabled;
+	}
+
+	public int getTotalCouponCount() {
+		int count = 0;
+		try {
+			if(promoCoupons != null) {
+				count = promoCoupons.size();
+			}
+			if(Data.autoData != null && Data.autoData.getPromoCoupons() != null) {
+				count += Data.autoData.getPromoCoupons().size();
+			}
+			if(Data.getFreshData() != null && Data.getFreshData().getPromoCoupons() != null) {
+				count += Data.getFreshData().getPromoCoupons().size();
+			}
+			if(Data.getMealsData() != null && Data.getMealsData().getPromoCoupons() != null) {
+				count += Data.getMealsData().getPromoCoupons().size();
+			}
+			if(Data.getDeliveryData() != null && Data.getDeliveryData().getPromoCoupons() != null) {
+				count += Data.getDeliveryData().getPromoCoupons().size();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	public ArrayList<PromoCoupon> getCoupons(int appType) {
+		ArrayList<PromoCoupon> coupons = new ArrayList<>();
+		if(appType == AppConstant.AppType.AUTO) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).autos.equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).autos.equals(1))) {
+                        coupons.add(promoCoupon);
+                    }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.autoData.getPromoCoupons());
+		} else if(appType == AppConstant.AppType.FRESH) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).fresh.equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).fresh.equals(1))) {
+                        coupons.add(promoCoupon);
+                    }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.getFreshData().getPromoCoupons());
+		} else if(appType == AppConstant.AppType.MEALS) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).meals.equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).meals.equals(1))) {
+                        coupons.add(promoCoupon);
+                    }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.getMealsData().getPromoCoupons());
+		} else if(appType == AppConstant.AppType.DELIVERY) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).delivery.equals(1)) ||
+							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).delivery.equals(1))) {
+						coupons.add(promoCoupon);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			coupons.addAll(Data.getDeliveryData().getPromoCoupons());
+		}
+
+		return coupons;
+	}
+
+	public JeanieIntroDialogContent getJeanieIntroDialogContent() {
+		return jeanieIntroDialogContent;
+	}
+
+	public void setJeanieIntroDialogContent(JeanieIntroDialogContent jeanieIntroDialogContent) {
+		this.jeanieIntroDialogContent = jeanieIntroDialogContent;
+	}
+
+//	"meals_enabled": 1,
+//			"fresh_enabled": 1,
+//			"delivery_enabled": 1,
+//			"default_client_id": "FHkmrtv6zn0KuGcW",
 }

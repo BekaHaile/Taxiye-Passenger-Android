@@ -187,7 +187,6 @@
             android:layout_width="match_parent"
             android:layout_height="187px"
             android:layout_marginBottom="10px"
-            android:animateLayoutChanges="true"
             android:soundEffectsEnabled="false">
 
             <ImageView
@@ -228,7 +227,18 @@
                 android:tag="mwar"
                 android:layout_marginLeft="56px"
                 android:layout_centerVertical="true"
-                android:visibility="visible"
+                android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/imageViewFabFake"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:src="@drawable/ic_fab_fake_selector"
+                android:tag="DontTouchMe"
+                android:layout_marginLeft="20dp"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
                 />
 
         </RelativeLayout>

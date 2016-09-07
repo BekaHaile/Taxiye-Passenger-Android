@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/sliding_bottom_bg_color">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewCategoryItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false">
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/noMealsView"
+        android:layout_width="376px"
+        android:layout_height="404px"
+        android:tag="mwar"
+        android:background="@drawable/ic_no_meals"
+        android:layout_centerInParent="true"
+        />
+
+    <LinearLayout
+        android:id="@+id/noFreshsView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="376px"
+            android:layout_height="270px"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/img_no_items_fresh"
+            android:tag="mwar"
+            />
+
+        <TextView
+            android:id="@+id/swipe_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38px"
+            android:text="@string/please_swipe_down_to_reload"
+            android:textColor="@color/text_color"
+            android:textSize="36px"
+            />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -46,7 +46,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
     private View rootView;
     private RecyclerView recyclerView;
     private NotificationSettingAdapter settingAdapter;
-    private TextView textViewpref;
+    private TextView textViewpref, textViewNotiDesc;
     public NotificationSettingFragment(){}
 
 
@@ -76,7 +76,8 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
         recyclerView.setHasFixedSize(false);
 
         textViewpref = (TextView) rootView.findViewById(R.id.textViewpref);
-        textViewpref.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        textViewpref.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+        textViewNotiDesc = (TextView) rootView.findViewById(R.id.textViewNotiDesc); textViewNotiDesc.setTypeface(Fonts.mavenMedium(activity));
 
         settingAdapter = new NotificationSettingAdapter(activity, R.layout.list_item_notification_setting, this);
         recyclerView.setAdapter(settingAdapter);
@@ -98,7 +99,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                 DialogPopup.showLoadingDialog(activity, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+                params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 
                 RestClient.getApiServices().getNotificationPreference(params, new Callback<NotificationSettingResponseModel>() {
                     @Override
@@ -171,7 +172,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                 DialogPopup.showLoadingDialog(activity, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_CLIENT_ID, Config.getClientId());
+                params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
                 params.put(Constants.KEY_PUSH_TYPE, name);
                 params.put(Constants.KEY_PUSH_STATUS, ""+status);
 

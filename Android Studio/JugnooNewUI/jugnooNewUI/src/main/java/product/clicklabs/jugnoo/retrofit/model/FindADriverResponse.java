@@ -10,6 +10,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 
 
@@ -35,19 +37,16 @@ public class FindADriverResponse {
     private String farAwayCity;
     @SerializedName("coupons")
     @Expose
-    private List<Coupon> coupons = new ArrayList<Coupon>();
+    private List<CouponInfo> coupons = new ArrayList<>();
     @SerializedName("promotions")
     @Expose
-    private List<Promotion> promotions = new ArrayList<Promotion>();
+    private List<PromotionInfo> promotions = new ArrayList<>();
     @SerializedName("fare_structure")
     @Expose
     private List<FareStructure> fareStructure = new ArrayList<FareStructure>();
     @SerializedName("regions")
     @Expose
     private List<Region> regions = new ArrayList<>();
-    @SerializedName("fresh_available")
-    @Expose
-    private Integer freshAvailable;
 
     @SerializedName("campaigns")
     @Expose
@@ -55,6 +54,132 @@ public class FindADriverResponse {
     @SerializedName("city_id")
     @Expose
     private Integer cityId;
+    @SerializedName("fresh_enabled")
+    @Expose
+    private Integer freshEnabled = 0;
+    @SerializedName("meals_enabled")
+    @Expose
+    private Integer mealsEnabled = 0;
+    @SerializedName("delivery_enabled")
+    @Expose
+    private Integer deliveryEnabled = 0;
+    @SerializedName("game_predict_url")
+    @Expose
+    private String gamePredictUrl = "";
+
+
+    @SerializedName("common_promotions")
+    @Expose
+    private List<PromotionInfo> commonPromotions = new ArrayList<>();
+    @SerializedName("common_coupons")
+    @Expose
+    private List<CouponInfo> commonCoupons = new ArrayList<>();
+    @SerializedName("autos_promotions")
+    @Expose
+    private List<PromotionInfo> autosPromotions = new ArrayList<>();
+    @SerializedName("autos_coupons")
+    @Expose
+    private List<CouponInfo> autosCoupons = new ArrayList<>();
+    @SerializedName("fresh_promotions")
+    @Expose
+    private List<PromotionInfo> freshPromotions = new ArrayList<>();
+    @SerializedName("fresh_coupons")
+    @Expose
+    private List<CouponInfo> freshCoupons = new ArrayList<>();
+    @SerializedName("meals_promotions")
+    @Expose
+    private List<PromotionInfo> mealsPromotions = new ArrayList<>();
+    @SerializedName("meals_coupons")
+    @Expose
+    private List<CouponInfo> mealsCoupons = new ArrayList<>();
+    @SerializedName("delivery_promotions")
+    @Expose
+    private List<PromotionInfo> deliveryPromotions = new ArrayList<>();
+    @SerializedName("delivery_coupons")
+    @Expose
+    private List<CouponInfo> deliveryCoupons = new ArrayList<>();
+
+    public List<CouponInfo> getDeliveryCoupons() {
+        return deliveryCoupons;
+    }
+
+    public void setDeliveryCoupons(List<CouponInfo> deliveryCoupons) {
+        this.deliveryCoupons = deliveryCoupons;
+    }
+
+    public List<PromotionInfo> getCommonPromotions() {
+        return commonPromotions;
+    }
+
+    public void setCommonPromotions(List<PromotionInfo> commonPromotions) {
+        this.commonPromotions = commonPromotions;
+    }
+
+    public List<CouponInfo> getCommonCoupons() {
+        return commonCoupons;
+    }
+
+    public void setCommonCoupons(List<CouponInfo> commonCoupons) {
+        this.commonCoupons = commonCoupons;
+    }
+
+    public List<PromotionInfo> getAutosPromotions() {
+        return autosPromotions;
+    }
+
+    public void setAutosPromotions(List<PromotionInfo> autosPromotions) {
+        this.autosPromotions = autosPromotions;
+    }
+
+    public List<CouponInfo> getAutosCoupons() {
+        return autosCoupons;
+    }
+
+    public void setAutosCoupons(List<CouponInfo> autosCoupons) {
+        this.autosCoupons = autosCoupons;
+    }
+
+    public List<PromotionInfo> getFreshPromotions() {
+        return freshPromotions;
+    }
+
+    public void setFreshPromotions(List<PromotionInfo> freshPromotions) {
+        this.freshPromotions = freshPromotions;
+    }
+
+    public List<CouponInfo> getFreshCoupons() {
+        return freshCoupons;
+    }
+
+    public void setFreshCoupons(List<CouponInfo> freshCoupons) {
+        this.freshCoupons = freshCoupons;
+    }
+
+    public List<PromotionInfo> getMealsPromotions() {
+        return mealsPromotions;
+    }
+
+    public void setMealsPromotions(List<PromotionInfo> mealsPromotions) {
+        this.mealsPromotions = mealsPromotions;
+    }
+
+    public List<CouponInfo> getMealsCoupons() {
+        return mealsCoupons;
+    }
+
+    public void setMealsCoupons(List<CouponInfo> mealsCoupons) {
+        this.mealsCoupons = mealsCoupons;
+    }
+
+    public List<PromotionInfo> getDeliveryPromotions() {
+        return deliveryPromotions;
+    }
+
+    public void setDeliveryPromotions(List<PromotionInfo> deliveryPromotions) {
+        this.deliveryPromotions = deliveryPromotions;
+    }
+
+
 
     /**
      *
@@ -143,7 +268,7 @@ public class FindADriverResponse {
      * @return
      * The coupons
      */
-    public List<Coupon> getCoupons() {
+    public List<CouponInfo> getCoupons() {
         return coupons;
     }
 
@@ -152,7 +277,7 @@ public class FindADriverResponse {
      * @param coupons
      * The coupons
      */
-    public void setCoupons(List<Coupon> coupons) {
+    public void setCoupons(List<CouponInfo> coupons) {
         this.coupons = coupons;
     }
 
@@ -161,7 +286,7 @@ public class FindADriverResponse {
      * @return
      * The promotions
      */
-    public List<Promotion> getPromotions() {
+    public List<PromotionInfo> getPromotions() {
         return promotions;
     }
 
@@ -170,7 +295,7 @@ public class FindADriverResponse {
      * @param promotions
      * The promotions
      */
-    public void setPromotions(List<Promotion> promotions) {
+    public void setPromotions(List<PromotionInfo> promotions) {
         this.promotions = promotions;
     }
 
@@ -201,14 +326,6 @@ public class FindADriverResponse {
         this.regions = regions;
     }
 
-    public Integer getFreshAvailable() {
-        return freshAvailable;
-    }
-
-    public void setFreshAvailable(Integer freshAvailable) {
-        this.freshAvailable = freshAvailable;
-    }
-
     public Double getDriverFareFactor() {
         return driverFareFactor;
     }
@@ -223,5 +340,37 @@ public class FindADriverResponse {
 
     public void setCityId(Integer cityId) {
         this.cityId = cityId;
+    }
+
+    public Integer getDeliveryEnabled() {
+        return deliveryEnabled;
+    }
+
+    public void setDeliveryEnabled(Integer deliveryEnabled) {
+        this.deliveryEnabled = deliveryEnabled;
+    }
+
+    public Integer getFreshEnabled() {
+        return freshEnabled;
+    }
+
+    public void setFreshEnabled(Integer freshEnabled) {
+        this.freshEnabled = freshEnabled;
+    }
+
+    public Integer getMealsEnabled() {
+        return mealsEnabled;
+    }
+
+    public void setMealsEnabled(Integer mealsEnabled) {
+        this.mealsEnabled = mealsEnabled;
+    }
+
+    public String getGamePredictUrl() {
+        return gamePredictUrl;
+    }
+
+    public void setGamePredictUrl(String gamePredictUrl) {
+        this.gamePredictUrl = gamePredictUrl;
     }
 }

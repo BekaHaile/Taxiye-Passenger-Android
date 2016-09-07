@@ -22,7 +22,13 @@ public enum AppLinkIndex {
 
 	GAME_PAGE(9), // opens Game Screen (eg. T20)
 
-	FRESH_PAGE(10) // opens Fresh Screen
+	FRESH_PAGE(10), // opens Fresh Screen
+
+	MEAL_PAGE(11), // open Meal Screen
+
+	DELIVERY_PAGE(12), // open Delivery Screen
+
+	AUTO_PAGE(13) // open Auto Screen
 
 	;
 

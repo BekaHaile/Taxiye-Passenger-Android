@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="630px"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="630px"
+            android:layout_height="262px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8px"
+            android:layout_marginLeft="8px"
+            android:layout_marginRight="8px"
+            android:src="@drawable/ic_rate_us"
+            android:tag="mwar"
+            android:scaleType="centerCrop"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewSkin"
+            android:layout_width="630px"
+            android:layout_height="110px"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="150px"
+            android:layout_marginLeft="8px"
+            android:layout_marginRight="8px"
+            android:src="@drawable/ic_fresh_skin"
+            android:tag="mwar"
+
+            />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="36px"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:gravity="center"
+            android:text="Glad you liked our Service."
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/text_size_34"
+            android:textAllCaps="false"
+            />
+
+
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Recommend Fatafat to others by leaving \nus a review on Play Store! \nWe apprecate your support."
+            android:textColor="@color/text_color_dark"
+            android:textSize="@dimen/text_size_26"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="20px"
+            android:layout_marginTop="30px"
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginLeft="74px"
+            android:layout_marginRight="74px"
+            android:layout_marginTop="20px"
+            android:layout_marginBottom="40px"
+            android:background="@color/text_color_light"
+            />
+
+
+        <Button
+            android:id="@+id/button"
+            style="@style/ButtonTheme"
+            android:layout_gravity="center_horizontal"
+            android:textAllCaps="false"
+            android:layout_marginBottom="20px"
+            android:text="Yes, rate it now!"/>
+
+
+        <Button
+            android:id="@+id/dismiss"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="@dimen/button_height"
+            android:background="@color/transparent"
+            android:textSize="@dimen/text_size_34"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30px"
+            android:text="Dismiss"/>
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

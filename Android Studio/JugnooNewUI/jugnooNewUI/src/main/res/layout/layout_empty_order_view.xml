@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:id="@+id/order_empty_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <ImageView
+        android:id="@+id/imageViewNoItems"
+        android:layout_width="416px"
+        android:layout_height="304px"
+        android:tag="mwar"
+        android:src="@drawable/ic_no_orders"
+        android:layout_centerInParent="true"
+        />
+
+    <!--<com.sabkuchfresh.widgets.TypefacedTextView-->
+        <!--android:id="@+id/empty_view_text"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/margin_huge"-->
+        <!--android:gravity="center"-->
+        <!--android:text="You haven't done any transactions yet."-->
+        <!--android:textSize="@dimen/text_large"/>-->
+
+    <com.sabkuchfresh.widgets.TypefacedTextView
+        android:id="@+id/place_order"
+        style="@style/sabkuchfresh.Text.RobotoRegularSmall_blueLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginTop="@dimen/margin_huge"
+        android:text="Place order now"
+        android:visibility="gone"/>
+
+</LinearLayout>

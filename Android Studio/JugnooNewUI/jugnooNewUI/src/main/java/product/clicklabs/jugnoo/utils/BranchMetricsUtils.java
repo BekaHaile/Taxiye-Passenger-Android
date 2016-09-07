@@ -34,13 +34,14 @@ public class BranchMetricsUtils {
 
     public void getBranchLinkForChannel(String channel, final String spKey, final String userIdentifier,
                                         final String referralCode, final String referringUserName,
-                                        final String fbShareDescription, final String jugnooFbBanner,
+                                        final String title, final String fbShareDescription, final String jugnooFbBanner,
                                         String branchDesktopUrl, String branchAndroidUrl,
                                         String branchIosUrl, String branchFallbackUrl){
 
         String existingUrl = Prefs.with(context).getString(spKey, "");
         String existingUserIdentifier = Prefs.with(context).getString(SPLabels.USER_IDENTIFIER, "");
 
+        String existingLinkTitle = Prefs.with(context).getString(SPLabels.BRANCH_LINK_TITLE, "");
         String existingLinkDescription = Prefs.with(context).getString(SPLabels.BRANCH_LINK_DESCRIPTION, "");
         String existingLinkImage = Prefs.with(context).getString(SPLabels.BRANCH_LINK_IMAGE, "");
 
@@ -62,6 +63,9 @@ public class BranchMetricsUtils {
             Prefs.with(context).save(SPLabels.BRANCH_IOS_URL, branchIosUrl);
             Prefs.with(context).save(SPLabels.BRANCH_FALLBACK_URL, branchFallbackUrl);
         }
+        if(!title.equalsIgnoreCase(existingLinkTitle)){
+            existingUrl = "";
+        }
         if(!fbShareDescription.equalsIgnoreCase(existingLinkDescription)){
             existingUrl = "";
         }
@@ -81,7 +85,7 @@ public class BranchMetricsUtils {
                     .setCanonicalUrl("https://jugnoo.in")
 
                             // This is where you define the open graph structure and how the object will appear on Facebook or in a deepview
-                    .setTitle(Constants.FB_LINK_SHARE_NAME)
+                    .setTitle(title)
                     .setContentDescription(fbShareDescription)
                     .setContentImageUrl(jugnooFbBanner)
 
@@ -127,6 +131,7 @@ public class BranchMetricsUtils {
                     if(error == null){
                         Prefs.with(context).save(spKey, url);
                         Prefs.with(context).save(SPLabels.USER_IDENTIFIER, userIdentifier);
+                        Prefs.with(context).save(SPLabels.BRANCH_LINK_TITLE, title);
                         Prefs.with(context).save(SPLabels.BRANCH_LINK_DESCRIPTION, fbShareDescription);
                         Prefs.with(context).save(SPLabels.BRANCH_LINK_IMAGE, jugnooFbBanner);
                         branchMetricsEventHandler.onBranchLinkCreated(url);

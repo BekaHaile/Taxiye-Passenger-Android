@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -35,10 +36,13 @@ import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
-import product.clicklabs.jugnoo.support.models.GetRideSummaryResponse;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -79,27 +83,30 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
     EndRideDiscountsAdapter endRideDiscountsAdapter;
 
     EndRideData endRideData = null;
-    GetRideSummaryResponse getRideSummaryResponse;
+    ArrayList<ShowPanelResponse.Item> items;
     private int engagementId = 0;
 
     private View rootView;
     private FragmentActivity activity;
     private boolean rideCancelled;
+    private int autosStatus;
 
     public RideSummaryFragment() {
     }
 
     @SuppressLint("ValidFragment")
-    public RideSummaryFragment(int engagementId, boolean rideCancelled) {
+    public RideSummaryFragment(int engagementId, boolean rideCancelled, int autosStatus) {
         this.engagementId = engagementId;
         this.rideCancelled = rideCancelled;
+        this.autosStatus = autosStatus;
     }
 
     @SuppressLint("ValidFragment")
-    public RideSummaryFragment(EndRideData endRideData, boolean rideCancelled) {
+    public RideSummaryFragment(EndRideData endRideData, boolean rideCancelled, int autosStatus) {
         this.engagementId = Integer.parseInt(endRideData.engagementId);
         this.endRideData = endRideData;
         this.rideCancelled = rideCancelled;
+        this.autosStatus = autosStatus;
     }
 
 
@@ -261,7 +268,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
                 if (activity instanceof RideTransactionsActivity) {
                     new TransactionUtils().openRideIssuesFragment(activity,
                             ((RideTransactionsActivity) activity).getContainer(),
-                            engagementId, endRideData, getRideSummaryResponse, 0, false);
+                            engagementId, -1, endRideData, items, 0, false, autosStatus, null);
                     FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
                     Bundle bundle = new Bundle();
                     MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.RIDE_HISTORY+"_"+ FirebaseEvents.NEED_HELP_ON_A_RIDE, bundle);
@@ -273,8 +280,8 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
         });
 
         try {
-            if (engagementId == -1 && Data.endRideData != null) {
-                endRideData = Data.endRideData;
+            if (engagementId == -1 && Data.autoData.getEndRideData() != null) {
+                endRideData = Data.autoData.getEndRideData();
                 setRideData();
             } else if (engagementId != -1) {
                 if (endRideData != null) {
@@ -367,12 +374,13 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
                     relativeLayoutConvenienceCharge.setVisibility(View.GONE);
                 }
 
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewEndRideAutoIcon.getLayoutParams();
                 if (endRideData.getIsPooled() == 1) {
-                    imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_invoice_pool);
-                    params.width = (int) (ASSL.Xscale() * 67);
-                    params.height = (int) (ASSL.Xscale() * 37);
-                    imageViewEndRideAutoIcon.setLayoutParams(params);
+                    if(endRideData.getVehicleType() == VehicleTypeValue.AUTOS.getOrdinal()){
+                        imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_history_pool);
+                    }
+                    else if(endRideData.getVehicleType() == VehicleTypeValue.TAXI.getOrdinal()){
+                        imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_history_carpool);
+                    }
                 }
 
                 if (endRideData.discountTypes.size() > 0) {
@@ -493,12 +501,12 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
 
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
-        new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), Data.fareStructure.getFixedFare(),
+        new ApiGetRideSummary(activity, Data.userData.accessToken, Integer.parseInt(engagementId), -1, Data.autoData.getFareStructure().getFixedFare(),
                 new ApiGetRideSummary.Callback() {
                     @Override
-                    public void onSuccess(EndRideData endRideData, GetRideSummaryResponse getRideSummaryResponse) {
+                    public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
                         RideSummaryFragment.this.endRideData = endRideData;
-                        RideSummaryFragment.this.getRideSummaryResponse = getRideSummaryResponse;
+                        RideSummaryFragment.this.items = items;
                         setRideData();
                     }
 
@@ -520,7 +528,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
                     public void onNoRetry(View view) {
                         performBackPressed();
                     }
-                }).getRideSummaryAPI(rideCancelled);
+                }).getRideSummaryAPI(autosStatus, ProductType.AUTO, false);
     }
 
 

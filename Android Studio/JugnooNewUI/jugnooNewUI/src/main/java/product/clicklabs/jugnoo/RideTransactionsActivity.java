@@ -8,10 +8,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
-import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -29,7 +27,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	ImageView imageViewBack, imageViewInvoice;
 
     RelativeLayout relativeLayoutContainer;
-
     public static UpdateRideTransaction updateRideTransaction;
 
 	@Override
@@ -37,7 +34,12 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
     }
-	
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -22,6 +22,8 @@ import android.os.Build;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -122,7 +124,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
     @SuppressWarnings("deprecation")
     private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
-											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush) {
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag) {
 
         try {
             long when = System.currentTimeMillis();
@@ -137,12 +139,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				deepindex = showDialog == 1 ? -1 : deepindex;
 				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
 				notificationIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
-
-				if(HomeActivity.appInterruptHandler != null && showDialog == 1){
-					HomeActivity.appInterruptHandler.onShowDialogPush();
-				}
+				notificationIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
 			} else{
 				notificationIntent.setData(Uri.parse(url));
+			}
+
+			if(HomeActivity.appInterruptHandler != null && showDialog == 1){
+				HomeActivity.appInterruptHandler.onShowDialogPush();
 			}
 
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -191,7 +194,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 	@SuppressWarnings("deprecation")
 	private void generateNotificationForCall(Context context, String title, String message, int notificationId,
-											 String callNumber, String eta, int playSound) {
+											 String callNumber, String eta, int playSound, String clientID) {
 
 		try {
 			long when = System.currentTimeMillis();
@@ -199,17 +202,31 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 			Intent notificationIntent;
-			if(HomeActivity.appInterruptHandler != null){
-				notificationIntent = new Intent(context, HomeActivity.class);
-			} else{
-				notificationIntent = new Intent(context, SplashNewActivity.class);
+			Log.d("clientID", "clientID = "+clientID);
+			if(TextUtils.isEmpty(clientID)) {
+				if (HomeActivity.appInterruptHandler != null) {
+					notificationIntent = new Intent(context, HomeActivity.class);
+				} else {
+					notificationIntent = new Intent(context, SplashNewActivity.class);
+				}
+			} else {
+//				if(!TextUtils.isEmpty(Data.currentActivity)) {
+//					notificationIntent = new Intent(context, FreshActivity.class);
+//				} else {
+					notificationIntent = new Intent(context, SplashNewActivity.class);
+//				}
+				notificationIntent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientID);
 			}
 
 			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
 			NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-			builder.setAutoCancel(false);
+			if(TextUtils.isEmpty(clientID)) {
+				builder.setAutoCancel(false);
+			} else {
+				builder.setAutoCancel(true);
+			}
 			builder.setContentTitle(title);
 			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 			builder.setContentText(message);
@@ -334,10 +351,17 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 					int deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
 					String message1 = jObj.optString(KEY_MESSAGE, "");
+					int tabIndex = jObj.optInt(KEY_TAB_INDEX, 0);
 					int playSound = jObj.optInt(KEY_PLAY_SOUND, 1);
+
+					if(deepindex == -1 && tabIndex > 0){
+						deepindex = AppLinkIndex.FRESH_PAGE.getOrdinal();
+					}
 
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
+						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
 						}
@@ -347,7 +371,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
-							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound);
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, "");
 						} else{
 							notificationManager(this, title, message1, playSound);
 						}
@@ -360,6 +384,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 
 					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
+						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String driverArrivedMessage = jObj.getString(KEY_MESSAGE);
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
@@ -369,12 +395,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						if(pushCallDriver == 1 && !"".equalsIgnoreCase(phoneNo)){
 							generateNotificationForCall(this, title, driverArrivedMessage, NOTIFICATION_ID, phoneNo,
-									null, playSound);
+									null, playSound, "");
 						} else{
 							notificationManager(this, title, driverArrivedMessage, playSound);
 						}
 
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
+						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(0, message1);
@@ -407,6 +435,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						FbEvents.logEvent(this, FlurryEventNames.FB_EVENT_RIDE_STARTED);
 
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
+						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
 						String engagementId = jObj.getString("engagement_id");
 
@@ -421,6 +451,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						stopService(intent);
 
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
+						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.ride_cancelled_by_driver));
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
@@ -434,11 +466,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						notificationManager(this, title, "" + message1, playSound);
 
 					} else if (PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String log = jObj.getString("log");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log);
 						}
 					} else if (PushFlags.CHANGE_STATE.getOrdinal() == flag) {
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String logMessage = jObj.getString("message");
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onChangeStatePushReceived();
@@ -476,13 +510,23 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 							if(!"".equalsIgnoreCase(picture)){
 								deepindex = jObj.optInt(KEY_DEEPINDEX, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
-								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush);
+								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush, tabIndex, flag);
 							}
 							else{
 								deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
 								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
-										null, url, playSound, showDialog, showPush);
+										null, url, playSound, showDialog, showPush, tabIndex, flag);
 							}
+
+							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
+							if("".equalsIgnoreCase(url)){
+								deepindex = showDialog == 1 ? -1 : deepindex;
+								broadcastIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
+								broadcastIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
+							}
+							broadcastIntent.putExtra(Constants.KEY_FLAG, flag);
+							LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+
 
 							Prefs.with(this).save(SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
 						}
@@ -522,7 +566,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							startActivity(otpConfirmScreen);
 						}
 						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1,
-								null, "", playSound, 0, 1);
+								null, "", playSound, 0, 1, 0, flag);
 
 					}
 					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
@@ -549,12 +593,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
                         String eta = jObj.optString(KEY_ETA, "-1");
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
                         if(!"-1".equalsIgnoreCase(eta) && !"".equalsIgnoreCase(phoneNo)){
-							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, eta, playSound);
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, eta, playSound, "");
                         }
                     } else if(PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag){
-						if(HomeActivity.appInterruptHandler != null){
-							HomeActivity.appInterruptHandler.onPaytmRechargePush(jObj);
-						}
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
+						Intent intent = new Intent(Data.LOCAL_BROADCAST);
+						intent.putExtra(Constants.KEY_FLAG, flag);
+						intent.putExtra(Constants.KEY_MESSAGE, message);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 						notificationManager(this, title, message1, playSound);
 
 					} else if(PushFlags.SYNC_PARA.getOrdinal() == flag){
@@ -564,6 +610,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						startService(synIntent);
 
 					} else if(PushFlags.UPDATE_POOL_RIDE_STATUS.getOrdinal() == flag){
+						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onUpdatePoolRideStatus(jObj);
 						}
@@ -580,6 +627,16 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							intent1.putExtra(KEY_LONGITUDE, LocationFetcher.getSavedLngFromSP(this));
 							intent1.putExtra(KEY_EMERGENCY_LOC, true);
 							sendBroadcast(intent1);
+						}
+					} else if (PushFlags.ORDER_DISPATCH.getOrdinal() == flag) {
+
+						String clientId = jObj.optString(KEY_CLIENT_ID, "");
+						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
+						if(!TextUtils.isEmpty(phoneNo)){
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, clientId);
+						} else{
+							notificationManager(this, title, message1, playSound);
 						}
 					}
 
@@ -629,7 +686,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 	public void bigImageNotifAsync(final String title, final String message, final int deepindex,
 								   final String picture, final String url, final int playSound,
-								   final int showDialog, final int showPush){
+								   final int showDialog, final int showPush, final int tabIndex, final int flag){
 		try {
 			RequestCreator requestCreator = Picasso.with(GCMIntentService.this).load(picture);
 			Target target = new Target() {
@@ -637,11 +694,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
 					try {
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID,
-								deepindex, bitmap, url, playSound, showDialog, showPush);
+								deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag);
 					} catch (Exception e) {
 						e.printStackTrace();
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex,
-								null, url, playSound, showDialog, showPush);
+								null, url, playSound, showDialog, showPush, tabIndex, flag);
 					}
 				}
 

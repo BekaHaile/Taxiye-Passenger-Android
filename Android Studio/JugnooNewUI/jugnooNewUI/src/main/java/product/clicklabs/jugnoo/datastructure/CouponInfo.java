@@ -1,56 +1,67 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class CouponInfo extends PromoCoupon{
-	
-	public int couponType;
-	public int status;
-	private String title;
+	@SerializedName("account_id")
+	@Expose
+	public Integer id;
+	@SerializedName("title")
+	@Expose
+	public String title;
+	@SerializedName("subtitle")
+	@Expose
 	public String subtitle;
+	@SerializedName("description")
+	@Expose
 	public String description;
-	public String image;
-	public String redeemedOn;
+	@SerializedName("expiry_date")
+	@Expose
 	public String expiryDate;
-    public String startTime;
-    public String endTime;
-	
-	public CouponInfo(int id, int couponType, int status, String title, String subtitle, String description, String image,
-			String redeemedOn, String expiryDate, String startTime, String endTime){
+	@SerializedName("autos")
+	@Expose
+	public Integer autos;
+	@SerializedName("fresh")
+	@Expose
+	public Integer fresh;
+	@SerializedName("meals")
+	@Expose
+	public Integer meals;
+	@SerializedName("delivery")
+	@Expose
+	public Integer delivery;
+	@SerializedName("master_coupon")
+	@Expose
+	private Integer masterCoupon = 0;
+
+	public CouponInfo(int id, String title, String subtitle, String description, String expiryDate){
 		this.id = id;
-		this.couponType = couponType;
-		this.status = status;
 		this.title = title;
 		this.subtitle = subtitle;
 		this.description = description;
-		this.image = image;
-		this.redeemedOn = redeemedOn;
 		this.expiryDate = expiryDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
 	}
 	
 	public CouponInfo(int id, String title){
 		this.id = id;
 		this.title = title;
-		this.couponType = 1;
-		this.status = 0;
-		this.subtitle = "";
-		this.description = "";
-		this.image = "";
-		this.redeemedOn = "";
-		this.expiryDate = "";
-        this.startTime = "";
-        this.endTime = "";
+	}
+
+	@Override
+	public int getId() {
+		return id;
 	}
 
 	@Override
 	public String getTitle() {
-		return title;
+		return title+" "+subtitle;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		try{
-			if((((CouponInfo)o).id == this.id)){
+			if((((CouponInfo)o).id.equals(this.id))){
 				return true;
 			}
 			else{
@@ -60,5 +71,15 @@ public class CouponInfo extends PromoCoupon{
 			return false;
 		}
 	}
-	
+
+	public Integer getMasterCoupon() {
+		if(masterCoupon == null){
+			return 0;
+		}
+		return masterCoupon;
+	}
+
+	public void setMasterCoupon(Integer masterCoupon) {
+		this.masterCoupon = masterCoupon;
+	}
 }

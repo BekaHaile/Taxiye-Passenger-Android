@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relativeLayoutLocationError"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_translucent_less"
+    android:visibility="gone">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutLocationErrorSearchBar"
+        android:layout_width="match_parent"
+        android:layout_height="90px"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="20px"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:splitMotionEvents="false"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/textViewSearchGPSIcon"
+            android:layout_width="30px"
+            android:layout_height="44px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="18px"
+            android:src="@drawable/search_location_icon"
+            android:tag="mwar"/>
+
+        <TextView
+            android:id="@+id/textViewLocationErrorSearch"
+            android:layout_width="560px"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20px"
+            android:layout_toRightOf="@+id/textViewSearchGPSIcon"
+            android:background="@color/transparent"
+            android:hint="Search address location"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/black_text"
+            android:textCursorDrawable="@null"
+            android:textSize="30px"/>
+
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/imageViewLocationErrorArrow"
+        android:layout_width="39px"
+        android:layout_height="230px"
+        android:layout_below="@+id/relativeLayoutLocationErrorSearchBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="37px"
+        android:src="@drawable/curly_arrow"
+        android:tag="mwar"/>
+
+    <ImageView
+        android:id="@+id/imageViewLocationErrorText"
+        android:layout_width="375px"
+        android:layout_height="146px"
+        android:layout_below="@+id/imageViewLocationErrorArrow"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="47px"
+        android:src="@drawable/mark_location_text"
+        android:tag="mwar"/>
+
+
+    <ImageView
+        android:id="@+id/imageViewLocationError"
+        android:layout_width="110px"
+        android:layout_height="140px"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="150px"
+        android:src="@drawable/location_error_icon"
+        android:tag="mwar"/>
+
+</RelativeLayout>

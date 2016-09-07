@@ -152,6 +152,9 @@ public class SearchListAdapter extends BaseAdapter{
                 }
                 Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
                 ArrayList<SearchResult> lastPickUp = new Gson().fromJson(json, type);
+				for(int i=0; i<lastPickUp.size(); i++){
+					lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
+				}
                 searchResults.addAll(lastPickUp);
             }
         } catch (Exception e) {
@@ -219,8 +222,12 @@ public class SearchListAdapter extends BaseAdapter{
                 holder.imageViewType.setVisibility(View.VISIBLE);
                 holder.imageViewType.setImageResource(R.drawable.ic_work);
             } else{
-                holder.imageViewType.setVisibility(View.VISIBLE);
-                holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
+				holder.imageViewType.setVisibility(View.VISIBLE);
+				if(searchResults.get(position).getType() == SearchResult.Type.LAST_SAVED) {
+					holder.imageViewType.setImageResource(R.drawable.ic_recent_loc);
+				} else{
+					holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
+				}
             }
 
             if(searchResults.get(position).getAddress().equalsIgnoreCase("")){
@@ -245,14 +252,14 @@ public class SearchListAdapter extends BaseAdapter{
                         if(!context.getResources().getString(R.string.no_results_found).equalsIgnoreCase(autoCompleteSearchResult.getName())
                                 && !context.getResources().getString(R.string.no_internet_connection).equalsIgnoreCase(autoCompleteSearchResult.getName())){
                             Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
-                            Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult);
+                            Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult.getAddress());
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (autoCompleteSearchResult.getPlaceId() != null
                                             && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
                                         searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
-                                        getSearchResultFromPlaceId(autoCompleteSearchResult.getName(), autoCompleteSearchResult.getPlaceId());
+                                        getSearchResultFromPlaceId(autoCompleteSearchResult.getName(),autoCompleteSearchResult.getAddress(), autoCompleteSearchResult.getPlaceId());
                                     } else{
                                         searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
                                         searchListActionsHandler.onPlaceSearchPre();
@@ -288,8 +295,8 @@ public class SearchListAdapter extends BaseAdapter{
     }
 
 	private LatLng getPivotLatLng(){
-		if(Data.lastRefreshLatLng != null){
-			return Data.lastRefreshLatLng;
+		if(Data.autoData.getLastRefreshLatLng() != null){
+			return Data.autoData.getLastRefreshLatLng();
 		} else{
 			return defaultSearchPivotLatLng;
 		}
@@ -394,7 +401,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 
 
-    private synchronized void getSearchResultFromPlaceId(final String placeName, final String placeId) {
+    private synchronized void getSearchResultFromPlaceId(final String placeName, final String placeAddress, final String placeId) {
         searchListActionsHandler.onPlaceSearchPre();
         Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 		Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)

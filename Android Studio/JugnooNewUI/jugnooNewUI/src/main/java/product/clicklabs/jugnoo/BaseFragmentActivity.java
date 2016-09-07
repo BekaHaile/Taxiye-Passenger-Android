@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 
+import com.sabkuchfresh.home.HomeUtil;
+
+import product.clicklabs.jugnoo.home.HomeActivity;
+
 /**
  * Created by clicklabs on 7/3/15.
  */
@@ -30,4 +34,12 @@ public class BaseFragmentActivity extends FragmentActivity {
 			}
 		}
     }
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if(!HomeActivity.checkIfUserDataNull(this)){
+			HomeUtil.checkForAccessTokenChange(this);
+		}
+	}
 }

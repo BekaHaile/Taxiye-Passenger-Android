@@ -113,7 +113,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
         textViewWhatImprove = (TextView) findViewById(R.id.textViewWhatImprove); textViewWhatImprove.setTypeface(Fonts.mavenMedium(this));
         listViewFeedbackReasons = (ListView) findViewById(R.id.listViewFeedbackReasons);
 
-        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.feedbackReasons, new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
+        feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.autoData.getFeedbackReasons(), new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
             @Override
             public void onLastItemSelected(boolean selected) {
                 if(!selected){
@@ -191,7 +191,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                     textViewRateText.setText("Loved it");
                 }
 
-                if(FeedbackMode.SUPPORT != feedbackMode && Data.feedbackReasons.size() > 0) {
+                if(FeedbackMode.SUPPORT != feedbackMode && Data.autoData.getFeedbackReasons().size() > 0) {
                     if (rating > 0 && rating <= 3) {
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -234,7 +234,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                     DialogPopup.alertPopup(FeedbackActivity.this, "", "We take your feedback seriously. Please give us a rating");
                     FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
                 } else {
-                    if(FeedbackMode.SUPPORT != feedbackMode  && Data.feedbackReasons.size() > 0 && rating <= 3){
+                    if(FeedbackMode.SUPPORT != feedbackMode  && Data.autoData.getFeedbackReasons().size() > 0 && rating <= 3){
                         if(feedbackReasons.length() > 0){
                             if(isLastReasonSelected && feedbackStr.length() == 0){
                                 relativeLayoutOtherError.setVisibility(View.VISIBLE);
@@ -252,7 +252,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                         editTextFeedback.setError("Review must be in 300 letters.");
                     } else {
                         if (FeedbackMode.AFTER_RIDE == feedbackMode) {
-                            submitFeedbackToDriverAsync(FeedbackActivity.this, Data.cEngagementId, Data.cDriverId, rating, feedbackStr, feedbackReasons);
+                            submitFeedbackToDriverAsync(FeedbackActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(), rating, feedbackStr, feedbackReasons);
                             FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_YES);
                             if(feedbackStr.length() > 0){
                                 FlurryEventLogger.event(FEEDBACK_WITH_COMMENTS);
@@ -278,7 +278,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 
             @Override
             public void onClick(View v) {
-                skipFeedbackForCustomerAsync(FeedbackActivity.this, Data.cEngagementId);
+                skipFeedbackForCustomerAsync(FeedbackActivity.this, Data.autoData.getcEngagementId());
                 FlurryEventLogger.event(FEEDBACK_AFTER_RIDE_NO);
             }
         });
@@ -434,7 +434,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                                     RideTransactionsActivity.updateRideTransaction.updateRideTransaction(position);
                                 }
                                 try {
-                                    Data.driverInfos.clear();
+                                    Data.autoData.getDriverInfos().clear();
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -471,7 +471,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
 			params.put("access_token", Data.userData.accessToken);
 			params.put("engagement_id", engagementId);
 
-			try { Data.driverInfos.clear(); } catch (Exception e) { e.printStackTrace(); }
+			try { Data.autoData.getDriverInfos().clear(); } catch (Exception e) { e.printStackTrace(); }
 
 			HomeActivity.feedbackSkipped = true;
 			HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(0);
@@ -525,7 +525,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                                 String error = jObj.getString("error");
                                 DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                Data.supportFeedbackSubmitted = true;
+                                Data.autoData.setSupportFeedbackSubmitted(true);
                                 finish();
                                 overridePendingTransition(R.anim.left_in, R.anim.left_out);
                             } else {

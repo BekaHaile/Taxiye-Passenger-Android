@@ -180,7 +180,7 @@
             android:id="@+id/imageViewFreeRideAuto"
             android:layout_width="128px"
             android:layout_height="128px"
-            android:src="@drawable/free_rides_promotions"
+            android:src="@drawable/ic_arrow_up_selector"
             android:layout_alignParentRight="true"
             android:layout_marginRight="50px"
             android:tag="mwar"/>

@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.apis;
 
+import android.text.TextUtils;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -7,19 +9,15 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
-import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
-import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.Coupon;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
-import product.clicklabs.jugnoo.retrofit.model.Promotion;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -98,7 +96,7 @@ public class ApiFindADriver {
 
 						if(beforeRequestRide){
 							Region newRegion = null;
-							for (Region region : Data.regions) {
+							for (Region region : Data.autoData.getRegions()) {
 								if(region.getRegionId() == ApiFindADriver.this.regionSelected.getRegionId()){
 									newRegion = region;
 								}
@@ -137,7 +135,7 @@ public class ApiFindADriver {
 
 	public void parseFindADriverResponse(FindADriverResponse findADriverResponse){
 		try {
-			Data.driverInfos.clear();
+			Data.autoData.getDriverInfos().clear();
 			if(findADriverResponse.getDrivers() != null) {
 				for (Driver driver : findADriverResponse.getDrivers()) {
 					double bearing = 0;
@@ -145,58 +143,48 @@ public class ApiFindADriver {
 						bearing = driver.getBearing();
 					}
 					int vehicleType = driver.getVehicleType() == null ? Constants.VEHICLE_AUTO : driver.getVehicleType();
-					Data.driverInfos.add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
+					Data.autoData.getDriverInfos().add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
 							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds()));
 				}
 			}
-			Data.priorityTipCategory = PriorityTipCategory.NO_PRIORITY_DIALOG.getOrdinal();
-			if (findADriverResponse.getPriorityTipCategory() != null) {
-				Data.priorityTipCategory = findADriverResponse.getPriorityTipCategory();
-			}
 
-			Data.userData.fareFactor = 1d;
+			Data.autoData.setFareFactor(1);
 			if(findADriverResponse.getFareFactor() != null) {
-				Data.userData.fareFactor = findADriverResponse.getFareFactor();
+				Data.autoData.setFareFactor(findADriverResponse.getFareFactor());
 			}
+			Data.autoData.setDriverFareFactor(1);
 			if(findADriverResponse.getDriverFareFactor() != null) {
-				Data.userData.setDriverFareFactor(findADriverResponse.getDriverFareFactor());
-			} else{
-				Data.userData.setDriverFareFactor(1);
+				Data.autoData.setDriverFareFactor(findADriverResponse.getDriverFareFactor());
 			}
-			Data.farAwayCity = "";
+
+			Data.autoData.setFarAwayCity("");
 			if (findADriverResponse.getFarAwayCity() == null) {
-				Data.farAwayCity = "";
+				Data.autoData.setFarAwayCity("");
 			} else {
-				Data.farAwayCity = findADriverResponse.getFarAwayCity();
+				Data.autoData.setFarAwayCity(findADriverResponse.getFarAwayCity());
 			}
 
-			if (findADriverResponse.getFreshAvailable() == null) {
-				Data.freshAvailable = 0;
-			} else {
-				Data.freshAvailable = findADriverResponse.getFreshAvailable();
-			}
-
-			Data.campaigns = findADriverResponse.getCampaigns();
+			Data.autoData.setCampaigns(findADriverResponse.getCampaigns());
 
             if(findADriverResponse.getCityId() != null){
-                Data.currentCity = findADriverResponse.getCityId();
+                Data.userData.setCurrentCity(findADriverResponse.getCityId());
             }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		try{
-			if(Data.regions == null){
-				Data.regions = new ArrayList<>();
+			if(Data.autoData.getRegions() == null){
+				Data.autoData.setRegions(new ArrayList<Region>());
 			} else{
-				Data.regions.clear();
+				Data.autoData.getRegions().clear();
 			}
 			if(findADriverResponse.getRegions() != null) {
 				HomeUtil homeUtil = new HomeUtil();
 				for (Region region : findADriverResponse.getRegions()) {
 					region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
 					region.setIsDefault(false);
-					Data.regions.add(region);
+					Data.autoData.getRegions().add(region);
 				}
 			}
 		} catch(Exception e){
@@ -204,31 +192,91 @@ public class ApiFindADriver {
 		}
 
 		try {
-			if(Data.promoCoupons == null){
-				Data.promoCoupons = new ArrayList<>();
-			} else{
-				Data.promoCoupons.clear();
+			//Common promo and Coupon
+			try {
+				if(Data.userData != null && Data.userData.getPromoCoupons() == null){
+                    Data.userData.setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.userData.getPromoCoupons().clear();
+                }
+				if(findADriverResponse.getCommonPromotions() != null) {
+                    Data.userData.getPromoCoupons().addAll(findADriverResponse.getCommonPromotions());
+                }
+				if(findADriverResponse.getCommonCoupons() != null) {
+                    Data.userData.getPromoCoupons().addAll(findADriverResponse.getCommonCoupons());
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if(findADriverResponse.getCoupons() != null) {
-				for (Coupon coupon : findADriverResponse.getCoupons()) {
-					Data.promoCoupons.add(new CouponInfo(coupon.getAccountId(),
-							coupon.getCouponType(),
-							coupon.getStatus(),
-							coupon.getTitle(),
-							coupon.getSubtitle(),
-							coupon.getDescription(),
-							coupon.getImage(),
-							coupon.getRedeemedOn(),
-							coupon.getExpiryDate(), "", ""));
-				}
+
+			// for Auto promo and coupons
+			try {
+				if(Data.autoData != null && Data.autoData.getPromoCoupons() == null){
+                    Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.autoData.getPromoCoupons().clear();
+                }
+				if(findADriverResponse.getAutosPromotions() != null) {
+                    Data.autoData.getPromoCoupons().addAll(findADriverResponse.getAutosPromotions());
+                }
+				if(findADriverResponse.getAutosCoupons() != null) {
+                    Data.autoData.getPromoCoupons().addAll(findADriverResponse.getAutosCoupons());
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if(findADriverResponse.getPromotions() != null) {
-				for (Promotion promotion : findADriverResponse.getPromotions()) {
-					Data.promoCoupons.add(new PromotionInfo(promotion.getPromoId(),
-							promotion.getTitle(),
-							promotion.getTermsNConds()));
-				}
+
+			// for Fresh promo and coupons
+			try {
+				if(Data.getFreshData() != null && Data.getFreshData().getPromoCoupons() == null){
+                    Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.getFreshData().getPromoCoupons().clear();
+                }
+				if(findADriverResponse.getFreshPromotions() != null) {
+                    Data.getFreshData().getPromoCoupons().addAll(findADriverResponse.getFreshPromotions());
+                }
+				if(findADriverResponse.getFreshCoupons() != null) {
+                    Data.getFreshData().getPromoCoupons().addAll(findADriverResponse.getFreshCoupons());
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
+
+			// for Meals promo and coupons
+			try {
+				if(Data.getMealsData() != null && Data.getMealsData().getPromoCoupons() == null){
+                    Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.getMealsData().getPromoCoupons().clear();
+                }
+				if(findADriverResponse.getMealsPromotions() != null) {
+                    Data.getMealsData().getPromoCoupons().addAll(findADriverResponse.getMealsPromotions());
+                }
+				if(findADriverResponse.getMealsCoupons() != null) {
+                    Data.getMealsData().getPromoCoupons().addAll(findADriverResponse.getMealsCoupons());
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			// for Dodo promo and coupons
+			try {
+				if(Data.getDeliveryData() != null && Data.getDeliveryData().getPromoCoupons() == null){
+                    Data.getDeliveryData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.getDeliveryData().getPromoCoupons().clear();
+                }
+				if(findADriverResponse.getDeliveryPromotions() != null) {
+                    Data.getDeliveryData().getPromoCoupons().addAll(findADriverResponse.getDeliveryPromotions());
+                }
+				if(findADriverResponse.getDeliveryCoupons() != null) {
+                    Data.getDeliveryData().getPromoCoupons().addAll(findADriverResponse.getDeliveryCoupons());
+                }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 
 			if(findADriverResponse.getFareStructure() != null) {
 				for (FareStructure fareStructure : findADriverResponse.getFareStructure()) {
@@ -252,11 +300,11 @@ public class ApiFindADriver {
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
 								fareStructure.getDisplayFareText());
-						for (int i = 0; i < Data.regions.size(); i++) {
+						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
-								if (Data.regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
-										&& Data.regions.get(i).getRideType().equals(fareStructure.getRideType())) {
-									Data.regions.get(i).setFareStructure(fareStructure1);
+								if (Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
+										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())) {
+									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -265,10 +313,23 @@ public class ApiFindADriver {
 						if (regionSelected.getVehicleType().equals(fareStructure.getVehicleType())
 								&& regionSelected.getRideType().equals(fareStructure.getRideType())
 								) {
-							Data.fareStructure = fareStructure1;
+							Data.autoData.setFareStructure(fareStructure1);
 						}
 					}
 				}
+			}
+
+			if(findADriverResponse.getFreshEnabled() != null) {
+				Data.userData.setFreshEnabled(findADriverResponse.getFreshEnabled());
+			}
+			if(findADriverResponse.getMealsEnabled() != null) {
+				Data.userData.setMealsEnabled(findADriverResponse.getMealsEnabled());
+			}
+			if(findADriverResponse.getDeliveryEnabled() != null) {
+				Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
+			}
+			if(!TextUtils.isEmpty(findADriverResponse.getGamePredictUrl())) {
+				Data.userData.setGamePredictUrl(findADriverResponse.getGamePredictUrl());
 			}
 
 		} catch (Exception exception) {

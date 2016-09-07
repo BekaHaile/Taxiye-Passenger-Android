@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/linearLayoutMain"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_fresh"
+    android:orientation="vertical"
+    >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewDeliveryAddress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="2px"
+        android:layout_marginRight="2px"
+        android:background="@color/white"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical"
+        android:splitMotionEvents="false"
+        android:visibility="gone"
+        >
+    </android.support.v7.widget.RecyclerView>
+
+    <include
+        android:id="@+id/addAddress"
+        layout="@layout/list_item_add_address"
+        android:visibility="gone"/>
+
+</LinearLayout>
