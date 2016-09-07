@@ -35,10 +35,10 @@ public class AppSwitcher {
 	 * @param clientId client id for the app
 	 * @param latLng
      */
-	public void switchApp(final Activity activity, final String clientId, LatLng latLng) {
+	public void switchApp(final Activity activity, final String clientId, LatLng latLng, boolean clearActivityStack) {
 		Bundle bundle = new Bundle();
 		bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, true);
-		switchApp(activity, clientId, null, latLng, bundle);
+		switchApp(activity, clientId, null, latLng, bundle, clearActivityStack);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class AppSwitcher {
 	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng) {
 		Bundle bundle = new Bundle();
 		bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false);
-		switchApp(activity, clientId, data, latLng, bundle);
+		switchApp(activity, clientId, data, latLng, bundle, false);
 	}
 
 	/**
@@ -62,8 +62,18 @@ public class AppSwitcher {
 	 * @param latLng
      * @param bundle
      */
-	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle){
+	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle, final boolean clearActivityStack){
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
+			final Intent intent = new Intent();
+			if(clearActivityStack) {
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			}
+			intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+			intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
+			if (data != null) {
+				intent.setData(data);
+			}
+
 			ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
 				@Override
 				public void noNet() {
@@ -72,11 +82,9 @@ public class AppSwitcher {
 
 				@Override
 				public void success(String clientId) {
-					if (!intentSentAfterDataCheck(activity, clientId, data, bundle)) {
-						Intent intent = new Intent(activity, FreshActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					if (!intentSentAfterDataCheck(activity, clientId, data, bundle, clearActivityStack)) {
+						intent.setClass(activity, FreshActivity.class);
 						intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-						intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 						activity.startActivity(intent);
 						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 						activity.finish();
@@ -91,7 +99,7 @@ public class AppSwitcher {
 
 				@Override
 				public void onRetry(View view) {
-					switchApp(activity, clientId, data, latLng, bundle);
+					switchApp(activity, clientId, data, latLng, bundle, clearActivityStack);
 				}
 
 				@Override
@@ -111,14 +119,9 @@ public class AppSwitcher {
 
 								@Override
 								public void success(String clientId) {
-									if (!intentSentAfterDataCheck(activity, clientId, data, bundle)) {
-										Intent intent = new Intent(activity, HomeActivity.class);
-										intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+									if (!intentSentAfterDataCheck(activity, clientId, data, bundle, clearActivityStack)) {
+										intent.setClass(activity, HomeActivity.class);
 										intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-										intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
-										if (data != null) {
-											intent.setData(data);
-										}
 										activity.startActivity(intent);
 										activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 										activity.finish();
@@ -132,7 +135,7 @@ public class AppSwitcher {
 
 								@Override
 								public void onRetry(View view) {
-									switchApp(activity, clientId, data, latLng, bundle);
+									switchApp(activity, clientId, data, latLng, bundle, clearActivityStack);
 								}
 
 								@Override
@@ -141,13 +144,7 @@ public class AppSwitcher {
 								}
 							});
 				} else {
-					Intent intent = new Intent(activity, HomeActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
-					if (data != null) {
-						intent.setData(data);
-					}
+					intent.setClass(activity, HomeActivity.class);
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 					activity.finish();
@@ -159,10 +156,7 @@ public class AppSwitcher {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 							callback);
 				} else {
-					Intent intent = new Intent(activity, FreshActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
+					intent.setClass(activity, FreshActivity.class);
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 					activity.finish();
@@ -175,10 +169,7 @@ public class AppSwitcher {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 							callback);
 				} else {
-					Intent intent = new Intent(activity, FreshActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
+					intent.setClass(activity, FreshActivity.class);
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 					activity.finish();
@@ -191,10 +182,7 @@ public class AppSwitcher {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 							callback);
 				} else {
-					Intent intent = new Intent(activity, FreshActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
+					intent.setClass(activity, FreshActivity.class);
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 					activity.finish();
@@ -204,18 +192,18 @@ public class AppSwitcher {
 				}
 			}
 		} else {
-			retryDialog(DialogErrorType.NO_NET, activity, clientId, data, latLng, bundle);
+			retryDialog(DialogErrorType.NO_NET, activity, clientId, data, latLng, bundle, clearActivityStack);
 		}
 
 	}
 
-	private void retryDialog(DialogErrorType dialogErrorType, final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle){
+	private void retryDialog(DialogErrorType dialogErrorType, final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle, final boolean clearActivityStack){
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
 				new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
-						switchApp(activity, clientId, data, latLng, bundle);
+						switchApp(activity, clientId, data, latLng, bundle, clearActivityStack);
 					}
 
 					@Override
@@ -229,10 +217,12 @@ public class AppSwitcher {
 				});
 	}
 
-	private boolean intentSentAfterDataCheck(Activity activity, String clientId, Uri data, Bundle bundle){
+	private boolean intentSentAfterDataCheck(Activity activity, String clientId, Uri data, Bundle bundle, boolean clearActivityStack){
 		try {
 			Intent intent = new Intent();
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			if(clearActivityStack) {
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			}
 			if(clientId.equalsIgnoreCase(Config.getAutosClientId()) && Data.autoData == null) {
 				if(Data.getFreshData() != null){
 					clientId = Config.getFreshClientId();
