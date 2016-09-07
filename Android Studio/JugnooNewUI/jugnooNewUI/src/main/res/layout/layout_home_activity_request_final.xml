@@ -178,7 +178,7 @@
                     android:layout_marginLeft="30px"
                     android:layout_marginTop="5px"
                     android:tag="mwar"
-                    android:src="@drawable/ic_profile_img_placeholder"
+                    android:src="@drawable/ic_driver_placeholder"
                     />
 
                 <RelativeLayout

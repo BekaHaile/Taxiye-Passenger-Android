@@ -3651,7 +3651,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(!"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().image)) {
                     float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                     Picasso.with(HomeActivity.this).load(Data.autoData.getAssignedDriverInfo().image)
-                            .placeholder(R.drawable.ic_profile_img_placeholder)
+                            .placeholder(R.drawable.ic_driver_placeholder)
                             .transform(new CircleTransform())
                             .resize((int)(130f * minRatio), (int)(130f * minRatio)).centerCrop()
                             .into(imageViewInRideDriver);
