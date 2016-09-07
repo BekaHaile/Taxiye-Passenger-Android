@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 
+import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;

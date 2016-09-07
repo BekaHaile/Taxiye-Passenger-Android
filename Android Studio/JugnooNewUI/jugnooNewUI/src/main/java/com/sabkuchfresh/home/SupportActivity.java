@@ -23,6 +23,7 @@ import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
