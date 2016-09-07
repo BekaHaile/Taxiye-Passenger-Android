@@ -718,7 +718,7 @@ public class JSONParser implements Constants {
     }
 
 
-    public void parseLastRideData(JSONObject jObj) {
+    public void parseLastRideData(Context context, JSONObject jObj) {
         try {
             JSONObject jLastRideData = jObj.getJSONObject("last_ride");
             Data.autoData.setcSessionId("");
@@ -745,6 +745,7 @@ public class JSONParser implements Constants {
 			Data.autoData.setEndRideData(parseEndRideData(jLastRideData, jLastRideData.getString("engagement_id"), Data.autoData.getFareStructure().getFixedFare()));
 
             HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
+            Prefs.with(context).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1043,7 +1044,7 @@ public class JSONParser implements Constants {
                             }
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
-                        parseLastRideData(jObject1);
+                        parseLastRideData(context, jObject1);
                         return returnResponse;
                     }
 
