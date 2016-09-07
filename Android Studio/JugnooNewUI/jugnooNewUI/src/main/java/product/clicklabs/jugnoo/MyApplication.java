@@ -387,6 +387,8 @@ public class MyApplication extends Application{
 		if(cleverTap == null) {
 			try {
 				cleverTap = CleverTapAPI.getInstance(getApplicationContext());
+				if(!getDeviceToken().equalsIgnoreCase("not_found"))
+					cleverTap.data.pushFcmRegistrationId(getDeviceToken(), true);
 			} catch (CleverTapMetaDataNotFoundException e) {
 				// thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
 			} catch (CleverTapPermissionsNotSatisfied e) {
