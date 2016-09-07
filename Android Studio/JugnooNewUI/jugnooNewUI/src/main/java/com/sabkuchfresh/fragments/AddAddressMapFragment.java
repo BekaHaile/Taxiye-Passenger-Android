@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -125,7 +126,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 //    private SearchListAdapter.SearchListActionsHandler searchListActionsHandler;
     private SearchListAdapter searchListAdapter;
     private NonScrollListView listViewSearch;
-    private boolean unsatflag = false;
+    private boolean unsatflag = false, locationUpdate = false;
 
     //Location Error layout
     RelativeLayout relativeLayoutLocationError;
@@ -281,6 +282,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                     public void onPlaceSearchPost(SearchResult searchResult) {
                         progressBarSearch.setVisibility(View.GONE);
 //                        searchAddress.setText(searchResult.name);
+                        locationUpdate = true;
                         editTextSearch.setText("");
                         scrollViewSearch.setVisibility(View.GONE);
                         layoutAddLocation.setVisibility(View.VISIBLE);
@@ -288,9 +290,27 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         locationPointer.setVisibility(View.VISIBLE);
                         homeActivity.locationSearchShown = false;
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                        textVeiwSearch.setText(searchResult.getAddress());
+                        mAddressName.setText(searchResult.getAddress());
+                        mSelectedLoc.setVisibility(View.VISIBLE);
+                        mAddressName.setVisibility(View.VISIBLE);
+                        progressWheel.setVisibility(View.GONE);
 
-//                        searchListActionsHandler.onPlaceSearchPost(searchResult);
-//                        getActivity().getSupportFragmentManager().popBackStack();
+
+                        homeActivity.current_latitude = searchResult.getLatLng().latitude;
+                        homeActivity.current_longitude = searchResult.getLatLng().longitude;
+                        String[] address = searchResult.getAddress().split(",");
+
+                        if(!TextUtils.isEmpty(address[0].replaceAll("\\D+","")))
+                        homeActivity.current_street = "";
+
+                        homeActivity.current_route = "";
+                        if(!TextUtils.isEmpty(address[address.length - 3]))
+                            homeActivity.current_area = "" + address[address.length - 3];
+                        if(!TextUtils.isEmpty(address[address.length - 2]))
+                            homeActivity.current_city = "" + address[address.length - 2];
+                        if(!TextUtils.isEmpty(address[address.length - 1]))
+                            homeActivity.current_pincode = "" + address[address.length - 1];
                     }
 
                     @Override
@@ -491,8 +511,15 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                     // Map settled
 //                    getAddress(map.getCameraPosition().target);
                     //unsatflag = true;
-                    fillAddressDetails(googleMap.getCameraPosition().target);
-
+                    if(!locationUpdate) {
+                        fillAddressDetails(googleMap.getCameraPosition().target);
+                    } else {
+                        mSelectedLoc.setVisibility(View.VISIBLE);
+                        mAddressName.setVisibility(View.VISIBLE);
+                        progressWheel.setVisibility(View.GONE);
+                        unsatflag = true;
+                    }
+                    locationUpdate = false;
                 }
             };
 
@@ -654,7 +681,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e(TAG, "paytmDeletePaytm error=" + error.toString());
+                        Log.e(TAG, "RetrofitError error=" + error.toString());
                         DialogPopup.dismissLoadingDialog();
                         DialogPopup.alertPopup(getActivity(), "", Data.SERVER_ERROR_MSG);
                     }
