@@ -56,7 +56,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -292,6 +291,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         activity.setSwipeAvailable(true);
 		if(!hidden){
 			freshCategoryFragmentsAdapter.notifyDataSetChanged();
+			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
 		}
@@ -355,8 +355,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                         Data.tabLinkIndex = 0;
                                         tabs.setBackgroundColor(activity.getResources().getColor(R.color.white_light_grey));
                                     } else {
-                                        freshCategoryFragmentsAdapter.notifyDataSetChanged();
+										freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
                                     }
+									tabs.notifyDataSetChanged();
 
                                     if(activity.updateCart) {
                                         activity.updateCart = false;
@@ -487,6 +488,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 }
                 try {
                     freshCategoryFragmentsAdapter.notifyDataSetChanged();
+					tabs.notifyDataSetChanged();
                 }catch(Exception e) {
                     e.printStackTrace();
 

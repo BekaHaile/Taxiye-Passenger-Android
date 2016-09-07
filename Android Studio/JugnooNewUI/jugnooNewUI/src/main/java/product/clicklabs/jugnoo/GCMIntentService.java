@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
@@ -131,7 +132,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
             Intent notificationIntent = new Intent();
-			Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
 			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
 			if("".equalsIgnoreCase(url)){
 				notificationIntent.setClass(context, SplashNewActivity.class);
@@ -140,20 +140,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
 				notificationIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
 				notificationIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
-
-				broadcastIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
-				broadcastIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
-				broadcastIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
 			} else{
 				notificationIntent.setData(Uri.parse(url));
-				broadcastIntent.setData(Uri.parse(url));
 			}
-			broadcastIntent.putExtra(Constants.KEY_FLAG, flag);
 
 			if(HomeActivity.appInterruptHandler != null && showDialog == 1){
 				HomeActivity.appInterruptHandler.onShowDialogPush();
 			}
-			LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent);
 
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -525,6 +518,16 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 										null, url, playSound, showDialog, showPush, tabIndex, flag);
 							}
 
+							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
+							if("".equalsIgnoreCase(url)){
+								deepindex = showDialog == 1 ? -1 : deepindex;
+								broadcastIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
+								broadcastIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
+							}
+							broadcastIntent.putExtra(Constants.KEY_FLAG, flag);
+							LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+
+
 							Prefs.with(this).save(SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
 						}
 
@@ -709,7 +712,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 				}
 			};
-//			PicassoTools.into(requestCreator, target);
+			PicassoTools.into(requestCreator, target);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
