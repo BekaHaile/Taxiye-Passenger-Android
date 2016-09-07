@@ -96,7 +96,8 @@ public class RideOrderShortView {
 				if(!"".equalsIgnoreCase(endRideData.driverImage)){
 					float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 					Picasso.with(context).load(endRideData.driverImage).transform(new CircleTransform())
-							.resize((int)(94f * minRatio), (int)(94f * minRatio)).into(imageViewDriver);
+							.resize((int)(94f * minRatio), (int)(94f * minRatio)).centerCrop()
+							.into(imageViewDriver);
 				}
 
 				float ratio = Math.min(ASSL.Xscale(), ASSL.Yscale());

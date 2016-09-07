@@ -133,7 +133,6 @@ import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
@@ -3654,7 +3653,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Picasso.with(HomeActivity.this).load(Data.autoData.getAssignedDriverInfo().image)
                             .placeholder(R.drawable.ic_profile_img_placeholder)
                             .transform(new CircleTransform())
-                            .resize((int)(130f * minRatio), (int)(130f * minRatio))
+                            .resize((int)(130f * minRatio), (int)(130f * minRatio)).centerCrop()
                             .into(imageViewInRideDriver);
                 }
             } catch (Exception e) {

@@ -249,14 +249,14 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
                     if(!"".equalsIgnoreCase(Data.userData.userImage)) {
                         Picasso.with(activity).load(Data.userData.userImage).transform(new CircleTransform())
-                                .resize((int)(160f * minRatio), (int)(160f * minRatio))
+                                .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
                                 .into(holder.imageViewProfile);
                     }
                 }
                 else{
                     if(!"".equalsIgnoreCase(Data.userData.userImage)) {
                         Picasso.with(activity).load(Data.userData.userImage).skipMemoryCache().transform(new CircleTransform())
-                                .resize((int)(160f * minRatio), (int)(160f * minRatio))
+                                .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
                                 .into(holder.imageViewProfile);
                     }
                 }
