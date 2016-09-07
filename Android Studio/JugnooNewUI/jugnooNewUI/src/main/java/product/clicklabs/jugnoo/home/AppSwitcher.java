@@ -73,6 +73,7 @@ public class AppSwitcher {
 				public void success(String clientId) {
 					if (!intentSentAfterDataCheck(activity, clientId, data, bundle)) {
 						Intent intent = new Intent(activity, FreshActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 						intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 						activity.startActivity(intent);
@@ -110,6 +111,7 @@ public class AppSwitcher {
 								public void success(String clientId) {
 									if (!intentSentAfterDataCheck(activity, clientId, data, bundle)) {
 										Intent intent = new Intent(activity, HomeActivity.class);
+										intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 										intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 										intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 										if (data != null) {
@@ -137,6 +139,7 @@ public class AppSwitcher {
 							});
 				} else {
 					Intent intent = new Intent(activity, HomeActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					if (data != null) {
@@ -153,6 +156,7 @@ public class AppSwitcher {
 							callback);
 				} else {
 					Intent intent = new Intent(activity, FreshActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					activity.startActivity(intent);
@@ -167,6 +171,7 @@ public class AppSwitcher {
 							callback);
 				} else {
 					Intent intent = new Intent(activity, FreshActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					activity.startActivity(intent);
@@ -181,6 +186,7 @@ public class AppSwitcher {
 							callback);
 				} else {
 					Intent intent = new Intent(activity, FreshActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					activity.startActivity(intent);
@@ -219,6 +225,7 @@ public class AppSwitcher {
 	private boolean intentSentAfterDataCheck(Activity activity, String clientId, Uri data, Bundle bundle){
 		try {
 			Intent intent = new Intent();
+			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 			if(clientId.equalsIgnoreCase(Config.getAutosClientId()) && Data.autoData == null) {
 				if(Data.getFreshData() != null){
 					clientId = Config.getFreshClientId();
