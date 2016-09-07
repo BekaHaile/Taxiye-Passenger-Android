@@ -42,6 +42,9 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -296,21 +299,43 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         mAddressName.setVisibility(View.VISIBLE);
                         progressWheel.setVisibility(View.GONE);
 
+                        homeActivity.current_street = "";
+                        homeActivity.current_route = "";
+                        homeActivity.current_area = "";
+                        homeActivity.current_city = "";
+                        homeActivity.current_pincode = "";
 
                         homeActivity.current_latitude = searchResult.getLatLng().latitude;
                         homeActivity.current_longitude = searchResult.getLatLng().longitude;
-                        String[] address = searchResult.getAddress().split(",");
 
-                        if(!TextUtils.isEmpty(address[0].replaceAll("\\D+","")))
-                        homeActivity.current_street = "";
+                        String[] address = searchResult.getAddress().split(",");
+                        List<String> addressArray = Arrays.asList(address);
+                        Collections.reverse(addressArray);
+                        address = (String[]) addressArray.toArray();
+
+                        if(address.length > 0 && (!TextUtils.isEmpty(address[0].trim())))
+                            homeActivity.current_pincode = "" + address[0].trim();
+                        if(address.length > 1 && (!TextUtils.isEmpty(address[1].trim())))
+                            homeActivity.current_city = "" + address[1].trim();
+                        if(address.length > 2 && (!TextUtils.isEmpty(address[2].trim())))
+                            homeActivity.current_area = "" + address[2].trim();
+
+                        int val = 0;
+                        if(!TextUtils.isEmpty(address[address.length - 1].replaceAll("\\D+","")) && address.length>3) {
+                            homeActivity.current_street = address[address.length - 1].replaceAll("\\D+","");
+                            val = 1;
+                        }
 
                         homeActivity.current_route = "";
-                        if(!TextUtils.isEmpty(address[address.length - 3]))
-                            homeActivity.current_area = "" + address[address.length - 3];
-                        if(!TextUtils.isEmpty(address[address.length - 2]))
-                            homeActivity.current_city = "" + address[address.length - 2];
-                        if(!TextUtils.isEmpty(address[address.length - 1]))
-                            homeActivity.current_pincode = "" + address[address.length - 1];
+                        if(address.length>3) {
+                            for (int i = 3; i < address.length - val; i++) {
+                                if(i==3) {
+                                    homeActivity.current_route = address[i].trim();
+                                } else {
+                                    homeActivity.current_route = homeActivity.current_route+", "+address[i].trim();
+                                }
+                            }
+                        }
                     }
 
                     @Override
