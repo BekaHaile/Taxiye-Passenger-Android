@@ -11,6 +11,7 @@ import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.apis.ApiUpdateClientId;
 import product.clicklabs.jugnoo.config.Config;
@@ -77,6 +78,7 @@ public class AppSwitcher {
 						intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 						activity.startActivity(intent);
+						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 						activity.finish();
 					}
 
@@ -118,6 +120,7 @@ public class AppSwitcher {
 											intent.setData(data);
 										}
 										activity.startActivity(intent);
+										activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 										activity.finish();
 									}
 								}
@@ -146,6 +149,7 @@ public class AppSwitcher {
 						intent.setData(data);
 					}
 					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 					activity.finish();
 					new ApiUpdateClientId().updateClientId(clientId);
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
@@ -160,6 +164,7 @@ public class AppSwitcher {
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 					activity.finish();
 
 					new ApiUpdateClientId().updateClientId(clientId);
@@ -175,6 +180,7 @@ public class AppSwitcher {
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 					activity.finish();
 
 					new ApiUpdateClientId().updateClientId(clientId);
@@ -190,6 +196,7 @@ public class AppSwitcher {
 					intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 					activity.finish();
 
 					new ApiUpdateClientId().updateClientId(clientId);
@@ -270,6 +277,7 @@ public class AppSwitcher {
 			intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 			intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 			activity.startActivity(intent);
+			activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 			activity.finish();
 			return true;
 		} catch (Exception e) {
