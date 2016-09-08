@@ -22,6 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/linearLayoutCheckoutContainer"
+            android:layout_marginTop="-6px"
             android:layout_below="@+id/topBarMain" />
 
         <LinearLayout
@@ -247,13 +248,14 @@
             android:id="@+id/imageViewFabFake"
             android:layout_width="68dp"
             android:layout_height="68dp"
-            android:src="@drawable/ic_fab_menu_fake"
+            android:src="@drawable/ic_fab_fake_selector"
+            android:tag="DontTouchMe"
             android:layout_above="@+id/linearLayoutCheckoutContainer"
             android:layout_alignParentLeft="true"
-            android:layout_marginBottom="25dp"
-            android:tag="DontTouchMe"
             android:layout_marginLeft="16dp"
-            android:visibility="gone"
+            android:layout_marginBottom="25dp"
+            android:layout_centerVertical="true"
+            android:visibility="visible"
             />
 
         <include layout="@layout/layout_home_activity_fab"/>
