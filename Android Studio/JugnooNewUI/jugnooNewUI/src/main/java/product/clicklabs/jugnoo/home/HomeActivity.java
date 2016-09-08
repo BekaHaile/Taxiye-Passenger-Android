@@ -7444,19 +7444,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, callFareEstimate,
                     getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
         } else{
-            textViewDestSearch.setText(getResources().getString(R.string.destination_required));
-            textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
+                textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+                textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
 
-            ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
-            int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-            if(index == 1 && Data.autoData.getDropLatLng() == null) {
-                translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
-                translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
-            }
-            if(Data.autoData.getDropLatLng() == null){
-                Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-                textViewDestSearch.startAnimation(shake);
-            }
+                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+                if (index == 1 && Data.autoData.getDropLatLng() == null) {
+                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
+                }
+                if (Data.autoData.getDropLatLng() == null) {
+                    Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+                    textViewDestSearch.startAnimation(shake);
+                }
         }
     }
 
@@ -8472,23 +8472,40 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 " +
                         slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
             } else{
-                if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
-                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                }
-                textViewDestSearch.setText(getResources().getString(R.string.destination_required));
-                textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
+                destinationRequiredShake();
+            }
+        } else {
+            if(Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
+                    .getRegionSelected().getDestinationMandatory() == 1){
+                destinationRequiredShake();
+            }else {
+                requestRideClick();
+                //openConfirmRequestView();
+                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 " +
+                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
+            }
+        }
+    }
 
-                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
-                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-                if(index == 1 && Data.autoData.getDropLatLng() == null) {
-                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
-                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
-                }
-                if(Data.autoData.getDropLatLng() == null){
-                    Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.shake);
-                    textViewDestSearch.startAnimation(shake);
-                    shakeAnim++;
-                    if(shakeAnim > 3){
+    private void destinationRequiredShake(){
+        if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
+            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        }
+        textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+        textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
+
+        ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+        int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+        if(index == 1 && Data.autoData.getDropLatLng() == null) {
+            translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+            translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
+        }
+        if(Data.autoData.getDropLatLng() == null){
+            Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.shake);
+            textViewDestSearch.startAnimation(shake);
+            shakeAnim++;
+            if(shakeAnim > 3){
                         /*new PoolDestinationDialog(HomeActivity.this, new PoolDestinationDialog.Callback() {
                             @Override
                             public void onEnterDestination() {
@@ -8498,15 +8515,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 switchPassengerScreen(passengerScreenMode);
                             }
                         }).show();*/
-                    }
-                }
             }
-        } else {
-            requestRideClick();
-            //openConfirmRequestView();
-            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-            FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 "+
-                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
         }
     }
 
