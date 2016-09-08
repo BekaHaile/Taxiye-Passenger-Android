@@ -903,6 +903,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
 			} else if(fragment instanceof FeedbackFragment) {
+                topBar.below_shadow.setVisibility(View.GONE);
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.GONE);
