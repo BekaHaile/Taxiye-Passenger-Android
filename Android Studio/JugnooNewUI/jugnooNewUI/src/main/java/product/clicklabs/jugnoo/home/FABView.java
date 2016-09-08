@@ -136,7 +136,8 @@ public class FABView {
                     }
                 } else {
                     if (activity instanceof FreshActivity) {
-                        relativeLayoutFAB.setVisibility(View.VISIBLE);
+                        relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                        ((FreshActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
                     } else {
                         relativeLayoutFAB.setVisibility(View.INVISIBLE);
                     }

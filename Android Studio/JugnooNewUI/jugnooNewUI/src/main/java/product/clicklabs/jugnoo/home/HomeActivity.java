@@ -1924,7 +1924,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             },300);
 
         }
-
     }
 
     private void endRideWithGif(){
