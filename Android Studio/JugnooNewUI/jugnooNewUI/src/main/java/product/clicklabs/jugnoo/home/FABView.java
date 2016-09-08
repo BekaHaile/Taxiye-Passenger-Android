@@ -125,7 +125,8 @@ public class FABView {
                 if (passengerScreenMode != null) {
                     if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
                             && !((HomeActivity) activity).confirmedScreenOpened)
-                            || passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
+                            || passengerScreenMode == PassengerScreenMode.P_RIDE_END
+                            || ((HomeActivity)activity).dropLocationSearched) {
                         relativeLayoutFAB.setVisibility(View.INVISIBLE);
                         ((HomeActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
                     } else {
