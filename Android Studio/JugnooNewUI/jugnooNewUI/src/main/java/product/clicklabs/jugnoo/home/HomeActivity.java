@@ -297,8 +297,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm;
     Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
-    TextView textViewIRPaymentOption, textViewIRPaymentOptionValue;
-    ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
+	TextView textViewIRPaymentOptionValue;
+	ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
 
 
 
@@ -700,8 +700,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
 
 
-        textViewIRPaymentOption = (TextView) findViewById(R.id.textViewIRPaymentOption); textViewIRPaymentOption.setTypeface(Fonts.mavenRegular(this));
-        textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenMedium(this));
+		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenMedium(this));
         imageViewIRPaymentOption = (ImageView) findViewById(R.id.imageViewIRPaymentOption);
 
         linearLayoutSendInvites = (LinearLayout) findViewById(R.id.linearLayoutSendInvites);
@@ -1893,6 +1892,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } finally {
             Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 0);
         }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    menuBar.setUserData();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
 
     }
 
@@ -3669,18 +3679,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try{
             imageViewIRPaymentOption.setImageResource(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionIconSmall(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
-            textViewIRPaymentOption.setText(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionName(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
-            textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
             textViewIRPaymentOptionValue.setTextColor(MyApplication.getInstance().getWalletCore()
                     .getWalletBalanceColor(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
             if(PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()){
-                textViewIRPaymentOption.setVisibility(View.VISIBLE);
-                textViewIRPaymentOptionValue.setVisibility(View.GONE);
+                textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
+                        .getPaymentOptionName(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
             } else {
-                textViewIRPaymentOption.setVisibility(View.GONE);
-                textViewIRPaymentOptionValue.setVisibility(View.VISIBLE);
+                textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
+                        .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
             }
         } catch(Exception e){}
     }

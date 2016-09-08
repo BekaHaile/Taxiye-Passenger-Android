@@ -106,6 +106,10 @@ public class FreshOrderItemAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     ((ViewHolderFooter)holder).textViewPaymentMode.setText(activity.getResources().getString(R.string.mobikwik));
                     ((ViewHolderFooter)holder).textViewpaytm.setText(activity.getString(R.string.mobikwik_wallet));
                 }
+                else if (orderHistory.getPaymentMode().equals(PaymentOption.FREECHARGE.getOrdinal())) {
+                    ((ViewHolderFooter)holder).textViewPaymentMode.setText(activity.getResources().getString(R.string.freecharge));
+                    ((ViewHolderFooter)holder).textViewpaytm.setText(activity.getString(R.string.freecharge_wallet));
+                }
                 else {
                     ((ViewHolderFooter)holder).textViewPaymentMode.setText(activity.getResources().getString(R.string.cash));
                 }

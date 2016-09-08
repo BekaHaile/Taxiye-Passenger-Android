@@ -3,7 +3,8 @@ package product.clicklabs.jugnoo.datastructure;
 public enum PaymentOption {
 	CASH(1),
 	PAYTM(2),
-	MOBIKWIK(3)
+	MOBIKWIK(3),
+    FREECHARGE(4)
 	;
 
 	private int ordinal;

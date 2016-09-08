@@ -226,9 +226,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				try{
 					editTextOTP.setError(null);
 					if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
-							|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-						// Resend OTP call to Paytm server...
-
+							|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()
+							|| linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
 						generateOTP(getLoggedInAccesToken(), linkedWallet);
 					} else{
 						if (1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)) {
@@ -399,7 +398,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			imageViewWalletIcon.setVisibility(View.VISIBLE);
 			imageViewWalletIcon.setImageResource(R.drawable.ic_mobikwik_big);
 			buttonOtpViaCall.setText(getResources().getString(R.string.resend_otp));
-		}else{
+		}
+		else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
+			imageViewWalletIcon.setVisibility(View.VISIBLE);
+			imageViewWalletIcon.setImageResource(R.drawable.ic_freecharge_big);
+			buttonOtpViaCall.setText(getResources().getString(R.string.resend_otp));
+		}
+		else{
 			imageViewWalletIcon.setVisibility(View.GONE);
 			buttonOtpViaCall.setText(getResources().getString(R.string.receive_otp_via_call));
 		}
@@ -430,7 +435,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			if(1 == Prefs.with(OTPConfirmScreen.this).getInt(SP_OTP_VIA_CALL_ENABLED, 1)
 					|| linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
-					|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()) {
+					|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()
+					|| linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()) {
 				buttonOtpViaCall.setVisibility(View.VISIBLE);
 			}
 			else{
@@ -1056,15 +1062,15 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			if(AppStatus.getInstance(OTPConfirmScreen.this).isOnline(OTPConfirmScreen.this)) {
 				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", accessToken);
-				params.put("client_id", Config.getAutosClientId());
-				params.put("is_access_token_new", "1");
+				params.put(KEY_ACCESS_TOKEN, accessToken);
+				params.put(KEY_CLIENT_ID, Config.getAutosClientId());
+				params.put(KEY_IS_ACCESS_TOKEN_NEW, "1");
 
 				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "paytmRequestOtp response = " + responseStr);
+						Log.i(TAG, linkedWallet+"walletRequestOtp response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
@@ -1085,7 +1091,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG, "paytmRequestOtp error="+error.toString());
+						Log.e(TAG, linkedWallet+"walletRequestOtp error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
 						DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
 					}
@@ -1096,6 +1102,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				}
 				else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
 					RestClient.getApiServices().mobikwikRequestOtp(params, callback);
+				}
+				else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
+					RestClient.getApiServices().freeChargeRequestOtp(params, callback);
 				}
 			} else{
 				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,

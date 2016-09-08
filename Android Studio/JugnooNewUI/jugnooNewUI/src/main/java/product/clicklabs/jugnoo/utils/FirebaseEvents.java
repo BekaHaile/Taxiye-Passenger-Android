@@ -87,12 +87,14 @@ public interface FirebaseEvents {
     String JUGNOO_CASH = "Jugnoo_Cash";
     String PAYTM_WALLET = "P_wal";
     String MOBIKWIK_WALLET = "M_wal";
+    String FREECHARGE_WALLET = "F_Wal";
     String VIEW_RECENT_TRANSACTION = "View_Recent_Transaction";
     String REQUEST_OTP = "Request_OTP";
     String EDIT = "Edit";
     String REMOVE_WALLET = "Remove_Wallet";
     String ADD_PAYTM_CASH = "Add_Paytm_Cash";
     String ADD_MOBIKWIK_CASH = "Add_Mobikwik_Cash";
+    String ADD_FREECHARGE_CASH = "Add_Freecharge_Cash";
     String ADD_AMOUNT = "add_amount";
 
     String CUSTOMER_SUPPORT = "Customer_Support";
@@ -118,6 +120,7 @@ public interface FirebaseEvents {
     String INVITE_FRIENDS = "inv_frnds_sc";
     String PAYTM = "paytm";
     String CASH = "cash";
+    String FREECHARGE = "freecharge";
     String SKIP_RIDE_IMAGE_END = "skip_ride_image_end";
     String AUTO_CANCEL_RIDE = "auto_cancel_ride";
     String POOL_CANCEL_RIDE = "pool_cancel_ride";

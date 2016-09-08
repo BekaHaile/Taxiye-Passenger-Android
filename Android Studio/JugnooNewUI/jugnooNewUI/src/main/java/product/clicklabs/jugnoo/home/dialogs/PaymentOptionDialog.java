@@ -36,9 +36,10 @@ public class PaymentOptionDialog implements View.OnClickListener {
 	private LinearLayout linearLayoutWalletContainer;
 	private RelativeLayout relativeLayoutPaytm;
 	private RelativeLayout relativeLayoutMobikwik;
+    private RelativeLayout relativeLayoutFreeCharge;
 	private LinearLayout linearLayoutCash;
-	private ImageView radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash;
-	private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue;
+	private ImageView radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge;
+	private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue;
 
 	public PaymentOptionDialog(HomeActivity activity, Callback callback) {
 		this.activity = activity;
@@ -66,19 +67,25 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			linearLayoutWalletContainer = (LinearLayout) dialog.findViewById(R.id.linearLayoutWalletContainer);
 			relativeLayoutPaytm = (RelativeLayout)dialog.findViewById(R.id.relativeLayoutPaytm);
 			relativeLayoutMobikwik = (RelativeLayout)dialog.findViewById(R.id.relativeLayoutMobikwik);
+			relativeLayoutFreeCharge = (RelativeLayout)dialog.findViewById(R.id.relativeLayoutFreeCharge);
 			linearLayoutCash = (LinearLayout)dialog.findViewById(R.id.linearLayoutCash);
 			radioBtnPaytm = (ImageView)dialog.findViewById(R.id.radio_paytm);
 			imageViewRadioMobikwik = (ImageView)dialog.findViewById(R.id.imageViewRadioMobikwik);
+			imageViewRadioFreeCharge = (ImageView)dialog.findViewById(R.id.imageViewRadioFreeCharge);
 			radioBtnCash = (ImageView)dialog.findViewById(R.id.radio_cash);
 
-			textViewPaytmValue = (TextView)dialog.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenLight(activity));
+
+            textViewPaytmValue = (TextView)dialog.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenLight(activity));
 			textViewPaytm = (TextView)dialog.findViewById(R.id.textViewPaytm); textViewPaytm.setTypeface(Fonts.mavenLight(activity));
 			textViewMobikwikValue = (TextView)dialog.findViewById(R.id.textViewMobikwikValue);textViewMobikwikValue.setTypeface(Fonts.mavenLight(activity));
 			textViewMobikwik = (TextView)dialog.findViewById(R.id.textViewMobikwik); textViewMobikwik.setTypeface(Fonts.mavenLight(activity));
 			((TextView)dialog.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenLight(activity));
+			textViewFreeCharge = (TextView)dialog.findViewById(R.id.textViewFreeCharge);textViewFreeCharge.setTypeface(Fonts.mavenLight(activity));
+			textViewFreeChargeValue = (TextView)dialog.findViewById(R.id.textViewFreeChargeValue);textViewFreeChargeValue.setTypeface(Fonts.mavenLight(activity));
 
 			relativeLayoutPaytm.setOnClickListener(this);
 			relativeLayoutMobikwik.setOnClickListener(this);
+			relativeLayoutFreeCharge.setOnClickListener(this);
 			linearLayoutCash.setOnClickListener(this);
 
 			orderPaymentModes();
@@ -145,6 +152,12 @@ public class PaymentOptionDialog implements View.OnClickListener {
 					MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
 					callback.onPaymentModeUpdated();
                     break;
+                case R.id.relativeLayoutFreeCharge:
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
+					MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
+							+FirebaseEvents.FREECHARGE, bundle);
+					callback.onPaymentModeUpdated();
+                    break;
             }
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,11 +169,13 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
 					.getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
 			if(PaymentOption.PAYTM.getOrdinal() == Data.autoData.getPickupPaymentOption()){
-				paymentSelection(radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash);
+				paymentSelection(radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge);
 			} else if(PaymentOption.MOBIKWIK.getOrdinal() == Data.autoData.getPickupPaymentOption()){
-				paymentSelection(imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash);
+				paymentSelection(imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, imageViewRadioFreeCharge);
+			} else if(PaymentOption.FREECHARGE.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
+				paymentSelection(imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash);
 			} else{
-				paymentSelection(radioBtnCash, radioBtnPaytm, imageViewRadioMobikwik);
+				paymentSelection(radioBtnCash, radioBtnPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge);
 			}
 			dialog.dismiss();
 		} catch (Exception e) {
@@ -168,11 +183,12 @@ public class PaymentOptionDialog implements View.OnClickListener {
 		}
 	}
 
-	private void paymentSelection(ImageView selected, ImageView unSelected, ImageView unSelected2){
+	private void paymentSelection(ImageView selected, ImageView unSelected, ImageView unSelected2, ImageView unSelected3){
 		try {
 			selected.setImageResource(R.drawable.ic_radio_button_selected);
 			unSelected.setImageResource(R.drawable.ic_radio_button_normal);
 			unSelected2.setImageResource(R.drawable.ic_radio_button_normal);
+            unSelected3.setImageResource(R.drawable.ic_radio_button_normal);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -191,6 +207,10 @@ public class PaymentOptionDialog implements View.OnClickListener {
 					.getString(R.string.rupees_value_format_without_space), Data.userData.getMobikwikBalanceStr()));
 			textViewMobikwikValue.setTextColor(Data.userData.getMobikwikBalanceColor(activity));
 
+			textViewFreeChargeValue.setText(String.format(activity.getResources()
+					.getString(R.string.rupees_value_format_without_space), Data.userData.getFreeChargeBalanceStr()));
+			textViewFreeChargeValue.setTextColor(Data.userData.getFreeChargeBalanceColor(activity));
+
 			if(Data.userData.getPaytmEnabled() == 1){
 				textViewPaytmValue.setVisibility(View.VISIBLE);
 				textViewPaytm.setText(activity.getResources().getString(R.string.paytm_wallet));
@@ -204,6 +224,13 @@ public class PaymentOptionDialog implements View.OnClickListener {
 			} else{
 				textViewMobikwikValue.setVisibility(View.GONE);
 				textViewMobikwik.setText(activity.getResources().getString(R.string.add_mobikwik_wallet));
+			}
+			if(Data.userData.getFreeChargeEnabled() == 1){
+				textViewFreeChargeValue.setVisibility(View.VISIBLE);
+				textViewFreeCharge.setText(activity.getResources().getString(R.string.freecharge_wallet));
+			} else{
+				textViewFreeChargeValue.setVisibility(View.GONE);
+				textViewFreeCharge.setText(activity.getResources().getString(R.string.add_freecharge_wallet));
 			}
 
 			setSelectedPaymentOptionUI();
@@ -224,9 +251,13 @@ public class PaymentOptionDialog implements View.OnClickListener {
 							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
 						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
 							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
+						} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
+							linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
 						}
 					}
 				}
+
+				linearLayoutWalletContainer.addView(linearLayoutCash);
 			}
 		} catch (Exception e){
 			e.printStackTrace();
