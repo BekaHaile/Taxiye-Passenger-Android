@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -169,7 +170,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-
+							getTransactionInfoAsync(paymentActivity);
 						}
 					},
 					new View.OnClickListener() {
@@ -178,7 +179,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 							paymentActivity.goBack();
 						}
 					}, false, false);
-			
+
 			transactionInfoList.clear();
 			walletTransactionsAdapter.notifyList(totalTransactions);
 			linearLayoutNoItems.setVisibility(View.GONE);
@@ -198,24 +199,29 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 			jugnooAnimation.start();
 			callRefreshAPI(activity);
 		} else {
-			DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
-					new Utils.AlertCallBackWithButtonsInterface() {
-						@Override
-						public void positiveClick(View view) {
-							getTransactionInfoAsync(activity);
-						}
-
-						@Override
-						public void neutralClick(View view) {
-
-						}
-
-						@Override
-						public void negativeClick(View view) {
-
-						}
-					});
+			retryDialog(DialogErrorType.NO_NET);
 		}
+	}
+
+
+	private void retryDialog(DialogErrorType dialogErrorType){
+		DialogPopup.dialogNoInternet(paymentActivity,
+				dialogErrorType,
+				new Utils.AlertCallBackWithButtonsInterface() {
+					@Override
+					public void positiveClick(View view) {
+						getTransactionInfoAsync(paymentActivity);
+					}
+
+					@Override
+					public void neutralClick(View view) {
+					}
+
+					@Override
+					public void negativeClick(View view) {
+						paymentActivity.goBack();
+					}
+				});
 	}
 
 

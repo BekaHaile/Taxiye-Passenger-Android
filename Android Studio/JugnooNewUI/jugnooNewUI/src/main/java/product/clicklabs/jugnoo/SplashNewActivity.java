@@ -138,6 +138,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	LinearLayout linearLayoutWalletContainer, linearLayoutWalletContainerInner,
 			linearLayoutPaytm, linearLayoutMobikwik, linearLayoutFreeCharge, linearLayoutNone;
 	ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewRadioNone;
+	LinearLayout linearLayoutWalletOption;
+	ImageView imageViewWalletOptionCheck, imageViewWalletOptionIcon;
+	TextView textViewWalletOptionMessage;
+
 
 	boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
 
@@ -503,6 +507,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			imageViewRadioFreeCharge = (ImageView) findViewById(R.id.imageViewRadioFreeCharge);
 			imageViewRadioNone = (ImageView) findViewById(R.id.imageViewRadioNone);
 
+			linearLayoutWalletOption = (LinearLayout) findViewById(R.id.linearLayoutWalletOption);
+			imageViewWalletOptionCheck = (ImageView) findViewById(R.id.imageViewWalletOptionCheck);
+			imageViewWalletOptionIcon = (ImageView) findViewById(R.id.imageViewWalletOptionIcon);
+			textViewWalletOptionMessage = (TextView) findViewById(R.id.textViewWalletOptionMessage);
+			textViewWalletOptionMessage.setTypeface(Fonts.mavenMedium(this));
+
 			root.setOnClickListener(onClickListenerKeybordHide);
 
 			relativeLayoutJugnooLogo.setOnClickListener(onClickListenerKeybordHide);
@@ -555,6 +565,20 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onClick(View v) {
 					linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
 					setLinkedWalletTick();
+				}
+			});
+
+			linearLayoutWalletOption.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					int walletFromServer = (int) linearLayoutWalletOption.getTag();
+					if(linkedWallet == walletFromServer){
+						linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+						imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_unchecked);
+					} else {
+						linkedWallet = walletFromServer;
+						imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_checked);
+					}
 				}
 			});
 
@@ -1473,8 +1497,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						int showMobikwik = jObj.optJSONObject("signup").optInt("MOBIKWIK");
 						int showFreecharge = jObj.optJSONObject("signup").optInt("FREECHARGE");
 						linkedWallet = jObj.optJSONObject("signup").optInt("DEFAULT");
-						int showFacebook = jObj.optJSONObject("signup").optInt("FACEBOOK");
-						int showGoogle = jObj.optJSONObject("signup").optInt("GOOGLE");
 						JSONArray jWalletOrder = jObj.optJSONArray(KEY_WALLET_ORDER);
 						if(jWalletOrder != null){
 							linearLayoutWalletContainerInner.removeAllViews();
@@ -1520,12 +1542,52 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						}
 
 						if(showPaytm == 1 || showMobikwik == 1 || showFreecharge == 1){
-							linearLayoutWalletContainer.setVisibility(View.VISIBLE);
+							linearLayoutWalletContainer.setVisibility(View.GONE);
 						} else{
 							linearLayoutWalletContainer.setVisibility(View.GONE);
 						}
 
 						setLinkedWalletTick();
+
+						int showPaytm1 = showPaytm;
+						int showMobikwik1 = showMobikwik;
+						int showFreecharge1 = showFreecharge;
+						int defaultTick = 1;
+
+						try {
+							showPaytm1 = jObj.optJSONObject("signup_new").optInt("PAYTM");
+							showMobikwik1 = jObj.optJSONObject("signup_new").optInt("MOBIKWIK");
+							showFreecharge1 = jObj.optJSONObject("signup_new").optInt("FREECHARGE");
+							defaultTick = jObj.optJSONObject("signup_new").optInt("DEFAULT");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						linearLayoutWalletOption.setVisibility(View.VISIBLE);
+						if(showPaytm1 == 1){
+							imageViewWalletOptionIcon.setImageResource(R.drawable.ic_paytm_small);
+							linkedWallet = (defaultTick == 1) ? LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal() : LinkedWalletStatus.NO_WALLET.getOrdinal();
+							linearLayoutWalletOption.setTag(LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal());
+						}
+						else if(showMobikwik1 == 1){
+							imageViewWalletOptionIcon.setImageResource(R.drawable.ic_mobikwik_small);
+							linkedWallet = (defaultTick == 1) ? LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal() : LinkedWalletStatus.NO_WALLET.getOrdinal();
+							linearLayoutWalletOption.setTag(LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal());
+						}
+						else if(showFreecharge1 == 1){
+							imageViewWalletOptionIcon.setImageResource(R.drawable.ic_freecharge_small);
+							linkedWallet = (defaultTick == 1) ? LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal() : LinkedWalletStatus.NO_WALLET.getOrdinal();
+							linearLayoutWalletOption.setTag(LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal());
+						}
+						else{
+							linearLayoutWalletOption.setVisibility(View.GONE);
+							linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+						}
+						if(defaultTick == 1){
+							imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_checked);
+						} else{
+							imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_unchecked);
+						}
 
 					}catch (Exception e){
 						e.printStackTrace();
@@ -3276,6 +3338,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	private void setLinkedWalletTick(){
 		if (linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
 			setWalletRadio(imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewRadioNone);
+
 		}
 		else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
 			setWalletRadio(imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioFreeCharge, imageViewRadioNone);
