@@ -307,6 +307,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             e.printStackTrace();
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
+                        if(!isHidden()) {
+                            activity.hideBottomBar(true);
+                        } else {
+                            activity.hideBottomBar(false);
+                        }
                     }
 
                     @Override
