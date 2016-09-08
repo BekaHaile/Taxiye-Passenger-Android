@@ -161,6 +161,10 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
+                    } else if (orderHistory.getCanReorder() == 0 && (activity instanceof FreshActivity)) {
+                        orderComplete.setVisibility(View.GONE);
+                        orderCancel.setVisibility(View.VISIBLE);
+                        buttonCancelOrder.setText(R.string.ok);
                     }  else {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
