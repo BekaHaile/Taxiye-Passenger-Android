@@ -7445,8 +7445,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, callFareEstimate,
                     getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
         } else{
-            if(getSlidingBottomPanel().getRequestRideOptionsFragment()
-                    .getRegionSelected().getDestinationMandatory() == 1) {
                 textViewDestSearch.setText(getResources().getString(R.string.destination_required));
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
 
@@ -7460,7 +7458,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                     textViewDestSearch.startAnimation(shake);
                 }
-            }
         }
     }
 
@@ -8469,9 +8466,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void imageViewRideNowPoolCheck(){
         if(getSlidingBottomPanel().getRequestRideOptionsFragment()
                 .getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-            if((Data.autoData.getDropLatLng() != null)
-                    || ((Data.autoData.getDropLatLng()) == null && (getSlidingBottomPanel().getRequestRideOptionsFragment()
-                    .getRegionSelected().getDestinationMandatory() == 0))){
+            if(Data.autoData.getDropLatLng() != null){
                 //requestRideClick();
                 shakeAnim = 0;
                 openConfirmRequestView();
