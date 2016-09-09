@@ -93,7 +93,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         } else if (viewType == MAIN_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_fresh_category_item, parent, false);
 
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, 194);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, 196);
             v.setLayoutParams(layoutParams);
 
             ASSL.DoMagic(v);

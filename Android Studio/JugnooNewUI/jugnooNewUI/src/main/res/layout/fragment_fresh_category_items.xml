@@ -62,5 +62,12 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/below_shadow_down"
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shadow_up"
+        />
 
 </RelativeLayout>
