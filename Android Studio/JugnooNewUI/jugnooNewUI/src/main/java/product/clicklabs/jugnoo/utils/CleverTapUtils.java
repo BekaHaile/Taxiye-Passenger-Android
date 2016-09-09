@@ -58,6 +58,15 @@ public class CleverTapUtils {
                     }
                 }
             }
+            if(Data.autoData != null && Data.autoData.getPromoCoupons() != null) {
+                for(int i=0;i<Data.autoData.getPromoCoupons().size();i++) {
+                    coupons.add(Data.autoData.getPromoCoupons().get(i).getTitle());
+                    String value = getCouponValue(Data.autoData.getPromoCoupons().get(i).getTitle());
+                    if(value.length()>0) {
+                        coupons.add(value);
+                    }
+                }
+            }
             if(Data.getFreshData() != null && Data.getFreshData().getPromoCoupons() != null) {
                 for(int i=0;i<Data.getFreshData().getPromoCoupons().size();i++) {
                     coupons.add(Data.getFreshData().getPromoCoupons().get(i).getTitle());
@@ -88,12 +97,7 @@ public class CleverTapUtils {
             }
             Log.d("TAG", "Coupon counts = "+coupons.size());
 
-            for(int i=0;i<coupons.size();i++) {
-                Log.d("Coupon", ""+coupons.get(i));
-//                coupons.add("Test Coupon dskjfh fksdfh kshdf qwe qwe"+i);
-            }
             MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
-
 
         } catch(Exception e) {
             e.printStackTrace();
