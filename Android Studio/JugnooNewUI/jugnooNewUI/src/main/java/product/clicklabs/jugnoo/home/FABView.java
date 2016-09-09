@@ -170,7 +170,7 @@ public class FABView {
             } else if(Config.getMealsClientId().equalsIgnoreCase(currentOpenedOffering)){
                 menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_meals_test);
             } else if(Config.getGroceryClientId().equalsIgnoreCase(currentOpenedOffering)){
-                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_delivery_test);
+                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_grocery_test);
             }
         } else {
             menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_menu_selector);

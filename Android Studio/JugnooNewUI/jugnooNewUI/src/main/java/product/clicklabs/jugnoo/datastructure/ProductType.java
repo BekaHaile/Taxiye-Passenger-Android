@@ -4,6 +4,7 @@ public enum ProductType {
 	AUTO(1),
 	FRESH(2),
 	MEALS(3),
+	GROCERY(4),
 	NOT_SURE(-1)
 	;
 

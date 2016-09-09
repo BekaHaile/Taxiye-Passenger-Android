@@ -54,7 +54,7 @@
             android:id="@+id/fabGrocery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_fab_delivery_selector"
+            android:src="@drawable/ic_fab_grocery_selector"
             android:visibility="gone"
             android:layout_marginBottom="0px"
             fab:fab_colorNormal="#0000"
