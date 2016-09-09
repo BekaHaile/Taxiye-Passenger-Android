@@ -42,6 +42,7 @@ import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 import com.sabkuchfresh.fragments.FreshPaymentFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.FreshSupportFragment;
+import com.sabkuchfresh.fragments.GroceryFragment;
 import com.sabkuchfresh.fragments.HomeFragment;
 import com.sabkuchfresh.fragments.MealFragment;
 import com.sabkuchfresh.retrofit.model.Category;
@@ -323,6 +324,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
                     addMealFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
+                } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+                    //openCart();
+                    addGroceryFragment();
+                    Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.GROCERY);
+                    lastClientId = Config.getGroceryClientId();
                 } else {
                     openCart();
                     addFreshFragment();
@@ -813,7 +819,34 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.title.setText(getResources().getString(R.string.meals));
 				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-			} else if (fragment instanceof FreshCartItemsFragment) {
+			} else if (fragment instanceof GroceryFragment) {
+                topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                topBar.below_shadow.setVisibility(View.GONE);
+                topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.GONE);
+                topBar.imageViewDelete.setVisibility(View.GONE);
+                textViewCheckout.setVisibility(View.GONE);
+                if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
+                    relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+
+                if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    imageViewFabFake.setVisibility(View.VISIBLE);
+                    fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                    fabView.setFABMenuDrawable();
+                }
+
+
+                relativeLayoutCartNew.setVisibility(View.VISIBLE);
+                linearLayoutCheckout.setVisibility(View.GONE);
+
+                relativeLayoutSort.setVisibility(View.VISIBLE);
+                relativeLayoutCart.setVisibility(View.GONE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getResources().getString(R.string.grocery));
+                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+
+            } else if (fragment instanceof FreshCartItemsFragment) {
 				textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));
 				try {
 	//                String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
@@ -1081,6 +1114,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 .add(relativeLayoutContainer.getId(), new MealFragment(),
                         MealFragment.class.getName())
                 .addToBackStack(MealFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
+    private void addGroceryFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new GroceryFragment(),
+                        GroceryFragment.class.getName())
+                .addToBackStack(GroceryFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 

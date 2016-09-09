@@ -43,6 +43,7 @@ public interface FirebaseEvents {
     String OFFER_SELECTED = "offer_selected";
     String OFFER_T_N_C = "offer_tnc";
     String FRESH = "fresh";
+    String GROCERY = "grocery";
     String REQUEST_RIDE_L1_AUTO = "req_ride_l1_auto";
     String REQUEST_RIDE_L1_AUTO_POOL = "req_ride_l1_auto_pool";
 

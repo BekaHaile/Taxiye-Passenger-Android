@@ -431,6 +431,7 @@ public interface Constants {
 	String KEY_DEFAULT_CLIENT_ID = "default_client_id";
 	String KEY_MEALS_ENABLED = "meals_enabled";
 	String KEY_FRESH_ENABLED = "fresh_enabled";
+	String KEY_GROCERY_ENABLED = "grocery_enabled";
 	String KEY_DELIVERY_ENABLED = "delivery_enabled";
 	String KEY_ORDER_HISTORY = "order_history";
 	String INTENT_KEY_FROM_BAD = "FromBad";

@@ -310,7 +310,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 				params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
                 params.put(Constants.IS_FATAFAT, "1");
-                params.put(Constants.KEY_CLIENT_ID, ""+ Config.getFreshClientId());
+                params.put(Constants.KEY_CLIENT_ID, ""+ Config.getGroceryClientId());
                 params.put(Constants.INTERATED, "1");
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 
