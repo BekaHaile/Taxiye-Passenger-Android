@@ -5054,7 +5054,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
             noDriversDialog.setContentView(R.layout.dialog_custom_one_button);
 
-            FrameLayout frameLayout = (FrameLayout) noDriversDialog.findViewById(R.id.rv);
+            RelativeLayout frameLayout = (RelativeLayout) noDriversDialog.findViewById(R.id.rv);
             new ASSL(activity, frameLayout, 1134, 720, true);
 
             WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
@@ -6363,7 +6363,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onLocationChanged(Location location) {
                     Log.e("highSpeedAccuracyLF", ">"+location+", mapTouched>"+mapTouched);
-                    if(!mapTouched){
+                    if(!mapTouched && PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened){
                         map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), MAP_ANIMATE_DURATION, null);
                     } else {
                         destroyHighSpeedAccuracyFusedLocationFetcher();
