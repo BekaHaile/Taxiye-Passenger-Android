@@ -5059,7 +5059,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
             noDriversDialog.setContentView(R.layout.dialog_custom_one_button);
 
-            FrameLayout frameLayout = (FrameLayout) noDriversDialog.findViewById(R.id.rv);
+            RelativeLayout frameLayout = (RelativeLayout) noDriversDialog.findViewById(R.id.rv);
             new ASSL(activity, frameLayout, 1134, 720, true);
 
             WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();

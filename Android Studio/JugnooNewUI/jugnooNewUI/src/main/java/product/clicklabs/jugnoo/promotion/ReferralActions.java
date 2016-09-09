@@ -40,64 +40,65 @@ import product.clicklabs.jugnoo.utils.Utils;
 public class ReferralActions implements FirebaseEvents {
 
     public static FacebookLoginHelper facebookLoginHelper;
-    public static void shareToFacebook(final Activity activity, final boolean isMessenger, CallbackManager callbackManager){
-        facebookLoginHelper = new FacebookLoginHelper(activity, callbackManager, new FacebookLoginCallback() {
-            @Override
-            public void facebookLoginDone(FacebookUserData facebookUserData) {
-                try {
-                    if(Data.userData != null){
-                        String channel = isMessenger ? BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK_MESSENGER : BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK;
-                        String channelLinkSP = isMessenger ? SPLabels.BRANCH_FACEBOOK_MESSENGER_LINK : SPLabels.BRANCH_FACEBOOK_LINK;
-                        new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
-                            @Override
-                            public void onBranchLinkCreated(String link) {
-                                if(Data.userData != null) {
-                                    ArrayList<AppPackage> appPackages = new ArrayList<>();
-                                    appPackages.add(new AppPackage(0, "com.facebook.orca"));
-                                    Utils.checkAppsArrayInstall(activity, appPackages);
-                                    if (isMessenger && appPackages.get(0).getInstalled() == 1) {
-                                        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                                        intent.setPackage("com.facebook.orca");
-                                        intent.setType("text/plain");
-                                        intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + "\n" + link);
-                                        activity.startActivity(intent);
-                                    } else {
+    public static void shareToFacebook(final Activity activity, final boolean isMessenger, final CallbackManager callbackManager){
+        try {
+            if(Data.userData != null){
+                String channel = isMessenger ? BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK_MESSENGER : BranchMetricsUtils.BRANCH_CHANNEL_FACEBOOK;
+                String channelLinkSP = isMessenger ? SPLabels.BRANCH_FACEBOOK_MESSENGER_LINK : SPLabels.BRANCH_FACEBOOK_LINK;
+                new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
+                    @Override
+                    public void onBranchLinkCreated(final String link) {
+                        if(Data.userData != null) {
+                            ArrayList<AppPackage> appPackages = new ArrayList<>();
+                            appPackages.add(new AppPackage(0, "com.facebook.orca"));
+                            Utils.checkAppsArrayInstall(activity, appPackages);
+                            if (isMessenger && appPackages.get(0).getInstalled() == 1) {
+                                Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                                intent.setPackage("com.facebook.orca");
+                                intent.setType("text/plain");
+                                intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + "\n" + link);
+                                activity.startActivity(intent);
+                            } else {
 
+                                facebookLoginHelper = new FacebookLoginHelper(activity, callbackManager, new FacebookLoginCallback() {
+                                    @Override
+                                    public void facebookLoginDone(FacebookUserData facebookUserData) {
                                         facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
                                                 Data.userData.getReferralMessages().fbShareCaption,
                                                 Data.userData.getReferralMessages().fbShareDescription,
                                                 link,
                                                 Data.userData.jugnooFbBanner);
-                                        //30.707810, 76.761957
-                                        // ?pickup_lat=30.707810&pickup_lng=76.761957
-                                        //http://share.jugnoo.in/m/7MPH22Lyln?deepindex=0
                                     }
-                                }
-                            }
 
-                            @Override
-                            public void onBranchError(String error) {
-                                Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void facebookLoginError(String message) {
+                                        Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                facebookLoginHelper.openFacebookSession(false);
+
+
                             }
-                        }).getBranchLinkForChannel(channel,
-                                channelLinkSP,
-                                Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
-                                Data.userData.getReferralMessages().getTitle(),
-                                Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
-                                Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
-                                Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
 
-            @Override
-            public void facebookLoginError(String message) {
-                Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onBranchError(String error) {
+                        Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                    }
+                }).getBranchLinkForChannel(channel,
+                        channelLinkSP,
+                        Data.userData.userIdentifier, Data.userData.referralCode, Data.userData.userName,
+                        Data.userData.getReferralMessages().getTitle(),
+                        Data.userData.getReferralMessages().fbShareDescription, Data.userData.jugnooFbBanner,
+                        Data.userData.getBranchDesktopUrl(), Data.userData.getBranchAndroidUrl(),
+                        Data.userData.getBranchIosUrl(), Data.userData.getBranchFallbackUrl());
             }
-        });
-        facebookLoginHelper.openFacebookSession(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public static void shareToFacebookBasic(final Activity activity, CallbackManager callbackManager, final String link){
@@ -242,8 +243,7 @@ public class ReferralActions implements FirebaseEvents {
             new BranchMetricsUtils(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
-
-                    shareGeneric(activity, callbackManager,
+                    genericShareDialog(activity, callbackManager,
                             Data.userData.getReferralMessages().referralEmailSubject,
                             Data.userData.getReferralMessages().referralSharingMessage + "\n" + link,
                             link);
@@ -265,12 +265,12 @@ public class ReferralActions implements FirebaseEvents {
         }
     }
 
-    public static void shareGeneric(final Activity activity, final CallbackManager callbackManager,
-                             final String subject, final String body, final String link) {
+    public static void genericShareDialog(final Activity activity, final CallbackManager callbackManager,
+                                          final String subject, final String body, final String link) {
         Intent sendIntent = new Intent(android.content.Intent.ACTION_SEND);
         sendIntent.setType("text/plain");
         List<ResolveInfo> activities = activity.getPackageManager().queryIntentActivities(sendIntent, 0);
-        sortApps(activities);
+        sortAppsInGenericShareDialog(activities);
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Share with...");
         final ShareIntentListAdapter adapter = new ShareIntentListAdapter(activity,
@@ -346,7 +346,7 @@ public class ReferralActions implements FirebaseEvents {
     }
 
 
-    private static void sortApps(List<ResolveInfo> infos){
+    private static void sortAppsInGenericShareDialog(List<ResolveInfo> infos){
         try{
             //com.facebook.orca
             //com.twitter.android
