@@ -54,7 +54,7 @@ public interface Events {
     String WORK = "Work";
     String IS_PUSH_MEALS_ENABLED = "is_push_meals_enabled";
     String IS_PUSH_AUTOS_ENABLED = "is_push_autos_enabled";
-    String IS_PUSH_FATAFAT_ENABLED = "is_push_fatafat_enabled";
+    String IS_PUSH_FRESH_ENABLED = "is_push_fresh_enabled";
     String TRAIN_TIME = "train_time";
 
 }

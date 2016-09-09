@@ -107,20 +107,19 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                     @Override
                     public void success(final NotificationSettingResponseModel notificationPrefResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
-
                         try {
                             if (notificationPrefResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 settingAdapter.setResults((ArrayList<NotificationSettingResponseModel.NotificationPrefData>) notificationPrefResponse.getData());
                                 try {
                                     HashMap<String, Object> profileUpdate = new HashMap<>();
-                                    for(int i=0;i<notificationPrefResponse.getData().size();i++) {
-                                        profileUpdate.put(notificationPrefResponse.getData().get(i).getTitle(), notificationPrefResponse.getData().get(i).getStatus());
+                                    for(NotificationSettingResponseModel.NotificationPrefData notificationPrefData : notificationPrefResponse.getData()) {
+                                        updateClevertapMap(notificationPrefData, profileUpdate);
+                                        profileUpdate.put(notificationPrefData.getTitle(), notificationPrefData.getStatus());
                                     }
                                     MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -197,6 +196,9 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 settingAdapter.getNotificationPrefDatas().get(position).setStatus(status);
                                 settingAdapter.notifyDataSetChanged();
+                                HashMap<String, Object> profileUpdate = new HashMap<>();
+                                updateClevertapMap(settingAdapter.getNotificationPrefDatas().get(position), profileUpdate);
+                                MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                             } else if(!TextUtils.isEmpty(notificationInboxResponse.getMessage())) {
                                 DialogPopup.alertPopup(activity, "", notificationInboxResponse.getMessage());
                             }
@@ -246,5 +248,15 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
             status = 1;
         }
         updateNotificationPreferenceStatus(datum.getName(), status, position);
+    }
+
+    private void updateClevertapMap(NotificationSettingResponseModel.NotificationPrefData notificationPrefData, HashMap<String, Object> profileUpdate){
+        if(notificationPrefData.getName().equalsIgnoreCase(Constants.AUTOS_PUSH)){
+            profileUpdate.put(Events.IS_PUSH_AUTOS_ENABLED, notificationPrefData.getStatus());
+        } else if(notificationPrefData.getName().equalsIgnoreCase(Constants.MEALS_PUSH)){
+            profileUpdate.put(Events.IS_PUSH_MEALS_ENABLED, notificationPrefData.getStatus());
+        } else if(notificationPrefData.getName().equalsIgnoreCase(Constants.FRESH_PUSH)){
+            profileUpdate.put(Events.IS_PUSH_FRESH_ENABLED, notificationPrefData.getStatus());
+        }
     }
 }
