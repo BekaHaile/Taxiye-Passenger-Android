@@ -2770,6 +2770,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         }
 
+                        initAndClearInRidePath();
+
+
                         break;
 
 
@@ -5593,17 +5596,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void plotPolylineInRideDriverPath(){
         if (map != null) {
-            if(polylinesInRideDriverPath == null){
+            initAndClearInRidePath();
+            for(PolylineOptions polylineOptions : getPolylineOptionsInRideDriverPath()){
+                polylinesInRideDriverPath.add(map.addPolyline(polylineOptions));
+            }
+        }
+    }
+
+    private void initAndClearInRidePath(){
+        if (map != null) {
+            if (polylinesInRideDriverPath == null) {
                 polylinesInRideDriverPath = new ArrayList<>();
             }
-            if(polylinesInRideDriverPath.size() > 0){
-                for(Polyline polyline : polylinesInRideDriverPath){
+            if (polylinesInRideDriverPath.size() > 0) {
+                for (Polyline polyline : polylinesInRideDriverPath) {
                     polyline.remove();
                 }
                 polylinesInRideDriverPath.clear();
-            }
-            for(PolylineOptions polylineOptions : getPolylineOptionsInRideDriverPath()){
-                polylinesInRideDriverPath.add(map.addPolyline(polylineOptions));
             }
         }
     }
