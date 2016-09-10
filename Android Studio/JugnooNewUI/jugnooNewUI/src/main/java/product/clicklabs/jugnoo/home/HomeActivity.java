@@ -115,6 +115,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database;
 import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
 import product.clicklabs.jugnoo.JSONParser;
@@ -6658,6 +6659,30 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     AdWordsConversionReporter.reportWithConversionId(HomeActivity.this.getApplicationContext(),
                                                             GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
+
+                                                    String offerCode = "NA";
+                                                    if (promoCouponSelectedForRide != null) {
+                                                        if (promoCouponSelectedForRide instanceof CouponInfo) {
+                                                            offerCode = ""+((CouponInfo) promoCouponSelectedForRide).title + " "+((CouponInfo) promoCouponSelectedForRide).subtitle;
+                                                        } else if (promoCouponSelectedForRide instanceof PromotionInfo) {
+                                                            offerCode = ""+((PromotionInfo) promoCouponSelectedForRide).title;
+                                                        }
+                                                    } else {
+                                                        offerCode = "NA";
+                                                    }
+
+                                                    //For Clever Tap
+                                                    MyApplication.getInstance().getCleverTapUtils().
+                                                            rideRequested(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType(),
+                                                                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType(),
+                                                                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor(),
+                                                                    offerCode, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta());
+
+                                                    if(!offerCode.equalsIgnoreCase("NA")) {
+                                                        HashMap<String, Object> profileUpdate = new HashMap<>();
+                                                        profileUpdate.put(Events.COUPONS_USED, offerCode);
+                                                        MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+                                                    }
 
                                                     if(Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
                                                         Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.autoData.getPickupPaymentOption());

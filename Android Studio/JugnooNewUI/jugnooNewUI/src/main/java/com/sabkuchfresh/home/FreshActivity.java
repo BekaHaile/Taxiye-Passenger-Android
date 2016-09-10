@@ -122,6 +122,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private PaymentOption paymentOption;
 
     private List<DeliveryAddress> deliveryAddresses;
+    public ArrayList<SubItem> subItemsInCart;
 
     public String mContactNo = "";
 
@@ -272,6 +273,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+
                 }
             });
 

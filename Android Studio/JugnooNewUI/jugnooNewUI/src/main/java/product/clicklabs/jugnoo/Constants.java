@@ -452,5 +452,10 @@ public interface Constants {
 	String KEY_SUPPORT_NUMBER = "support_number";
 
 	String INTERATED = "integrated";
+	String SP_WALLET_AT_SIGNUP = "sp_wallet_at_signup";
+
+	String AUTOS_PUSH = "autos_push";
+	String FRESH_PUSH = "fresh_push";
+	String MEALS_PUSH = "meals_push";
 
 }

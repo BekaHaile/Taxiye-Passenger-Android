@@ -4,9 +4,14 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 
+import com.clevertap.android.sdk.ActivityLifecycleCallback;
+import com.clevertap.android.sdk.CleverTapAPI;
+import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
+import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -19,6 +24,8 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.kochava.android.tracker.Feature;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +34,8 @@ import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.AppSwitcher;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
+import product.clicklabs.jugnoo.utils.CleverTapUtils;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 
@@ -65,8 +74,12 @@ public class MyApplication extends Application{
 	 */
 	private Bus mBus;
 	public Branch branch;
+
+	private CleverTapAPI cleverTap;
+
 	@Override
 	public void onCreate() {
+		ActivityLifecycleCallback.register(this);
 		super.onCreate();
 		try {
 			Fabric.with(this, new Crashlytics());
@@ -86,6 +99,7 @@ public class MyApplication extends Application{
 			if(BuildConfig.DEBUG_MODE) {
 //				Feature.setErrorDebug(true);
 //				Feature.enableDebug(true);
+				CleverTapAPI.setDebugLevel(1);
 			}
             kTracker = new Feature( this , Config.KOCHAVA_KEY );
 
@@ -100,6 +114,7 @@ public class MyApplication extends Application{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		getCleverTap();
 	}
 
 	public Bus getBus() {
@@ -367,6 +382,70 @@ public class MyApplication extends Application{
 			appSwitcher = new AppSwitcher();
 		}
 		return appSwitcher;
+	}
+
+	public CleverTapAPI getCleverTap() {
+		if(cleverTap == null) {
+			try {
+				cleverTap = CleverTapAPI.getInstance(getApplicationContext());
+			} catch (CleverTapMetaDataNotFoundException e) {
+				// thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
+			} catch (CleverTapPermissionsNotSatisfied e) {
+				// thrown if you haven’t requested the required permissions in your AndroidManifest.xml
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return cleverTap;
+	}
+
+	public void setLocationToCleverTap() {
+		try {
+			Location location = getCleverTap().getLocation();
+			getCleverTap().setLocation(location);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Method used to send event on clever tap
+	 * @param eventName
+	 * @param prodViewedAction
+     */
+	public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
+		getCleverTap().event.push(eventName, prodViewedAction);
+	}
+
+	public void charged(HashMap<String, Object> chargeDetails, ArrayList<HashMap<String, Object>> items) {
+		try {
+			getCleverTap().event.push(CleverTapAPI.CHARGED_EVENT, chargeDetails, items);
+		} catch (Exception e) {
+			// You have to specify the first parameter to push()
+			// as CleverTapAPI.CHARGED_EVENT
+		}
+	}
+
+	public void udpateUserData(String key, ArrayList<String> coupons) {
+		try {
+			if(coupons.size()>0)
+				getCleverTap().profile.setMultiValuesForKey(key, coupons);
+			else {
+				HashMap<String, Object> profileUpdate = new HashMap<>();
+				profileUpdate.put(key, "NA");
+				getCleverTap().profile.push(profileUpdate);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private CleverTapUtils cleverTapUtils;
+	public CleverTapUtils getCleverTapUtils(){
+		if(cleverTapUtils == null){
+			cleverTapUtils = new CleverTapUtils();
+		}
+		return cleverTapUtils;
 	}
 
 }

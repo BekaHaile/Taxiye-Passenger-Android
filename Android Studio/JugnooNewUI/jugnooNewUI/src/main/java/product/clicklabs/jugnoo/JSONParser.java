@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.Location;
 
 import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
@@ -1469,6 +1470,7 @@ public class JSONParser implements Constants {
     }
 
     public void loginAnalyticEvents(Context context, LoginVia loginVia){
+        loginClevertap(context);
         try {
             FlurryEventLogger.setGAUserId(Data.userData.getUserId());
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
@@ -1486,10 +1488,71 @@ public class JSONParser implements Constants {
                 BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
                 FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
                 FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
+
+                String walletSelected = Prefs.with(context).getString(SP_WALLET_AT_SIGNUP, "NA");
+                Prefs.with(context).save(SP_WALLET_AT_SIGNUP, "");
+
+                MyApplication.getInstance().getCleverTapUtils().signUp(String.valueOf(loginVia), walletSelected, referralCodeEntered);
+
             }
             JSONObject map = new JSONObject();
             map.put(KEY_SOURCE, getAppSource(context));
             NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_LOGIN_APP_SOURCE, map);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    private void loginClevertap(Context context){
+        try{
+            // each of the below mentioned fields are optional
+            // if set, these populate demographic information in the Dashboard
+            HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+            profileUpdate.put(Events.NAME, Data.userData.userName);                  // String
+            profileUpdate.put(Events.USER_ID, Data.userData.getUserId());                    // String or number
+            profileUpdate.put(Events.EMAIL, Data.userData.userEmail);               // Email address of the user
+            profileUpdate.put(Events.PHONE, Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));                     // Phone (without the country code)
+
+            //profileUpdate.put("Photo", Data.userData.userImage);    // URL to the Image
+            profileUpdate.put(Events.SOURCE, getAppSource(context));
+            profileUpdate.put(Events.REFERRAL_CODE, Data.userData.referralCode);
+            profileUpdate.put(Events.JUGNOO_CASH, Data.userData.getJugnooBalance());
+            profileUpdate.put(Events.IS_VERIFIED, "True");
+
+//            profileUpdate.put(Events.COUPONS_USED, Data.userData.);
+            try {
+                int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+                profileUpdate.put(Events.OS_VERSION, currentapiVersion);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            profileUpdate.put(Events.WALLET, Data.userData.);
+            if(Prefs.with(context).getString(SPLabels.ADD_HOME, "").length()>0) {
+                String data = Prefs.with(context).getString(SPLabels.ADD_HOME, "");
+                JSONObject jsonObject  = new JSONObject(data);
+                profileUpdate.put(Events.HOME, jsonObject.optString("address"));
+            }
+            if(Prefs.with(context).getString(SPLabels.ADD_WORK, "").length()>0) {
+                String data = Prefs.with(context).getString(SPLabels.ADD_WORK, "");
+                JSONObject jsonObject  = new JSONObject(data);
+                profileUpdate.put(Events.WORK, jsonObject.optString("address"));
+            }
+
+            // optional fields. controls whether the user will be sent email, push etc.
+            profileUpdate.put("MSG-email", true);                      // Disable email notifications
+            profileUpdate.put("MSG-push", true);                        // Enable push notifications
+            profileUpdate.put("MSG-sms", true);                        // Disable SMS notifications
+
+            MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+
+            MyApplication.getInstance().getCleverTapUtils().setCoupons();
+            MyApplication.getInstance().getCleverTapUtils().setWalletData();
+            // for send location to clevertap
+            MyApplication.getInstance().setLocationToCleverTap();
 
         } catch (Exception e) {
             e.printStackTrace();

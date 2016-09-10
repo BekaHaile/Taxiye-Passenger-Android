@@ -44,6 +44,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -639,7 +640,9 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                     applyButton.setEnabled(false);
                                     applyButton.setBackgroundColor(activity.getResources().getColor(R.color.theme_color_pressed));
                                     updateUI();
-
+                                    HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+                                    profileUpdate.put(Events.COUPONS_USED, promoCode);
+                                    MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                     promoCode = "";
@@ -712,6 +715,12 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 //                                                                .setPosition(4);
                             productList.add(product);
 
+                            HashMap<String, Object> item = new HashMap<>();
+                            item.put(Events.PRODUCT_NAME, itemName);
+                            item.put(Events.PRODUCT_ID, itemId);
+                            item.put(Events.QUANTITY, qty);
+                            items.add(item);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                             return "";
@@ -723,11 +732,29 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         return jCart.toString();
     }
 
+    HashMap<String, Object> chargeDetails = new HashMap<String, Object>();
+    ArrayList<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
+
     public void placeOrderApi() {
         try {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
                 productList.clear();
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+                chargeDetails.clear();
+                items.clear();
+
+
+                chargeDetails.put("Payment mode", ""+activity.getPaymentOption());
+                chargeDetails.put(Events.TOTAL_AMOUNT, ""+totalAmount);
+                if(promoAmount>0) {
+                    chargeDetails.put(Events.DISCOUNT_AMOUNT, "" + promoAmount);
+                } else {
+                    chargeDetails.put(Events.DISCOUNT_AMOUNT, "" + promoAmount);
+                }
+
+                chargeDetails.put(Events.START_TIME, ""+String.valueOf(activity.getSlotSelected().getStartTime()));
+                chargeDetails.put(Events.END_TIME, ""+String.valueOf(activity.getSlotSelected().getEndTime()));
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -742,14 +769,20 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 params.put(Constants.KEY_DELIVERY_ADDRESS, String.valueOf(activity.getSelectedAddress()));
                 params.put(Constants.KEY_DELIVERY_NOTES, String.valueOf(activity.getSpecialInst()));
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-                if(!TextUtils.isEmpty(promoCode))
-                    params.put(Constants.PROMO_CODE, promoCode);
                 params.put(Constants.KEY_CART, cartItems());
+                if(!TextUtils.isEmpty(promoCode)) {
+                    params.put(Constants.PROMO_CODE, promoCode);
+                    chargeDetails.put(Events.PROMOCODE, promoCode);
+                }
+
 
                 int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                 if(type == AppConstant.ApplicationType.MEALS) {
                     params.put("store_id", "2");
                     params.put("group_id", ""+activity.getProductsResponse().getCategories().get(0).getSubItems().get(0).getGroupId());
+                    chargeDetails.put(Events.TYPE, "Meals");
+                } else {
+                    chargeDetails.put(Events.TYPE, "Fresh");
                 }
                 params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.INTERATED, "1");
@@ -771,6 +804,11 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                     long time = 0L;
                                     Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
                                     activity.resumeMethod();
+
+                                    chargeDetails.put("Charged ID", placeOrderResponse.getOrderId());
+                                    MyApplication.getInstance().charged(chargeDetails, items);
+
+
                                     ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
                                             .setTransactionId(String.valueOf(placeOrderResponse.getOrderId()))
                                             .setTransactionAffiliation("Fresh Store")

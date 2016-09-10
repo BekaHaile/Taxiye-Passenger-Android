@@ -1087,6 +1087,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             Prefs.with(this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 1);
         }
 
+		try{
+			if(!MyApplication.getInstance().getDeviceToken().equalsIgnoreCase("not_found")) {
+				MyApplication.getInstance().getCleverTap().data.pushFcmRegistrationId(MyApplication.getInstance().getDeviceToken(), true);
+				Log.d("Token", "token = "+MyApplication.getInstance().getDeviceToken());
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	private void logSome(){
@@ -2803,7 +2812,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up");
                                     SplashNewActivity.this.name = name;
                                     SplashNewActivity.this.emailId = emailId;
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                     nudgeSignupEvent(phoneNo, emailId, name);
 
                                 } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
@@ -2818,7 +2827,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
                                     SplashNewActivity.this.name = name;
                                     SplashNewActivity.this.emailId = emailId;
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
@@ -2928,7 +2937,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Facebook");
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                     nudgeSignupEvent(phoneNo, Data.facebookUserData.userEmail,
                                             Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
 
@@ -2940,7 +2949,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     parseDataSendToMultipleAccountsScreen(activity, jObj);
                                 } else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
@@ -3043,7 +3052,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Google");
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                     nudgeSignupEvent(phoneNo, Data.googleSignInAccount.getEmail(),
                                             Data.googleSignInAccount.getDisplayName());
 
@@ -3055,7 +3064,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     parseDataSendToMultipleAccountsScreen(activity, jObj);
                                 } else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
@@ -3100,7 +3109,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
     }
 
 
-    private void parseOTPSignUpData(JSONObject jObj, String password, String referralCode) throws Exception {
+    private void parseOTPSignUpData(JSONObject jObj, String password, String referralCode, int linkedWallet) throws Exception {
         SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
         SplashNewActivity.this.password = password;
         SplashNewActivity.this.referralCode = referralCode;
@@ -3111,6 +3120,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
         sendToOtpScreen = true;
         linkedWalletErrorMsg = jObj.optString(KEY_MESSAGE, "");
+		Prefs.with(this).save(SP_WALLET_AT_SIGNUP, String.valueOf(linkedWallet));
     }
 
     private void generateOTPRegisterData() {
