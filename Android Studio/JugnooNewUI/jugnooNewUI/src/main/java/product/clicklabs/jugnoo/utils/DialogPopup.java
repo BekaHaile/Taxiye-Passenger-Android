@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.text.Html;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
@@ -508,7 +509,7 @@ public class DialogPopup {
 				textHead.setText(title);
 				textMessage.setText(message);
 
-				if (showTitle) {
+				if (showTitle && !TextUtils.isEmpty(title)) {
 					textHead.setVisibility(View.VISIBLE);
 				} else {
 					textHead.setVisibility(View.GONE);

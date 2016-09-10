@@ -427,6 +427,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                         try {
                             activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             setPaymentOptionUI();
+                            activity.updateMenu();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -437,6 +438,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                         try {
                             activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             setPaymentOptionUI();
+                            activity.updateMenu();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -852,21 +854,25 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                     final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
                                     final double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, 0);
                                     Log.e("USER_IN_DEBT message", "=" + message1);
-                                    activity.runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            new UserDebtDialog(activity, Data.userData,
-                                                    new UserDebtDialog.Callback() {
-                                                        @Override
-                                                        public void successFullyDeducted(double userDebt) {
-                                                            setPaymentOptionUI();
-                                                            activity.updateMenu();
-                                                        }
+                                    new UserDebtDialog(activity, Data.userData,
+                                            new UserDebtDialog.Callback() {
+                                                @Override
+                                                public void successFullyDeducted(double userDebt) {
+                                                    activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                                                    setPaymentOptionUI();
+                                                    activity.updateMenu();
+                                                }
 
-                                                    }).showUserDebtDialog(userDebt, message1);
+                                            }).showUserDebtDialog(userDebt, message1);
+                                } else if (ApiResponseFlags.INSUFFICIENT_BALANCE.getOrdinal() == flag) {
+                                    DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            fetchWalletBalance();
                                         }
                                     });
-                                } else {
+                                }
+                                else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
                             }

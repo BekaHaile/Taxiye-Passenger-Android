@@ -116,6 +116,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         relativeLayoutGreat = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutGreat);
         relativeLayoutGreat.setVisibility(View.GONE);
         relativeLayoutRideEndWithImage = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideEndWithImage);
+        relativeLayoutRideEndWithImage.setVisibility(View.GONE);
 
         textViewThanks = (TextView) rootView.findViewById(R.id.textViewThanks);
         textViewRSTotalFare = (TextView) rootView.findViewById(R.id.textViewRSTotalFare);

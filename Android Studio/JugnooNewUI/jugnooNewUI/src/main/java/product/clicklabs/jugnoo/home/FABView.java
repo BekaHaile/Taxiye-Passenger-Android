@@ -121,7 +121,8 @@ public class FABView {
         //relativeLayoutFAB.setVisibility(View.INVISIBLE);
         try {
             if(Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
-                    Data.userData.getIntegratedJugnooEnabled() == 1) {
+                    (Data.userData.getFreshEnabled() == 1 || Data.userData.getMealsEnabled() == 1 || Data.userData.getDeliveryEnabled() == 1)
+                    && Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if (passengerScreenMode != null) {
                     if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
                             && !((HomeActivity) activity).confirmedScreenOpened)
