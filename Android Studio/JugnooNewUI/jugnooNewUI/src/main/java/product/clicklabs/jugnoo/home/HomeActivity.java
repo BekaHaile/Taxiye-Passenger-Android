@@ -377,7 +377,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
     PushDialog pushDialog;
 
-    LocationFetcher highAccuracyLF;
+    LocationFetcher highAccuracyLF, highSpeedAccuracyLF;
 
     PromoCoupon promoCouponSelectedForRide;
 
@@ -6363,11 +6363,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if (highAccuracyLF == null) {
             highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
         }
+        if(highSpeedAccuracyLF == null && !mapTouched){
+            highSpeedAccuracyLF = new LocationFetcher(HomeActivity.this, new LocationUpdate() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    Log.e("highSpeedAccuracyLF", ">"+location+", mapTouched>"+mapTouched);
+                    if(!mapTouched && PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened){
+                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), MAP_ANIMATE_DURATION, null);
+                    } else {
+                        destroyHighSpeedAccuracyFusedLocationFetcher();
+                    }
+                }
+            }, 1000);
+        }
+
     }
 
 
     public void destroyFusedLocationFetchers() {
         destroyHighAccuracyFusedLocationFetcher();
+        destroyHighSpeedAccuracyFusedLocationFetcher();
     }
 
 
@@ -6376,6 +6391,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if (highAccuracyLF != null) {
                 highAccuracyLF.destroy();
                 highAccuracyLF = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void destroyHighSpeedAccuracyFusedLocationFetcher() {
+        try {
+            if (highSpeedAccuracyLF != null) {
+                highSpeedAccuracyLF.destroy();
+                highSpeedAccuracyLF = null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -6391,10 +6416,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
                 HomeActivity.myLocation = location;
             }
+            checkForMyLocationButtonVisibility();
 
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){
                 Data.autoData.setFarAwayCity("");
-                mapTouched = true;
+//                mapTouched = true;
                 zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
             }
             zoomedToMyLocation = true;
