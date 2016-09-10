@@ -331,6 +331,9 @@ public class ApiFindADriver {
 			if(findADriverResponse.getDeliveryEnabled() != null) {
 				Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
 			}
+			if(findADriverResponse.getIntegratedJugnooEnabled() != null){
+				Data.userData.setIntegratedJugnooEnabled(findADriverResponse.getIntegratedJugnooEnabled());
+			}
 			if(!TextUtils.isEmpty(findADriverResponse.getGamePredictUrl())) {
 				Data.userData.setGamePredictUrl(findADriverResponse.getGamePredictUrl());
 			}

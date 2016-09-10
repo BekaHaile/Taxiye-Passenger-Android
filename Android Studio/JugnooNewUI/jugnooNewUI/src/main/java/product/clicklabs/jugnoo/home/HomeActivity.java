@@ -373,7 +373,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             zoomedToMyLocation = false,
             mapTouchedOnce = false;
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, firstTimeZoom = false, zoomingForDeepLink = false;
-    boolean dropLocationSet = false;
+    boolean dropLocationSet = false, myLocationButtonClicked = false;
 
     Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
     PushDialog pushDialog;
@@ -396,6 +396,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
     public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
+    public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 20; // in meters
 
     public static final float MAX_ZOOM = 15;
     private static final int MAP_ANIMATE_DURATION = 300;
@@ -511,6 +512,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         zoomingForDeepLink = false;
         freshIntroDialog = null;
         dropLocationSet = false;
+        myLocationButtonClicked = false;
 
 
 
@@ -1733,6 +1735,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onMapTouched() {
                     // Map touched
                     mapTouched = true;
+                    myLocationButtonClicked = false;
                 }
 
                 @Override
@@ -2054,27 +2057,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             dropLocationSet = true;
             relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
             imageViewDropCross.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void checkForMyLocationButtonVisibility(){
-        try{
-            if("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
-                if (MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
-                        map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK) {
-                    initialMyLocationBtn.setVisibility(View.VISIBLE);
-                    customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
-                } else {
-                    initialMyLocationBtn.setVisibility(View.GONE);
-                    customerInRideMyLocationBtn.setVisibility(View.GONE);
-                }
-            } else{
-                initialMyLocationBtn.setVisibility(View.GONE);
-                customerInRideMyLocationBtn.setVisibility(View.GONE);
-            }
-        } catch(Exception e){
-            initialMyLocationBtn.setVisibility(View.VISIBLE);
-            customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
         }
     }
 
@@ -2537,6 +2519,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(passengerScreenMode != PassengerScreenMode.P_INITIAL){
                 zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
             }else {
+                myLocationButtonClicked = true;
                 textViewInitialSearch.setText("");
                 if (myLocation != null) {
                     try {
@@ -2733,6 +2716,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             else if(myLocation != null){
                                 zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
                             }
+                            myLocationButtonClicked = true;
                         }
                         firstTimeZoom = true;
 
@@ -3128,6 +3112,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 initiateTimersForStates(mode);
                 dismissReferAllDialog(mode);
+
+                initializeHighSpeedAccuracyFusedLocationFetcher();
 
                 updateTopBar();
 
@@ -6373,26 +6359,74 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    private void checkForMyLocationButtonVisibility(){
+        try{
+            if("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
+                if (MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
+                        map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK) {
+                    initialMyLocationBtn.setVisibility(View.VISIBLE);
+                    customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
+                    destroyHighSpeedAccuracyFusedLocationFetcher();
+                } else {
+                    initialMyLocationBtn.setVisibility(View.GONE);
+                    customerInRideMyLocationBtn.setVisibility(View.GONE);
+                    initializeHighSpeedAccuracyFusedLocationFetcher();
+                }
+            } else{
+                initialMyLocationBtn.setVisibility(View.GONE);
+                customerInRideMyLocationBtn.setVisibility(View.GONE);
+                destroyHighSpeedAccuracyFusedLocationFetcher();
+            }
+        } catch(Exception e){
+            initialMyLocationBtn.setVisibility(View.VISIBLE);
+            customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
+            destroyHighSpeedAccuracyFusedLocationFetcher();
+        }
+    }
+
 
     public void initializeFusedLocationFetchers() {
-        destroyFusedLocationFetchers();
+        destroyHighAccuracyFusedLocationFetcher();
         if (highAccuracyLF == null) {
             highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
+        } else{
+            highAccuracyLF.connect();
         }
-        if(highSpeedAccuracyLF == null && !mapTouched){
-            highSpeedAccuracyLF = new LocationFetcher(HomeActivity.this, new LocationUpdate() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    Log.e("highSpeedAccuracyLF", ">"+location+", mapTouched>"+mapTouched);
-                    if(!mapTouched && PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened){
-                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), MAP_ANIMATE_DURATION, null);
-                    } else {
-                        destroyHighSpeedAccuracyFusedLocationFetcher();
-                    }
-                }
-            }, 1000);
-        }
+        initializeHighSpeedAccuracyFusedLocationFetcher();
+    }
 
+    private void initializeHighSpeedAccuracyFusedLocationFetcher(){
+        destroyHighSpeedAccuracyFusedLocationFetcher();
+        if(checkForInitialMyLocationButtonClick()) {
+            if (highSpeedAccuracyLF == null) {
+                highSpeedAccuracyLF = new LocationFetcher(HomeActivity.this, new LocationUpdate() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        try {
+                            Log.e("highSpeedAccuracyLF", ">" + location + ", mapTouched>" + mapTouched);
+                            if (checkForInitialMyLocationButtonClick()) {
+                                LatLng lastMapCentre = map.getCameraPosition().target;
+                                LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                                if(MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
+                                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), MAP_ANIMATE_DURATION, null);
+                                }
+							} else {
+								destroyHighSpeedAccuracyFusedLocationFetcher();
+							}
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 2000);
+            } else {
+                highSpeedAccuracyLF.connect();
+            }
+        }
+    }
+
+    private boolean checkForInitialMyLocationButtonClick(){
+        return PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened
+                && myLocationButtonClicked;
     }
 
 
@@ -6406,7 +6440,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             if (highAccuracyLF != null) {
                 highAccuracyLF.destroy();
-                highAccuracyLF = null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -6416,7 +6449,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             if (highSpeedAccuracyLF != null) {
                 highSpeedAccuracyLF.destroy();
-                highSpeedAccuracyLF = null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -7855,6 +7887,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode){
+            myLocationButtonClicked = false;
             if(!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     FlurryEventLogger.event(PICKUP_LOCATION_SET);
