@@ -980,6 +980,7 @@
 	<string name="mobikwik_coupon_selected_but_mobikwik_option_not_selected">You need to select MobiKwik as preferred payment option to avail this coupon</string>
 	<string name="mobikwik_coupon_selected_but_mobikwik_not_added">You need to add MobiKwik Wallet to avail this coupon</string>
 	<string name="link_mobile_wallet_message">Link Mobile Wallet for ease of payments</string>
+	<string name="use_mobile_wallet_powered_by_format">Use mobile wallet powered by %s</string>
 	<string name="none">None</string>
 	<string name="its_cool_to_pool">ITS COOL TO POOL</string>
 	<string name="add_money_to_wallet">Add Money to Wallet</string>

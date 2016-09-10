@@ -561,7 +561,7 @@ public class UserData {
 
             if(jObj.has(Constants.KEY_FREECHARGE_BALANCE)) {
                 setFreeChargeBalance(jObj.optDouble(Constants.KEY_FREECHARGE_BALANCE, getFreeChargeBalance()));
-                if(getFreeChargeBalance() > 0) {
+                if(getFreeChargeBalance() > 0 || removeWalletIfNoKey) {
                     setFreeChargeEnabled(1);
                 }
             } else {

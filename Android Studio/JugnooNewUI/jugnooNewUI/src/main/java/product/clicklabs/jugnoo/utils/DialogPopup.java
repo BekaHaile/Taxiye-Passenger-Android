@@ -697,7 +697,11 @@ public class DialogPopup {
 				@Override
 				public void run() {
 					//DialogPopup.dismissAlertPopup();
-					dialog.dismiss();
+					try {
+						dialog.dismiss();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}, timeToDismiss);
 		} catch (Exception e) {

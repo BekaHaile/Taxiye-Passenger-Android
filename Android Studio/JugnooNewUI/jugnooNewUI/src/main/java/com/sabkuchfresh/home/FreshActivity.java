@@ -349,6 +349,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             public void onClick(View v) {
                 openFABView();
                 //imageViewFabFake.setVisibility(View.INVISIBLE);
+                MyApplication.getInstance().getFirebaseAnalytics().logEvent(FirebaseEvents.BUTTON_GENIE, new Bundle());
             }
         });
     }

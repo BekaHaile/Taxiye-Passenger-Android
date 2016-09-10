@@ -5059,7 +5059,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
             noDriversDialog.setContentView(R.layout.dialog_custom_one_button);
 
-            FrameLayout frameLayout = (FrameLayout) noDriversDialog.findViewById(R.id.rv);
+            RelativeLayout frameLayout = (RelativeLayout) noDriversDialog.findViewById(R.id.rv);
             new ASSL(activity, frameLayout, 1134, 720, true);
 
             WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
@@ -6750,16 +6750,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-                    relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
-                    initialCancelRideBtn.setVisibility(View.GONE);
-                    findDriverJugnooAnimation.setVisibility(View.VISIBLE);
-                    jugnooAnimation.start();
-                } else {
-                    setDropLocationAssigningUI();
-                    initialCancelRideBtn.setVisibility(View.VISIBLE);
-                    jugnooAnimation.stop();
-                    findDriverJugnooAnimation.setVisibility(View.GONE);
+                try {
+                    if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
+						relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
+						initialCancelRideBtn.setVisibility(View.GONE);
+						findDriverJugnooAnimation.setVisibility(View.VISIBLE);
+						jugnooAnimation.start();
+					} else {
+						setDropLocationAssigningUI();
+						initialCancelRideBtn.setVisibility(View.VISIBLE);
+						jugnooAnimation.stop();
+						findDriverJugnooAnimation.setVisibility(View.GONE);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

@@ -36,15 +36,34 @@
             android:orientation="vertical"
             >
 
-            <TextView
-                android:id="@+id/textViewThanks"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginTop="40px"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/thanks_for_riding_with_jugnoo"
-                android:textSize="@dimen/text_size_36"
-                android:textColor="@color/text_color"/>
+                >
+                <ImageView
+                    android:layout_width="49px"
+                    android:layout_height="36px"
+                    android:tag="mwar"
+                    android:src="@drawable/ic_support_auto_big"
+                    android:layout_gravity="center_vertical"
+
+                    />
+
+                <TextView
+                    android:id="@+id/textViewThanks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/thanks_for_riding_with_jugnoo"
+                    android:textSize="@dimen/text_size_36"
+                    android:layout_marginLeft="20px"
+                    android:textColor="@color/text_color"/>
+
+            </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
