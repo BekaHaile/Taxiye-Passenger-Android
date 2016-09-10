@@ -444,6 +444,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ImageView imageViewFabFake;
     private Bundle bundle;
     public float scale = 0f;
+    private boolean rideNowClicked = false;
 
     /*private RelativeLayout relativeLayoutFAB;
     private FloatingActionMenu menuLabelsRight;
@@ -513,6 +514,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         freshIntroDialog = null;
         dropLocationSet = false;
         myLocationButtonClicked = false;
+        rideNowClicked = false;
 
 
 
@@ -916,18 +918,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         // Customer initial layout events
-        imageViewRideNow.setTag(1);
+        rideNowClicked = false;
         imageViewRideNow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 //fabView.menuLabelsRight.close(true);
                 //imageViewFabFake.setVisibility(View.GONE);
-                int tagVal = 1;
-                try{
-                    tagVal = (int) imageViewRideNow.getTag(1);
-                } catch (Exception e){
-                }
-                if(tagVal == 1) {
+                if(!rideNowClicked) {
                     Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                     if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
                         Bundle bundle = new Bundle();
@@ -940,13 +937,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 + FirebaseEvents.REQUEST_RIDE_L1_AUTO_POOL, bundle);
                         imageViewRideNowPoolCheck();
                     }
-                    imageViewRideNow.setTag(0);
+                    rideNowClicked = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            imageViewRideNow.setTag(1);
+                            rideNowClicked = false;
                         }
-                    }, 500);
+                    }, 1000);
                 }
             }
         });
