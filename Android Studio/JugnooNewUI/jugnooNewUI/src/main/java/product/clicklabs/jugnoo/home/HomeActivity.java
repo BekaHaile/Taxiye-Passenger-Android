@@ -6750,16 +6750,20 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-                    relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
-                    initialCancelRideBtn.setVisibility(View.GONE);
-                    findDriverJugnooAnimation.setVisibility(View.VISIBLE);
-                    jugnooAnimation.start();
-                } else {
-                    setDropLocationAssigningUI();
-                    initialCancelRideBtn.setVisibility(View.VISIBLE);
-                    jugnooAnimation.stop();
-                    findDriverJugnooAnimation.setVisibility(View.GONE);
+                try {
+                    if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
+						relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
+						initialCancelRideBtn.setVisibility(View.GONE);
+						findDriverJugnooAnimation.setVisibility(View.VISIBLE);
+						jugnooAnimation.start();
+					} else {
+						setDropLocationAssigningUI();
+						initialCancelRideBtn.setVisibility(View.VISIBLE);
+						jugnooAnimation.stop();
+						findDriverJugnooAnimation.setVisibility(View.GONE);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

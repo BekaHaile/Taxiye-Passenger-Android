@@ -259,6 +259,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                placeOrder();
                 int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                 if(appType == AppConstant.ApplicationType.MEALS){
                     MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+activity.getPaymentOption(), null);
@@ -269,22 +270,24 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 }
                 NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PLACE_ORDER_CLICKED, null);
                 FlurryEventLogger.event(PAYMENT_SCREEN, ORDER_PLACED, ORDER_PLACED);
-                placeOrder();
             }
         });
 
 
-        subTotalAmount = activity.updateCartValuesGetTotalPrice().first;
-        promoAmount = 0;
+        try {
+            subTotalAmount = activity.updateCartValuesGetTotalPrice().first;
+            promoAmount = 0;
 
-        if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > subTotalAmount) {
-            deliveryAmount = activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+            if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > subTotalAmount) {
+				deliveryAmount = activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+			}
+            jcAmount = getTotalJCPaid();
+            totalAmount = subTotalAmount - promoAmount + deliveryAmount;
+            payableAmount = subTotalAmount - promoAmount + deliveryAmount - jcAmount;
+            updateUI();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        jcAmount = getTotalJCPaid();
-        totalAmount = subTotalAmount - promoAmount + deliveryAmount;
-        payableAmount = subTotalAmount - promoAmount + deliveryAmount - jcAmount;
-
-        updateUI();
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.PAYMENT, activity.productList);
         fetchWalletBalance();
@@ -893,15 +896,15 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 }
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
-                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - getTotalPriceWithDeliveryCharges()));
+                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - Math.ceil(getTotalPriceWithDeliveryCharges())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, R.drawable.ic_paytm_big);
             }
             else if (paymentOption == PaymentOption.MOBIKWIK && Data.userData.getMobikwikEnabled() == 1) {
-                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - getTotalPriceWithDeliveryCharges()));
+                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - Math.ceil(getTotalPriceWithDeliveryCharges())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
             }
             else if (paymentOption == PaymentOption.FREECHARGE && Data.userData.getFreeChargeEnabled() == 1) {
-                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - getTotalPriceWithDeliveryCharges()));
+                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - Math.ceil(getTotalPriceWithDeliveryCharges())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, R.drawable.ic_freecharge_big);
             }
             else {

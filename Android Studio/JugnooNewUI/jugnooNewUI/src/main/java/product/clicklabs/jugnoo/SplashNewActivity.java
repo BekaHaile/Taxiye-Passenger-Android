@@ -139,7 +139,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			linearLayoutPaytm, linearLayoutMobikwik, linearLayoutFreeCharge, linearLayoutNone;
 	ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewRadioNone;
 	LinearLayout linearLayoutWalletOption;
-	ImageView imageViewWalletOptionCheck, imageViewWalletOptionIcon;
+	ImageView imageViewWalletOptionCheck;
 	TextView textViewWalletOptionMessage;
 
 
@@ -509,7 +509,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			linearLayoutWalletOption = (LinearLayout) findViewById(R.id.linearLayoutWalletOption);
 			imageViewWalletOptionCheck = (ImageView) findViewById(R.id.imageViewWalletOptionCheck);
-			imageViewWalletOptionIcon = (ImageView) findViewById(R.id.imageViewWalletOptionIcon);
 			textViewWalletOptionMessage = (TextView) findViewById(R.id.textViewWalletOptionMessage);
 			textViewWalletOptionMessage.setTypeface(Fonts.mavenMedium(this));
 
@@ -1565,17 +1564,17 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 						linearLayoutWalletOption.setVisibility(View.VISIBLE);
 						if(showPaytm1 == 1){
-							imageViewWalletOptionIcon.setImageResource(R.drawable.ic_paytm_small);
+							textViewWalletOptionMessage.setText(getString(R.string.use_mobile_wallet_powered_by_format, getString(R.string.paytm)));
 							linkedWallet = (defaultTick == 1) ? LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal() : LinkedWalletStatus.NO_WALLET.getOrdinal();
 							linearLayoutWalletOption.setTag(LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal());
 						}
 						else if(showMobikwik1 == 1){
-							imageViewWalletOptionIcon.setImageResource(R.drawable.ic_mobikwik_small);
+							textViewWalletOptionMessage.setText(getString(R.string.use_mobile_wallet_powered_by_format, getString(R.string.mobikwik)));
 							linkedWallet = (defaultTick == 1) ? LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal() : LinkedWalletStatus.NO_WALLET.getOrdinal();
 							linearLayoutWalletOption.setTag(LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal());
 						}
 						else if(showFreecharge1 == 1){
-							imageViewWalletOptionIcon.setImageResource(R.drawable.ic_freecharge_small);
+							textViewWalletOptionMessage.setText(getString(R.string.use_mobile_wallet_powered_by_format, getString(R.string.freecharge)));
 							linkedWallet = (defaultTick == 1) ? LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal() : LinkedWalletStatus.NO_WALLET.getOrdinal();
 							linearLayoutWalletOption.setTag(LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal());
 						}

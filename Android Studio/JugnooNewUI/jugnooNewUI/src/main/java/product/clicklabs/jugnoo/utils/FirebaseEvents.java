@@ -211,5 +211,6 @@ public interface FirebaseEvents {
     String F_CART = "f_cart";
     String F_PAY = "f_pay";
     String PLACE_ORDER = "place_order";
+    String BUTTON_GENIE = "button_genie";
 
 }

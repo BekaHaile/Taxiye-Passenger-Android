@@ -135,6 +135,7 @@ public class WalletRechargeFragment extends Fragment {
 		editTextAmount = (EditText) rootView.findViewById(R.id.editTextAmount);	editTextAmount.setTypeface(Fonts.mavenRegular(paymentActivity));
 		try {
 			editTextAmount.setText(paymentActivity.amountToPreFill);
+			editTextAmount.setSelection(editTextAmount.getText().length());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
