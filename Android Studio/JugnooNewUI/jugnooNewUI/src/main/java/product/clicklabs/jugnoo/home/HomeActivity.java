@@ -914,22 +914,37 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         // Customer initial layout events
+        imageViewRideNow.setTag(1);
         imageViewRideNow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 //fabView.menuLabelsRight.close(true);
                 //imageViewFabFake.setVisibility(View.GONE);
-                Data.autoData.setPickupLatLng(map.getCameraPosition().target);
-                if(getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())){
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
-                            +FirebaseEvents.REQUEST_RIDE_L1_AUTO, bundle);
-                    findDriversETACall(true, false);
-                } else {
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
-                            +FirebaseEvents.REQUEST_RIDE_L1_AUTO_POOL, bundle);
-                    imageViewRideNowPoolCheck();
+                int tagVal = 1;
+                try{
+                    tagVal = (int) imageViewRideNow.getTag(1);
+                } catch (Exception e){
+                }
+                if(tagVal == 1) {
+                    Data.autoData.setPickupLatLng(map.getCameraPosition().target);
+                    if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
+                                + FirebaseEvents.REQUEST_RIDE_L1_AUTO, bundle);
+                        findDriversETACall(true, false);
+                    } else {
+                        Bundle bundle = new Bundle();
+                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
+                                + FirebaseEvents.REQUEST_RIDE_L1_AUTO_POOL, bundle);
+                        imageViewRideNowPoolCheck();
+                    }
+                    imageViewRideNow.setTag(0);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageViewRideNow.setTag(1);
+                        }
+                    }, 500);
                 }
             }
         });
