@@ -3986,7 +3986,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         }
 
-                        fetchWalletBalance(this);
+                        fetchWalletBalance(this, false);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -7542,7 +7542,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     private ApiFetchWalletBalance apiFetchWalletBalance = null;
-    private void fetchWalletBalance(final Activity activity) {
+    private void fetchWalletBalance(final Activity activity, boolean ignoreTimeCheck) {
         try {
             if(apiFetchWalletBalance == null){
                 apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
@@ -7584,7 +7584,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
             long lastFetchWalletBalanceCall = Prefs.with(activity).getLong(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
             long lastCallDiff = System.currentTimeMillis() - lastFetchWalletBalanceCall;
-            if(lastCallDiff >= FETCH_WALLET_BALANCE_REFRESH_TIME) {
+            if(ignoreTimeCheck || lastCallDiff >= FETCH_WALLET_BALANCE_REFRESH_TIME) {
                 apiFetchWalletBalance.getBalance(false);
             }
         } catch (Exception e) {
@@ -8038,7 +8038,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         Data.userData.setPaytmRechargeInfo(null);
                                         Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME,
                                                 (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
-                                        fetchWalletBalance(HomeActivity.this);
+                                        fetchWalletBalance(HomeActivity.this, true);
                                     }
                                 }
 

@@ -74,6 +74,24 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 
         Data.AppType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
 
+		try {
+			if(Data.AppType == AppConstant.ApplicationType.MEALS) {
+				for (int i = 0; i < activity.subItemsInCart.size(); i++) {
+					MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
+							activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(), activity.subItemsInCart.get(i).getPrice(),
+							AppConstant.ApplicationType.MEALS);
+				}
+			} else {
+				for (int i = 0; i < activity.subItemsInCart.size(); i++) {
+					MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
+							activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(), activity.subItemsInCart.get(i).getPrice(),
+							AppConstant.ApplicationType.FRESH);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
 		recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
