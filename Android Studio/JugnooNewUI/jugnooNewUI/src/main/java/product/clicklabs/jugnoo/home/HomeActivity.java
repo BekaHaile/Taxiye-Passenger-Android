@@ -8151,17 +8151,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void setRegionUI(boolean firstTime) {
-        getSelectorBitmapLoader(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
-                .loadSelector(imageViewRideNow, slidingBottomPanel.getRequestRideOptionsFragment().
-                        getRegionSelected().getImages().getRideNowNormal(), slidingBottomPanel.getRequestRideOptionsFragment().
-                        getRegionSelected().getImages().getRideNowHighlighted(), new SelectorBitmapLoader.Callback() {
-                    @Override
-                    public void onSuccess(Drawable drawable) {
-                        if (regionIdForSelectorLoader == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
-                            imageViewRideNow.setImageDrawable(drawable);
-                        }
-                    }
-                }, false);
+        try {
+            getSelectorBitmapLoader(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
+					.loadSelector(imageViewRideNow, slidingBottomPanel.getRequestRideOptionsFragment().
+							getRegionSelected().getImages().getRideNowNormal(), slidingBottomPanel.getRequestRideOptionsFragment().
+							getRegionSelected().getImages().getRideNowHighlighted(), new SelectorBitmapLoader.Callback() {
+						@Override
+						public void onSuccess(Drawable drawable) {
+							if (regionIdForSelectorLoader == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
+								imageViewRideNow.setImageDrawable(drawable);
+							}
+						}
+					}, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         imageViewRideNow.startAnimation(getBounceScale());
         showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
 

@@ -74,9 +74,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         linearLayoutCash.setOnClickListener(this);
         relativeLayoutFreeCharge.setOnClickListener(this);
 
-        orderPaymentModes();
 
-        updatePreferredPaymentOptionUI();
 
         activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(linearLayoutRoot);
 
@@ -86,6 +84,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
+        orderPaymentModes();
         updatePreferredPaymentOptionUI();
     }
     Bundle bundle = new Bundle();
@@ -203,6 +202,14 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(Data.userData);
             if(paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0){
                 linearLayoutWalletContainer.removeAllViews();
+                boolean cashAdded = false;
+                if(Data.userData.getPaytmEnabled() == 0
+                        && Data.userData.getMobikwikEnabled() == 0
+                        && Data.userData.getFreeChargeEnabled() == 0){
+                    linearLayoutWalletContainer.addView(linearLayoutCash);
+                    cashAdded = true;
+                }
+
                 for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
                     if(paymentModeConfigData.getEnabled() == 1) {
                         if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
@@ -215,7 +222,10 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                     }
                 }
 
-                linearLayoutWalletContainer.addView(linearLayoutCash);
+                if(!cashAdded){
+                    linearLayoutWalletContainer.addView(linearLayoutCash);
+                }
+
             }
         } catch (Exception e){
             e.printStackTrace();

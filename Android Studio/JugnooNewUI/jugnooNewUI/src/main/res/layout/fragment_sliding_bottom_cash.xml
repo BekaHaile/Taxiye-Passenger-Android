@@ -8,11 +8,18 @@
     >
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+    <LinearLayout
         android:id="@+id/linearLayoutWalletContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
+        android:layout_marginBottom="15px"
         >
 
         <RelativeLayout
@@ -176,9 +183,6 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutCash"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
-            android:layout_marginBottom="20px"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="visible"
@@ -213,6 +217,7 @@
 
         </LinearLayout>
 
+    </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

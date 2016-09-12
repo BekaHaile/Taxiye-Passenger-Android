@@ -542,39 +542,41 @@
 
                 </RelativeLayout>
 
+                <LinearLayout
+                    android:id="@+id/linearLayoutCash"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/nl_button_size"
+                    android:background="@drawable/background_white_grey_light_selector"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/imageViewCashRadio"
+                        android:layout_marginLeft="36px"
+                        android:layout_width="33px"
+                        android:layout_height="33px"
+                        android:src="@drawable/ic_radio_button_normal"
+                        android:tag="mwar"/>
+
+                    <ImageView
+                        style="@style/payment_option_icon_small"
+                        android:layout_marginLeft="10px"/>
+
+                    <TextView
+                        android:id="@+id/textViewCash"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10px"
+                        android:text="@string/cash"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34"/>
+
+                </LinearLayout>
+
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayoutCash"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/nl_button_size"
-                android:background="@drawable/background_white_grey_light_selector"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="visible">
 
-                <ImageView
-                    android:id="@+id/imageViewCashRadio"
-                    android:layout_marginLeft="36px"
-                    android:layout_width="33px"
-                    android:layout_height="33px"
-                    android:src="@drawable/ic_radio_button_normal"
-                    android:tag="mwar"/>
-
-                <ImageView
-                    style="@style/payment_option_icon_small"
-                    android:layout_marginLeft="10px"/>
-
-                <TextView
-                    android:id="@+id/textViewCash"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
-                    android:text="@string/cash"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_34"/>
-
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

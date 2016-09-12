@@ -9,11 +9,11 @@
         android:gravity="center_vertical"
         android:layout_marginLeft="30px"
         android:layout_marginRight="30px"
-        android:layout_marginBottom="15px"
+        android:layout_marginBottom="8px"
         android:visibility="visible"
         android:layout_width="664px"
         android:layout_height="92px"
-        android:layout_marginTop="15px"
+        android:layout_marginTop="8px"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/bg_white_r_bthin"
         >
