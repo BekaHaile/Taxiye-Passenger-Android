@@ -458,4 +458,6 @@ public interface Constants {
 	String FRESH_PUSH = "fresh_push";
 	String MEALS_PUSH = "meals_push";
 
+	String KEY_INTEGRATED_JUGNOO_ENABLED = "integrated_jugnoo_enabled";
+
 }

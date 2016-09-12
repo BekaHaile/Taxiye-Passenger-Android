@@ -4028,7 +4028,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
 
-            HomeActivity.checkForAccessTokenChange(this);
 
             activityResumed = true;
             intentFired = false;
@@ -4278,31 +4277,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
         if (!"".equalsIgnoreCase(pair.first)) {
             if (Data.userData == null) {
-                logoutIntent(activity);
+                splashIntent(activity);
             } else {
                 if (!pair.first.equalsIgnoreCase(Data.userData.accessToken)) {
-                    logoutIntent(activity);
+                    splashIntent(activity);
                 }
             }
         } else {
             if (Data.userData == null) {
 
             } else {
-                logoutIntent(activity);
+                splashIntent(activity);
             }
         }
     }
 
 
-    public static void logoutIntent(Activity cont) {
+    public static void splashIntent(Activity cont) {
         try {
             FacebookLoginHelper.logoutFacebook();
-            Data.clearDataOnLogout(cont);
             Intent intent = new Intent(cont, SplashNewActivity.class);
             cont.startActivity(intent);
             cont.finish();
             cont.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
             Branch.getInstance(cont).logout();
         } catch (Exception e) {
             e.printStackTrace();

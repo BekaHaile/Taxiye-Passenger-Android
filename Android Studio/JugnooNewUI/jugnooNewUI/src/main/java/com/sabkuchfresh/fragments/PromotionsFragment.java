@@ -15,9 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.home.HomeUtil;
 import com.sabkuchfresh.home.SupportActivity;
-import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
 
@@ -27,6 +25,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -151,7 +150,7 @@ public class PromotionsFragment extends Fragment {
 	 */
 	public void applyPromoCodeAPI(final Activity activity, final String promoCode) {
 		try {
-			if(!HomeUtil.checkIfUserDataNull(activity)) {
+			if(!HomeActivity.checkIfUserDataNull(activity)) {
 				if (AppStatus.getInstance(activity).isOnline(activity)) {
 					DialogPopup.showLoadingDialog(activity, "Loading...");
 
@@ -169,7 +168,7 @@ public class PromotionsFragment extends Fragment {
 								JSONObject jObj = new JSONObject(responseStr);
 								int flag = jObj.getInt("flag");
 								if (ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag) {
-                                    HomeUtil.logoutUser(activity);
+                                    HomeActivity.logoutUser(activity);
 								} else if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
 									String errorMessage = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", errorMessage);

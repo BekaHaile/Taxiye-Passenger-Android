@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.location.Location;
 
 import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
@@ -132,7 +131,7 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
         int fabButtonEnable = userData.optInt("fab_button_enabled", 0);
         Prefs.with(context).save(SPLabels.SHOW_FAB_SETTING, fabButtonEnable);
-        int integratedJugnooEnabled = userData.optInt("integrated_jugnoo_enabled", 0);
+        int integratedJugnooEnabled = userData.optInt(KEY_INTEGRATED_JUGNOO_ENABLED, 0);
 
         if(userData.has("user_saved_addresses")){
             JSONArray userSavedAddressArray = userData.getJSONArray("user_saved_addresses");
