@@ -1769,16 +1769,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     try {
                         checkForMyLocationButtonVisibility();
                         refresh = false;
-                        if(Data.autoData.getLastRefreshLatLng() == null){
+                        if(Data.autoData.getLastRefreshLatLng() == null
+                                || (MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH)){
 							Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
 							refresh = true;
-						}
-						else{
-							Log.v("Min Difference is = ","---> "+MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target));
-							if(MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH){
-								Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
-								refresh = true;
-							}
 						}
                         if(!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
 							if (refresh && mapTouched) {
@@ -6471,7 +6465,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){
                 Data.autoData.setFarAwayCity("");
-//                mapTouched = true;
+                mapTouched = true;
+                zoomAfterFindADriver = true;
                 zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
             }
             zoomedToMyLocation = true;

@@ -295,7 +295,7 @@ public class SearchListAdapter extends BaseAdapter{
     }
 
 	private LatLng getPivotLatLng(){
-		if(Data.autoData.getLastRefreshLatLng() != null){
+		if(Data.autoData != null && Data.autoData.getLastRefreshLatLng() != null){
 			return Data.autoData.getLastRefreshLatLng();
 		} else{
 			return defaultSearchPivotLatLng;
