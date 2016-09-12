@@ -671,6 +671,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
 										Database.getInstance(OTPConfirmScreen.this).close();
 										loginDataFetched = true;
+										firebaseEventWalletAtSignup();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
@@ -776,6 +777,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 										loginDataFetched = true;
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
 										Database.getInstance(OTPConfirmScreen.this).close();
+										firebaseEventWalletAtSignup();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
@@ -874,6 +876,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 										loginDataFetched = true;
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(googleRegisterData.email);
 										Database.getInstance(OTPConfirmScreen.this).close();
+										firebaseEventWalletAtSignup();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
@@ -1127,6 +1130,16 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void firebaseEventWalletAtSignup(){
+		if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
+			MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.PAYTM, new Bundle());
+		} else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
+			MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.MOBIKWIK, new Bundle());
+		} else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
+			MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.FREECHARGE, new Bundle());
 		}
 	}
 

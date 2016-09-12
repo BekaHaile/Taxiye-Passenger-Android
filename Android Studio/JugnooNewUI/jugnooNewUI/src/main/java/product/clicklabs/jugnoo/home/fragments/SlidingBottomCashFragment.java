@@ -112,7 +112,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                     break;
                 case R.id.relativeLayoutFreeCharge:
                     MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.S_PAYMENT_MODE+"_"
-                            +FirebaseEvents.FREECHARGE, bundle);
+                            +FirebaseEvents.FREECHARGE_SHORT, bundle);
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
                     break;
             }

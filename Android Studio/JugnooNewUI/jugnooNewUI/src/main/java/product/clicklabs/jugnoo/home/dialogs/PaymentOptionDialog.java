@@ -155,7 +155,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
                 case R.id.relativeLayoutFreeCharge:
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
 					MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_PAYMENT_MODE+"_"
-							+FirebaseEvents.FREECHARGE, bundle);
+							+FirebaseEvents.FREECHARGE_SHORT, bundle);
 					callback.onPaymentModeUpdated();
                     break;
             }

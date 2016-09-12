@@ -154,7 +154,7 @@
     <color name="theme_red_color">#F54646</color>
     <color name="text_color_light">#A4A4A4</color>
     <color name="white_alpha_33">#33FFFFFF</color>
-    <color name="sliding_bottom_bg_color">#F2F2F2</color>
+    <color name="sliding_bottom_bg_color">#FAFBFC</color>
     <color name="text_color_hint">#BCBCBC</color>
     <color name="nl_white_dark">#E0E0E0</color>
     <color name="menu_item_selector_color">#EEEEEE</color>
@@ -212,6 +212,8 @@
     <color name="search_view_radius">#d5d5d5</color>
     <color name="text_color_blue">#2BC9EC</color>
     <color name="text_color_red">#DE5B5B</color>
+
+    <color name="stroke_light_grey_alpha">#33979797</color>
 
 
 </resources>

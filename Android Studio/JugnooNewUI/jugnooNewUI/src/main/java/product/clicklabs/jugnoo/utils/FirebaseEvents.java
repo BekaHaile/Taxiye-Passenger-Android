@@ -32,6 +32,8 @@ public interface FirebaseEvents {
     String VIEW_ACCOUNT = "V_A";
     String SPLASH_SCREEN = "S_S";
     String B_PAYMENT_MODE = "b_pay_m";
+    String MEALS_PAYMENT_MODE = "m_pay_mode";
+    String FRESH_PAYMENT_MODE = "f_pay_mode";
 
 
     // Events
@@ -212,5 +214,6 @@ public interface FirebaseEvents {
     String F_PAY = "f_pay";
     String PLACE_ORDER = "place_order";
     String BUTTON_GENIE = "button_genie";
+    String FREECHARGE_SHORT = "FC";
 
 }

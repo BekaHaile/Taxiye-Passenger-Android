@@ -755,6 +755,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //        Utils.hideViewByScale(relativeLayoutCartRound);
 //        relativeLayoutCartRound.hide();
             topView.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
+            params.setMargins(0, (int)(ASSL.Yscale() * 96f), 0, 0);
+            relativeLayoutContainer.setLayoutParams(params);
+
             fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
             imageViewFabFake.setVisibility(View.GONE);
 
@@ -920,6 +924,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 			} else if (fragment instanceof FreshSearchFragment) {
 				topView.setVisibility(View.GONE);
+                RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
+                params1.setMargins(0, 0, 0, 0);
+                relativeLayoutContainer.setLayoutParams(params1);
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);

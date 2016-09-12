@@ -17,12 +17,11 @@
 
         <RelativeLayout
             android:id="@+id/relativeLayoutPaytm"
-            android:layout_width="match_parent"
-            android:layout_height="80px"
+            android:layout_width="664px"
+            android:layout_height="92px"
             android:layout_marginTop="15px"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
-            android:background="@drawable/background_white_rounded_bordered"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_white_r_bthin"
             android:visibility="visible">
 
             <LinearLayout
@@ -71,12 +70,11 @@
 
         <RelativeLayout
             android:id="@+id/relativeLayoutMobikwik"
-            android:layout_width="match_parent"
-            android:layout_height="80px"
+            android:layout_width="664px"
+            android:layout_height="92px"
             android:layout_marginTop="15px"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
-            android:background="@drawable/background_white_rounded_bordered"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_white_r_bthin"
             android:visibility="visible">
 
             <LinearLayout
@@ -125,12 +123,11 @@
 
         <RelativeLayout
             android:id="@+id/relativeLayoutFreeCharge"
-            android:layout_width="match_parent"
-            android:layout_height="80px"
+            android:layout_width="664px"
+            android:layout_height="92px"
             android:layout_marginTop="15px"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
-            android:background="@drawable/background_white_rounded_bordered"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_white_r_bthin"
             android:visibility="visible">
 
             <LinearLayout
@@ -179,16 +176,18 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutCash"
-            android:layout_width="match_parent"
-            android:layout_height="80px"
-            android:layout_marginTop="15px"
             android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
             android:layout_marginBottom="20px"
-            android:background="@drawable/background_white_rounded_bordered"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="visible"
+            android:layout_width="664px"
+            android:layout_height="92px"
+            android:layout_marginTop="15px"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/bg_white_r_bthin"
+            >
 
             <ImageView
                 android:id="@+id/imageViewRadioCash"
