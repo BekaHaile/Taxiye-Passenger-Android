@@ -323,7 +323,7 @@
                     android:layout_marginLeft="@dimen/payment_margin"
                     android:layout_toLeftOf="@+id/apply_button"
                     android:background="@color/transparent"
-                    android:hint="Add Promo"
+                    android:hint="@string/add_promo_code"
                     android:inputType="textNoSuggestions|textCapCharacters"
                     android:paddingLeft="6px"
                     android:textAllCaps="true"
