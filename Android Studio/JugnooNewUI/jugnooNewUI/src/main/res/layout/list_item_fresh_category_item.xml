@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
-    android:layout_height="210px"
+    android:layout_height="wrap_content"
     android:background="@drawable/background_white_grey_light_selector"
     android:orientation="vertical">
 
@@ -52,12 +52,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayoutContent"
         android:layout_width="450px"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="20px"
         android:layout_marginLeft="55px"
-        android:layout_marginTop="20px"
         android:layout_toRightOf="@+id/imageViewItemImage"
         android:orientation="vertical">
 
@@ -69,6 +68,7 @@
             android:text="Orange"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_34"
+            android:layout_marginTop="25px"
 
             />
 
@@ -114,7 +114,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20px"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="25px">
 
             <TextView
                 android:id="@+id/textViewItemPrice"
@@ -160,13 +161,15 @@
     <LinearLayout
         android:id="@+id/button_view"
         android:layout_width="218px"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="20px"
         android:animateLayoutChanges="true"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_alignTop="@+id/linearLayoutContent"
+        android:layout_alignBottom="@+id/linearLayoutContent"
+        >
 
         <Button
             android:id="@+id/add_button"
@@ -259,7 +262,7 @@
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/linearLayoutContent"
         android:background="@color/text_color_hint"/>
 
 </RelativeLayout>

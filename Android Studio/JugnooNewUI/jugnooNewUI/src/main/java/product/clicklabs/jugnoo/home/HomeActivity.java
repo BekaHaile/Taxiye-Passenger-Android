@@ -1643,7 +1643,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 					Data.autoData.setLastRefreshLatLng(new LatLng(22.971723, 78.754263));
 				} else {
 					map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
-					Data.autoData.setLastRefreshLatLng(new LatLng(Data.latitude, Data.longitude));
+                    if(Data.autoData.getLastRefreshLatLng() == null) {
+                        Data.autoData.setLastRefreshLatLng(new LatLng(Data.latitude, Data.longitude));
+                    }
 				}
             } catch (Exception e) {
                 e.printStackTrace();
