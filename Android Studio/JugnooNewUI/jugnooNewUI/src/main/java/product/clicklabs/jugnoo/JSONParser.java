@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.FreshData;
+import product.clicklabs.jugnoo.datastructure.GroceryData;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -239,7 +240,7 @@ public class JSONParser implements Constants {
         int mealsEnabled = userData.optInt(KEY_MEALS_ENABLED, 0);
         int freshEnabled = userData.optInt(KEY_FRESH_ENABLED, 0);
         int deliveryEnabled = userData.optInt(KEY_DELIVERY_ENABLED, 0);
-        int groceryEnabled = userData.optInt(KEY_GROCERY_ENABLED, 1);
+        int groceryEnabled = userData.optInt(KEY_GROCERY_ENABLED, 0);
         String defaultClientId = userData.optString(KEY_DEFAULT_CLIENT_ID, Config.getAutosClientId());
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
@@ -464,6 +465,78 @@ public class JSONParser implements Constants {
         }
     }
 
+    public void parseGroceryData(Context context, JSONObject jGroceryData, LoginResponse.Grocery groceryData){
+        try{
+            String orderId = jGroceryData.optString(KEY_FEEDBACK_ORDER_ID, "");
+            String question = jGroceryData.optString(KEY_QUESTION, "");
+            int questionType = jGroceryData.optInt(KEY_QUESTION_TYPE, 0);
+            int pendingFeedback = jGroceryData.optInt(KEY_PENDING_FEEDBACK, 0);
+            double amount = jGroceryData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
+            String feedbackDeliveryDate = jGroceryData.optString(KEY_FEEDBACK_DATE, "");
+            int feedbackViewType = jGroceryData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
+            int isFatafatEnabled = jGroceryData.optInt(KEY_FATAFAT_ENABLED, 1);
+            String rideEndGoodFeedbackText = jGroceryData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+
+            PopupData popupData = null;
+            try {
+                if (jGroceryData.has("popup_data")) {
+                    popupData = new PopupData();
+                    popupData.popup_id = jGroceryData.getJSONObject("popup_data").optInt("popup_id", 0);
+                    popupData.title_text = jGroceryData.getJSONObject("popup_data").optString("title_text", "");
+                    popupData.desc_text = jGroceryData.getJSONObject("popup_data").optString("desc_text", "");
+                    popupData.image_url = jGroceryData.getJSONObject("popup_data").optString("image_url", "");
+                    popupData.cancel_title = jGroceryData.getJSONObject("popup_data").optString("cancel_title", "");
+                    popupData.ok_title = jGroceryData.getJSONObject("popup_data").optString("ok_title", "OK");
+                    popupData.is_cancellable = jGroceryData.getJSONObject("popup_data").optInt("is_cancellable", 1);
+                    popupData.deep_index = jGroceryData.getJSONObject("popup_data").optInt("deep_index", 0);
+                    popupData.ext_url = jGroceryData.getJSONObject("popup_data").optString("ext_url", "");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ArrayList<Store> stores = new ArrayList<>();
+            Store store = null;
+            try {
+                if(jGroceryData.has("stores")) {
+                    JSONArray storesArr = jGroceryData.getJSONArray("stores");
+                    for(int i=0;i<storesArr.length();i++) {
+                        JSONObject jsonObject = storesArr.getJSONObject(i);
+                        store = new Store();
+                        store.setStoreId(jsonObject.optInt("store_id"));
+                        store.setTitle(jsonObject.optString("title"));
+                        store.setDescription(jsonObject.optString("description"));
+                        store.setImage(jsonObject.optString("image"));
+                        store.setTextColor(jsonObject.optString("text_color"));
+
+                        stores.add(store);
+
+                    }
+                }
+            } catch (Exception e){ e.printStackTrace(); }
+
+            Data.setGroceryData(new GroceryData(question, orderId, questionType, pendingFeedback, stores, popupData,
+                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText));
+
+            try {
+                if(Data.getGroceryData().getPromoCoupons() == null){
+                    Data.getGroceryData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.getGroceryData().getPromoCoupons().clear();
+                }
+                if(groceryData.getPromotions() != null)
+                    Data.getGroceryData().getPromoCoupons().addAll(groceryData.getPromotions());
+                if(groceryData.getCoupons() != null)
+                    Data.getGroceryData().getPromoCoupons().addAll(groceryData.getCoupons());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse,
                                             LoginVia loginVia) throws Exception {
@@ -475,11 +548,13 @@ public class JSONParser implements Constants {
         JSONObject jAutosObject = jObj.optJSONObject(KEY_AUTOS);
         JSONObject jFreshObject = jObj.optJSONObject(KEY_FRESH);
         JSONObject jMealsObject = jObj.optJSONObject(KEY_MEALS);
+        JSONObject jGroceryObject = jObj.optJSONObject(KEY_GROCERY);
 
         parseUserData(context, jUserDataObject, loginResponse.getUserData());
         parseAutoData(context, jAutosObject, loginResponse.getAutos());
         parseFreshData(context, jFreshObject, loginResponse.getFresh());
         parseMealsData(context, jMealsObject, loginResponse.getMeals());
+        parseGroceryData(context, jGroceryObject, loginResponse.getGrocery());
         parseDeliveryData(loginResponse.getDelivery());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();

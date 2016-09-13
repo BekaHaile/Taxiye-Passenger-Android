@@ -44,6 +44,7 @@ public interface Constants {
 	String KEY_QUANTITY = "quantity";
 	String SP_FRESH_CART= "fresh_cart";
 	String SP_MEAL_CART= "meal_cart";
+	String SP_GROCERY_CART= "grocery_cart";
 	String KEY_CATEGORY_POSITION = "category_position";
 
 
@@ -415,6 +416,7 @@ public interface Constants {
 	String KEY_AUTOS = "autos";
 	String KEY_FRESH = "fresh";
 	String KEY_MEALS = "meals";
+	String KEY_GROCERY = "grocery";
 
 	String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
 	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";

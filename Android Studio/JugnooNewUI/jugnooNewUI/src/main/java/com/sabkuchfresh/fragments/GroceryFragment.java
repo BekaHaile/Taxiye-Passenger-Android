@@ -111,8 +111,8 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
         activity = (FreshActivity) getActivity();
         mBus = (activity).getBus();
-        Data.AppType = AppConstant.ApplicationType.FRESH;
-        Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
+        Data.AppType = AppConstant.ApplicationType.GROCERY;
+        Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.GROCERY);
         activity.setSwipeAvailable(true);
 
 		try {
@@ -211,7 +211,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
         getAllProducts(true);
 
         try {
-            if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
+            if(Data.getGroceryData() != null && Data.getGroceryData().pendingFeedback == 1) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -227,12 +227,12 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 		try {
 			if(Data.userData.getPromoSuccess() == 0) {
 				showPromoFailedAtSignupDialog();
-			} else if(Data.getFreshData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
-				Data.getFreshData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
+			} else if(Data.getGroceryData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
+				Data.getGroceryData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
 				showPopup();
-			} else if(Data.getFreshData().getPopupData() != null) {
+			} else if(Data.getGroceryData().getPopupData() != null) {
 				pushDialog = new PushDialog(activity, this);
-				pushDialog.show(Data.getFreshData().getPopupData());
+				pushDialog.show(Data.getGroceryData().getPopupData());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

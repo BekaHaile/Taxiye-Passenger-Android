@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 	<string name="no_more_than">Can\'t order more than %d units</string>
 
-	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live
+	<!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	 <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string>&lt;!&ndash; General&ndash;&gt;-->
+	 <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -883,6 +883,7 @@
 	<string name="place_order_confirmation">Are you sure you want to place your order?</string>
 	<string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
 	<string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith Jugnoo Meals!</string>
+	<string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith Jugnoo Grocery!</string>
 	<string name="your_order_id">Your Order ID:</string>
 	<string name="will_be_delivered_by">will be delivered by</string>
 	<string name="your_cart_is_empty">Your cart is empty</string>

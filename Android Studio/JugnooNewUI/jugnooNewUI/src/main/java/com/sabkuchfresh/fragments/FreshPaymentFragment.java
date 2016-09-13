@@ -787,10 +787,11 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     params.put("store_id", "2");
                     params.put("group_id", ""+activity.getProductsResponse().getCategories().get(0).getSubItems().get(0).getGroupId());
                     chargeDetails.put(Events.TYPE, "Meals");
-                } else {
+                } else if(type == AppConstant.ApplicationType.GROCERY) {
+                    chargeDetails.put(Events.TYPE, "Grocery");
+                }else {
                     chargeDetails.put(Events.TYPE, "Fresh");
                 }
-                params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.INTERATED, "1");
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());

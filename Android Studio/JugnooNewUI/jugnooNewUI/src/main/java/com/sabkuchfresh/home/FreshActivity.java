@@ -285,11 +285,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 public void onClick(View v) {
                     FreshFragment fragment = getFreshFragment();
                     MealFragment mealFragment = getMealFragment();
+                    GroceryFragment groceryFragment = getGroceryFragment();
 
                     if (fragment != null && !fragment.isHidden()) {
                         fragment.getFreshDeliverySlotsDialog().showSorting();
                     } else if(mealFragment != null && !mealFragment.isHidden()) {
                         mealFragment.getFreshDeliverySlotsDialog().showSorting();
+                    } else if(groceryFragment != null && !groceryFragment.isHidden()) {
+                        groceryFragment.getFreshDeliverySlotsDialog().showSorting();
                     }
                 }
             });
@@ -565,6 +568,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public MealFragment getMealFragment() {
         return (MealFragment) getSupportFragmentManager().findFragmentByTag(MealFragment.class.getName());
+    }
+
+    public GroceryFragment getGroceryFragment () {
+        return (GroceryFragment) getSupportFragmentManager().findFragmentByTag(GroceryFragment.class.getName());
     }
 
     private FreshCartItemsFragment getFreshCartItemsFragment() {
@@ -1032,7 +1039,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
                         if(type == AppConstant.ApplicationType.FRESH) {
                             clearCart();
-                        } else {
+                        } else if(type == AppConstant.ApplicationType.GROCERY){
+                            clearGroceryCart();
+                        } else{
                             clearMealCart();
                         }
                         if(type == AppConstant.ApplicationType.MEALS){
@@ -1428,7 +1437,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             int type = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
             if(type == AppConstant.ApplicationType.FRESH) {
                 Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
-            } else {
+            } else if(type == AppConstant.ApplicationType.GROCERY){
+                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
+            } else{
                 Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
             }
         } catch (Exception e) {
@@ -1448,7 +1459,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             int type = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
             if(type == AppConstant.ApplicationType.FRESH) {
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
+            } else if(type == AppConstant.ApplicationType.GROCERY){
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+            } else{
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
             }
             if (getProductsResponse() != null
@@ -1476,6 +1489,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     private void clearMealCart() {
         Prefs.with(this).save(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT);
+    }
+
+    private void clearGroceryCart() {
+        Prefs.with(this).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
     }
 
     @Subscribe
