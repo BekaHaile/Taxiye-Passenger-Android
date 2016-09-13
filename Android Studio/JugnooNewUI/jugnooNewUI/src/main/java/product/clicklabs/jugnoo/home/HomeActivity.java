@@ -2520,12 +2520,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         lastSearchLatLng = null;
                         setCentrePinAccToGoogleMapPadding();
                         zoomAfterFindADriver = true;
-                        if("".equalsIgnoreCase(Data.autoData.getFarAwayCity())) {
-                            //zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
-                        } else {
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
-                        }
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                         mapTouched = true;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -3964,24 +3959,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             //driverMarkerRotation = driverLocationMarker.getRotation();
                             Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, driverLocationMarker.getRotation());
                         }
-                        if (!feedbackSkipped && !placeAdded
-                                && PassengerScreenMode.P_RIDE_END != passengerScreenMode
-                                && PassengerScreenMode.P_SEARCH != passengerScreenMode
-                                && !isPoolRideAtConfirmation()
-                                && !isNormalRideWithDropAtConfirmation()) {
-                            mapTouched = false;
-                            callAndHandleStateRestoreAPI(false);
-                        }
-                        initiateTimersForStates(passengerScreenMode);
-
                         if (!intentFired) {
                             if (userMode == UserMode.PASSENGER &&
                                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
                                 if (map != null && myLocation != null) {
                                     initialMyLocationBtn.performClick();
+                                    mapTouched = true;
+                                    try {Data.autoData.setLastRefreshLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));} catch (Exception e) {}
                                 }
                             }
                         }
+                        if (!feedbackSkipped && !placeAdded
+                                && PassengerScreenMode.P_RIDE_END != passengerScreenMode
+                                && PassengerScreenMode.P_SEARCH != passengerScreenMode
+                                && !isPoolRideAtConfirmation()
+                                && !isNormalRideWithDropAtConfirmation()) {
+                            callAndHandleStateRestoreAPI(false);
+                        }
+                        initiateTimersForStates(passengerScreenMode);
 
                         fetchWalletBalance(this, false);
                     }
@@ -7217,10 +7212,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         int currentUserStatus = 2;
                         final PassengerScreenMode passengerScreenModeOld = passengerScreenMode;
                         String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
-                                currentUserStatus, getApiFindADriver(), Data.autoData.getPickupLatLng());
+                                currentUserStatus, getApiFindADriver(), Data.autoData.getLastRefreshLatLng());
                         if (resp.contains(Constants.SERVER_TIMEOUT)) {
                             String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
-                                    currentUserStatus, getApiFindADriver(), Data.autoData.getPickupLatLng());
+                                    currentUserStatus, getApiFindADriver(), Data.autoData.getLastRefreshLatLng());
                             if (resp1.contains(Constants.SERVER_TIMEOUT)) {
                                 runOnUiThread(new Runnable() {
                                     @Override
