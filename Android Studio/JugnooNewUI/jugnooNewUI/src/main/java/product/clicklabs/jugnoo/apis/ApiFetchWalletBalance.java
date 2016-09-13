@@ -10,6 +10,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -70,6 +71,7 @@ public class ApiFetchWalletBalance {
 								String message = JSONParser.getServerMessage(jObj);
 								if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
 									Data.userData.updateWalletBalances(jObj, true);
+									MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(jObj);
 									Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
 								} else {
 									DialogPopup.alertPopup(activity, "", message);

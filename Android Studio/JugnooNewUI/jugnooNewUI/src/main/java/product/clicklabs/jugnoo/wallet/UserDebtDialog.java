@@ -13,6 +13,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
@@ -105,6 +106,7 @@ public class UserDebtDialog {
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 									DialogPopup.alertPopup(activity, "", message);
 									userData.updateWalletBalances(jObj, false);
+									MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(jObj);
 									callback.successFullyDeducted(userDebt);
 								} else {
 									DialogPopup.alertPopup(activity, "", message);
