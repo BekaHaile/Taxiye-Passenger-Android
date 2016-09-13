@@ -157,6 +157,7 @@ import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PoolIntroDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
+import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
@@ -5136,36 +5137,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    public void acceptAppRatingRequestAPI(final Activity activity) {
-        try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("access_token", Data.userData.accessToken);
-                RestClient.getApiServices().acceptAppRatingRequest(params, new Callback<SettleUserDebt>() {
-                    @Override
-                    public void success(SettleUserDebt settleUserDebt, Response response) {
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i(TAG, "acceptAppRatingRequest response = " + responseStr);
-                        try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, "acceptAppRatingRequest error="+error.toString());
-                    }
-                });
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
@@ -5188,9 +5159,19 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 int flag = jObj.getInt("flag");
                                 if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
                                     try {
-                                        if (jObj.has("rate_app")) {
-                                            Data.autoData.setCustomerRateAppFlag(jObj.getInt("rate_app"));
+                                        int rideEndGoodFeedbackViewType = jObj.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+                                        Data.autoData.setRideEndGoodFeedbackViewType(rideEndGoodFeedbackViewType);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    try {
+                                        if (jObj.has(KEY_RATE_APP)) {
+                                            Data.autoData.setCustomerRateAppFlag(jObj.getInt(KEY_RATE_APP));
                                             Data.autoData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jObj));
+
+                                            if(Data.autoData.getCustomerRateAppFlag() == 1){
+                                                Data.autoData.setRideEndGoodFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                                            }
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -5926,25 +5907,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void rateAppPopup(final Activity activity, final RateAppDialogContent rateAppDialogContent) {
         try {
             if(rateAppDialogContent != null) {
-                DialogPopup.alertPopupTwoButtonsWithListeners(activity, rateAppDialogContent.getTitle(), rateAppDialogContent.getText(),
-                        rateAppDialogContent.getConfirmButtonText(), rateAppDialogContent.getCancelButtonText(),
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                acceptAppRatingRequestAPI(activity);
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(rateAppDialogContent.getUrl()));
-                                activity.startActivity(intent);
-                                FlurryEventLogger.event(RATE_US_NOW_POP_RATED);
-
-                            }
-                        },
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                FlurryEventLogger.event(RATE_US_NOW_POP_NOT_RATED);
-                            }
-                        }, false, true);
+                new RateAppDialog(activity).show(rateAppDialogContent);
             }
         } catch (Exception e) {
             e.printStackTrace();

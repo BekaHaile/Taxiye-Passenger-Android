@@ -5,6 +5,8 @@ import com.sabkuchfresh.retrofit.model.Store;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
+
 /**
  * Created by shankar on 8/17/16.
  */
@@ -20,7 +22,8 @@ public class FreshData {
 	private int feedbackViewType;
 	private int isFatafatEnabled;
 
-
+	private int customerRateAppFlag = 0;
+	private RateAppDialogContent rateAppDialogContent;
 
 	public FreshData(String question, String orderId, int questionType, int pendingFeedback,
 					 ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate,
@@ -132,5 +135,21 @@ public class FreshData {
 
 	public void setRideEndGoodFeedbackText(String rideEndGoodFeedbackText) {
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+	}
+
+	public int getCustomerRateAppFlag() {
+		return customerRateAppFlag;
+	}
+
+	public void setCustomerRateAppFlag(int customerRateAppFlag) {
+		this.customerRateAppFlag = customerRateAppFlag;
+	}
+
+	public RateAppDialogContent getRateAppDialogContent() {
+		return rateAppDialogContent;
+	}
+
+	public void setRateAppDialogContent(RateAppDialogContent rateAppDialogContent) {
+		this.rateAppDialogContent = rateAppDialogContent;
 	}
 }

@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -36,6 +37,8 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -71,6 +74,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     private String dateValue = "", endRideGoodFeedbackText;
     private double orderAmount = 0;
     private String orderId = "";
+    private int rateApp = 0;
+    private RateAppDialogContent rateAppDialogContent;
 
     public boolean isUpbuttonClicked = false;
 
@@ -90,6 +95,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 				orderId = Data.getFreshData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
+                rateApp = Data.getFreshData().getCustomerRateAppFlag();
+                rateAppDialogContent = Data.getFreshData().getRateAppDialogContent();
 			} else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
 				viewType = Data.getMealsData().getFeedbackViewType();
 				dateValue = Data.getMealsData().getFeedbackDeliveryDate();
@@ -97,6 +104,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 				orderId = Data.getMealsData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
+                rateApp = Data.getMealsData().getCustomerRateAppFlag();
+                rateAppDialogContent = Data.getMealsData().getRateAppDialogContent();
 			} else {
 				activity.finish();
 			}
@@ -162,7 +171,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         buttonEndRideSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                backPressed();
+                backPressed(true);
             }
         });
 
@@ -174,7 +183,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 intent.putExtra("message", "This is my message!");
                 intent.putExtra("open_type", 1);
                 LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
-                backPressed();
+                backPressed(true);
             }
         });
 
@@ -190,7 +199,6 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             public void onClick(View v) {
                 sendQuery(0);
                 openSupportFragment();
-
             }
         });
 
@@ -331,12 +339,12 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                backPressed();
+                                                backPressed(true);
                                             }
                                         }, 3000);
                                     } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
                                             ) {
-                                        backPressed();
+                                        backPressed(true);
                                     }
                                 } else if(rating == 0) {
                                     // for bad rating
@@ -499,15 +507,19 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         intent.putExtra(Constants.KEY_ORDER_ID, Integer.parseInt(orderId));
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-        backPressed();
+        backPressed(false);
     }
 
-    private void backPressed() {
+    private void backPressed(boolean goodRating) {
         try {
-            activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+            activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } catch (Exception e) {
             e.printStackTrace();
             activity.getSupportFragmentManager().popBackStackImmediate();
+        }
+
+        if(goodRating && rateApp == 1){
+            new RateAppDialog(activity).show(rateAppDialogContent);
         }
     }
 

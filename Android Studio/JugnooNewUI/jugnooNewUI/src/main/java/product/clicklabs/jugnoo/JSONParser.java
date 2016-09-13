@@ -307,8 +307,8 @@ public class JSONParser implements Constants {
             String poolDestinationPopupText1 = autoData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
             String poolDestinationPopupText2 = autoData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
             String poolDestinationPopupText3 = autoData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
-            int rideEndGoodFeedbackViewType = autoData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-            String rideEndGoodFeedbackText = autoData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+            int rideEndGoodFeedbackViewType = autoData.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+            String rideEndGoodFeedbackText = autoData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
             String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
 
             Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));
@@ -362,6 +362,18 @@ public class JSONParser implements Constants {
     }
 
     public void parseMealsData(Context context, JSONObject jMealsData, LoginResponse.Meals mealsData) {
+        try {
+            int pendingFeedback = jMealsData.optInt(KEY_PENDING_FEEDBACK, 0);
+            String orderId = jMealsData.optString(KEY_FEEDBACK_ORDER_ID, "");
+            double amount = jMealsData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
+            String feedbackDeliveryDate = jMealsData.optString(KEY_FEEDBACK_DATE, "");
+            int feedbackViewType = jMealsData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+            String rideEndGoodFeedbackText = jMealsData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
+
+            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             if(Data.getMealsData().getPromoCoupons() == null){
@@ -378,17 +390,18 @@ public class JSONParser implements Constants {
         }
 
         try {
-            int pendingFeedback = jMealsData.optInt(KEY_PENDING_FEEDBACK, 0);
-            String orderId = jMealsData.optString(KEY_FEEDBACK_ORDER_ID, "");
-            double amount = jMealsData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
-            String feedbackDeliveryDate = jMealsData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jMealsData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
-            String rideEndGoodFeedbackText = jMealsData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+            if (jMealsData.has(KEY_RATE_APP)) {
+                Data.getMealsData().setCustomerRateAppFlag(jMealsData.getInt(KEY_RATE_APP));
+                Data.getMealsData().setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jMealsData));
 
-            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText));
+                if(Data.getMealsData().getCustomerRateAppFlag() == 1){
+                    Data.getMealsData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public void parseFreshData(Context context, JSONObject jFatafatData, LoginResponse.Fresh freshData){
@@ -399,9 +412,9 @@ public class JSONParser implements Constants {
             int pendingFeedback = jFatafatData.optInt(KEY_PENDING_FEEDBACK, 0);
             double amount = jFatafatData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
             String feedbackDeliveryDate = jFatafatData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
+            int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             int isFatafatEnabled = jFatafatData.optInt(KEY_FATAFAT_ENABLED, 1);
-            String rideEndGoodFeedbackText = jFatafatData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+            String rideEndGoodFeedbackText = jFatafatData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
 
             PopupData popupData = null;
             try {
@@ -454,6 +467,19 @@ public class JSONParser implements Constants {
                     Data.getFreshData().getPromoCoupons().addAll(freshData.getPromotions());
                 if(freshData.getCoupons() != null)
                     Data.getFreshData().getPromoCoupons().addAll(freshData.getCoupons());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                if (jFatafatData.has(KEY_RATE_APP)) {
+                    Data.getFreshData().setCustomerRateAppFlag(jFatafatData.getInt(KEY_RATE_APP));
+                    Data.getFreshData().setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jFatafatData));
+
+                    if(Data.getFreshData().getCustomerRateAppFlag() == 1){
+                        Data.getFreshData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -736,8 +762,8 @@ public class JSONParser implements Constants {
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no")));
 
             try {
-                if (jLastRideData.has("rate_app")) {
-                    Data.autoData.setCustomerRateAppFlag(jLastRideData.getInt("rate_app"));
+                if (jLastRideData.has(KEY_RATE_APP)) {
+                    Data.autoData.setCustomerRateAppFlag(jLastRideData.getInt(KEY_RATE_APP));
                     Data.autoData.setRateAppDialogContent(parseRateAppDialogContent(jLastRideData));
                 }
             } catch (Exception e) {
@@ -1435,13 +1461,15 @@ public class JSONParser implements Constants {
                     jRA.getString(KEY_TEXT),
                     jRA.getString(KEY_CONFIRM_BUTTON_TEXT),
                     jRA.getString(KEY_CANCEL_BUTTON_TEXT),
+                    jRA.getString(KEY_NEVER_BUTTON_TEXT),
                     jRA.getString(KEY_URL));
         } catch(Exception e){
             e.printStackTrace();
-            return new RateAppDialogContent("Rate Us",
-                    "Liked our services!!! Please rate us on Play Store",
-                    "RATE NOW",
-                    "LATER",
+            return new RateAppDialogContent("Glad you liked our services",
+                    "Do you find Jugnoo useful?\nIf yes, we would appreciate if you could rate us on the Play Store",
+                    "Rate Now",
+                    "Not Now",
+                    "Never Ask Again",
                     "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo") ;
         }
     }

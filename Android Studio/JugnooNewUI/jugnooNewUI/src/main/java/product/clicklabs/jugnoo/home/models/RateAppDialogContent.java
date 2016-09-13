@@ -9,13 +9,15 @@ public class RateAppDialogContent {
     private String text;
     private String confirmButtonText;
     private String cancelButtonText;
+    private String neverButtonText;
     private String url;
 
-    public RateAppDialogContent(String title, String text, String confirmButtonText, String cancelButtonText, String url) {
+    public RateAppDialogContent(String title, String text, String confirmButtonText, String cancelButtonText, String neverButtonText, String url) {
         this.title = title;
         this.text = text;
         this.confirmButtonText = confirmButtonText;
         this.cancelButtonText = cancelButtonText;
+        this.neverButtonText = neverButtonText;
         this.url = url;
     }
 
@@ -57,5 +59,13 @@ public class RateAppDialogContent {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getNeverButtonText() {
+        return neverButtonText;
+    }
+
+    public void setNeverButtonText(String neverButtonText) {
+        this.neverButtonText = neverButtonText;
     }
 }
