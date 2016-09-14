@@ -8215,9 +8215,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         updateImageViewRideNowIcon();
         imageViewRideNow.startAnimation(getBounceScale());
         showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
-        if(!firstTime && map != null){
-            zoomToCurrentLocationWithOneDriver(map.getCameraPosition().target);
-        }
+//        if(!firstTime && map != null){
+//            zoomToCurrentLocationWithOneDriver(map.getCameraPosition().target);
+//        }
 
         if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
             ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());

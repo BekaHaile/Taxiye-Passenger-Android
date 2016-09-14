@@ -110,7 +110,7 @@ public class FreshSearchFragment extends Fragment {
 					e.printStackTrace();
 				}
 			}
-        }, 300);
+        }, 3);
 
 
         imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
