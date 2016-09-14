@@ -459,5 +459,6 @@ public interface Constants {
 	String MEALS_PUSH = "meals_push";
 
 	String KEY_INTEGRATED_JUGNOO_ENABLED = "integrated_jugnoo_enabled";
+	String KEY_REDIRECT = "redirect";
 
 }

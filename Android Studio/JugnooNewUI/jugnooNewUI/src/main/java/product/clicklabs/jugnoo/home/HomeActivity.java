@@ -42,13 +42,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
@@ -1740,7 +1735,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onMapTouched() {
                     // Map touched
                     mapTouched = true;
-                    myLocationButtonClicked = false;
+                    try {
+                        LatLng lastMapCentre = map.getCameraPosition().target;
+                        LatLng currentLoc = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                        if(MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
+							myLocationButtonClicked = false;
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -4555,6 +4558,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             dontCallRefreshDriver = false;
                         }
                     }, 300);
+                    updateImageViewRideNowIcon();
                     setServiceAvailablityUI(Data.autoData.getFarAwayCity());
                     setupFreshUI();
                     setupInAppCampaignUI();
@@ -8180,22 +8184,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return selectorBitmapLoader;
     }
 
-    public void setRegionUI(boolean firstTime) {
+    private void updateImageViewRideNowIcon(){
         try {
             getSelectorBitmapLoader(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
-					.loadSelector(imageViewRideNow, slidingBottomPanel.getRequestRideOptionsFragment().
-							getRegionSelected().getImages().getRideNowNormal(), slidingBottomPanel.getRequestRideOptionsFragment().
-							getRegionSelected().getImages().getRideNowHighlighted(), new SelectorBitmapLoader.Callback() {
-						@Override
-						public void onSuccess(Drawable drawable) {
-							if (regionIdForSelectorLoader == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
-								imageViewRideNow.setImageDrawable(drawable);
-							}
-						}
-					}, false);
+                    .loadSelector(imageViewRideNow, slidingBottomPanel.getRequestRideOptionsFragment().
+                            getRegionSelected().getImages().getRideNowNormal(), slidingBottomPanel.getRequestRideOptionsFragment().
+                            getRegionSelected().getImages().getRideNowHighlighted(), new SelectorBitmapLoader.Callback() {
+                        @Override
+                        public void onSuccess(Drawable drawable) {
+                            if (regionIdForSelectorLoader == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
+                                imageViewRideNow.setImageDrawable(drawable);
+                            }
+                        }
+                    }, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setRegionUI(boolean firstTime) {
+        updateImageViewRideNowIcon();
         imageViewRideNow.startAnimation(getBounceScale());
         showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
 
@@ -8470,84 +8478,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    private long supplyTypeAnimTime = 500;
-    private void animateSupplyTypeImage(View view){
-        float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-
-        /*Animation translate = new TranslateAnimation(0,
-                (((float)getResources().getDisplayMetrics().widthPixels)/2f - ((118f * minRatio)/2f) - (45f * minRatio)) * 0.66f, 0, 0);*/
-        Animation translate = new TranslateAnimation(0, 170 * ASSL.Xscale(), 0, 2 * ASSL.Yscale());
-        translate.setDuration(supplyTypeAnimTime);
-        translate.setFillAfter(false);
-        translate.setInterpolator(new BounceInterpolator());
-
-        Animation alpha = new AlphaAnimation(0.0f, 0.6f);
-        alpha.setDuration(supplyTypeAnimTime);
-        alpha.setFillAfter(false);
-
-        Animation scale = new ScaleAnimation(1.0f, 1.5f, 1.0f, 1.5f,
-                ScaleAnimation.RELATIVE_TO_SELF, 0.5f, ScaleAnimation.RELATIVE_TO_SELF, 0.5f);
-        scale.setDuration(supplyTypeAnimTime);
-        scale.setFillAfter(false);
-
-
-
-        AnimationSet animationSet = new AnimationSet(true);
-        animationSet.addAnimation(translate);
-        animationSet.addAnimation(scale);
-        animationSet.addAnimation(alpha);
-        animationSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        view.clearAnimation();
-
-
-        animationSet.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-                    imageViewRideNow.setImageResource(R.drawable.ic_pool_request_selector);
-                } else {
-                    imageViewRideNow.setImageResource(R.drawable.ic_auto_request_selector);
-                }
-                //imageViewRideNow.startAnimation(getBounceScale());
-                bounceAnimationEnd();
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-
-        view.startAnimation(animationSet);
-    }
-
-    private void bounceAnimationEnd(){
-        Animation bounce = AnimationUtils.loadAnimation(this, R.anim.sequential);
-        imageViewRideNow.startAnimation(bounce);
-
-        bounce.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-//                slidingBottomPanel.getRequestRideOptionsFragment().updateSlidingBottomHeight(isPoolSelected);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-    }
 
     public void updateConfirmedStatePaymentUI(){
         try {
