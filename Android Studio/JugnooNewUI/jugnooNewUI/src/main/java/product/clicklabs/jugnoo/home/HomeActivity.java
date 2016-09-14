@@ -4821,9 +4821,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
             LatLng firstLatLng = null;
+            Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+            DriverInfo firstDriverInfo = null;
+            for(DriverInfo driverInfo : Data.autoData.getDriverInfos()){
+                if(driverInfo.getVehicleType() == region.getVehicleType()
+                        && driverInfo.getRegionIds().contains(region.getRegionId())){
+                    firstDriverInfo = driverInfo;
+                    break;
+                }
+            }
             if((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)
-                    && Data.autoData.getDriverInfos().size() > 0) {
-                firstLatLng = Data.autoData.getDriverInfos().get(0).latLng;
+                    && firstDriverInfo != null) {
+                firstLatLng = firstDriverInfo.latLng;
             }
             if (firstLatLng != null) {
                 boolean fixedZoom = false;
@@ -8206,6 +8215,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         updateImageViewRideNowIcon();
         imageViewRideNow.startAnimation(getBounceScale());
         showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+        if(!firstTime && map != null){
+            zoomToCurrentLocationWithOneDriver(map.getCameraPosition().target);
+        }
 
         if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
             ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
