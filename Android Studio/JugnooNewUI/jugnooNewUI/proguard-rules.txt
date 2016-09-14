@@ -76,6 +76,9 @@
     @com.squareup.otto.Produce public *;
 }
 
+# For CleverTap SDK
+-dontwarn com.clevertap.android.sdk.**
+
 #-keep class com.google.gson.stream.** { *; }
 
 # Application classes that will be serialized/deserialized over Gson
@@ -111,4 +114,9 @@
   public static <fields>;
 }
 -keepclassmembers enum * { *; }
+
+# for fabric
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
 

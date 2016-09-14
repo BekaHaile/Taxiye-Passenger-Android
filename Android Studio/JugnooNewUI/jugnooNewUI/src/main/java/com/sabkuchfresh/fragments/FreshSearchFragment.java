@@ -102,11 +102,15 @@ public class FreshSearchFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                editTextSearch.requestFocus();
-                InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                mgr.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
-            }
-        }, 700);
+				try {
+					editTextSearch.requestFocus();
+					InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+					mgr.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+        }, 3);
 
 
         imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);

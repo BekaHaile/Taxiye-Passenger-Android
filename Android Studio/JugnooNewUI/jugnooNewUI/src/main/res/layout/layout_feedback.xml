@@ -467,5 +467,10 @@
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
-
+    <ImageView
+        android:id="@+id/below_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        />
 </RelativeLayout>

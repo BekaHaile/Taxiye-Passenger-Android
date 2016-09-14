@@ -50,7 +50,7 @@ public class UserDebtDialog {
 		this.callback = callback;
 	}
 
-	public void showUserDebtDialog(double userDebt, String message) {
+	public void showUserDebtDialog(final double userDebt, String message) {
 		this.userDebt = userDebt;
 		if(message.length() == 0){
 			if(activity instanceof HomeActivity) {
@@ -64,19 +64,11 @@ public class UserDebtDialog {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if(userData.getPaytmEnabled() == 1 || userData.getMobikwikEnabled() == 1){
-							double availableBalance = (userData.getPaytmEnabled() == 1 ? userData.getPaytmBalance() : 0)
-									+ (userData.getMobikwikEnabled() == 1 ? userData.getMobikwikBalance() : 0);
-							if(availableBalance >= UserDebtDialog.this.userDebt){
-								settleUserDebt(activity);
-							}
-							else{
-								Intent intent = new Intent(activity, PaymentActivity.class);
-								intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
-								activity.startActivity(intent);
-								activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-								FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
-							}
+						double availableBalance = (userData.getPaytmEnabled() == 1 ? userData.getPaytmBalance() : 0)
+								+ (userData.getMobikwikEnabled() == 1 ? userData.getMobikwikBalance() : 0)
+								+ (userData.getFreeChargeEnabled() == 1 ? userData.getFreeChargeBalance() : 0);
+						if (availableBalance >= UserDebtDialog.this.userDebt) {
+							settleUserDebt(activity);
 						} else {
 							Intent intent = new Intent(activity, PaymentActivity.class);
 							intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
@@ -85,7 +77,7 @@ public class UserDebtDialog {
 							FlurryEventLogger.event(FlurryEventNames.USER_DEBT_MAKE_PAYMENT);
 						}
 					}
-				}, true);
+				}, false);
 	}
 
 	private void settleUserDebt(final Activity activity) {

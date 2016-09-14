@@ -46,11 +46,15 @@ public class UserData {
 	private String fatafatUrlLink;
 
 
+
 	private int paytmEnabled;
 	private double paytmBalance = -1;
 
 	private int mobikwikEnabled, integratedJugnooEnabled;
 	private double mobikwikBalance = -1;
+
+	private int freeChargeEnabled;
+	private double freeChargeBalance = -1;
 
 	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton;
 
@@ -78,7 +82,7 @@ public class UserData {
 					int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
-					int paytmEnabled, int mobikwikEnabled, int notificationPreferenceEnabled,
+					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled){
         this.userIdentifier = userIdentifier;
@@ -137,6 +141,8 @@ public class UserData {
 
 		this.paytmEnabled = paytmEnabled;
 		this.mobikwikEnabled = mobikwikEnabled;
+		this.freeChargeEnabled = freeChargeEnabled;
+
 		this.mealsEnabled = mealsEnabled;
 		this.freshEnabled = freshEnabled;
 		this.deliveryEnabled = deliveryEnabled;
@@ -145,6 +151,7 @@ public class UserData {
 
 		this.defaultClientId = defaultClientId;
 		this.integratedJugnooEnabled = integratedJugnooEnabled;
+
 	}
 
 	private void checkUserImage(){
@@ -189,6 +196,9 @@ public class UserData {
 				} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
 						&& mobikwikEnabled == 1 && mobikwikBalance > -1) {
 					walletTotal = walletTotal + mobikwikBalance;
+				} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()
+						&& freeChargeEnabled == 1 && freeChargeBalance > -1) {
+					walletTotal = walletTotal + freeChargeBalance;
 				}
 			}
 		}
@@ -473,7 +483,50 @@ public class UserData {
 	}
 
 
-	public int getPaytmEnabled() {
+    /**
+     * For FreeCharge
+     */
+
+
+    public int getFreeChargeEnabled() {
+        return freeChargeEnabled;
+    }
+
+    public void setFreeChargeEnabled(int freeChargeEnabled) {
+        this.freeChargeEnabled = freeChargeEnabled;
+    }
+
+    public double getFreeChargeBalance() {
+        return freeChargeBalance;
+    }
+
+    public String getFreeChargeBalanceStr(){
+        if(freeChargeEnabled != 1 || freeChargeBalance < 0){
+            return "--";
+        } else {
+            return Utils.getMoneyDecimalFormatWithoutFloat().format(freeChargeBalance);
+        }
+    }
+
+    public void setFreeChargeBalance(double freeChargeBalance) {
+        this.freeChargeBalance = freeChargeBalance;
+    }
+
+    public int getFreeChargeBalanceColor(Context context){
+        if(freeChargeBalance < 0){
+            return context.getResources().getColor(R.color.theme_red_color);
+        } else{
+            return context.getResources().getColor(R.color.theme_green_color);
+        }
+    }
+
+    public void deleteFreeCharge(){
+        this.freeChargeEnabled = 0;
+        this.freeChargeBalance = -1;
+    }
+
+
+    public int getPaytmEnabled() {
 		return paytmEnabled;
 	}
 
@@ -505,6 +558,18 @@ public class UserData {
 					deleteMobikwik();
 				}
 			}
+
+            if(jObj.has(Constants.KEY_FREECHARGE_BALANCE)) {
+                setFreeChargeBalance(jObj.optDouble(Constants.KEY_FREECHARGE_BALANCE, getFreeChargeBalance()));
+                if(getFreeChargeBalance() > 0 || removeWalletIfNoKey) {
+                    setFreeChargeEnabled(1);
+                }
+            } else {
+                if(removeWalletIfNoKey) {
+                    deleteFreeCharge();
+                }
+            }
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

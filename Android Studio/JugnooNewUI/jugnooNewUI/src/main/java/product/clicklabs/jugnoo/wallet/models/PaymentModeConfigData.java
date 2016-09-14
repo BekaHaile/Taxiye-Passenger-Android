@@ -22,6 +22,9 @@ public class PaymentModeConfigData {
 		else if(Constants.KEY_MOBIKWIK.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.MOBIKWIK.getOrdinal();
 		}
+		else if(Constants.KEY_FREECHARGE.equalsIgnoreCase(name)) {
+			paymentOption = PaymentOption.FREECHARGE.getOrdinal();
+		}
 		else if(Constants.KEY_JUGNOO_CASH.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.CASH.getOrdinal();
 		}

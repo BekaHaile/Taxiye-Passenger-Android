@@ -81,6 +81,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
+        updateUI();
         try {
             if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
 				viewType = Data.getFreshData().getFeedbackViewType();
@@ -115,6 +116,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         relativeLayoutGreat = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutGreat);
         relativeLayoutGreat.setVisibility(View.GONE);
         relativeLayoutRideEndWithImage = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideEndWithImage);
+        relativeLayoutRideEndWithImage.setVisibility(View.GONE);
 
         textViewThanks = (TextView) rootView.findViewById(R.id.textViewThanks);
         textViewRSTotalFare = (TextView) rootView.findViewById(R.id.textViewRSTotalFare);
@@ -212,8 +214,25 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 }
             }
         });
-
+        activity.fragmentUISetup(this);
         return rootView;
+    }
+
+    private void updateUI() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                update();
+            }
+        }, 500);
+    }
+
+    private void update() {
+        try {
+            activity.fragmentUISetup(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void endRideWithGif(){

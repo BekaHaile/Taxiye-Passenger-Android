@@ -8,9 +8,10 @@ public class TransactionInfo {
 	public double amount;
 	public int paytm;
 	private int mobikwik;
+	private int freecharge;
 	
 	public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText,
-						   double amount, int paytm, int mobikwik){
+						   double amount, int paytm, int mobikwik, int freecharge){
 		this.transactionId = transactionId;
 		this.transactionType = transactionType;
 		this.time = time;
@@ -19,6 +20,7 @@ public class TransactionInfo {
 		this.amount = amount;
 		this.paytm = paytm;
 		this.mobikwik = mobikwik;
+		this.freecharge = freecharge;
 	}
 	
 	@Override
@@ -37,5 +39,9 @@ public class TransactionInfo {
 
 	public int getMobikwik() {
 		return mobikwik;
+	}
+
+	public int getFreecharge() {
+		return freecharge;
 	}
 }

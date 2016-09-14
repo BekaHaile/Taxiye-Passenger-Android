@@ -131,7 +131,7 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SPLabels.SHOW_JUGNOO_JEANIE, showJugnooJeanie);
         int fabButtonEnable = userData.optInt("fab_button_enabled", 0);
         Prefs.with(context).save(SPLabels.SHOW_FAB_SETTING, fabButtonEnable);
-        int integratedJugnooEnabled = userData.optInt("integrated_jugnoo_enabled", 0);
+        int integratedJugnooEnabled = userData.optInt(KEY_INTEGRATED_JUGNOO_ENABLED, 0);
 
         if(userData.has("user_saved_addresses")){
             JSONArray userSavedAddressArray = userData.getJSONArray("user_saved_addresses");
@@ -234,6 +234,8 @@ public class JSONParser implements Constants {
 
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
+        int freeChargeEnabled = userData.optInt(KEY_FREECHARGE_ENABLED, 0);
+
         int mealsEnabled = userData.optInt(KEY_MEALS_ENABLED, 0);
         int freshEnabled = userData.optInt(KEY_FRESH_ENABLED, 0);
         int deliveryEnabled = userData.optInt(KEY_DELIVERY_ENABLED, 0);
@@ -252,7 +254,7 @@ public class JSONParser implements Constants {
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
-                fatafatUrlLink, paytmEnabled, mobikwikEnabled, notificationPreferenceEnabled,
+                fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
                 mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton, defaultClientId, integratedJugnooEnabled);
 
 
@@ -260,7 +262,7 @@ public class JSONParser implements Constants {
 
         Data.userData.setJeanieIntroDialogContent(loginUserData.getJeanieIntroDialogContent());
 
-        MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData, Data.userData);
+        MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData);
 
         try {
             Data.userData.setEmergencyContactsList(JSONParser.parseEmergencyContacts(userData));
@@ -745,7 +747,7 @@ public class JSONParser implements Constants {
 			Data.autoData.setEndRideData(parseEndRideData(jLastRideData, jLastRideData.getString("engagement_id"), Data.autoData.getFareStructure().getFixedFare()));
 
             HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
-            Prefs.with(context).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+            Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -848,8 +850,9 @@ public class JSONParser implements Constants {
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
         String engagementDate = jLastRideData.optString("engagement_date", "");
 
-
         double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
+        double paidUsingFreeCharge = jLastRideData.optDouble(KEY_PAID_USING_FREECHARGE, 0);
+
         int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 0);
         int status = jLastRideData.optInt(Constants.KEY_STATUS, EngagementStatus.ENDED.getOrdinal());
 
@@ -868,7 +871,7 @@ public class JSONParser implements Constants {
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
-                sumAdditionalCharges, engagementDate, paidUsingMobikwik, totalRide, status, supportNumber);
+                sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge, totalRide, status, supportNumber);
 	}
 
 
@@ -1075,7 +1078,7 @@ public class JSONParser implements Constants {
             } else if (Data.P_ASSIGNING.equalsIgnoreCase(screenMode)) {
                 HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
                 Data.autoData.setcSessionId(sessionId);
-                Prefs.with(context).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+                Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 clearSPData(context);
             } else {
 
@@ -1108,15 +1111,15 @@ public class JSONParser implements Constants {
 
                 if (Data.P_REQUEST_FINAL.equalsIgnoreCase(screenMode)) {
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-                    Prefs.with(context).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+                    Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 }
                 else if (Data.P_DRIVER_ARRIVED.equalsIgnoreCase(screenMode)) {
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
-                    Prefs.with(context).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+                    Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 }
                 else if (Data.P_IN_RIDE.equalsIgnoreCase(screenMode)) {
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-                    Prefs.with(context).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+                    Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 }
             }
         }
@@ -1466,6 +1469,7 @@ public class JSONParser implements Constants {
     }
 
     public void loginAnalyticEvents(Context context, LoginVia loginVia){
+        loginClevertap(context);
         try {
             FlurryEventLogger.setGAUserId(Data.userData.getUserId());
             NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
@@ -1483,10 +1487,71 @@ public class JSONParser implements Constants {
                 BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
                 FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
                 FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
+
+                String walletSelected = Prefs.with(context).getString(SP_WALLET_AT_SIGNUP, "NA");
+                Prefs.with(context).save(SP_WALLET_AT_SIGNUP, "");
+
+                MyApplication.getInstance().getCleverTapUtils().signUp(String.valueOf(loginVia), walletSelected, referralCodeEntered);
+
             }
             JSONObject map = new JSONObject();
             map.put(KEY_SOURCE, getAppSource(context));
             NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_LOGIN_APP_SOURCE, map);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+    private void loginClevertap(Context context){
+        try{
+            // each of the below mentioned fields are optional
+            // if set, these populate demographic information in the Dashboard
+            HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+            profileUpdate.put(Events.NAME, Data.userData.userName);                  // String
+            profileUpdate.put(Events.USER_ID, Data.userData.getUserId());                    // String or number
+            profileUpdate.put(Events.EMAIL, Data.userData.userEmail);               // Email address of the user
+            profileUpdate.put(Events.PHONE, Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));                     // Phone (without the country code)
+
+            //profileUpdate.put("Photo", Data.userData.userImage);    // URL to the Image
+            profileUpdate.put(Events.SOURCE, getAppSource(context));
+            profileUpdate.put(Events.REFERRAL_CODE, Data.userData.referralCode);
+            profileUpdate.put(Events.JUGNOO_CASH, Data.userData.getJugnooBalance());
+            profileUpdate.put(Events.IS_VERIFIED, "True");
+
+//            profileUpdate.put(Events.COUPONS_USED, Data.userData.);
+            try {
+                int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+                profileUpdate.put(Events.OS_VERSION, currentapiVersion);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            profileUpdate.put(Events.WALLET, Data.userData.);
+            if(Prefs.with(context).getString(SPLabels.ADD_HOME, "").length()>0) {
+                String data = Prefs.with(context).getString(SPLabels.ADD_HOME, "");
+                JSONObject jsonObject  = new JSONObject(data);
+                profileUpdate.put(Events.HOME, jsonObject.optString("address"));
+            }
+            if(Prefs.with(context).getString(SPLabels.ADD_WORK, "").length()>0) {
+                String data = Prefs.with(context).getString(SPLabels.ADD_WORK, "");
+                JSONObject jsonObject  = new JSONObject(data);
+                profileUpdate.put(Events.WORK, jsonObject.optString("address"));
+            }
+
+            // optional fields. controls whether the user will be sent email, push etc.
+            profileUpdate.put("MSG-email", true);                      // Disable email notifications
+            profileUpdate.put("MSG-push", true);                        // Enable push notifications
+            profileUpdate.put("MSG-sms", true);                        // Disable SMS notifications
+
+            MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+
+            MyApplication.getInstance().getCleverTapUtils().setCoupons();
+            MyApplication.getInstance().getCleverTapUtils().setWalletData();
+            // for send location to clevertap
+            MyApplication.getInstance().setLocationToCleverTap();
 
         } catch (Exception e) {
             e.printStackTrace();

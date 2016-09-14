@@ -7,21 +7,6 @@
     android:orientation="vertical"
     android:background="@color/sliding_bottom_bg_color">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewCategoryItems"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fadeScrollbars="true"
-            android:scrollbars="vertical"
-            android:splitMotionEvents="false">
-        </android.support.v7.widget.RecyclerView>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
     <ImageView
         android:visibility="gone"
         android:id="@+id/noMealsView"
@@ -62,5 +47,27 @@
 
     </LinearLayout>
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewCategoryItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false">
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ImageView
+        android:id="@+id/below_shadow_down"
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/shadow_up"
+        />
 
 </RelativeLayout>

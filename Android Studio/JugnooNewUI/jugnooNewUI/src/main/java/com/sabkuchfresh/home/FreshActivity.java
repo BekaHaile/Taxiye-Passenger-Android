@@ -81,6 +81,7 @@ import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABView;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
@@ -106,7 +107,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private RelativeLayout relativeLayoutCheckoutBar, relativeLayoutSort, relativeLayoutCartNew;
     private LinearLayout linearLayoutCheckout, linearLayoutCheckoutContainer;
     private TextView textViewTotalPrice, textViewCheckout, textViewMinOrder, textViewCartItemsCount, textViewCartItemsCountNew;
-    private ImageView imageViewCartNew;
+    private ImageView imageViewCartNew, imageViewFabFake;
 
     private MenuBar menuBar;
     private TopBar topBar;
@@ -122,6 +123,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private PaymentOption paymentOption;
 
     private List<DeliveryAddress> deliveryAddresses;
+    public ArrayList<SubItem> subItemsInCart;
 
     public String mContactNo = "";
 
@@ -196,6 +198,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             textViewMinOrder.setTypeface(Fonts.mavenRegular(this));
 
             topView = (View) findViewById(R.id.topBarMain);
+            imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
 
             menuBar = new MenuBar(this, drawerLayout);
             topBar = new TopBar(this, drawerLayout);
@@ -271,6 +274,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+
                 }
             });
 
@@ -343,6 +348,43 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             e.printStackTrace();
         }
 
+        imageViewFabFake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFABView();
+                //imageViewFabFake.setVisibility(View.INVISIBLE);
+                MyApplication.getInstance().getFirebaseAnalytics().logEvent(FirebaseEvents.BUTTON_GENIE, new Bundle());
+            }
+        });
+    }
+
+    private void openFABView(){
+        fabView.setFABButtons();
+        fabView.setFABMenuDrawable();
+        if (fabView.menuLabelsRight.isOpened()) {
+            fabView.menuLabelsRight.close(true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fabView.fabExtra.setVisibility(View.GONE);
+                    fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                }
+            }, 300);
+        } else {
+            fabView.menuLabelsRight.open(true);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    fabView.fabExtra.setVisibility(View.VISIBLE);
+                    imageViewFabFake.setVisibility(View.INVISIBLE);
+                }
+            },300);
+
+        }
+    }
+
+    public ImageView getImageViewFabFake() {
+        return imageViewFabFake;
     }
 
     public void intentToShareActivity(){
@@ -452,7 +494,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     protected void onResume() {
         super.onResume();
         try {
-        if (!HomeUtil.checkIfUserDataNull(this)) {
+        if (!HomeActivity.checkIfUserDataNull(this)) {
             try {
                 mBus.register(this);
             } catch (Exception e) {
@@ -475,11 +517,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if((getFreshFragment() != null && !getFreshFragment().isHidden()) ||
                         (getMealFragment() != null && !getMealFragment().isHidden())) {
-                    fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
+                    fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
                     fabView.setFABMenuDrawable();
+                    imageViewFabFake.setVisibility(View.VISIBLE);
                 }
             } else{
                 fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                imageViewFabFake.setVisibility(View.GONE);
             }
         }
         } catch (Exception e) {
@@ -711,8 +755,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //        Utils.hideViewByScale(relativeLayoutCartRound);
 //        relativeLayoutCartRound.hide();
             topView.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
+            params.setMargins(0, (int)(ASSL.Yscale() * 96f), 0, 0);
+            relativeLayoutContainer.setLayoutParams(params);
+
             fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
-            //imageViewFabFake.setVisibility(View.GONE);
+            imageViewFabFake.setVisibility(View.GONE);
 
             if (fragment instanceof FreshFragment) {
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -723,9 +771,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				textViewCheckout.setVisibility(View.GONE);
 				if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
                     relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
-				//imageViewFabFake.setVisibility(View.VISIBLE);
+
 				if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-					fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
+                    imageViewFabFake.setVisibility(View.VISIBLE);
+					fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
 					fabView.setFABMenuDrawable();
 				}
 
@@ -755,7 +804,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				relativeLayoutCart.setVisibility(View.GONE);
 
 				if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-					fabView.relativeLayoutFAB.setVisibility(View.VISIBLE);
+                    imageViewFabFake.setVisibility(View.VISIBLE);
+					fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
 					fabView.setFABMenuDrawable();
 				}
 
@@ -874,6 +924,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 			} else if (fragment instanceof FreshSearchFragment) {
 				topView.setVisibility(View.GONE);
+                RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
+                params1.setMargins(0, 0, 0, 0);
+                relativeLayoutContainer.setLayoutParams(params1);
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -903,6 +956,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
 			} else if(fragment instanceof FeedbackFragment) {
+                topBar.below_shadow.setVisibility(View.GONE);
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.GONE);

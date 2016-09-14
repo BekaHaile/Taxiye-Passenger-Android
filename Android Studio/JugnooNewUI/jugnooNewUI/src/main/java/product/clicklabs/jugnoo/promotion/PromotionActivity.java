@@ -29,6 +29,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.BaseActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -284,6 +285,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
             recyclerViewOffers.setVisibility(View.VISIBLE);
             linearLayoutNoOffers.setVisibility(View.GONE);
             promotionsAdapter.notifyDataSetChanged();
+            updateUserCoupons();
         }
     }
 
@@ -346,6 +348,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                             promoCoupons.addAll(promCouponResponse.getDeliveryCoupons());
 
                                         updateListData();
+
                                     } else {
                                         updateListData();
                                         retryDialog(DialogErrorType.OTHER, message);
@@ -378,6 +381,26 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
             e.printStackTrace();
         }
     }
+
+    private void updateUserCoupons() {
+        try{
+            ArrayList<String> coupons = new ArrayList<>();
+            if(promoCoupons != null) {
+                for(int i=0;i<promoCoupons.size();i++) {
+                    coupons.add(promoCoupons.get(i).getTitle());
+                    String value = MyApplication.getInstance().getCleverTapUtils().getCouponValue(promoCoupons.get(i).getTitle());
+                    if(value.length()>0) {
+                        coupons.add(value);
+                    }
+                }
+            }
+            MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     private void retryDialog(DialogErrorType dialogErrorType, String message){
         if(dialogErrorType == DialogErrorType.OTHER){

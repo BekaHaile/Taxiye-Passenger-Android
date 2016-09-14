@@ -36,7 +36,15 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
             // Get updated InstanceID token.
             String refreshedToken = FirebaseInstanceId.getInstance().getToken();
             Log.d(TAG, "Refreshed token: " + refreshedToken);
+            if(Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found").equalsIgnoreCase("not_found")) {
+                try{
+                    MyApplication.getInstance().getCleverTap().data.pushFcmRegistrationId(refreshedToken, true);
+                } catch (Exception e){
+
+                }
+            }
             Prefs.with(this).save(Constants.SP_DEVICE_TOKEN, refreshedToken);
+
             Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(this);
             if (!"".equalsIgnoreCase(pair.first)) {
                 // call api

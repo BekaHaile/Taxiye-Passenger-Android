@@ -179,6 +179,8 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
             e.printStackTrace();
         }
 
+
+
         RecyclerView recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
         recyclerViewDeliverySlots.setLayoutManager(new LinearLayoutManager(activity));
         recyclerViewDeliverySlots.setItemAnimator(new DefaultItemAnimator());
@@ -191,6 +193,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
 
         checkoutAdapter = new FreshCheckoutAdapter(activity, checkout, this);
         recyclerViewDeliverySlots.setAdapter(checkoutAdapter);
+
 
 
 
@@ -331,7 +334,15 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                     generateSlots();
 //								setAddressAndTimeSlot();
                                 } else{
-                                    DialogPopup.alertPopup(activity, "", message);
+                                    final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
+                                    DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if(redirect == 1) {
+                                                activity.performBackPressed();
+                                            }
+                                        }
+                                    });
                                     buttonProceedToPayment.setText(getActivity().getResources().getString(R.string.connection_lost_try_again));
                                 }
                             }

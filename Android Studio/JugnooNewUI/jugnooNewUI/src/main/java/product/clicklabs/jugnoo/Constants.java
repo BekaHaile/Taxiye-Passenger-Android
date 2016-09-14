@@ -254,6 +254,7 @@ public interface Constants {
 	String KEY_PAYTM_BALANCE = "paytm_balance";
 	String KEY_PAID_USING_PAYTM = "paid_using_paytm";
 	String KEY_PAID_USING_JUGNOO_CASH = "paid_using_jugnoo_cash";
+	String KEY_PAID_USING_FREECHARGE = "paid_using_freecharge";
 	String KEY_PAID_USING_CASH = "paid_using_cash";
 	String KEY_TOTAL_FARE = "total_fare";
 
@@ -306,6 +307,8 @@ public interface Constants {
 	String KEY_HEIGHT = "height";
 	String KEY_CAMPAIGN_ID = "campaign_id";
 	String KEY_DATA = "data";
+	String KEY_JSON_DATA = "json_data";
+	String KEY_REQUEST_ENCODING = "UTF-8";
 	String VALUE_CAMPAIGN_DATA_REQUEST = "1";
 	String VALUE_CAMPAIGN_DATA_CANCEL = "-1";
 
@@ -348,6 +351,11 @@ public interface Constants {
 	String KEY_CONVENIENCE_CHARGE = "convenience_charge";
         String KEY_SEARCH_RESULT = "search_result";
 	String SP_DRIVER_BEARING = "driver_bearing";
+
+    String KEY_FREECHARGE = "freecharge";
+    String KEY_FREECHARGE_BALANCE = "freecharge_balance";
+    String KEY_FREECHARGE_ENABLED = "freecharge_enabled";
+
 
 	String KEY_MOBIKWIK_ENABLED = "mobikwik_enabled";
 	String KEY_MOBIKWIK_BALANCE = "mobikwik_balance";
@@ -444,4 +452,13 @@ public interface Constants {
 	String KEY_SUPPORT_NUMBER = "support_number";
 
 	String INTERATED = "integrated";
+	String SP_WALLET_AT_SIGNUP = "sp_wallet_at_signup";
+
+	String AUTOS_PUSH = "autos_push";
+	String FRESH_PUSH = "fresh_push";
+	String MEALS_PUSH = "meals_push";
+
+	String KEY_INTEGRATED_JUGNOO_ENABLED = "integrated_jugnoo_enabled";
+	String KEY_REDIRECT = "redirect";
+
 }

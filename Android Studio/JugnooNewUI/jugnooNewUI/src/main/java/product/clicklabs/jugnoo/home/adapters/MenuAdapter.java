@@ -188,7 +188,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             holder.textViewValue.setBackgroundResource(R.drawable.circle_theme);
                             setLayoutParamsForValue(holder.textViewValue);
                         }
-                    } catch (Resources.NotFoundException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(menuInfo.getTag())){

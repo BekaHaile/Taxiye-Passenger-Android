@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="26px"
+            android:layout_marginBottom="36px"
             >
 
             <RelativeLayout
@@ -148,42 +149,95 @@
                     android:textSize="@dimen/text_size_34"/>
 
             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutFreeCharge"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/nl_button_size"
+                android:layout_marginLeft="36px"
+                android:layout_marginRight="36px"
+                android:layout_marginTop="10px"
+                android:visibility="visible"
+
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="100px"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageViewRadioFreeCharge"
+                        android:layout_width="33px"
+                        android:layout_height="33px"
+                        android:src="@drawable/ic_radio_button_normal"
+                        android:tag="mwar"/>
+
+                    <ImageView
+                        style="@style/payment_option_icon_small"
+                        android:src="@drawable/ic_freecharge_small"
+                        android:layout_marginLeft="10px"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewFreeCharge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10px"
+                        android:text="@string/freecharge_wallet"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewFreeChargeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="200"
+                    android:textColor="@color/theme_green_color"
+                    android:textSize="@dimen/text_size_34"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutCash"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/nl_button_size"
+                android:layout_marginLeft="36px"
+                android:layout_marginRight="36px"
+                android:layout_marginTop="10px"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/radio_cash"
+                    android:layout_width="33px"
+                    android:layout_height="33px"
+                    android:src="@drawable/ic_radio_button_normal"
+                    android:tag="mwar"/>
+
+                <ImageView
+                    style="@style/payment_option_icon_small"
+                    android:layout_marginLeft="10px"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewCash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10px"
+                    android:text="@string/cash"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_34"/>
+
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayoutCash"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/nl_button_size"
-            android:layout_marginBottom="36px"
-            android:layout_marginLeft="36px"
-            android:layout_marginRight="36px"
-            android:layout_marginTop="10px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="visible">
-
-            <ImageView
-                android:id="@+id/radio_cash"
-                android:layout_width="33px"
-                android:layout_height="33px"
-                android:src="@drawable/ic_radio_button_normal"
-                android:tag="mwar"/>
-
-            <ImageView
-                style="@style/payment_option_icon_small"
-                android:layout_marginLeft="10px"
-                />
-
-            <TextView
-                android:id="@+id/textViewCash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10px"
-                android:text="@string/cash"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_34"/>
-
-        </LinearLayout>
 
 
     </LinearLayout>

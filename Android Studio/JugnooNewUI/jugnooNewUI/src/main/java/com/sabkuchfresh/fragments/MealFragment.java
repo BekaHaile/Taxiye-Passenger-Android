@@ -307,6 +307,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             e.printStackTrace();
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
+                        if(!isHidden()) {
+                            activity.hideBottomBar(true);
+                        } else {
+                            activity.hideBottomBar(false);
+                        }
                     }
 
                     @Override
@@ -325,16 +330,21 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                     }
                 });
             } else {
+
                 retryDialog(DialogErrorType.NO_NET);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {
         noFreshsView.setVisibility(View.VISIBLE);
+        activity.hideBottomBar(false);
+        mealsData.clear();
+        mealAdapter.setList(mealsData);
+
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {

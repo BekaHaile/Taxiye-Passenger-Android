@@ -326,10 +326,14 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 							String message = JSONParser.getServerMessage(jObj);
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 noFreshsView.setVisibility(View.GONE);
+                                activity.getTopBar().below_shadow.setVisibility(View.GONE);
                                 mSwipeRefreshLayout.setVisibility(View.GONE);
                                 if(!isHidden()) {
                                     activity.hideBottomBar(true);
                                     activity.getTopBar().below_shadow.setVisibility(View.GONE);
+                                } else {
+                                    activity.hideBottomBar(false);
+                                    activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
                                 }
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);
@@ -375,6 +379,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 									}
 								}
 							} else {
+                                activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
                                 noFreshsView.setVisibility(View.VISIBLE);
                                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                                 activity.hideBottomBar(false);
@@ -424,6 +429,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
 	private void retryDialog(DialogErrorType dialogErrorType){
         noFreshsView.setVisibility(View.VISIBLE);
+        activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         activity.hideBottomBar(false);
         mainLayout.setVisibility(View.GONE);

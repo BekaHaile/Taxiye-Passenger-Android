@@ -19,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
@@ -26,6 +27,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.widget.TextView;
 
+import com.clevertap.android.sdk.CleverTapAPI;
+import com.clevertap.android.sdk.NotificationInfo;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.squareup.picasso.Picasso;
@@ -328,7 +331,23 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
+		try {
+			if (remoteMessage.getData().size() > 0) {
+				Bundle extras = new Bundle();
+				for (Map.Entry<String, String> entry : remoteMessage.getData().entrySet()) {
+					extras.putString(entry.getKey(), entry.getValue());
+				}
 
+				NotificationInfo info = CleverTapAPI.getNotificationInfo(extras);
+				//Logger.logFine("FcmMessageListenerService: "+ info.toString());
+
+				if (info.fromCleverTap) {
+					CleverTapAPI.createNotification(getApplicationContext(), extras);
+				}
+			}
+		} catch (Throwable t) {
+			//Logger.logFine("Error parsing FCM message", t);
+		}
 		try {
 			String from = remoteMessage.getFrom();
 			Map data = remoteMessage.getData();

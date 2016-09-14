@@ -121,11 +121,13 @@ public class FABView {
         //relativeLayoutFAB.setVisibility(View.INVISIBLE);
         try {
             if(Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
-                    Data.userData.getIntegratedJugnooEnabled() == 1) {
+                    (Data.userData.getFreshEnabled() == 1 || Data.userData.getMealsEnabled() == 1 || Data.userData.getDeliveryEnabled() == 1)
+                    && Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if (passengerScreenMode != null) {
                     if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
                             && !((HomeActivity) activity).confirmedScreenOpened)
-                            || passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
+                            || passengerScreenMode == PassengerScreenMode.P_RIDE_END
+                            || ((HomeActivity)activity).dropLocationSearched) {
                         relativeLayoutFAB.setVisibility(View.INVISIBLE);
                         ((HomeActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
                     } else {
@@ -136,7 +138,8 @@ public class FABView {
                     }
                 } else {
                     if (activity instanceof FreshActivity) {
-                        relativeLayoutFAB.setVisibility(View.VISIBLE);
+                        relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                        ((FreshActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
                     } else {
                         relativeLayoutFAB.setVisibility(View.INVISIBLE);
                     }

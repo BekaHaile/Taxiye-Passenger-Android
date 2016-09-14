@@ -39,6 +39,9 @@ public class Region {
 	@SerializedName("priority_tip_category")
 	@Expose
 	private Integer priorityTipCategory;
+	@SerializedName("destination_mandatory")
+	@Expose
+	private  Integer destinationMandatory = 0;
 	@SerializedName("images")
 	@Expose
 	private Images images;
@@ -314,5 +317,13 @@ public class Region {
 
 	public void setDriverFareFactor(Double driverFareFactor) {
 		this.driverFareFactor = driverFareFactor;
+	}
+
+	public Integer getDestinationMandatory() {
+		return destinationMandatory;
+	}
+
+	public void setDestinationMandatory(Integer destinationMandatory) {
+		this.destinationMandatory = destinationMandatory;
 	}
 }

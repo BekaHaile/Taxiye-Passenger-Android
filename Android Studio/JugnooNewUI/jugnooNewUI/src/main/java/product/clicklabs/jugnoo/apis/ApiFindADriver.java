@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -277,6 +278,8 @@ public class ApiFindADriver {
 				e.printStackTrace();
 			}
 
+			MyApplication.getInstance().getCleverTapUtils().setCoupons();
+
 
 			if(findADriverResponse.getFareStructure() != null) {
 				for (FareStructure fareStructure : findADriverResponse.getFareStructure()) {
@@ -327,6 +330,9 @@ public class ApiFindADriver {
 			}
 			if(findADriverResponse.getDeliveryEnabled() != null) {
 				Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
+			}
+			if(findADriverResponse.getIntegratedJugnooEnabled() != null){
+				Data.userData.setIntegratedJugnooEnabled(findADriverResponse.getIntegratedJugnooEnabled());
 			}
 			if(!TextUtils.isEmpty(findADriverResponse.getGamePredictUrl())) {
 				Data.userData.setGamePredictUrl(findADriverResponse.getGamePredictUrl());

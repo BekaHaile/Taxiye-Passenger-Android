@@ -135,8 +135,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	Button buttonEmailSignup, buttonFacebookSignup, buttonGoogleSignup;
 	TextView textViewSTerms;
 
-	LinearLayout linearLayoutWalletContainer, linearLayoutWalletContainerInner, linearLayoutPaytm, linearLayoutMobikwik, linearLayoutNone;
-	ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioNone;
+	LinearLayout linearLayoutWalletContainer, linearLayoutWalletContainerInner,
+			linearLayoutPaytm, linearLayoutMobikwik, linearLayoutFreeCharge, linearLayoutNone;
+	ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewRadioNone;
+	LinearLayout linearLayoutWalletOption;
+	ImageView imageViewWalletOptionCheck;
+	TextView textViewWalletOptionMessage;
+
 
 	boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
 
@@ -493,12 +498,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			linearLayoutWalletContainerInner = (LinearLayout) findViewById(R.id.linearLayoutWalletContainerInner);
 			linearLayoutPaytm = (LinearLayout) findViewById(R.id.linearLayoutPaytm);
 			linearLayoutMobikwik = (LinearLayout) findViewById(R.id.linearLayoutMobikwik);
+			linearLayoutFreeCharge = (LinearLayout) findViewById(R.id.linearLayoutFreeCharge);
 			linearLayoutNone = (LinearLayout) findViewById(R.id.linearLayoutNone);
 			((TextView) findViewById(R.id.textViewLinkWalletMessage)).setTypeface(Fonts.mavenMedium(this));
 			((TextView) findViewById(R.id.textViewNone)).setTypeface(Fonts.mavenMedium(this));
 			imageViewRadioPaytm = (ImageView) findViewById(R.id.imageViewRadioPaytm);
 			imageViewRadioMobikwik = (ImageView) findViewById(R.id.imageViewRadioMobikwik);
+			imageViewRadioFreeCharge = (ImageView) findViewById(R.id.imageViewRadioFreeCharge);
 			imageViewRadioNone = (ImageView) findViewById(R.id.imageViewRadioNone);
+
+			linearLayoutWalletOption = (LinearLayout) findViewById(R.id.linearLayoutWalletOption);
+			imageViewWalletOptionCheck = (ImageView) findViewById(R.id.imageViewWalletOptionCheck);
+			textViewWalletOptionMessage = (TextView) findViewById(R.id.textViewWalletOptionMessage);
+			textViewWalletOptionMessage.setTypeface(Fonts.mavenMedium(this));
 
 			root.setOnClickListener(onClickListenerKeybordHide);
 
@@ -539,11 +551,33 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				}
 			});
 
+			linearLayoutFreeCharge.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					linkedWallet = LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal();
+					setLinkedWalletTick();
+				}
+			});
+
 			linearLayoutNone.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
 					setLinkedWalletTick();
+				}
+			});
+
+			linearLayoutWalletOption.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					int walletFromServer = (int) linearLayoutWalletOption.getTag();
+					if(linkedWallet == walletFromServer){
+						linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+						imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_unchecked);
+					} else {
+						linkedWallet = walletFromServer;
+						imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_checked);
+					}
 				}
 			});
 
@@ -903,7 +937,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 										if ((linkedWallet == LinkedWalletStatus.NO_WALLET.getOrdinal() && Utils.isEmailValid(emailId))
 												||
 												((linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
-														|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal())
+														|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()
+														|| linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal())
 														&& Utils.isEmailValid(emailId) && !emailId.contains("+"))
 												) {
 											if (password.length() >= 6) {
@@ -1051,6 +1086,15 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 && Prefs.with(this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, -1) == -1){
             Prefs.with(this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 1);
         }
+
+		try{
+			if(!MyApplication.getInstance().getDeviceToken().equalsIgnoreCase("not_found")) {
+				MyApplication.getInstance().getCleverTap().data.pushFcmRegistrationId(MyApplication.getInstance().getDeviceToken(), true);
+				Log.d("Token", "token = "+MyApplication.getInstance().getDeviceToken());
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -1459,9 +1503,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						JSONObject jObj = new JSONObject(responseStr);
 						int showPaytm = jObj.optJSONObject("signup").optInt("PAYTM");
 						int showMobikwik = jObj.optJSONObject("signup").optInt("MOBIKWIK");
+						int showFreecharge = jObj.optJSONObject("signup").optInt("FREECHARGE");
 						linkedWallet = jObj.optJSONObject("signup").optInt("DEFAULT");
-						int showFacebook = jObj.optJSONObject("signup").optInt("FACEBOOK");
-						int showGoogle = jObj.optJSONObject("signup").optInt("GOOGLE");
 						JSONArray jWalletOrder = jObj.optJSONArray(KEY_WALLET_ORDER);
 						if(jWalletOrder != null){
 							linearLayoutWalletContainerInner.removeAllViews();
@@ -1471,6 +1514,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								}
 								else if(Constants.KEY_MOBIKWIK.equalsIgnoreCase(jWalletOrder.getString(i))){
 									linearLayoutWalletContainerInner.addView(linearLayoutMobikwik);
+								}
+								else if(Constants.KEY_FREECHARGE.equalsIgnoreCase(jWalletOrder.getString(i))){
+									linearLayoutWalletContainerInner.addView(linearLayoutFreeCharge);
 								}
 							}
 							linearLayoutWalletContainerInner.addView(linearLayoutNone);
@@ -1494,13 +1540,62 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							}
 						}
 
-						if(showPaytm == 1 || showMobikwik == 1){
-							linearLayoutWalletContainer.setVisibility(View.VISIBLE);
+						if(showFreecharge == 1){
+							linearLayoutFreeCharge.setVisibility(View.VISIBLE);
+						} else{
+							linearLayoutFreeCharge.setVisibility(View.GONE);
+							if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
+								linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+							}
+						}
+
+						if(showPaytm == 1 || showMobikwik == 1 || showFreecharge == 1){
+							linearLayoutWalletContainer.setVisibility(View.GONE);
 						} else{
 							linearLayoutWalletContainer.setVisibility(View.GONE);
 						}
 
 						setLinkedWalletTick();
+
+						int showPaytm1 = showPaytm;
+						int showMobikwik1 = showMobikwik;
+						int showFreecharge1 = showFreecharge;
+						int defaultTick = 1;
+
+						try {
+							showPaytm1 = jObj.optJSONObject("signup_new").optInt("PAYTM");
+							showMobikwik1 = jObj.optJSONObject("signup_new").optInt("MOBIKWIK");
+							showFreecharge1 = jObj.optJSONObject("signup_new").optInt("FREECHARGE");
+							defaultTick = jObj.optJSONObject("signup_new").optInt("DEFAULT");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						linearLayoutWalletOption.setVisibility(View.VISIBLE);
+						if(showPaytm1 == 1){
+							textViewWalletOptionMessage.setText(getString(R.string.use_mobile_wallet_powered_by_format, getString(R.string.paytm)));
+							linkedWallet = (defaultTick == 1) ? LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal() : LinkedWalletStatus.NO_WALLET.getOrdinal();
+							linearLayoutWalletOption.setTag(LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal());
+						}
+						else if(showMobikwik1 == 1){
+							textViewWalletOptionMessage.setText(getString(R.string.use_mobile_wallet_powered_by_format, getString(R.string.mobikwik)));
+							linkedWallet = (defaultTick == 1) ? LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal() : LinkedWalletStatus.NO_WALLET.getOrdinal();
+							linearLayoutWalletOption.setTag(LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal());
+						}
+						else if(showFreecharge1 == 1){
+							textViewWalletOptionMessage.setText(getString(R.string.use_mobile_wallet_powered_by_format, getString(R.string.freecharge)));
+							linkedWallet = (defaultTick == 1) ? LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal() : LinkedWalletStatus.NO_WALLET.getOrdinal();
+							linearLayoutWalletOption.setTag(LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal());
+						}
+						else{
+							linearLayoutWalletOption.setVisibility(View.GONE);
+							linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+						}
+						if(defaultTick == 1){
+							imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_checked);
+						} else{
+							imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_unchecked);
+						}
 
 					}catch (Exception e){
 						e.printStackTrace();
@@ -2717,7 +2812,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up");
                                     SplashNewActivity.this.name = name;
                                     SplashNewActivity.this.emailId = emailId;
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                     nudgeSignupEvent(phoneNo, emailId, name);
 
                                 } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
@@ -2732,7 +2827,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
                                     SplashNewActivity.this.name = name;
                                     SplashNewActivity.this.emailId = emailId;
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
@@ -2842,7 +2937,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Facebook");
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                     nudgeSignupEvent(phoneNo, Data.facebookUserData.userEmail,
                                             Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
 
@@ -2854,7 +2949,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     parseDataSendToMultipleAccountsScreen(activity, jObj);
                                 } else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
@@ -2957,7 +3052,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Google");
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                     nudgeSignupEvent(phoneNo, Data.googleSignInAccount.getEmail(),
                                             Data.googleSignInAccount.getDisplayName());
 
@@ -2969,7 +3064,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     parseDataSendToMultipleAccountsScreen(activity, jObj);
                                 } else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
-                                    parseOTPSignUpData(jObj, password, referralCode);
+                                    parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
@@ -3014,7 +3109,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
     }
 
 
-    private void parseOTPSignUpData(JSONObject jObj, String password, String referralCode) throws Exception {
+    private void parseOTPSignUpData(JSONObject jObj, String password, String referralCode, int linkedWallet) throws Exception {
         SplashNewActivity.this.phoneNo = jObj.getString("phone_no");
         SplashNewActivity.this.password = password;
         SplashNewActivity.this.referralCode = referralCode;
@@ -3025,6 +3120,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 1));
         sendToOtpScreen = true;
         linkedWalletErrorMsg = jObj.optString(KEY_MESSAGE, "");
+		Prefs.with(this).save(SP_WALLET_AT_SIGNUP, String.valueOf(linkedWallet));
     }
 
     private void generateOTPRegisterData() {
@@ -3250,20 +3346,25 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void setLinkedWalletTick(){
 		if (linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
-			imageViewRadioPaytm.setImageResource(R.drawable.ic_radio_button_selected);
-			imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
-			imageViewRadioNone.setImageResource(R.drawable.ic_radio_button_normal);
+			setWalletRadio(imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewRadioNone);
+
 		}
 		else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-			imageViewRadioPaytm.setImageResource(R.drawable.ic_radio_button_normal);
-			imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_selected);
-			imageViewRadioNone.setImageResource(R.drawable.ic_radio_button_normal);
+			setWalletRadio(imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioFreeCharge, imageViewRadioNone);
+		}
+		else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
+			setWalletRadio(imageViewRadioFreeCharge, imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioNone);
 		}
 		else {
-			imageViewRadioPaytm.setImageResource(R.drawable.ic_radio_button_normal);
-			imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
-			imageViewRadioNone.setImageResource(R.drawable.ic_radio_button_selected);
+			setWalletRadio(imageViewRadioNone, imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge);
 		}
+	}
+
+	private void setWalletRadio(ImageView selected, ImageView unSelected1, ImageView unSelected2, ImageView unSelected3){
+		selected.setImageResource(R.drawable.ic_radio_button_selected);
+		unSelected1.setImageResource(R.drawable.ic_radio_button_normal);
+		unSelected2.setImageResource(R.drawable.ic_radio_button_normal);
+		unSelected3.setImageResource(R.drawable.ic_radio_button_normal);
 	}
 
 }

@@ -26,6 +26,9 @@
     
 	<!-- <string name="fb_app_id">782131025144439</string> -->
 	<string name="fb_app_id">782131025144439</string>
+
+	<string name="clevertap_account_id">8R5-WZ7-R74Z</string>
+	<string name="clevertap_account_token">a10-52b</string>
     
 	
 	
@@ -856,6 +859,7 @@
 	<string name="balance_running_low">Balance is running low!</string>
 	<string name="dont_have_enough_paytm_balance">You don\'t have enough money for\ntransaction in your Paytm wallet.</string>
 	<string name="dont_have_enough_mobikwik_balance">You don\'t have enough money for\ntransaction in your Mobikwik wallet.</string>
+	<string name="dont_have_enough_freecharge_balance">You don\'t have enough money for\ntransaction in your FreeCharge wallet.</string>
 	<string name="get_fresh">Get Fresh</string>
 	<string name="fruits_and_vegetables">FRUITS AND VEGETABLES</string>
 	<string name="delivered_at_your_doorstep">delivered at your doorstep</string>
@@ -954,11 +958,15 @@
 	<string name="fares_updated">Fares updated try again</string>
 	<string name="no_current_offers">No Current Offers</string>
 	<string name="mobikwik_wallet">MobiKwik Wallet</string>
+    <string name="freecharge_wallet">FreeCharge Wallet</string>
 	<string name="add_mobikwik_wallet">Add MobiKwik Wallet</string>
+    <string name="add_freecharge_wallet">Add FreeCharge Wallet</string>
 	<string name="paytm_colon">Paytm:</string>
 	<string name="mobikwik_colon">MobiKwik:</string>
+	<string name="freecharge_colon">FreeCharge:</string>
 	<string name="request_otp_message_paytm">Request an OTP to link Paytm Wallet to</string>
 	<string name="request_otp_message_mobikwik">Request an OTP to link MobiKwik Wallet to</string>
+    <string name="request_otp_message_freecharge">Request an OTP to link FreeCharge Wallet to</string>
 	<string name="sending_otp_to">Sending OTP To</string>
 	<string name="otp_sent_successfully">OTP sent successfully</string>
 	<string name="add_wallet">Add Wallet</string>
@@ -975,6 +983,7 @@
 	<string name="mobikwik_coupon_selected_but_mobikwik_option_not_selected">You need to select MobiKwik as preferred payment option to avail this coupon</string>
 	<string name="mobikwik_coupon_selected_but_mobikwik_not_added">You need to add MobiKwik Wallet to avail this coupon</string>
 	<string name="link_mobile_wallet_message">Link Mobile Wallet for ease of payments</string>
+	<string name="use_mobile_wallet_powered_by_format">Use mobile wallet powered by %s</string>
 	<string name="none">None</string>
 	<string name="its_cool_to_pool">ITS COOL TO POOL</string>
 	<string name="add_money_to_wallet">Add Money to Wallet</string>
@@ -1107,5 +1116,16 @@
 	<string name="affordable_high_quality_fruits_veggies">Affordable &amp; high Quality fruits &amp; veggies</string>
 	<string name="delivery">Delivery</string>
 	<string name="please_swipe_down_to_reload">Please swipe down to reload</string>
+
+
+    <string name="freecharge_coupon_selected_but_freecharge_option_not_selected">You need to select FreeCharge as preferred payment option to avail this coupon</string>
+    <string name="freecharge_coupon_selected_but_freecharge_not_added">You need to add FreeCharge Wallet to avail this coupon</string>
+
+    <string name="freecharge">FreeCharge</string>
+    <string name="add_freecharge_cash">Add FreeCharge Cash</string>
+	<string name="freecharge_low_cash">Your FreeCharge cash is low</string>
+	<string name="freecharge_error_case_select_cash">We are not able to connect to FreeCharge</string>
+	<string name="freecharge_no_cash">You do not have money in your\nFreeCharge Account</string>
+
 
 </resources>
