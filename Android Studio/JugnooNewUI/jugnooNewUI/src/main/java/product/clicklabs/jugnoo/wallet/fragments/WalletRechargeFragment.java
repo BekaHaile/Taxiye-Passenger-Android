@@ -85,6 +85,10 @@ public class WalletRechargeFragment extends Fragment {
 	String amount1 = "500", amount2 = "1000", amount3 = "2000";
 	private int openWalletType;
 
+	public WalletRechargeFragment(){
+		this.openWalletType = PaymentOption.PAYTM.getOrdinal();
+	}
+
 	public WalletRechargeFragment(int openWalletType){
 		this.openWalletType = openWalletType;
 	}

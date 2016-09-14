@@ -111,16 +111,20 @@ public class SearchListAdapter extends BaseAdapter{
 
                 @Override
                 public void afterTextChanged(Editable s) {
-					SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString());
-                    if (s.length() > 0) {
-                        getSearchResults(s.toString().trim(), SearchListAdapter.this.getPivotLatLng());
-                    }
-                    else{
-                        searchResultsForSearch.clear();
-                        addFavoriteLocations("");
-                        setResults(searchResultsForSearch);
-                    }
-                }
+					try {
+						SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString());
+						if (s.length() > 0) {
+							getSearchResults(s.toString().trim(), SearchListAdapter.this.getPivotLatLng());
+						}
+						else{
+							searchResultsForSearch.clear();
+							addFavoriteLocations("");
+							setResults(searchResultsForSearch);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
             });
 
             this.editTextForSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {

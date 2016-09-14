@@ -924,26 +924,32 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             public void onClick(View v) {
                 //fabView.menuLabelsRight.close(true);
                 //imageViewFabFake.setVisibility(View.GONE);
-                if(!rideNowClicked) {
-                    Data.autoData.setPickupLatLng(map.getCameraPosition().target);
-                    if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                        Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
-                                + FirebaseEvents.REQUEST_RIDE_L1_AUTO, bundle);
-                        findDriversETACall(true, false);
-                    } else {
-                        Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
-                                + FirebaseEvents.REQUEST_RIDE_L1_AUTO_POOL, bundle);
-                        imageViewRideNowPoolCheck();
-                    }
-                    rideNowClicked = true;
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            rideNowClicked = false;
-                        }
-                    }, 1000);
+                try {
+                    if(map != null) {
+						if (!rideNowClicked) {
+							Data.autoData.setPickupLatLng(map.getCameraPosition().target);
+							if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+								Bundle bundle = new Bundle();
+								MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
+										+ FirebaseEvents.REQUEST_RIDE_L1_AUTO, bundle);
+								findDriversETACall(true, false);
+							} else {
+								Bundle bundle = new Bundle();
+								MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
+										+ FirebaseEvents.REQUEST_RIDE_L1_AUTO_POOL, bundle);
+								imageViewRideNowPoolCheck();
+							}
+							rideNowClicked = true;
+							new Handler().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									rideNowClicked = false;
+								}
+							}, 1000);
+						}
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -5966,13 +5972,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         @Override
                         public void run() {
-                            Log.i("in in herestartRideForCustomer  run class", "=");
-                            if(Data.autoData.getAssignedDriverInfo() != null) {
-                                initializeStartRideVariables();
-                                passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-                                switchPassengerScreen(passengerScreenMode);
-                            } else{
-                                callAndHandleStateRestoreAPI(true);
+                            try {
+                                Log.i("in in herestartRideForCustomer  run class", "=");
+                                if(Data.autoData.getAssignedDriverInfo() != null) {
+									initializeStartRideVariables();
+									passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+									switchPassengerScreen(passengerScreenMode);
+								} else{
+									callAndHandleStateRestoreAPI(true);
+								}
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     });
@@ -5981,12 +5991,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         @Override
                         public void run() {
-                            Log.i("in in herestartRideForCustomer  run class", "=");
-                            if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-                                firstTimeZoom = false;
-                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                                switchPassengerScreen(passengerScreenMode);
-                                DialogPopup.alertPopup(HomeActivity.this, "", message);
+                            try {
+                                Log.i("in in herestartRideForCustomer  run class", "=");
+                                if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+									firstTimeZoom = false;
+									passengerScreenMode = PassengerScreenMode.P_INITIAL;
+									switchPassengerScreen(passengerScreenMode);
+									DialogPopup.alertPopup(HomeActivity.this, "", message);
+								}
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                     });
@@ -6667,10 +6681,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-                                                            if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                                                DialogPopup.alertPopup(HomeActivity.this, "", errorMessage);
-                                                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                                                                switchPassengerScreen(passengerScreenMode);
+                                                            try {
+                                                                if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+																	DialogPopup.alertPopup(HomeActivity.this, "", errorMessage);
+																	HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+																	switchPassengerScreen(passengerScreenMode);
+																}
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
                                                             }
                                                         }
                                                     });
@@ -6744,19 +6762,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                                            noDriverAvailablePopup(HomeActivity.this, false, log);
-                                                            firstTimeZoom = false;
-                                                            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                                                            switchPassengerScreen(passengerScreenMode);
-                                                            try {
-                                                                JSONObject map = new JSONObject();
-                                                                map.put(KEY_LATITUDE, Data.autoData.getPickupLatLng().latitude);
-                                                                map.put(KEY_LONGITUDE, Data.autoData.getPickupLatLng().longitude);
-                                                                NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
-                                                            } catch (Exception e) {
-                                                                e.printStackTrace();
-                                                            }
+                                                        try {
+                                                            if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+																noDriverAvailablePopup(HomeActivity.this, false, log);
+																firstTimeZoom = false;
+																HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+																switchPassengerScreen(passengerScreenMode);
+																try {
+																	JSONObject map = new JSONObject();
+																	map.put(KEY_LATITUDE, Data.autoData.getPickupLatLng().latitude);
+																	map.put(KEY_LONGITUDE, Data.autoData.getPickupLatLng().longitude);
+																	NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
+																} catch (Exception e) {
+																	e.printStackTrace();
+																}
+															}
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
                                                         }
                                                     }
                                                 });
@@ -6768,17 +6790,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                 runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                                            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                                                            switchPassengerScreen(passengerScreenMode);
-                                                            new UserDebtDialog(HomeActivity.this, Data.userData,
-                                                                    new UserDebtDialog.Callback() {
-                                                                        @Override
-                                                                        public void successFullyDeducted(double userDebt) {
-                                                                            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
-                                                                            setUserData();
-                                                                        }
-                                                                    }).showUserDebtDialog(userDebt, message);
+                                                        try {
+                                                            if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+																HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+																switchPassengerScreen(passengerScreenMode);
+																new UserDebtDialog(HomeActivity.this, Data.userData,
+																		new UserDebtDialog.Callback() {
+																			@Override
+																			public void successFullyDeducted(double userDebt) {
+																				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+																				setUserData();
+																			}
+																		}).showUserDebtDialog(userDebt, message);
+															}
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
                                                         }
                                                     }
                                                 });
@@ -6871,14 +6897,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    noDriverAvailablePopup(HomeActivity.this, false, logMessage);
-                    HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                    switchPassengerScreen(passengerScreenMode);
                     try {
-                        JSONObject map = new JSONObject();
-                        map.put(KEY_LATITUDE, Data.autoData.getPickupLatLng().latitude);
-                        map.put(KEY_LONGITUDE, Data.autoData.getPickupLatLng().longitude);
-                        NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
+                        noDriverAvailablePopup(HomeActivity.this, false, logMessage);
+                        HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        switchPassengerScreen(passengerScreenMode);
+                        try {
+							JSONObject map = new JSONObject();
+							map.put(KEY_LATITUDE, Data.autoData.getPickupLatLng().latitude);
+							map.put(KEY_LONGITUDE, Data.autoData.getPickupLatLng().longitude);
+							NudgeClient.trackEventUserId(HomeActivity.this, NUDGE_DRIVER_NOT_ASSIGNED, map);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -7040,11 +7070,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             @Override
             public void run() {
-                if(Data.autoData.getAssignedDriverInfo() != null) {
-                    passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
-                    switchPassengerScreen(passengerScreenMode);
-                } else{
-                    callAndHandleStateRestoreAPI(true);
+                try {
+                    if(Data.autoData.getAssignedDriverInfo() != null) {
+						passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
+						switchPassengerScreen(passengerScreenMode);
+					} else{
+						callAndHandleStateRestoreAPI(true);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

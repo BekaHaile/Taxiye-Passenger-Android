@@ -180,7 +180,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(Data.autoData.getRegions().size() > 1) {
+                    if(Data.autoData != null && Data.autoData.getRegions().size() > 1) {
                         setRegionSelected(0);
                         activity.setRegionUI(true);
                     }
