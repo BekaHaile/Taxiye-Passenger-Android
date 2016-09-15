@@ -762,15 +762,15 @@ public class JSONParser implements Constants {
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no")));
 
             try {
-                int rideEndGoodFeedbackViewType = jObj.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+                int rideEndGoodFeedbackViewType = jLastRideData.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
                 Data.autoData.setRideEndGoodFeedbackViewType(rideEndGoodFeedbackViewType);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                if (jObj.has(KEY_RATE_APP)) {
-                    Data.autoData.setCustomerRateAppFlag(jObj.getInt(KEY_RATE_APP));
-                    Data.autoData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jObj));
+                if (jLastRideData.has(KEY_RATE_APP)) {
+                    Data.autoData.setCustomerRateAppFlag(jLastRideData.getInt(KEY_RATE_APP));
+                    Data.autoData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jLastRideData));
 
                     if(Data.autoData.getCustomerRateAppFlag() == 1){
                         Data.autoData.setRideEndGoodFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());

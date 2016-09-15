@@ -462,7 +462,7 @@ public interface Constants {
 	String KEY_INTEGRATED_JUGNOO_ENABLED = "integrated_jugnoo_enabled";
 	String KEY_REDIRECT = "redirect";
 
-	String KEY_NEVER_PRESSED = "never_pressed";
+	String KEY_RATING_FLAG = "rating_flag";
 	String KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE = "ride_end_good_feedback_view_type";
 	String KEY_RIDE_END_GOOD_FEEDBACK_TEXT = "ride_end_good_feedback_text";
 	String KEY_RATE_APP = "rate_app";

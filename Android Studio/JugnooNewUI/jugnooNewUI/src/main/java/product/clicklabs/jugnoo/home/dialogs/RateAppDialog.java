@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
+import product.clicklabs.jugnoo.home.models.AppRatingTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -74,7 +75,7 @@ public class RateAppDialog {
 				public void onClick(View v) {
 					try {
 						dialog.dismiss();
-						acceptAppRatingRequestAPI(activity, 0);
+						acceptAppRatingRequestAPI(activity, AppRatingTypeValue.ACCEPTED);
 						if(rateAppDialogContent != null) {
 							Intent intent = new Intent(Intent.ACTION_VIEW);
 							intent.setData(Uri.parse(rateAppDialogContent.getUrl()));
@@ -97,7 +98,7 @@ public class RateAppDialog {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
-					acceptAppRatingRequestAPI(activity, 1);
+					acceptAppRatingRequestAPI(activity, AppRatingTypeValue.NEVER);
 				}
 			});
 
@@ -109,12 +110,12 @@ public class RateAppDialog {
 	}
 
 
-	private void acceptAppRatingRequestAPI(final Activity activity, int neverPressed) {
+	private void acceptAppRatingRequestAPI(final Activity activity, AppRatingTypeValue ratingFlag) {
 		try {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_NEVER_PRESSED, String.valueOf(neverPressed));
+				params.put(Constants.KEY_RATING_FLAG, String.valueOf(ratingFlag.getOrdinal()));
 				RestClient.getApiServices().acceptAppRatingRequest(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
