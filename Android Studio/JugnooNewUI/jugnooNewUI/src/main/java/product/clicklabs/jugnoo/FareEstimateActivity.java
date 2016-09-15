@@ -458,6 +458,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     public void onPlaceSearchPost(SearchResult searchResult) {
         try {
             Data.autoData.setDropLatLng(searchResult.getLatLng());
+            Data.autoData.setDropAddress(searchResult.getAddress());
             getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), searchResult.getLatLng());
             FlurryEventLogger.event(FARE_ESTIMATE_CALCULATED);
             searchResultGlobal = searchResult;

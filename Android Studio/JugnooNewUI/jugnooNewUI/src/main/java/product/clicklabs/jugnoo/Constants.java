@@ -467,4 +467,7 @@ public interface Constants {
 	String KEY_RIDE_END_GOOD_FEEDBACK_TEXT = "ride_end_good_feedback_text";
 	String KEY_RATE_APP = "rate_app";
 
+	String KEY_PICKUP_LOCATION_ADDRESS = "pickup_location_address";
+	String KEY_DROP_LOCATION_ADDRESS = "drop_location_address";
+
 }
