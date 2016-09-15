@@ -27,7 +27,7 @@
             android:layout_margin="20px"
             android:background="@drawable/background_white_rounded_bordered"
             android:splitMotionEvents="false"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/textViewSearchGPSIcon"

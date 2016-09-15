@@ -32,6 +32,8 @@ import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
+import com.sabkuchfresh.fragments.AddToAddressBookFragment;
+import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
 import com.sabkuchfresh.fragments.FreshCartItemsFragment;
@@ -586,6 +588,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return (FreshAddressFragment) getSupportFragmentManager().findFragmentByTag(FreshAddressFragment.class.getName());
     }
 
+    public DeliveryAddressesFragment getDeliveryAddressesFragment() {
+        return (DeliveryAddressesFragment) getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName());
+    }
+
     public TopBar getTopBar() {
         return topBar;
     }
@@ -774,6 +780,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
             fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
             imageViewFabFake.setVisibility(View.GONE);
+            topBar.editTextDeliveryAddress.setVisibility(View.GONE);
 
             if (fragment instanceof FreshFragment) {
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -892,7 +899,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.title.setText(getResources().getString(R.string.checkout));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-			} else if (fragment instanceof FreshAddressFragment || fragment instanceof AddAddressMapFragment) {
+			} else if (fragment instanceof FreshAddressFragment || fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -906,7 +913,21 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.title.setText(getResources().getString(R.string.address));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-			} else if (fragment instanceof FreshPaymentFragment) {
+			} else if(fragment instanceof DeliveryAddressesFragment){
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.imageViewDelete.setVisibility(View.GONE);
+                relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+                relativeLayoutSort.setVisibility(View.GONE);
+                relativeLayoutCart.setVisibility(View.VISIBLE);
+
+                topBar.title.setVisibility(View.GONE);
+                topBar.title.setText("Type Delivery Address");
+                topBar.editTextDeliveryAddress.setVisibility(View.VISIBLE);
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof FreshPaymentFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);

@@ -417,7 +417,7 @@ public class SearchListAdapter extends BaseAdapter{
                             if (places.getStatus().isSuccess()) {
                                 final Place myPlace = places.get(0);
                                 final CharSequence thirdPartyAttributions = places.getAttributions();
-                                SearchResult searchResult = new SearchResult(placeName, myPlace.getAddress().toString(), myPlace.getLatLng());
+                                SearchResult searchResult = new SearchResult(placeName, placeAddress, myPlace.getLatLng());
                                 searchResult.setThirdPartyAttributions(thirdPartyAttributions);
                                 setSearchResult(searchResult);
                             }
