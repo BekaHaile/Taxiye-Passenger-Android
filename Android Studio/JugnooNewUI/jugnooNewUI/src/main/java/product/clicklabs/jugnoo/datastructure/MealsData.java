@@ -2,8 +2,6 @@ package product.clicklabs.jugnoo.datastructure;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
-
 /**
  * Created by shankar on 8/17/16.
  */
@@ -15,9 +13,6 @@ public class MealsData {
 	private double amount;
 	private String feedbackDeliveryDate, rideEndGoodFeedbackText;
 	private int feedbackViewType;
-
-	private int customerRateAppFlag = 0;
-	private RateAppDialogContent rateAppDialogContent;
 
 	public MealsData(String orderId, int pendingFeedback, double amount, String feedbackDeliveryDate, int feedbackViewType,
 					 String rideEndGoodFeedbackText) {
@@ -85,19 +80,4 @@ public class MealsData {
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 	}
 
-	public int getCustomerRateAppFlag() {
-		return customerRateAppFlag;
-	}
-
-	public void setCustomerRateAppFlag(int customerRateAppFlag) {
-		this.customerRateAppFlag = customerRateAppFlag;
-	}
-
-	public RateAppDialogContent getRateAppDialogContent() {
-		return rateAppDialogContent;
-	}
-
-	public void setRateAppDialogContent(RateAppDialogContent rateAppDialogContent) {
-		this.rateAppDialogContent = rateAppDialogContent;
-	}
 }

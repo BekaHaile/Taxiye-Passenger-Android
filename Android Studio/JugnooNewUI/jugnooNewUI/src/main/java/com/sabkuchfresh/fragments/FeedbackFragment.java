@@ -88,6 +88,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         activity.fragmentUISetup(this);
         updateUI();
         try {
+            rateApp = Data.userData.getCustomerRateAppFlag();
+            rateAppDialogContent = Data.userData.getRateAppDialogContent();
             if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
 				viewType = Data.getFreshData().getFeedbackViewType();
 				dateValue = Data.getFreshData().getFeedbackDeliveryDate();
@@ -95,8 +97,6 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 				orderId = Data.getFreshData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
-                rateApp = Data.getFreshData().getCustomerRateAppFlag();
-                rateAppDialogContent = Data.getFreshData().getRateAppDialogContent();
 			} else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
 				viewType = Data.getMealsData().getFeedbackViewType();
 				dateValue = Data.getMealsData().getFeedbackDeliveryDate();
@@ -104,8 +104,6 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 				orderId = Data.getMealsData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
-                rateApp = Data.getMealsData().getCustomerRateAppFlag();
-                rateAppDialogContent = Data.getMealsData().getRateAppDialogContent();
 			} else {
 				activity.finish();
 			}

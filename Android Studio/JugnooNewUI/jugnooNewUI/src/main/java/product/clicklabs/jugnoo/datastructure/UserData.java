@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -68,6 +69,9 @@ public class UserData {
 	private String defaultClientId;
 
 	private JeanieIntroDialogContent jeanieIntroDialogContent;
+
+	private int customerRateAppFlag = 0;
+	private RateAppDialogContent rateAppDialogContent;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -761,6 +765,22 @@ public class UserData {
 
 	public void setJeanieIntroDialogContent(JeanieIntroDialogContent jeanieIntroDialogContent) {
 		this.jeanieIntroDialogContent = jeanieIntroDialogContent;
+	}
+
+	public int getCustomerRateAppFlag() {
+		return customerRateAppFlag;
+	}
+
+	public void setCustomerRateAppFlag(int customerRateAppFlag) {
+		this.customerRateAppFlag = customerRateAppFlag;
+	}
+
+	public RateAppDialogContent getRateAppDialogContent() {
+		return rateAppDialogContent;
+	}
+
+	public void setRateAppDialogContent(RateAppDialogContent rateAppDialogContent) {
+		this.rateAppDialogContent = rateAppDialogContent;
 	}
 
 //	"meals_enabled": 1,

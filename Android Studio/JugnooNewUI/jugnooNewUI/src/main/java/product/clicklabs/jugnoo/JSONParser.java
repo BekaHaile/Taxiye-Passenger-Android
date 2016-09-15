@@ -389,19 +389,6 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
 
-        try {
-            if (jMealsData.has(KEY_RATE_APP)) {
-                Data.getMealsData().setCustomerRateAppFlag(jMealsData.getInt(KEY_RATE_APP));
-                Data.getMealsData().setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jMealsData));
-
-                if(Data.getMealsData().getCustomerRateAppFlag() == 1){
-                    Data.getMealsData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void parseFreshData(Context context, JSONObject jFatafatData, LoginResponse.Fresh freshData){
@@ -471,19 +458,6 @@ public class JSONParser implements Constants {
                 e.printStackTrace();
             }
 
-            try {
-                if (jFatafatData.has(KEY_RATE_APP)) {
-                    Data.getFreshData().setCustomerRateAppFlag(jFatafatData.getInt(KEY_RATE_APP));
-                    Data.getFreshData().setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jFatafatData));
-
-                    if(Data.getFreshData().getCustomerRateAppFlag() == 1){
-                        Data.getFreshData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -512,10 +486,11 @@ public class JSONParser implements Constants {
 
         parseFindDriverResp(loginResponse.getAutos());
 
-
         //Fetching user current status
         JSONObject jUserStatusObject = jObj.getJSONObject(KEY_AUTOS).getJSONObject(KEY_STATUS);
         String resp = parseCurrentUserStatus(context, loginResponse.getAutos().getCurrentUserStatus(), jUserStatusObject);
+
+        parseRateAppFlagContent(jUserDataObject);
 
         parseCancellationReasons(loginResponse.getAutos());
         parseFeedbackReasonArrayList(loginResponse.getAutos());
@@ -764,18 +739,6 @@ public class JSONParser implements Constants {
             try {
                 int rideEndGoodFeedbackViewType = jLastRideData.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
                 Data.autoData.setRideEndGoodFeedbackViewType(rideEndGoodFeedbackViewType);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (jLastRideData.has(KEY_RATE_APP)) {
-                    Data.autoData.setCustomerRateAppFlag(jLastRideData.getInt(KEY_RATE_APP));
-                    Data.autoData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jLastRideData));
-
-                    if(Data.autoData.getCustomerRateAppFlag() == 1){
-                        Data.autoData.setRideEndGoodFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
-                    }
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1591,6 +1554,31 @@ public class JSONParser implements Constants {
             // for send location to clevertap
             MyApplication.getInstance().setLocationToCleverTap();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void parseRateAppFlagContent(JSONObject jsonObject){
+        try {
+            if (jsonObject.has(KEY_RATE_APP)) {
+                Data.userData.setCustomerRateAppFlag(jsonObject.getInt(KEY_RATE_APP));
+            }
+            if(jsonObject.has(KEY_RATE_APP_DIALOG_CONTENT)){
+                Data.userData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jsonObject));
+            }
+            if(Data.userData.getCustomerRateAppFlag() == 1){
+                if(Data.autoData != null) {
+                    Data.autoData.setRideEndGoodFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                }
+                if(Data.getMealsData() != null) {
+                    Data.getMealsData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                }
+                if(Data.getFreshData() != null) {
+                    Data.getFreshData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

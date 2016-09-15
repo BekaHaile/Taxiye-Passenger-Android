@@ -5172,18 +5172,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                    try {
-                                        if (jObj.has(KEY_RATE_APP)) {
-                                            Data.autoData.setCustomerRateAppFlag(jObj.getInt(KEY_RATE_APP));
-                                            Data.autoData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jObj));
-
-                                            if(Data.autoData.getCustomerRateAppFlag() == 1){
-                                                Data.autoData.setRideEndGoodFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                    JSONParser.parseRateAppFlagContent(jObj);
 
                                     Data.userData.updateWalletBalances(jObj, false);
 
@@ -6933,8 +6922,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             switchUserScreen();
 
-            if (givenRating >= 4 && Data.autoData.getCustomerRateAppFlag()== 1) {
-                rateAppPopup(HomeActivity.this, Data.autoData.getRateAppDialogContent());
+            if (givenRating >= 4 && Data.userData.getCustomerRateAppFlag() == 1) {
+                rateAppPopup(HomeActivity.this, Data.userData.getRateAppDialogContent());
             }
             firstTimeZoom = false;
             dropLocationSearchText = "";
