@@ -35,6 +35,7 @@ public class AutoData {
     private int customerRateAppFlag = 0;
     private RateAppDialogContent rateAppDialogContent;
     private LatLng pickupLatLng, dropLatLng;
+    private String pickupAddress = "", dropAddress = "";
     private int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
     private CancelOptionsList cancelOptionsList;
     private ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();
@@ -397,5 +398,21 @@ public class AutoData {
 
     public void setPromoCoupons(ArrayList<PromoCoupon> promoCoupons) {
         this.promoCoupons = promoCoupons;
+    }
+
+    public String getPickupAddress() {
+        return pickupAddress;
+    }
+
+    public void setPickupAddress(String pickupAddress) {
+        this.pickupAddress = pickupAddress;
+    }
+
+    public String getDropAddress() {
+        return dropAddress;
+    }
+
+    public void setDropAddress(String dropAddress) {
+        this.dropAddress = dropAddress;
     }
 }

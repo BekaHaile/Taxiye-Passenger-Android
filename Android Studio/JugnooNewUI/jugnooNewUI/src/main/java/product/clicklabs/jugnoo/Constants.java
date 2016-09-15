@@ -461,4 +461,7 @@ public interface Constants {
 	String KEY_INTEGRATED_JUGNOO_ENABLED = "integrated_jugnoo_enabled";
 	String KEY_REDIRECT = "redirect";
 
+	String KEY_PICKUP_LOCATION_ADDRESS = "pickup_location_address";
+	String KEY_DROP_LOCATION_ADDRESS = "drop_location_address";
+
 }

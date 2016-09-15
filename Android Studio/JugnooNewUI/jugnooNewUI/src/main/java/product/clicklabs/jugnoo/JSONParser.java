@@ -730,7 +730,9 @@ public class JSONParser implements Constants {
             Data.autoData.setcDriverId(jDriverInfo.getString("id"));
 
             Data.autoData.setPickupLatLng(new LatLng(0, 0));
+            Data.autoData.setPickupAddress("");
             Data.autoData.setDropLatLng(null);
+            Data.autoData.setDropAddress("");
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no")));
@@ -921,7 +923,7 @@ public class JSONParser implements Constants {
             int engagementStatus = -1;
             String engagementId = "", sessionId = "", userId = "", latitude = "", longitude = "",
                     driverName = "", driverImage = "", driverCarImage = "", driverPhone = "", driverRating = "", driverCarNumber = "",
-                    pickupLatitude = "", pickupLongitude = "";
+                    pickupLatitude = "", pickupLongitude = "", pickupAddress = "", dropAddress = "";
             int freeRide = 0, preferredPaymentMode = PaymentOption.CASH.getOrdinal();
 			String promoName = "", eta = "";
             double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0, bearing = 0.0;
@@ -966,6 +968,7 @@ public class JSONParser implements Constants {
                         }
 
                         Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
+                        Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""));
                         parseDropLatLng(jObject1);
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
@@ -990,11 +993,13 @@ public class JSONParser implements Constants {
                             driverRating = jObject.getString("rating");
                             pickupLatitude = jObject.getString("pickup_latitude");
                             pickupLongitude = jObject.getString("pickup_longitude");
+                            pickupAddress = jObject.optString(KEY_PICKUP_LOCATION_ADDRESS, "");
 
                             try {
                                 if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {
                                     dropLatitude = jObject.getDouble(KEY_OP_DROP_LATITUDE);
                                     dropLongitude = jObject.getDouble(KEY_OP_DROP_LONGITUDE);
+                                    dropAddress = jObject.optString(KEY_DROP_LOCATION_ADDRESS, "");
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -1087,10 +1092,13 @@ public class JSONParser implements Constants {
                 Data.autoData.setcDriverId(userId);
 
                 Data.autoData.setPickupLatLng(new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude)));
+                Data.autoData.setPickupAddress(pickupAddress);
                 if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
                     Data.autoData.setDropLatLng(null);
+                    Data.autoData.setDropAddress("");
                 } else{
                     Data.autoData.setDropLatLng(new LatLng(dropLatitude, dropLongitude));
+                    Data.autoData.setDropAddress(dropAddress);
                 }
 
                 double dLatitude = Double.parseDouble(latitude);
@@ -1404,15 +1412,19 @@ public class JSONParser implements Constants {
                 double dropLongitude = jObject1.getDouble(KEY_OP_DROP_LONGITUDE);
                 if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
                     Data.autoData.setDropLatLng(null);
+                    Data.autoData.setDropAddress("");
                 } else{
                     Data.autoData.setDropLatLng(new LatLng(dropLatitude, dropLongitude));
+                    Data.autoData.setDropAddress(jObject1.optString(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress()));
                 }
 			} else{
                 Data.autoData.setDropLatLng(null);
+                Data.autoData.setDropAddress("");
 			}
         } catch (Exception e) {
             e.printStackTrace();
             Data.autoData.setDropLatLng(null);
+            Data.autoData.setDropAddress("");
         }
     }
 
