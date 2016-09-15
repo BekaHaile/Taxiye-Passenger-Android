@@ -35,7 +35,6 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.AppSwitcher;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
 import product.clicklabs.jugnoo.utils.CleverTapUtils;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 
