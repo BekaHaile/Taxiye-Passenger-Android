@@ -307,8 +307,8 @@ public class JSONParser implements Constants {
             String poolDestinationPopupText1 = autoData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
             String poolDestinationPopupText2 = autoData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
             String poolDestinationPopupText3 = autoData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
-            int rideEndGoodFeedbackViewType = autoData.optInt("ride_end_good_feedback_view_type", RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-            String rideEndGoodFeedbackText = autoData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+            int rideEndGoodFeedbackViewType = autoData.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+            String rideEndGoodFeedbackText = autoData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
             String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
 
             Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));
@@ -362,6 +362,18 @@ public class JSONParser implements Constants {
     }
 
     public void parseMealsData(Context context, JSONObject jMealsData, LoginResponse.Meals mealsData) {
+        try {
+            int pendingFeedback = jMealsData.optInt(KEY_PENDING_FEEDBACK, 0);
+            String orderId = jMealsData.optString(KEY_FEEDBACK_ORDER_ID, "");
+            double amount = jMealsData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
+            String feedbackDeliveryDate = jMealsData.optString(KEY_FEEDBACK_DATE, "");
+            int feedbackViewType = jMealsData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+            String rideEndGoodFeedbackText = jMealsData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
+
+            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         try {
             if(Data.getMealsData().getPromoCoupons() == null){
@@ -377,18 +389,6 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
 
-        try {
-            int pendingFeedback = jMealsData.optInt(KEY_PENDING_FEEDBACK, 0);
-            String orderId = jMealsData.optString(KEY_FEEDBACK_ORDER_ID, "");
-            double amount = jMealsData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
-            String feedbackDeliveryDate = jMealsData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jMealsData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
-            String rideEndGoodFeedbackText = jMealsData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
-
-            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void parseFreshData(Context context, JSONObject jFatafatData, LoginResponse.Fresh freshData){
@@ -399,9 +399,9 @@ public class JSONParser implements Constants {
             int pendingFeedback = jFatafatData.optInt(KEY_PENDING_FEEDBACK, 0);
             double amount = jFatafatData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
             String feedbackDeliveryDate = jFatafatData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
+            int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             int isFatafatEnabled = jFatafatData.optInt(KEY_FATAFAT_ENABLED, 1);
-            String rideEndGoodFeedbackText = jFatafatData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+            String rideEndGoodFeedbackText = jFatafatData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
 
             PopupData popupData = null;
             try {
@@ -486,10 +486,11 @@ public class JSONParser implements Constants {
 
         parseFindDriverResp(loginResponse.getAutos());
 
-
         //Fetching user current status
         JSONObject jUserStatusObject = jObj.getJSONObject(KEY_AUTOS).getJSONObject(KEY_STATUS);
         String resp = parseCurrentUserStatus(context, loginResponse.getAutos().getCurrentUserStatus(), jUserStatusObject);
+
+        parseRateAppFlagContent(jUserDataObject);
 
         parseCancellationReasons(loginResponse.getAutos());
         parseFeedbackReasonArrayList(loginResponse.getAutos());
@@ -736,10 +737,8 @@ public class JSONParser implements Constants {
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no")));
 
             try {
-                if (jLastRideData.has("rate_app")) {
-                    Data.autoData.setCustomerRateAppFlag(jLastRideData.getInt("rate_app"));
-                    Data.autoData.setRateAppDialogContent(parseRateAppDialogContent(jLastRideData));
-                }
+                int rideEndGoodFeedbackViewType = jLastRideData.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+                Data.autoData.setRideEndGoodFeedbackViewType(rideEndGoodFeedbackViewType);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1435,13 +1434,15 @@ public class JSONParser implements Constants {
                     jRA.getString(KEY_TEXT),
                     jRA.getString(KEY_CONFIRM_BUTTON_TEXT),
                     jRA.getString(KEY_CANCEL_BUTTON_TEXT),
+                    jRA.getString(KEY_NEVER_BUTTON_TEXT),
                     jRA.getString(KEY_URL));
         } catch(Exception e){
             e.printStackTrace();
-            return new RateAppDialogContent("Rate Us",
-                    "Liked our services!!! Please rate us on Play Store",
-                    "RATE NOW",
-                    "LATER",
+            return new RateAppDialogContent("Glad you liked our services",
+                    "Do you find Jugnoo useful?\nIf yes, we would appreciate if you could rate us on the Play Store",
+                    "Rate Now",
+                    "Not Now",
+                    "Never Ask Again",
                     "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo") ;
         }
     }
@@ -1553,6 +1554,31 @@ public class JSONParser implements Constants {
             // for send location to clevertap
             MyApplication.getInstance().setLocationToCleverTap();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void parseRateAppFlagContent(JSONObject jsonObject){
+        try {
+            if (jsonObject.has(KEY_RATE_APP)) {
+                Data.userData.setCustomerRateAppFlag(jsonObject.getInt(KEY_RATE_APP));
+            }
+            if(jsonObject.has(KEY_RATE_APP_DIALOG_CONTENT)){
+                Data.userData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jsonObject));
+            }
+            if(Data.userData.getCustomerRateAppFlag() == 1){
+                if(Data.autoData != null) {
+                    Data.autoData.setRideEndGoodFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                }
+                if(Data.getMealsData() != null) {
+                    Data.getMealsData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                }
+                if(Data.getFreshData() != null) {
+                    Data.getFreshData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

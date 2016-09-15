@@ -157,6 +157,7 @@ import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PoolIntroDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
+import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
@@ -1517,33 +1518,37 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewThumbsUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                rating = 5;
-                //imageViewThumbsDown.clearAnimation();
-                //imageViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_up));
-                //textViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
-
-                //setZeroRatingView();
-                if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
-                            +FirebaseEvents.RATING_5, bundle);
-                    thumbsUpGifStartTime = System.currentTimeMillis();
+                try {
                     rating = 5;
-                    submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-                            rating, "", "");
-                    if(Data.userData != null){
-                        if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
-                            endRideWithImages(R.drawable.ride_end_image_1);
-                        } else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()){
-                            endRideWithImages(R.drawable.ride_end_image_2);
-                        } else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()){
-                            endRideWithImages(R.drawable.ride_end_image_3);
-                        } else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()){
-                            endRideWithImages(R.drawable.ride_end_image_4);
-                        } else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
-                            endRideWithGif();
-                        }
-                    }
+                    //imageViewThumbsDown.clearAnimation();
+                    //imageViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_up));
+                    //textViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
+
+                    //setZeroRatingView();
+                    if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+						Bundle bundle = new Bundle();
+						MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
+								+FirebaseEvents.RATING_5, bundle);
+						thumbsUpGifStartTime = System.currentTimeMillis();
+						rating = 5;
+						submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
+								rating, "", "");
+						if(Data.userData != null){
+							if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
+								endRideWithImages(R.drawable.ride_end_image_1);
+							} else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()){
+								endRideWithImages(R.drawable.ride_end_image_2);
+							} else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()){
+								endRideWithImages(R.drawable.ride_end_image_3);
+							} else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()){
+								endRideWithImages(R.drawable.ride_end_image_4);
+							} else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
+								endRideWithGif();
+							}
+						}
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -1551,21 +1556,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewThumbsDown.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                rating = 1;
-                //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
-                        +FirebaseEvents.RATING_1, bundle);
-                submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-                        rating, "", "");
-                Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
-                intent.putExtra(INTENT_KEY_FROM_BAD, 1);
-                intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
-                startActivity(intent);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                //imageViewThumbsUp.clearAnimation();
-                //imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
-                //textViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
+                try {
+                    rating = 1;
+                    //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
+                    Bundle bundle = new Bundle();
+                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
+							+FirebaseEvents.RATING_1, bundle);
+                    submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
+							rating, "", "");
+                    Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
+                    intent.putExtra(INTENT_KEY_FROM_BAD, 1);
+                    intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    //imageViewThumbsUp.clearAnimation();
+                    //imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
+                    //textViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
 
                 /*textViewRSWhatImprove.setVisibility(View.VISIBLE);
                 gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
@@ -1573,6 +1579,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
                 layoutParams.height = (int) (ASSL.Yscale() * 150);
                 editTextRSFeedback.setLayoutParams(layoutParams);*/
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -5136,36 +5145,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    public void acceptAppRatingRequestAPI(final Activity activity) {
-        try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("access_token", Data.userData.accessToken);
-                RestClient.getApiServices().acceptAppRatingRequest(params, new Callback<SettleUserDebt>() {
-                    @Override
-                    public void success(SettleUserDebt settleUserDebt, Response response) {
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i(TAG, "acceptAppRatingRequest response = " + responseStr);
-                        try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, "acceptAppRatingRequest error="+error.toString());
-                    }
-                });
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
@@ -5188,13 +5167,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 int flag = jObj.getInt("flag");
                                 if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
                                     try {
-                                        if (jObj.has("rate_app")) {
-                                            Data.autoData.setCustomerRateAppFlag(jObj.getInt("rate_app"));
-                                            Data.autoData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jObj));
-                                        }
+                                        int rideEndGoodFeedbackViewType = jObj.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+                                        Data.autoData.setRideEndGoodFeedbackViewType(rideEndGoodFeedbackViewType);
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
+                                    JSONParser.parseRateAppFlagContent(jObj);
 
                                     Data.userData.updateWalletBalances(jObj, false);
                                     MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(jObj);
@@ -5927,25 +5905,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void rateAppPopup(final Activity activity, final RateAppDialogContent rateAppDialogContent) {
         try {
             if(rateAppDialogContent != null) {
-                DialogPopup.alertPopupTwoButtonsWithListeners(activity, rateAppDialogContent.getTitle(), rateAppDialogContent.getText(),
-                        rateAppDialogContent.getConfirmButtonText(), rateAppDialogContent.getCancelButtonText(),
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                acceptAppRatingRequestAPI(activity);
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(rateAppDialogContent.getUrl()));
-                                activity.startActivity(intent);
-                                FlurryEventLogger.event(RATE_US_NOW_POP_RATED);
-
-                            }
-                        },
-                        new OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                FlurryEventLogger.event(RATE_US_NOW_POP_NOT_RATED);
-                            }
-                        }, false, true);
+                new RateAppDialog(activity).show(rateAppDialogContent);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -6963,8 +6923,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             switchUserScreen();
 
-            if (givenRating >= 4 && Data.autoData.getCustomerRateAppFlag()== 1) {
-                rateAppPopup(HomeActivity.this, Data.autoData.getRateAppDialogContent());
+            if (givenRating >= 4 && Data.userData.getCustomerRateAppFlag() == 1) {
+                rateAppPopup(HomeActivity.this, Data.userData.getRateAppDialogContent());
             }
             firstTimeZoom = false;
             dropLocationSearchText = "";

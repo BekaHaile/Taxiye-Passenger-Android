@@ -21,7 +21,6 @@ public class FreshData {
 	private int isFatafatEnabled;
 
 
-
 	public FreshData(String question, String orderId, int questionType, int pendingFeedback,
 					 ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate,
 					 int feedbackViewType, int isFatafatEnabled, String rideEndGoodFeedbackText) {
@@ -133,4 +132,5 @@ public class FreshData {
 	public void setRideEndGoodFeedbackText(String rideEndGoodFeedbackText) {
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 	}
+
 }

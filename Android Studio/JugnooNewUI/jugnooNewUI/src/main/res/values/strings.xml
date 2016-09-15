@@ -1126,6 +1126,14 @@
 	<string name="freecharge_low_cash">Your FreeCharge cash is low</string>
 	<string name="freecharge_error_case_select_cash">We are not able to connect to FreeCharge</string>
 	<string name="freecharge_no_cash">You do not have money in your\nFreeCharge Account</string>
+	<string name="yes">Yes</string>
+	<string name="never">Never</string>
+	<string name="maybe_later">Maybe Later</string>
+	<string name="yes_rate_it_now">Yes Rate it now!</string>
+	<string name="rate_app_dialog_message">Do you find Jugnoo useful?\nIf yes, we would appreciate if you could rate us on the Play Store</string>
+	<string name="rate_now">Rate Now</string>
+	<string name="not_now">Not Now</string>
+	<string name="never_ask_again">Never Ask Again</string>
 
 
 </resources>
