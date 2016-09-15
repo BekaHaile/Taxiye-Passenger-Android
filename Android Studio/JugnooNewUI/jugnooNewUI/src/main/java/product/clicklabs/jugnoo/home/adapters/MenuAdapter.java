@@ -326,6 +326,15 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     holder.imageViewArrow.setRotation(270);
                 }
             });
+
+            holder.linearLayoutSubGrocery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickAction(MenuInfoTags.GROCERY.getTag());
+                    holder.imageViewArrow.setRotation(270);
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                }
+            });
         }
 
     }
@@ -550,6 +559,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), getLatLng(), false);
             }
+            else if(MenuInfoTags.GROCERY.getTag().equalsIgnoreCase(tag)){
+                drawerLayout.closeDrawer(GravityCompat.START);
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getGroceryClientId(), getLatLng(), false);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -587,6 +600,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     } else {
                         holder.linearLayoutSubDelivery.setVisibility(View.GONE);
                     }
+
+                    if(Data.userData.getGroceryEnabled() == 1){
+                        holder.linearLayoutSubGrocery.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.linearLayoutSubGrocery.setVisibility(View.GONE);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -613,8 +632,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public class ViewHeaderHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
         public ImageView imageViewProfile, imageViewArrow;
-        public TextView textViewUserName, textViewViewPhone, textViewCategories, textViewAutos, textViewFresh, textViewMeals, textViewDelivery;
-        public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubDelivery, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos;
+        public TextView textViewUserName, textViewViewPhone, textViewCategories, textViewAutos, textViewFresh, textViewMeals, textViewDelivery, textViewGrocery;
+        public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubDelivery, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos,
+            linearLayoutSubGrocery;
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
@@ -626,6 +646,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             textViewFresh = (TextView) convertView.findViewById(R.id.textViewFresh); textViewFresh.setTypeface(Fonts.mavenRegular(context));
             textViewMeals = (TextView) convertView.findViewById(R.id.textViewMeals); textViewMeals.setTypeface(Fonts.mavenRegular(context));
             textViewDelivery = (TextView) convertView.findViewById(R.id.textViewDelivery); textViewDelivery.setTypeface(Fonts.mavenRegular(context));
+            textViewGrocery = (TextView) convertView.findViewById(R.id.textViewGrocery); textViewGrocery.setTypeface(Fonts.mavenRegular(context));
             linearLayoutCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutCategories);
             linearLayoutSubCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubCategories);
             imageViewArrow = (ImageView) convertView.findViewById(R.id.imageViewArrow);
@@ -633,6 +654,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             linearLayoutSubFresh = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubFresh);
             linearLayoutSubMeals = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubMeals);
             linearLayoutSubDelivery = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubDelivery);
+            linearLayoutSubGrocery = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubGrocery);
         }
     }
 

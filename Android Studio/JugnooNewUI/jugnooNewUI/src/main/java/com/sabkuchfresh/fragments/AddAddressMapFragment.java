@@ -169,6 +169,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         scrollViewSearch.setVisibility(View.GONE);
         centerPivot = (ImageView) rootView.findViewById(R.id.centerPivot);
         locationPointer = (ImageView) rootView.findViewById(R.id.locationPointer);
+
         linearLayoutSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -417,7 +418,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
     private void locationGotNow() {
         relativeLayoutLocationError.setVisibility(View.GONE);
-        searchAddress.setVisibility(View.VISIBLE);
+        searchAddress.setVisibility(View.GONE);
         layoutAddLocation.setVisibility(View.VISIBLE);
         centerPivot.setVisibility(View.VISIBLE);
         locationPointer.setVisibility(View.VISIBLE);

@@ -30,6 +30,7 @@ public class FABView {
     public FloatingActionButton fabMeals;
     public FloatingActionButton fabFresh;
     public FloatingActionButton fabAutos;
+    public FloatingActionButton fabGrocery;
     public View fabExtra;
 
     public FABView(Activity activity) {
@@ -45,14 +46,17 @@ public class FABView {
         fabMeals = (FloatingActionButton) activity.findViewById(R.id.fabMeals);
         fabFresh = (FloatingActionButton) activity.findViewById(R.id.fabFresh);
         fabAutos = (FloatingActionButton) activity.findViewById(R.id.fabAutos);
+        fabGrocery = (FloatingActionButton) activity.findViewById(R.id.fabGrocery);
         fabExtra = (View) activity.findViewById(R.id.fabExtra);
         //fabExtra.setVisibility(View.GONE);
         menuLabelsRight.setIconAnimated(false);
         fabDelivery.setLabelTextColor(activity.getResources().getColor(R.color.black));
         fabMeals.setLabelTextColor(activity.getResources().getColor(R.color.black));
         fabFresh.setLabelTextColor(activity.getResources().getColor(R.color.black));
+        fabGrocery.setLabelTextColor(activity.getResources().getColor(R.color.black));
         fabAutos.setLabelTextColor(activity.getResources().getColor(R.color.black));
         fabDelivery.setOnClickListener(clickListener);
+        fabGrocery.setOnClickListener(clickListener);
         fabMeals.setOnClickListener(clickListener);
         fabFresh.setOnClickListener(clickListener);
         fabAutos.setOnClickListener(clickListener);
@@ -165,6 +169,8 @@ public class FABView {
                 menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_fresh_test);
             } else if(Config.getMealsClientId().equalsIgnoreCase(currentOpenedOffering)){
                 menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_meals_test);
+            } else if(Config.getGroceryClientId().equalsIgnoreCase(currentOpenedOffering)){
+                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_grocery_test);
             }
         } else {
             menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_menu_selector);
@@ -179,6 +185,8 @@ public class FABView {
         } else if(Config.getMealsClientId().equalsIgnoreCase(currentOpenedOffering)){
             fabMeals.setVisibility(View.GONE);
             //fabAutos.setVisibility(View.VISIBLE);
+        } else if(Config.getGroceryClientId().equalsIgnoreCase(currentOpenedOffering)){
+            fabGrocery.setVisibility(View.GONE);
         }
 
         //setFABButtons();
@@ -203,11 +211,18 @@ public class FABView {
                     fabMeals.setVisibility(View.GONE);
                 }
 
+                if(Data.userData.getGroceryEnabled() == 1){
+                    fabGrocery.setVisibility(View.VISIBLE);
+                } else{
+                    fabGrocery.setVisibility(View.GONE);
+                }
+
                 if (Data.userData.getDeliveryEnabled() == 1) {
                     fabDelivery.setVisibility(View.VISIBLE);
                 } else {
                     fabDelivery.setVisibility(View.GONE);
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -258,6 +273,17 @@ public class FABView {
                         }
                     }, 250);
                     break;
+                case R.id.fabGrocery:
+                    //Toast.makeText(HomeActivity.this, "Autos", Toast.LENGTH_SHORT).show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.GROCERY, null);
+                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getGroceryClientId(), finalLatLng, false);
+                        }
+                    }, 250);
+                    break;
+
             }
             fabExtra.performClick();
         }

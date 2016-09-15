@@ -504,7 +504,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                 && activity.getUserCheckoutResponse().getCheckoutData() != null
                 && activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses() != null
                 && activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses().size() > 0) {
-            activity.getTransactionUtils().openAddressFragment(activity, activity.getRelativeLayoutContainer());
+            activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
         } else {
             activity.openMapAddress();
         }

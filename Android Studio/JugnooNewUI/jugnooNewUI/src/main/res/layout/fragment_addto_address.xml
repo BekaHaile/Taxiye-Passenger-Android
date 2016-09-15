@@ -1,11 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/root"
-                android:layout_width="720px"
-                android:layout_height="1134px"
-                android:background="@color/white"
-                >
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="720px"
+    android:layout_height="1134px"
+    android:background="@color/white">
 
 
     <ScrollView
@@ -17,9 +15,7 @@
             android:id="@+id/linearLayoutMain"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
+            android:orientation="vertical">
 
 
             <LinearLayout
@@ -27,14 +23,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="324px"
 
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
+
                 <fragment
                     android:id="@+id/addressmapView"
                     class="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                     />
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
             <LinearLayout
@@ -73,7 +68,7 @@
                         android:padding="15px"
                         android:src="@drawable/edit_icon_selector"
                         android:tag="mwar"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
 
@@ -108,7 +103,7 @@
                         android:padding="15px"
                         android:src="@drawable/edit_icon_selector"
                         android:tag="mwar"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ImageView
@@ -133,6 +128,7 @@
                         android:textColor="@color/black_text"
                         android:textCursorDrawable="@null"
                         android:textSize="30px" />
+
                     <ImageView
                         android:id="@+id/imageViewEditArea"
                         android:layout_width="68px"
@@ -141,7 +137,7 @@
                         android:padding="15px"
                         android:src="@drawable/edit_icon_selector"
                         android:tag="mwar"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ImageView
@@ -172,9 +168,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="90px"
                     android:background="@null"
+                    android:digits="1234567890"
                     android:hint="@string/pin_code_hint"
                     android:inputType="textFilter|number"
-                    android:digits="1234567890"
                     android:maxLength="6"
                     android:paddingLeft="25px"
                     android:singleLine="true"
@@ -196,9 +192,9 @@
                 android:layout_height="100px"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="70px"
                 android:layout_marginTop="70px"
-                android:layout_gravity="center_horizontal"
                 android:background="@drawable/button_yellow_selector"
                 android:text="@string/add_address_to_address_book"
                 android:textColor="@drawable/text_color_white_alpha_selector"
@@ -208,8 +204,7 @@
                 android:id="@+id/textViewScroll"
                 android:layout_width="20px"
                 android:layout_height="20px"
-                android:text=" "
-                />
+                android:text=" " />
 
 
         </LinearLayout>

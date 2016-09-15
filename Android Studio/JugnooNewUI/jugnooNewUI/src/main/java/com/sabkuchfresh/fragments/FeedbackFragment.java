@@ -104,7 +104,14 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 				orderId = Data.getMealsData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
-			} else {
+			}else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                viewType = Data.getGroceryData().getFeedbackViewType();
+                dateValue = Data.getGroceryData().getFeedbackDeliveryDate();
+                orderAmount = Data.getGroceryData().getAmount();
+                orderId = Data.getGroceryData().getOrderId();
+                activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+                endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
+            } else {
 				activity.finish();
 			}
         } catch (Exception e) {
@@ -163,6 +170,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
         if(Config.getFreshClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.feedback_fresh);
+        } else if(Config.getGroceryClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+            imageviewType.setImageResource(R.drawable.feedback_grocery);
         } else {
             imageviewType.setImageResource(R.drawable.feedback_meals);
         }
@@ -309,6 +318,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 Data.getFreshData().setPendingFeedback(0);
             } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
                 Data.getMealsData().setPendingFeedback(0);
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                Data.getGroceryData().setPendingFeedback(0);
             } else {
                 activity.finish();
             }

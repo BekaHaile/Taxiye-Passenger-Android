@@ -177,6 +177,19 @@ public class AppSwitcher {
 					new ApiUpdateClientId().updateClientId(clientId);
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				}
+			} else if (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && !(activity instanceof FreshActivity)) {
+				if (Data.getGroceryData() == null) {
+					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+							callback);
+				} else {
+					intent.setClass(activity, FreshActivity.class);
+					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					activity.finish();
+
+					new ApiUpdateClientId().updateClientId(clientId);
+					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				}
 			} else if (activity instanceof FreshActivity && !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))) {
 				if (Data.getFreshData() == null) {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,

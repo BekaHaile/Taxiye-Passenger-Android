@@ -6,6 +6,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ public class TopBar implements FlurryEventNames {
 	public RelativeLayout relativeLayoutNotification;
 	public TextView textViewNotificationValue;
 	public ImageView imageViewBack, imageViewDelete, imageViewNotification;//, imageViewSearch;
+	public EditText editTextDeliveryAddress;
 
 
 	public TopBar(Activity activity, DrawerLayout drawerLayout){
@@ -66,6 +68,7 @@ public class TopBar implements FlurryEventNames {
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
         imageViewNotification = (ImageView) drawerLayout.findViewById(R.id.imageViewNotification);
+		editTextDeliveryAddress = (EditText) drawerLayout.findViewById(R.id.editTextDeliveryAddress);
 //		imageViewSearch = (ImageView)drawerLayout.findViewById(R.id.imageViewSearch);
 
 		//Top bar events

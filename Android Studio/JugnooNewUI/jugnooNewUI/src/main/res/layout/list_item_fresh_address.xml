@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutLast"
         android:layout_width="match_parent"
-        android:layout_height="110px"
-        >
+        android:layout_height="110px">
 
         <TextView
             android:id="@+id/textViewLast"
@@ -17,25 +16,26 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
+            android:layout_toLeftOf="@+id/imageViewEditOther"
             android:layout_toRightOf="@+id/imageViewLast"
             android:gravity="center_vertical"
             android:lineSpacingExtra="2px"
             android:maxLines="2"
             android:paddingRight="20px"
-            android:layout_toLeftOf="@+id/imageViewEditOther"
             android:tag="mwar"
             android:text="@string/last"
             android:textColor="@color/text_color"
-            android:textSize="28px"/>
+            android:textSize="28px" />
 
         <ImageView
             android:id="@+id/imageViewLast"
-            android:layout_width="36px"
-            android:layout_height="34px"
+            android:layout_width="50px"
+            android:layout_height="50px"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:src="@drawable/ic_loc_other"
             android:layout_marginLeft="30px"
-            android:tag="mwar"/>
+            android:tag="mwar" />
 
         <ImageView
             android:id="@+id/imageViewEditOther"
@@ -47,20 +47,19 @@
             android:padding="15px"
             android:src="@drawable/edit_icon_selector"
             android:tag="mwar"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <ImageView
+            android:id="@+id/imageViewDivider"
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:src="@color/text_color_hint"/>
+            android:src="@color/stroke_light_grey_alpha" />
     </RelativeLayout>
 
     <Button
         android:id="@+id/add_button"
-        android:visibility="gone"
         android:layout_width="450px"
         android:layout_height="100px"
         android:layout_gravity="center_horizontal"
@@ -69,5 +68,5 @@
         android:text="ADD NEW ADDRESS"
         android:textColor="@color/white"
         android:textSize="35px"
-        />
+        android:visibility="gone" />
 </LinearLayout>

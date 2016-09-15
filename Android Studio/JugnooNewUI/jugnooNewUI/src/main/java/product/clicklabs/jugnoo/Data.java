@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.DeliveryData;
 import product.clicklabs.jugnoo.datastructure.FreshData;
+import product.clicklabs.jugnoo.datastructure.GroceryData;
 import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -90,6 +91,7 @@ public class Data {
 	public static AutoData autoData;
 	private static FreshData freshData;
 	private static MealsData mealsData;
+	private static GroceryData groceryData;
 	private static DeliveryData DeliveryData;
 
 	
@@ -414,6 +416,14 @@ public class Data {
 
 	public static void setFreshData(FreshData freshData){
 		Data.freshData = freshData;
+	}
+
+	public static GroceryData getGroceryData(){
+		return groceryData;
+	}
+
+	public static void setGroceryData(GroceryData groceryData){
+		Data.groceryData = groceryData;
 	}
 
 	public static MealsData getMealsData() {

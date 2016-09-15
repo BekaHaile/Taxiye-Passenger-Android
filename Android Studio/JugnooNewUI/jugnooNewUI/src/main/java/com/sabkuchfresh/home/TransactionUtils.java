@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
+import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
 import com.sabkuchfresh.fragments.FreshCartItemsFragment;
@@ -56,6 +57,19 @@ public class TransactionUtils {
 					.add(container.getId(), new FreshAddressFragment(),
 							FreshAddressFragment.class.getName())
 					.addToBackStack(FreshAddressFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openDeliveryAddressFragment(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, DeliveryAddressesFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+					.add(container.getId(), new DeliveryAddressesFragment(),
+							DeliveryAddressesFragment.class.getName())
+					.addToBackStack(DeliveryAddressesFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();

@@ -18,6 +18,7 @@ public enum MenuInfoTags {
     OFFERS("offers"),
     FRESH("fresh"),
     MEALS("meals"),
+    GROCERY("grocery"),
     DELIVERY("delivery");
 
     private String tag;

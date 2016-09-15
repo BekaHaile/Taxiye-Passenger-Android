@@ -57,7 +57,7 @@ public class UserData {
 	private int freeChargeEnabled;
 	private double freeChargeBalance = -1;
 
-	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, inviteFriendButton;
+	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, inviteFriendButton;
 
 	private ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
 	private int currentCity = 1;
@@ -87,7 +87,7 @@ public class UserData {
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
-					int mealsEnabled, int freshEnabled, int deliveryEnabled, int inviteFriendButton, String defaultClientId,
+					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
@@ -149,6 +149,7 @@ public class UserData {
 
 		this.mealsEnabled = mealsEnabled;
 		this.freshEnabled = freshEnabled;
+		this.groceryEnabled = groceryEnabled;
 		this.deliveryEnabled = deliveryEnabled;
 
 		this.inviteFriendButton = inviteFriendButton;
@@ -604,6 +605,14 @@ public class UserData {
 
 	public void setFreshEnabled(int freshEnabled) {
 		this.freshEnabled = freshEnabled;
+	}
+
+	public int getGroceryEnabled() {
+		return groceryEnabled;
+	}
+
+	public void setGroceryEnabled(int groceryEnabled) {
+		this.groceryEnabled = groceryEnabled;
 	}
 
 	public int getDeliveryEnabled() {

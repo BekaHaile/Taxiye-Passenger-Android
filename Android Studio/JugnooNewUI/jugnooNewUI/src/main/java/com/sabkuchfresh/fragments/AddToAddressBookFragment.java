@@ -119,6 +119,8 @@ public class AddToAddressBookFragment extends Fragment {
             areaReceived = homeActivity.current_area;
         homeAddressReceived = homeActivity.current_street;
         buildingStreetReceived = homeActivity.current_route;
+
+        homeActivity.fragmentUISetup(this);
 //
 //
 //
@@ -385,9 +387,9 @@ public class AddToAddressBookFragment extends Fragment {
                             homeActivity.setSelectedAddress(localAddress);
                             Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_address_selected), 3);
 
-                            FreshAddressFragment freshAddressFragment = homeActivity.getFreshAddressFragment();
-                            if(freshAddressFragment != null) {
-                                getActivity().getSupportFragmentManager().popBackStack(FreshAddressFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+                            DeliveryAddressesFragment deliveryAddressesFragment = homeActivity.getDeliveryAddressesFragment();
+                            if(deliveryAddressesFragment != null) {
+                                getActivity().getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
                             } else {
                                 getActivity().getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
                             }
@@ -427,9 +429,6 @@ public class AddToAddressBookFragment extends Fragment {
 
     }
 
-
-
-
     public Bitmap createPinMarkerBitmap() {
         float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
         int width = (int) (45.0f * scale);
@@ -441,8 +440,6 @@ public class AddToAddressBookFragment extends Fragment {
         shape.draw(canvas);
         return mDotMarkerBitmap;
     }
-
-
 
     private boolean fieldsAreFilled() {
         if (houseNumber.getText().toString().trim().length() == 0 && buildingStreetName.getText().toString().trim().length() == 0 &&

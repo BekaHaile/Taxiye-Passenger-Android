@@ -134,8 +134,9 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 								} else {
 									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 								}
-							} else if (historyData.getProductType() == ProductType.FRESH.getOrdinal() ||
-									historyData.getProductType() == ProductType.MEALS.getOrdinal()) {
+							} else if (historyData.getProductType() == ProductType.FRESH.getOrdinal()
+									|| historyData.getProductType() == ProductType.MEALS.getOrdinal()
+									|| historyData.getProductType() == ProductType.GROCERY.getOrdinal()) {
 								if (activity instanceof RideTransactionsActivity) {
 									new TransactionUtils().openOrderSummaryFragment(activity,
 											((RideTransactionsActivity) activity).getContainer(), historyData);

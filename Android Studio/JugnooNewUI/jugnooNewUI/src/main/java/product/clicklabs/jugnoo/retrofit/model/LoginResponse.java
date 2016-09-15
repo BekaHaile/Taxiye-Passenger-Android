@@ -90,6 +90,9 @@ public class LoginResponse {
 	@SerializedName("meals")
 	@Expose
 	private Meals meals;
+	@SerializedName("grocery")
+	@Expose
+	private Grocery grocery;
 	@SerializedName("delivery")
 	@Expose
 	private Delivery delivery;
@@ -161,7 +164,13 @@ public class LoginResponse {
 		this.delivery = delivery;
 	}
 
+	public Grocery getGrocery() {
+		return grocery;
+	}
 
+	public void setGrocery(Grocery grocery) {
+		this.grocery = grocery;
+	}
 
 	public class Delivery{
 		@SerializedName("promotions")
@@ -214,6 +223,31 @@ public class LoginResponse {
 	}
 
 	public class Fresh{
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+	}
+
+	public class Grocery{
 		@SerializedName("promotions")
 		@Expose
 		private List<PromotionInfo> promotions = new ArrayList<>();

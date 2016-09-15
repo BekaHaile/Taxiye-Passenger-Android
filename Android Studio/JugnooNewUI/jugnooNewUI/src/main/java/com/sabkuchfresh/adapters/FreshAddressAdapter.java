@@ -89,11 +89,17 @@ public class FreshAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 String selectedLongi = Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_loc_longi), "");;
                 String selectedAddress = activity.getSelectedAddress();
 
-                if(selectedAddress.equalsIgnoreCase(slot.getLastAddress()) && selectedLat.equalsIgnoreCase(slot.getDeliveryLatitude()) &&
+                /*if(selectedAddress.equalsIgnoreCase(slot.getLastAddress()) && selectedLat.equalsIgnoreCase(slot.getDeliveryLatitude()) &&
                         selectedLongi.equalsIgnoreCase(slot.getDeliveryLongitude())) {
                     ((ViewHolderSlot)holder).imageViewRadio.setBackgroundResource(R.drawable.ic_radio_button_selected);
                 } else {
                     ((ViewHolderSlot)holder).imageViewRadio.setBackgroundResource(R.drawable.ic_radio_button_normal);
+                }*/
+
+                if(position == slots.size()-1){
+                    ((ViewHolderSlot)holder).imageViewDivider.setVisibility(View.GONE);
+                } else{
+                    ((ViewHolderSlot)holder).imageViewDivider.setVisibility(View.VISIBLE);
                 }
 
                 ((ViewHolderSlot)holder).linear.setTag(position);
@@ -118,25 +124,26 @@ public class FreshAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
-        return slots == null ? 0 : slots.size()+1;
+        return slots == null ? 0 : slots.size();
     }
 
     @Override
     public int getItemViewType(int position) {
         if(position == slots.size()) {
-            return ADD_VIEW;
+            //return ADD_VIEW;
         }
         return MAIN_VIEW;
     }
 
     static class ViewHolderSlot extends RecyclerView.ViewHolder {
         public RelativeLayout linear;
-        private ImageView imageViewRadio;
+        private ImageView imageViewRadio, imageViewDivider;
         public TextView textViewLast;
         public ViewHolderSlot(View itemView, Activity context) {
             super(itemView);
             linear = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutLast);
             imageViewRadio = (ImageView) itemView.findViewById(R.id.imageViewLast);
+            imageViewDivider = (ImageView) itemView.findViewById(R.id.imageViewDivider);
             textViewLast = (TextView)itemView.findViewById(R.id.textViewLast);
             textViewLast.setTypeface(Fonts.mavenRegular(context));
         }
