@@ -1067,14 +1067,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(Data.userData);
             if(paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0){
                 linearLayoutWalletContainer.removeAllViews();
-                boolean cashAdded = false;
-                if(Data.userData.getPaytmEnabled() == 0
-                        && Data.userData.getMobikwikEnabled() == 0
-                        && Data.userData.getFreeChargeEnabled() == 0){
-                    linearLayoutWalletContainer.addView(linearLayoutCash);
-                    cashAdded = true;
-                }
-
                 for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
                     if(paymentModeConfigData.getEnabled() == 1) {
                         if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
@@ -1083,12 +1075,10 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                             linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(linearLayoutCash);
                         }
                     }
-                }
-
-                if(!cashAdded){
-                    linearLayoutWalletContainer.addView(linearLayoutCash);
                 }
             }
         } catch (Exception e){
