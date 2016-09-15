@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -99,6 +100,17 @@ public class Database2 {                                                        
     private static final String POKESTOP_DATA = "pokestop_data";
     private static final String UPDATED_TIMESTAMP = "updated_timestamp";
 
+    private static final String TABLE_DRIVER_LOCATIONS = "table_driver_locations";
+    private static final String ENGAGEMENT_ID = "engagement_id";
+    private static final String LAT = "lat";
+    private static final String LONG = "long";
+
+    private static final String TABLE_TRACKING_LOGS = "table_driver_locations";
+    private static final String ENGAGEMENT_ID = "engagement_id";
+    private static final String LAT = "lat";
+    private static final String LONG = "long";
+
+
 
     /**
      * Creates and opens database for the application use
@@ -175,6 +187,12 @@ public class Database2 {                                                        
                 + CITY_ID + " INTEGER, "
                 + POKESTOP_DATA + " TEXT, "
                 + UPDATED_TIMESTAMP + " REAL "
+                + ");");
+
+        database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_DRIVER_LOCATIONS + " ("
+                + ENGAGEMENT_ID + " INTEGER, "
+                + LAT + " TEXT, "
+                + LONG + " TEXT "
                 + ");");
 
     }
@@ -839,5 +857,54 @@ public class Database2 {                                                        
         return updatedTimestamp;
     }
 
+
+
+
+
+
+
+
+
+    public void insertDriverLocations(int engagementId, LatLng latLng) {
+        try{
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(ENGAGEMENT_ID, engagementId);
+            contentValues.put(LAT, String.valueOf(latLng.latitude));
+            contentValues.put(LONG, String.valueOf(latLng.longitude));
+            database.insert(TABLE_DRIVER_LOCATIONS, null, contentValues);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public JSONArray getDriverLocations(int engagementId) {
+        JSONArray jsonArray = new JSONArray();
+        try {
+            String[] columns = new String[] { LAT, LONG };
+            Cursor cursor = database.query(TABLE_DRIVER_LOCATIONS, columns, ENGAGEMENT_ID+"="+engagementId, null, null, null, null);
+            if (cursor.getCount() > 0) {
+                int in0 = cursor.getColumnIndex(LAT);
+                int in1 = cursor.getColumnIndex(LONG);
+                for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put(LAT, cursor.getString(in0));
+                    jsonObject.put(LONG, cursor.getString(in1));
+                    jsonArray.put(jsonObject);
+                }
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
+    }
+
+    public void deleteDriverLocations(){
+        try{
+            database.execSQL("delete from " + TABLE_DRIVER_LOCATIONS);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }

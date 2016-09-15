@@ -2781,6 +2781,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
                         initAndClearInRidePath();
+                        Database2.getInstance(this).deleteDriverLocations();
 
 
                         break;
@@ -3096,6 +3097,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         setFabViewAtRide(mode);
 
 //                        genieLayout.setVisibility(View.GONE);
+
+                        Log.e(TAG, "getDriverLocations>"+Database2.getInstance(this).getDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId())));
 
                         break;
 
@@ -5378,6 +5381,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
                                             Data.autoData.getAssignedDriverInfo().setEta(eta);
                                         }
+                                        Database2.getInstance(HomeActivity.this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
+
 
                                         HomeActivity.this.runOnUiThread(new Runnable() {
 
@@ -6175,6 +6180,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing));
+
+            Database2.getInstance(this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
 
             if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
                 passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
