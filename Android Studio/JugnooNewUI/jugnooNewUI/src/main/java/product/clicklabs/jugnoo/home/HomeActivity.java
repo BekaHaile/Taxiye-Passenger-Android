@@ -5197,6 +5197,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     }
 
                                     Data.userData.updateWalletBalances(jObj, false);
+                                    MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(jObj);
 
                                     Data.autoData.setEndRideData(JSONParser.parseEndRideData(jObj, engagementId, Data.autoData.getFareStructure().getFixedFare()));
 

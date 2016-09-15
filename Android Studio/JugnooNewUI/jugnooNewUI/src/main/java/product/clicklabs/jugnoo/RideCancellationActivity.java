@@ -465,6 +465,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 									DialogPopup.alertPopup(activity, "", serverMessage);
 								} else if (ApiResponseFlags.RIDE_CANCELLED_BY_CUSTOMER.getOrdinal() == flag) {
 									Data.userData.updateWalletBalances(jObj, false);
+									MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(jObj);
 
 									if (HomeActivity.appInterruptHandler != null) {
 										HomeActivity.appInterruptHandler.onCancelCompleted();

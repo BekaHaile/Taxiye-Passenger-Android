@@ -199,10 +199,12 @@ public class UserData {
 				} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()
 						&& freeChargeEnabled == 1 && freeChargeBalance > -1) {
 					walletTotal = walletTotal + freeChargeBalance;
+				} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
+					walletTotal = walletTotal + jugnooBalance;
 				}
 			}
 		}
-		return jugnooBalance + walletTotal;
+		return walletTotal;
 	}
 
 	public int getPromoSuccess() {
