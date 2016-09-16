@@ -264,7 +264,7 @@ public class JSONParser implements Constants {
 
         Data.userData.setJeanieIntroDialogContent(loginUserData.getJeanieIntroDialogContent());
 
-        MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData);
+        MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData.optJSONObject(KEY_WALLET_BALANCE));
 
         try {
             Data.userData.setEmergencyContactsList(JSONParser.parseEmergencyContacts(userData));
