@@ -16,24 +16,24 @@
         android:orientation="vertical"
         android:splitMotionEvents="false"
         android:layout_centerInParent="true"
-        android:layout_margin="40px"
+        android:layout_margin="28px"
         android:soundEffectsEnabled="false"
+        android:gravity="center_horizontal"
         >
 
         <TextView
-            android:id="@+id/textViewTitle"
+            android:id="@+id/textViewMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Glad you liked our services"
-            android:textAllCaps="true"
+            android:text="@string/rate_app_dialog_message"
             android:padding="30px"
-            android:textSize="@dimen/text_size_32"
-            android:textColor="@color/white"
-            android:background="@drawable/background_orange_tr"
+            android:textSize="@dimen/text_size_38"
+            android:textColor="@color/text_color"
+            android:background="@drawable/bg_menu_item_selector_f7_tlrr"
             android:gravity="center"/>
 
         <TextView
-            android:id="@+id/textViewMessage"
+            android:id="@+id/textViewTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/rate_app_dialog_message"
@@ -41,55 +41,44 @@
             android:textColor="@color/text_color"
             android:gravity="center"
             android:layout_margin="20px"
+            android:visibility="gone"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@color/stroke_color_light"
-            android:layout_marginTop="20px"
-            />
 
         <Button
             android:id="@+id/buttonYes"
-            android:layout_width="match_parent"
+            style="@style/ButtonTheme"
+            android:textAllCaps="false"
+            android:layout_width="400px"
             android:layout_height="80px"
-            android:textColor="@color/text_color_light_selector"
-            android:background="@color/transparent"
             android:textSize="@dimen/text_size_30"
             android:text="@string/rate_now"
+            android:layout_marginTop="36px"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@color/stroke_color_light"
-            />
 
         <Button
             android:id="@+id/buttonMaybe"
-            android:layout_width="match_parent"
+            style="@style/ButtonThemeAlternate"
+            android:textAllCaps="false"
+            android:layout_width="400px"
             android:layout_height="80px"
-            android:textColor="@color/text_color_light_selector"
-            android:background="@color/transparent"
             android:textSize="@dimen/text_size_30"
             android:text="@string/not_now"
+            android:layout_marginTop="30px"
             />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@color/stroke_color_light"
-            />
 
         <Button
             android:id="@+id/buttonNo"
-            android:layout_width="match_parent"
+            style="@style/ButtonThemeAlternate"
+            android:textAllCaps="false"
+            android:layout_width="400px"
             android:layout_height="80px"
-            android:textColor="@color/text_color_light_selector"
-            android:background="@color/transparent"
             android:textSize="@dimen/text_size_30"
             android:text="@string/never_ask_again"
+            android:layout_marginTop="30px"
+            android:layout_marginBottom="36px"
             />
 
     </LinearLayout>

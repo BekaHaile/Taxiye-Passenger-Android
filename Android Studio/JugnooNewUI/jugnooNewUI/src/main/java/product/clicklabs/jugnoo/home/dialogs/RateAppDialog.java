@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -53,9 +54,10 @@ public class RateAppDialog {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(true);
 
+			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			TextView textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 			TextView textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage); textViewMessage.setTypeface(Fonts.mavenMedium(activity));
 			Button buttonYes = (Button) dialog.findViewById(R.id.buttonYes); buttonYes.setTypeface(Fonts.mavenRegular(activity));
@@ -99,6 +101,19 @@ public class RateAppDialog {
 				public void onClick(View v) {
 					dialog.dismiss();
 					acceptAppRatingRequestAPI(activity, AppRatingTypeValue.NEVER);
+				}
+			});
+
+			linearLayoutInner.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+				}
+			});
+
+			relative.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
 				}
 			});
 
