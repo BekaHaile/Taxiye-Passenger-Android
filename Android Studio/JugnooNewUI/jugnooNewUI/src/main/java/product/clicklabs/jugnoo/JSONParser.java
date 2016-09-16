@@ -473,9 +473,9 @@ public class JSONParser implements Constants {
             int pendingFeedback = jGroceryData.optInt(KEY_PENDING_FEEDBACK, 0);
             double amount = jGroceryData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
             String feedbackDeliveryDate = jGroceryData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jGroceryData.optInt(KEY_FEEDBACK_VIEW_TYPE, 0);
+            int feedbackViewType = jGroceryData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             int isFatafatEnabled = jGroceryData.optInt(KEY_FATAFAT_ENABLED, 1);
-            String rideEndGoodFeedbackText = jGroceryData.optString("ride_end_good_feedback_text", context.getResources().getString(R.string.end_ride_with_image_text));
+            String rideEndGoodFeedbackText = jGroceryData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
 
             PopupData popupData = null;
             try {
@@ -1665,6 +1665,9 @@ public class JSONParser implements Constants {
                 }
                 if(Data.getFreshData() != null) {
                     Data.getFreshData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                }
+                if(Data.getGroceryData() != null) {
+                    Data.getGroceryData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
                 }
             }
         } catch (Exception e) {
