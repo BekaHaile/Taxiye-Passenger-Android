@@ -73,6 +73,7 @@
 	<string name="last_name">Last Name</string>
 	<string name="phone_number">Phone Number</string>
 	<string name="confirm_password">Confirm Password</string>
+	<string name="confirm_address">Confirm Address</string>
 	<string name="confirm_ride">Confirm Ride</string>
 	<string name="confirm_request">Confirm Request</string>
 	

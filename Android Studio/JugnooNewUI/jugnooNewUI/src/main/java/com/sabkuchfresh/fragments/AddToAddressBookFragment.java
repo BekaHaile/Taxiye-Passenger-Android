@@ -221,9 +221,6 @@ public class AddToAddressBookFragment extends Fragment {
 
 
     private void initializeMap() {
-
-
-
         if (googleMap == null) {
             ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.addressmapView)).getMapAsync(new OnMapReadyCallback() {
                 @Override
@@ -432,10 +429,10 @@ public class AddToAddressBookFragment extends Fragment {
     public Bitmap createPinMarkerBitmap() {
         float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
         int width = (int) (45.0f * scale);
-        int height = (int) (74.97f * scale);
+        int height = (int) (85.0f * scale);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(mDotMarkerBitmap);
-        Drawable shape = homeActivity.getResources().getDrawable(R.drawable.pin_ball);
+        Drawable shape = homeActivity.getResources().getDrawable(R.drawable.ic_delivery_address_map);
         shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
         shape.draw(canvas);
         return mDotMarkerBitmap;
