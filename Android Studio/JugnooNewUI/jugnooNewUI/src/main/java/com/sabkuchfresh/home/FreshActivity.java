@@ -910,7 +910,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				relativeLayoutCart.setVisibility(View.VISIBLE);
 
 				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.setText(getResources().getString(R.string.address));
+                if(fragment instanceof AddToAddressBookFragment){
+                    topBar.title.setText(getResources().getString(R.string.confirm_address));
+                } else {
+                    topBar.title.setText(getResources().getString(R.string.address));
+                }
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 			} else if(fragment instanceof DeliveryAddressesFragment){

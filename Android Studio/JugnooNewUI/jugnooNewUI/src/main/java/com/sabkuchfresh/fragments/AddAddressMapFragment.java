@@ -85,7 +85,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
     public static final double FIX_ZOOM_DIAGONAL = 408;
 
-    Button getMyLocation;
+    Button getMyLocation, buttonOk;
     TextView buttonAddLocation;
     String PIN;
     String City;
@@ -169,13 +169,14 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         scrollViewSearch.setVisibility(View.GONE);
         centerPivot = (ImageView) rootView.findViewById(R.id.centerPivot);
         locationPointer = (ImageView) rootView.findViewById(R.id.locationPointer);
+        buttonOk = (Button)rootView.findViewById(R.id.buttonOk);
 
         linearLayoutSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(editTextSearch.getText().toString().length() < 1) {
                     scrollViewSearch.setVisibility(View.GONE);
-                    layoutAddLocation.setVisibility(View.VISIBLE);
+                    layoutAddLocation.setVisibility(View.GONE);
                     centerPivot.setVisibility(View.VISIBLE);
                     locationPointer.setVisibility(View.VISIBLE);
                     homeActivity.locationSearchShown = false;
@@ -207,7 +208,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
         geocoder = new Geocoder(getActivity(), Locale.getDefault());
 
-        searchAddress.setOnClickListener(new View.OnClickListener() {
+        /*searchAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 scrollViewSearch.setVisibility(View.VISIBLE);
@@ -223,18 +224,28 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                 }
                 homeActivity.locationSearchShown = true;
             }
-        });
+        });*/
 
         layoutAddLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(unsatflag) {
                     homeActivity.openAddToAddressBook();
                 } else {
                     Toast.makeText(homeActivity, "Please wait...", Toast.LENGTH_SHORT).show();
                 }
 
+            }
+        });
+
+        buttonOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(unsatflag) {
+                    homeActivity.openAddToAddressBook();
+                } else {
+                    Toast.makeText(homeActivity, "Please wait...", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -289,7 +300,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         locationUpdate = true;
                         editTextSearch.setText("");
                         scrollViewSearch.setVisibility(View.GONE);
-                        layoutAddLocation.setVisibility(View.VISIBLE);
+                        layoutAddLocation.setVisibility(View.GONE);
                         centerPivot.setVisibility(View.VISIBLE);
                         locationPointer.setVisibility(View.VISIBLE);
                         homeActivity.locationSearchShown = false;
@@ -418,8 +429,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
     private void locationGotNow() {
         relativeLayoutLocationError.setVisibility(View.GONE);
-        searchAddress.setVisibility(View.GONE);
-        layoutAddLocation.setVisibility(View.VISIBLE);
+        searchAddress.setVisibility(View.VISIBLE);
+        layoutAddLocation.setVisibility(View.GONE);
         centerPivot.setVisibility(View.VISIBLE);
         locationPointer.setVisibility(View.VISIBLE);
         getMyLocation.setVisibility(View.VISIBLE);
@@ -434,7 +445,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
     public void closeLayout() {
         scrollViewSearch.setVisibility(View.GONE);
-        layoutAddLocation.setVisibility(View.VISIBLE);
+        layoutAddLocation.setVisibility(View.GONE);
         centerPivot.setVisibility(View.VISIBLE);
         locationPointer.setVisibility(View.VISIBLE);
         homeActivity.locationSearchShown = false;
@@ -696,6 +707,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                                 route = geocodeResponse.results.get(0).getRoute() + ", ";
 
                             mAddressName.setText("For\n"+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+homeActivity.current_city);
+                            //mAddressName.setText("For\n"+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+homeActivity.current_city);asdf
                             textVeiwSearch.setText(""+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+homeActivity.current_city);
 
                         } catch (Exception e) {
@@ -758,7 +770,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         if(addressSearch.selection == 1) {
             editTextSearch.setText("");
             scrollViewSearch.setVisibility(View.GONE);
-            layoutAddLocation.setVisibility(View.VISIBLE);
+            layoutAddLocation.setVisibility(View.GONE);
             centerPivot.setVisibility(View.VISIBLE);
             locationPointer.setVisibility(View.VISIBLE);
             homeActivity.locationSearchShown = false;

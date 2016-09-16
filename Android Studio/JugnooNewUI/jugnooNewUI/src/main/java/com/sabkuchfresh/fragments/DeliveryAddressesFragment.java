@@ -146,13 +146,14 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         @Override
                         public void onLatLngReceived(LatLng latLng) {
                             if(latLng != null) {
-                                Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(latLng.latitude));
+                                /*Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(latLng.latitude));
                                 Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(latLng.longitude));
                                 Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), "" + searchResult.getAddress());
 
                                 activity.setSelectedAddress("" + searchResult.getAddress());
                                 mBus.post(new AddressAdded(true));
-                                activity.performBackPressed();
+                                activity.performBackPressed();*/
+                                fillAddressDetails(latLng);
                             }
                         }
                     });
@@ -172,13 +173,14 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         @Override
                         public void onLatLngReceived(LatLng latLng) {
                             if(latLng != null) {
-                                Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(latLng.latitude));
+                                /*Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(latLng.latitude));
                                 Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(latLng.longitude));
                                 Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), "" + searchResult.getAddress());
 
                                 activity.setSelectedAddress("" + searchResult.getAddress());
                                 mBus.post(new AddressAdded(true));
-                                activity.performBackPressed();
+                                activity.performBackPressed();*/
+                                fillAddressDetails(latLng);
                             }
                         }
                     });
@@ -195,13 +197,15 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     @Override
                     public void onAddressReceived(String address) {
                         if(address != null) {
-                            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(Data.latitude));
+                           /* Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(Data.latitude));
                             Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(Data.longitude));
                             Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), "" + address);
 
                             activity.setSelectedAddress("" + address);
                             mBus.post(new AddressAdded(true));
-                            activity.performBackPressed();
+                            activity.performBackPressed();*/
+                            //activity.openAddToAddressBook();
+                            fillAddressDetails(new LatLng(Data.latitude, Data.longitude));
                         }
                     }
                 });
