@@ -105,13 +105,14 @@ public class PaymentActivity extends BaseFragmentActivity{
 	protected void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
-		if(getWalletAddMoneyState() != WalletAddMoneyState.SUCCESS) {
+		if(!newIntentReceived && getWalletAddMoneyState() != WalletAddMoneyState.SUCCESS) {
 			getBalance("Refresh");
 		} else{
 			setWalletAddMoneyState(WalletAddMoneyState.INIT);
 		}
 		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PaymentActivity.class.getName());
 		Utils.enableSMSReceiver(this);
+		newIntentReceived = false;
 	}
 
 	@Override
@@ -121,8 +122,10 @@ public class PaymentActivity extends BaseFragmentActivity{
 		Utils.disableSMSReceiver(this);
 	}
 
+	boolean newIntentReceived = false;
 	@Override
 	protected void onNewIntent(Intent intent) {
+		newIntentReceived = true;
 		retrieveOTPFromSMS(intent);
 		super.onNewIntent(intent);
 	}
