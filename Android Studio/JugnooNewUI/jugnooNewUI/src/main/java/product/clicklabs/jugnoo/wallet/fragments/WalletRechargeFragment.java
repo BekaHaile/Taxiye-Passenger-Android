@@ -569,7 +569,7 @@ public class WalletRechargeFragment extends Fragment {
 								MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
 								performBackPressed();
 								performBackPressed();
-								paymentActivity.performGetBalanceSuccess("");
+								paymentActivity.getBalance("");
 								MyApplication.getInstance().getWalletCore().deleteWalletFlurryEvent(openWalletType);
 							} else {
 								DialogPopup.alertPopup(paymentActivity, "", message);
