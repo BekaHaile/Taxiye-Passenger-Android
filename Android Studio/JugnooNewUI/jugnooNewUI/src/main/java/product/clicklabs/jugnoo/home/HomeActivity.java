@@ -5254,6 +5254,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             params.put("session_id", Data.autoData.getcSessionId());
             params.put(KEY_OP_DROP_LATITUDE, ""+dropLatLng.latitude);
             params.put(KEY_OP_DROP_LONGITUDE, "" + dropLatLng.longitude);
+            params.put(KEY_DROP_LOCATION_ADDRESS, address);
             if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
                 params.put("engagement_id", Data.autoData.getcEngagementId());
             }
@@ -6410,7 +6411,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     @Override
                     public void onLocationChanged(Location location) {
                         try {
-                            Log.e("highSpeedAccuracyLF", ">" + location + ", mapTouched>" + mapTouched);
                             if (checkForInitialMyLocationButtonClick()) {
                                 LatLng lastMapCentre = map.getCameraPosition().target;
                                 LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
