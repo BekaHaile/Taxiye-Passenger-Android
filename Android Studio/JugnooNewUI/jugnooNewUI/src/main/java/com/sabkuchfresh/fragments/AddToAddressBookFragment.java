@@ -200,6 +200,10 @@ public class AddToAddressBookFragment extends Fragment {
 //            homeActivity.current_longitude = homeActivity.addressBookList.get(homeActivity.addressPos).longitude;
 //
 //        }
+
+        InputMethodManager inputMethodManager = (InputMethodManager) homeActivity.getSystemService(homeActivity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(homeActivity.getCurrentFocus().getWindowToken(), 0);
+
         initializeMap();
         initComponents();
 
@@ -323,7 +327,7 @@ public class AddToAddressBookFragment extends Fragment {
 
 //        if (homeActivity.current_action.equals(homeActivity.ADD_ADDRESS)) {
 //            activityTitle.setText("ADD ADDRESS");
-            buttonAddToAddressBook.setText("ADD ADDRESS");
+            buttonAddToAddressBook.setText(homeActivity.getResources().getString(R.string.confirm));
 
 
 //        } else if (homeActivity.current_action.equals(homeActivity.EDIT_ADDRESS)) {

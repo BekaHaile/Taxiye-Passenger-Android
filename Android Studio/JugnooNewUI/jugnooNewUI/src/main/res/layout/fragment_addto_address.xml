@@ -192,7 +192,7 @@
                 android:textAllCaps="false"
                 android:layout_marginBottom="70px"
                 android:layout_marginTop="70px"
-                android:text="@string/add_address_to_address_book"/>
+                android:text="@string/confirm"/>
 
             <TextView
                 android:id="@+id/textViewScroll"

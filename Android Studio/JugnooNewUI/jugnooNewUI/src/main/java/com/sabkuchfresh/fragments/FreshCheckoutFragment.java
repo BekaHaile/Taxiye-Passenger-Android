@@ -506,7 +506,8 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                 && activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses().size() > 0) {
             activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
         } else {
-            activity.openMapAddress();
+            //activity.openMapAddress();
+            activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
         }
         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ADDRESS_CLICKED, null);
     }

@@ -912,6 +912,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.title.setVisibility(View.VISIBLE);
                 if(fragment instanceof AddToAddressBookFragment){
                     topBar.title.setText(getResources().getString(R.string.confirm_address));
+                } else if(fragment instanceof AddAddressMapFragment){
+                    topBar.title.setText(getResources().getString(R.string.choose_your_address));
                 } else {
                     topBar.title.setText(getResources().getString(R.string.address));
                 }
@@ -922,6 +924,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.imageViewDelete.setVisibility(View.GONE);
+                topBar.below_shadow.setVisibility(View.GONE);
                 relativeLayoutCheckoutBar.setVisibility(View.GONE);
 
                 relativeLayoutSort.setVisibility(View.GONE);
@@ -930,6 +933,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.title.setVisibility(View.GONE);
                 topBar.title.setText("Type Delivery Address");
                 topBar.editTextDeliveryAddress.setVisibility(View.VISIBLE);
+                topBar.editTextDeliveryAddress.requestFocus();
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             } else if (fragment instanceof FreshPaymentFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);

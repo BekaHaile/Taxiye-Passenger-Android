@@ -87,28 +87,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/payment_margin"
-            android:layout_toLeftOf="@+id/imageViewEditAddress"
+            android:layout_toLeftOf="@+id/linearLayoutAddOrEdit"
             android:gravity="center_vertical"
-            android:maxLines="3"
             android:paddingRight="50px"
             android:text="Address here"
             android:ellipsize="end"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_32"
             android:visibility="visible"
-            android:layout_marginTop="10px"
+            android:layout_marginTop="20px"
             />
+
+        <LinearLayout
+            android:id="@+id/linearLayoutAddOrEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30px">
 
         <ImageView
             android:id="@+id/imageViewEditAddress"
             android:layout_width="60px"
             android:layout_height="60px"
             android:padding="15px"
+            android:layout_marginTop="10px"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30px"
             android:src="@drawable/edit_icon_selector"
             android:tag="mwar"
-            android:visibility="visible" />
+            android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imageViewForward"
+                style="@style/back_image"
+                android:rotation="180"/>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

@@ -42,7 +42,7 @@ public class TopBar implements FlurryEventNames {
 	public Button buttonCheckServer;
 	public RelativeLayout relativeLayoutNotification;
 	public TextView textViewNotificationValue;
-	public ImageView imageViewBack, imageViewDelete, imageViewNotification;//, imageViewSearch;
+	public ImageView imageViewBack, imageViewDelete, imageViewNotification, imageViewShadow;//, imageViewSearch;
 	public EditText editTextDeliveryAddress;
 
 
@@ -69,6 +69,7 @@ public class TopBar implements FlurryEventNames {
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
         imageViewNotification = (ImageView) drawerLayout.findViewById(R.id.imageViewNotification);
 		editTextDeliveryAddress = (EditText) drawerLayout.findViewById(R.id.editTextDeliveryAddress);
+		editTextDeliveryAddress.setTypeface(Fonts.mavenLight(activity));
 //		imageViewSearch = (ImageView)drawerLayout.findViewById(R.id.imageViewSearch);
 
 		//Top bar events

@@ -72,10 +72,12 @@
 	<string name="first_name">First Name</string>
 	<string name="last_name">Last Name</string>
 	<string name="phone_number">Phone Number</string>
+	<string name="confirm">Confirm</string>
 	<string name="confirm_password">Confirm Password</string>
 	<string name="confirm_address">Confirm Address</string>
 	<string name="confirm_ride">Confirm Ride</string>
 	<string name="confirm_request">Confirm Request</string>
+	<string name="choose_your_address">Choose Your Address</string>
 	
 	<string name="confirmation_code">Confirmation Code</string>
 	<string name="check_your_registered_email_phone_number_for_otp">Check your registered email/phone number for OTP</string>
@@ -992,6 +994,7 @@
 	<string name="its_cool_to_pool">ITS COOL TO POOL</string>
 	<string name="add_money_to_wallet">Add Money to Wallet</string>
 	<string name="choose_other_mode_to_pay">Choose other mode to pay</string>
+
 
     <string name="jugnoo_pokemon">POKEMON RADAR</string>
 	<string name="jugnoo_fab">JUGNOO JEANIE</string>
