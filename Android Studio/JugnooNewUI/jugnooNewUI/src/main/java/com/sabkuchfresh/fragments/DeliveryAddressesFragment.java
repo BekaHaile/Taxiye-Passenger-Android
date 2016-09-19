@@ -386,6 +386,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     private void getAddressAsync(final LatLng currentLatLng, final GetAddressFromLatLng getAddressFromLatLng){
         try {
+            DialogPopup.showLoadingDialog(getActivity(), "Loading...");
             RestClient.getGoogleApiServices().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
                     "en", false, new Callback<SettleUserDebt>() {
                         @Override
@@ -405,11 +406,13 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         @Override
                         public void failure(RetrofitError error) {
                             getAddressFromLatLng.onAddressReceived(null);
+                            DialogPopup.dismissLoadingDialog();
                         }
                     });
         } catch (Exception e) {
             e.printStackTrace();
             getAddressFromLatLng.onAddressReceived(null);
+            DialogPopup.dismissLoadingDialog();
         }
 
     }
@@ -417,7 +420,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private void fillAddressDetails(final LatLng latLng) {
         try {
             if (AppStatus.getInstance(getActivity()).isOnline(getActivity())) {
-                DialogPopup.showLoadingDialog(getActivity(), "Loading...");
+                //DialogPopup.showLoadingDialog(getActivity(), "Loading...");
                 final Map<String, String> params = new HashMap<String, String>(6);
 
                 params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
