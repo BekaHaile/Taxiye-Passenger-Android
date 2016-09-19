@@ -226,7 +226,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         linearLayoutChooseOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.performBackPressed();
+                //activity.performBackPressed();
                 activity.openMapAddress();
             }
         });
@@ -417,7 +417,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private void fillAddressDetails(final LatLng latLng) {
         try {
             if (AppStatus.getInstance(getActivity()).isOnline(getActivity())) {
-//                DialogPopup.showLoadingDialog(getActivity(), "Loading...");
+                DialogPopup.showLoadingDialog(getActivity(), "Loading...");
                 final Map<String, String> params = new HashMap<String, String>(6);
 
                 params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
