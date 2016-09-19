@@ -25,8 +25,6 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
-
-
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
 
@@ -61,14 +59,14 @@
             android:name=".GCMIntentService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <service
             android:name=".MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
 
@@ -115,8 +113,8 @@
         <activity
             android:name=".OTPConfirmScreen"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
             <!-- jugnooautos-verify://app?otp=1234 -->
             <intent-filter android:label="@string/app_name">
@@ -172,10 +170,10 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name="com.sabkuchfresh.home.FeedbackActivity"
-                  android:label="@string/receipt"
-                  android:screenOrientation="portrait">
-
+        <activity
+            android:name="com.sabkuchfresh.home.FeedbackActivity"
+            android:label="@string/receipt"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".AboutActivity"
@@ -394,32 +392,29 @@
         </receiver>
 
         <service android:name="com.google.android.gms.analytics.CampaignTrackingService"/>
-
         <service
             android:name=".home.LocationUpdateService"
             android:enabled="true"
             android:exported="false">
         </service>
 
-
-
-
-        <!-- nudgesopt integration-->
-        <receiver android:name="com.nudgespot.notification.GcmBroadcastReceiver"
-                  android:permission="com.google.android.c2dm.permission.SEND" >
+        <!-- nudgesopt integration -->
+        <receiver
+            android:name="com.nudgespot.notification.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="product.clicklabs.jugnoo" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+
+                <category android:name="product.clicklabs.jugnoo"/>
             </intent-filter>
         </receiver>
-        <service android:name="com.nudgespot.notification.GcmIntentService" />
+
+        <service android:name="com.nudgespot.notification.GcmIntentService"/>
+
         <activity
             android:name="com.nudgespot.notification.ReceiverActivity"
-            android:theme="@android:style/Theme.NoDisplay" >
+            android:theme="@android:style/Theme.NoDisplay">
         </activity>
-
-
-
 
         <!-- for fresh Application -->
         <activity
@@ -428,23 +423,20 @@
             android:screenOrientation="portrait">
         </activity>
 
-
         <meta-data
             android:name="CLEVERTAP_ACCOUNT_ID"
-            android:value="@string/clevertap_account_id"/>;
+            android:value="@string/clevertap_account_id"/>
+        ;
         <meta-data
             android:name="CLEVERTAP_TOKEN"
             android:value="@string/clevertap_account_token"/>
 
-        <service
-            android:name="com.clevertap.android.sdk.FcmTokenListenerService">
+        <service android:name="com.clevertap.android.sdk.FcmTokenListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
-
-        <service
-            android:name="com.clevertap.android.sdk.FcmMessageListenerService">
+        <service android:name="com.clevertap.android.sdk.FcmMessageListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
@@ -456,14 +448,17 @@
 
         <activity
             android:name="com.clevertap.android.sdk.InAppNotificationActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="orientation|keyboardHidden"/>
+            android:configChanges="orientation|keyboardHidden"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
 
         <!-- uncomment below block to ensure in-app notification isn't shown on a splash screen -->
         <meta-data
             android:name="CLEVERTAP_INAPP_EXCLUDE"
             android:value="SplashNewActivity"/>
 
+        <service
+            android:name=".home.trackinglog.TrackingLogSyncIntentService"
+            android:enabled="true"/>
     </application>
 
 </manifest>

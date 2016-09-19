@@ -167,6 +167,7 @@ import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.TrackingLogModeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
+import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -3110,15 +3111,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                        genieLayout.setVisibility(View.GONE);
 
                         try {
-                            JSONArray driverLocations = Database2.getInstance(this).getDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()));
-                            JSONArray trackingLogs = Database2.getInstance(this).getTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()));
-                            Log.e(TAG, "getDriverLocations>"+driverLocations);
-                            Log.e(TAG, "getTrackingLogs>"+trackingLogs);
-                            JSONObject jsonObjectTrackingLog = new JSONObject();
-                            jsonObjectTrackingLog.put(KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
-                            jsonObjectTrackingLog.put(KEY_DRIVER_LOCATIONS, driverLocations);
-                            jsonObjectTrackingLog.put(KEY_TRACKING_LOGS, trackingLogs);
-                            Log.writePathLogToFile(KEY_TRACKING_LOGS+"_"+Data.autoData.getcEngagementId(), jsonObjectTrackingLog.toString());
+                            getTrackingLogHelper().generateTrackLogFile(Data.autoData.getcEngagementId());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -3170,6 +3163,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 startStopLocationUpdateService(mode);
 
                 showPokestopOnOffButton(mode);
+
+                try {
+                    getTrackingLogHelper().startSyncService(mode, Data.userData.accessToken);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -8779,5 +8778,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             });
         }
     };
+
+    private TrackingLogHelper trackingLogHelper;
+    private TrackingLogHelper getTrackingLogHelper(){
+        if(trackingLogHelper == null){
+            trackingLogHelper = new TrackingLogHelper(this);
+        }
+        return trackingLogHelper;
+    }
 
 }
