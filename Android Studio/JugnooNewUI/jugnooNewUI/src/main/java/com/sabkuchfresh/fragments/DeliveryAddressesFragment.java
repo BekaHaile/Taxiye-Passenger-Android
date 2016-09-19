@@ -35,7 +35,9 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -83,6 +85,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private SearchListAdapter searchListAdapter;
     private ScrollView scrollViewSearch;
     private NonScrollListView listViewSearch;
+    private List<DeliveryAddress> deliveryAddresses = new ArrayList<DeliveryAddress>();
 
 
     public DeliveryAddressesFragment() {
@@ -125,8 +128,15 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         recyclerView.setVisibility(View.VISIBLE);
 
         setSavePlaces();
-        addressFragment = new FreshAddressAdapter(activity, activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses(), this);
+        deliveryAddresses.addAll(activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses());
+        for(int i=0; i<deliveryAddresses.size(); i++){
+            if(activity.getSelectedAddress().equalsIgnoreCase(deliveryAddresses.get(i).getLastAddress())){
+                deliveryAddresses.remove(i);
+            }
+        }
+        addressFragment = new FreshAddressAdapter(activity, deliveryAddresses, this);
         recyclerView.setAdapter(addressFragment);
+
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(activity)
@@ -216,7 +226,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         linearLayoutChooseOnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.performBackPressed();
+                //activity.performBackPressed();
                 activity.openMapAddress();
             }
         });
@@ -407,7 +417,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private void fillAddressDetails(final LatLng latLng) {
         try {
             if (AppStatus.getInstance(getActivity()).isOnline(getActivity())) {
-//                DialogPopup.showLoadingDialog(getActivity(), "Loading...");
+                DialogPopup.showLoadingDialog(getActivity(), "Loading...");
                 final Map<String, String> params = new HashMap<String, String>(6);
 
                 params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
