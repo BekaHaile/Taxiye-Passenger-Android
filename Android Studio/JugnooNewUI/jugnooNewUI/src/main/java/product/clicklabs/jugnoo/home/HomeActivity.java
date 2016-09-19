@@ -165,7 +165,9 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
+import product.clicklabs.jugnoo.home.models.TrackingLogModeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
+import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -2781,6 +2783,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
                         initAndClearInRidePath();
+                        Database2.getInstance(this).deleteDriverLocations();
 
 
                         break;
@@ -2918,6 +2921,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             } else{
                                 driverLocationMarker.setRotation((float)Data.autoData.getAssignedDriverInfo().getBearing());
                             }
+                            Database2.getInstance(this).insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
+                                    Data.autoData.getAssignedDriverInfo().latLng,
+                                    driverLocationMarker.getRotation(),
+                                    TrackingLogModeValue.RESET.getOrdinal(),
+                                    Data.autoData.getAssignedDriverInfo().latLng, 0);
 
                             Log.i("marker added", "REQUEST_FINAL");
                         }
@@ -2982,6 +2990,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if(Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0){
                                 driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
                             }
+                            Database2.getInstance(this).insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
+                                    Data.autoData.getAssignedDriverInfo().latLng,
+                                    driverLocationMarker.getRotation(),
+                                    TrackingLogModeValue.RESET.getOrdinal(),
+                                    Data.autoData.getAssignedDriverInfo().latLng, 0);
                             Log.i("marker added", "REQUEST_FINAL");
 
                             if(Data.autoData.getDropLatLng() != null) {
@@ -3097,6 +3110,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 //                        genieLayout.setVisibility(View.GONE);
 
+                        try {
+                            getTrackingLogHelper().generateTrackLogFile(Data.autoData.getcEngagementId());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
                         break;
 
                     case P_RIDE_END:
@@ -3143,6 +3163,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 startStopLocationUpdateService(mode);
 
                 showPokestopOnOffButton(mode);
+
+                try {
+                    getTrackingLogHelper().startSyncService(mode, Data.userData.accessToken);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -3978,7 +4004,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if((passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
                                 || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
                                 && driverLocationMarker != null){
-                            //driverMarkerRotation = driverLocationMarker.getRotation();
                             Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, driverLocationMarker.getRotation());
                         }
                         if (!intentFired) {
@@ -5374,32 +5399,34 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         if (jObj.has("eta")) {
                                             eta = jObj.getString("eta");
                                         }
-                                        if (Data.autoData.getAssignedDriverInfo() != null) {
-                                            Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
-                                            Data.autoData.getAssignedDriverInfo().setEta(eta);
-                                        }
+                                        if (Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
+                                            if(MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng , driverCurrentLatLng) > 5) {
+                                                Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
+                                                Data.autoData.getAssignedDriverInfo().setEta(eta);
+                                                Database2.getInstance(HomeActivity.this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
+                                                HomeActivity.this.runOnUiThread(new Runnable() {
 
-                                        HomeActivity.this.runOnUiThread(new Runnable() {
-
-                                            @Override
-                                            public void run() {
-                                                try {
-                                                    //double bearing = jObj.optDouble("bearing", driverLocationMarker.getRotation());
-                                                    if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-                                                        if (map != null) {
-                                                            if (HomeActivity.this.hasWindowFocus()) {
-//                                                                driverLocationMarker.setPosition(driverCurrentLatLng);
-                                                                MarkerAnimation.animateMarkerToICS(driverLocationMarker,
-                                                                        driverCurrentLatLng, new LatLngInterpolator.Spherical());
-                                                                updateDriverETAText(passengerScreenMode);
+                                                    @Override
+                                                    public void run() {
+                                                        try {
+                                                            if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+                                                                if (map != null) {
+                                                                    if (HomeActivity.this.hasWindowFocus()) {
+                                                                        MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
+                                                                                driverCurrentLatLng, new LatLngInterpolator.Spherical());
+                                                                        updateDriverETAText(passengerScreenMode);
+                                                                    }
+                                                                }
                                                             }
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
                                                         }
                                                     }
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
+                                                });
                                             }
-                                        });
+                                        }
+
+
                                     }
                                 }
                             } catch (JSONException e) {
@@ -6175,6 +6202,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing));
+
+            Database2.getInstance(this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
 
             if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
                 passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
@@ -8751,5 +8780,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             });
         }
     };
+
+    private TrackingLogHelper trackingLogHelper;
+    private TrackingLogHelper getTrackingLogHelper(){
+        if(trackingLogHelper == null){
+            trackingLogHelper = new TrackingLogHelper(this);
+        }
+        return trackingLogHelper;
+    }
 
 }

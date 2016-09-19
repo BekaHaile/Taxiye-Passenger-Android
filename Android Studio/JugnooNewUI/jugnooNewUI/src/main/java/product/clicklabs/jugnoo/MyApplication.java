@@ -447,4 +447,9 @@ public class MyApplication extends Application{
 		return cleverTapUtils;
 	}
 
+
+	public Database2 getDatabase2(){
+		return Database2.getInstance(this);
+	}
+
 }

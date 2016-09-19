@@ -1046,6 +1046,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            onResume();
         }
     }
 

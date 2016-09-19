@@ -22,8 +22,12 @@ import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.Headers;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.http.Part;
+import retrofit.http.PartMap;
 import retrofit.http.QueryMap;
+import retrofit.mime.TypedFile;
 import retrofit.mime.TypedInput;
 
 /**
@@ -475,5 +479,11 @@ public interface ApiService {
     @POST("/freecharge/unlink")
     void freechargeUnlink(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
+
+
+    @Multipart
+    @POST("/customer/upload_ride_log")
+    Response customerUploadRideLog(@Part("log_file") TypedFile file,
+                               @PartMap Map<String, String> params);
 
 }
