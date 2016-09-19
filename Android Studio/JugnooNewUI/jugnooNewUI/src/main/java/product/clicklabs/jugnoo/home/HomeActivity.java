@@ -5399,32 +5399,34 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         if (jObj.has("eta")) {
                                             eta = jObj.getString("eta");
                                         }
-                                        if (Data.autoData.getAssignedDriverInfo() != null) {
-                                            Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
-                                            Data.autoData.getAssignedDriverInfo().setEta(eta);
-                                        }
-                                        Database2.getInstance(HomeActivity.this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
+                                        if (Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
+                                            if(MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng , driverCurrentLatLng) > 5) {
+                                                Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
+                                                Data.autoData.getAssignedDriverInfo().setEta(eta);
+                                                Database2.getInstance(HomeActivity.this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
+                                                HomeActivity.this.runOnUiThread(new Runnable() {
 
-
-                                        HomeActivity.this.runOnUiThread(new Runnable() {
-
-                                            @Override
-                                            public void run() {
-                                                try {
-                                                    if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-                                                        if (map != null) {
-                                                            if (HomeActivity.this.hasWindowFocus()) {
-                                                                MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-                                                                        driverCurrentLatLng, new LatLngInterpolator.Spherical());
-                                                                updateDriverETAText(passengerScreenMode);
+                                                    @Override
+                                                    public void run() {
+                                                        try {
+                                                            if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+                                                                if (map != null) {
+                                                                    if (HomeActivity.this.hasWindowFocus()) {
+                                                                        MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
+                                                                                driverCurrentLatLng, new LatLngInterpolator.Spherical());
+                                                                        updateDriverETAText(passengerScreenMode);
+                                                                    }
+                                                                }
                                                             }
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
                                                         }
                                                     }
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
+                                                });
                                             }
-                                        });
+                                        }
+
+
                                     }
                                 }
                             } catch (JSONException e) {

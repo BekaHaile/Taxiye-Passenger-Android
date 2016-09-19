@@ -235,7 +235,7 @@ public class MarkerAnimation {
 
     public static void animationForShortDistance(String engagementId, final Marker marker, LatLng latLng,
                                                  final LatLngInterpolator latLngInterpolator){
-
+        if(MapUtils.distance(marker.getPosition(), latLng) >= 20) {
             TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {
                 @Override
                 public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
@@ -244,7 +244,7 @@ public class MarkerAnimation {
             };
             Property<Marker, LatLng> property = Property.of(Marker.class, LatLng.class, "position");
             ObjectAnimator animator = ObjectAnimator.ofObject(marker, property, typeEvaluator, latLng);
-            animator.setDuration((long)ANIMATION_TIME);
+            animator.setDuration((long) ANIMATION_TIME);
             animator.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animator) {
@@ -267,13 +267,13 @@ public class MarkerAnimation {
                 }
             });
             animator.start();
-        float bearing  = (float) MapUtils.getBearing(marker.getPosition(), latLng);
-        MapUtils.rotateMarker(marker, bearing);
-        MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(engagementId),
-                latLng, bearing,
-                TrackingLogModeValue.MOVE.getOrdinal(),
-                marker.getPosition(), (long)ANIMATION_TIME);
-
+            float bearing = (float) MapUtils.getBearing(marker.getPosition(), latLng);
+            MapUtils.rotateMarker(marker, bearing);
+            MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(engagementId),
+                    latLng, bearing,
+                    TrackingLogModeValue.MOVE.getOrdinal(),
+                    marker.getPosition(), (long) ANIMATION_TIME);
+        }
     }
 
 

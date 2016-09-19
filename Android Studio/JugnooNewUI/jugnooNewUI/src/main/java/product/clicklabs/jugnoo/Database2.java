@@ -938,7 +938,7 @@ public class Database2 {                                                        
             contentValues.put(MODE, mode);
             contentValues.put(FROM_LAT, String.valueOf(fromLatLng.latitude));
             contentValues.put(FROM_LONG, String.valueOf(fromLatLng.longitude));
-            contentValues.put(DURATION, String.valueOf(duration));
+            contentValues.put(DURATION, String.valueOf(duration/1000l));
             database.insert(TABLE_TRACKING_LOGS, null, contentValues);
         } catch(Exception e){
             e.printStackTrace();

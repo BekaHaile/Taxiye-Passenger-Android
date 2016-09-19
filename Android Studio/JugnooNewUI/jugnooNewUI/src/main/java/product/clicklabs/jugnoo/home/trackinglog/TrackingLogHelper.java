@@ -36,17 +36,21 @@ public class TrackingLogHelper {
 		this.context = context;
 	}
 
-	//79152695, 79152734
+	//79152766
 
 	public void generateTrackLogFile(String engagementId){
 		try {
 			JSONArray driverLocations = Database2.getInstance(context).getDriverLocations(Integer.parseInt(engagementId));
 			JSONArray trackingLogs = Database2.getInstance(context).getTrackingLogs(Integer.parseInt(engagementId));
-			JSONObject jsonObjectTrackingLog = new JSONObject();
-			jsonObjectTrackingLog.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
-			jsonObjectTrackingLog.put(Constants.KEY_DRIVER_LOCATIONS, driverLocations);
-			jsonObjectTrackingLog.put(Constants.KEY_TRACKING_LOGS, trackingLogs);
-			writeTrackingLogToFile(engagementId, jsonObjectTrackingLog.toString());
+			if(trackingLogs.length() > 0 && driverLocations.length() > 0) {
+				JSONObject jsonObjectTrackingLog = new JSONObject();
+				jsonObjectTrackingLog.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
+				jsonObjectTrackingLog.put(Constants.KEY_DRIVER_LOCATIONS, driverLocations);
+				jsonObjectTrackingLog.put(Constants.KEY_TRACKING_LOGS, trackingLogs);
+				writeTrackingLogToFile(engagementId, jsonObjectTrackingLog.toString());
+				Database2.getInstance(context).deleteDriverLocations();
+				Database2.getInstance(context).deleteTrackingLogs();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -112,7 +116,7 @@ public class TrackingLogHelper {
 					Log.d(TAG, "FileName:" + file.getName());
 					String filePrefix = file.getName().split("\\.")[0];
 					if(Utils.checkIfOnlyDigits(filePrefix)){
-						TypedFile typedFile = new TypedFile("multipart/form-data", file);
+						TypedFile typedFile = new TypedFile("application/octet-stream", file);
 						HashMap<String, String> map = new HashMap<>();
 						map.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 						map.put(Constants.KEY_ENGAGEMENT_ID, filePrefix);
