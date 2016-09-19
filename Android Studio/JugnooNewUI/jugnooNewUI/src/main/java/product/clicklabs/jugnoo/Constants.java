@@ -473,4 +473,7 @@ public interface Constants {
 	String KEY_PICKUP_LOCATION_ADDRESS = "pickup_location_address";
 	String KEY_DROP_LOCATION_ADDRESS = "drop_location_address";
 
+	String KEY_DRIVER_LOCATIONS = "driver_locations";
+	String KEY_TRACKING_LOGS = "tracking_logs";
+
 }

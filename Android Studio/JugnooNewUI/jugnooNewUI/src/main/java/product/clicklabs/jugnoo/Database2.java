@@ -23,6 +23,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PendingAPICall;
 import product.clicklabs.jugnoo.datastructure.RidePath;
+import product.clicklabs.jugnoo.home.models.TrackingLogModeValue;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.Schedule;
@@ -105,10 +106,12 @@ public class Database2 {                                                        
     private static final String LAT = "lat";
     private static final String LONG = "long";
 
-    private static final String TABLE_TRACKING_LOGS = "table_driver_locations";
-    private static final String ENGAGEMENT_ID = "engagement_id";
-    private static final String LAT = "lat";
-    private static final String LONG = "long";
+    private static final String TABLE_TRACKING_LOGS = "table_tracking_logs";
+    private static final String BEARING = "bearing";
+    private static final String MODE = "mode";
+    private static final String FROM_LAT = "from_lat";
+    private static final String FROM_LONG = "from_long";
+    private static final String DURATION = "duration";
 
 
 
@@ -193,6 +196,17 @@ public class Database2 {                                                        
                 + ENGAGEMENT_ID + " INTEGER, "
                 + LAT + " TEXT, "
                 + LONG + " TEXT "
+                + ");");
+
+        database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_TRACKING_LOGS + " ("
+                + ENGAGEMENT_ID + " INTEGER, "
+                + LAT + " TEXT, "
+                + LONG + " TEXT, "
+                + BEARING + " TEXT, "
+                + MODE + " TEXT, "
+                + FROM_LAT + " TEXT, "
+                + FROM_LONG + " TEXT, "
+                + DURATION + " TEXT"
                 + ");");
 
     }
@@ -906,5 +920,73 @@ public class Database2 {                                                        
             e.printStackTrace();
         }
     }
+
+
+
+
+
+
+
+
+    public void insertTrackingLogs(int engagementId, LatLng latLng, float bearing, String mode, LatLng fromLatLng, long duration) {
+        try{
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(ENGAGEMENT_ID, engagementId);
+            contentValues.put(LAT, String.valueOf(latLng.latitude));
+            contentValues.put(LONG, String.valueOf(latLng.longitude));
+            contentValues.put(BEARING, String.valueOf(bearing));
+            contentValues.put(MODE, mode);
+            contentValues.put(FROM_LAT, String.valueOf(fromLatLng.latitude));
+            contentValues.put(FROM_LONG, String.valueOf(fromLatLng.longitude));
+            contentValues.put(DURATION, String.valueOf(duration));
+            database.insert(TABLE_TRACKING_LOGS, null, contentValues);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public JSONArray getTrackingLogs(int engagementId) {
+        JSONArray jsonArray = new JSONArray();
+        try {
+            String[] columns = new String[] { LAT, LONG, BEARING, MODE, FROM_LAT, FROM_LONG, DURATION };
+            Cursor cursor = database.query(TABLE_TRACKING_LOGS, columns, ENGAGEMENT_ID+"="+engagementId, null, null, null, null);
+            if (cursor.getCount() > 0) {
+                int in0 = cursor.getColumnIndex(LAT);
+                int in1 = cursor.getColumnIndex(LONG);
+                int in2 = cursor.getColumnIndex(BEARING);
+                int in3 = cursor.getColumnIndex(MODE);
+                int in4 = cursor.getColumnIndex(FROM_LAT);
+                int in5 = cursor.getColumnIndex(FROM_LONG);
+                int in6 = cursor.getColumnIndex(DURATION);
+                for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put(LAT, cursor.getString(in0));
+                    jsonObject.put(LONG, cursor.getString(in1));
+                    jsonObject.put(BEARING, cursor.getString(in2));
+                    String mode = cursor.getString(in3);
+                    jsonObject.put(MODE, mode);
+                    if(mode.equalsIgnoreCase(TrackingLogModeValue.MOVE.getOrdinal())){
+                        jsonObject.put(FROM_LAT, cursor.getString(in4));
+                        jsonObject.put(FROM_LONG, cursor.getString(in5));
+                        jsonObject.put(DURATION, cursor.getString(in6));
+                    }
+                    jsonArray.put(jsonObject);
+                }
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
+    }
+
+    public void deleteTrackingLogs(){
+        try{
+            database.execSQL("delete from " + TABLE_TRACKING_LOGS);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 }
