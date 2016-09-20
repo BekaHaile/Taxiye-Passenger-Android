@@ -459,6 +459,12 @@
         <service
             android:name=".home.trackinglog.TrackingLogSyncIntentService"
             android:enabled="true"/>
+
+        <activity
+            android:name=".home.trackinglog.TrackingLogActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

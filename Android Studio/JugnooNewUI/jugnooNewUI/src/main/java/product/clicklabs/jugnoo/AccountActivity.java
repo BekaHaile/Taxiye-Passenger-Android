@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.JeanieIntroDialog;
+import product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -67,6 +68,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
 	private TextView textViewSave, textViewPasswordSave;
 	ImageView imageViewBack;
+    View viewTrackingLog;
 
 	ScrollView scrollView;
 	LinearLayout linearLayoutMain;
@@ -106,6 +108,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
         textViewSave = (TextView) findViewById(R.id.textViewSave); textViewSave.setTypeface(Fonts.mavenMedium(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+        viewTrackingLog = findViewById(R.id.viewTrackingLog);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -603,6 +606,15 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                         },
                         true, false);
 
+            }
+        });
+
+        viewTrackingLog.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startActivity(new Intent(AccountActivity.this, TrackingLogActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                return false;
             }
         });
 

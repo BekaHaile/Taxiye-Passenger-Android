@@ -1145,6 +1145,8 @@
 	<string name="never_ask_again">Never Ask Again</string>
 
 	<string name="getting_address">Getting address...</string>
+	<string name="tracking_log">Tracking Log</string>
+	<string name="engagement_id">Engagement ID</string>
 
 
 </resources>

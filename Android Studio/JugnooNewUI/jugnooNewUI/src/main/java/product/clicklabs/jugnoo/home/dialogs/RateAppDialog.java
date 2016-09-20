@@ -93,6 +93,7 @@ public class RateAppDialog {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
+					acceptAppRatingRequestAPI(activity, AppRatingTypeValue.REJECTED);
 				}
 			});
 
@@ -104,18 +105,18 @@ public class RateAppDialog {
 				}
 			});
 
-			linearLayoutInner.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-				}
-			});
-
-			relative.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
+//			linearLayoutInner.setOnClickListener(new View.OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//				}
+//			});
+//
+//			relative.setOnClickListener(new View.OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					dialog.dismiss();
+//				}
+//			});
 
 			dialog.show();
 		} catch (Exception e) {
@@ -136,6 +137,11 @@ public class RateAppDialog {
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "acceptAppRatingRequest response = " + responseStr);
+						try {
+							Data.userData.setCustomerRateAppFlag(0);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 
 					@Override

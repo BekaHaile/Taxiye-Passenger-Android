@@ -64,6 +64,13 @@
         </LinearLayout>
 
 
+        <View
+            android:id="@+id/viewTrackingLog"
+            android:layout_width="200px"
+            android:layout_height="60px"
+            android:layout_centerHorizontal="true"
+            />
+
     </RelativeLayout>
 
     <ScrollView
