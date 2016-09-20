@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -80,6 +81,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
+    private ImageView imageViewNoItem;
 
     private RelativeLayout searchLayout;
 
@@ -136,6 +138,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
         searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
+        imageViewNoItem = (ImageView) rootView.findViewById(R.id.imageViewNoItem);
         swipe_text = (TextView) rootView.findViewById(R.id.swipe_text);
         swipe_text.setTypeface(Fonts.mavenRegular(activity));
 
@@ -379,6 +382,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 								}
 							} else {
                                 noFreshsView.setVisibility(View.VISIBLE);
+                                imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_grocery);
                                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                                 activity.hideBottomBar(false);
                                 mainLayout.setVisibility(View.GONE);
@@ -427,6 +431,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
 	private void retryDialog(DialogErrorType dialogErrorType){
         noFreshsView.setVisibility(View.VISIBLE);
+        imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_grocery);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         activity.hideBottomBar(false);
         mainLayout.setVisibility(View.GONE);

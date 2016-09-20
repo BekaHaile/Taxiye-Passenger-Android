@@ -140,6 +140,7 @@ public class FABView {
                         menuLabelsRight.close(true);
                         fabFresh.setVisibility(View.INVISIBLE);
                         fabMeals.setVisibility(View.INVISIBLE);
+                        fabGrocery.setVisibility(View.INVISIBLE);
                     }
                 } else {
                     if (activity instanceof FreshActivity) {

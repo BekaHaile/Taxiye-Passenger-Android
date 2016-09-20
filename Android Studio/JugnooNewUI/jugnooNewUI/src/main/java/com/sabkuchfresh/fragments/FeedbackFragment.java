@@ -109,7 +109,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 dateValue = Data.getGroceryData().getFeedbackDeliveryDate();
                 orderAmount = Data.getGroceryData().getAmount();
                 orderId = Data.getGroceryData().getOrderId();
-                activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+                activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
             } else {
 				activity.finish();

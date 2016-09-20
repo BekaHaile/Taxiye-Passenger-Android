@@ -484,7 +484,21 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 								}
 							} else if (type == 1) {
 								intentToShareActivity();
-							}
+							} else if(type == 2){
+                                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                                    drawerLayout.closeDrawer(GravityCompat.START);
+                                }
+                                String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getGroceryClientId());
+                                if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+                                    updateCartFromSP();
+                                    relativeLayoutCart.performClick();
+                                } else {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+                                    MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
+                                            getCurrentPlaceLatLng(), bundle, false);
+                                }
+                            }
 						} else {
 							if(flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()){
 								Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
@@ -1484,7 +1498,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void updateCartFromSP() {
         try {
-
             for (Category category : productsResponse.getCategories()) {
                 for (SubItem subItem : category.getSubItems()) {
                     subItem.setSubItemQuantitySelected(0);

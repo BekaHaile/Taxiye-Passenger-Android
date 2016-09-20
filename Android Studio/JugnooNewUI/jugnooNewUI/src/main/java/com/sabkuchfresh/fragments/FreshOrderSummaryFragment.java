@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -385,11 +386,13 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
 
     public void saveHistoryCardToSP(HistoryResponse.Datum orderHistory) {
         try {
-            Prefs.with(activity).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
-
+            if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
+                Prefs.with(activity).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
+            } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
+                Prefs.with(activity).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
+            }
             JSONObject jCart = new JSONObject();
             if (orderHistory != null && orderHistory.getOrderItems() != null) {
-
                 for (HistoryResponse.OrderItem subItem : orderHistory.getOrderItems()) {
                     if (subItem.getItemQuantity() > 0) {
                         try {
@@ -399,10 +402,15 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                         }
                     }
                 }
-
             }
-            Prefs.with(activity).save(Constants.SP_FRESH_CART, jCart.toString());
-            sendMessage();
+            if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
+                Prefs.with(activity).save(Constants.SP_FRESH_CART, jCart.toString());
+                sendMessage(0);
+            } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
+                Prefs.with(activity).save(Constants.SP_GROCERY_CART, jCart.toString());
+                sendMessage(2);
+            }
+
             DialogPopup.showLoadingDialog(activity, "Please wait...");
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -416,12 +424,12 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
         }
     }
 
-    private void sendMessage() {
+    private void sendMessage(int type) {
         Log.d("sender", "Broadcasting message");
         Intent intent = new Intent(Data.LOCAL_BROADCAST);
         // You can also include some extra data.
         intent.putExtra("message", "This is my message!");
-        intent.putExtra("open_type", 0);
+        intent.putExtra("open_type", type);
         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
     }
 
