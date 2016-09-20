@@ -1,8 +1,12 @@
 package com.sabkuchfresh.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -118,6 +122,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     @Override
     public void onStart() {
         super.onStart();
+        LocalBroadcastManager.getInstance(activity).registerReceiver(broadcastReceiverWalletUpdate,
+                new IntentFilter(Constants.INTENT_ACTION_WALLET_UPDATE));
     }
 
     @Override
@@ -419,6 +425,15 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         orderPaymentModes();
         setPaymentOptionUI();
     }
+
+    private BroadcastReceiver broadcastReceiverWalletUpdate = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+            onResume();
+        }
+    };
+
 
 
     private ApiFetchWalletBalance apiFetchWalletBalance = null;
@@ -1048,6 +1063,12 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             activity.fragmentUISetup(this);
             onResume();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(activity).unregisterReceiver(broadcastReceiverWalletUpdate);
     }
 
     @Override

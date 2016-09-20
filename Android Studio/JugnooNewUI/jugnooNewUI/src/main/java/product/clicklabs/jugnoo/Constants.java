@@ -476,4 +476,6 @@ public interface Constants {
 	String KEY_DRIVER_LOCATIONS = "driver_locations";
 	String KEY_TRACKING_LOGS = "tracking_logs";
 
+	String INTENT_ACTION_WALLET_UPDATE = "INTENT_ACTION_WALLET_UPDATE";
+
 }
