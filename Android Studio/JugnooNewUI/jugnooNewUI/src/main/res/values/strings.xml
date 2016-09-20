@@ -1138,7 +1138,8 @@
 	<string name="never">Never</string>
 	<string name="maybe_later">Maybe Later</string>
 	<string name="yes_rate_it_now">Yes Rate it now!</string>
-	<string name="rate_app_dialog_message">Do you find Jugnoo useful? If yes, we would appreciate if you could rate us on the Play Store</string>
+	<string name="rate_app_dialog_title">Do you find Jugnoo useful?</string>
+	<string name="rate_app_dialog_message">We would appreciate if you could rate us on the Play Store</string>
 	<string name="rate_now">Rate Now</string>
 	<string name="not_now">Not Now</string>
 	<string name="never_ask_again">Never Ask Again</string>
