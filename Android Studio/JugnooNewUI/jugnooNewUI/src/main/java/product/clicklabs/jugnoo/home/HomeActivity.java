@@ -5954,14 +5954,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     /**
      * Displays popup to rate the app
      */
-    public void rateAppPopup(final Activity activity, final RateAppDialogContent rateAppDialogContent) {
+    public void rateAppPopup(final RateAppDialogContent rateAppDialogContent) {
         try {
             if(rateAppDialogContent != null) {
-                new RateAppDialog(activity).show(rateAppDialogContent);
+                getRateAppDialog().show(rateAppDialogContent);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private RateAppDialog rateAppDialog;
+    private RateAppDialog getRateAppDialog(){
+        if(rateAppDialog == null){
+            rateAppDialog = new RateAppDialog(this);
+        }
+        return rateAppDialog;
     }
 
 
@@ -6980,7 +6988,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             switchUserScreen();
 
             if (givenRating >= 4 && Data.userData.getCustomerRateAppFlag() == 1) {
-                rateAppPopup(HomeActivity.this, Data.userData.getRateAppDialogContent());
+                rateAppPopup(Data.userData.getRateAppDialogContent());
             }
             firstTimeZoom = false;
             dropLocationSearchText = "";
@@ -7907,6 +7915,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+//        if(givenRating == 5) {
+//            getRateAppDialog().thumbsUpClickedAPI();
+//        }
     }
 
     private void submitFeedbackToInitial(int givenRating){

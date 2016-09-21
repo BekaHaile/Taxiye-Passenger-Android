@@ -418,6 +418,10 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             DialogPopup.dismissLoadingDialog();
             e.printStackTrace();
         }
+
+//        if(rating == 1) {
+//            getRateAppDialog().thumbsUpClickedAPI();
+//        }
     }
 
     /**
@@ -528,8 +532,16 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         }
 
         if(goodRating && rateApp == 1){
-            new RateAppDialog(activity).show(rateAppDialogContent);
+            getRateAppDialog().show(rateAppDialogContent);
         }
+    }
+
+    private RateAppDialog rateAppDialog;
+    private RateAppDialog getRateAppDialog(){
+        if(rateAppDialog == null){
+            rateAppDialog = new RateAppDialog(activity);
+        }
+        return rateAppDialog;
     }
 
     @Override

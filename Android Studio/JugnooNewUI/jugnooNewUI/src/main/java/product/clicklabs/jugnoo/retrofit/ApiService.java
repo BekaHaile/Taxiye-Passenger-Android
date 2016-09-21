@@ -486,4 +486,9 @@ public interface ApiService {
     Response customerUploadRideLog(@Part("log_file") TypedFile file,
                                @PartMap Map<String, String> params);
 
+    @FormUrlEncoded
+    @POST("/thumbs_up_clicked")
+    void thumbsUpClicked(@FieldMap Map<String, String> params,
+                         Callback<SettleUserDebt> callback);
+
 }
