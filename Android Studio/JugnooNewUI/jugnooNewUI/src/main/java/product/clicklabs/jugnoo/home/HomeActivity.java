@@ -2475,7 +2475,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } else {
                     boolean isSame = false;
                     for (int i = 0; i < lastPickUp.size(); i++) {
-                        if (textViewInitialSearch.getText().toString().equalsIgnoreCase(lastPickUp.get(i).getName())) {
+                        if (textViewInitialSearch.getText().toString().equalsIgnoreCase(lastPickUp.get(i).getName())
+                                && Data.autoData.getPickupAddress().equalsIgnoreCase(lastPickUp.get(i).getAddress())) {
                             isSame = true;
                             break;
                         }
@@ -8108,7 +8109,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } else {
                     boolean isSame = false;
                     for (int i = 0; i < lastDestination.size(); i++) {
-                        if (searchResult.getName().equalsIgnoreCase(lastDestination.get(i).getName())) {
+                        if (searchResult.getName().equalsIgnoreCase(lastDestination.get(i).getName())
+                                && searchResult.getAddress().equalsIgnoreCase(lastDestination.get(i).getAddress())) {
                             isSame = true;
                             break;
                         }
