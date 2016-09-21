@@ -340,7 +340,7 @@ public class TrackingLogActivity extends BaseFragmentActivity implements FlurryE
                     public void run() {
                         try {
                             float ratio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int)(80.0f*ratio)));
+                            map.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), (int)(80.0f*ratio)), 500, null);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -381,7 +381,7 @@ public class TrackingLogActivity extends BaseFragmentActivity implements FlurryE
             if(trackingLogItem.getMode().equalsIgnoreCase(TrackingLogModeValue.MOVE.getOrdinal())){
                 marker.setPosition(new LatLng(trackingLogItem.getFromLat(), trackingLogItem.getFromLng()));
                 final LatLng finalPosition = new LatLng(trackingLogItem.getLat(), trackingLogItem.getLng());
-                final double finalDuration = trackingLogItem.getDuration() * 1000l;
+                final double finalDuration = trackingLogItem.getDuration() * 1000.0D;
                 TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {
                     @Override
                     public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
@@ -462,7 +462,7 @@ public class TrackingLogActivity extends BaseFragmentActivity implements FlurryE
         private Double fromLng;
         @SerializedName("duration")
         @Expose
-        private Long duration;
+        private Float duration;
 
         public Double getLat() {
             return lat;
@@ -512,11 +512,11 @@ public class TrackingLogActivity extends BaseFragmentActivity implements FlurryE
             this.fromLng = fromLng;
         }
 
-        public Long getDuration() {
+        public Float getDuration() {
             return duration;
         }
 
-        public void setDuration(Long duration) {
+        public void setDuration(Float duration) {
             this.duration = duration;
         }
     }

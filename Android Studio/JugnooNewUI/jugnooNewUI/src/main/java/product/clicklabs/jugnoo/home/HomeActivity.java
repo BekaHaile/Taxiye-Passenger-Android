@@ -2783,7 +2783,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
                         initAndClearInRidePath();
-                        Database2.getInstance(this).deleteDriverLocations();
+                        getTrackingLogHelper().uploadAllTrackLogs();
 
 
                         break;
@@ -3111,7 +3111,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                        genieLayout.setVisibility(View.GONE);
 
                         try {
-                            getTrackingLogHelper().generateTrackLogFile(Data.autoData.getcEngagementId());
+                            getTrackingLogHelper().uploadAllTrackLogs();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -3139,6 +3139,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         dropLocationSet = false;
                         Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
                         fabView.setRelativeLayoutFABVisibility(mode);
+
+                        getTrackingLogHelper().uploadAllTrackLogs();
                         break;
 
                 }
