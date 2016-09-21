@@ -1,12 +1,10 @@
 package com.sabkuchfresh.fragments;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,10 +23,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshAddressAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
@@ -45,7 +41,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
@@ -61,7 +56,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -127,12 +121,16 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         recyclerView.setHasFixedSize(false);
         recyclerView.setVisibility(View.VISIBLE);
 
-        setSavePlaces();
-        deliveryAddresses.addAll(activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses());
-        for(int i=0; i<deliveryAddresses.size(); i++){
-            if(activity.getSelectedAddress().equalsIgnoreCase(deliveryAddresses.get(i).getLastAddress())){
-                deliveryAddresses.remove(i);
-            }
+        try {
+            setSavePlaces();
+            deliveryAddresses.addAll(activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses());
+            for(int i=0; i<deliveryAddresses.size(); i++){
+				if(activity.getSelectedAddress().equalsIgnoreCase(deliveryAddresses.get(i).getLastAddress())){
+					deliveryAddresses.remove(i);
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         addressFragment = new FreshAddressAdapter(activity, deliveryAddresses, this);
         recyclerView.setAdapter(addressFragment);
