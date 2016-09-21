@@ -77,7 +77,7 @@ public class RateAppDialog {
 				public void onClick(View v) {
 					try {
 						dialog.dismiss();
-						acceptAppRatingRequestAPI(activity, AppRatingTypeValue.ACCEPTED);
+						acceptAppRatingRequestAPI(AppRatingTypeValue.ACCEPTED);
 						if(rateAppDialogContent != null) {
 							Intent intent = new Intent(Intent.ACTION_VIEW);
 							intent.setData(Uri.parse(rateAppDialogContent.getUrl()));
@@ -93,6 +93,7 @@ public class RateAppDialog {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
+					acceptAppRatingRequestAPI(AppRatingTypeValue.REJECTED);
 				}
 			});
 
@@ -100,22 +101,22 @@ public class RateAppDialog {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
-					acceptAppRatingRequestAPI(activity, AppRatingTypeValue.NEVER);
+					acceptAppRatingRequestAPI(AppRatingTypeValue.NEVER);
 				}
 			});
 
-			linearLayoutInner.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-				}
-			});
-
-			relative.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
+//			linearLayoutInner.setOnClickListener(new View.OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//				}
+//			});
+//
+//			relative.setOnClickListener(new View.OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					dialog.dismiss();
+//				}
+//			});
 
 			dialog.show();
 		} catch (Exception e) {
@@ -125,7 +126,7 @@ public class RateAppDialog {
 	}
 
 
-	private void acceptAppRatingRequestAPI(final Activity activity, AppRatingTypeValue ratingFlag) {
+	private void acceptAppRatingRequestAPI(AppRatingTypeValue ratingFlag) {
 		try {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				HashMap<String, String> params = new HashMap<>();
@@ -136,11 +137,39 @@ public class RateAppDialog {
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "acceptAppRatingRequest response = " + responseStr);
+						try {
+							Data.userData.setCustomerRateAppFlag(0);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 
 					@Override
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "acceptAppRatingRequest error="+error.toString());
+					}
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void thumbsUpClickedAPI() {
+		try {
+			if (AppStatus.getInstance(activity).isOnline(activity)) {
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				RestClient.getApiServices().thumbsUpClicked(params, new retrofit.Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "thumbsUpClicked response = " + responseStr);
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "thumbsUpClicked error="+error.toString());
 					}
 				});
 			}
