@@ -2470,7 +2470,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (lastPickUp.size() == 0) {
                     if ((!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.home))) &&
                             (!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.work)))) {
-                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), textViewInitialSearch.getText().toString(), Data.autoData.getPickupLatLng()));
+                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), Data.autoData.getPickupLatLng()));
                     }
                 } else {
                     boolean isSame = false;
@@ -2483,7 +2483,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (!isSame) {
                         if ((!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.home))) &&
                                 (!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.work)))) {
-                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), textViewInitialSearch.getText().toString(), Data.autoData.getPickupLatLng()));
+                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), Data.autoData.getPickupLatLng()));
                         }
                     }
                     if (lastPickUp.size() > 3) {
