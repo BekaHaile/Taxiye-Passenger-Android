@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 
@@ -232,6 +233,15 @@ public class FABView {
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            try {
+                if(Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0){
+					Data.latitude = Data.autoData.getLastRefreshLatLng().latitude;
+					Data.longitude = Data.autoData.getLastRefreshLatLng().longitude;
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             LatLng latLng = new LatLng(Data.latitude, Data.longitude);
             if(activity instanceof HomeActivity){
                 latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();

@@ -300,8 +300,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             });
 
 
-            Data.latitude = Data.loginLatitude;
-            Data.longitude = Data.loginLongitude;
 
 
             try {
