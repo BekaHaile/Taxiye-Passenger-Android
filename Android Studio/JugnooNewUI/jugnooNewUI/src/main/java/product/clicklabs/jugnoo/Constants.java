@@ -478,4 +478,13 @@ public interface Constants {
 
 	String INTENT_ACTION_WALLET_UPDATE = "INTENT_ACTION_WALLET_UPDATE";
 
+
+	String KEY_BEARING = "bearing";
+	String KEY_MODE = "mode";
+	String KEY_FROM_LAT = "from_lat";
+	String KEY_FROM_LONG = "from_long";
+	String KEY_DURATION = "duration";
+	String KEY_LAT = "lat";
+	String KEY_LONG = "long";
+
 }

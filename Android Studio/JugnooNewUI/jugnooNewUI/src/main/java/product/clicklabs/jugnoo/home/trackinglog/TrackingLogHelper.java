@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -48,10 +49,21 @@ public class TrackingLogHelper {
 				jsonObjectTrackingLog.put(Constants.KEY_DRIVER_LOCATIONS, driverLocations);
 				jsonObjectTrackingLog.put(Constants.KEY_TRACKING_LOGS, trackingLogs);
 				writeTrackingLogToFile(engagementId, jsonObjectTrackingLog.toString());
-				Database2.getInstance(context).deleteDriverLocations();
-				Database2.getInstance(context).deleteTrackingLogs();
+				Database2.getInstance(context).deleteDriverLocations(Integer.parseInt(engagementId));
+				Database2.getInstance(context).deleteTrackingLogs(Integer.parseInt(engagementId));
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void uploadAllTrackLogs(){
+		try{
+			ArrayList<Integer> engagementIds = Database2.getInstance(context).getDistinctEngagementIdsFromDriverLocations();
+			for(Integer engagementId : engagementIds){
+				generateTrackLogFile(String.valueOf(engagementId));
+			}
+		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}

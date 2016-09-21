@@ -1,0 +1,99 @@
+<LinearLayout android:id="@+id/relative"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            style="@style/title"
+            android:text="@string/tracking_log"/>
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            style="@style/back_image"
+            />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/menu_item_selector_color"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        >
+
+        <LinearLayout
+            android:id="@+id/linearLayoutForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <EditText
+                android:id="@+id/editTextEngagementId"
+                android:layout_width="500px"
+                android:layout_height="100px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="240px"
+                android:background="@drawable/edittext_background"
+                android:gravity="center"
+                android:hint="@string/engagement_id"
+                android:inputType="number"
+                android:maxLength="20"
+                android:padding="20px"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/text_color_hint"
+                android:textSize="@dimen/text_size_34"
+                />
+
+            <Button
+                android:id="@+id/buttonSubmit"
+                style="@style/ButtonTheme"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="100px"
+                android:text="@string/submit"
+                />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewLogs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false"
+            >
+        </android.support.v7.widget.RecyclerView>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutMap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

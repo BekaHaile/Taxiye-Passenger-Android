@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.home.models.TrackingLogModeValue;
+import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;

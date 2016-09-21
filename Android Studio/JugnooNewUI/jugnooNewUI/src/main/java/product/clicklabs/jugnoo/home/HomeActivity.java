@@ -165,7 +165,7 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
-import product.clicklabs.jugnoo.home.models.TrackingLogModeValue;
+import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
@@ -2783,7 +2783,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
                         initAndClearInRidePath();
-                        Database2.getInstance(this).deleteDriverLocations();
+                        getTrackingLogHelper().uploadAllTrackLogs();
 
 
                         break;
@@ -3111,7 +3111,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                        genieLayout.setVisibility(View.GONE);
 
                         try {
-                            getTrackingLogHelper().generateTrackLogFile(Data.autoData.getcEngagementId());
+                            getTrackingLogHelper().uploadAllTrackLogs();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -3139,6 +3139,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         dropLocationSet = false;
                         Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
                         fabView.setRelativeLayoutFABVisibility(mode);
+
+                        getTrackingLogHelper().uploadAllTrackLogs();
                         break;
 
                 }
@@ -6193,7 +6195,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 fareFixed = jObj.optJSONObject("fare_details").optDouble("fare_fixed", 0);
                 cancelRideThrashHoldTime = jObj.optString("cancel_ride_threshold_time", "");
                 cancellationCharges = jObj.optInt("cancellation_charge", 0);
-                bearing = jObj.optDouble("bearing", 0);
+                bearing = jObj.optDouble(KEY_BEARING, 0);
 
             } catch(Exception e){
                 e.printStackTrace();

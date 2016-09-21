@@ -23,7 +23,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PendingAPICall;
 import product.clicklabs.jugnoo.datastructure.RidePath;
-import product.clicklabs.jugnoo.home.models.TrackingLogModeValue;
+import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.Schedule;
@@ -913,12 +913,29 @@ public class Database2 {                                                        
         return jsonArray;
     }
 
-    public void deleteDriverLocations(){
+    public void deleteDriverLocations(int engagementId){
         try{
-            database.execSQL("delete from " + TABLE_DRIVER_LOCATIONS);
+            database.execSQL("delete from " + TABLE_DRIVER_LOCATIONS + " where "+ENGAGEMENT_ID+"="+engagementId);
         } catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Integer> getDistinctEngagementIdsFromDriverLocations() {
+        ArrayList<Integer> engagementIds = new ArrayList<>();
+        try {
+            Cursor cursor = database.rawQuery("select distinct "+ENGAGEMENT_ID+" from "+TABLE_DRIVER_LOCATIONS, null);
+            if (cursor.getCount() > 0) {
+                int in0 = cursor.getColumnIndex(ENGAGEMENT_ID);
+                for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+                    engagementIds.add(cursor.getInt(in0));
+                }
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return engagementIds;
     }
 
 
@@ -938,7 +955,7 @@ public class Database2 {                                                        
             contentValues.put(MODE, mode);
             contentValues.put(FROM_LAT, String.valueOf(fromLatLng.latitude));
             contentValues.put(FROM_LONG, String.valueOf(fromLatLng.longitude));
-            contentValues.put(DURATION, String.valueOf(duration/1000l));
+            contentValues.put(DURATION, String.valueOf(((float)duration)/1000.0f));
             database.insert(TABLE_TRACKING_LOGS, null, contentValues);
         } catch(Exception e){
             e.printStackTrace();
@@ -980,9 +997,9 @@ public class Database2 {                                                        
         return jsonArray;
     }
 
-    public void deleteTrackingLogs(){
+    public void deleteTrackingLogs(int engagementId){
         try{
-            database.execSQL("delete from " + TABLE_TRACKING_LOGS);
+            database.execSQL("delete from " + TABLE_TRACKING_LOGS + " where "+ENGAGEMENT_ID+"="+engagementId);
         } catch(Exception e){
             e.printStackTrace();
         }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="80px"
+    android:tag="mwar"
+    android:splitMotionEvents="false"
+    android:background="@drawable/bg_white_menu_item_selector_color_selector"
+    >
+
+    <ImageView
+        android:layout_width="21px"
+        android:layout_height="37px"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30px"
+        android:src="@drawable/ic_arrow_orange"
+        android:tag="mwar" />
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:text=""
+        android:textColor="@color/text_color_light_selector"
+        android:textSize="@dimen/text_size_30"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        android:layout_centerVertical="true"
+        />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginLeft="2px"
+        android:layout_marginRight="2px"
+        android:background="@color/stroke_color_light"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>
