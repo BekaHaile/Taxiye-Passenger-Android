@@ -36,38 +36,63 @@
         android:splitMotionEvents="false"
         >
 
-        <EditText
-            android:id="@+id/editTextEngagementId"
-            android:layout_width="500px"
-            android:layout_height="100px"
-            android:background="@drawable/edittext_background"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="240px"
-            android:textSize="@dimen/text_size_34"
-            android:textColor="@color/text_color"
-            android:hint="@string/engagement_id"
-            android:padding="20px"
-            android:gravity="center"
-            android:textColorHint="@color/text_color_hint"
-            />
+        <LinearLayout
+            android:id="@+id/linearLayoutForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
-        <Button
-            android:id="@+id/buttonSubmit"
-            style="@style/ButtonTheme"
-            android:text="@string/submit"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="100px"
-            />
+            <EditText
+                android:id="@+id/editTextEngagementId"
+                android:layout_width="500px"
+                android:layout_height="100px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="240px"
+                android:background="@drawable/edittext_background"
+                android:gravity="center"
+                android:hint="@string/engagement_id"
+                android:inputType="number"
+                android:maxLength="20"
+                android:padding="20px"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/text_color_hint"
+                android:textSize="@dimen/text_size_34"
+                />
+
+            <Button
+                android:id="@+id/buttonSubmit"
+                style="@style/ButtonTheme"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="100px"
+                android:text="@string/submit"
+                />
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewLogs"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:splitMotionEvents="false"
-            android:scrollbars="vertical"
             android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false"
             >
         </android.support.v7.widget.RecyclerView>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutMap"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <fragment
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </RelativeLayout>
 
 
     </LinearLayout>

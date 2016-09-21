@@ -4,6 +4,7 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
+import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -485,5 +486,10 @@ public interface ApiService {
     @POST("/customer/upload_ride_log")
     Response customerUploadRideLog(@Part("log_file") TypedFile file,
                                @PartMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/customer/fetch_ride_log")
+    void customerFetchRideLog(@FieldMap Map<String, String> params,
+                          Callback<TrackingLogReponse> callback);
 
 }

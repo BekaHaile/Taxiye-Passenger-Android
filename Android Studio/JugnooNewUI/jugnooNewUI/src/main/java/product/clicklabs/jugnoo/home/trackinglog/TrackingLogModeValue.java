@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.home.models;
+package product.clicklabs.jugnoo.home.trackinglog;
 
 /**
  * Created by Shankar on 6/23/16.

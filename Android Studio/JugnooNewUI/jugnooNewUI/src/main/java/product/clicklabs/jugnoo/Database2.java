@@ -23,7 +23,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PendingAPICall;
 import product.clicklabs.jugnoo.datastructure.RidePath;
-import product.clicklabs.jugnoo.home.models.TrackingLogModeValue;
+import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.Schedule;
