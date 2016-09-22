@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.utils;
 
 import com.sabkuchfresh.utils.AppConstant;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -49,12 +50,14 @@ public class CleverTapUtils {
     public void setCoupons() {
         try {
             ArrayList<String> coupons = new ArrayList<>();
+            double maxValue = 0.0;
             if(Data.userData != null && Data.userData.getPromoCoupons() != null) {
                 for(int i=0;i<Data.userData.getPromoCoupons().size();i++) {
                     coupons.add(Data.userData.getPromoCoupons().get(i).getTitle());
                     String value = getCouponValue(Data.userData.getPromoCoupons().get(i).getTitle());
                     if(value.length()>0) {
                         coupons.add(value);
+                        maxValue = getCouponMaxValue(maxValue, value);
                     }
                 }
             }
@@ -64,6 +67,7 @@ public class CleverTapUtils {
                     String value = getCouponValue(Data.autoData.getPromoCoupons().get(i).getTitle());
                     if(value.length()>0) {
                         coupons.add(value);
+                        maxValue = getCouponMaxValue(maxValue, value);
                     }
                 }
             }
@@ -73,6 +77,7 @@ public class CleverTapUtils {
                     String value = getCouponValue(Data.getFreshData().getPromoCoupons().get(i).getTitle());
                     if(value.length()>0) {
                         coupons.add(value);
+                        maxValue = getCouponMaxValue(maxValue, value);
                     }
                 }
             }
@@ -82,6 +87,7 @@ public class CleverTapUtils {
                     String value = getCouponValue(Data.getMealsData().getPromoCoupons().get(i).getTitle());
                     if(value.length()>0) {
                         coupons.add(value);
+                        maxValue = getCouponMaxValue(maxValue, value);
                     }
                 }
             }
@@ -92,12 +98,18 @@ public class CleverTapUtils {
                     String value = getCouponValue(Data.getDeliveryData().getPromoCoupons().get(i).getTitle());
                     if(value.length()>0) {
                         coupons.add(value);
+                        maxValue = getCouponMaxValue(maxValue, value);
                     }
                 }
             }
             Log.d("TAG", "Coupon counts = "+coupons.size());
 
             MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
+
+            DecimalFormat df = new DecimalFormat("#.##");
+            HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+            profileUpdate.put(Events.MAX_COUPON_VALUE, df.format(maxValue));
+            MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -114,6 +126,15 @@ public class CleverTapUtils {
             }
         }
         return "";
+    }
+
+    public double getCouponMaxValue(double maxValue, String value){
+        double dValue = 0.0;
+        try{dValue = Double.parseDouble(value);} catch (Exception e){}
+        if(dValue > maxValue){
+            maxValue = dValue;
+        }
+        return maxValue;
     }
 
     public void setWalletData() {

@@ -57,4 +57,6 @@ public interface Events {
     String IS_PUSH_FRESH_ENABLED = "is_push_fresh_enabled";
     String TRAIN_TIME = "train_time";
 
+    String MAX_COUPON_VALUE = "max_coupon_value";
+
 }

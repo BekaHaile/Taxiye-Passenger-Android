@@ -23,6 +23,7 @@ import com.flurry.android.FlurryAgent;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -385,16 +386,24 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     private void updateUserCoupons() {
         try{
             ArrayList<String> coupons = new ArrayList<>();
+            double maxValue = 0.0;
             if(promoCoupons != null) {
                 for(int i=0;i<promoCoupons.size();i++) {
                     coupons.add(promoCoupons.get(i).getTitle());
                     String value = MyApplication.getInstance().getCleverTapUtils().getCouponValue(promoCoupons.get(i).getTitle());
                     if(value.length()>0) {
                         coupons.add(value);
+                        maxValue = MyApplication.getInstance().getCleverTapUtils().getCouponMaxValue(maxValue, value);
                     }
                 }
             }
             MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
+
+            DecimalFormat df = new DecimalFormat("#.##");
+            HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+            profileUpdate.put(Events.MAX_COUPON_VALUE, df.format(maxValue));
+            MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+
         } catch(Exception e) {
             e.printStackTrace();
         }
