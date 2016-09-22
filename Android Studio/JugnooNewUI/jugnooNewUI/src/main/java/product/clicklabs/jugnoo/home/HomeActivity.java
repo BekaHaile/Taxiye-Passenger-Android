@@ -124,6 +124,7 @@ import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
 import product.clicklabs.jugnoo.apis.ApiCampaignRequestCancel;
+import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
@@ -394,7 +395,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
     public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
-    public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 20; // in meters
+    public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 10; // in meters
 
     public static final float MAX_ZOOM = 15;
     private static final int MAP_ANIMATE_DURATION = 300;
@@ -1548,6 +1549,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							} else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
 								endRideWithGif();
 							}
+                            disableEmergencyModeIfNeeded(Data.autoData.getcEngagementId());
+                            updateTopBar();
+                            topBar.imageViewHelp.setVisibility(View.GONE);
 						}
 					}
                 } catch (Exception e) {
@@ -2636,6 +2640,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         setZeroRatingView();
                         linearLayoutRideSummary.setLayoutTransition(new LayoutTransition());
                         relativeLayoutRideEndWithImage.setVisibility(View.GONE);
+                        relativeLayoutGreat.setVisibility(View.GONE);
 
                         editTextRSFeedback.setText("");
                         for(int i=0; i<Data.autoData.getFeedbackReasons().size(); i++){
@@ -2729,7 +2734,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             else if(myLocation != null){
                                 zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
                             }
-                            myLocationButtonClicked = true;
+                            try {
+                                if(!zoomedForSearch && Data.autoData.getPickupLatLng() != null && myLocation != null
+										&& MapUtils.distance(Data.autoData.getPickupLatLng(),
+										new LatLng(myLocation.getLatitude(), myLocation.getLongitude())) <= MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
+									myLocationButtonClicked = true;
+								}
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         firstTimeZoom = true;
 
@@ -6983,6 +6996,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void afterRideFeedbackSubmitted(final int givenRating){
         try {
+            try {
+                disableEmergencyModeIfNeeded(Data.autoData.getcEngagementId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             eventKochavaFirstRide();
             
             ReferralActions.incrementTransactionCount(HomeActivity.this);
@@ -7228,7 +7247,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                     || PassengerScreenMode.P_IN_RIDE == passengerScreenMode
-                    || PassengerScreenMode.P_RIDE_END == passengerScreenMode){
+                    || (PassengerScreenMode.P_RIDE_END == passengerScreenMode
+                    && relativeLayoutRideEndWithImage.getVisibility() == View.GONE && relativeLayoutGreat.getVisibility() == View.GONE)){
                 int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 if(modeEnabled == 1){
                     topBar.textViewTitle.setText(getResources().getString(R.string.emergency_mode_enabled));
@@ -7265,6 +7285,37 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
+
+    private void disableEmergencyModeIfNeeded(final String engagementId){
+        int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
+        if(modeEnabled == 1){
+            disableEmergencyMode(engagementId);
+        }
+    }
+
+    private void disableEmergencyMode(final String engagementId){
+        new ApiEmergencyDisable(this, new ApiEmergencyDisable.Callback() {
+            @Override
+            public void onSuccess() {
+            }
+
+            @Override
+            public void onFailure() {
+            }
+
+            @Override
+            public void onRetry(View view) {
+                disableEmergencyMode(engagementId);
+            }
+
+            @Override
+            public void onNoRetry(View view) {
+
+            }
+        }).emergencyDisable(engagementId);
+    }
+
 
 
     public void callAndHandleStateRestoreAPI(final boolean showDialogs) {
