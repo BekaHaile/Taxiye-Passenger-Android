@@ -7873,7 +7873,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 HashMap<String, String> params = new HashMap<>();
 
                 params.put("access_token", Data.userData.accessToken);
-                params.put(KEY_GIVEN_RATING, "" + givenRating);
+                params.put(KEY_GIVEN_RATING, String.valueOf(givenRating));
                 params.put("engagement_id", engagementId);
                 params.put("driver_id", ratingReceiverId);
                 params.put("feedback", feedbackText);
