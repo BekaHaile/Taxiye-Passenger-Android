@@ -323,6 +323,7 @@ public class TrackingLogActivity extends BaseFragmentActivity implements FlurryE
     private void displayDataOnMap(JSONObject jsonObject){
         try {
             if(map != null){
+                map.clear();
 				JSONArray jDriverLocations = jsonObject.getJSONArray(Constants.KEY_DRIVER_LOCATIONS);
                 final LatLngBounds.Builder builder = new LatLngBounds.Builder();
 	            for(int i=0; i<jDriverLocations.length(); i++){
@@ -376,7 +377,7 @@ public class TrackingLogActivity extends BaseFragmentActivity implements FlurryE
 
     private void animateMarkerICSRecursive(final Marker marker, final List<TrackingLogItem> trackingLogItems,
                                                    final LatLngInterpolator latLngInterpolator) {
-        if(trackingLogItems.size() > 0) {
+        if(marker.isVisible() && trackingLogItems.size() > 0) {
             TrackingLogItem trackingLogItem = trackingLogItems.remove(0);
             if(trackingLogItem.getMode().equalsIgnoreCase(TrackingLogModeValue.MOVE.getOrdinal())){
                 marker.setPosition(new LatLng(trackingLogItem.getFromLat(), trackingLogItem.getFromLng()));
