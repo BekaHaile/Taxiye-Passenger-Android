@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,6 +34,8 @@ import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -295,22 +299,52 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
                     @Override
                     public void onPlaceSearchPost(SearchResult searchResult) {
-                        //progressBarSearch.setVisibility(View.GONE);
-//                        searchAddress.setText(searchResult.name);
-                        activity.getTopBar().editTextDeliveryAddress.setText("");
-                        scrollViewSearch.setVisibility(View.GONE);
-//                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(searchResult.getLatLng().latitude));
-//                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(searchResult.getLatLng().longitude));
-//                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), "" + searchResult.getAddress());
-//                        activity.setSelectedAddress("" + searchResult.getAddress());
-//                        mBus.post(new AddressAdded(true));
-                        fillAddressDetails(searchResult.getLatLng());
+                        try {
+                            activity.getTopBar().editTextDeliveryAddress.setText("");
+                            scrollViewSearch.setVisibility(View.GONE);
 
-                        //activity.performBackPressed();
-                        //googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                            activity.current_street = "";
+                            activity.current_route = "";
+                            activity.current_area = "";
+                            activity.current_city = "";
+                            activity.current_pincode = "";
 
-//                        searchListActionsHandler.onPlaceSearchPost(searchResult);
-//                        getActivity().getSupportFragmentManager().popBackStack();
+                            activity.current_latitude = searchResult.getLatLng().latitude;
+                            activity.current_longitude = searchResult.getLatLng().longitude;
+
+                            String[] address = searchResult.getAddress().split(",");
+                            List<String> addressArray = Arrays.asList(address);
+                            Collections.reverse(addressArray);
+                            address = (String[]) addressArray.toArray();
+
+                            if(address.length > 0 && (!TextUtils.isEmpty(address[0].trim())))
+                                activity.current_pincode = "" + address[0].trim();
+                            if(address.length > 1 && (!TextUtils.isEmpty(address[1].trim())))
+                                activity.current_city = "" + address[1].trim();
+                            if(address.length > 2 && (!TextUtils.isEmpty(address[2].trim())))
+                                activity.current_area = "" + address[2].trim();
+
+                            int val = 0;
+                            if(!TextUtils.isEmpty(address[address.length - 1].replaceAll("\\D+","")) && address.length>3) {
+                                activity.current_street = address[address.length - 1].replaceAll("\\D+","");
+                                val = 1;
+                            }
+
+                            activity.current_route = "";
+                            if(address.length>3) {
+                                for (int i = 3; i < address.length - val; i++) {
+                                    if(i==3) {
+                                        activity.current_route = address[i].trim();
+                                    } else {
+                                        activity.current_route = activity.current_route+", "+address[i].trim();
+                                    }
+                                }
+                            }
+                            //fillAddressDetails(searchResult.getLatLng());
+                            activity.openAddToAddressBook();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override

@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:text="Current Location"
                 android:layout_marginLeft="40px"
-                android:textColor="@color/text_color"
+                android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/text_size_28"/>
         </LinearLayout>
         <ImageView
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:text="Choose on map"
                 android:layout_marginLeft="40px"
-                android:textColor="@color/text_color"
+                android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/text_size_28"/>
         </LinearLayout>
     </LinearLayout>
@@ -97,7 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/add_home"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_28" />
 
                 <TextView
@@ -153,7 +153,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/add_work"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_28" />
 
                 <TextView

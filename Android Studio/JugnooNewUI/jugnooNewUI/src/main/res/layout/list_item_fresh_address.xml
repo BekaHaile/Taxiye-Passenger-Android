@@ -24,7 +24,7 @@
             android:paddingRight="20px"
             android:tag="mwar"
             android:text="@string/last"
-            android:textColor="@color/text_color"
+            android:textColor="@color/text_color_light_selector"
             android:textSize="28px" />
 
         <ImageView

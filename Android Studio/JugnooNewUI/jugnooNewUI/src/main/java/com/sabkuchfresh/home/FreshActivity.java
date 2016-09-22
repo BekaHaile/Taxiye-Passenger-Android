@@ -175,6 +175,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            try {
+                if(Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0){
+                    Data.latitude = Data.loginLatitude;
+                    Data.longitude = Data.loginLongitude;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
             relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
