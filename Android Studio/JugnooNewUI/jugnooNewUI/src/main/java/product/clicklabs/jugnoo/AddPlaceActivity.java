@@ -28,7 +28,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -320,7 +319,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                                         Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, strResult);
                                     }
 
-                                    Intent intent=new Intent();
+                                    Intent intent = new Intent();
                                     intent.putExtra("PLACE", strResult);
                                     if("".equalsIgnoreCase(strResult)) {
                                         setResult(RESULT_CANCELED, intent);

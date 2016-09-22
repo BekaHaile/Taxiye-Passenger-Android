@@ -41,7 +41,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -289,9 +288,9 @@ public class SearchListAdapter extends BaseAdapter{
     public synchronized void notifyDataSetChanged() {
         if (searchResults.size() > 1) {
             if (searchResults.contains(new SearchResult(context.getResources()
-                    .getString(R.string.no_results_found), "", ""))) {
+                    .getString(R.string.no_results_found), "", null, ""))) {
                 searchResults.remove(searchResults.indexOf(new SearchResult(context.getResources()
-                        .getString(R.string.no_results_found), "", "")));
+                        .getString(R.string.no_results_found), "", null, "")));
             }
         }
 
@@ -323,7 +322,7 @@ public class SearchListAdapter extends BaseAdapter{
 							for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
                                 String name = autocompletePrediction.getFullText(null).toString().split(",")[0];
 								searchResultsForSearch.add(new SearchResult(name,
-                                        autocompletePrediction.getFullText(null).toString(), autocompletePrediction.getPlaceId()));
+                                        autocompletePrediction.getFullText(null).toString(), null, autocompletePrediction.getPlaceId()));
 							}
 							autocompletePredictions.release();
 
@@ -362,10 +361,10 @@ public class SearchListAdapter extends BaseAdapter{
 				if ((searchResultsForSearch.size()) == 0 && (editTextForSearch.getText().toString().trim().length() > 0)) {
                     if(AppStatus.getInstance(context).isOnline(context)) {
                         searchResultsForSearch.add(new SearchResult(context.getResources()
-                                .getString(R.string.no_results_found), "", ""));
+                                .getString(R.string.no_results_found), "", null, ""));
                     } else{
                         searchResultsForSearch.add(new SearchResult(context.getResources()
-                                .getString(R.string.no_internet_connection), "", ""));
+                                .getString(R.string.no_internet_connection), "", null, ""));
                     }
                 }
                 SearchListAdapter.this.setResults(searchResultsForSearch);
@@ -417,7 +416,7 @@ public class SearchListAdapter extends BaseAdapter{
                             if (places.getStatus().isSuccess()) {
                                 final Place myPlace = places.get(0);
                                 final CharSequence thirdPartyAttributions = places.getAttributions();
-                                SearchResult searchResult = new SearchResult(placeName, placeAddress, myPlace.getLatLng());
+                                SearchResult searchResult = new SearchResult(placeName, placeAddress, myPlace.getLatLng(), placeId);
                                 searchResult.setThirdPartyAttributions(thirdPartyAttributions);
                                 setSearchResult(searchResult);
                             }

@@ -4,18 +4,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
-public class SearchResult implements Serializable{
+public class SearchResult {
 	@SerializedName("name")
 	@Expose
 	private String name;
 	@SerializedName("address")
 	@Expose
 	private String address;
-	@SerializedName("latLng")
+	@SerializedName("latitude")
 	@Expose
-	private LatLng latLng;
+	private Double latitude;
+	@SerializedName("longitude")
+	@Expose
+	private Double longitude;
 	@SerializedName("thirdPartyAttributions")
 	@Expose
 	private CharSequence thirdPartyAttributions;
@@ -25,22 +26,23 @@ public class SearchResult implements Serializable{
 	@SerializedName("placeId")
 	@Expose
 	private String placeId;
+	@SerializedName("id")
+	@Expose
+	private Integer id;
 
 	private Type type = Type.SEARCHED;
 	
-	public SearchResult(String name, String address, LatLng latLng){
-		this.name = name;
-		this.address = address;
-		this.latLng = latLng;
-		this.thirdPartyAttributions = null;
-		time = System.currentTimeMillis();
-	}
-
-	public SearchResult(String name, String address, String placeId){
+	public SearchResult(String name, String address, String placeId, double latitude, double longitude){
 		this.name = name;
 		this.address = address;
 		this.placeId = placeId;
+		this.latitude = latitude;
+		this.longitude = longitude;
+
+		thirdPartyAttributions = null;
+		time = System.currentTimeMillis();
 	}
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -110,6 +112,14 @@ public class SearchResult implements Serializable{
 
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 
