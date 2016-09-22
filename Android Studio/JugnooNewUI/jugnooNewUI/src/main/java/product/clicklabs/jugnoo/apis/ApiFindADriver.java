@@ -331,6 +331,9 @@ public class ApiFindADriver {
 			if(findADriverResponse.getDeliveryEnabled() != null) {
 				Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
 			}
+			if(findADriverResponse.getGroceryEnabled() != null) {
+				Data.userData.setGroceryEnabled(findADriverResponse.getGroceryEnabled());
+			}
 			if(findADriverResponse.getIntegratedJugnooEnabled() != null){
 				Data.userData.setIntegratedJugnooEnabled(findADriverResponse.getIntegratedJugnooEnabled());
 			}

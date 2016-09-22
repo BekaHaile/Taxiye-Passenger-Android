@@ -63,6 +63,9 @@ public class FindADriverResponse {
     @SerializedName("delivery_enabled")
     @Expose
     private Integer deliveryEnabled = 0;
+    @SerializedName("grocery_enabled")
+    @Expose
+    private Integer groceryEnabled = 0;
     @SerializedName("integrated_jugnoo_enabled")
     @Expose
     private Integer integratedJugnooEnabled;
@@ -367,6 +370,14 @@ public class FindADriverResponse {
 
     public void setMealsEnabled(Integer mealsEnabled) {
         this.mealsEnabled = mealsEnabled;
+    }
+
+    public Integer getGroceryEnabled() {
+        return groceryEnabled;
+    }
+
+    public void setGroceryEnabled(Integer groceryEnabled) {
+        this.groceryEnabled = groceryEnabled;
     }
 
     public String getGamePredictUrl() {

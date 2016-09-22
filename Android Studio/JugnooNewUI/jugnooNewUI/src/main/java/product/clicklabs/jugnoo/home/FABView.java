@@ -126,7 +126,7 @@ public class FABView {
         //relativeLayoutFAB.setVisibility(View.INVISIBLE);
         try {
             if(Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
-                    (Data.userData.getFreshEnabled() == 1 || Data.userData.getMealsEnabled() == 1 || Data.userData.getDeliveryEnabled() == 1)
+                    (Data.userData.getFreshEnabled() == 1 || Data.userData.getMealsEnabled() == 1 || Data.userData.getDeliveryEnabled() == 1 || Data.userData.getGroceryEnabled() == 1)
                     && Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if (passengerScreenMode != null) {
                     if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
@@ -198,7 +198,7 @@ public class FABView {
     public void setFABButtons(){
         try {
             if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
-                    && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
+                    && (Data.userData.getGroceryEnabled() == 0) && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 relativeLayoutFAB.setVisibility(View.GONE);
             } else {
                 relativeLayoutFAB.setVisibility(View.INVISIBLE);

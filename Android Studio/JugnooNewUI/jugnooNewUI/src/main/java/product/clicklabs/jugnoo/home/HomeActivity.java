@@ -4619,7 +4619,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setupFreshUI();
                     setupInAppCampaignUI();
                     if(Data.userData.getIntegratedJugnooEnabled() == 1) {
-                        if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)) {
+                        if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
+                                && (Data.userData.getGroceryEnabled() == 0)) {
                             imageViewFabFake.setVisibility(View.GONE);
                             fabView.menuLabelsRight.setVisibility(View.INVISIBLE);
                         } else {
