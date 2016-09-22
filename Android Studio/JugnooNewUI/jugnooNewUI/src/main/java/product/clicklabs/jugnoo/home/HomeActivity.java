@@ -444,6 +444,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private Bundle bundle;
     public float scale = 0f;
     private boolean rideNowClicked = false;
+    private String dropAddressName = "";
 
     /*private RelativeLayout relativeLayoutFAB;
     private FloatingActionMenu menuLabelsRight;
@@ -654,6 +655,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewDestHelp = (TextView) findViewById(R.id.textViewDestHelp);textViewDestHelp.setTypeface(Fonts.mavenRegular(this));
         textViewAssigningDropLocationClick = (TextView)findViewById(R.id.textViewAssigningDropLocationClick);
         textViewAssigningDropLocationClick.setTypeface(Fonts.mavenMedium(this));
+        textViewAssigningDropLocationClick.setText("");
         progressBarAssigningDropLocation = (ProgressWheel)findViewById(R.id.progressBarAssigningDropLocation);
         imageViewAssigningDropLocationEdit = (ImageView)findViewById(R.id.imageViewAssigningDropLocationEdit);
         imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
@@ -673,6 +675,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutFinalDropLocationClick = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationClick);
         textViewFinalDropLocationClick = (TextView)findViewById(R.id.textViewFinalDropLocationClick);
         textViewFinalDropLocationClick.setTypeface(Fonts.mavenMedium(this));
+        textViewFinalDropLocationClick.setText("");
         imageViewFinalDropLocationEdit = (ImageView) findViewById(R.id.imageViewFinalDropLocationEdit);
         imageViewFinalDropLocationEdit.setVisibility(View.GONE);
         progressBarFinalDropLocation = (ProgressWheel) findViewById(R.id.progressBarFinalDropLocation);
@@ -2976,7 +2979,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 imageViewFinalDropLocationEdit.setVisibility(View.GONE);
                             } else{
                                 relativeLayoutPoolSharing.setVisibility(View.GONE);
-                                imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
                             }
                             setPoolRideStatus(Data.autoData.getAssignedDriverInfo().getPoolRideStatusString(), Data.autoData.getAssignedDriverInfo().getFellowRiders());
                         } catch (Exception e) {
@@ -3050,7 +3052,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 imageViewFinalDropLocationEdit.setVisibility(View.GONE);
                             } else{
                                 relativeLayoutPoolSharing.setVisibility(View.GONE);
-                                imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
                             }
                             setPoolRideStatus(Data.autoData.getAssignedDriverInfo().getPoolRideStatusString(), Data.autoData.getAssignedDriverInfo().getFellowRiders());
                         } catch (Exception e) {
@@ -3113,7 +3114,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 imageViewFinalDropLocationEdit.setVisibility(View.GONE);
                             } else{
                                 relativeLayoutPoolSharing.setVisibility(View.GONE);
-                                imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
                             }
                             setPoolRideStatus(Data.autoData.getAssignedDriverInfo().getPoolRideStatusString(), Data.autoData.getAssignedDriverInfo().getFellowRiders());
                         } catch (Exception e) {
@@ -3573,6 +3573,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                     }
                     textViewAssigningDropLocationClick.setText("");
+                    dropAddressName = "";
                     imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
                     progressBarAssigningDropLocation.setVisibility(View.GONE);
                 }
@@ -3602,6 +3603,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void setDropLocationEngagedUI(){
         if(Data.autoData.getDropLatLng() == null){
             textViewFinalDropLocationClick.setText("");
+            dropAddressName = "";
             imageViewFinalDropLocationEdit.setVisibility(View.GONE);
             progressBarFinalDropLocation.setVisibility(View.GONE);
         }
@@ -4961,7 +4963,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                     || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
                 if(Data.autoData.getDropLatLng() != null && !TextUtils.isEmpty(Data.autoData.getDropAddress())){
-                    textView.setText(Data.autoData.getDropAddress());
+                    if(dropAddressName.length() == 0) {
+                        textView.setText(Data.autoData.getDropAddress());
+                    }
                     addressNeeded = false;
                 }
             }
@@ -8029,11 +8033,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
             textViewAssigningDropLocationClick.setText(autoCompleteSearchResult.getName());
+            dropAddressName = autoCompleteSearchResult.getName();
         }
         else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
             textViewFinalDropLocationClick.setText(autoCompleteSearchResult.getName());
+            dropAddressName = autoCompleteSearchResult.getName();
         }
     }
 
@@ -8132,11 +8138,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
             textViewAssigningDropLocationClick.setText("");
+            dropAddressName = "";
         }
         else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
             textViewFinalDropLocationClick.setText("");
+            dropAddressName = "";
         }
 
         Log.e("onPlaceSearchError", "=");

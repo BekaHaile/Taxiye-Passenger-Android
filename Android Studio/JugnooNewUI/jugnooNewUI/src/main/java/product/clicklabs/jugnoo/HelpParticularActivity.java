@@ -1,7 +1,9 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -13,7 +15,11 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -112,17 +118,6 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
     private class MyWebViewClient1 extends WebViewClient {
 
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String urlNewString) {
-            if (!loadingFinished) {
-                redirect = true;
-            }
-            loadingFinished = false;
-            view.loadUrl(urlNewString);
-            Log.e("shouldOverrideUrlLoading", "urlNewString=" + urlNewString);
-            return true;
-        }
-
-        @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             loadingFinished = false;
             //SHOW LOADING IF IT ISNT ALREADY VISIBLE
@@ -146,6 +141,98 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
             }
             Log.e("onPageFinished", "url="+url);
 
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (!loadingFinished) {
+                redirect = true;
+            }
+            loadingFinished = false;
+            if (url == null) {
+                return false;
+            }
+            if (url.startsWith("market://")) {
+                view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                return true;
+            }
+            if (url.startsWith("mailto:")) {
+
+                try {
+                    List<String> to = new ArrayList<String>();
+                    List<String> cc = new ArrayList<String>();
+                    List<String> bcc = new ArrayList<String>();
+                    String subject = null;
+                    String body = null;
+
+                    url = url.replaceFirst("mailto:", "");
+
+                    String[] urlSections = url.split("&");
+                    if (urlSections.length >= 2) {
+
+                        to.addAll(Arrays.asList(urlSections[0].split(",")));
+
+                        for (int i = 1; i < urlSections.length; i++) {
+                            String urlSection = urlSections[i];
+                            String[] keyValue = urlSection.split("=");
+
+                            if (keyValue.length == 2) {
+                                String key = keyValue[0];
+                                String value = keyValue[1];
+
+                                value = URLDecoder.decode(value, "UTF-8");
+
+                                if (key.equals("cc")) {
+                                    cc.addAll(Arrays.asList(url.split(",")));
+                                }
+                                else if (key.equals("bcc")) {
+                                    bcc.addAll(Arrays.asList(url.split(",")));
+                                }
+                                else if (key.equals("subject")) {
+                                    subject = value;
+                                }
+                                else if (key.equals("body")) {
+                                    body = value;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        String[] toArr = url.split(",");
+                        for(String toI : toArr){
+                            toI = URLDecoder.decode(toI, "UTF-8");
+                            to.add(toI);
+                        }
+//                        to.addAll(Arrays.asList(url.split(",")));
+                    }
+
+                    Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    emailIntent.setType("message/rfc822");
+
+                    String[] dummyStringArray = new String[0]; // For list to array conversion
+                    emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, to.toArray(dummyStringArray));
+                    if (cc.size() > 0) {
+                        emailIntent.putExtra(android.content.Intent.EXTRA_CC, cc.toArray(dummyStringArray));
+                    }
+                    if (bcc.size() > 0) {
+                        emailIntent.putExtra(android.content.Intent.EXTRA_BCC, bcc.toArray(dummyStringArray));
+                    }
+                    if (subject != null) {
+                        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+                    }
+                    if (body != null) {
+                        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, body);
+                    }
+                    view.getContext().startActivity(emailIntent);
+
+                    return true;
+                }
+                catch (Exception e) {
+      /* Won't happen*/
+                }
+
+            }
+            return false;
         }
     }
 
