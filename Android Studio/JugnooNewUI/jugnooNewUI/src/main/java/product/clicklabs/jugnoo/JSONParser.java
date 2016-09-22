@@ -134,28 +134,28 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SPLabels.SHOW_FAB_SETTING, fabButtonEnable);
         int integratedJugnooEnabled = userData.optInt(KEY_INTEGRATED_JUGNOO_ENABLED, 0);
 
-        if(userData.has("user_saved_addresses")){
-            JSONArray userSavedAddressArray = userData.getJSONArray("user_saved_addresses");
+        if(userData.has(KEY_USER_SAVED_ADDRESSES)){
+            JSONArray userSavedAddressArray = userData.getJSONArray(KEY_USER_SAVED_ADDRESSES);
             for(int i=0; i<userSavedAddressArray.length(); i++){
                 JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
-                if(jsonObject.optString("type").equalsIgnoreCase("home")){
-                    if(!jsonObject.optString("address").equalsIgnoreCase("")){
+                if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_HOME)){
+                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
                         JSONObject json = new JSONObject();
-                        json.put("address", jsonObject.optString("address"));
-                        json.put("name", jsonObject.optString("type"));
-                        json.put("placeId", jsonObject.optString("google_place_id"));
+                        json.put(KEY_ADDRESS, jsonObject.optString(KEY_ADDRESS));
+                        json.put(KEY_NAME, jsonObject.optString(KEY_TYPE));
+                        json.put(KEY_PLACE_ID, jsonObject.optString(KEY_GOOGLE_PLACE_ID));
                         String strResult = json.toString();
                         Prefs.with(context).save(SPLabels.ADD_HOME, strResult);
                     }else {
                         Prefs.with(context).save(SPLabels.ADD_HOME, "");
                     }
 
-                }else if(jsonObject.optString("type").equalsIgnoreCase("work")){
-                    if(!jsonObject.optString("address").equalsIgnoreCase("")){
+                }else if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_WORK)){
+                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
                         JSONObject json = new JSONObject();
-                        json.put("address", jsonObject.optString("address"));
-                        json.put("name", jsonObject.optString("type"));
-                        json.put("placeId", jsonObject.optString("google_place_id"));
+                        json.put(KEY_ADDRESS, jsonObject.optString(KEY_ADDRESS));
+                        json.put(KEY_NAME, jsonObject.optString(KEY_TYPE));
+                        json.put(KEY_PLACE_ID, jsonObject.optString(KEY_GOOGLE_PLACE_ID));
                         String strResult = json.toString();
                         Prefs.with(context).save(SPLabels.ADD_WORK, strResult);
                     }else {

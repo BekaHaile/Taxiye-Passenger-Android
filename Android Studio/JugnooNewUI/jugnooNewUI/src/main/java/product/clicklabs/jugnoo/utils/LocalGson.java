@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 
 /**
@@ -14,7 +15,7 @@ public class LocalGson {
 		try {
 			JSONObject json = new JSONObject(jsonStr);
 			return new SearchResult(json.optString("name", ""), json.optString("address", ""),
-					json.optString("placeId", ""));
+					json.optString(Constants.KEY_PLACE_ID, ""));
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return new SearchResult("", "", "");
@@ -26,7 +27,7 @@ public class LocalGson {
 			JSONObject json = new JSONObject();
 			json.put("address", result.getAddress());
 			json.put("name", result.getName());
-			json.put("placeId", result.getPlaceId());
+			json.put(Constants.KEY_PLACE_ID, result.getPlaceId());
 			return json.toString();
 		} catch (JSONException e) {
 			e.printStackTrace();

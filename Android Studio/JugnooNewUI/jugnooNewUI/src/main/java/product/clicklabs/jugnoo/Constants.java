@@ -489,4 +489,12 @@ public interface Constants {
 
 	String INTENT_ACTION_DEVICE_TOKEN_UPDATE = "INTENT_ACTION_DEVICE_TOKEN_UPDATE";
 
+	String KEY_USER_SAVED_ADDRESSES = "user_saved_addresses";
+	String KEY_TYPE = "type";
+	String TYPE_HOME = "home";
+	String TYPE_WORK = "work";
+	String KEY_ADDRESS = "address";
+	String KEY_PLACE_ID = "placeId";
+	String KEY_GOOGLE_PLACE_ID = "google_place_id";
+
 }

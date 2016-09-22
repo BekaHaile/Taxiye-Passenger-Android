@@ -59,8 +59,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 
 	private GoogleApiClient mGoogleApiClient;
 
-    private final String TYPE_HOME = "home";
-    private final String TYPE_WORK = "work";
+
 
 
     @Override
@@ -99,9 +98,9 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
             public void onClick(View view) {
 
                 if(placeName.equalsIgnoreCase(SPLabels.ADD_HOME)){
-                    addPlacesApi("", "", TYPE_HOME, "", false);
+                    addPlacesApi("", "", Constants.TYPE_HOME, "", false);
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_WORK)){
-                    addPlacesApi("", "", TYPE_WORK, "", false);
+                    addPlacesApi("", "", Constants.TYPE_WORK, "", false);
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_GYM)){
                     Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_GYM, "");
                 }else if(placeName.equalsIgnoreCase(SPLabels.ADD_FRIEND)){
@@ -154,7 +153,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                                     removeOther = true;
                                 }
                             }
-                            addPlacesApi(autoCompleteSearchResult.getAddress(), autoCompleteSearchResult.getPlaceId(), TYPE_HOME, strResult, removeOther);
+                            addPlacesApi(autoCompleteSearchResult.getAddress(), autoCompleteSearchResult.getPlaceId(), Constants.TYPE_HOME, strResult, removeOther);
                         }
                         else if(placeName.equalsIgnoreCase("WORK")){
                             String savedHomeStr = Prefs.with(AddPlaceActivity.this).getString(SPLabels.ADD_HOME, "");
@@ -165,7 +164,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                                     removeOther = true;
                                 }
                             }
-                            addPlacesApi(autoCompleteSearchResult.getAddress(), autoCompleteSearchResult.getPlaceId(), TYPE_WORK, strResult, removeOther);
+                            addPlacesApi(autoCompleteSearchResult.getAddress(), autoCompleteSearchResult.getPlaceId(), Constants.TYPE_WORK, strResult, removeOther);
                         }
 
                         Log.v("onPlaceClick result ", "---> " + strResult);
@@ -275,21 +274,21 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 
                 HashMap<String, String> params = new HashMap<>();
                 if(removeOther){
-                    params.put("access_token", Data.userData.accessToken);
-                    params.put("address", "");
-                    params.put("google_place_id", "");
+                    params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                    params.put(Constants.KEY_ADDRESS, "");
+                    params.put(Constants.KEY_GOOGLE_PLACE_ID, "");
 
-                    if(type.equalsIgnoreCase(TYPE_HOME)){
-                        params.put("type", TYPE_WORK);
-                    } else if(type.equalsIgnoreCase(TYPE_WORK)){
-                        params.put("type", TYPE_HOME);
+                    if(type.equalsIgnoreCase(Constants.TYPE_HOME)){
+                        params.put(Constants.KEY_TYPE, Constants.TYPE_WORK);
+                    } else if(type.equalsIgnoreCase(Constants.TYPE_WORK)){
+                        params.put(Constants.KEY_TYPE, Constants.TYPE_HOME);
                     }
                 }
                 else{
-                    params.put("access_token", Data.userData.accessToken);
-                    params.put("address", address);
-                    params.put("google_place_id", googlePlaceId);
-                    params.put("type", type);
+                    params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                    params.put(Constants.KEY_ADDRESS, address);
+                    params.put(Constants.KEY_GOOGLE_PLACE_ID, googlePlaceId);
+                    params.put(Constants.KEY_TYPE, type);
                 }
 
 				DialogPopup.showLoadingDialog(AddPlaceActivity.this, "Updating...");
@@ -307,17 +306,17 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                             if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 
                                 if(removeOther){
-                                    if(type.equalsIgnoreCase(TYPE_HOME)){
+                                    if(type.equalsIgnoreCase(Constants.TYPE_HOME)){
                                         Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, "");
-                                    } else if(type.equalsIgnoreCase(TYPE_WORK)){
+                                    } else if(type.equalsIgnoreCase(Constants.TYPE_WORK)){
                                         Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, "");
                                     }
                                     addPlacesApi(address, googlePlaceId, type, strResult, false);
                                 }
                                 else{
-                                    if(type.equalsIgnoreCase(TYPE_HOME)){
+                                    if(type.equalsIgnoreCase(Constants.TYPE_HOME)){
                                         Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, strResult);
-                                    } else if(type.equalsIgnoreCase(TYPE_WORK)){
+                                    } else if(type.equalsIgnoreCase(Constants.TYPE_WORK)){
                                         Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, strResult);
                                     }
 
