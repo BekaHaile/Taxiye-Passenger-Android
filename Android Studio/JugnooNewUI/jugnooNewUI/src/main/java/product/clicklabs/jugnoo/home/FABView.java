@@ -179,7 +179,7 @@ public class FABView {
         }
 
         fabDelivery.setVisibility(View.GONE);
-        fabGrocery.setVisibility(View.GONE);
+        //fabGrocery.setVisibility(View.GONE);
         if(Config.getAutosClientId().equalsIgnoreCase(currentOpenedOffering)){
             fabAutos.setVisibility(View.GONE);
         } else if(Config.getFreshClientId().equalsIgnoreCase(currentOpenedOffering)){
