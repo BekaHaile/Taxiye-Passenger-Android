@@ -11,6 +11,9 @@ public class SearchResult {
 	@SerializedName("address")
 	@Expose
 	private String address;
+	@SerializedName("placeId")
+	@Expose
+	private String placeId;
 	@SerializedName("latitude")
 	@Expose
 	private Double latitude;
@@ -23,9 +26,6 @@ public class SearchResult {
 	@SerializedName("time")
 	@Expose
 	private long time;
-	@SerializedName("placeId")
-	@Expose
-	private String placeId;
 	@SerializedName("id")
 	@Expose
 	private Integer id;
@@ -75,12 +75,9 @@ public class SearchResult {
 	}
 
 	public LatLng getLatLng() {
-		return latLng;
+		return new LatLng(latitude, longitude);
 	}
 
-	public void setLatLng(LatLng latLng) {
-		this.latLng = latLng;
-	}
 
 	public long getTime() {
 		return time;
@@ -122,6 +119,21 @@ public class SearchResult {
 		this.id = id;
 	}
 
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
 
 	public enum Type{
 		SEARCHED, LAST_SAVED;

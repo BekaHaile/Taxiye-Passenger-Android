@@ -494,7 +494,7 @@ public interface Constants {
 	String TYPE_HOME = "home";
 	String TYPE_WORK = "work";
 	String KEY_ADDRESS = "address";
-	String KEY_PLACE_ID = "placeId";
+	String KEY_PLACEID = "placeId";
 	String KEY_GOOGLE_PLACE_ID = "google_place_id";
 
 }

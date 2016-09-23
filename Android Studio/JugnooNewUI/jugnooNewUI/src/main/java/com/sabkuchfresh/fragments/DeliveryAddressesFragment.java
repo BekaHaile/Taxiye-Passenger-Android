@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -26,6 +25,7 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.FreshAddressAdapter;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
@@ -152,7 +152,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             public void onClick(View v) {
                 try {
                     String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-                    final SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+                    final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
                     getLatLngFromPlaceId(searchResult.getPlaceId(), new GetLatLngFromPlaceId() {
                         @Override
                         public void onLatLngReceived(LatLng latLng) {
@@ -179,7 +179,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             public void onClick(View v) {
                 try {
                     String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-                    final SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
+                    final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
                     getLatLngFromPlaceId(searchResult.getPlaceId(), new GetLatLngFromPlaceId() {
                         @Override
                         public void onLatLngReceived(LatLng latLng) {
@@ -536,7 +536,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private void setSavePlaces() {
         if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-            SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+            SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
             textViewAddHome.setText(getResources().getString(R.string.home));
             textViewAddHomeValue.setVisibility(View.VISIBLE);
             textViewAddHomeValue.setText(searchResult.getAddress());
@@ -549,7 +549,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
         if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
             String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-            SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
+            SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
             textViewAddWork.setText(getResources().getString(R.string.work));
             textViewAddWorkValue.setVisibility(View.VISIBLE);
             textViewAddWorkValue.setText(searchResult.getAddress());

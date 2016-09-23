@@ -288,9 +288,9 @@ public class SearchListAdapter extends BaseAdapter{
     public synchronized void notifyDataSetChanged() {
         if (searchResults.size() > 1) {
             if (searchResults.contains(new SearchResult(context.getResources()
-                    .getString(R.string.no_results_found), "", null, ""))) {
+                    .getString(R.string.no_results_found), "", "", 0, 0))) {
                 searchResults.remove(searchResults.indexOf(new SearchResult(context.getResources()
-                        .getString(R.string.no_results_found), "", null, "")));
+                        .getString(R.string.no_results_found), "", "", 0, 0)));
             }
         }
 
@@ -322,7 +322,8 @@ public class SearchListAdapter extends BaseAdapter{
 							for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
                                 String name = autocompletePrediction.getFullText(null).toString().split(",")[0];
 								searchResultsForSearch.add(new SearchResult(name,
-                                        autocompletePrediction.getFullText(null).toString(), null, autocompletePrediction.getPlaceId()));
+                                        autocompletePrediction.getFullText(null).toString(),
+										autocompletePrediction.getPlaceId(), 0, 0));
 							}
 							autocompletePredictions.release();
 
@@ -361,10 +362,10 @@ public class SearchListAdapter extends BaseAdapter{
 				if ((searchResultsForSearch.size()) == 0 && (editTextForSearch.getText().toString().trim().length() > 0)) {
                     if(AppStatus.getInstance(context).isOnline(context)) {
                         searchResultsForSearch.add(new SearchResult(context.getResources()
-                                .getString(R.string.no_results_found), "", null, ""));
+                                .getString(R.string.no_results_found), "", "", 0, 0));
                     } else{
                         searchResultsForSearch.add(new SearchResult(context.getResources()
-                                .getString(R.string.no_internet_connection), "", null, ""));
+                                .getString(R.string.no_internet_connection), "", "", 0, 0));
                     }
                 }
                 SearchListAdapter.this.setResults(searchResultsForSearch);
@@ -381,7 +382,7 @@ public class SearchListAdapter extends BaseAdapter{
                     if (SPLabels.ADD_WORK.toLowerCase().contains(searchText.toLowerCase()) ||
                             Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())
                             || searchText.equalsIgnoreCase("")) {
-                        SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_WORK, ""));
+                        SearchResult searchResult = new Gson().fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""), SearchResult.class);
                         searchResult.setName(SPLabels.ADD_WORK);
                         searchResultsForSearch.add(0, searchResult);
                     }
@@ -391,7 +392,7 @@ public class SearchListAdapter extends BaseAdapter{
                     if (SPLabels.ADD_HOME.toLowerCase().contains(searchText.toLowerCase()) ||
                             Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())
                             || searchText.equalsIgnoreCase("")) {
-                        SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_HOME, ""));
+                        SearchResult searchResult = new Gson().fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""), SearchResult.class);
                         searchResult.setName(SPLabels.ADD_HOME);
                         searchResultsForSearch.add(0, searchResult);
                     }
@@ -416,7 +417,8 @@ public class SearchListAdapter extends BaseAdapter{
                             if (places.getStatus().isSuccess()) {
                                 final Place myPlace = places.get(0);
                                 final CharSequence thirdPartyAttributions = places.getAttributions();
-                                SearchResult searchResult = new SearchResult(placeName, placeAddress, myPlace.getLatLng(), placeId);
+                                SearchResult searchResult = new SearchResult(placeName, placeAddress, placeId,
+										myPlace.getLatLng().latitude, myPlace.getLatLng().longitude);
                                 searchResult.setThirdPartyAttributions(thirdPartyAttributions);
                                 setSearchResult(searchResult);
                             }

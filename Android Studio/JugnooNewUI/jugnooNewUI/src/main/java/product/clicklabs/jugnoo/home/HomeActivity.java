@@ -2500,7 +2500,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (lastPickUp.size() == 0) {
                     if ((!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.home))) &&
                             (!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.work)))) {
-                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), Data.autoData.getPickupLatLng(), ""));
+                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), ""
+                                , Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude));
                     }
                 } else {
                     boolean isSame = false;
@@ -2514,7 +2515,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (!isSame) {
                         if ((!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.home))) &&
                                 (!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.work)))) {
-                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), Data.autoData.getPickupLatLng(), ""));
+                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), ""
+                                    , Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude));
                         }
                     }
                     if (lastPickUp.size() > 3) {
@@ -4325,7 +4327,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(resultCode==RESULT_OK) {
                 if (requestCode == ADD_HOME) {
                     String strResult = data.getStringExtra("PLACE");
-                    SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
+                    SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                     if(searchResult != null){
                         placeAdded = true;
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_HOME, strResult);
@@ -4334,7 +4336,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 } else if (requestCode == ADD_WORK) {
                     String strResult = data.getStringExtra("PLACE");
-                    SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
+                    SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                     if(searchResult != null) {
                         placeAdded = true;
                         Prefs.with(HomeActivity.this).save(SPLabels.ADD_WORK, strResult);
@@ -8202,7 +8204,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (lastDestination.size() == 0) {
                     if ((!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.home))) &&
                             (!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.work)))) {
-                        lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng(), searchResult.getPlaceId()));
+                        lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getPlaceId()
+                                , searchResult.getLatLng().latitude, searchResult.getLatLng().longitude));
                     }
                 } else {
                     boolean isSame = false;
@@ -8216,7 +8219,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (!isSame) {
                         if ((!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.home))) &&
                                 (!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.work)))) {
-                            lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng(), searchResult.getPlaceId()));
+                            lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getPlaceId()
+                                    , searchResult.getLatLng().latitude, searchResult.getLatLng().longitude));
                         }
                     }
                     if (lastDestination.size() > 3) {

@@ -140,24 +140,13 @@ public class JSONParser implements Constants {
                 JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
                 if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_HOME)){
                     if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
-                        JSONObject json = new JSONObject();
-                        json.put(KEY_ADDRESS, jsonObject.optString(KEY_ADDRESS));
-                        json.put(KEY_NAME, jsonObject.optString(KEY_TYPE));
-                        json.put(KEY_PLACE_ID, jsonObject.optString(KEY_GOOGLE_PLACE_ID));
-                        String strResult = json.toString();
-                        Prefs.with(context).save(SPLabels.ADD_HOME, strResult);
+                        Prefs.with(context).save(SPLabels.ADD_HOME, getSearchResultStringFromJSON(jsonObject));
                     }else {
                         Prefs.with(context).save(SPLabels.ADD_HOME, "");
                     }
-
                 }else if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_WORK)){
                     if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
-                        JSONObject json = new JSONObject();
-                        json.put(KEY_ADDRESS, jsonObject.optString(KEY_ADDRESS));
-                        json.put(KEY_NAME, jsonObject.optString(KEY_TYPE));
-                        json.put(KEY_PLACE_ID, jsonObject.optString(KEY_GOOGLE_PLACE_ID));
-                        String strResult = json.toString();
-                        Prefs.with(context).save(SPLabels.ADD_WORK, strResult);
+                        Prefs.with(context).save(SPLabels.ADD_WORK, getSearchResultStringFromJSON(jsonObject));
                     }else {
                         Prefs.with(context).save(SPLabels.ADD_HOME, "");
                     }
@@ -1675,4 +1664,20 @@ public class JSONParser implements Constants {
         }
     }
 
+
+    public String getSearchResultStringFromJSON(JSONObject jsonObject){
+        try {
+            JSONObject json = new JSONObject();
+            json.put(KEY_ADDRESS, jsonObject.optString(KEY_ADDRESS));
+            json.put(KEY_NAME, jsonObject.optString(KEY_TYPE));
+            json.put(KEY_PLACEID, jsonObject.optString(KEY_GOOGLE_PLACE_ID));
+            json.put(KEY_LATITUDE, jsonObject.optDouble(KEY_LATITUDE, 0));
+            json.put(KEY_LONGITUDE, jsonObject.optDouble(KEY_LONGITUDE, 0));
+            json.put(KEY_ID, jsonObject.optInt(KEY_ID));
+            return json.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return EMPTY_JSON_OBJECT;
+        }
+    }
 }

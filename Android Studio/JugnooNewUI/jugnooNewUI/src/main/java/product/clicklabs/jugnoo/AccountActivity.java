@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -1042,7 +1043,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
     private void setSavePlaces() {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             String homeString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
-            SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+            SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
             textViewAddHome.setText(getResources().getString(R.string.home));
             textViewAddHomeValue.setVisibility(View.VISIBLE);
             textViewAddHomeValue.setText(searchResult.getAddress());
@@ -1055,7 +1056,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
             String workString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
-            SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
+            SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
             textViewAddWork.setText(getResources().getString(R.string.work));
             textViewAddWorkValue.setVisibility(View.VISIBLE);
             textViewAddWorkValue.setText(searchResult.getAddress());

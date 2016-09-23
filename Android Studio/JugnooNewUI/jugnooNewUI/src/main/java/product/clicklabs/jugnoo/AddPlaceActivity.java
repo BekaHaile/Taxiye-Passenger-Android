@@ -13,6 +13,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -141,13 +142,13 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 
                     @Override
                     public void onPlaceClick(SearchResult autoCompleteSearchResult) {
-                        String strResult = new LocalGson().getJSONFromAutoCompleteSearchResult(autoCompleteSearchResult);
+                        String strResult = new Gson().toJson(autoCompleteSearchResult, SearchResult.class);
 
                         if(placeName.equalsIgnoreCase("HOME")){
                             String savedWorkStr = Prefs.with(AddPlaceActivity.this).getString(SPLabels.ADD_WORK, "");
                             boolean removeOther = false;
                             if(!"".equalsIgnoreCase(savedWorkStr)){
-                                SearchResult savedWork = new LocalGson().getAutoCompleteSearchResultFromJSON(savedWorkStr);
+                                SearchResult savedWork = new Gson().fromJson(savedWorkStr, SearchResult.class);
                                 if(savedWork.getPlaceId().equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())){
                                     removeOther = true;
                                 }
@@ -158,7 +159,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                             String savedHomeStr = Prefs.with(AddPlaceActivity.this).getString(SPLabels.ADD_HOME, "");
                             boolean removeOther = false;
                             if(!"".equalsIgnoreCase(savedHomeStr)){
-                                SearchResult savedHome = new LocalGson().getAutoCompleteSearchResultFromJSON(savedHomeStr);
+                                SearchResult savedHome = new Gson().fromJson(savedHomeStr, SearchResult.class);
                                 if(savedHome.getPlaceId().equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())){
                                     removeOther = true;
                                 }
@@ -214,7 +215,7 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
             editTextSearch.setHint("Enter " + placeName.toLowerCase() + " location");
 
             if(!getIntent().getStringExtra("address").equalsIgnoreCase("")){
-                SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(getIntent().getStringExtra("address"));
+                SearchResult searchResult = new Gson().fromJson(getIntent().getStringExtra("address"), SearchResult.class);
                 editTextSearch.setText(searchResult.getAddress());
 				editTextSearch.setSelection(editTextSearch.getText().length());
                 buttonRemove.setVisibility(View.VISIBLE);

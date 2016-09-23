@@ -20,6 +20,7 @@ import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -353,7 +354,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 			if(resultCode == Activity.RESULT_OK) {
 				if (requestCode == ADD_HOME) {
 					String strResult = data.getStringExtra("PLACE");
-					SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
+					SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
 					if(searchResult != null){
 						Prefs.with(activity).save(SPLabels.ADD_HOME, strResult);
 						showSearchLayout();
@@ -363,7 +364,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 				} else if (requestCode == ADD_WORK) {
 					String strResult = data.getStringExtra("PLACE");
-					SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
+					SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
 					if(searchResult != null) {
 						Prefs.with(activity).save(SPLabels.ADD_WORK, strResult);
 						showSearchLayout();
