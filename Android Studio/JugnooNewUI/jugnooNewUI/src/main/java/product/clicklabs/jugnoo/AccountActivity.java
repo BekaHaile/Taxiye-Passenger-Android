@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import io.branch.referral.Branch;
+import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -52,6 +53,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -94,8 +96,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
+    NonScrollListView listViewSavedLocations;
     RelativeLayout relativeLayoutAddNewAddress;
-    TextView textViewAddNewAddress;
+    SavedPlacesAdapter savedPlacesAdapter;
 
     private boolean setJeanieState;
     Bundle bundle = new Bundle();
@@ -202,6 +205,22 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             e.printStackTrace();
         }
 
+        listViewSavedLocations = (NonScrollListView) findViewById(R.id.listViewSavedLocations);
+        try {
+            savedPlacesAdapter = new SavedPlacesAdapter(this, Data.userData.getSearchResults(), new SavedPlacesAdapter.Callback() {
+                @Override
+                public void onItemClick(SearchResult searchResult) {
+                    Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
+                    intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
+                    startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+            });
+            listViewSavedLocations.setAdapter(savedPlacesAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         relativeLayoutAddNewAddress = (RelativeLayout) findViewById(R.id.relativeLayoutAddNewAddress);
         ((TextView) findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(this));
@@ -464,7 +483,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                 } else if (newPassword.length() < 6) {
                     editTextNewPassword.requestFocus();
                     editTextNewPassword.setError(String.format(
-                            getResources().getString(R.string.new_password_length_error_format), 6));
+                            getResources().getString(R.string.new_password_length_error_format), String.valueOf(6)));
                 } else {
                     updateUserProfileChangePasswordAPI(AccountActivity.this, oldPassword, newPassword);
                 }
@@ -1085,6 +1104,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             textViewAddWork.setText(getResources().getString(R.string.add_work));
             textViewAddWorkValue.setVisibility(View.GONE);
             imageViewEditWork.setVisibility(View.GONE);
+        }
+
+        if(savedPlacesAdapter != null){
+            savedPlacesAdapter.notifyDataSetChanged();
         }
     }
 

@@ -65,6 +65,8 @@
                 android:background="@color/transparent"
                 android:hint="Enter label"
                 android:maxLines="1"
+                android:inputType="textCapSentences"
+                android:singleLine="true"
                 android:textColor="@color/black_text"
                 android:textCursorDrawable="@null"
                 android:textSize="30px"/>

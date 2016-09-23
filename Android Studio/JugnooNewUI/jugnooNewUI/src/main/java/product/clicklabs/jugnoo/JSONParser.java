@@ -256,7 +256,7 @@ public class JSONParser implements Constants {
                         Prefs.with(context).save(SPLabels.ADD_WORK, "");
                     }
                     workSaved = true;
-                } else {
+                } else if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
                     Data.userData.getSearchResults().add(gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class));
                 }
             }

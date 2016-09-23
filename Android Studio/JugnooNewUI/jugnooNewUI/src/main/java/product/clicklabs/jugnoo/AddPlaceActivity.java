@@ -42,6 +42,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+import static product.clicklabs.jugnoo.Constants.KEY_ID;
 import static product.clicklabs.jugnoo.Constants.TYPE_HOME;
 import static product.clicklabs.jugnoo.Constants.TYPE_WORK;
 import static product.clicklabs.jugnoo.Data.latitude;
@@ -201,6 +202,8 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                                     }
                                 }
                                 addPlacesApi(searchResult, false, otherId);
+                            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
+                                addPlacesApi(searchResult, false, 0);
                             }
 
                             editTextSearch.setText(searchResult.getAddress());
@@ -363,13 +366,22 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                                     addPlacesApi(searchResult, deleteAddress, 0);
                                 }
                                 else{
+                                    searchResult.setId(jObj.optInt(KEY_ID, 0));
+
                                     String strResult = gson.toJson(searchResult, SearchResult.class);
+                                    if(deleteAddress){
+                                        strResult = "";
+                                    }
                                     if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
                                         Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, strResult);
                                     } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
                                         Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, strResult);
                                     } else {
-                                        Data.userData.getSearchResults().add(searchResult);
+                                        if(deleteAddress){
+                                            Data.userData.getSearchResults().remove(searchResult);
+                                        } else {
+                                            Data.userData.getSearchResults().add(searchResult);
+                                        }
                                     }
 
                                     Intent intent = new Intent();
