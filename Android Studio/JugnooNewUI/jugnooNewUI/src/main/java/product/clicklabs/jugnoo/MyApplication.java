@@ -32,7 +32,10 @@ import java.util.Map;
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.config.ConfigMode;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.AppSwitcher;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
 import product.clicklabs.jugnoo.utils.CleverTapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -450,6 +453,38 @@ public class MyApplication extends Application{
 
 	public Database2 getDatabase2(){
 		return Database2.getInstance(this);
+	}
+
+	public void initializeServerURL(Context context) {
+		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
+
+		ConfigMode configModeToSet;
+		if (link.equalsIgnoreCase(Config.getLiveServerUrl())
+				|| link.equalsIgnoreCase(Config.getLegacyServerUrl())) {
+			configModeToSet = ConfigMode.LIVE;
+		} else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
+			configModeToSet = ConfigMode.DEV;
+		} else if (link.equalsIgnoreCase(Config.getDev1ServerUrl())) {
+			configModeToSet = ConfigMode.DEV_1;
+		} else if (link.equalsIgnoreCase(Config.getDev2ServerUrl())) {
+			configModeToSet = ConfigMode.DEV_2;
+		} else if (link.equalsIgnoreCase(Config.getDev3ServerUrl())) {
+			configModeToSet = ConfigMode.DEV_3;
+		} else {
+			Config.CUSTOM_SERVER_URL = link;
+			configModeToSet = ConfigMode.CUSTOM;
+		}
+		Config.FRESH_SERVER_URL = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
+
+		if(configModeToSet != Config.getConfigMode()){
+			RestClient.clearRestClient();
+		}
+		Config.setConfigMode(configModeToSet);
+
+		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
+
+		RestClient.setupRestClient();
+		RestClient.setupFreshApiRestClient();
 	}
 
 }

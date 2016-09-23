@@ -3,8 +3,10 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -16,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -70,7 +73,6 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
-import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -273,36 +275,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				|| clickCount > 1);
 	}
 
-	public static void initializeServerURL(Context context) {
-		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
-
-		ConfigMode configModeToSet;
-		if (link.equalsIgnoreCase(Config.getLiveServerUrl())
-				|| link.equalsIgnoreCase(Config.getLegacyServerUrl())) {
-			configModeToSet = ConfigMode.LIVE;
-		} else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
-			configModeToSet = ConfigMode.DEV;
-		} else if (link.equalsIgnoreCase(Config.getDev1ServerUrl())) {
-			configModeToSet = ConfigMode.DEV_1;
-		} else if (link.equalsIgnoreCase(Config.getDev2ServerUrl())) {
-			configModeToSet = ConfigMode.DEV_2;
-		} else if (link.equalsIgnoreCase(Config.getDev3ServerUrl())) {
-			configModeToSet = ConfigMode.DEV_3;
-		} else {
-			Config.CUSTOM_SERVER_URL = link;
-			configModeToSet = ConfigMode.CUSTOM;
-		}
-
-		if(configModeToSet != Config.getConfigMode()){
-			RestClient.clearRestClient();
-		}
-		Config.setConfigMode(configModeToSet);
-
-		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
-
-		RestClient.setupRestClient();
-		RestClient.setupFreshApiRestClient();
-	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -327,6 +299,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			Data.getDeepLinkIndexFromIntent(this, getIntent());
 
+			MyApplication.getInstance().initializeServerURL(this);
+
 
 			try {
 				Data.TRANSFER_FROM_JEANIE = 0;
@@ -349,7 +323,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.autoData = null;
 			Data.setFreshData(null);
 
-			initializeServerURL(this);
 
 			FlurryAgent.init(this, Config.getFlurryKey());
 
@@ -1096,6 +1069,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 
+		LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverDeviceToken,
+				new IntentFilter(INTENT_ACTION_DEVICE_TOKEN_UPDATE));
+
 	}
 
 	private void logSome(){
@@ -1343,15 +1319,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	public void onNewIntent(Intent intent) {
 		this.setIntent(intent);
-		try {
-			if (intent.hasExtra(KEY_DEVICE_TOKEN)) {
-				getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
-				goToAccessTokenLogin();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
+
+	private BroadcastReceiver broadcastReceiverDeviceToken = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			try {
+				if (intent.hasExtra(KEY_DEVICE_TOKEN)) {
+					getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
+					goToAccessTokenLogin();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
 
 	private void goToAccessTokenLogin() {
 		try {
@@ -1811,6 +1793,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	protected void onDestroy() {
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiverDeviceToken);
 		if(!newActivityStarted){
 			Data.linkFoundOnce = false;
 		}

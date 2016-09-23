@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -46,7 +46,7 @@ public class LocationUpdateService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.i(TAG, "service onStartCommand");
 		try {
-			SplashNewActivity.initializeServerURL(this);
+			MyApplication.getInstance().initializeServerURL(this);
 			try {
 				oneShot = intent.getBooleanExtra(Constants.KEY_ONE_SHOT, true);
 			} catch (Exception e) {

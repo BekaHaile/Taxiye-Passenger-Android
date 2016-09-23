@@ -45,97 +45,146 @@
                 android:layout_height="match_parent"
                 android:background="@color/white_light_grey"
                 android:orientation="vertical"
-                android:splitMotionEvents="false" >
-
-
-                <TextView
-                    android:id="@+id/textViewDebugOptions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Debug Options"
-                    android:textSize="34px"
-                    android:textColor="@color/black_text"
-                    android:background="@color/white_dark1"
-                    android:padding="20px"
-
-                    />
+                android:splitMotionEvents="false"
+                android:animateLayoutChanges="true">
 
                 <RelativeLayout
-                    android:id="@+id/relativeLayoutShowAllDrivers"
+                    android:id="@+id/relativeLayoutDebugOptions"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
-
+                    android:layout_height="wrap_content">
                     <TextView
-                        android:id="@+id/textViewShowAllDrivers"
-                        android:layout_width="600px"
+                        android:id="@+id/textViewDebugOptions"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:padding="30px"
-                        android:text="Show All Drivers"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="30px" />
+                        android:text="Debug Options"
+                        android:textSize="@dimen/text_size_28"
+                        android:textColor="@color/black_text"
+                        android:background="@color/white_dark1"
+                        android:padding="20px"
+
+                        />
 
                     <ImageView
-                        android:id="@+id/imageViewShowAllDrivers"
-                        android:layout_width="36px"
-                        android:layout_height="36px"
+                        android:id="@+id/imageViewArrowDebugOptions"
+                        android:layout_width="23px"
+                        android:layout_height="41px"
+                        android:tag="mwar"
+                        android:rotation="270"
+                        android:src="@drawable/ic_back"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked"
-                        android:tag="mwar"
+                        android:layout_marginRight="30px"
                         />
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutShowDriverInfo"
+                <LinearLayout
+                    android:id="@+id/linearLayoutDebugOptionsBelow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     >
-
-                    <TextView
-                        android:id="@+id/textViewShowDriverInfo"
-                        android:layout_width="600px"
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutShowAllDrivers"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:padding="30px"
-                        android:text="Show Driver Information"
-                        android:textColor="@color/grey_dark"
-                        android:textSize="30px" />
+                        >
+
+                        <TextView
+                            android:id="@+id/textViewShowAllDrivers"
+                            android:layout_width="600px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:padding="20px"
+                            android:text="Show All Drivers"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="30px" />
+
+                        <ImageView
+                            android:id="@+id/imageViewShowAllDrivers"
+                            android:layout_width="36px"
+                            android:layout_height="36px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="40px"
+                            android:src="@drawable/check_box_checked"
+                            android:tag="mwar"
+                            />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutShowDriverInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TextView
+                            android:id="@+id/textViewShowDriverInfo"
+                            android:layout_width="600px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:padding="20px"
+                            android:text="Show Driver Information"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="30px" />
+
+                        <ImageView
+                            android:id="@+id/imageViewShowDriverInfo"
+                            android:layout_width="36px"
+                            android:layout_height="36px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="40px"
+                            android:src="@drawable/check_box_checked"
+                            android:tag="mwar"
+                            />
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutServerEnv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20px">
+                    <TextView
+                        android:id="@+id/textViewServerEnv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Select Server Environment (Autos)"
+                        android:textSize="@dimen/text_size_28"
+                        android:textColor="@color/black_text"
+                        android:background="@color/white_dark1"
+                        android:padding="20px"
+
+                        />
 
                     <ImageView
-                        android:id="@+id/imageViewShowDriverInfo"
-                        android:layout_width="36px"
-                        android:layout_height="36px"
+                        android:id="@+id/imageViewArrowServerEnv"
+                        android:layout_width="23px"
+                        android:layout_height="41px"
+                        android:tag="mwar"
+                        android:rotation="270"
+                        android:src="@drawable/ic_back"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="40px"
-                        android:src="@drawable/check_box_checked"
-                        android:tag="mwar"
+                        android:layout_marginRight="30px"
                         />
                 </RelativeLayout>
 
-
-
-
-
-
-
-
-
-                <TextView
-                    android:id="@+id/textViewServerEnv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Select Server Environment"
-                    android:textSize="34px"
-                    android:textColor="@color/black_text"
-                    android:background="@color/white_dark1"
-                    android:padding="20px"
-
-                    />
-
+            <LinearLayout
+                android:id="@+id/linearLayoutServerEnvBelow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
                 <RelativeLayout
                     android:id="@+id/relativeLayoutLive4012"
                     android:layout_width="match_parent"
@@ -147,7 +196,7 @@
                         android:layout_width="600px"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:padding="30px"
+                        android:padding="20px"
                         android:text="Live (4012)"
                         android:textColor="@color/grey_dark"
                         android:textSize="30px" />
@@ -175,7 +224,7 @@
                         android:layout_width="600px"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:padding="30px"
+                        android:padding="20px"
                         android:text="Training / Dev (8012)"
                         android:textColor="@color/grey_dark"
                         android:textSize="30px" />
@@ -204,7 +253,7 @@
                         android:layout_width="600px"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:padding="30px"
+                        android:padding="20px"
                         android:text="Test (8013)"
                         android:textColor="@color/grey_dark"
                         android:textSize="30px" />
@@ -232,7 +281,7 @@
                         android:layout_width="600px"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:padding="30px"
+                        android:padding="20px"
                         android:text="Test (8014)"
                         android:textColor="@color/grey_dark"
                         android:textSize="30px" />
@@ -260,7 +309,7 @@
                         android:layout_width="600px"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:padding="30px"
+                        android:padding="20px"
                         android:text="Test (8015)"
                         android:textColor="@color/grey_dark"
                         android:textSize="30px" />
@@ -288,9 +337,9 @@
                         android:layout_width="600px"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:padding="30px"
+                        android:padding="20px"
                         android:text=""
-                        android:hint="Custom URL"
+                        android:hint="Custom URL Auto"
                         android:textColor="@color/grey_dark"
                         android:textSize="30px" />
 
@@ -305,17 +354,139 @@
                         android:tag="mwar"
                         />
                 </RelativeLayout>
-
-
-
-
-
+            </LinearLayout>
 
 
 
 
 
                 <RelativeLayout
+                    android:id="@+id/relativeLayoutServerEnvFresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20px">
+                    <TextView
+                        android:id="@+id/textViewServerEnvFresh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Select Server Environment (Fresh/Meals)"
+                        android:textSize="@dimen/text_size_28"
+                        android:textColor="@color/black_text"
+                        android:background="@color/white_dark1"
+                        android:padding="20px"
+
+                        />
+
+                    <ImageView
+                        android:id="@+id/imageViewArrowServerEnvFresh"
+                        android:layout_width="23px"
+                        android:layout_height="41px"
+                        android:tag="mwar"
+                        android:rotation="270"
+                        android:src="@drawable/ic_back"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="30px"
+                        />
+                </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutServerEnvFreshBelow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutLiveFresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:id="@+id/textViewLiveFresh"
+                        android:layout_width="600px"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="20px"
+                        android:text="Live"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="30px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewLiveFresh"
+                        android:layout_width="36px"
+                        android:layout_height="36px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="40px"
+                        android:src="@drawable/check_box_checked"
+                        android:tag="mwar"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutTestFresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:id="@+id/textViewTestFresh"
+                        android:layout_width="600px"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="20px"
+                        android:text="Dev"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="30px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewTestFresh"
+                        android:layout_width="36px"
+                        android:layout_height="36px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="40px"
+                        android:src="@drawable/check_box_checked"
+                        android:tag="mwar"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutCustomFresh"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <EditText
+                        android:id="@+id/editTextCustomFresh"
+                        android:layout_width="600px"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="20px"
+                        android:text=""
+                        android:hint="Custom URL Fresh"
+                        android:textColor="@color/grey_dark"
+                        android:textSize="30px" />
+
+                    <ImageView
+                        android:id="@+id/imageViewCustomFresh"
+                        android:layout_width="36px"
+                        android:layout_height="36px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="40px"
+                        android:src="@drawable/check_box_checked"
+                        android:tag="mwar"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+
+
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutAuto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="40px"
@@ -324,7 +495,7 @@
                     <Button
                         android:id="@+id/buttonSave"
                         android:layout_width="280px"
-                        android:layout_height="100px"
+                        android:layout_height="80px"
                         android:layout_marginRight="45px"
                         android:layout_alignParentRight="true"
                         android:background="@drawable/button_theme"
@@ -335,7 +506,7 @@
                     <Button
                         android:id="@+id/buttonCancel"
                         android:layout_width="280px"
-                        android:layout_height="100px"
+                        android:layout_height="80px"
                         android:layout_marginLeft="45px"
                         android:background="@drawable/button_theme"
                         android:text="CANCEL"
@@ -344,16 +515,6 @@
                 </RelativeLayout>
 
 
-                <Button
-                    android:id="@+id/buttonRefreshGCM"
-                    android:layout_width="280px"
-                    android:layout_height="70px"
-                    android:layout_marginLeft="45px"
-                    android:layout_marginBottom="40px"
-                    android:background="@drawable/button_theme"
-                    android:text="Refresh FCM"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="26px" />
 
 
                 <TextView
