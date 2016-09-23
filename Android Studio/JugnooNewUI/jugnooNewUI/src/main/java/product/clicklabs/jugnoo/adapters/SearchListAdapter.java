@@ -378,7 +378,19 @@ public class SearchListAdapter extends BaseAdapter{
 	private synchronized void addFavoriteLocations(String searchText){
 		try {
             if(showSavedPlaces) {
-                if (!Prefs.with(context).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+				try {
+					for(SearchResult searchResult : Data.userData.getSearchResults()){
+						if(searchResult.getName().toLowerCase().contains(searchText.toLowerCase())
+								|| searchResult.getAddress().toLowerCase().contains(searchText.toLowerCase())
+								|| searchText.equalsIgnoreCase("")){
+							searchResultsForSearch.add(searchResult);
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				if (!Prefs.with(context).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
                     if (SPLabels.ADD_WORK.toLowerCase().contains(searchText.toLowerCase()) ||
                             Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())
                             || searchText.equalsIgnoreCase("")) {

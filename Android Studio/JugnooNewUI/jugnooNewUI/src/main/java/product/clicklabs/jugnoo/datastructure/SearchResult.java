@@ -47,12 +47,7 @@ public class SearchResult {
 	@Override
 	public boolean equals(Object o) {
 		try{
-			if(((SearchResult)o).name.equalsIgnoreCase(this.name)){
-				return true;
-			}
-			else{
-				return false;
-			}
+			return (((SearchResult)o).id.equals(this.id));
 		} catch(Exception e){
 			return false;
 		}

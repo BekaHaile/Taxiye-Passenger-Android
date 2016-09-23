@@ -44,6 +44,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -134,25 +135,6 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SPLabels.SHOW_FAB_SETTING, fabButtonEnable);
         int integratedJugnooEnabled = userData.optInt(KEY_INTEGRATED_JUGNOO_ENABLED, 0);
 
-        if(userData.has(KEY_USER_SAVED_ADDRESSES)){
-            JSONArray userSavedAddressArray = userData.getJSONArray(KEY_USER_SAVED_ADDRESSES);
-            for(int i=0; i<userSavedAddressArray.length(); i++){
-                JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
-                if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_HOME)){
-                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
-                        Prefs.with(context).save(SPLabels.ADD_HOME, getSearchResultStringFromJSON(jsonObject));
-                    }else {
-                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
-                    }
-                }else if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_WORK)){
-                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
-                        Prefs.with(context).save(SPLabels.ADD_WORK, getSearchResultStringFromJSON(jsonObject));
-                    }else {
-                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
-                    }
-                }
-            }
-        }
 
         String defaultBranchDesktopUrl = Prefs.with(context).getString(SPLabels.BRANCH_DESKTOP_URL, "");
         String defaultBranchAndroidUrl = Prefs.with(context).getString(SPLabels.BRANCH_ANDROID_URL, "");
@@ -252,6 +234,33 @@ public class JSONParser implements Constants {
         Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
 
         Data.userData.setJeanieIntroDialogContent(loginUserData.getJeanieIntroDialogContent());
+
+        Data.userData.getSearchResults().clear();
+        if(userData.has(KEY_USER_SAVED_ADDRESSES)){
+            JSONArray userSavedAddressArray = userData.getJSONArray(KEY_USER_SAVED_ADDRESSES);
+            boolean homeSaved = false, workSaved = false;
+            Gson gson = new Gson();
+            for(int i=0; i<userSavedAddressArray.length(); i++){
+                JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
+                if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_HOME) && !homeSaved){
+                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
+                        Prefs.with(context).save(SPLabels.ADD_HOME, getSearchResultStringFromJSON(jsonObject));
+                    }else {
+                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                    }
+                    homeSaved = true;
+                } else if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_WORK) && !workSaved){
+                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
+                        Prefs.with(context).save(SPLabels.ADD_WORK, getSearchResultStringFromJSON(jsonObject));
+                    }else {
+                        Prefs.with(context).save(SPLabels.ADD_WORK, "");
+                    }
+                    workSaved = true;
+                } else {
+                    Data.userData.getSearchResults().add(gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class));
+                }
+            }
+        }
 
         MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData.optJSONObject(KEY_WALLET_BALANCE));
 

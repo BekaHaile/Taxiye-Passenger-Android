@@ -1149,6 +1149,9 @@
 	<string name="engagement_id">Engagement ID</string>
 	<string name="empty_engagement_id">Empty engagement id</string>
 	<string name="invalid_engagement_id">Invalid engagement id</string>
+	<string name="add_new_address">Add new address</string>
+	<string name="could_not_find_address">Could not find address</string>
+	<string name="label_can_not_be_empty">Label can\'t be empty</string>
 
 
 </resources>

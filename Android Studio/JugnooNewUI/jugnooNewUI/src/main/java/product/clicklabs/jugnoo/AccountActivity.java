@@ -94,8 +94,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
+    RelativeLayout relativeLayoutAddNewAddress;
+    TextView textViewAddNewAddress;
+
     private boolean setJeanieState;
-    public static final int ADD_HOME = 2, ADD_WORK = 3;
     Bundle bundle = new Bundle();
 
 	@Override
@@ -199,6 +201,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        relativeLayoutAddNewAddress = (RelativeLayout) findViewById(R.id.relativeLayoutAddNewAddress);
+        ((TextView) findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(this));
+
+
 
         imageViewPokemon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -543,9 +551,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
-                intent.putExtra("requestCode", "HOME");
-                intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
-                startActivityForResult(intent, ADD_HOME);
+                intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_HOME);
+                intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
+                startActivityForResult(intent, Constants.REQUEST_CODE_ADD_HOME);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_HOME);
                 MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_HOME, bundle);
@@ -557,9 +565,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
-                intent.putExtra("requestCode", "WORK");
-                intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
-                startActivityForResult(intent, ADD_WORK);
+                intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_WORK);
+                intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
+                startActivityForResult(intent, Constants.REQUEST_CODE_ADD_WORK);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_WORK);
                 MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_WORK, bundle);
@@ -580,6 +588,18 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                 relativeLayoutAddWork.performClick();
             }
         });
+
+        relativeLayoutAddNewAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
+                intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                intent.putExtra(Constants.KEY_ADDRESS, "");
+                startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
+
 
 
 		linearLayoutLogout.setOnClickListener(new View.OnClickListener() {

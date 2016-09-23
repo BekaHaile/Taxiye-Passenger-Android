@@ -38,13 +38,67 @@
         android:visibility="visible">
 
         <RelativeLayout
+            android:id="@+id/relativeLayoutLabel"
+            android:layout_width="match_parent"
+            android:layout_height="100px"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/white"
+            android:splitMotionEvents="false">
+
+            <ImageView
+                android:id="@+id/imageViewSearchGPSIconLabel"
+                android:layout_width="31px"
+                android:layout_height="43px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30px"
+                android:src="@drawable/ic_support_location_pin"
+                android:tag="mwar"/>
+
+            <EditText
+                android:id="@+id/editTextSearchLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20px"
+                android:layout_toRightOf="@+id/imageViewSearchGPSIconLabel"
+                android:layout_toLeftOf="@+id/imageViewSearchCrossLabel"
+                android:background="@color/transparent"
+                android:hint="Enter label"
+                android:maxLines="1"
+                android:textColor="@color/black_text"
+                android:textCursorDrawable="@null"
+                android:textSize="30px"/>
+
+
+            <ImageView
+                android:id="@+id/imageViewSearchCrossLabel"
+                android:layout_width="70px"
+                android:layout_height="70px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5px"
+                android:padding="16px"
+                android:src="@drawable/ic_cross_et_selector"
+                android:tag="mwar"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="4px"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/shadow_down"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/relativeLayoutSearchBar"
             android:layout_width="match_parent"
             android:layout_height="100px"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="15px"
             android:background="@color/white"
-            android:splitMotionEvents="false">
+            android:splitMotionEvents="false"
+            android:layout_below="@+id/relativeLayoutLabel"
+            >
 
             <ImageView
                 android:id="@+id/imageViewSearchGPSIcon"

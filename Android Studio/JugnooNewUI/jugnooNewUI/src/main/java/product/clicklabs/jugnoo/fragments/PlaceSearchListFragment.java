@@ -63,7 +63,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	private SearchListAdapter.SearchListActionsHandler searchListActionsHandler;
 	private SearchListAdapter searchListAdapter;
 
-	private final int ADD_HOME = 2, ADD_WORK = 3;
 
 	public PlaceSearchListFragment(){
 
@@ -225,9 +224,9 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 			@Override
 			public void onClick(View view) {
 				Intent intent=new Intent(activity, AddPlaceActivity.class);
-				intent.putExtra("requestCode", "HOME");
-				intent.putExtra("address", Prefs.with(activity).getString(SPLabels.ADD_HOME, ""));
-				startActivityForResult(intent, ADD_HOME);
+				intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_HOME);
+				intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(activity).getString(SPLabels.ADD_HOME, ""));
+				startActivityForResult(intent, Constants.REQUEST_CODE_ADD_HOME);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
@@ -236,9 +235,9 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 			@Override
 			public void onClick(View view) {
 				Intent intent=new Intent(activity, AddPlaceActivity.class);
-				intent.putExtra("requestCode", "WORK");
-				intent.putExtra("address", Prefs.with(activity).getString(SPLabels.ADD_WORK, ""));
-				startActivityForResult(intent, ADD_WORK);
+				intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_WORK);
+				intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(activity).getString(SPLabels.ADD_WORK, ""));
+				startActivityForResult(intent, Constants.REQUEST_CODE_ADD_WORK);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
@@ -352,7 +351,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
 			if(resultCode == Activity.RESULT_OK) {
-				if (requestCode == ADD_HOME) {
+				if (requestCode == Constants.REQUEST_CODE_ADD_HOME) {
 					String strResult = data.getStringExtra("PLACE");
 					SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
 					if(searchResult != null){
@@ -362,7 +361,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 						textViewAddHome.setText("Add Home");
 					}
 
-				} else if (requestCode == ADD_WORK) {
+				} else if (requestCode == Constants.REQUEST_CODE_ADD_WORK) {
 					String strResult = data.getStringExtra("PLACE");
 					SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
 					if(searchResult != null) {

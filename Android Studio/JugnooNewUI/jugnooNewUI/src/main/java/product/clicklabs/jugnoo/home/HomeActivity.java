@@ -425,7 +425,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     CallbackManager callbackManager;
-    public final int ADD_HOME = 2, ADD_WORK = 3, FARE_ESTIMATE = 4;
+    public final int FARE_ESTIMATE = 4;
     private String dropLocationSearchText = "";
     private SlidingBottomPanelV4 slidingBottomPanel;
 
@@ -4325,7 +4325,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if(resultCode==RESULT_OK) {
-                if (requestCode == ADD_HOME) {
+                if (requestCode == Constants.REQUEST_CODE_ADD_HOME) {
                     String strResult = data.getStringExtra("PLACE");
                     SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                     if(searchResult != null){
@@ -4334,7 +4334,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }else {
                     }
 
-                } else if (requestCode == ADD_WORK) {
+                } else if (requestCode == Constants.REQUEST_CODE_ADD_WORK) {
                     String strResult = data.getStringExtra("PLACE");
                     SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                     if(searchResult != null) {
