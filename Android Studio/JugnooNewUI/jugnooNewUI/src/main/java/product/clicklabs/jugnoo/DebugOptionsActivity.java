@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -248,6 +247,13 @@ public class DebugOptionsActivity extends BaseActivity {
         setServerUI(selectedServer);
         setFreshServerUI(selectedServerFresh);
 
+        imageViewArrowDebugOptions.setRotation(90);
+        linearLayoutDebugOptionsBelow.setVisibility(View.VISIBLE);
+        imageViewArrowServerEnv.setRotation(90);
+        linearLayoutServerEnvBelow.setVisibility(View.VISIBLE);
+        imageViewArrowServerEnvFresh.setRotation(90);
+        linearLayoutServerEnvFreshBelow.setVisibility(View.VISIBLE);
+
 
         relativeLayoutShowAllDrivers.setOnClickListener(new OnClickListener() {
             @Override
@@ -338,29 +344,93 @@ public class DebugOptionsActivity extends BaseActivity {
         editTextCustom.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-//				relativeLayoutCustom.performClick();
                 selectedServer = editTextCustom.getText().toString().trim();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.smoothScrollTo(0, relativeLayoutAuto.getBottom());
-                    }
-                }, 200);
             }
         });
 
-//		linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-//			@Override
-//			public void keyboardOpened() {
-//
-//			}
-//
-//			@Override
-//			public void keyBoardClosed() {
-//
-//			}
-//		}));
 
+
+
+
+
+
+        relativeLayoutLiveFresh.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedServerFresh = Config.getFreshLiveServerUrl();
+                setFreshServerUI(selectedServerFresh);
+            }
+        });
+
+        relativeLayoutTestFresh.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedServerFresh = Config.getFreshDevServerUrl();
+                setFreshServerUI(selectedServerFresh);
+            }
+        });
+
+        relativeLayoutCustomFresh.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String customUrl = editTextCustomFresh.getText().toString().trim();
+                if ("".equalsIgnoreCase(customUrl)) {
+                    editTextCustomFresh.requestFocus();
+                    editTextCustomFresh.setError("Please enter something");
+                } else {
+                    selectedServerFresh = customUrl;
+                    setFreshServerUI(selectedServerFresh);
+                }
+            }
+        });
+
+        editTextCustomFresh.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedServerFresh = editTextCustomFresh.getText().toString().trim();
+            }
+        });
+
+
+
+        relativeLayoutDebugOptions.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(linearLayoutDebugOptionsBelow.getVisibility() == View.VISIBLE){
+                    imageViewArrowDebugOptions.setRotation(270);
+                    linearLayoutDebugOptionsBelow.setVisibility(View.GONE);
+                } else{
+                    imageViewArrowDebugOptions.setRotation(90);
+                    linearLayoutDebugOptionsBelow.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        relativeLayoutServerEnv.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(linearLayoutServerEnvBelow.getVisibility() == View.VISIBLE){
+                    imageViewArrowServerEnv.setRotation(270);
+                    linearLayoutServerEnvBelow.setVisibility(View.GONE);
+                } else{
+                    imageViewArrowServerEnv.setRotation(90);
+                    linearLayoutServerEnvBelow.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        relativeLayoutServerEnvFresh.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(linearLayoutServerEnvFreshBelow.getVisibility() == View.VISIBLE){
+                    imageViewArrowServerEnvFresh.setRotation(270);
+                    linearLayoutServerEnvFreshBelow.setVisibility(View.GONE);
+                } else{
+                    imageViewArrowServerEnvFresh.setRotation(90);
+                    linearLayoutServerEnvFreshBelow.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 

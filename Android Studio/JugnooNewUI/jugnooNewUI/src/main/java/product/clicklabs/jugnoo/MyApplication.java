@@ -81,8 +81,6 @@ public class MyApplication extends Application{
 
 	@Override
 	public void onCreate() {
-		initializeServerURL(this);
-
 		ActivityLifecycleCallback.register(this);
 		super.onCreate();
 		try {

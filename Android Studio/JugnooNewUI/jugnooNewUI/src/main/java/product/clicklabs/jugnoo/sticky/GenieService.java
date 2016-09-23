@@ -42,6 +42,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
@@ -119,7 +120,7 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
     public void onCreate() {
         super.onCreate();
 
-        SplashNewActivity.initializeServerURL(this);
+        MyApplication.getInstance().initializeServerURL(this);
 
         FlurryAgent.init(this, Config.getFlurryKey());
         FlurryAgent.onStartSession(this, Config.getFlurryKey());

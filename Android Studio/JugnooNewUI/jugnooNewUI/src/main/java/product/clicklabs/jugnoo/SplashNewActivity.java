@@ -3,7 +3,10 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -15,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -294,6 +298,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 			Data.getDeepLinkIndexFromIntent(this, getIntent());
+
+			MyApplication.getInstance().initializeServerURL(this);
 
 
 			try {
@@ -1063,6 +1069,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 
+		LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverDeviceToken,
+				new IntentFilter(INTENT_ACTION_DEVICE_TOKEN_UPDATE));
+
 	}
 
 	private void logSome(){
@@ -1310,15 +1319,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	public void onNewIntent(Intent intent) {
 		this.setIntent(intent);
-		try {
-			if (intent.hasExtra(KEY_DEVICE_TOKEN)) {
-				getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
-				goToAccessTokenLogin();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
+
+	private BroadcastReceiver broadcastReceiverDeviceToken = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			try {
+				if (intent.hasExtra(KEY_DEVICE_TOKEN)) {
+					getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
+					goToAccessTokenLogin();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	};
 
 	private void goToAccessTokenLogin() {
 		try {
@@ -1778,6 +1793,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	@Override
 	protected void onDestroy() {
+		LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiverDeviceToken);
 		if(!newActivityStarted){
 			Data.linkFoundOnce = false;
 		}

@@ -487,4 +487,6 @@ public interface Constants {
 	String KEY_LAT = "lat";
 	String KEY_LONG = "long";
 
+	String INTENT_ACTION_DEVICE_TOKEN_UPDATE = "INTENT_ACTION_DEVICE_TOKEN_UPDATE";
+
 }
