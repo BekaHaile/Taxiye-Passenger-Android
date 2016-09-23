@@ -85,12 +85,6 @@ public class FABView {
                     } else if(activity instanceof FreshActivity){
                         setRelativeLayoutFABVisibility(null);
                     }
-
-//                    if (Data.userData.getFreshEnabled() == 1) {
-//                        fabFresh.setVisibility(View.VISIBLE);
-//                    } else {
-//                        fabFresh.setVisibility(View.GONE);
-//                    }
                 }
             }
         });
@@ -197,8 +191,9 @@ public class FABView {
 
     public void setFABButtons(){
         try {
-            if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
-                    && (Data.userData.getGroceryEnabled() == 0) && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
+            if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
+                    && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
+                    && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 relativeLayoutFAB.setVisibility(View.GONE);
             } else {
                 relativeLayoutFAB.setVisibility(View.INVISIBLE);

@@ -336,7 +336,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     addMealFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
                 } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
-                    //openCart();
+                    openCart();
                     addGroceryFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.GROCERY);
                     lastClientId = Config.getGroceryClientId();
