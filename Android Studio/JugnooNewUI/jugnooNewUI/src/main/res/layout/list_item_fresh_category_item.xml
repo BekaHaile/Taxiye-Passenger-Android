@@ -163,61 +163,12 @@
         android:layout_width="218px"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="20px"
         android:animateLayoutChanges="true"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:layout_alignTop="@+id/linearLayoutContent"
         android:layout_alignBottom="@+id/linearLayoutContent"
         >
-
-        <Button
-            android:id="@+id/add_button"
-            android:layout_width="118px"
-            android:layout_height="60px"
-            android:layout_gravity="center"
-            android:background="@drawable/button_theme"
-            android:gravity="center"
-            android:text="ADD"
-            android:visibility="gone"
-            android:textColor="@color/white"
-            android:textSize="32px"/>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutQuantitySelector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/imageViewMinus"
-                android:layout_width="74px"
-                android:layout_height="74px"
-                android:padding="10px"
-                android:src="@drawable/ic_minus_selector"
-                android:tag="mwar"/>
-
-            <TextView
-                android:id="@+id/textViewQuantity"
-                android:layout_width="70px"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="998"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_34"/>
-
-            <ImageView
-                android:id="@+id/imageViewPlus"
-                android:layout_width="74px"
-                android:layout_height="74px"
-                android:padding="10px"
-                android:src="@drawable/ic_plus_selector"
-                android:tag="mwar"/>
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/textViewOutOfStock"
@@ -231,6 +182,60 @@
             android:textSize="@dimen/text_size_34"/>
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayoutQuantitySelector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_alignParentRight="true"
+        android:layout_above="@+id/imageViewSep"
+        android:layout_marginBottom="25px"
+        android:layout_marginRight="20px"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageViewMinus"
+            android:layout_width="74px"
+            android:layout_height="74px"
+            android:padding="10px"
+            android:src="@drawable/ic_minus_selector"
+            android:tag="mwar"/>
+
+        <TextView
+            android:id="@+id/textViewQuantity"
+            android:layout_width="70px"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="998"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"/>
+
+        <ImageView
+            android:id="@+id/imageViewPlus"
+            android:layout_width="74px"
+            android:layout_height="74px"
+            android:padding="10px"
+            android:src="@drawable/ic_plus_selector"
+            android:tag="mwar"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="118px"
+        android:layout_height="60px"
+        android:background="@drawable/button_theme"
+        android:layout_alignParentRight="true"
+        android:layout_above="@+id/imageViewSep"
+        android:layout_marginBottom="25px"
+        android:layout_marginRight="20px"
+        android:text="ADD"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_32"/>
 
     <TextView
         android:id="@+id/unavilable_view"

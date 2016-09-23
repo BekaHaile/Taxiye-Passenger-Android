@@ -109,7 +109,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 dateValue = Data.getGroceryData().getFeedbackDeliveryDate();
                 orderAmount = Data.getGroceryData().getAmount();
                 orderId = Data.getGroceryData().getOrderId();
-                activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+                activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
             } else {
 				activity.finish();
@@ -553,6 +553,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
             } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
                 activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
             }
         }
     }

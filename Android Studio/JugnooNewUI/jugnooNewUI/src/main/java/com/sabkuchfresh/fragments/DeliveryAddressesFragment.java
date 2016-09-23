@@ -248,9 +248,18 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             public void afterTextChanged(Editable s) {
                 if(s.length() > 0){
                     scrollViewSearch.setVisibility(View.VISIBLE);
+                    activity.getTopBar().imageViewSearchCross.setVisibility(View.VISIBLE);
                 } else{
                     scrollViewSearch.setVisibility(View.GONE);
+                    activity.getTopBar().imageViewSearchCross.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        activity.getTopBar().imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.getTopBar().editTextDeliveryAddress.getText().clear();
             }
         });
 

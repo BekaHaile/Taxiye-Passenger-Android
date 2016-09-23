@@ -4619,7 +4619,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setupFreshUI();
                     setupInAppCampaignUI();
                     if(Data.userData.getIntegratedJugnooEnabled() == 1) {
-                        if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)) {
+                        if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
+                                && (Data.userData.getGroceryEnabled() == 0)) {
                             imageViewFabFake.setVisibility(View.GONE);
                             fabView.menuLabelsRight.setVisibility(View.INVISIBLE);
                         } else {
@@ -4629,6 +4630,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         }
                         fabView.setFABButtons();
+                        //fabView.setFABMenuDrawable();
                     }
                     if(showPoolIntro) {
 //                        showPoolIntroDialog();
@@ -7873,7 +7875,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 HashMap<String, String> params = new HashMap<>();
 
                 params.put("access_token", Data.userData.accessToken);
-                params.put(KEY_GIVEN_RATING, "" + givenRating);
+                params.put(KEY_GIVEN_RATING, String.valueOf(givenRating));
                 params.put("engagement_id", engagementId);
                 params.put("driver_id", ratingReceiverId);
                 params.put("feedback", feedbackText);
@@ -8838,6 +8840,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
+                                            getCurrentPlaceLatLng(), bundle, false);
+                                }
+                            } else if(type == 2){
+                                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                                    drawerLayout.closeDrawer(GravityCompat.START);
+                                }
+                                if (Prefs.with(HomeActivity.this).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()).equals(Config.getAutosClientId())) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+                                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getGroceryClientId(), null,
                                             getCurrentPlaceLatLng(), bundle, false);
                                 }
                             }

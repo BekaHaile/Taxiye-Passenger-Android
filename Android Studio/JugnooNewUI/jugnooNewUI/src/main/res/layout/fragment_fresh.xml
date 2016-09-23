@@ -103,6 +103,7 @@
         >
 
         <ImageView
+            android:id="@+id/imageViewNoItem"
             android:layout_width="376px"
             android:layout_height="270px"
             android:layout_gravity="center_horizontal"

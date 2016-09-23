@@ -52,11 +52,11 @@
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabGrocery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:src="@drawable/ic_fab_grocery_selector"
-            android:visibility="gone"
             android:layout_marginBottom="0px"
+            android:visibility="gone"
             fab:fab_colorNormal="#0000"
             fab:fab_colorPressed="#0000"
             fab:fab_colorRipple="#0000"

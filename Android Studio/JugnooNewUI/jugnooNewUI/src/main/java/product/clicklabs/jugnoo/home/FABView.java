@@ -85,12 +85,6 @@ public class FABView {
                     } else if(activity instanceof FreshActivity){
                         setRelativeLayoutFABVisibility(null);
                     }
-
-//                    if (Data.userData.getFreshEnabled() == 1) {
-//                        fabFresh.setVisibility(View.VISIBLE);
-//                    } else {
-//                        fabFresh.setVisibility(View.GONE);
-//                    }
                 }
             }
         });
@@ -126,7 +120,7 @@ public class FABView {
         //relativeLayoutFAB.setVisibility(View.INVISIBLE);
         try {
             if(Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
-                    (Data.userData.getFreshEnabled() == 1 || Data.userData.getMealsEnabled() == 1 || Data.userData.getDeliveryEnabled() == 1)
+                    (Data.userData.getFreshEnabled() == 1 || Data.userData.getMealsEnabled() == 1 || Data.userData.getDeliveryEnabled() == 1 || Data.userData.getGroceryEnabled() == 1)
                     && Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if (passengerScreenMode != null) {
                     if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
@@ -140,6 +134,7 @@ public class FABView {
                         menuLabelsRight.close(true);
                         fabFresh.setVisibility(View.INVISIBLE);
                         fabMeals.setVisibility(View.INVISIBLE);
+                        fabGrocery.setVisibility(View.INVISIBLE);
                     }
                 } else {
                     if (activity instanceof FreshActivity) {
@@ -178,7 +173,7 @@ public class FABView {
         }
 
         fabDelivery.setVisibility(View.GONE);
-        fabGrocery.setVisibility(View.GONE);
+        //fabGrocery.setVisibility(View.GONE);
         if(Config.getAutosClientId().equalsIgnoreCase(currentOpenedOffering)){
             fabAutos.setVisibility(View.GONE);
         } else if(Config.getFreshClientId().equalsIgnoreCase(currentOpenedOffering)){
@@ -196,7 +191,8 @@ public class FABView {
 
     public void setFABButtons(){
         try {
-            if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
+            if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
+                    && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
                     && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 relativeLayoutFAB.setVisibility(View.GONE);
             } else {

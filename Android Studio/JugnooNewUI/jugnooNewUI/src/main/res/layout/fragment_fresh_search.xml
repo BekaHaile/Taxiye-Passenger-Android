@@ -81,7 +81,6 @@
                 android:src="@drawable/ic_cross_et"
                 android:tag="mwar"
                 android:visibility="gone"
-
                 />
         </LinearLayout>
 
