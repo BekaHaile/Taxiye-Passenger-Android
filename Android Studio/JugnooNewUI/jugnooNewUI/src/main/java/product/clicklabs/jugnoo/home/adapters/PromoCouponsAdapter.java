@@ -18,7 +18,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -30,11 +29,11 @@ import product.clicklabs.jugnoo.utils.Fonts;
  */
 public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapter.ViewHolder> {
 
-	private HomeActivity activity;
+	private Activity activity;
 	private ArrayList<PromoCoupon> offerList = new ArrayList<>();
 	private Callback callback;
 
-	public PromoCouponsAdapter(HomeActivity activity, ArrayList<PromoCoupon> offerList, Callback callback) {
+	public PromoCouponsAdapter(Activity activity, ArrayList<PromoCoupon> offerList, Callback callback) {
 		this.activity = activity;
 		this.offerList = offerList;
 		this.callback = callback;
@@ -56,8 +55,7 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 		PromoCoupon promoCoupon = offerList.get(position);
 
 		holder.textViewOfferName.setText(promoCoupon.getTitle());
-		if(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() != null &&
-				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() == promoCoupon.getId()){
+		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() == promoCoupon.getId()){
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
 		} else{
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
@@ -94,10 +92,10 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 				try {
 					int position = (int) v.getTag();
 					PromoCoupon promoCoupon = offerList.get(position);
-					if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() == promoCoupon.getId()) {
-						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+					if (callback.getSelectedCoupon().getId() == promoCoupon.getId()) {
+						callback.setSelectedCoupon(-1);
 					} else {
-						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
+						callback.setSelectedCoupon(position);
 						callback.onCouponSelected();
 					}
                     Bundle bundle = new Bundle();
@@ -134,6 +132,8 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 
 	public interface Callback{
 		void onCouponSelected();
+		PromoCoupon getSelectedCoupon();
+		void setSelectedCoupon(int position);
 	}
 
 }

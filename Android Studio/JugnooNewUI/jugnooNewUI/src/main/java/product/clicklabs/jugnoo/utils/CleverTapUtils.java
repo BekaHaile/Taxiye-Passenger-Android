@@ -102,6 +102,16 @@ public class CleverTapUtils {
                     }
                 }
             }
+            if(Data.getGroceryData() != null && Data.getGroceryData().getPromoCoupons() != null) {
+                for(int i=0;i<Data.getGroceryData().getPromoCoupons().size();i++) {
+                    coupons.add(Data.getGroceryData().getPromoCoupons().get(i).getTitle());
+                    String value = getCouponValue(Data.getGroceryData().getPromoCoupons().get(i).getTitle());
+                    if(value.length()>0) {
+                        coupons.add(value);
+                        maxValue = getCouponMaxValue(maxValue, value);
+                    }
+                }
+            }
             Log.d("TAG", "Coupon counts = "+coupons.size());
 
             MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);

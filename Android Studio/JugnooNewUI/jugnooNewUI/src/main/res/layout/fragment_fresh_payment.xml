@@ -287,20 +287,41 @@
 
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/textViewAddPromo"
+            <RelativeLayout
+                android:id="@+id/relativeLayoutOffers"
                 android:layout_width="match_parent"
-                android:layout_height="40px"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="20px"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/payment_hearder_30"
-                android:singleLine="true"
-                android:text="ADD PROMO"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_22"
-                android:visibility="visible"
-                />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textViewOffers"
+                    android:layout_width="match_parent"
+                    android:layout_height="40px"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="20px"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/payment_hearder_30"
+                    android:singleLine="true"
+                    android:text="@string/offers"
+                    android:textAllCaps="true"
+                    android:textColor="@color/theme_color"
+                    android:textSize="@dimen/text_size_22"
+                    android:visibility="visible"
+                    />
+
+                <ImageView
+                    android:id="@+id/imageViewOffersArrow"
+                    android:layout_width="23px"
+                    android:layout_height="41px"
+                    android:tag="mwar"
+                    android:rotation="270"
+                    android:src="@drawable/ic_back"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="30px"
+                    />
+
+            </RelativeLayout>
+
 
             <View
                 android:layout_width="match_parent"
@@ -308,45 +329,14 @@
                 android:background="@color/divider_color"
                 />
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutDeliveryCharges"
+            <product.clicklabs.jugnoo.utils.NonScrollListView
+                android:id="@+id/listViewOffers"
                 android:layout_width="match_parent"
-                android:layout_height="110px"
-                android:gravity="center_vertical"
-                >
-
-                <EditText
-                    android:id="@+id/ed_promo_code"
-                    style="@style/sabkuchfresh.Text.RobotoRegularSmall_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/payment_margin"
-                    android:layout_toLeftOf="@+id/apply_button"
-                    android:background="@color/transparent"
-                    android:hint="@string/add_promo_code"
-                    android:inputType="textNoSuggestions|textCapCharacters"
-                    android:paddingLeft="6px"
-                    android:textAllCaps="true"
-                    android:singleLine="true"
-                    android:textColor="@color/text_color"
-                    android:textColorHint="@color/text_color_light"
-                    android:textSize="@dimen/text_size_30"
-                    />
-
-                <Button
-                    android:id="@+id/apply_button"
-                    android:layout_width="168px"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:background="@drawable/apply_button_selector"
-                    android:gravity="center"
-                    android:text="ADD"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_38"
-                    android:visibility="visible"
-                    />
-
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:divider="@color/transparent"
+                android:dividerHeight="0dp"
+                android:splitMotionEvents="false">
+            </product.clicklabs.jugnoo.utils.NonScrollListView>
 
             <View
                 android:layout_width="match_parent"

@@ -31,6 +31,9 @@ public class CouponInfo extends PromoCoupon{
 	@SerializedName("delivery")
 	@Expose
 	public Integer delivery;
+	@SerializedName("grocery")
+	@Expose
+	public Integer grocery;
 	@SerializedName("master_coupon")
 	@Expose
 	private Integer masterCoupon = 0;

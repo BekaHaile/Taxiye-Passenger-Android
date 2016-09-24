@@ -7,20 +7,16 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
@@ -58,7 +54,10 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -67,6 +66,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
@@ -85,9 +85,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 //	private TextView textViewPayForItems, textViewPayFromjc;
 
     RelativeLayout relativeLayoutSubTotalLayout, relativeLayoutJC, relativeLayoutPromo, relativeLayoutTotalLayout, relativeLayoutdelivery;
-    TextView textViewTotalValue, textViewJCValue, textViewPromoValue, textViewPayableValue, textViewAddPromo, textpaymentoption,
+    TextView textViewTotalValue, textViewJCValue, textViewPromoValue, textViewPayableValue, textpaymentoption,
             textViewSubTotal, textViewSubTotalValue, textViewdelivery, textViewdeliveryValue;
-    private EditText appPromoEdittext;
     private View viewLine;
 
 
@@ -96,7 +95,11 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     private ImageView imageViewPaytmRadio, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewCashRadio;
     private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue,
             textViewFreeCharge, textViewFreeChargeValue;
-    private Button buttonPlaceOrder, applyButton;
+    private Button buttonPlaceOrder;
+    private RelativeLayout relativeLayoutOffers;
+    private ImageView imageViewOffersArrow;
+    private NonScrollListView listViewOffers;
+    private PromoCouponsAdapter promoCouponsAdapter;
 
     private View rootView;
     private FreshActivity activity;
@@ -118,6 +121,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     }
 
     private List<Product> productList = new ArrayList<>();
+    private ArrayList<PromoCoupon> promoCoupons = null;
 
     @Override
     public void onStart() {
@@ -167,8 +171,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         textViewPayableValue = (TextView) rootView.findViewById(R.id.textViewPayableValue);
         textViewPayableValue.setTypeface(Fonts.mavenRegular(activity));
 
-        textViewAddPromo = (TextView) rootView.findViewById(R.id.textViewAddPromo);
-        textViewAddPromo.setTypeface(Fonts.mavenRegular(activity));
+//        textViewAddPromo = (TextView) rootView.findViewById(textViewAddPromo);
+//        textViewAddPromo.setTypeface(Fonts.mavenRegular(activity));
 
         textViewSubTotalValue = (TextView) rootView.findViewById(R.id.textViewSubTotalValue);
         textViewSubTotalValue.setTypeface(Fonts.mavenRegular(activity));
@@ -186,10 +190,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         textpaymentoption = ((TextView) rootView.findViewById(R.id.textViewPaymentOption));
         textpaymentoption.setTypeface(Fonts.mavenRegular(activity));
 
-        appPromoEdittext = (EditText) rootView.findViewById(R.id.ed_promo_code);
-        appPromoEdittext.setTypeface(Fonts.mavenRegular(activity));
-
-        applyButton = (Button) rootView.findViewById(R.id.apply_button);
 
 
 
@@ -220,48 +220,83 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         buttonPlaceOrder = (Button) rootView.findViewById(R.id.buttonPlaceOrder);
         buttonPlaceOrder.setTypeface(Fonts.mavenRegular(activity));
 
-        appPromoEdittext.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                applyButton.setEnabled(true);
-                if(s.length()==0)
-                    applyButton.setBackgroundColor(activity.getResources().getColor(R.color.apply_btn_normal));
-                else
-                    applyButton.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        applyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!TextUtils.isEmpty(appPromoEdittext.getText().toString().trim())) {
-                    applyPromo();
-                    int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                    if(appType == AppConstant.ApplicationType.MEALS){
-                        MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.ADD_PROMO, null);
-                    }else{
-                        MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.ADD_PROMO, null);
-                    }
-                }
-                else {
-                    Toast.makeText(activity, "Please enter code", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        appPromoEdittext.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                applyButton.setEnabled(true);
+//                if(s.length()==0)
+//                    applyButton.setBackgroundColor(activity.getResources().getColor(R.color.apply_btn_normal));
+//                else
+//                    applyButton.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
+//
+//        applyButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!TextUtils.isEmpty(appPromoEdittext.getText().toString().trim())) {
+//                    applyPromo();
+//                    int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+//                    if(appType == AppConstant.ApplicationType.MEALS){
+//                        MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.ADD_PROMO, null);
+//                    }else{
+//                        MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.ADD_PROMO, null);
+//                    }
+//                }
+//                else {
+//                    Toast.makeText(activity, "Please enter code", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
         linearLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
+
+        relativeLayoutOffers = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutOffers);
+        ((TextView)rootView.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
+        imageViewOffersArrow = (ImageView) rootView.findViewById(R.id.imageViewOffersArrow);
+        listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
+
+        String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+        if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
+            promoCoupons = Data.userData.getCoupons(ProductType.MEALS);
+        } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+            promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
+        } else {
+            promoCoupons = Data.userData.getCoupons(ProductType.FRESH);
+        }
+        if(promoCoupons != null) {
+            promoCouponsAdapter = new PromoCouponsAdapter(activity, promoCoupons, new PromoCouponsAdapter.Callback() {
+                @Override
+                public void onCouponSelected() {
+                }
+
+                @Override
+                public PromoCoupon getSelectedCoupon() {
+                    return activity.getSelectedPromoCoupon();
+                }
+
+                @Override
+                public void setSelectedCoupon(int position) {
+                    if (promoCoupons != null) {
+                        activity.setSelectedPromoCoupon(promoCoupons.get(position));
+                    }
+                }
+            });
+        }
+
+
 
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -626,77 +661,77 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         }
     }
 
-    private void applyPromo() {
-        Utils.hideSoftKeyboard(activity, appPromoEdittext);
-        try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
-                DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.DELIVERY_LATITUDE, Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(Data.latitude)));
-                params.put(Constants.DELIVERY_LONGITUDE, Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(Data.longitude)));
-
-                params.put(Constants.ORDER_AMOUNT, String.valueOf(activity.getTotalPrice()));
-                params.put(Constants.PROMO_CODE, appPromoEdittext.getText().toString().trim());
-                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-                params.put(Constants.INTERATED, "1");
-                params.put(Constants.KEY_CART, cartItems());
-
-                Log.i(TAG, "getAllProducts params=" + params.toString());
-
-                RestClient.getFreshApiService().applyPromo(params, new Callback<PlaceOrderResponse>() {
-                    @Override
-                    public void success(PlaceOrderResponse placeOrderResponse, Response response) {
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        Log.i(TAG, "getAllProducts response = " + responseStr);
-                        try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            String message = JSONParser.getServerMessage(jObj);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt(Constants.KEY_FLAG);
-                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    Toast.makeText(activity, ""+message, Toast.LENGTH_SHORT).show();
-                                    promoCode = appPromoEdittext.getText().toString().trim();
-                                    promoAmount = jObj.optDouble(Constants.DISCOUNT, 0);
-                                    appPromoEdittext.clearFocus();
-                                    applyButton.setEnabled(false);
-                                    applyButton.setBackgroundColor(activity.getResources().getColor(R.color.theme_color_pressed));
-                                    updateUI();
-                                    HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
-                                    profileUpdate.put(Events.COUPONS_USED, promoCode);
-                                    MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
-                                } else {
-                                    DialogPopup.alertPopup(activity, "", message);
-                                    promoCode = "";
-                                    promoAmount = 0;
-                                    appPromoEdittext.setText("");
-                                    appPromoEdittext.clearFocus();
-                                    updateUI();
-                                }
-                            }
-                        } catch (Exception exception) {
-                            exception.printStackTrace();
-                            retryDialog(DialogErrorType.SERVER_ERROR, 0);
-                        }
-                        DialogPopup.dismissLoadingDialog();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, "paytmAuthenticateRecharge error " + error.toString());
-                        DialogPopup.dismissLoadingDialog();
-//                        123
-                        retryDialog(DialogErrorType.CONNECTION_LOST, 0);
-                    }
-                });
-            } else {
-                retryDialog(DialogErrorType.NO_NET, 0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    private void applyPromo() {
+//        Utils.hideSoftKeyboard(activity, appPromoEdittext);
+//        try {
+//            if (AppStatus.getInstance(activity).isOnline(activity)) {
+//                DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+//
+//                HashMap<String, String> params = new HashMap<>();
+//                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+//                params.put(Constants.DELIVERY_LATITUDE, Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(Data.latitude)));
+//                params.put(Constants.DELIVERY_LONGITUDE, Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(Data.longitude)));
+//
+//                params.put(Constants.ORDER_AMOUNT, String.valueOf(activity.getTotalPrice()));
+//                params.put(Constants.PROMO_CODE, appPromoEdittext.getText().toString().trim());
+//                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+//                params.put(Constants.INTERATED, "1");
+//                params.put(Constants.KEY_CART, cartItems());
+//
+//                Log.i(TAG, "getAllProducts params=" + params.toString());
+//
+//                RestClient.getFreshApiService().applyPromo(params, new Callback<PlaceOrderResponse>() {
+//                    @Override
+//                    public void success(PlaceOrderResponse placeOrderResponse, Response response) {
+//                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+//                        Log.i(TAG, "getAllProducts response = " + responseStr);
+//                        try {
+//                            JSONObject jObj = new JSONObject(responseStr);
+//                            String message = JSONParser.getServerMessage(jObj);
+//                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+//                                int flag = jObj.getInt(Constants.KEY_FLAG);
+//                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+//                                    Toast.makeText(activity, ""+message, Toast.LENGTH_SHORT).show();
+//                                    promoCode = appPromoEdittext.getText().toString().trim();
+//                                    promoAmount = jObj.optDouble(Constants.DISCOUNT, 0);
+//                                    appPromoEdittext.clearFocus();
+//                                    applyButton.setEnabled(false);
+//                                    applyButton.setBackgroundColor(activity.getResources().getColor(R.color.theme_color_pressed));
+//                                    updateUI();
+//                                    HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+//                                    profileUpdate.put(Events.COUPONS_USED, promoCode);
+//                                    MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+//                                } else {
+//                                    DialogPopup.alertPopup(activity, "", message);
+//                                    promoCode = "";
+//                                    promoAmount = 0;
+//                                    appPromoEdittext.setText("");
+//                                    appPromoEdittext.clearFocus();
+//                                    updateUI();
+//                                }
+//                            }
+//                        } catch (Exception exception) {
+//                            exception.printStackTrace();
+//                            retryDialog(DialogErrorType.SERVER_ERROR, 0);
+//                        }
+//                        DialogPopup.dismissLoadingDialog();
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//                        Log.e(TAG, "paytmAuthenticateRecharge error " + error.toString());
+//                        DialogPopup.dismissLoadingDialog();
+////                        123
+//                        retryDialog(DialogErrorType.CONNECTION_LOST, 0);
+//                    }
+//                });
+//            } else {
+//                retryDialog(DialogErrorType.NO_NET, 0);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private String cartItems(){
         JSONArray jCart = new JSONArray();
@@ -931,8 +966,9 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     public void positiveClick(View view) {
                         if(apiHit == 1)
                             placeOrderApi();
-                        else if(apiHit == 0)
-                            applyPromo();
+                        else if(apiHit == 0) {
+                        //TODO commented api applyPromo();
+                        }
                     }
 
                     @Override

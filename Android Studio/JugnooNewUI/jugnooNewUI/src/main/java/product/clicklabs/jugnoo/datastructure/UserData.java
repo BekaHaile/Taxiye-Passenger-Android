@@ -2,8 +2,6 @@ package product.clicklabs.jugnoo.datastructure;
 
 import android.content.Context;
 
-import com.sabkuchfresh.utils.AppConstant;
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -705,15 +703,18 @@ public class UserData {
 			if(Data.getDeliveryData() != null && Data.getDeliveryData().getPromoCoupons() != null) {
 				count += Data.getDeliveryData().getPromoCoupons().size();
 			}
+			if(Data.getGroceryData() != null && Data.getGroceryData().getPromoCoupons() != null) {
+				count += Data.getGroceryData().getPromoCoupons().size();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return count;
 	}
 
-	public ArrayList<PromoCoupon> getCoupons(int appType) {
+	public ArrayList<PromoCoupon> getCoupons(ProductType productType) {
 		ArrayList<PromoCoupon> coupons = new ArrayList<>();
-		if(appType == AppConstant.AppType.AUTO) {
+		if(productType == ProductType.AUTO) {
 			for(int i = 0;i<promoCoupons.size();i++) {
 				PromoCoupon promoCoupon = promoCoupons.get(i);
 				try {
@@ -725,8 +726,10 @@ public class UserData {
 					e.printStackTrace();
 				}
 			}
-			coupons.addAll(Data.autoData.getPromoCoupons());
-		} else if(appType == AppConstant.AppType.FRESH) {
+			if(Data.autoData != null) {
+				coupons.addAll(Data.autoData.getPromoCoupons());
+			}
+		} else if(productType == ProductType.FRESH) {
 			for(int i = 0;i<promoCoupons.size();i++) {
 				PromoCoupon promoCoupon = promoCoupons.get(i);
 				try {
@@ -738,8 +741,10 @@ public class UserData {
 					e.printStackTrace();
 				}
 			}
-			coupons.addAll(Data.getFreshData().getPromoCoupons());
-		} else if(appType == AppConstant.AppType.MEALS) {
+			if(Data.getFreshData() != null) {
+				coupons.addAll(Data.getFreshData().getPromoCoupons());
+			}
+		} else if(productType == ProductType.MEALS) {
 			for(int i = 0;i<promoCoupons.size();i++) {
 				PromoCoupon promoCoupon = promoCoupons.get(i);
 				try {
@@ -751,20 +756,24 @@ public class UserData {
 					e.printStackTrace();
 				}
 			}
-			coupons.addAll(Data.getMealsData().getPromoCoupons());
-		} else if(appType == AppConstant.AppType.DELIVERY) {
+			if(Data.getMealsData() != null) {
+				coupons.addAll(Data.getMealsData().getPromoCoupons());
+			}
+		} else if(productType == ProductType.GROCERY) {
 			for(int i = 0;i<promoCoupons.size();i++) {
 				PromoCoupon promoCoupon = promoCoupons.get(i);
 				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).delivery.equals(1)) ||
-							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).delivery.equals(1))) {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).grocery.equals(1)) ||
+							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).grocery.equals(1))) {
 						coupons.add(promoCoupon);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-			coupons.addAll(Data.getDeliveryData().getPromoCoupons());
+			if(Data.getGroceryData() != null) {
+				coupons.addAll(Data.getGroceryData().getPromoCoupons());
+			}
 		}
 
 		return coupons;

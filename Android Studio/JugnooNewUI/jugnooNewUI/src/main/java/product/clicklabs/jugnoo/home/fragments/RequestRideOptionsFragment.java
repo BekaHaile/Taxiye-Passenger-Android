@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.sabkuchfresh.utils.AppConstant;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import product.clicklabs.jugnoo.Constants;
@@ -27,6 +26,7 @@ import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
@@ -259,9 +259,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public void updateOffersCount(){
         try {
-            if(Data.userData.getCoupons(AppConstant.AppType.AUTO).size() > 0) {
-                textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(AppConstant.AppType.AUTO).size());
-                textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(AppConstant.AppType.AUTO).size());
+            if(Data.userData.getCoupons(ProductType.AUTO).size() > 0) {
+                textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(ProductType.AUTO).size());
+                textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(ProductType.AUTO).size());
             } else{
                 textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + "-");
                 textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + "-");
@@ -447,7 +447,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     public void initSelectedCoupon(){
         try {
             if(selectedCoupon == null) {
-                if (Data.userData.getCoupons(AppConstant.AppType.AUTO).size() > 0) {
+                if (Data.userData.getCoupons(ProductType.AUTO).size() > 0) {
                     selectedCoupon = noSelectionCoupon;
                 } else {
                     selectedCoupon = new CouponInfo(0, "");
@@ -465,8 +465,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
     public void setSelectedCoupon(int position) {
         PromoCoupon promoCoupon;
-        if (position > -1 && position < Data.userData.getCoupons(AppConstant.AppType.AUTO).size()) {
-            promoCoupon = Data.userData.getCoupons(AppConstant.AppType.AUTO).get(position);
+        if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO).size()) {
+            promoCoupon = Data.userData.getCoupons(ProductType.AUTO).get(position);
         } else {
             promoCoupon = noSelectionCoupon;
         }
