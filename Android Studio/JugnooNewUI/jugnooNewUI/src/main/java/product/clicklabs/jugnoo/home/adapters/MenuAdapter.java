@@ -261,6 +261,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 }
                 holder.linearLayoutCategories.setVisibility(View.GONE);
+                holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 setSubCategories(holder);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -577,7 +578,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private void setSubCategories(ViewHeaderHolder holder){
         try {
             if(Data.userData.getIntegratedJugnooEnabled() == 1) {
-                if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)) {
+                if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
+                        && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)) {
                     holder.linearLayoutCategories.setVisibility(View.GONE);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 } else {
