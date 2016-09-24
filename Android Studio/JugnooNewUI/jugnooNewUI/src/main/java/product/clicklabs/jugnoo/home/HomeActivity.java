@@ -4330,7 +4330,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                     if(searchResult != null){
                         placeAdded = true;
-                        Prefs.with(HomeActivity.this).save(SPLabels.ADD_HOME, strResult);
                     }else {
                     }
 
@@ -4339,7 +4338,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                     if(searchResult != null) {
                         placeAdded = true;
-                        Prefs.with(HomeActivity.this).save(SPLabels.ADD_WORK, strResult);
                     }else{
                     }
                 } else if(requestCode == FARE_ESTIMATE){

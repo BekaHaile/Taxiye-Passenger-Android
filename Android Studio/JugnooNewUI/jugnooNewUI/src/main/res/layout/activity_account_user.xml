@@ -498,12 +498,18 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                >
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:layout_marginLeft="40px"
                 android:layout_marginRight="40px"
                 android:background="@color/stroke_color_light" />
+            </RelativeLayout>
 
             <product.clicklabs.jugnoo.utils.NonScrollListView
                 android:id="@+id/listViewSavedLocations"

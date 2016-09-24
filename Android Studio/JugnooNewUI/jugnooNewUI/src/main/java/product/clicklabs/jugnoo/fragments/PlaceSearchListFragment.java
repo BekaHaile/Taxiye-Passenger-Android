@@ -355,7 +355,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					String strResult = data.getStringExtra("PLACE");
 					SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
 					if(searchResult != null){
-						Prefs.with(activity).save(SPLabels.ADD_HOME, strResult);
 						showSearchLayout();
 					} else {
 						textViewAddHome.setText("Add Home");
@@ -365,7 +364,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					String strResult = data.getStringExtra("PLACE");
 					SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
 					if(searchResult != null) {
-						Prefs.with(activity).save(SPLabels.ADD_WORK, strResult);
 						showSearchLayout();
 					} else{
 						textViewAddWork.setText("Add Work");

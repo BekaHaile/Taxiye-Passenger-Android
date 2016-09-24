@@ -366,7 +366,11 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                                     addPlacesApi(searchResult, deleteAddress, 0);
                                 }
                                 else{
-                                    searchResult.setId(jObj.optInt(KEY_ID, 0));
+                                    int id = 0;
+                                    if(searchResult.getId() != null){
+                                        id = searchResult.getId();
+                                    }
+                                    searchResult.setId(jObj.optInt(KEY_ID, id));
 
                                     String strResult = gson.toJson(searchResult, SearchResult.class);
                                     if(deleteAddress){
