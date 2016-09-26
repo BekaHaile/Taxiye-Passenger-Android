@@ -52,10 +52,12 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -97,6 +99,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             textViewFreeCharge, textViewFreeChargeValue;
     private Button buttonPlaceOrder;
     private RelativeLayout relativeLayoutOffers;
+    private TextView textViewOffers;
     private ImageView imageViewOffersArrow;
     private NonScrollListView listViewOffers;
     private PromoCouponsAdapter promoCouponsAdapter;
@@ -122,6 +125,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
     private List<Product> productList = new ArrayList<>();
     private ArrayList<PromoCoupon> promoCoupons = null;
+    private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
     @Override
     public void onStart() {
@@ -264,7 +268,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
 
         relativeLayoutOffers = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutOffers);
-        ((TextView)rootView.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
+        textViewOffers = (TextView)rootView.findViewById(R.id.textViewOffers); textViewOffers.setTypeface(Fonts.mavenMedium(activity));
         imageViewOffersArrow = (ImageView) rootView.findViewById(R.id.imageViewOffersArrow);
         listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
 
@@ -289,13 +293,42 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
                 @Override
                 public void setSelectedCoupon(int position) {
-                    if (promoCoupons != null) {
+                    if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
                         activity.setSelectedPromoCoupon(promoCoupons.get(position));
+                    } else {
+                        activity.setSelectedPromoCoupon(noSelectionCoupon);
                     }
                 }
             });
+            listViewOffers.setAdapter(promoCouponsAdapter);
+            if(promoCoupons.size() > 0){
+                textViewOffers.setText(R.string.offers);
+                rootView.findViewById(R.id.viewOffersSep).setVisibility(View.VISIBLE);
+                imageViewOffersArrow.setVisibility(View.VISIBLE);
+            } else {
+                textViewOffers.setText(R.string.no_offers_currently);
+                rootView.findViewById(R.id.viewOffersSep).setVisibility(View.GONE);
+                imageViewOffersArrow.setVisibility(View.GONE);
+            }
         }
 
+
+        relativeLayoutOffers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(promoCoupons.size() > 0) {
+                    if (listViewOffers.getVisibility() == View.VISIBLE) {
+                        listViewOffers.setVisibility(View.GONE);
+                        imageViewOffersArrow.setRotation(90f);
+                        rootView.findViewById(R.id.viewOffersSep).setVisibility(View.GONE);
+                    } else {
+                        listViewOffers.setVisibility(View.VISIBLE);
+                        imageViewOffersArrow.setRotation(270f);
+                        rootView.findViewById(R.id.viewOffersSep).setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
 
 
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
@@ -832,6 +865,14 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     params.put(Constants.PROMO_CODE, promoCode);
                     chargeDetails.put(Events.PROMOCODE, promoCode);
                 }
+                if(activity.getSelectedPromoCoupon() != null && activity.getSelectedPromoCoupon().getId() > -1){
+                    if(activity.getSelectedPromoCoupon() instanceof CouponInfo){
+                        params.put(Constants.KEY_ACCOUNT_ID, String.valueOf(activity.getSelectedPromoCoupon().getId()));
+                    } else if(activity.getSelectedPromoCoupon() instanceof PromotionInfo){
+                        params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(activity.getSelectedPromoCoupon().getId()));
+                    }
+                }
+
 
 
                 int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
@@ -845,6 +886,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     chargeDetails.put(Events.TYPE, "Fresh");
                 }
                 params.put(Constants.INTERATED, "1");
+
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 

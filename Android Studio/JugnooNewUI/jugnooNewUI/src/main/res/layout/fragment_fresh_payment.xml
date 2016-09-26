@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:animateLayoutChanges="true"
             >
 
 
@@ -324,6 +325,7 @@
 
 
             <View
+                android:id="@+id/viewOffersSep"
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:background="@color/divider_color"

@@ -2,14 +2,12 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,7 +36,7 @@ public class PromoCouponsDialog {
 	private Callback callback;
 	private Dialog dialog = null;
 
-	private RecyclerView recyclerViewPromoCoupons;
+	private ListView listViewPromoCoupons;
 	private PromoCouponsAdapter promoCouponsAdapter;
 	private Button buttonContinue, buttonInviteFriends;
 	private LinearLayout linearLayoutNoCurrentOffers;
@@ -66,10 +64,7 @@ public class PromoCouponsDialog {
 			dialog.setCanceledOnTouchOutside(true);
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
-			recyclerViewPromoCoupons = (RecyclerView) dialog.findViewById(R.id.recyclerViewPromoCoupons);
-			recyclerViewPromoCoupons.setLayoutManager(new LinearLayoutManager(activity));
-			recyclerViewPromoCoupons.setItemAnimator(new DefaultItemAnimator());
-			recyclerViewPromoCoupons.setHasFixedSize(false);
+			listViewPromoCoupons = (ListView) dialog.findViewById(R.id.listViewPromoCoupons);
 			FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "b_offer");
 
 			ArrayList<PromoCoupon> promoCoupons = Data.userData.getCoupons(ProductType.AUTO);
@@ -77,6 +72,7 @@ public class PromoCouponsDialog {
 			promoCouponsAdapter = new PromoCouponsAdapter(activity, promoCoupons, new PromoCouponsAdapter.Callback() {
 				@Override
 				public void onCouponSelected() {
+
 				}
 
 				@Override
@@ -91,11 +87,11 @@ public class PromoCouponsDialog {
 			});
 //			activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 
-			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recyclerViewPromoCoupons.getLayoutParams();
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listViewPromoCoupons.getLayoutParams();
 			params.height = promoCoupons.size() > 3 ? (int)(84f * 3f * ASSL.Yscale())
 					: (int)(84f * (float)promoCoupons.size() * ASSL.Yscale());
-			recyclerViewPromoCoupons.setLayoutParams(params);
-			recyclerViewPromoCoupons.setAdapter(promoCouponsAdapter);
+			listViewPromoCoupons.setLayoutParams(params);
+			listViewPromoCoupons.setAdapter(promoCouponsAdapter);
 
 			Button buttonSkip = (Button) dialog.findViewById(R.id.buttonSkip);
 			buttonSkip.setTypeface(Fonts.mavenRegular(activity));
@@ -109,12 +105,12 @@ public class PromoCouponsDialog {
 			imageViewOffers = (ImageView)dialog.findViewById(R.id.imageViewOffers);
 
 			if(promoCoupons.size() > 0){
-				recyclerViewPromoCoupons.setVisibility(View.VISIBLE);
+				listViewPromoCoupons.setVisibility(View.VISIBLE);
 				relativeLayoutBottomButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoCurrentOffers.setVisibility(View.GONE);
 				imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
 			} else{
-				recyclerViewPromoCoupons.setVisibility(View.GONE);
+				listViewPromoCoupons.setVisibility(View.GONE);
 				relativeLayoutBottomButtons.setVisibility(View.GONE);
 				linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
 				imageViewOffers.setImageResource(R.drawable.no_current_offer);

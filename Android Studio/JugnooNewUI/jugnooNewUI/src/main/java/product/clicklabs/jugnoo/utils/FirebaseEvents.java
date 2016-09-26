@@ -222,4 +222,6 @@ public interface FirebaseEvents {
     String MENU_CATEGORIES_FRESH = "menu_categories_fresh";
     String MENU_CATEGORIES_MEALS = "menu_categories_meals";
 
+    String G_ADD = "g_add";
+
 }
