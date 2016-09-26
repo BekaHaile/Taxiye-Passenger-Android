@@ -6,7 +6,7 @@
     android:layout_marginTop="@dimen/top_bar_height"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
@@ -101,6 +101,18 @@
         android:layout_marginBottom="5px"
         android:layout_above="@+id/relativeLayoutInRideContainer"
         android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/imageViewFabFakeFinal"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:src="@drawable/ic_fab_fake_selector"
+        android:layout_alignParentBottom="true"
+        android:tag="DontTouchMe"
+        android:layout_marginLeft="20dp"
+        android:layout_centerVertical="true"
+        android:visibility="visible"
         />
 
 

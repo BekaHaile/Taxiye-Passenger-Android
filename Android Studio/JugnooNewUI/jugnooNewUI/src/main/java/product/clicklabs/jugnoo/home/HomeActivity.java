@@ -440,7 +440,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private PokestopHelper pokestopHelper;
     ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffAssigning, imageViewPokemonOnOffEngaged;
-    private ImageView imageViewFabFake;
+    private ImageView imageViewFabFake, imageViewFabFakeAssigning, imageViewFabFakeFinal;
     private Bundle bundle;
     public float scale = 0f;
     private boolean rideNowClicked = false;
@@ -805,6 +805,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
         imageViewFabFake.setVisibility(View.GONE);
 
+        imageViewFabFakeAssigning = (ImageView) findViewById(R.id.imageViewFabFakeAssigning);
+        imageViewFabFakeAssigning.setVisibility(View.GONE);
+
+        imageViewFabFakeFinal = (ImageView) findViewById(R.id.imageViewFabFakeFinal);
+        imageViewFabFakeFinal.setVisibility(View.GONE);
+
         imageViewFabFake.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -815,6 +821,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 openFABView();
                 //imageViewFabFake.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        imageViewFabFakeAssigning.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFABView();
+                imageViewFabFake.setVisibility(View.GONE);
+            }
+        });
+
+        imageViewFabFakeFinal.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFABView();
+                imageViewFabFake.setVisibility(View.GONE);
             }
         });
 
@@ -1970,6 +1992,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void run() {
                     fabView.fabExtra.setVisibility(View.VISIBLE);
                     imageViewFabFake.setVisibility(View.INVISIBLE);
+                    //imageViewFabFakeAssigning.setVisibility(View.INVISIBLE);
+                    //imageViewFabFakeFinal.setVisibility(View.INVISIBLE);
                 }
             },300);
 
@@ -2902,9 +2926,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
+                        imageViewFabFakeAssigning.setVisibility(View.VISIBLE);
                         fabView.setRelativeLayoutFABVisibility(mode);
                         int dpAsPixels = (int) (150f*scale + 0.5f);
                         fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
+                        setMargins(imageViewFabFakeAssigning, (int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
 
                         try {
                             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
@@ -2985,6 +3011,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
+                        imageViewFabFakeFinal.setVisibility(View.VISIBLE);
                         setFabViewAtRide(mode);
 
 //                        genieLayout.setVisibility(View.GONE);
@@ -3058,6 +3085,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
+                        imageViewFabFakeFinal.setVisibility(View.VISIBLE);
                         setFabViewAtRide(mode);
 
 //                        genieLayout.setVisibility(View.GONE);
@@ -3120,6 +3148,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
+                        imageViewFabFakeFinal.setVisibility(View.VISIBLE);
                         setFabViewAtRide(mode);
 
 //                        genieLayout.setVisibility(View.GONE);
@@ -3191,6 +3220,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
     }
 
+    private void setMargins (View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
+    }
+
 
     private void setFabViewAtRide(PassengerScreenMode mode){
         fabView.setFABMenuDrawable();
@@ -3205,6 +3242,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         dpAsPixels1 = (int) (containerHeight * scale + 0.5f);
         fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels1);
+        setMargins(imageViewFabFakeFinal, (int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels1);
     }
 
 
