@@ -22,7 +22,8 @@
         android:id="@+id/offer_tag_layout"
         android:layout_width="wrap_content"
         android:layout_height="27px"
-        android:layout_above="@+id/imageViewItemImage"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginBottom="2px"
         android:orientation="horizontal"
         >
