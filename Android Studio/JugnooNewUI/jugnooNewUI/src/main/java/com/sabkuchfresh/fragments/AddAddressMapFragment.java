@@ -135,6 +135,13 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     RelativeLayout relativeLayoutLocationError;
     RelativeLayout relativeLayoutLocationErrorSearchBar;
 
+    public double current_latitude = 0.0;
+    public double current_longitude = 0.0;
+    public String current_street = "";
+    public String current_route = "";
+    public String current_area = "";
+    public String current_city = "";
+    public String current_pincode = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -147,6 +154,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         relative = (RelativeLayout) rootView.findViewById(R.id.root);
         new ASSL(homeActivity, relative, 1134, 720, false);
         setupUI(rootView.findViewById(R.id.root));
+
+        fetchAddressBundle();
 
         mSelectedLoc = (TextView) rootView.findViewById(R.id.selected_loc);
         mAddressName = (TextView) rootView.findViewById(R.id.address_name);
@@ -233,7 +242,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             @Override
             public void onClick(View v) {
                 if(unsatflag) {
-                    homeActivity.openAddToAddressBook();
+                    homeActivity.openAddToAddressBook(createAddressBundle());
                 } else {
                     Toast.makeText(homeActivity, "Please wait...", Toast.LENGTH_SHORT).show();
                 }
@@ -245,7 +254,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             @Override
             public void onClick(View v) {
                 if(unsatflag) {
-                    homeActivity.openAddToAddressBook();
+                    homeActivity.openAddToAddressBook(createAddressBundle());
                 } else {
                     Toast.makeText(homeActivity, "Please wait...", Toast.LENGTH_SHORT).show();
                 }
@@ -314,14 +323,14 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         mAddressName.setVisibility(View.VISIBLE);
                         progressWheel.setVisibility(View.GONE);
 
-                        homeActivity.current_street = "";
-                        homeActivity.current_route = "";
-                        homeActivity.current_area = "";
-                        homeActivity.current_city = "";
-                        homeActivity.current_pincode = "";
+                        current_street = "";
+                        current_route = "";
+                        current_area = "";
+                        current_city = "";
+                        current_pincode = "";
 
-                        homeActivity.current_latitude = searchResult.getLatLng().latitude;
-                        homeActivity.current_longitude = searchResult.getLatLng().longitude;
+                        current_latitude = searchResult.getLatLng().latitude;
+                        current_longitude = searchResult.getLatLng().longitude;
 
                         String[] address = searchResult.getAddress().split(",");
                         List<String> addressArray = Arrays.asList(address);
@@ -329,25 +338,25 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         address = (String[]) addressArray.toArray();
 
                         if(address.length > 0 && (!TextUtils.isEmpty(address[0].trim())))
-                            homeActivity.current_pincode = "" + address[0].trim();
+                            current_pincode = "" + address[0].trim();
                         if(address.length > 1 && (!TextUtils.isEmpty(address[1].trim())))
-                            homeActivity.current_city = "" + address[1].trim();
+                            current_city = "" + address[1].trim();
                         if(address.length > 2 && (!TextUtils.isEmpty(address[2].trim())))
-                            homeActivity.current_area = "" + address[2].trim();
+                            current_area = "" + address[2].trim();
 
                         int val = 0;
                         if(!TextUtils.isEmpty(address[address.length - 1].replaceAll("\\D+","")) && address.length>3) {
-                            homeActivity.current_street = address[address.length - 1].replaceAll("\\D+","");
+                            current_street = address[address.length - 1].replaceAll("\\D+","");
                             val = 1;
                         }
 
-                        homeActivity.current_route = "";
+                        current_route = "";
                         if(address.length>3) {
                             for (int i = 3; i < address.length - val; i++) {
                                 if(i==3) {
-                                    homeActivity.current_route = address[i].trim();
+                                    current_route = address[i].trim();
                                 } else {
-                                    homeActivity.current_route = homeActivity.current_route+", "+address[i].trim();
+                                    current_route = current_route+", "+address[i].trim();
                                 }
                             }
                         }
@@ -693,25 +702,25 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                             longitude = latLng.longitude;
                             addressText = "" + geocodeResponse.results.get(0).getLocality();
 
-                            homeActivity.current_latitude = latLng.latitude;
-                            homeActivity.current_longitude = latLng.longitude;
+                            current_latitude = latLng.latitude;
+                            current_longitude = latLng.longitude;
 
-                            homeActivity.current_street = ""+geocodeResponse.results.get(0).getStreetNumber();
-                            homeActivity.current_route = ""+geocodeResponse.results.get(0).getRoute();
-                            homeActivity.current_area = "" + geocodeResponse.results.get(0).getLocality();
-                            homeActivity.current_city = "" + geocodeResponse.results.get(0).getCity();
-                            homeActivity.current_pincode = "" + geocodeResponse.results.get(0).getPin();
-                            String streetNum = homeActivity.current_street;
-                            if(homeActivity.current_street.length()>0)
+                            current_street = ""+geocodeResponse.results.get(0).getStreetNumber();
+                            current_route = ""+geocodeResponse.results.get(0).getRoute();
+                            current_area = "" + geocodeResponse.results.get(0).getLocality();
+                            current_city = "" + geocodeResponse.results.get(0).getCity();
+                            current_pincode = "" + geocodeResponse.results.get(0).getPin();
+                            String streetNum = current_street;
+                            if(current_street.length()>0)
                                 streetNum = geocodeResponse.results.get(0).getStreetNumber()+", ";
 
-                            String route = homeActivity.current_route;
+                            String route = current_route;
                             if(route.length()>0)
                                 route = geocodeResponse.results.get(0).getRoute() + ", ";
 
-                            mAddressName.setText("For\n"+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+homeActivity.current_city);
+                            mAddressName.setText("For\n"+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+current_city);
                             //mAddressName.setText("For\n"+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+homeActivity.current_city);asdf
-                            textVeiwSearch.setText(""+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+homeActivity.current_city);
+                            textVeiwSearch.setText(""+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+current_city);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -779,4 +788,28 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             homeActivity.locationSearchShown = false;
         }
     }
+
+    private Bundle createAddressBundle(){
+        Bundle bundle = new Bundle();
+        bundle.putString("current_street", current_street);
+        bundle.putString("current_route", current_route);
+        bundle.putString("current_area", current_area);
+        bundle.putString("current_city", current_city);
+        bundle.putString("current_pincode", current_pincode);
+        bundle.putDouble("current_latitude", current_latitude);
+        bundle.putDouble("current_longitude", current_longitude);
+        return bundle;
+    }
+
+    private void fetchAddressBundle(){
+        Bundle bundle = getArguments();
+        current_street = bundle.getString("current_street", current_street);
+        current_route = bundle.getString("current_route", current_route);
+        current_area = bundle.getString("current_area", current_area);
+        current_city = bundle.getString("current_city", current_city);
+        current_pincode = bundle.getString("current_pincode", current_pincode);
+        current_latitude = bundle.getDouble("current_latitude", current_latitude);
+        current_longitude = bundle.getDouble("current_longitude", current_longitude);
+    }
+
 }

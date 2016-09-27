@@ -151,7 +151,6 @@
             android:visibility="gone"
             />
 
-
     </RelativeLayout>
 
     <ImageView

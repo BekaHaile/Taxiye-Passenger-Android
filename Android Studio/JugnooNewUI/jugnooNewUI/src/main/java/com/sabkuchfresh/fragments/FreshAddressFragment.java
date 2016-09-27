@@ -82,7 +82,7 @@ public class FreshAddressFragment extends Fragment implements View.OnClickListen
         addressAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.openMapAddress();
+                activity.openMapAddress(null);
 //                onAddAddress();
             }
         });
@@ -167,6 +167,6 @@ public class FreshAddressFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onAddAddress() {
-        activity.openMapAddress();
+        activity.openMapAddress(null);
     }
 }

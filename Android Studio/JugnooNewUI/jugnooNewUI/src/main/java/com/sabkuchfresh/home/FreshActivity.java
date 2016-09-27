@@ -143,14 +143,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private LocationFetcher locationFetcher;
 
     // for adding address
-    public String current_action = "";
-    public double current_latitude = 0.0;
-    public double current_longitude = 0.0;
-    public String current_street = "";
-    public String current_route = "";
-    public String current_area = "";
-    public String current_city = "";
-    public String current_pincode = "";
+//    public String current_action = "";
+//    public double current_latitude = 0.0;
+//    public double current_longitude = 0.0;
+//    public String current_street = "";
+//    public String current_route = "";
+//    public String current_area = "";
+//    public String current_city = "";
+//    public String current_pincode = "";
     public boolean locationSearchShown = false;
     public boolean canOrder = false;
 
@@ -1216,13 +1216,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //		getTransactionUtils().openSupportFragment(FreshActivity.this, relativeLayoutContainer);
     }
 
-    public void openMapAddress() {
+    public void openMapAddress(Bundle bundle) {
         FlurryEventLogger.event(Address_Screen, SCREEN_TRANSITION, ADD_NEW_ADDRESS);
-        getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer);
+        getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
-    public void openAddToAddressBook() {
-        getTransactionUtils().openAddToAddressFragment(FreshActivity.this, relativeLayoutContainer);
+    public void openAddToAddressBook(Bundle bundle) {
+        getTransactionUtils().openAddToAddressFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
 

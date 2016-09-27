@@ -17,6 +17,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
+import com.sabkuchfresh.home.TransactionUtils;
 
 import org.json.JSONObject;
 
@@ -52,7 +55,7 @@ import static product.clicklabs.jugnoo.Data.longitude;
 /**
  * Created by Ankit on 10/7/15.
  */
-public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private final String TAG = AddPlaceActivity.class.getSimpleName();
 
@@ -72,9 +75,12 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
     EditText editTextSearchLabel;
     ImageView imageViewSearchCrossLabel;
 
+    RelativeLayout relativeLayoutContainer;
+
 	private GoogleApiClient mGoogleApiClient;
 
     private Gson gson;
+    private EditText editTextDeliveryAddress;
 
 
 
@@ -114,7 +120,10 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
         editTextSearchLabel = (EditText) findViewById(R.id.editTextSearchLabel); editTextSearchLabel.setTypeface(Fonts.mavenMedium(this));
         imageViewSearchCrossLabel = (ImageView) findViewById(R.id.imageViewSearchCrossLabel);
         relativeLayoutLabel.setVisibility(View.GONE);
+        editTextDeliveryAddress = (EditText) findViewById(R.id.editTextDeliveryAddress);
+        editTextDeliveryAddress.setTypeface(Fonts.mavenLight(AddPlaceActivity.this));
 
+        relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
         buttonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,6 +239,13 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
                 editTextSearch.setText("");
             }
         });
+
+        getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
+
+    }
+
+    public EditText getEditTextDeliveryAddress() {
+        return editTextDeliveryAddress;
     }
 
     @Override
@@ -426,4 +442,23 @@ public class AddPlaceActivity extends BaseActivity implements GoogleApiClient.Co
 
     }
 
+    public void openMapAddress(Bundle bundle) {
+        getTransactionUtils().openMapFragment(this, relativeLayoutContainer, bundle);
+    }
+    private TransactionUtils transactionUtils;
+
+    public TransactionUtils getTransactionUtils() {
+        if (transactionUtils == null) {
+            transactionUtils = new TransactionUtils();
+        }
+        return transactionUtils;
+    }
+
+    public void openAddToAddressBook(Bundle bundle) {
+        getTransactionUtils().openAddToAddressFragment(this, relativeLayoutContainer, bundle);
+    }
+
+    public DeliveryAddressesFragment getDeliveryAddressesFragment() {
+        return (DeliveryAddressesFragment) getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName());
+    }
 }

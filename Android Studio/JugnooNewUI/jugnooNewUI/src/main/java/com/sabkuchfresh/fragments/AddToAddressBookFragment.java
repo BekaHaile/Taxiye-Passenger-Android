@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -7,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +50,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 
+import product.clicklabs.jugnoo.AddPlaceActivity;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -78,7 +82,7 @@ public class AddToAddressBookFragment extends Fragment {
     double latitude, longitude;
 
     View rootView;
-    public FreshActivity homeActivity;
+    public FragmentActivity homeActivity;
 
     ScrollView scrollView;
     TextView textViewScroll;
@@ -94,6 +98,13 @@ public class AddToAddressBookFragment extends Fragment {
 
     }
 
+    public double current_latitude = 0.0;
+    public double current_longitude = 0.0;
+    public String current_street = "";
+    public String current_route = "";
+    public String current_area = "";
+    public String current_city = "";
+    public String current_pincode = "";
 
 
 
@@ -101,105 +112,29 @@ public class AddToAddressBookFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_addto_address, container, false);
 
-        homeActivity = (FreshActivity) getActivity();
-
-        mBus = (homeActivity).getBus();
+        homeActivity = getActivity();
 
 
+
+        fetchAddressBundle();
 
         root = (RelativeLayout) rootView.findViewById(R.id.root);
         new ASSL(homeActivity, root, 1134, 720, false);
         scrolled = false;
 
 //        if (homeActivity.current_action.equals(homeActivity.ADD_ADDRESS)) {
-            currentLatitude = homeActivity.current_latitude;
-            currentLongitude = homeActivity.current_longitude;
-            cityValue = homeActivity.current_city;
-            pinCodeValue = homeActivity.current_pincode;
-            areaReceived = homeActivity.current_area;
-        homeAddressReceived = homeActivity.current_street;
-        buildingStreetReceived = homeActivity.current_route;
+            currentLatitude = current_latitude;
+            currentLongitude = current_longitude;
+            cityValue = current_city;
+            pinCodeValue = current_pincode;
+            areaReceived = current_area;
+        homeAddressReceived = current_street;
+        buildingStreetReceived = current_route;
 
-        homeActivity.fragmentUISetup(this);
-//
-//
-//
-//        } else if (homeActivity.current_action.equals(homeActivity.UPDATE_ADDRESS)) {
-//
-//            try{
-//
-//                currentLatitude = homeActivity.current_latitude;
-//                currentLongitude = homeActivity.current_longitude;
-//
-//
-//                JSONObject object = new JSONObject(""+homeActivity.addressBookList.get(homeActivity.addressPos).address);
-//                homeAddressReceived = object.getString("house_number");
-//                buildingStreetReceived = object.getString("building_name");
-//                areaReceived = object.getString("area");
-//
-//                cityValueReceived = homeActivity.current_city;
-//                pinCodeReceived = homeActivity.current_pincode;
-//
-//
-//
-//            } catch(Exception e) {
-//                e.printStackTrace();
-//                currentLatitude = homeActivity.current_latitude;
-//                currentLongitude = homeActivity.current_longitude;
-//                homeAddressReceived = ""+homeActivity.addressBookList.get(homeActivity.addressPos).address;
-//            }
-//
-//        }
-//        else if (homeActivity.current_action.equals(homeActivity.EDIT_ADDRESS)) {
-//
-//            if(homeActivity.addressBookList.get(homeActivity.addressPos).address_version == 0) {
-//                try{
-//
-//                    latitude = homeActivity.addressBookList.get(homeActivity.addressPos).latitude;
-//                    longitude = homeActivity.addressBookList.get(homeActivity.addressPos).longitude;
-//
-//
-//
-//                    JSONObject object = new JSONObject(""+homeActivity.addressBookList.get(homeActivity.addressPos).address);
-//                    homeAddressReceived = object.getString("house_number");
-//                    buildingStreetReceived = object.getString("building_name");
-//                    areaReceived = object.getString("area");
-//
-//
-//                    cityValueReceived = object.getString("city");
-//                    pinCodeReceived = object.getString("pin");
-//
-//                    if(cityValueReceived.length()==0 || pinCodeReceived.length() == 0){
-//                        new AsyncGetAddress().execute();
-//                    }
-//
-//
-//                } catch(Exception e) {
-//                    e.printStackTrace();
-//                    homeAddressReceived = ""+homeActivity.addressBookList.get(homeActivity.addressPos).address;
-//                    new AsyncGetAddress().execute();
-//                }
-//
-//            } else if(homeActivity.addressBookList.get(homeActivity.addressPos).address_version == 1) {
-//                try{
-//                    JSONObject object = new JSONObject(""+homeActivity.addressBookList.get(homeActivity.addressPos).address);
-//                    homeAddressReceived = object.getString("house_number");
-//                    buildingStreetReceived = object.getString("building_name");
-//                    areaReceived = object.getString("area");
-//                    cityValueReceived = object.getString("city");
-//                    pinCodeReceived = object.getString("pin");
-//
-//
-//
-//                } catch(Exception e) {
-//
-//                }
-//
-//            }
-//            homeActivity.current_latitude = homeActivity.addressBookList.get(homeActivity.addressPos).latitude;
-//            homeActivity.current_longitude = homeActivity.addressBookList.get(homeActivity.addressPos).longitude;
-//
-//        }
+        mBus = MyApplication.getInstance().getBus();
+        if(homeActivity instanceof FreshActivity) {
+            ((FreshActivity)homeActivity).fragmentUISetup(this);
+        }
 
         InputMethodManager inputMethodManager = (InputMethodManager) homeActivity.getSystemService(homeActivity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(homeActivity.getCurrentFocus().getWindowToken(), 0);
@@ -380,21 +315,24 @@ public class AddToAddressBookFragment extends Fragment {
 
                         if(checkFields()) {
                             Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_local_address), localAddress);
-                            Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_loc_lati), ""+homeActivity.current_latitude);
-                            Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_loc_longi), ""+homeActivity.current_longitude);
+                            Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_loc_lati), ""+current_latitude);
+                            Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_loc_longi), ""+current_longitude);
 
                             mBus.post(new AddressAdded(true));
+                            DeliveryAddressesFragment deliveryAddressesFragment = null;
+                            if(homeActivity instanceof FreshActivity) {
+                                ((FreshActivity)homeActivity).setSelectedAddress(localAddress);
+                                Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_address_selected), 3);
+                                deliveryAddressesFragment = ((FreshActivity)homeActivity).getDeliveryAddressesFragment();
+                            } else if(homeActivity instanceof AddPlaceActivity){
+                                deliveryAddressesFragment = ((AddPlaceActivity)homeActivity).getDeliveryAddressesFragment();
+                            }
 
-                            homeActivity.setSelectedAddress(localAddress);
-                            Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_address_selected), 3);
-
-                            DeliveryAddressesFragment deliveryAddressesFragment = homeActivity.getDeliveryAddressesFragment();
                             if(deliveryAddressesFragment != null) {
                                 getActivity().getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
                             } else {
                                 getActivity().getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
                             }
-
                         }
 
                 } else {
@@ -474,26 +412,6 @@ public class AddToAddressBookFragment extends Fragment {
         }
     }
 
-//    public void updateAddress() {
-//
-//
-//        homeAddressReceived = "";
-//        buildingStreetReceived = "";
-//        areaReceived = "";
-//
-//        city.setText(homeActivity.current_city);
-//        pinCode.setText(homeActivity.current_pincode);
-//
-//        houseNumber.setText(homeAddressReceived);
-//        buildingStreetName.setText(buildingStreetReceived);
-//        area.setText(areaReceived);
-//
-//        houseNumber.setEnabled(true);
-//        buildingStreetName.setEnabled(true);
-//        area.setEnabled(true);
-//
-//        extractMapSnapShot(homeActivity.current_latitude, homeActivity.current_longitude);
-//    }
 
     @Override
     public void onDestroyView() {
@@ -506,7 +424,6 @@ public class AddToAddressBookFragment extends Fragment {
 
 
     public void destroyMap(){
-
         try {
             SupportMapFragment suMapFrag = (SupportMapFragment) homeActivity.getSupportFragmentManager()
                     .findFragmentById(R.id.addressmapView);
@@ -695,6 +612,17 @@ public class AddToAddressBookFragment extends Fragment {
             e.printStackTrace();
         }
         return true;
+    }
+
+    private void fetchAddressBundle(){
+        Bundle bundle = getArguments();
+        current_street = bundle.getString("current_street", current_street);
+        current_route = bundle.getString("current_route", current_route);
+        current_area = bundle.getString("current_area", current_area);
+        current_city = bundle.getString("current_city", current_city);
+        current_pincode = bundle.getString("current_pincode", current_pincode);
+        current_latitude = bundle.getDouble("current_latitude", current_latitude);
+        current_longitude = bundle.getDouble("current_longitude", current_longitude);
     }
 
 }
