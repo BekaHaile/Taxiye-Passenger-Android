@@ -38,7 +38,9 @@
                 android:hint="@string/type_delivery_address"
                 android:textColor="@color/text_color"
                 android:textCursorDrawable="@drawable/blue_color_cursor"
-                android:textSize="@dimen/text_size_30" />
+                android:textSize="@dimen/text_size_30"
+                android:singleLine="true"
+                />
         </RelativeLayout>
 
         <RelativeLayout
@@ -49,7 +51,8 @@
             android:background="@color/white_translucent"
             android:orientation="vertical"
             android:splitMotionEvents="false"
-            android:visibility="visible">
+            android:visibility="visible"
+            android:layout_above="@+id/buttonRemove">
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutLabel"
@@ -218,23 +221,27 @@
                 </LinearLayout>
             </ScrollView>
 
-
-            <Button
-                android:id="@+id/buttonRemove"
-                style="@style/ButtonTheme"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30px"
-                android:layout_marginTop="20px"
-                android:text="@string/remove" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relativeLayoutContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/topBar"></RelativeLayout>
+            android:layout_below="@+id/topBar"
+            android:layout_above="@+id/buttonRemove"
+            />
+
+        <Button
+            android:id="@+id/buttonRemove"
+            style="@style/ButtonTheme"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30px"
+            android:layout_marginTop="20px"
+            android:text="@string/remove"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:layout_width="match_parent"

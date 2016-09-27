@@ -41,6 +41,24 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
+                <EditText
+                    android:id="@+id/editTextLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="90px"
+                    android:background="@null"
+                    android:hint="@string/label"
+                    android:inputType="textFilter|textCapSentences"
+                    android:paddingLeft="25px"
+                    android:singleLine="true"
+                    android:textColor="@color/black_text"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30px" />
+
+                <ImageView
+                    android:layout_width="600px"
+                    android:layout_height="2px"
+                    android:src="@color/text_color_hint" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

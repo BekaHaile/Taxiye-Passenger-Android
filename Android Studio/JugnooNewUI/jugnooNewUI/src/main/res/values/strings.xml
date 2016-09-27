@@ -1152,6 +1152,7 @@
 	<string name="add_new_address">Add new address</string>
 	<string name="could_not_find_address">Could not find address</string>
 	<string name="label_can_not_be_empty">Label can\'t be empty</string>
+	<string name="label">Label</string>
 
 
 </resources>

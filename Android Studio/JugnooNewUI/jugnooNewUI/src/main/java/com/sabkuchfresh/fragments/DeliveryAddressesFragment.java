@@ -88,8 +88,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private ScrollView scrollViewSearch;
     private NonScrollListView listViewSearch;
     private List<DeliveryAddress> deliveryAddresses = new ArrayList<DeliveryAddress>();
-    private FreshActivity freshActivity;
-    private HomeActivity homeActivity;
     private EditText editTextDeliveryAddress;
 
 
@@ -145,9 +143,11 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setHasFixedSize(false);
         recyclerView.setVisibility(View.VISIBLE);
+        linearLayoutAddFav.setVisibility(View.GONE);
 
         if(activity instanceof FreshActivity) {
             try {
+                linearLayoutAddFav.setVisibility(View.VISIBLE);
                 setSavePlaces();
                 deliveryAddresses.addAll(((FreshActivity)activity).getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses());
                 for (int i = 0; i < deliveryAddresses.size(); i++) {
@@ -400,8 +400,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden && (activity instanceof FreshActivity))
-            ((FreshActivity)activity).fragmentUISetup(this);
+        if(!hidden && (activity instanceof FreshActivity)) {
+            ((FreshActivity) activity).fragmentUISetup(this);
+        } else if(!hidden && (activity instanceof AddPlaceActivity)){
+            ((AddPlaceActivity)activity).getTextViewTitle().setVisibility(View.GONE);
+            ((AddPlaceActivity)activity).getEditTextDeliveryAddress().setVisibility(View.VISIBLE);
+        }
     }
 
     private interface GetLatLngFromPlaceId{

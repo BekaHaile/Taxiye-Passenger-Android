@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -244,6 +245,10 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
     }
 
+    public TextView getTextViewTitle() {
+        return textViewTitle;
+    }
+
     public EditText getEditTextDeliveryAddress() {
         return editTextDeliveryAddress;
     }
@@ -282,6 +287,16 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
                     relativeLayoutLabel.setVisibility(View.VISIBLE);
                     editTextSearchLabel.setText(searchResult.getName());
                 }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            editTextDeliveryAddress.setText(searchResult.getAddress());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 500);
             }
         }
     }
@@ -299,10 +314,15 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 	}
 
     public void performBackPressed(){
-        Intent intent=new Intent();
-        setResult(RESULT_CANCELED, intent);
-        finish();
-        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        if(getSupportFragmentManager().getBackStackEntryCount() == 1){
+            Intent intent=new Intent();
+            setResult(RESULT_CANCELED, intent);
+            finish();
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        } else {
+            super.onBackPressed();
+        }
+
     }
 
 	@Override
@@ -339,7 +359,6 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
                     params.put(Constants.KEY_ADDRESS_ID, String.valueOf(matchedWithOtherId));
                     params.put(Constants.KEY_DELETE_FLAG, "1");
-                    params.put(Constants.KEY_KEEP_DUPLICATE, "1");
                 }
                 else{
                     params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -349,7 +368,6 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
                     params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
                     params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
-                    params.put(Constants.KEY_KEEP_DUPLICATE, "1");
 
                     if(editThisAddress){
                         params.put(Constants.KEY_ADDRESS_ID, String.valueOf(searchResult.getId()));
@@ -460,5 +478,13 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
     public DeliveryAddressesFragment getDeliveryAddressesFragment() {
         return (DeliveryAddressesFragment) getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName());
+    }
+
+    public int getPlaceRequestCode(){
+        return placeRequestCode;
+    }
+
+    public SearchResult getSearchResult(){
+        return searchResult;
     }
 }

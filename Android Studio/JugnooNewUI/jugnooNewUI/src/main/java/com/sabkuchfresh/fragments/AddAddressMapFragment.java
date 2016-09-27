@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -50,8 +51,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.LocationUpdate;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -101,7 +104,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     private String addressText = "";
 
     View rootView;
-    public FreshActivity homeActivity;
+    public FragmentActivity homeActivity;
 
     RelativeLayout relativeLayoutSearchBarText, relative;
     LinearLayout layoutAddLocation;
@@ -147,10 +150,12 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_add_address, container, false);
-        homeActivity = (FreshActivity) getActivity();
-        homeActivity.fragmentUISetup(this);
+        homeActivity = getActivity();
+        if(homeActivity instanceof FreshActivity) {
+            ((FreshActivity)homeActivity).fragmentUISetup(this);
+        }
         zoomedToMyLoc = false;
-        mBus = (homeActivity).getBus();
+        mBus = MyApplication.getInstance().getBus();
         relative = (RelativeLayout) rootView.findViewById(R.id.root);
         new ASSL(homeActivity, relative, 1134, 720, false);
         setupUI(rootView.findViewById(R.id.root));
@@ -191,7 +196,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                     layoutAddLocation.setVisibility(View.GONE);
                     centerPivot.setVisibility(View.VISIBLE);
                     locationPointer.setVisibility(View.VISIBLE);
-                    homeActivity.locationSearchShown = false;
+                    //homeActivity.locationSearchShown = false;
                 }
             }
         });
@@ -238,7 +243,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             }
         });*/
 
-        layoutAddLocation.setOnClickListener(new View.OnClickListener() {
+        /*layoutAddLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(unsatflag) {
@@ -248,13 +253,18 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                 }
 
             }
-        });
+        });*/
 
         buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(unsatflag) {
-                    homeActivity.openAddToAddressBook(createAddressBundle());
+                    if(homeActivity instanceof FreshActivity) {
+                        ((FreshActivity)homeActivity).openAddToAddressBook(createAddressBundle());
+                    } else if(homeActivity instanceof AddPlaceActivity){
+                        ((AddPlaceActivity)homeActivity).openAddToAddressBook(createAddressBundle());
+                    }
+
                 } else {
                     Toast.makeText(homeActivity, "Please wait...", Toast.LENGTH_SHORT).show();
                 }
@@ -315,7 +325,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         layoutAddLocation.setVisibility(View.GONE);
                         centerPivot.setVisibility(View.VISIBLE);
                         locationPointer.setVisibility(View.VISIBLE);
-                        homeActivity.locationSearchShown = false;
+                        //homeActivity.locationSearchShown = false;
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                         textVeiwSearch.setText(searchResult.getAddress());
                         mAddressName.setText(searchResult.getAddress());
@@ -450,8 +460,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden) {
-            homeActivity.fragmentUISetup(this);
+        if (!hidden && (homeActivity instanceof FreshActivity)) {
+            ((FreshActivity)homeActivity).fragmentUISetup(this);
         }
     }
 
@@ -460,7 +470,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         layoutAddLocation.setVisibility(View.GONE);
         centerPivot.setVisibility(View.VISIBLE);
         locationPointer.setVisibility(View.VISIBLE);
-        homeActivity.locationSearchShown = false;
+        //homeActivity.locationSearchShown = false;
     }
 
     public void myLocation() {
@@ -599,7 +609,6 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     }
 
     public void destroyMap() {
-
         try {
             SupportMapFragment suMapFrag = (SupportMapFragment) homeActivity.getSupportFragmentManager().findFragmentById(R.id.mapView);
             if (suMapFrag != null)
@@ -785,7 +794,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             layoutAddLocation.setVisibility(View.GONE);
             centerPivot.setVisibility(View.VISIBLE);
             locationPointer.setVisibility(View.VISIBLE);
-            homeActivity.locationSearchShown = false;
+//            homeActivity.locationSearchShown = false;
         }
     }
 

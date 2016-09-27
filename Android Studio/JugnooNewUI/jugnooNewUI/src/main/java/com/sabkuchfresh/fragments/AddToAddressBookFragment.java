@@ -51,8 +51,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import product.clicklabs.jugnoo.AddPlaceActivity;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -75,7 +77,7 @@ public class AddToAddressBookFragment extends Fragment {
     String homeAddressReceived, buildingStreetReceived, areaReceived, cityValueReceived,
             pinCodeReceived, cityValue, pinCodeValue, selectedAddressPosition;
     Double currentLatitude = 30.215462, currentLongitude = 72.521462;
-    EditText houseNumber, buildingStreetName, area, city, pinCode;
+    EditText editTextLabel, houseNumber, buildingStreetName, area, city, pinCode;
     Bundle extras;
 
     String City, PIN;
@@ -113,9 +115,6 @@ public class AddToAddressBookFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_addto_address, container, false);
 
         homeActivity = getActivity();
-
-
-
         fetchAddressBundle();
 
         root = (RelativeLayout) rootView.findViewById(R.id.root);
@@ -134,6 +133,10 @@ public class AddToAddressBookFragment extends Fragment {
         mBus = MyApplication.getInstance().getBus();
         if(homeActivity instanceof FreshActivity) {
             ((FreshActivity)homeActivity).fragmentUISetup(this);
+        } else{
+            ((AddPlaceActivity)homeActivity).getTextViewTitle().setVisibility(View.VISIBLE);
+            ((AddPlaceActivity)homeActivity).getTextViewTitle().setText(homeActivity.getString(R.string.confirm_address));
+            ((AddPlaceActivity)homeActivity).getEditTextDeliveryAddress().setVisibility(View.GONE);
         }
 
         InputMethodManager inputMethodManager = (InputMethodManager) homeActivity.getSystemService(homeActivity.INPUT_METHOD_SERVICE);
@@ -209,7 +212,8 @@ public class AddToAddressBookFragment extends Fragment {
     }
 
     private void initComponents() {
-
+        editTextLabel = (EditText) rootView.findViewById(R.id.editTextLabel);
+        editTextLabel.setTypeface(Fonts.mavenMedium(homeActivity));
         houseNumber = (EditText) rootView.findViewById(R.id.edt_houseFlatNo);
         houseNumber.setTypeface(Fonts.mavenRegular(homeActivity));
         buildingStreetName = (EditText) rootView.findViewById(R.id.edt_buildingStreetName);
@@ -277,7 +281,7 @@ public class AddToAddressBookFragment extends Fragment {
 //            activityTitle.setText("UPDATE ADDRESS");
 //            buttonAddToAddressBook.setText("UPDATE ADDRESS");
 //
-//            extractMapSnapShot(currentLatitude, currentLongitude);
+//
 //        }
 
         buttonAddToAddressBook.setOnClickListener(new View.OnClickListener() {
@@ -285,8 +289,6 @@ public class AddToAddressBookFragment extends Fragment {
             public void onClick(View view) {
                 if (fieldsAreFilled()){
                     hideSoftKeyboard();
-//                    if (homeActivity.current_action.equals(homeActivity.ADD_ADDRESS)) {
-
 
                         String hno = "";
                         String building = "";
@@ -320,12 +322,23 @@ public class AddToAddressBookFragment extends Fragment {
 
                             mBus.post(new AddressAdded(true));
                             DeliveryAddressesFragment deliveryAddressesFragment = null;
+
                             if(homeActivity instanceof FreshActivity) {
                                 ((FreshActivity)homeActivity).setSelectedAddress(localAddress);
                                 Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_address_selected), 3);
                                 deliveryAddressesFragment = ((FreshActivity)homeActivity).getDeliveryAddressesFragment();
                             } else if(homeActivity instanceof AddPlaceActivity){
                                 deliveryAddressesFragment = ((AddPlaceActivity)homeActivity).getDeliveryAddressesFragment();
+                                String label = "";
+                                int placeRequestCode = ((AddPlaceActivity)homeActivity).getPlaceRequestCode();
+                                if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
+                                    label = Constants.TYPE_HOME;
+                                } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
+                                    label = Constants.TYPE_WORK;
+                                } else {
+                                    label = editTextLabel.getText().toString().trim();
+                                }
+                                ((AddPlaceActivity)homeActivity).addPlacesApi(new SearchResult(label, localAddress, "", current_latitude, current_longitude), false, 0);
                             }
 
                             if(deliveryAddressesFragment != null) {
@@ -346,6 +359,19 @@ public class AddToAddressBookFragment extends Fragment {
             area.setText(areaReceived);
             city.setText(cityValue);
             pinCode.setText(pinCodeValue);
+
+        if(homeActivity instanceof AddPlaceActivity){
+            int placeRequestCode = ((AddPlaceActivity)homeActivity).getPlaceRequestCode();
+            if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
+                editTextLabel.setText(getString(R.string.home));
+                editTextLabel.setEnabled(false);
+            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
+                editTextLabel.setText(getString(R.string.work));
+                editTextLabel.setEnabled(false);
+            } else {
+                editTextLabel.setEnabled(true);
+            }
+        }
 
     }
 
@@ -381,7 +407,11 @@ public class AddToAddressBookFragment extends Fragment {
     }
 
     private boolean fieldsAreFilled() {
-        if (houseNumber.getText().toString().trim().length() == 0 && buildingStreetName.getText().toString().trim().length() == 0 &&
+        if(editTextLabel.getText().toString().trim().length() == 0){
+            editTextLabel.requestFocus();
+            editTextLabel.setError("required field");
+        }
+        else if (houseNumber.getText().toString().trim().length() == 0 && buildingStreetName.getText().toString().trim().length() == 0 &&
                 area.getText().toString().trim().length() == 0){// && city.getText().toString().trim().length() == 0 && pinCode.getText().toString().trim().length() == 0) {
             houseNumber.requestFocus();
             houseNumber.setError("required field");
@@ -412,16 +442,13 @@ public class AddToAddressBookFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onDestroyView() {
-
         Log.e("onDestroyView", "====onDestroyView");
         destroyMap();
         super.onDestroyView();
 
     }
-
 
     public void destroyMap(){
         try {
@@ -433,21 +460,15 @@ public class AddToAddressBookFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
-
 
     private void editNewAddress(String data) {
 
     }
 
-
     public void addNewAddress(String data) {
 
     }
-
-
 
     class AsyncGetAddress extends AsyncTask<String, String, String> {
 
@@ -582,7 +603,6 @@ public class AddToAddressBookFragment extends Fragment {
         return currentLocation;
 
     }
-
 
     public boolean check(){
         return false;
