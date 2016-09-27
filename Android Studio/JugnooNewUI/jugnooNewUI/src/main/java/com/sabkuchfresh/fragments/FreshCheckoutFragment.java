@@ -45,6 +45,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -332,6 +333,40 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                     checkout.get(0).setCaddress(userCheckoutResponse.getCheckoutData().getLastAddress());
                                     activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
                                     generateSlots();
+
+                                    String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+                                    if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
+                                        if(Data.getMealsData().getPromoCoupons() == null){
+                                            Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                        }
+                                        if(userCheckoutResponse.getPromotions() != null){
+                                            Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                        }
+                                        if(userCheckoutResponse.getCoupons() != null){
+                                            Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                        }
+                                    } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+                                        if(Data.getGroceryData().getPromoCoupons() == null){
+                                            Data.getGroceryData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                        }
+                                        if(userCheckoutResponse.getPromotions() != null){
+                                            Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                        }
+                                        if(userCheckoutResponse.getCoupons() != null){
+                                            Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                        }
+                                    } else {
+                                        if(Data.getFreshData().getPromoCoupons() == null){
+                                            Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                        }
+                                        if(userCheckoutResponse.getPromotions() != null){
+                                            Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                        }
+                                        if(userCheckoutResponse.getCoupons() != null){
+                                            Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                        }
+                                    }
+
 //								setAddressAndTimeSlot();
                                 } else{
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
