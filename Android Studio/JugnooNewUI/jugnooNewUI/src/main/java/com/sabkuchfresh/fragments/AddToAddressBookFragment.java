@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.AppConstant;
@@ -54,12 +56,16 @@ import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+
+import static product.clicklabs.jugnoo.Constants.TYPE_HOME;
+import static product.clicklabs.jugnoo.Constants.TYPE_WORK;
 
 /**
  * Created by Gurmail S. Kang on 5/4/16.
@@ -92,13 +98,6 @@ public class AddToAddressBookFragment extends Fragment {
     boolean scrolled = false;
 
     protected Bus mBus;
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//        homeActivity.resumeMethod();
-
-    }
 
     public double current_latitude = 0.0;
     public double current_longitude = 0.0;
@@ -134,13 +133,15 @@ public class AddToAddressBookFragment extends Fragment {
         if(homeActivity instanceof FreshActivity) {
             ((FreshActivity)homeActivity).fragmentUISetup(this);
         } else{
-            ((AddPlaceActivity)homeActivity).getTextViewTitle().setVisibility(View.VISIBLE);
-            ((AddPlaceActivity)homeActivity).getTextViewTitle().setText(homeActivity.getString(R.string.confirm_address));
-            ((AddPlaceActivity)homeActivity).getEditTextDeliveryAddress().setVisibility(View.GONE);
+            AddPlaceActivity addPlaceActivity = (AddPlaceActivity)homeActivity;
+            addPlaceActivity.getTextViewTitle().setVisibility(View.VISIBLE);
+            addPlaceActivity.getTextViewTitle().setText(homeActivity.getString(R.string.confirm_address));
+            addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.GONE);
+            addPlaceActivity.getButtonRemove().setVisibility(View.GONE);
         }
 
-        InputMethodManager inputMethodManager = (InputMethodManager) homeActivity.getSystemService(homeActivity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(homeActivity.getCurrentFocus().getWindowToken(), 0);
+
+        homeActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         initializeMap();
         initComponents();
@@ -264,25 +265,9 @@ public class AddToAddressBookFragment extends Fragment {
 
 
 
-//        if (homeActivity.current_action.equals(homeActivity.ADD_ADDRESS)) {
-//            activityTitle.setText("ADD ADDRESS");
             buttonAddToAddressBook.setText(homeActivity.getResources().getString(R.string.confirm));
 
 
-//        } else if (homeActivity.current_action.equals(homeActivity.EDIT_ADDRESS)) {
-//            activityTitle.setText("UPDATE ADDRESS");
-//            buttonAddToAddressBook.setText("UPDATE ADDRESS");
-//            double lat = homeActivity.addressBookList.get(homeActivity.addressPos).latitude;
-//            double longi = homeActivity.addressBookList.get(homeActivity.addressPos).longitude;
-//
-//
-//            extractMapSnapShot(lat, longi);
-//        }  else if (homeActivity.current_action.equals(homeActivity.UPDATE_ADDRESS)) {
-//            activityTitle.setText("UPDATE ADDRESS");
-//            buttonAddToAddressBook.setText("UPDATE ADDRESS");
-//
-//
-//        }
 
         buttonAddToAddressBook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -328,9 +313,10 @@ public class AddToAddressBookFragment extends Fragment {
                                 Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_address_selected), 3);
                                 deliveryAddressesFragment = ((FreshActivity)homeActivity).getDeliveryAddressesFragment();
                             } else if(homeActivity instanceof AddPlaceActivity){
-                                deliveryAddressesFragment = ((AddPlaceActivity)homeActivity).getDeliveryAddressesFragment();
+                                AddPlaceActivity addPlaceActivity = (AddPlaceActivity)homeActivity;
+                                deliveryAddressesFragment = addPlaceActivity.getDeliveryAddressesFragment();
                                 String label = "";
-                                int placeRequestCode = ((AddPlaceActivity)homeActivity).getPlaceRequestCode();
+                                int placeRequestCode = addPlaceActivity.getPlaceRequestCode();
                                 if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
                                     label = Constants.TYPE_HOME;
                                 } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
@@ -338,7 +324,35 @@ public class AddToAddressBookFragment extends Fragment {
                                 } else {
                                     label = editTextLabel.getText().toString().trim();
                                 }
-                                ((AddPlaceActivity)homeActivity).addPlacesApi(new SearchResult(label, localAddress, "", current_latitude, current_longitude), false, 0);
+                                SearchResult searchResult = new SearchResult(label, localAddress, "", current_latitude, current_longitude);
+                                if (addPlaceActivity.isEditThisAddress() && addPlaceActivity.getSearchResult() != null) {
+                                    searchResult.setId(addPlaceActivity.getSearchResult().getId());
+                                }
+
+                                if (placeRequestCode == Constants.REQUEST_CODE_ADD_HOME) {
+                                    String savedWorkStr = Prefs.with(addPlaceActivity).getString(SPLabels.ADD_WORK, "");
+                                    int otherId = 0;
+                                    if (!"".equalsIgnoreCase(savedWorkStr)) {
+                                        SearchResult savedWork = new Gson().fromJson(savedWorkStr, SearchResult.class);
+                                        if (savedWork.getPlaceId().equalsIgnoreCase(searchResult.getPlaceId())) {
+                                            otherId = savedWork.getId();
+                                        }
+                                    }
+                                    addPlaceActivity.addPlacesApi(searchResult, false, otherId);
+                                } else if (placeRequestCode == Constants.REQUEST_CODE_ADD_WORK) {
+                                    String savedHomeStr = Prefs.with(addPlaceActivity).getString(SPLabels.ADD_HOME, "");
+                                    int otherId = 0;
+                                    if (!"".equalsIgnoreCase(savedHomeStr)) {
+                                        SearchResult savedHome = new Gson().fromJson(savedHomeStr, SearchResult.class);
+                                        if (savedHome.getPlaceId().equalsIgnoreCase(searchResult.getPlaceId())) {
+                                            otherId = savedHome.getId();
+                                        }
+                                    }
+                                    addPlaceActivity.addPlacesApi(searchResult, false, otherId);
+                                } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
+                                    addPlaceActivity.addPlacesApi(searchResult, false, 0);
+                                }
+
                             }
 
                             if(deliveryAddressesFragment != null) {
@@ -374,6 +388,14 @@ public class AddToAddressBookFragment extends Fragment {
         }
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
+    }
+
 
     public void extractMapSnapShot(double latitude, double longitude) {
 

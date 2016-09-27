@@ -60,21 +60,13 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
     private final String TAG = AddPlaceActivity.class.getSimpleName();
 
-    private ImageView imageViewBack, imageViewSearchCross;
+    private ImageView imageViewBack;
     private LinearLayout root;
-    private EditText editTextSearch;
-    private ProgressWheel progressBarSearch;
-    private NonScrollListView listViewSearch;
-    private LinearLayout linearLayoutSearch, linearLayoutScrollSearch;
-    private TextView textViewScrollSearch, textViewTitle;
+    private TextView textViewTitle;
     private Button buttonRemove;
     private int placeRequestCode;
     private SearchResult searchResult;
     private boolean editThisAddress = false;
-
-    RelativeLayout relativeLayoutLabel;
-    EditText editTextSearchLabel;
-    ImageView imageViewSearchCrossLabel;
 
     RelativeLayout relativeLayoutContainer;
 
@@ -82,6 +74,8 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
     private Gson gson;
     private EditText editTextDeliveryAddress;
+    private RelativeLayout relativeLayoutSearch;
+    private ImageView imageViewSearchCross;
 
 
 
@@ -104,25 +98,14 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.avenirNext(this));
         buttonRemove = (Button)findViewById(R.id.buttonRemove); buttonRemove.setTypeface(Fonts.mavenRegular(this));
-        editTextSearch = (EditText) findViewById(R.id.editTextSearch);editTextSearch.setTypeface(Fonts.mavenMedium(this));
-
-
-
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-        progressBarSearch = (ProgressWheel) findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
-        listViewSearch = (NonScrollListView) findViewById(R.id.listViewSearch);
-        imageViewSearchCross = (ImageView) findViewById(R.id.imageViewSearchCross); imageViewSearchCross.setVisibility(View.GONE);
-        linearLayoutScrollSearch = (LinearLayout) findViewById(R.id.linearLayoutScrollSearch);
-        textViewScrollSearch = (TextView) findViewById(R.id.textViewScrollSearch);
 
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
-        relativeLayoutLabel = (RelativeLayout) findViewById(R.id.relativeLayoutLabel);
-        editTextSearchLabel = (EditText) findViewById(R.id.editTextSearchLabel); editTextSearchLabel.setTypeface(Fonts.mavenMedium(this));
-        imageViewSearchCrossLabel = (ImageView) findViewById(R.id.imageViewSearchCrossLabel);
-        relativeLayoutLabel.setVisibility(View.GONE);
         editTextDeliveryAddress = (EditText) findViewById(R.id.editTextDeliveryAddress);
         editTextDeliveryAddress.setTypeface(Fonts.mavenLight(AddPlaceActivity.this));
+        relativeLayoutSearch = (RelativeLayout) findViewById(R.id.relativeLayoutSearch);
+        imageViewSearchCross = (ImageView) findViewById(R.id.imageViewSearchCross);
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
@@ -141,121 +124,13 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
             }
         });
 
-        SearchListAdapter searchListAdapter = new SearchListAdapter(this, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient, 0,
-                new SearchListAdapter.SearchListActionsHandler() {
-
-                    @Override
-                    public void onTextChange(String text) {
-                        if(text.length() > 0){
-                            imageViewSearchCross.setVisibility(View.VISIBLE);
-                        }
-                        else{
-                            imageViewSearchCross.setVisibility(View.GONE);
-                        }
-                    }
-
-                    @Override
-                    public void onSearchPre() {
-                        progressBarSearch.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onSearchPost() {
-                        progressBarSearch.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onPlaceClick(SearchResult autoCompleteSearchResult) {
-
-                    }
-
-                    @Override
-                    public void onPlaceSearchPre() {
-                        //progressBarInitialSearch.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onPlaceSearchPost(SearchResult searchResult) {
-                        if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION
-                                && editTextSearchLabel.getText().toString().trim().length() == 0){
-                            editTextSearchLabel.requestFocus();
-                            editTextSearchLabel.setError(getString(R.string.label_can_not_be_empty));
-                        } else {
-                            if (editThisAddress && AddPlaceActivity.this.searchResult != null) {
-                                searchResult.setId(AddPlaceActivity.this.searchResult.getId());
-                            }
-                            if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION){
-                                searchResult.setName(editTextSearchLabel.getText().toString().trim());
-                            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
-                                searchResult.setName(TYPE_HOME);
-                            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
-                                searchResult.setName(TYPE_WORK);
-                            }
-
-                            if (placeRequestCode == Constants.REQUEST_CODE_ADD_HOME) {
-                                String savedWorkStr = Prefs.with(AddPlaceActivity.this).getString(SPLabels.ADD_WORK, "");
-                                int otherId = 0;
-                                if (!"".equalsIgnoreCase(savedWorkStr)) {
-                                    SearchResult savedWork = new Gson().fromJson(savedWorkStr, SearchResult.class);
-                                    if (savedWork.getPlaceId().equalsIgnoreCase(searchResult.getPlaceId())) {
-                                        otherId = savedWork.getId();
-                                    }
-                                }
-                                addPlacesApi(searchResult, false, otherId);
-                            } else if (placeRequestCode == Constants.REQUEST_CODE_ADD_WORK) {
-                                String savedHomeStr = Prefs.with(AddPlaceActivity.this).getString(SPLabels.ADD_HOME, "");
-                                int otherId = 0;
-                                if (!"".equalsIgnoreCase(savedHomeStr)) {
-                                    SearchResult savedHome = new Gson().fromJson(savedHomeStr, SearchResult.class);
-                                    if (savedHome.getPlaceId().equalsIgnoreCase(searchResult.getPlaceId())) {
-                                        otherId = savedHome.getId();
-                                    }
-                                }
-                                addPlacesApi(searchResult, false, otherId);
-                            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
-                                addPlacesApi(searchResult, false, 0);
-                            }
-
-                            editTextSearch.setText(searchResult.getAddress());
-                        }
-                    }
-
-                    @Override
-                    public void onPlaceSearchError() {
-                        //progressBarInitialSearch.setVisibility(View.GONE);
-                        Toast.makeText(AddPlaceActivity.this, R.string.could_not_find_address, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onPlaceSaved() {
-
-                    }
-                }, false);
-
-        listViewSearch.setAdapter(searchListAdapter);
-
         imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editTextSearch.setText("");
+                editTextDeliveryAddress.setText("");
             }
         });
 
-        getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
-
-    }
-
-    public TextView getTextViewTitle() {
-        return textViewTitle;
-    }
-
-    public EditText getEditTextDeliveryAddress() {
-        return editTextDeliveryAddress;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         if(getIntent().hasExtra(Constants.KEY_REQUEST_CODE)){
             placeRequestCode = getIntent().getIntExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_HOME);
             String address = getIntent().getStringExtra(Constants.KEY_ADDRESS);
@@ -264,14 +139,13 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
                 editThisAddress = false;
                 if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
                     textViewTitle.setText("ADD Home");
-                    editTextSearch.setHint("Enter Home location");
+                    editTextDeliveryAddress.setHint("Enter Home location");
                 } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
                     textViewTitle.setText("ADD Work");
-                    editTextSearch.setHint("Enter Work location");
+                    editTextDeliveryAddress.setHint("Enter Work location");
                 } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION){
                     textViewTitle.setText("ADD New Address");
-                    editTextSearch.setHint("Enter location");
-                    relativeLayoutLabel.setVisibility(View.VISIBLE);
+                    editTextDeliveryAddress.setHint("Enter location");
                 }
                 buttonRemove.setVisibility(View.GONE);
             } else {
@@ -279,26 +153,21 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
                 editThisAddress = true;
                 textViewTitle.setText("EDIT "+ searchResult.getName());
                 buttonRemove.setText("REMOVE "+ searchResult.getName());
-                editTextSearch.setHint("Enter " + searchResult.getName().toLowerCase() + " location");
-                editTextSearch.setText(searchResult.getAddress());
-                editTextSearch.setSelection(editTextSearch.getText().length());
+                editTextDeliveryAddress.setHint("Enter " + searchResult.getName().toLowerCase() + " location");
+                editTextDeliveryAddress.setText(searchResult.getAddress());
+                editTextDeliveryAddress.setSelection(editTextDeliveryAddress.getText().length());
                 buttonRemove.setVisibility(View.VISIBLE);
-                if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION){
-                    relativeLayoutLabel.setVisibility(View.VISIBLE);
-                    editTextSearchLabel.setText(searchResult.getName());
-                }
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            editTextDeliveryAddress.setText(searchResult.getAddress());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, 500);
             }
         }
+
+
+        getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
 	@Override
@@ -359,6 +228,7 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
                     params.put(Constants.KEY_ADDRESS_ID, String.valueOf(matchedWithOtherId));
                     params.put(Constants.KEY_DELETE_FLAG, "1");
+                    params.put(Constants.KEY_IS_CONFIRMED, "1");
                 }
                 else{
                     params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -375,6 +245,7 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
                             params.put(Constants.KEY_DELETE_FLAG, "1");
                         }
                     }
+                    params.put(Constants.KEY_IS_CONFIRMED, "1");
                 }
 
 				DialogPopup.showLoadingDialog(AddPlaceActivity.this, "Updating...");
@@ -460,6 +331,14 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
     }
 
+    public TextView getTextViewTitle() {
+        return textViewTitle;
+    }
+
+    public EditText getEditTextDeliveryAddress() {
+        return editTextDeliveryAddress;
+    }
+
     public void openMapAddress(Bundle bundle) {
         getTransactionUtils().openMapFragment(this, relativeLayoutContainer, bundle);
     }
@@ -486,5 +365,21 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
     public SearchResult getSearchResult(){
         return searchResult;
+    }
+
+    public boolean isEditThisAddress() {
+        return editThisAddress;
+    }
+
+    public Button getButtonRemove() {
+        return buttonRemove;
+    }
+
+    public ImageView getImageViewSearchCross() {
+        return imageViewSearchCross;
+    }
+
+    public RelativeLayout getRelativeLayoutSearch() {
+        return relativeLayoutSearch;
     }
 }

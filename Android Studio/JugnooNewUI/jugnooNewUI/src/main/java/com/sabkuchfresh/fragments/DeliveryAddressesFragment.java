@@ -2,6 +2,7 @@ package com.sabkuchfresh.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,6 +46,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.AddPlaceActivity;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -177,14 +180,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 try {
                     String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
                     final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-                    getLatLngFromPlaceId(searchResult.getPlaceId(), new GetLatLngFromPlaceId() {
-                        @Override
-                        public void onLatLngReceived(LatLng latLng) {
-                            if(latLng != null) {
-                                fillAddressDetails(latLng);
-                            }
-                        }
-                    });
+                    fillAddressDetails(searchResult.getLatLng());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -197,14 +193,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 try {
                     String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
                     final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-                    getLatLngFromPlaceId(searchResult.getPlaceId(), new GetLatLngFromPlaceId() {
-                        @Override
-                        public void onLatLngReceived(LatLng latLng) {
-                            if(latLng != null) {
-                                fillAddressDetails(latLng);
-                            }
-                        }
-                    });
+                    fillAddressDetails(searchResult.getLatLng());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -275,14 +264,14 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     @Override
                     public void onTextChange(String text) {
                         try {
-                            if (text.length() > 0) {
-//                                imageViewSearchCross.setVisibility(View.VISIBLE);
-//                                hideSearchLayout();
-                            } else {
-//                                imageViewSearchCross.setVisibility(View.GONE);
-//                                showSearchLayout();
+                            if(activity instanceof AddPlaceActivity) {
+                                AddPlaceActivity addPlaceActivity = ((AddPlaceActivity)activity);
+                                if (text.length() > 0) {
+                                    addPlaceActivity.getImageViewSearchCross().setVisibility(View.VISIBLE);
+                                } else {
+                                    addPlaceActivity.getImageViewSearchCross().setVisibility(View.GONE);
+                                }
                             }
-//                            searchListActionsHandler.onTextChange(text);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -369,6 +358,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     public void onPlaceSearchError() {
                         //progressBarSearch.setVisibility(View.GONE);
 //                        searchListActionsHandler.onPlaceSearchError();
+                        Toast.makeText(activity, R.string.could_not_find_address, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -379,6 +369,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
         listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
         listViewSearch.setAdapter(searchListAdapter);
+
 
         return rootView;
     }
@@ -403,8 +394,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         if(!hidden && (activity instanceof FreshActivity)) {
             ((FreshActivity) activity).fragmentUISetup(this);
         } else if(!hidden && (activity instanceof AddPlaceActivity)){
-            ((AddPlaceActivity)activity).getTextViewTitle().setVisibility(View.GONE);
-            ((AddPlaceActivity)activity).getEditTextDeliveryAddress().setVisibility(View.VISIBLE);
+            AddPlaceActivity addPlaceActivity = (AddPlaceActivity)activity;
+            addPlaceActivity.getTextViewTitle().setVisibility(View.GONE);
+            addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.VISIBLE);
+            if(addPlaceActivity.isEditThisAddress()) {
+                addPlaceActivity.getButtonRemove().setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -474,7 +469,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private void fillAddressDetails(final LatLng latLng) {
         try {
             if (AppStatus.getInstance(getActivity()).isOnline(getActivity())) {
-                //DialogPopup.showLoadingDialog(getActivity(), "Loading...");
+                DialogPopup.showLoadingDialog(getActivity(), "Loading...");
                 final Map<String, String> params = new HashMap<String, String>(6);
 
                 params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
@@ -608,5 +603,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         bundle.putDouble("current_longitude", current_longitude);
         return bundle;
     }
+
+
 
 }

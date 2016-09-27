@@ -29,6 +29,9 @@ public class SearchResult {
 	@SerializedName("id")
 	@Expose
 	private Integer id;
+	@SerializedName("is_confirmed")
+	@Expose
+	private Integer isConfirmed = 0;
 
 	private Type type = Type.SEARCHED;
 	
@@ -128,6 +131,14 @@ public class SearchResult {
 
 	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
+	}
+
+	public Integer getIsConfirmed() {
+		return isConfirmed;
+	}
+
+	public void setIsConfirmed(Integer isConfirmed) {
+		this.isConfirmed = isConfirmed;
 	}
 
 	public enum Type{

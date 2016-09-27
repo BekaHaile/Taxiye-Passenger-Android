@@ -505,4 +505,6 @@ public interface Constants {
 	String KEY_KEEP_DUPLICATE = "keep_duplicate";
 	String KEY_DELETE_FLAG = "delete_flag";
 
+	String KEY_IS_CONFIRMED = "is_confirmed";
+
 }

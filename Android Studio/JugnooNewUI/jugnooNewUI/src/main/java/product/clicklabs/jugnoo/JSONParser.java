@@ -1677,12 +1677,13 @@ public class JSONParser implements Constants {
     public String getSearchResultStringFromJSON(JSONObject jsonObject){
         try {
             JSONObject json = new JSONObject();
-            json.put(KEY_ADDRESS, jsonObject.optString(KEY_ADDRESS));
-            json.put(KEY_NAME, jsonObject.optString(KEY_TYPE));
-            json.put(KEY_PLACEID, jsonObject.optString(KEY_GOOGLE_PLACE_ID));
+            json.put(KEY_ADDRESS, jsonObject.optString(KEY_ADDRESS, ""));
+            json.put(KEY_NAME, jsonObject.optString(KEY_TYPE, ""));
+            json.put(KEY_PLACEID, jsonObject.optString(KEY_GOOGLE_PLACE_ID, ""));
             json.put(KEY_LATITUDE, jsonObject.optDouble(KEY_LATITUDE, 0));
             json.put(KEY_LONGITUDE, jsonObject.optDouble(KEY_LONGITUDE, 0));
-            json.put(KEY_ID, jsonObject.optInt(KEY_ID));
+            json.put(KEY_ID, jsonObject.optInt(KEY_ID, 0));
+            json.put(KEY_IS_CONFIRMED, jsonObject.optInt(KEY_IS_CONFIRMED, 0));
             return json.toString();
         } catch (Exception e) {
             e.printStackTrace();
