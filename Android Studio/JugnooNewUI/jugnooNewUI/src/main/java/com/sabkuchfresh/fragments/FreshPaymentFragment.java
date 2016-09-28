@@ -445,6 +445,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     public void onSuccess() {
                         try {
                             activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            orderPaymentModes();
                             setPaymentOptionUI();
                             activity.updateMenu();
                         } catch (Exception e) {
@@ -456,6 +457,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     public void onFailure() {
                         try {
                             activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            orderPaymentModes();
                             setPaymentOptionUI();
                             activity.updateMenu();
                         } catch (Exception e) {
