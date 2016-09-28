@@ -62,7 +62,7 @@ public class RestClient {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-//                    .setLog(fooLog)
+                    .setLog(fooLog)
                     .setErrorHandler(new ErrorHandler() {
                         @Override
                         public Throwable handleError(RetrofitError cause) {
@@ -106,7 +106,7 @@ public class RestClient {
                 .setEndpoint(Config.getServerUrl())
                 .setClient(new Ok3Client(getOkHttpClient()))
                 .setConverter(new StringConverter())
-//                .setLog(fooLog)
+                .setLog(fooLog)
                 .setLogLevel(RestAdapter.LogLevel.FULL);
 
         RestAdapter restAdapter = builder.build();
@@ -151,7 +151,7 @@ public class RestClient {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getFreshServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-//                    .setLog(fooLog)
+                    .setLog(fooLog)
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();

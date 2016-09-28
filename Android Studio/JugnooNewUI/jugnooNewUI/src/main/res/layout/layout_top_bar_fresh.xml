@@ -54,7 +54,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="100px"
             android:hint="@string/type_delivery_address"
-            android:textCursorDrawable="@drawable/color_cursor"
             android:background="@color/transparent"
             android:textSize="@dimen/text_size_30"
             android:textColor="@color/text_color"
