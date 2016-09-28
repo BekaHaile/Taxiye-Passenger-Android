@@ -2,7 +2,6 @@ package com.sabkuchfresh.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -46,7 +45,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.AddPlaceActivity;
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -55,7 +53,6 @@ import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -594,6 +591,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     private Bundle createAddressBundle(){
         Bundle bundle = new Bundle();
+        bundle.putString("current_street", current_street);
         bundle.putString("current_street", current_street);
         bundle.putString("current_route", current_route);
         bundle.putString("current_area", current_area);

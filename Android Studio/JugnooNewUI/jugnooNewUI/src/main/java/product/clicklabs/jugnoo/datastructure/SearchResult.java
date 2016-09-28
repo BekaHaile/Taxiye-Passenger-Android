@@ -73,7 +73,11 @@ public class SearchResult {
 	}
 
 	public LatLng getLatLng() {
-		return new LatLng(latitude, longitude);
+		if(latitude != null && longitude != null) {
+			return new LatLng(latitude, longitude);
+		} else{
+			return new LatLng(0, 0);
+		}
 	}
 
 

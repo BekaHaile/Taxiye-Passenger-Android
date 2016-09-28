@@ -1,6 +1,5 @@
 package com.sabkuchfresh.fragments;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -63,9 +62,6 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
-
-import static product.clicklabs.jugnoo.Constants.TYPE_HOME;
-import static product.clicklabs.jugnoo.Constants.TYPE_WORK;
 
 /**
  * Created by Gurmail S. Kang on 5/4/16.
@@ -310,7 +306,6 @@ public class AddToAddressBookFragment extends Fragment {
 
                             if(homeActivity instanceof FreshActivity) {
                                 ((FreshActivity)homeActivity).setSelectedAddress(localAddress);
-                                Prefs.with(homeActivity).save(homeActivity.getResources().getString(R.string.pref_address_selected), 3);
                                 deliveryAddressesFragment = ((FreshActivity)homeActivity).getDeliveryAddressesFragment();
                             } else if(homeActivity instanceof AddPlaceActivity){
                                 AddPlaceActivity addPlaceActivity = (AddPlaceActivity)homeActivity;
