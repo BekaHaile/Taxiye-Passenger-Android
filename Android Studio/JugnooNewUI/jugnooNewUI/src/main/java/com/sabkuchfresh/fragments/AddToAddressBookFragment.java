@@ -333,7 +333,8 @@ public class AddToAddressBookFragment extends Fragment {
                                             otherId = savedWork.getId();
                                         }
                                     }
-                                    addPlaceActivity.addPlacesApi(searchResult, false, otherId);
+                                    addPlaceActivity.hitApiAddHomeWorkAddress(searchResult, false, otherId,
+                                            addPlaceActivity.isEditThisAddress(), placeRequestCode);
                                 } else if (placeRequestCode == Constants.REQUEST_CODE_ADD_WORK) {
                                     String savedHomeStr = Prefs.with(addPlaceActivity).getString(SPLabels.ADD_HOME, "");
                                     int otherId = 0;
@@ -343,9 +344,9 @@ public class AddToAddressBookFragment extends Fragment {
                                             otherId = savedHome.getId();
                                         }
                                     }
-                                    addPlaceActivity.addPlacesApi(searchResult, false, otherId);
+                                    addPlaceActivity.hitApiAddHomeWorkAddress(searchResult, false, otherId, addPlaceActivity.isEditThisAddress(), placeRequestCode);
                                 } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
-                                    addPlaceActivity.addPlacesApi(searchResult, false, 0);
+                                    addPlaceActivity.hitApiAddHomeWorkAddress(searchResult, false, 0, addPlaceActivity.isEditThisAddress(), placeRequestCode);
                                 }
 
                             }

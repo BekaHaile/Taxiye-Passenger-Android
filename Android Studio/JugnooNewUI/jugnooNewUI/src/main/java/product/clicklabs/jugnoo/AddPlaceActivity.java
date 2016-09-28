@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -11,52 +10,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.home.TransactionUtils;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
-import product.clicklabs.jugnoo.adapters.SearchListAdapter;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
-import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NonScrollListView;
-import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
-
-import static product.clicklabs.jugnoo.Constants.KEY_ID;
-import static product.clicklabs.jugnoo.Constants.TYPE_HOME;
-import static product.clicklabs.jugnoo.Constants.TYPE_WORK;
-import static product.clicklabs.jugnoo.Data.latitude;
-import static product.clicklabs.jugnoo.Data.longitude;
 
 
 /**
  * Created by Ankit on 10/7/15.
  */
-public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class AddPlaceActivity extends BaseFragmentActivity {
 
     private final String TAG = AddPlaceActivity.class.getSimpleName();
 
@@ -68,9 +37,7 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
     private SearchResult searchResult;
     private boolean editThisAddress = false;
 
-    RelativeLayout relativeLayoutContainer;
-
-	private GoogleApiClient mGoogleApiClient;
+    private RelativeLayout relativeLayoutContainer;
 
     private Gson gson;
     private EditText editTextDeliveryAddress;
@@ -88,14 +55,6 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
         gson = new Gson();
 
-		mGoogleApiClient = new GoogleApiClient
-				.Builder(this)
-				.addApi(Places.GEO_DATA_API)
-				.addApi(Places.PLACE_DETECTION_API)
-				.addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this)
-				.build();
-
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.avenirNext(this));
         buttonRemove = (Button)findViewById(R.id.buttonRemove); buttonRemove.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
@@ -112,7 +71,7 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
         buttonRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addPlacesApi(searchResult, true, 0);
+                hitApiAddHomeWorkAddress(searchResult, true, 0, editThisAddress, placeRequestCode);
             }
         });
 
@@ -173,12 +132,10 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 	@Override
 	public void onStart() {
 		super.onStart();
-		mGoogleApiClient.connect();
 	}
 
 	@Override
 	public void onStop() {
-		mGoogleApiClient.disconnect();
 		super.onStop();
 	}
 
@@ -205,131 +162,7 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 		ASSL.closeActivity(root);
 		System.gc();
 	}
-	public void onConnected(Bundle bundle) {
-	}
 
-	@Override
-	public void onConnectionSuspended(int i) {
-	}
-
-	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {
-	}
-
-    public void addPlacesApi(final SearchResult searchResult, final boolean deleteAddress, final int matchedWithOtherId) {
-        try {
-            if(AppStatus.getInstance(AddPlaceActivity.this).isOnline(AddPlaceActivity.this)) {
-
-                HashMap<String, String> params = new HashMap<>();
-                if(matchedWithOtherId > 0){
-                    params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                    params.put(Constants.KEY_ADDRESS, "");
-                    params.put(Constants.KEY_GOOGLE_PLACE_ID, "");
-
-                    params.put(Constants.KEY_ADDRESS_ID, String.valueOf(matchedWithOtherId));
-                    params.put(Constants.KEY_DELETE_FLAG, "1");
-                    params.put(Constants.KEY_IS_CONFIRMED, "1");
-                }
-                else{
-                    params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                    params.put(Constants.KEY_ADDRESS, searchResult.getAddress());
-                    params.put(Constants.KEY_GOOGLE_PLACE_ID, searchResult.getPlaceId());
-                    params.put(Constants.KEY_TYPE, searchResult.getName());
-
-                    params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
-                    params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
-
-                    if(editThisAddress){
-                        params.put(Constants.KEY_ADDRESS_ID, String.valueOf(searchResult.getId()));
-                        if(deleteAddress) {
-                            params.put(Constants.KEY_DELETE_FLAG, "1");
-                        }
-                    }
-                    params.put(Constants.KEY_IS_CONFIRMED, "1");
-                }
-
-				DialogPopup.showLoadingDialog(AddPlaceActivity.this, "Updating...");
-
-                RestClient.getApiServices().addHomeAndWorkAddress(params, new Callback<SettleUserDebt>() {
-                    @Override
-                    public void success(SettleUserDebt settleUserDebt, Response response) {
-                        String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-                        Log.i(TAG, "addHomeAndWorkAddress response = " + responseStr);
-                        DialogPopup.dismissLoadingDialog();
-                        try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            int flag = jObj.optInt("", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-                            String message = JSONParser.getServerMessage(jObj);
-                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-
-                                if(matchedWithOtherId > 0){
-                                    if(searchResult.getName().equalsIgnoreCase(TYPE_HOME)){
-                                        Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, "");
-                                    } else if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_WORK)){
-                                        Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, "");
-                                    }
-                                    addPlacesApi(searchResult, deleteAddress, 0);
-                                }
-                                else{
-                                    int id = 0;
-                                    if(searchResult.getId() != null){
-                                        id = searchResult.getId();
-                                    }
-                                    searchResult.setId(jObj.optInt(KEY_ID, id));
-
-                                    String strResult = gson.toJson(searchResult, SearchResult.class);
-                                    if(deleteAddress){
-                                        strResult = "";
-                                    }
-                                    if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
-                                        Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_HOME, strResult);
-                                    } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
-                                        Prefs.with(AddPlaceActivity.this).save(SPLabels.ADD_WORK, strResult);
-                                    } else {
-                                        if(deleteAddress){
-                                            Data.userData.getSearchResults().remove(searchResult);
-                                        } else {
-                                            Data.userData.getSearchResults().add(searchResult);
-                                        }
-                                    }
-
-                                    Intent intent = new Intent();
-                                    intent.putExtra("PLACE", strResult);
-                                    if("".equalsIgnoreCase(strResult)) {
-                                        setResult(RESULT_CANCELED, intent);
-                                    } else{
-                                        setResult(RESULT_OK, intent);
-                                    }
-                                    finish();
-                                    overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                                }
-
-                            } else{
-                                DialogPopup.alertPopup(AddPlaceActivity.this, "", message);
-                            }
-                        }  catch (Exception exception) {
-                            exception.printStackTrace();
-                            DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_ERROR_MSG);
-                            DialogPopup.dismissLoadingDialog();
-                        }
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, "addHomeAndWorkAddress error="+error.toString());
-                        DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
-                    }
-                });
-			}
-			else {
-				DialogPopup.alertPopup(AddPlaceActivity.this, "", Data.CHECK_INTERNET_MSG);
-			}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public TextView getTextViewTitle() {
         return textViewTitle;
@@ -381,5 +214,42 @@ public class AddPlaceActivity extends BaseFragmentActivity implements GoogleApiC
 
     public RelativeLayout getRelativeLayoutSearch() {
         return relativeLayoutSearch;
+    }
+
+    private ApiAddHomeWorkAddress apiAddHomeWorkAddress;
+    public void hitApiAddHomeWorkAddress(final SearchResult searchResult, final boolean deleteAddress, final int matchedWithOtherId,
+                                         final boolean editThisAddress, final int placeRequestCode){
+        if(apiAddHomeWorkAddress == null){
+            apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
+                @Override
+                public void onSuccess(SearchResult searchResult, String strResult) {
+                    Intent intent = new Intent();
+                    intent.putExtra("PLACE", strResult);
+                    if("".equalsIgnoreCase(strResult)) {
+                        setResult(RESULT_CANCELED, intent);
+                    } else{
+                        setResult(RESULT_OK, intent);
+                    }
+                    finish();
+                    overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onRetry(View view) {
+
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            });
+        }
+        apiAddHomeWorkAddress.addHomeAndWorkAddress(searchResult, deleteAddress, matchedWithOtherId, editThisAddress, placeRequestCode);
     }
 }

@@ -129,10 +129,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         linearLayoutChooseOnMap = (LinearLayout)rootView.findViewById(R.id.linearLayoutChooseOnMap);
         relativeLayoutAddHome = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddHome);
         relativeLayoutAddWork = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddWork);
-        textViewAddHome = (TextView)rootView.findViewById(R.id.textViewAddHome);
-        textViewAddHomeValue = (TextView)rootView.findViewById(R.id.textViewAddHomeValue);
-        textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork);
-        textViewAddWorkValue = (TextView)rootView.findViewById(R.id.textViewAddWorkValue);
+        textViewAddHome = (TextView)rootView.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
+        textViewAddHomeValue = (TextView)rootView.findViewById(R.id.textViewAddHomeValue); textViewAddHomeValue.setTypeface(Fonts.mavenMedium(activity));
+        textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
+        textViewAddWorkValue = (TextView)rootView.findViewById(R.id.textViewAddWorkValue); textViewAddWorkValue.setTypeface(Fonts.mavenMedium(activity));
         imageViewSep = (ImageView)rootView.findViewById(R.id.imageViewSep);
         scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
         linearLayoutSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutSearch);
