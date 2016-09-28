@@ -339,6 +339,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                         if(Data.getMealsData().getPromoCoupons() == null){
                                             Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
                                         }
+                                        Data.getMealsData().getPromoCoupons().clear();
                                         if(userCheckoutResponse.getPromotions() != null){
                                             Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
                                         }
@@ -349,6 +350,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                         if(Data.getGroceryData().getPromoCoupons() == null){
                                             Data.getGroceryData().setPromoCoupons(new ArrayList<PromoCoupon>());
                                         }
+                                        Data.getGroceryData().getPromoCoupons().clear();
                                         if(userCheckoutResponse.getPromotions() != null){
                                             Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
                                         }
@@ -359,6 +361,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                         if(Data.getFreshData().getPromoCoupons() == null){
                                             Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
                                         }
+                                        Data.getFreshData().getPromoCoupons().clear();
                                         if(userCheckoutResponse.getPromotions() != null){
                                             Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
                                         }
