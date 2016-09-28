@@ -310,13 +310,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 											activity.finish();
 											activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 										} else {
-											FragmentManager fm = getActivity().getSupportFragmentManager();
-											for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-												fm.popBackStack();
-												if (fm.getFragments().get(i).getTag().equalsIgnoreCase(SupportRideIssuesFragment.class.getName())) {
-													break;
-												}
-											}
+											getActivity().getSupportFragmentManager().popBackStack(SupportRideIssuesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 										}
 									} catch (Exception e) {
 										e.printStackTrace();
