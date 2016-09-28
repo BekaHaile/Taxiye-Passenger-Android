@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -48,6 +46,7 @@ import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -59,7 +58,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -78,17 +76,18 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private Activity activity;
     protected Bus mBus;
     private FreshAddressAdapter addressFragment;
-    private RecyclerView recyclerView;
-    private LinearLayout linearLayoutAddFav, linearLayoutChooseOnMap, linearLayoutCurrentLocation, linearLayoutSearch;
+    private NonScrollListView listViewDeliveryAddress, listViewSavedLocations;
+    private LinearLayout linearLayoutFav, linearLayoutChooseOnMap, linearLayoutCurrentLocation, linearLayoutSearch;
     private RelativeLayout linearLayoutMain, relativeLayoutAddHome, relativeLayoutAddWork;
     private TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue;
     private ImageView imageViewSep;
     private GoogleApiClient mGoogleApiClient;
     private SearchListAdapter searchListAdapter;
-    private ScrollView scrollViewSearch;
+    private ScrollView scrollViewSearch, scrollViewSuggestions;
     private NonScrollListView listViewSearch;
     private List<DeliveryAddress> deliveryAddresses = new ArrayList<DeliveryAddress>();
     private EditText editTextDeliveryAddress;
+    private SavedPlacesAdapter savedPlacesAdapter;
 
 
     public double current_latitude = 0.0;
@@ -125,7 +124,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
         ((TextView)rootView.findViewById(R.id.textViewCurrentLocation)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewChooseOnMap)).setTypeface(Fonts.mavenMedium(activity));
-        linearLayoutAddFav = (LinearLayout)rootView.findViewById(R.id.linearLayoutAddFav);
+        linearLayoutFav = (LinearLayout)rootView.findViewById(R.id.linearLayoutFav);
         linearLayoutCurrentLocation = (LinearLayout)rootView.findViewById(R.id.linearLayoutCurrentLocation);
         linearLayoutChooseOnMap = (LinearLayout)rootView.findViewById(R.id.linearLayoutChooseOnMap);
         relativeLayoutAddHome = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddHome);
@@ -138,16 +137,33 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
         linearLayoutSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutSearch);
         scrollViewSearch.setVisibility(View.GONE);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliveryAddress);
-        recyclerView.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setVisibility(View.VISIBLE);
-        linearLayoutAddFav.setVisibility(View.GONE);
+        listViewDeliveryAddress = (NonScrollListView) rootView.findViewById(R.id.listViewDeliveryAddress);
+        linearLayoutFav.setVisibility(View.GONE);
+        scrollViewSuggestions = (ScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
+
+        listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
+        try {
+            savedPlacesAdapter = new SavedPlacesAdapter(activity, Data.userData.getSearchResults(), new SavedPlacesAdapter.Callback() {
+                @Override
+                public void onItemClick(SearchResult searchResult) {
+                    try {
+                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(searchResult.getLatitude()));
+                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(searchResult.getLongitude()));
+                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), searchResult.getAddress());
+                        setAddressToBundle(searchResult);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, false, true);
+            listViewSavedLocations.setAdapter(savedPlacesAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if(activity instanceof FreshActivity) {
             try {
-                linearLayoutAddFav.setVisibility(View.VISIBLE);
+                linearLayoutFav.setVisibility(View.VISIBLE);
                 setSavePlaces();
                 deliveryAddresses.addAll(((FreshActivity)activity).getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses());
                 for (int i = 0; i < deliveryAddresses.size(); i++) {
@@ -158,8 +174,13 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            listViewDeliveryAddress.setVisibility(View.VISIBLE);
             addressFragment = new FreshAddressAdapter(((FreshActivity)activity), deliveryAddresses, this);
-            recyclerView.setAdapter(addressFragment);
+            listViewDeliveryAddress.setAdapter(addressFragment);
+        }
+        else if(activity instanceof AddPlaceActivity){
+            listViewDeliveryAddress.setVisibility(View.GONE);
+            linearLayoutFav.setVisibility(View.GONE);
         }
 
 
@@ -177,7 +198,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 try {
                     String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
                     final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-                    fillAddressDetails(searchResult.getLatLng());
+                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(searchResult.getLatitude()));
+                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(searchResult.getLongitude()));
+                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), searchResult.getAddress());
+                    setAddressToBundle(searchResult);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -190,7 +214,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 try {
                     String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
                     final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-                    fillAddressDetails(searchResult.getLatLng());
+                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(searchResult.getLatitude()));
+                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(searchResult.getLongitude()));
+                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), searchResult.getAddress());
+                    setAddressToBundle(searchResult);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -303,49 +330,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                             editTextDeliveryAddress.setText("");
                             scrollViewSearch.setVisibility(View.GONE);
 
-                            current_street = "";
-                            current_route = "";
-                            current_area = "";
-                            current_city = "";
-                            current_pincode = "";
-
-                            current_latitude = searchResult.getLatLng().latitude;
-                            current_longitude = searchResult.getLatLng().longitude;
-
-                            String[] address = searchResult.getAddress().split(",");
-                            List<String> addressArray = Arrays.asList(address);
-                            Collections.reverse(addressArray);
-                            address = (String[]) addressArray.toArray();
-
-                            if(address.length > 0 && (!TextUtils.isEmpty(address[0].trim())))
-                                current_pincode = "" + address[0].trim();
-                            if(address.length > 1 && (!TextUtils.isEmpty(address[1].trim())))
-                                current_city = "" + address[1].trim();
-                            if(address.length > 2 && (!TextUtils.isEmpty(address[2].trim())))
-                                current_area = "" + address[2].trim();
-
-                            int val = 0;
-                            if(!TextUtils.isEmpty(address[address.length - 1].replaceAll("\\D+","")) && address.length>3) {
-                                current_street = address[address.length - 1].replaceAll("\\D+","");
-                                val = 1;
-                            }
-
-                            current_route = "";
-                            if(address.length>3) {
-                                for (int i = 3; i < address.length - val; i++) {
-                                    if(i==3) {
-                                        current_route = address[i].trim();
-                                    } else {
-                                        current_route = current_route+", "+address[i].trim();
-                                    }
-                                }
-                            }
-                            //fillAddressDetails(searchResult.getLatLng());
-                            if(activity instanceof FreshActivity) {
-                                ((FreshActivity)activity).openAddToAddressBook(createAddressBundle());
-                            }else if(activity instanceof AddPlaceActivity){
-                                ((AddPlaceActivity)activity).openAddToAddressBook(createAddressBundle());
-                            }
+                            setAddressToBundle(searchResult);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -525,6 +510,58 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     }
 
+
+    private void setAddressToBundle(SearchResult searchResult){
+        try {
+            current_street = "";
+            current_route = "";
+            current_area = "";
+            current_city = "";
+            current_pincode = "";
+
+            current_latitude = searchResult.getLatLng().latitude;
+            current_longitude = searchResult.getLatLng().longitude;
+
+            String[] address = searchResult.getAddress().split(",");
+            List<String> addressArray = Arrays.asList(address);
+            Collections.reverse(addressArray);
+            address = (String[]) addressArray.toArray();
+
+            if(address.length > 0 && (!TextUtils.isEmpty(address[0].trim())))
+                current_pincode = "" + address[0].trim();
+            if(address.length > 1 && (!TextUtils.isEmpty(address[1].trim())))
+                current_city = "" + address[1].trim();
+            if(address.length > 2 && (!TextUtils.isEmpty(address[2].trim())))
+                current_area = "" + address[2].trim();
+
+            int val = 0;
+            if(!TextUtils.isEmpty(address[address.length - 1].replaceAll("\\D+","")) && address.length>3) {
+                current_street = address[address.length - 1].replaceAll("\\D+","");
+                val = 1;
+            }
+
+            current_route = "";
+            if(address.length>3) {
+                for (int i = 3; i < address.length - val; i++) {
+                    if(i==3) {
+                        current_route = address[i].trim();
+                    } else {
+                        current_route = current_route+", "+address[i].trim();
+                    }
+                }
+            }
+            //fillAddressDetails(searchResult.getLatLng());
+            if(activity instanceof FreshActivity) {
+                ((FreshActivity)activity).openAddToAddressBook(createAddressBundle());
+            }else if(activity instanceof AddPlaceActivity){
+                ((AddPlaceActivity)activity).openAddToAddressBook(createAddressBundle());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private void setSavePlaces() {
         if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
@@ -566,11 +603,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         }
 
 
-
-    }
-
-    @Override
-    public void onAddAddress() {
 
     }
 

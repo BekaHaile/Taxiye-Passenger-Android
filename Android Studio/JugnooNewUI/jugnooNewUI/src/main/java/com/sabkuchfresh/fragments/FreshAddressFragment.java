@@ -2,9 +2,6 @@ package com.sabkuchfresh.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +20,7 @@ import com.squareup.otto.Subscribe;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 
@@ -30,7 +28,7 @@ public class FreshAddressFragment extends Fragment implements View.OnClickListen
 
     private final String TAG = FreshAddressFragment.class.getSimpleName();
 
-    private RecyclerView recyclerView;
+    private NonScrollListView listViewDeliveryAddress;
 
     private LinearLayout linearLayoutMain;
 
@@ -93,14 +91,11 @@ public class FreshAddressFragment extends Fragment implements View.OnClickListen
 
         new ASSL(activity, linearLayoutMain, 1134, 720, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliveryAddress);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setHasFixedSize(false);
-        recyclerView.setVisibility(View.VISIBLE);
+        listViewDeliveryAddress = (NonScrollListView) rootView.findViewById(R.id.listViewDeliveryAddress);
+        listViewDeliveryAddress.setVisibility(View.VISIBLE);
 
         addressFragment = new FreshAddressAdapter(activity, activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses(), this);
-        recyclerView.setAdapter(addressFragment);
+        listViewDeliveryAddress.setAdapter(addressFragment);
 
         return rootView;
     }
@@ -163,10 +158,5 @@ public class FreshAddressFragment extends Fragment implements View.OnClickListen
 //        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_address_selected), 3);
 
         activity.performBackPressed();
-    }
-
-    @Override
-    public void onAddAddress() {
-        activity.openMapAddress(null);
     }
 }

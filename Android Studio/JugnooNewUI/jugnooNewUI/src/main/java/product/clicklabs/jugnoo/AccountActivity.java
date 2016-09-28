@@ -216,7 +216,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                     startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 }
-            });
+            }, true, false);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
         } catch (Exception e) {
             e.printStackTrace();

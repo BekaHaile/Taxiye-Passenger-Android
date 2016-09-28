@@ -21,9 +21,9 @@ import product.clicklabs.jugnoo.utils.Fonts;
 
 public class SavedPlacesAdapter extends BaseAdapter{
 
-    class ViewHolderSearchItem {
+    private class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress;
-        ImageView imageViewType, imageViewSep;
+        ImageView imageViewType, imageViewSep, imageViewEdit;
         RelativeLayout relative;
         int id;
     }
@@ -32,16 +32,20 @@ public class SavedPlacesAdapter extends BaseAdapter{
     private LayoutInflater mInflater;
     private ViewHolderSearchItem holder;
     private Callback callback;
+    private boolean showEditIcon, separatorOnTop;
 
     private ArrayList<SearchResult> searchResults;
 
-    public SavedPlacesAdapter(Context context, ArrayList<SearchResult> searchResults, Callback callback)
+    public SavedPlacesAdapter(Context context, ArrayList<SearchResult> searchResults, Callback callback,
+                              boolean showEditIcon, boolean separatorOnTop)
             throws IllegalStateException{
         if(context instanceof Activity) {
             this.context = context;
             this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.searchResults = searchResults;
             this.callback = callback;
+            this.showEditIcon = showEditIcon;
+            this.separatorOnTop = separatorOnTop;
         }
         else{
             throw new IllegalStateException("context passed is not of Activity type");
@@ -76,6 +80,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
             holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
+            holder.imageViewEdit = (ImageView) convertView.findViewById(R.id.imageViewEdit);
 
             holder.relative.setTag(holder);
 
@@ -97,6 +102,13 @@ public class SavedPlacesAdapter extends BaseAdapter{
 			holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
 
             holder.imageViewSep.setVisibility(View.VISIBLE);
+
+            holder.imageViewEdit.setVisibility(showEditIcon ? View.VISIBLE : View.GONE);
+            if(separatorOnTop){
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.imageViewSep.getLayoutParams();
+                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+                holder.imageViewSep.setLayoutParams(params);
+            }
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
 
