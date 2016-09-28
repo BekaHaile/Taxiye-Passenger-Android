@@ -474,12 +474,13 @@ public class MyApplication extends Application{
 			Config.CUSTOM_SERVER_URL = link;
 			configModeToSet = ConfigMode.CUSTOM;
 		}
-		Config.FRESH_SERVER_URL = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
+		String freshServerUrlToSet = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
 
-		if(configModeToSet != Config.getConfigMode()){
+		if(configModeToSet != Config.getConfigMode() || !Config.getFreshServerUrl().equalsIgnoreCase(freshServerUrlToSet)){
 			RestClient.clearRestClient();
 		}
 		Config.setConfigMode(configModeToSet);
+		Config.FRESH_SERVER_URL = freshServerUrlToSet;
 
 		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
 
