@@ -178,6 +178,8 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.FRESH);
 					} else if (datum.getProductType() == ProductType.MEALS.getOrdinal()){
 						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MEALS);
+					} else if (datum.getProductType() == ProductType.GROCERY.getOrdinal()){
+						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.GROCERY);
 					}
 				}
 			}
@@ -199,9 +201,9 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 			if(Data.isOrderCancelled) {
 				int orderId = datum.getOrderId();
 				int supportCategory = datum.getSupportCategory();
-				if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
-					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.NOT_SURE);
-				} else if (datum.getProductType() == ProductType.MEALS.getOrdinal()){
+				if(datum.getProductType() == ProductType.FRESH.getOrdinal()
+						|| datum.getProductType() == ProductType.MEALS.getOrdinal()
+						|| datum.getProductType() == ProductType.GROCERY.getOrdinal()){
 					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.NOT_SURE);
 				}
 				Data.isSupportRideIssueUpdated = true;

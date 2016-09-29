@@ -261,7 +261,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 }
                 holder.linearLayoutCategories.setVisibility(View.GONE);
+                holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                holder.imageViewArrow.setRotation(270);
                 setSubCategories(holder);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -274,6 +277,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_down);
                         holder.imageViewArrow.setRotation(270);
                         //holder.linearLayoutCategories.startAnimation(animation);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES, null);
                     } else {
                         holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
                         Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_up);
@@ -297,6 +301,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     onClickAction(MenuInfoTags.GET_A_RIDE.getTag());
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_AUTOS, null);
                 }
             });
 
@@ -306,6 +311,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     onClickAction(MenuInfoTags.FRESH.getTag());
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_FRESH, null);
                 }
             });
 
@@ -315,6 +321,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     onClickAction(MenuInfoTags.MEALS.getTag());
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     holder.imageViewArrow.setRotation(270);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_MEALS, null);
                 }
             });
 
@@ -577,7 +584,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private void setSubCategories(ViewHeaderHolder holder){
         try {
             if(Data.userData.getIntegratedJugnooEnabled() == 1) {
-                if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)) {
+                if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
+                        && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)) {
                     holder.linearLayoutCategories.setVisibility(View.GONE);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 } else {

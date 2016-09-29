@@ -217,4 +217,9 @@ public interface FirebaseEvents {
     String BUTTON_GENIE = "button_genie";
     String FREECHARGE_SHORT = "FC";
 
+    String MENU_CATEGORIES = "menu_categories";
+    String MENU_CATEGORIES_AUTOS = "menu_categories_autos";
+    String MENU_CATEGORIES_FRESH = "menu_categories_fresh";
+    String MENU_CATEGORIES_MEALS = "menu_categories_meals";
+
 }

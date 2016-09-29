@@ -216,7 +216,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
-                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.FRESH, null);
+                            MyApplication.getInstance().logEvent(FirebaseEvents.M_ADD, null);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
