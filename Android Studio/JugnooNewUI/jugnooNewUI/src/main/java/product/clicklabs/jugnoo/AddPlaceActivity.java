@@ -62,6 +62,7 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         editTextDeliveryAddress.setTypeface(Fonts.mavenLight(AddPlaceActivity.this));
         relativeLayoutSearch = (RelativeLayout) findViewById(R.id.relativeLayoutSearch);
         imageViewSearchCross = (ImageView) findViewById(R.id.imageViewSearchCross);
+        imageViewSearchCross.setVisibility(View.GONE);
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 

@@ -88,7 +88,7 @@ public class FreshAddressAdapter extends BaseAdapter {
             } else {
                 holder.imageViewDivider.setVisibility(View.VISIBLE);
             }
-            holder.linear.setTag(position);
+            holder.linear.setTag(holder);
             holder.linear.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -117,7 +117,7 @@ public class FreshAddressAdapter extends BaseAdapter {
             imageViewRadio = (ImageView) itemView.findViewById(R.id.imageViewLast);
             imageViewDivider = (ImageView) itemView.findViewById(R.id.imageViewDivider);
             textViewLast = (TextView)itemView.findViewById(R.id.textViewLast);
-            textViewLast.setTypeface(Fonts.mavenRegular(context));
+            textViewLast.setTypeface(Fonts.mavenMedium(context));
         }
     }
 

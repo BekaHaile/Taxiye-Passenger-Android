@@ -24,7 +24,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.sabkuchfresh.bus.AddressAdded;
@@ -54,14 +53,7 @@ public class AddToAddressBookFragment extends Fragment {
     Button buttonAddToAddressBook;
     RelativeLayout root;
 
-    String homeAddressReceived, buildingStreetReceived, areaReceived, cityValueReceived,
-            pinCodeReceived, cityValue, pinCodeValue, selectedAddressPosition;
-    Double currentLatitude = 30.215462, currentLongitude = 72.521462;
     EditText editTextLabel, houseNumber, buildingStreetName, area, city, pinCode;
-    Bundle extras;
-
-    String City, PIN;
-    double latitude, longitude;
 
     View rootView;
     public FragmentActivity activity;
@@ -87,14 +79,6 @@ public class AddToAddressBookFragment extends Fragment {
 
         root = (RelativeLayout) rootView.findViewById(R.id.root);
         new ASSL(activity, root, 1134, 720, false);
-
-            currentLatitude = current_latitude;
-            currentLongitude = current_longitude;
-            cityValue = current_city;
-            pinCodeValue = current_pincode;
-            areaReceived = current_area;
-        homeAddressReceived = current_street;
-        buildingStreetReceived = current_route;
 
         mBus = MyApplication.getInstance().getBus();
         if(activity instanceof FreshActivity) {
@@ -142,20 +126,6 @@ public class AddToAddressBookFragment extends Fragment {
                         googleMap.getUiSettings().setZoomControlsEnabled(false);
                         googleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                            @Override
-                            public void onMapClick(LatLng latLng) {
-                                goToExpandedMap();
-                            }
-                        });
-
-                        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                            @Override
-                            public boolean onMarkerClick(Marker marker) {
-                                goToExpandedMap();
-                                return true;
-                            }
-                        });
                     }
 
                     // check if map is created successfully or not
@@ -164,7 +134,7 @@ public class AddToAddressBookFragment extends Fragment {
                                 "Sorry! unable to create maps", Toast.LENGTH_SHORT)
                                 .show();
                     }
-                    extractMapSnapShot(currentLatitude, currentLongitude);
+                    extractMapSnapShot(current_latitude, current_longitude);
                 }
             });
 
@@ -172,14 +142,6 @@ public class AddToAddressBookFragment extends Fragment {
         }
     }
 
-    private void goToExpandedMap(){
-//        if (homeActivity.current_action.equals(homeActivity.EDIT_ADDRESS)) {
-//            getActivity().getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-//                    .add(R.id.fragLayout, new AddAddressFragment(), "AddAddressFragment").addToBackStack("AddAddressFragment")
-//                    .hide(getActivity().getSupportFragmentManager().findFragmentByTag(getActivity().getSupportFragmentManager().getBackStackEntryAt(getActivity()
-//                            .getSupportFragmentManager().getBackStackEntryCount() - 1).getName())).commit();
-//        }
-    }
 
     private void initComponents() {
         editTextLabel = (EditText) rootView.findViewById(R.id.editTextLabel); editTextLabel.setTypeface(Fonts.mavenMedium(activity));
@@ -308,11 +270,11 @@ public class AddToAddressBookFragment extends Fragment {
             }
         });
 
-        houseNumber.setText(homeAddressReceived);
-        buildingStreetName.setText(buildingStreetReceived);
-        area.setText(areaReceived);
-        city.setText(cityValue);
-        pinCode.setText(pinCodeValue);
+        houseNumber.setText(current_street);
+        buildingStreetName.setText(current_route);
+        area.setText(current_area);
+        city.setText(current_city);
+        pinCode.setText(current_pincode);
 
         int placeRequestCode = 0;
         String label = "";

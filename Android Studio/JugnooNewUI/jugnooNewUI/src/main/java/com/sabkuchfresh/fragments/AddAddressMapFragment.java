@@ -189,8 +189,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         locationPointer = (ImageView) rootView.findViewById(R.id.locationPointer);
         buttonOk = (Button)rootView.findViewById(R.id.buttonOk);
 
-        InputMethodManager inputMethodManager = (InputMethodManager) homeActivity.getSystemService(homeActivity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(homeActivity.getCurrentFocus().getWindowToken(), 0);
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
 
         linearLayoutSearch.setOnClickListener(new View.OnClickListener() {
             @Override

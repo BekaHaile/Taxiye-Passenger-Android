@@ -1909,7 +1909,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         this.searchResult = searchResult;
     }
 
+    private boolean editThisAddress;
     public boolean isEditThisAddress() {
-        return true;
+        return editThisAddress;
+    }
+    public void setEditThisAddress(boolean editThisAddress){
+        this.editThisAddress = editThisAddress;
     }
 }

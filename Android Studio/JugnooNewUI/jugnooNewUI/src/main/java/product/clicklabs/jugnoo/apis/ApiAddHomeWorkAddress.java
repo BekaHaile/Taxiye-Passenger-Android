@@ -28,10 +28,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-import static product.clicklabs.jugnoo.Constants.KEY_ID;
-import static product.clicklabs.jugnoo.Constants.TYPE_HOME;
-import static product.clicklabs.jugnoo.Data.latitude;
-import static product.clicklabs.jugnoo.Data.longitude;
+
 
 /**
  * For saving home, work and other addresses
@@ -75,8 +72,8 @@ public class ApiAddHomeWorkAddress {
 					params.put(Constants.KEY_GOOGLE_PLACE_ID, searchResult.getPlaceId());
 					params.put(Constants.KEY_TYPE, searchResult.getName());
 
-					params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
-					params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
+					params.put(Constants.KEY_LATITUDE, String.valueOf(searchResult.getLatitude()));
+					params.put(Constants.KEY_LONGITUDE, String.valueOf(searchResult.getLongitude()));
 
 					if(editThisAddress){
 						params.put(Constants.KEY_ADDRESS_ID, String.valueOf(searchResult.getId()));
@@ -102,7 +99,7 @@ public class ApiAddHomeWorkAddress {
 							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 
 								if(matchedWithOtherId > 0){
-									if(searchResult.getName().equalsIgnoreCase(TYPE_HOME)){
+									if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_HOME)){
 										Prefs.with(activity).save(SPLabels.ADD_WORK, "");
 									} else if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_WORK)){
 										Prefs.with(activity).save(SPLabels.ADD_HOME, "");
@@ -114,7 +111,7 @@ public class ApiAddHomeWorkAddress {
 									if(searchResult.getId() != null){
 										id = searchResult.getId();
 									}
-									searchResult.setId(jObj.optInt(KEY_ID, id));
+									searchResult.setId(jObj.optInt(Constants.KEY_ID, id));
 									searchResult.setIsConfirmed(1);
 
 									String strResult = gson.toJson(searchResult, SearchResult.class);

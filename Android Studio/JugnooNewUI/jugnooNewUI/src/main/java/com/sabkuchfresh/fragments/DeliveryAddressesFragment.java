@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,7 +82,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private ImageView imageViewSep;
     private GoogleApiClient mGoogleApiClient;
     private SearchListAdapter searchListAdapter;
-    private ScrollView scrollViewSearch, scrollViewSuggestions;
+    private ScrollView scrollViewSearch;
     private NonScrollListView listViewSearch;
     private List<DeliveryAddress> deliveryAddresses = new ArrayList<DeliveryAddress>();
     private EditText editTextDeliveryAddress;
@@ -140,7 +138,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         scrollViewSearch.setVisibility(View.GONE);
         listViewDeliveryAddress = (NonScrollListView) rootView.findViewById(R.id.listViewDeliveryAddress);
         linearLayoutFav.setVisibility(View.GONE);
-        scrollViewSuggestions = (ScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
 
         listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
         try {
@@ -151,7 +148,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress());
                     } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                     }
                 }
             }, false, true);
@@ -201,7 +198,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress());
                     } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME);
+                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -219,7 +216,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress());
                     } else {
-                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK);
+                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -254,36 +251,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             }
         });
 
-        editTextDeliveryAddress.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s.length() > 0){
-                    scrollViewSearch.setVisibility(View.VISIBLE);
-                    activity.getTopBar().imageViewSearchCross.setVisibility(View.VISIBLE);
-                } else{
-                    scrollViewSearch.setVisibility(View.GONE);
-                    activity.getTopBar().imageViewSearchCross.setVisibility(View.GONE);
-                }
-            }
-        });
-
-        activity.getTopBar().imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.getTopBar().editTextDeliveryAddress.getText().clear();
-            }
-        });
-
         searchListAdapter = new SearchListAdapter(activity, editTextDeliveryAddress, new LatLng(30.75, 76.78), mGoogleApiClient,
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
@@ -291,6 +258,11 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     @Override
                     public void onTextChange(String text) {
                         try {
+                            if(text.length() > 0){
+                                scrollViewSearch.setVisibility(View.VISIBLE);
+                            } else{
+                                scrollViewSearch.setVisibility(View.GONE);
+                            }
                             if(activity instanceof AddPlaceActivity) {
                                 AddPlaceActivity addPlaceActivity = ((AddPlaceActivity)activity);
                                 if (text.length() > 0) {
@@ -333,7 +305,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                             editTextDeliveryAddress.setText("");
                             scrollViewSearch.setVisibility(View.GONE);
 
-                            setAddressToBundle(searchResult);
+                            goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -514,12 +486,13 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     }
 
 
-    private void goToPredefinedSearchResultConfirmation(SearchResult searchResult, int placeRequestCode){
+    private void goToPredefinedSearchResultConfirmation(SearchResult searchResult, int placeRequestCode, boolean editThisAddress){
         try {
             if(activity instanceof FreshActivity){
 				FreshActivity freshActivity = (FreshActivity) activity;
 				freshActivity.setPlaceRequestCode(placeRequestCode);
 				freshActivity.setSearchResult(searchResult);
+                freshActivity.setEditThisAddress(editThisAddress);
 			}
             Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(searchResult.getLatitude()));
             Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(searchResult.getLongitude()));
