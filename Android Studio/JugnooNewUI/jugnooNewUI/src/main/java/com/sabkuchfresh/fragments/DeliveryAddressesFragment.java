@@ -147,7 +147,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             savedPlacesAdapter = new SavedPlacesAdapter(activity, Data.userData.getSearchResults(), new SavedPlacesAdapter.Callback() {
                 @Override
                 public void onItemClick(SearchResult searchResult) {
-                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    if(searchResult.getIsConfirmed() == 1){
+                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+                                searchResult.getAddress());
+                    } else {
+                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    }
                 }
             }, false, true);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
@@ -192,7 +197,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 try {
                     String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
                     final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME);
+                    if(searchResult.getIsConfirmed() == 1){
+                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+                                searchResult.getAddress());
+                    } else {
+                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -205,7 +215,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 try {
                     String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
                     final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK);
+                    if(searchResult.getIsConfirmed() == 1){
+                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+                                searchResult.getAddress());
+                    } else {
+                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -596,12 +611,15 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     @Override
     public void onSlotSelected(int position, DeliveryAddress slot) {
-        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), slot.getDeliveryLatitude());
-        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), slot.getDeliveryLongitude());
-        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), "" + slot.getLastAddress());
+        onAddressSelected(slot.getDeliveryLatitude(), slot.getDeliveryLongitude(), slot.getLastAddress());
+    }
 
+    private void onAddressSelected(String latitude, String longitude, String address){
         if(activity instanceof FreshActivity) {
-            ((FreshActivity)activity).setSelectedAddress("" + slot.getLastAddress());
+            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), latitude);
+            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), longitude);
+            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), address);
+            ((FreshActivity)activity).setSelectedAddress(address);
             mBus.post(new AddressAdded(true));
             ((FreshActivity)activity).performBackPressed();
         }

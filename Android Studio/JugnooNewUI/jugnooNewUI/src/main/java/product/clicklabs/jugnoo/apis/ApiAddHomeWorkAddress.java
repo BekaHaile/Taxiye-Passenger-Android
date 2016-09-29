@@ -129,7 +129,12 @@ public class ApiAddHomeWorkAddress {
 										if(deleteAddress){
 											Data.userData.getSearchResults().remove(searchResult);
 										} else {
-											Data.userData.getSearchResults().add(searchResult);
+											int index = Data.userData.getSearchResults().indexOf(searchResult);
+											if(index != -1){
+												Data.userData.getSearchResults().set(index, searchResult);
+											} else{
+												Data.userData.getSearchResults().add(searchResult);
+											}
 										}
 									}
 									callback.onSuccess(searchResult, strResult);
