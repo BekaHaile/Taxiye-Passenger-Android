@@ -115,6 +115,7 @@ public class ApiAddHomeWorkAddress {
 										id = searchResult.getId();
 									}
 									searchResult.setId(jObj.optInt(KEY_ID, id));
+									searchResult.setIsConfirmed(1);
 
 									String strResult = gson.toJson(searchResult, SearchResult.class);
 									if(deleteAddress){

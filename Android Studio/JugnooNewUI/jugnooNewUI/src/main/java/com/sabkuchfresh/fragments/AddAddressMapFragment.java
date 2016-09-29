@@ -1,7 +1,6 @@
 package com.sabkuchfresh.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -43,7 +42,6 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -104,7 +102,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     private String addressText = "";
 
     View rootView;
-    public FragmentActivity homeActivity;
+    public FragmentActivity activity;
 
     RelativeLayout relativeLayoutSearchBarText, relative;
     LinearLayout layoutAddLocation;
@@ -150,14 +148,20 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_add_address, container, false);
-        homeActivity = getActivity();
-        if(homeActivity instanceof FreshActivity) {
-            ((FreshActivity)homeActivity).fragmentUISetup(this);
+        activity = getActivity();
+        if(activity instanceof FreshActivity) {
+            ((FreshActivity) activity).fragmentUISetup(this);
+        }else if(activity instanceof AddPlaceActivity){
+            AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
+            addPlaceActivity.getTextViewTitle().setVisibility(View.VISIBLE);
+            addPlaceActivity.getTextViewTitle().setText(R.string.choose_your_address);
+            addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.GONE);
+            addPlaceActivity.getButtonRemove().setVisibility(View.GONE);
         }
         zoomedToMyLoc = false;
         mBus = MyApplication.getInstance().getBus();
         relative = (RelativeLayout) rootView.findViewById(R.id.root);
-        new ASSL(homeActivity, relative, 1134, 720, false);
+        new ASSL(activity, relative, 1134, 720, false);
         setupUI(rootView.findViewById(R.id.root));
 
         fetchAddressBundle();
@@ -167,9 +171,9 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         textVeiwSearch = (TextView) rootView.findViewById(R.id.textVeiwSearch);
 
 
-        mSelectedLoc.setTypeface(Fonts.mavenRegular(homeActivity), Typeface.BOLD);
-        mAddressName.setTypeface(Fonts.mavenRegular(homeActivity));
-        textVeiwSearch.setTypeface(Fonts.mavenRegular(homeActivity));
+        mSelectedLoc.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+        mAddressName.setTypeface(Fonts.mavenRegular(activity));
+        textVeiwSearch.setTypeface(Fonts.mavenRegular(activity));
 
         progressWheel = (ProgressBar) rootView.findViewById(R.id.progress_wheel);
         progressBarSearch = (ProgressBar) rootView.findViewById(R.id.progressBarSearch);
@@ -259,20 +263,20 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             @Override
             public void onClick(View v) {
                 if(unsatflag) {
-                    if(homeActivity instanceof FreshActivity) {
-                        ((FreshActivity)homeActivity).openAddToAddressBook(createAddressBundle());
-                    } else if(homeActivity instanceof AddPlaceActivity){
-                        ((AddPlaceActivity)homeActivity).openAddToAddressBook(createAddressBundle());
+                    if(activity instanceof FreshActivity) {
+                        ((FreshActivity) activity).openAddToAddressBook(createAddressBundle());
+                    } else if(activity instanceof AddPlaceActivity){
+                        ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle());
                     }
 
                 } else {
-                    Toast.makeText(homeActivity, "Please wait...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Please wait...", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
 
-        searchListAdapter = new SearchListAdapter(homeActivity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
+        searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
 
@@ -390,7 +394,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
         relativeLayoutLocationError = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLocationError);
         relativeLayoutLocationErrorSearchBar = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLocationErrorSearchBar);
-        ((TextView) rootView.findViewById(R.id.textViewLocationErrorSearch)).setTypeface(Fonts.mavenMedium(homeActivity));
+        ((TextView) rootView.findViewById(R.id.textViewLocationErrorSearch)).setTypeface(Fonts.mavenMedium(activity));
 
         //Location error layout
         relativeLayoutLocationError.setOnClickListener(new View.OnClickListener() {
@@ -460,8 +464,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden && (homeActivity instanceof FreshActivity)) {
-            ((FreshActivity)homeActivity).fragmentUISetup(this);
+        if (!hidden && (activity instanceof FreshActivity)) {
+            ((FreshActivity) activity).fragmentUISetup(this);
         }
     }
 
@@ -538,7 +542,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
             // check if map is created successfully or not
             if (googleMap == null) {
-                Toast.makeText(homeActivity,
+                Toast.makeText(activity,
                         "Sorry! unable to create maps", Toast.LENGTH_SHORT)
                         .show();
             }
@@ -610,9 +614,9 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
     public void destroyMap() {
         try {
-            SupportMapFragment suMapFrag = (SupportMapFragment) homeActivity.getSupportFragmentManager().findFragmentById(R.id.mapView);
+            SupportMapFragment suMapFrag = (SupportMapFragment) activity.getSupportFragmentManager().findFragmentById(R.id.mapView);
             if (suMapFrag != null)
-                homeActivity.getSupportFragmentManager().beginTransaction().remove(suMapFrag).commit();
+                activity.getSupportFragmentManager().beginTransaction().remove(suMapFrag).commit();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -629,9 +633,9 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
     public void hideSoftKeyboard() {
         try {
-            if (homeActivity.getCurrentFocus() != null) {
-                InputMethodManager inputMethodManager = (InputMethodManager) homeActivity.getSystemService(homeActivity.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(homeActivity.getCurrentFocus().getWindowToken(), 0);
+            if (activity.getCurrentFocus() != null) {
+                InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
             }
         } catch (Exception e) {
             // Auto-generated catch block
@@ -658,8 +662,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     try {
-                        InputMethodManager inputMethodManager = (InputMethodManager) homeActivity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        inputMethodManager.hideSoftInputFromWindow(homeActivity.getCurrentFocus().getWindowToken(), 0);
+                        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -39,7 +39,6 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 
     private RelativeLayout relativeLayoutContainer;
 
-    private Gson gson;
     private EditText editTextDeliveryAddress;
     private RelativeLayout relativeLayoutSearch;
     private ImageView imageViewSearchCross;
@@ -52,8 +51,6 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         setContentView(R.layout.activity_add_places);
         root = (LinearLayout) findViewById(R.id.root);
         new ASSL(this, root, 1134, 720, false);
-
-        gson = new Gson();
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.avenirNext(this));
         buttonRemove = (Button)findViewById(R.id.buttonRemove); buttonRemove.setTypeface(Fonts.mavenRegular(this));

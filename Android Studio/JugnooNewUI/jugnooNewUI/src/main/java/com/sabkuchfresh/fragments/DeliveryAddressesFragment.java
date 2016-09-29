@@ -43,6 +43,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.AddPlaceActivity;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -146,14 +147,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             savedPlacesAdapter = new SavedPlacesAdapter(activity, Data.userData.getSearchResults(), new SavedPlacesAdapter.Callback() {
                 @Override
                 public void onItemClick(SearchResult searchResult) {
-                    try {
-                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(searchResult.getLatitude()));
-                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(searchResult.getLongitude()));
-                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), searchResult.getAddress());
-                        setAddressToBundle(searchResult);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
                 }
             }, false, true);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
@@ -198,10 +192,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 try {
                     String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
                     final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(searchResult.getLatitude()));
-                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(searchResult.getLongitude()));
-                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), searchResult.getAddress());
-                    setAddressToBundle(searchResult);
+                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -214,10 +205,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 try {
                     String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
                     final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(searchResult.getLatitude()));
-                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(searchResult.getLongitude()));
-                    Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), searchResult.getAddress());
-                    setAddressToBundle(searchResult);
+                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -511,6 +499,22 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     }
 
 
+    private void goToPredefinedSearchResultConfirmation(SearchResult searchResult, int placeRequestCode){
+        try {
+            if(activity instanceof FreshActivity){
+				FreshActivity freshActivity = (FreshActivity) activity;
+				freshActivity.setPlaceRequestCode(placeRequestCode);
+				freshActivity.setSearchResult(searchResult);
+			}
+            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(searchResult.getLatitude()));
+            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(searchResult.getLongitude()));
+            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), searchResult.getAddress());
+            setAddressToBundle(searchResult);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setAddressToBundle(SearchResult searchResult){
         try {
             current_street = "";
@@ -601,9 +605,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             mBus.post(new AddressAdded(true));
             ((FreshActivity)activity).performBackPressed();
         }
-
-
-
     }
 
     @Override
