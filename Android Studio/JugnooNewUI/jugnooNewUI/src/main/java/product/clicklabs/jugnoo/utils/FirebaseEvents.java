@@ -221,5 +221,13 @@ public interface FirebaseEvents {
     String MENU_CATEGORIES_AUTOS = "menu_categories_autos";
     String MENU_CATEGORIES_FRESH = "menu_categories_fresh";
     String MENU_CATEGORIES_MEALS = "menu_categories_meals";
+    String MENU_CATEGORIES_GROCERY = "menu_categories_grocery";
+
+    String MEALS_UPVOTE = "m_upvote";
+    String MEALS_DOWNVOTE = "m_downvote";
+    String FRESH_UPVOTE = "f_upvote";
+    String FRESH_DOWNVOTE = "f_downvote";
+    String GROCERY_UPVOTE = "g_upvote";
+    String GROCERY_DOWNVOTE = "g_downvote";
 
 }

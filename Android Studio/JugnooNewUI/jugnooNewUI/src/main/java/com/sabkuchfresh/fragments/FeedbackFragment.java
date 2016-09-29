@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -206,6 +207,19 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             public void onClick(View v) {
                 sendQuery(0);
                 openSupportFragment();
+                try {
+                    if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+                        MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_DOWNVOTE, new Bundle());
+                    }
+                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_DOWNVOTE, new Bundle());
+                    }
+                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_DOWNVOTE, new Bundle());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -227,6 +241,20 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                         endRideWithGif();
                     }
                 }
+                try {
+                    if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+						MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_UPVOTE, new Bundle());
+					}
+					else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+						MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_UPVOTE, new Bundle());
+					}
+					else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+						MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_UPVOTE, new Bundle());
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
         activity.fragmentUISetup(this);
