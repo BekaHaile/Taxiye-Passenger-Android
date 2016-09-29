@@ -416,11 +416,22 @@ public class MyApplication extends Application{
 	 * @param prodViewedAction
      */
 	public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
+		try{
+			prodViewedAction.put(Events.TIMING, System.currentTimeMillis());
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
 		getCleverTap().event.push(eventName, prodViewedAction);
 	}
 
 	public void charged(HashMap<String, Object> chargeDetails, ArrayList<HashMap<String, Object>> items) {
 		try {
+			try{
+				chargeDetails.put(Events.TIMING, System.currentTimeMillis());
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 			getCleverTap().event.push(CleverTapAPI.CHARGED_EVENT, chargeDetails, items);
 		} catch (Exception e) {
 			// You have to specify the first parameter to push()

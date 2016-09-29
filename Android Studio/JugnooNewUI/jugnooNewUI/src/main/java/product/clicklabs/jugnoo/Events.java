@@ -58,5 +58,6 @@ public interface Events {
     String TRAIN_TIME = "train_time";
 
     String MAX_COUPON_VALUE = "max_coupon_value";
+    String TIMING = "timing";
 
 }

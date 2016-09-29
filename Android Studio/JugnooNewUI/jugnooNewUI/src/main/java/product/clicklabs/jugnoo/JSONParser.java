@@ -1580,7 +1580,8 @@ public class JSONParser implements Constants {
                 String walletSelected = Prefs.with(context).getString(SP_WALLET_AT_SIGNUP, "NA");
                 Prefs.with(context).save(SP_WALLET_AT_SIGNUP, "");
 
-                MyApplication.getInstance().getCleverTapUtils().signUp(String.valueOf(loginVia), walletSelected, referralCodeEntered);
+                MyApplication.getInstance().getCleverTapUtils().signUp(String.valueOf(loginVia), walletSelected, referralCodeEntered,
+                        String.valueOf(Data.userData.getJugnooBalance()));
 
             }
             JSONObject map = new JSONObject();
