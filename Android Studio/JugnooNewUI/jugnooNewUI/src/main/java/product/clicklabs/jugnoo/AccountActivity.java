@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -39,11 +41,13 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.fragments.AddressBookFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.JeanieIntroDialog;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -62,13 +66,13 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class AccountActivity extends BaseActivity implements FlurryEventNames, FirebaseEvents {
+public class AccountActivity extends BaseFragmentActivity implements FlurryEventNames, FirebaseEvents {
 
     private final String TAG = "View Account";
 
 	LinearLayout relative;
 
-	private TextView textViewSave, textViewPasswordSave;
+	private TextView textViewTitle, textViewSave, textViewPasswordSave;
 	ImageView imageViewBack;
     View viewTrackingLog;
 
@@ -96,6 +100,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
+    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer;
     NonScrollListView listViewSavedLocations;
     RelativeLayout relativeLayoutAddNewAddress;
     SavedPlacesAdapter savedPlacesAdapter;
@@ -111,9 +116,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
         textViewSave = (TextView) findViewById(R.id.textViewSave); textViewSave.setTypeface(Fonts.mavenMedium(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         viewTrackingLog = findViewById(R.id.viewTrackingLog);
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
+        textViewTitle.setVisibility(View.GONE);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -225,6 +233,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
         relativeLayoutAddNewAddress = (RelativeLayout) findViewById(R.id.relativeLayoutAddNewAddress);
         ((TextView) findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(this));
 
+        relativeLayoutAddressBook = (RelativeLayout) findViewById(R.id.relativeLayoutAddressBook);
+        ((TextView)findViewById(R.id.textViewAddressBook)).setTypeface(Fonts.mavenMedium(this));
+
+        relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
 
         imageViewPokemon.setOnClickListener(new View.OnClickListener() {
@@ -619,6 +631,13 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             }
         });
 
+        relativeLayoutAddressBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, true);
+            }
+        });
+
 
 
 		linearLayoutLogout.setOnClickListener(new View.OnClickListener() {
@@ -710,7 +729,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 	public void performBackPressed(){
         FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
         MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+BACK, bundle);
-        if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+            openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
+        }
+        else if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
             if(linearLayoutPasswordChange.getVisibility() == View.VISIBLE){
                 relativeLayoutChangePassword.performClick();
             }
@@ -1177,6 +1199,45 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
 
+    }
+
+
+    public void openAddressBookFragment(FragmentActivity activity, View container, boolean addFrag) {
+        if(addFrag) {
+            if (!new TransactionUtils().checkIfFragmentAdded(activity, AddressBookFragment.class.getName())) {
+                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                        .add(container.getId(), new AddressBookFragment(),
+                                AddressBookFragment.class.getName())
+                        .addToBackStack(AddressBookFragment.class.getName());
+                if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+                    transaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+                }
+                transaction.commitAllowingStateLoss();
+
+                textViewTitle.setVisibility(View.VISIBLE);
+                textViewTitle.setText(R.string.address_book);
+                imageViewEditProfile.setVisibility(View.GONE);
+                linearLayoutSave.setVisibility(View.GONE);
+                scrollView.setVisibility(View.GONE);
+            }
+        } else{
+            super.onBackPressed();
+            textViewTitle.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
+            if (editTextUserName.isEnabled()) {
+                imageViewEditProfile.setVisibility(View.GONE);
+                linearLayoutSave.setVisibility(View.VISIBLE);
+            } else {
+                imageViewEditProfile.setVisibility(View.VISIBLE);
+                linearLayoutSave.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public TextView getTextViewTitle(){
+        return textViewTitle;
     }
 
 }

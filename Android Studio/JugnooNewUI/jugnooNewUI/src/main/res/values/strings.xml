@@ -1153,6 +1153,8 @@
 	<string name="could_not_find_address">Could not find address</string>
 	<string name="label_can_not_be_empty">Label can\'t be empty</string>
 	<string name="label">Label</string>
+	<string name="add_favorite">Add Favorite</string>
+	<string name="address_book">Address Book</string>
 
 
 </resources>
