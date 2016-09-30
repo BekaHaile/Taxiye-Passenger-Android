@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -188,9 +190,6 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         centerPivot = (ImageView) rootView.findViewById(R.id.centerPivot);
         locationPointer = (ImageView) rootView.findViewById(R.id.locationPointer);
         buttonOk = (Button)rootView.findViewById(R.id.buttonOk);
-
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
 
         linearLayoutSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -449,6 +448,20 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                 }
             }
         });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Utils.hideSoftKeyboard(activity, editTextSearch);
+                    activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 500);
+
+
 
         return rootView;
     }
