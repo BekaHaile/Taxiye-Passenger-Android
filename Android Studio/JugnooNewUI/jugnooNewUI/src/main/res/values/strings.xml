@@ -1149,6 +1149,8 @@
 	<string name="engagement_id">Engagement ID</string>
 	<string name="empty_engagement_id">Empty engagement id</string>
 	<string name="invalid_engagement_id">Invalid engagement id</string>
+	<string name="offers">Offers</string>
+	<string name="select_offers">Select Offers</string>
 
 
 </resources>

@@ -80,6 +80,7 @@ import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
@@ -1357,6 +1358,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        System.gc();
         super.onDestroy();
     }
 
@@ -1858,6 +1860,17 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private PromoCoupon selectedPromoCoupon;
+
+    public PromoCoupon getSelectedPromoCoupon() {
+        return selectedPromoCoupon;
+    }
+
+    public void setSelectedPromoCoupon(PromoCoupon selectedPromoCoupon) {
+        this.selectedPromoCoupon = selectedPromoCoupon;
     }
 
 }

@@ -489,4 +489,7 @@ public interface Constants {
 
 	String INTENT_ACTION_DEVICE_TOKEN_UPDATE = "INTENT_ACTION_DEVICE_TOKEN_UPDATE";
 
+	String KEY_ACCOUNT_ID = "account_id";
+	String KEY_ORDER_OFFER_ID = "order_offer_id";
+
 }

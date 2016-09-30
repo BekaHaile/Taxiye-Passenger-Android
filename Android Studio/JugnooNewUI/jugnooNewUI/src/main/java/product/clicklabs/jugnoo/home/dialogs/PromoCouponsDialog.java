@@ -1,24 +1,28 @@
 package product.clicklabs.jugnoo.home.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.home.FreshActivity;
+
+import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -32,23 +36,24 @@ import product.clicklabs.jugnoo.utils.Fonts;
 public class PromoCouponsDialog {
 
 	private final String TAG = PromoCouponsDialog.class.getSimpleName();
-	private HomeActivity activity;
+	private Activity activity;
 	private Callback callback;
 	private Dialog dialog = null;
 
-	private RecyclerView recyclerViewPromoCoupons;
+	private ListView listViewPromoCoupons;
 	private PromoCouponsAdapter promoCouponsAdapter;
 	private Button buttonContinue, buttonInviteFriends;
 	private LinearLayout linearLayoutNoCurrentOffers;
 	private TextView textViewNoCurrentOffers;
 	private ImageView imageViewOffers;
+	private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
-	public PromoCouponsDialog(HomeActivity activity, Callback callback) {
+	public PromoCouponsDialog(Activity activity, Callback callback) {
 		this.activity = activity;
 		this.callback = callback;
 	}
 
-	public PromoCouponsDialog show() {
+	public PromoCouponsDialog show(ProductType productType, final ArrayList<PromoCoupon> promoCoupons) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
@@ -64,24 +69,54 @@ public class PromoCouponsDialog {
 			dialog.setCanceledOnTouchOutside(true);
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
-			recyclerViewPromoCoupons = (RecyclerView) dialog.findViewById(R.id.recyclerViewPromoCoupons);
-			recyclerViewPromoCoupons.setLayoutManager(new LinearLayoutManager(activity));
-			recyclerViewPromoCoupons.setItemAnimator(new DefaultItemAnimator());
-			recyclerViewPromoCoupons.setHasFixedSize(false);
-			FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "b_offer");
+			listViewPromoCoupons = (ListView) dialog.findViewById(R.id.listViewPromoCoupons);
+			if(productType == ProductType.AUTO) {
+				FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "b_offer");
+			}
 
-			promoCouponsAdapter = new PromoCouponsAdapter(activity, Data.userData.getCoupons(AppConstant.AppType.AUTO), new PromoCouponsAdapter.Callback() {
+			promoCouponsAdapter = new PromoCouponsAdapter(activity, promoCoupons, new PromoCouponsAdapter.Callback() {
 				@Override
 				public void onCouponSelected() {
+
+				}
+
+				@Override
+				public PromoCoupon getSelectedCoupon() {
+					if(activity instanceof HomeActivity) {
+						return ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
+					} else if(activity instanceof FreshActivity) {
+						return ((FreshActivity)activity).getSelectedPromoCoupon();
+					} else {
+						return noSelectionCoupon;
+					}
+				}
+
+				@Override
+				public void setSelectedCoupon(int position) {
+					if(activity instanceof HomeActivity) {
+						((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);;
+					} else if(activity instanceof FreshActivity) {
+						if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
+							((FreshActivity)activity).setSelectedPromoCoupon(promoCoupons.get(position));
+						} else {
+							((FreshActivity)activity).setSelectedPromoCoupon(noSelectionCoupon);
+						}
+						new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								dialog.dismiss();
+							}
+						}, 200);
+						callback.onCouponApplied();
+					}
 				}
 			});
-//			activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 
-			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recyclerViewPromoCoupons.getLayoutParams();
-			params.height = Data.userData.getCoupons(AppConstant.AppType.AUTO).size() > 3 ? (int)(84f * 3f * ASSL.Yscale())
-					: (int)(84f * (float)Data.userData.getCoupons(AppConstant.AppType.AUTO).size() * ASSL.Yscale());
-			recyclerViewPromoCoupons.setLayoutParams(params);
-			recyclerViewPromoCoupons.setAdapter(promoCouponsAdapter);
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listViewPromoCoupons.getLayoutParams();
+			params.height = promoCoupons.size() > 3 ? (int)(84f * 3f * ASSL.Yscale())
+					: (int)(84f * (float)promoCoupons.size() * ASSL.Yscale());
+			listViewPromoCoupons.setLayoutParams(params);
+			listViewPromoCoupons.setAdapter(promoCouponsAdapter);
 
 			Button buttonSkip = (Button) dialog.findViewById(R.id.buttonSkip);
 			buttonSkip.setTypeface(Fonts.mavenRegular(activity));
@@ -94,13 +129,17 @@ public class PromoCouponsDialog {
 			buttonInviteFriends = (Button)dialog.findViewById(R.id.buttonInviteFriends);buttonInviteFriends.setTypeface(Fonts.mavenMedium(activity));
 			imageViewOffers = (ImageView)dialog.findViewById(R.id.imageViewOffers);
 
-			if(Data.userData.getCoupons(AppConstant.AppType.AUTO).size() > 0){
-				recyclerViewPromoCoupons.setVisibility(View.VISIBLE);
-				relativeLayoutBottomButtons.setVisibility(View.VISIBLE);
+			if(promoCoupons.size() > 0){
+				listViewPromoCoupons.setVisibility(View.VISIBLE);
 				linearLayoutNoCurrentOffers.setVisibility(View.GONE);
 				imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
+				if(activity instanceof HomeActivity){
+					relativeLayoutBottomButtons.setVisibility(View.VISIBLE);
+				} else if(activity instanceof FreshActivity){
+					relativeLayoutBottomButtons.setVisibility(View.GONE);
+				}
 			} else{
-				recyclerViewPromoCoupons.setVisibility(View.GONE);
+				listViewPromoCoupons.setVisibility(View.GONE);
 				relativeLayoutBottomButtons.setVisibility(View.GONE);
 				linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
 				imageViewOffers.setImageResource(R.drawable.no_current_offer);
@@ -109,22 +148,26 @@ public class PromoCouponsDialog {
 			buttonSkip.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.B_OFFER+"_"
-                            +FirebaseEvents.SKIP, bundle);
-					FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "skip");
-					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
-					dialog.dismiss();
-					callback.onSkipped();
+					if(activity instanceof HomeActivity) {
+						Bundle bundle = new Bundle();
+						MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.B_OFFER + "_"
+								+ FirebaseEvents.SKIP, bundle);
+						FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_offer", "skip");
+						((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+						dialog.dismiss();
+						callback.onSkipped();
+					}
 				}
 			});
 
 			imageViewClose.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
-					dialog.dismiss();
-					callback.onSkipped();
+					if(activity instanceof HomeActivity) {
+						((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+						dialog.dismiss();
+						callback.onSkipped();
+					}
 				}
 			});
 
@@ -173,8 +216,8 @@ public class PromoCouponsDialog {
 	}
 
 	public void setContinueButton(){
-		if(buttonContinue != null) {
-			if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() != -1) {
+		if(activity instanceof HomeActivity && buttonContinue != null) {
+			if (((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() != -1) {
 				buttonContinue.setEnabled(true);
 				buttonContinue.setAlpha(1.0f);
 			} else {

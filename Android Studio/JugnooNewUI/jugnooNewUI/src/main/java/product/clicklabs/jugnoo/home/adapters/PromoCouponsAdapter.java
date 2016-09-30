@@ -1,12 +1,14 @@
 package product.clicklabs.jugnoo.home.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,7 +20,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -28,43 +29,67 @@ import product.clicklabs.jugnoo.utils.Fonts;
 /**
  * Created by shankar on 5/10/16.
  */
-public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapter.ViewHolder> {
+public class PromoCouponsAdapter extends BaseAdapter {
 
-	private HomeActivity activity;
+	private Activity activity;
 	private ArrayList<PromoCoupon> offerList = new ArrayList<>();
 	private Callback callback;
+	private LayoutInflater mInflater;
 
-	public PromoCouponsAdapter(HomeActivity activity, ArrayList<PromoCoupon> offerList, Callback callback) {
+	public PromoCouponsAdapter(Activity activity, ArrayList<PromoCoupon> offerList, Callback callback) {
 		this.activity = activity;
 		this.offerList = offerList;
 		this.callback = callback;
+		this.mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
-	public PromoCouponsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_promo_coupon, parent, false);
-
-		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(640, 84);
-		v.setLayoutParams(layoutParams);
-
-		ASSL.DoMagic(v);
-		return new ViewHolder(v, activity);
+	public int getCount() {
+		return offerList.size();
 	}
 
 	@Override
+	public Object getItem(int position) {
+		return position;
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.list_item_promo_coupon, null);
+			holder = new ViewHolder(convertView, activity);
+
+			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 84));
+			ASSL.DoMagic(holder.relative);
+
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+		holder.id = position;
+		onBindViewHolder(holder, position);
+
+		return convertView;
+	}
+
+
 	public void onBindViewHolder(PromoCouponsAdapter.ViewHolder holder, int position) {
 		PromoCoupon promoCoupon = offerList.get(position);
 
 		holder.textViewOfferName.setText(promoCoupon.getTitle());
-		if(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() != null &&
-				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() == promoCoupon.getId()){
+		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() == promoCoupon.getId()){
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
 		} else{
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
 		}
 
-		holder.relative.setTag(position);
-		holder.imageViewRadio.setTag(position);
+		holder.relative.setTag(holder);
 		holder.textViewTNC.setTag(position);
 
 		holder.textViewTNC.setOnClickListener(new View.OnClickListener() {
@@ -92,12 +117,12 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 			@Override
 			public void onClick(View v) {
 				try {
-					int position = (int) v.getTag();
+					int position = ((ViewHolder) v.getTag()).id;
 					PromoCoupon promoCoupon = offerList.get(position);
-					if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() == promoCoupon.getId()) {
-						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+					if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() == promoCoupon.getId()) {
+						callback.setSelectedCoupon(-1);
 					} else {
-						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
+						callback.setSelectedCoupon(position);
 						callback.onCouponSelected();
 					}
                     Bundle bundle = new Bundle();
@@ -112,17 +137,13 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 
 	}
 
-	@Override
-	public int getItemCount() {
-		return offerList == null ? 0 : offerList.size();
-	}
 
-	class ViewHolder extends RecyclerView.ViewHolder {
+	class ViewHolder {
+		public int id;
 		public RelativeLayout relative;
 		public ImageView imageViewRadio;
 		public TextView textViewOfferName, textViewTNC;
 		public ViewHolder(View itemView, Activity activity) {
-			super(itemView);
 			relative = (RelativeLayout) itemView.findViewById(R.id.relative);
 			imageViewRadio = (ImageView)itemView.findViewById(R.id.imageViewRadio);
 			textViewOfferName = (TextView) itemView.findViewById(R.id.textViewOfferName);
@@ -134,6 +155,8 @@ public class PromoCouponsAdapter extends RecyclerView.Adapter<PromoCouponsAdapte
 
 	public interface Callback{
 		void onCouponSelected();
+		PromoCoupon getSelectedCoupon();
+		void setSelectedCoupon(int position);
 	}
 
 }

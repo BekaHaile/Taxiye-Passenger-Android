@@ -113,7 +113,6 @@ public class CleverTapUtils {
                     }
                 }
             }
-
             Log.d("TAG", "Coupon counts = "+coupons.size());
 
             DecimalFormat df = new DecimalFormat("#.##");

@@ -230,4 +230,6 @@ public interface FirebaseEvents {
     String GROCERY_UPVOTE = "g_upvote";
     String GROCERY_DOWNVOTE = "g_downvote";
 
+    String G_ADD = "g_add";
+
 }

@@ -7,12 +7,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.utils.AppConstant;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.home.models.Region;
@@ -156,9 +156,9 @@ public class SlidingBottomPanelV4 {
     public void update() {
         try {
             updatePannelHeight();
-            if (Data.userData.getCoupons(AppConstant.AppType.AUTO) != null) {
-                if (Data.userData.getCoupons(AppConstant.AppType.AUTO).size() > 0) {
-                    textViewOffersValue.setText(String.valueOf(Data.userData.getCoupons(AppConstant.AppType.AUTO).size()));
+            if (Data.userData.getCoupons(ProductType.AUTO) != null) {
+                if (Data.userData.getCoupons(ProductType.AUTO).size() > 0) {
+                    textViewOffersValue.setText(String.valueOf(Data.userData.getCoupons(ProductType.AUTO).size()));
                 } else {
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_NO_COUPONS, null);
                     textViewOffersValue.setText("-");

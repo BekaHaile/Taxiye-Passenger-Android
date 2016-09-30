@@ -104,6 +104,12 @@ public class FindADriverResponse {
     @SerializedName("delivery_coupons")
     @Expose
     private List<CouponInfo> deliveryCoupons = new ArrayList<>();
+    @SerializedName("grocery_promotions")
+    @Expose
+    private List<PromotionInfo> groceryPromotions = new ArrayList<>();
+    @SerializedName("grocery_coupons")
+    @Expose
+    private List<CouponInfo> groceryCoupons = new ArrayList<>();
 
     public List<CouponInfo> getDeliveryCoupons() {
         return deliveryCoupons;
@@ -394,5 +400,21 @@ public class FindADriverResponse {
 
     public void setIntegratedJugnooEnabled(Integer integratedJugnooEnabled) {
         this.integratedJugnooEnabled = integratedJugnooEnabled;
+    }
+
+    public List<PromotionInfo> getGroceryPromotions() {
+        return groceryPromotions;
+    }
+
+    public void setGroceryPromotions(List<PromotionInfo> groceryPromotions) {
+        this.groceryPromotions = groceryPromotions;
+    }
+
+    public List<CouponInfo> getGroceryCoupons() {
+        return groceryCoupons;
+    }
+
+    public void setGroceryCoupons(List<CouponInfo> groceryCoupons) {
+        this.groceryCoupons = groceryCoupons;
     }
 }

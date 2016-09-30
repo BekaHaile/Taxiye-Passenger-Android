@@ -13,14 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.utils.AppConstant;
-
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -81,7 +80,7 @@ public class SlidingBottomOffersFragment extends Fragment {
 
     public void setOfferAdapter(){
         try {
-            offersAdapter = new OffersAdapter(Data.userData.getCoupons(AppConstant.AppType.AUTO));
+            offersAdapter = new OffersAdapter(Data.userData.getCoupons(ProductType.AUTO));
             recyclerViewOffers.setAdapter(offersAdapter);
             activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(recyclerViewOffers);
         } catch (Exception e) {
@@ -91,9 +90,9 @@ public class SlidingBottomOffersFragment extends Fragment {
 
     public void update(){
         try {
-            if(Data.userData.getCoupons(AppConstant.AppType.AUTO) != null && Data.userData.getCoupons(AppConstant.AppType.AUTO).size() >= 2){
+            if(Data.userData.getCoupons(ProductType.AUTO) != null && Data.userData.getCoupons(ProductType.AUTO).size() >= 2){
                 linearLayoutNoOffers.setVisibility(View.GONE);
-            } else if(Data.userData.getCoupons(AppConstant.AppType.AUTO) != null && Data.userData.getCoupons(AppConstant.AppType.AUTO).size() == 1){
+            } else if(Data.userData.getCoupons(ProductType.AUTO) != null && Data.userData.getCoupons(ProductType.AUTO).size() == 1){
                 linearLayoutNoOffers.setVisibility(View.GONE);
             }
             offersAdapter.notifyDataSetChanged();
