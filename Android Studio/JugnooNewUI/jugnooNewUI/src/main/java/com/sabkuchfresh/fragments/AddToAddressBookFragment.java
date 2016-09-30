@@ -346,6 +346,7 @@ public class AddToAddressBookFragment extends Fragment {
         if(editTextLabel.getText().toString().trim().length() == 0){
             editTextLabel.requestFocus();
             editTextLabel.setError("required field");
+            return false;
         }
         else if (houseNumber.getText().toString().trim().length() == 0 && buildingStreetName.getText().toString().trim().length() == 0 &&
                 area.getText().toString().trim().length() == 0){// && city.getText().toString().trim().length() == 0 && pinCode.getText().toString().trim().length() == 0) {

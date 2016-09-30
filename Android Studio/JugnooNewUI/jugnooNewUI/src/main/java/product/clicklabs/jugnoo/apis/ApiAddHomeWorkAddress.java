@@ -65,6 +65,7 @@ public class ApiAddHomeWorkAddress {
 					params.put(Constants.KEY_ADDRESS_ID, String.valueOf(matchedWithOtherId));
 					params.put(Constants.KEY_DELETE_FLAG, "1");
 					params.put(Constants.KEY_IS_CONFIRMED, "1");
+					params.put(Constants.KEY_KEEP_DUPLICATE, "0");
 				}
 				else{
 					params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -82,6 +83,7 @@ public class ApiAddHomeWorkAddress {
 						}
 					}
 					params.put(Constants.KEY_IS_CONFIRMED, "1");
+					params.put(Constants.KEY_KEEP_DUPLICATE, "0");
 				}
 				Log.i(TAG, "addHomeAndWorkAddress params=" + params.toString());
 
