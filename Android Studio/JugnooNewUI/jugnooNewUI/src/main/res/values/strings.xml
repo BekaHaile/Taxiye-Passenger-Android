@@ -1151,6 +1151,12 @@
 	<string name="invalid_engagement_id">Invalid engagement id</string>
 	<string name="offers">Offers</string>
 	<string name="select_offers">Select Offers</string>
+	<string name="add_new_address">Add new address</string>
+	<string name="could_not_find_address">Could not find address</string>
+	<string name="label_can_not_be_empty">Label can\'t be empty</string>
+	<string name="label">Label</string>
+	<string name="add_favorite">Add Favorite</string>
+	<string name="address_book">Address Book</string>
 
 
 </resources>

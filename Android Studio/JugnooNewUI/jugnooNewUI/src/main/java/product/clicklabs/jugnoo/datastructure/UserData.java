@@ -71,6 +71,8 @@ public class UserData {
 	private int customerRateAppFlag = 0;
 	private RateAppDialogContent rateAppDialogContent;
 
+	private ArrayList<SearchResult> searchResults = new ArrayList<>();
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
 					String jugnooFbBanner,
@@ -801,6 +803,14 @@ public class UserData {
 
 	public void setRateAppDialogContent(RateAppDialogContent rateAppDialogContent) {
 		this.rateAppDialogContent = rateAppDialogContent;
+	}
+
+	public ArrayList<SearchResult> getSearchResults() {
+		return searchResults;
+	}
+
+	public void setSearchResults(ArrayList<SearchResult> searchResults) {
+		this.searchResults = searchResults;
 	}
 
 //	"meals_enabled": 1,

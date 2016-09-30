@@ -81,7 +81,6 @@ public interface Constants {
 	String KEY_APP_MONITORING_TIME_TO_SAVE = "app_monitoring_time";
 	String KEY_GOOGLE_PARCEL = "google_parcel";
 	String KEY_ETA = "eta";
-	int ADD_HOME = 2, ADD_WORK = 3;
 	String KEY_LATITUDE = "latitude";
 	String KEY_LONGITUDE = "longitude";
 
@@ -491,5 +490,23 @@ public interface Constants {
 
 	String KEY_ACCOUNT_ID = "account_id";
 	String KEY_ORDER_OFFER_ID = "order_offer_id";
+	String KEY_USER_SAVED_ADDRESSES = "user_saved_addresses";
+	String KEY_TYPE = "type";
+	String TYPE_HOME = "home";
+	String TYPE_WORK = "work";
+	String KEY_ADDRESS = "address";
+	String KEY_PLACEID = "placeId";
+	String KEY_GOOGLE_PLACE_ID = "google_place_id";
+
+
+	int REQUEST_CODE_ADD_HOME = 2;
+	int REQUEST_CODE_ADD_WORK = 3;
+	int REQUEST_CODE_ADD_NEW_LOCATION = 4;
+	String KEY_REQUEST_CODE = "request_code";
+	String KEY_ADDRESS_ID = "address_id";
+	String KEY_KEEP_DUPLICATE = "keep_duplicate";
+	String KEY_DELETE_FLAG = "delete_flag";
+
+	String KEY_IS_CONFIRMED = "is_confirmed";
 
 }

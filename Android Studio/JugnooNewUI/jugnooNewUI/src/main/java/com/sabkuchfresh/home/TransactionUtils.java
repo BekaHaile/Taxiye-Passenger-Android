@@ -1,6 +1,9 @@
 package com.sabkuchfresh.home;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
@@ -65,14 +68,17 @@ public class TransactionUtils {
 
 	public void openDeliveryAddressFragment(FragmentActivity activity, View container) {
 		if(!checkIfFragmentAdded(activity, DeliveryAddressesFragment.class.getName())) {
-			activity.getSupportFragmentManager().beginTransaction()
-					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+			FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+			fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
 					.add(container.getId(), new DeliveryAddressesFragment(),
 							DeliveryAddressesFragment.class.getName())
-					.addToBackStack(DeliveryAddressesFragment.class.getName())
-					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-					.commitAllowingStateLoss();
+					.addToBackStack(DeliveryAddressesFragment.class.getName());
+
+			if(activity.getSupportFragmentManager().getBackStackEntryCount() > 0){
+				fragmentTransaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+						.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+			}
+			fragmentTransaction.commitAllowingStateLoss();
 		}
 	}
 
@@ -141,11 +147,15 @@ public class TransactionUtils {
 		}
 	}
 
-    public void openMapFragment(FragmentActivity activity, View container) {
+    public void openMapFragment(FragmentActivity activity, View container, Bundle bundle) {
+		AddAddressMapFragment addAddressMapFragment = new AddAddressMapFragment();
+		if(bundle != null) {
+			addAddressMapFragment.setArguments(bundle);
+		}
         if(!checkIfFragmentAdded(activity, AddAddressMapFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(container.getId(), new AddAddressMapFragment(),
+                    .add(container.getId(), addAddressMapFragment,
                             AddAddressMapFragment.class.getName())
                     .addToBackStack(AddAddressMapFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -154,11 +164,15 @@ public class TransactionUtils {
         }
     }
 
-    public void openAddToAddressFragment(FragmentActivity activity, View container) {
+    public void openAddToAddressFragment(FragmentActivity activity, View container, Bundle bundle) {
+		AddToAddressBookFragment addToAddressBookFragment = new AddToAddressBookFragment();
+		if(bundle != null) {
+			addToAddressBookFragment.setArguments(bundle);
+		}
         if(!checkIfFragmentAdded(activity, AddToAddressBookFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(container.getId(), new AddToAddressBookFragment(),
+                    .add(container.getId(), addToAddressBookFragment,
                             AddToAddressBookFragment.class.getName())
                     .addToBackStack(AddToAddressBookFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

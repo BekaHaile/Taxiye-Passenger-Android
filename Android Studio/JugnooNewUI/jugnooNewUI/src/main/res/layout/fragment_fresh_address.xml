@@ -8,8 +8,8 @@
     android:orientation="vertical"
     >
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewDeliveryAddress"
+    <product.clicklabs.jugnoo.utils.NonScrollListView
+        android:id="@+id/listViewDeliveryAddress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="2px"
@@ -20,7 +20,7 @@
         android:splitMotionEvents="false"
         android:visibility="gone"
         >
-    </android.support.v7.widget.RecyclerView>
+    </product.clicklabs.jugnoo.utils.NonScrollListView>
 
     <include
         android:id="@+id/addAddress"

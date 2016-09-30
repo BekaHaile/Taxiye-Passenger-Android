@@ -41,34 +41,36 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/editTextLabel"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="90px"
+                    android:background="@null"
+                    android:hint="@string/label"
+                    android:inputType="textFilter|textCapSentences"
+                    android:paddingLeft="25px"
+                    android:singleLine="true"
+                    android:textColor="@color/black_text"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30px" />
 
-                    <EditText
-                        android:id="@+id/edt_houseFlatNo"
-                        android:layout_width="530px"
-                        android:layout_height="90px"
-                        android:background="@null"
-                        android:hint="@string/house_flat_no_hint"
-                        android:inputType="textFilter|textCapSentences"
-                        android:paddingLeft="25px"
-                        android:singleLine="true"
-                        android:textColor="@color/black_text"
-                        android:textCursorDrawable="@null"
-                        android:textSize="30px" />
+                <ImageView
+                    android:layout_width="600px"
+                    android:layout_height="2px"
+                    android:src="@color/text_color_hint" />
 
-                    <ImageView
-                        android:id="@+id/imageViewEditHouseNumber"
-                        android:layout_width="68px"
-                        android:layout_height="68px"
-                        android:layout_gravity="center"
-                        android:padding="15px"
-                        android:src="@drawable/edit_icon_selector"
-                        android:tag="mwar"
-                        android:visibility="gone" />
-                </LinearLayout>
+                <EditText
+                    android:id="@+id/edt_houseFlatNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="90px"
+                    android:background="@null"
+                    android:hint="@string/house_flat_no_hint"
+                    android:inputType="textFilter|textCapSentences"
+                    android:paddingLeft="25px"
+                    android:singleLine="true"
+                    android:textColor="@color/black_text"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30px" />
 
 
                 <ImageView
@@ -76,68 +78,36 @@
                     android:layout_height="2px"
                     android:src="@color/text_color_hint" />
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/edt_buildingStreetName"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/edt_buildingStreetName"
-                        android:layout_width="530px"
-                        android:layout_height="90px"
-                        android:background="@null"
-                        android:hint="@string/building_street_name_hint"
-                        android:inputType="textFilter|textCapSentences"
-                        android:paddingLeft="25px"
-                        android:singleLine="true"
-                        android:textColor="@color/black_text"
-                        android:textCursorDrawable="@null"
-                        android:textSize="30px" />
-
-                    <ImageView
-                        android:id="@+id/imageViewEditBuilding"
-                        android:layout_width="68px"
-                        android:layout_height="68px"
-                        android:layout_gravity="center"
-                        android:padding="15px"
-                        android:src="@drawable/edit_icon_selector"
-                        android:tag="mwar"
-                        android:visibility="gone" />
-                </LinearLayout>
+                    android:layout_height="90px"
+                    android:background="@null"
+                    android:hint="@string/building_street_name_hint"
+                    android:inputType="textFilter|textCapSentences"
+                    android:paddingLeft="25px"
+                    android:singleLine="true"
+                    android:textColor="@color/black_text"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30px" />
 
                 <ImageView
                     android:layout_width="600px"
                     android:layout_height="2px"
                     android:src="@color/text_color_hint" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/edt_area"
-                        android:layout_width="530px"
-                        android:layout_height="90px"
-                        android:background="@null"
-                        android:hint="@string/area_hint"
-                        android:inputType="textFilter|textCapSentences"
-                        android:paddingLeft="25px"
-                        android:singleLine="true"
-                        android:textColor="@color/black_text"
-                        android:textCursorDrawable="@null"
-                        android:textSize="30px" />
-
-                    <ImageView
-                        android:id="@+id/imageViewEditArea"
-                        android:layout_width="68px"
-                        android:layout_height="68px"
-                        android:layout_gravity="center"
-                        android:padding="15px"
-                        android:src="@drawable/edit_icon_selector"
-                        android:tag="mwar"
-                        android:visibility="gone" />
-                </LinearLayout>
+                <EditText
+                    android:id="@+id/edt_area"
+                    android:layout_width="530px"
+                    android:layout_height="90px"
+                    android:background="@null"
+                    android:hint="@string/area_hint"
+                    android:inputType="textFilter|textCapSentences"
+                    android:paddingLeft="25px"
+                    android:singleLine="true"
+                    android:textColor="@color/black_text"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30px" />
 
                 <ImageView
                     android:layout_width="600px"

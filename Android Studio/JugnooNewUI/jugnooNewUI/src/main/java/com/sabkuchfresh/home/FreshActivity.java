@@ -76,6 +76,7 @@ import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
@@ -83,6 +84,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABView;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -144,14 +146,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private LocationFetcher locationFetcher;
 
     // for adding address
-    public String current_action = "";
-    public double current_latitude = 0.0;
-    public double current_longitude = 0.0;
-    public String current_street = "";
-    public String current_route = "";
-    public String current_area = "";
-    public String current_city = "";
-    public String current_pincode = "";
+//    public String current_action = "";
+//    public double current_latitude = 0.0;
+//    public double current_longitude = 0.0;
+//    public String current_street = "";
+//    public String current_route = "";
+//    public String current_area = "";
+//    public String current_city = "";
+//    public String current_pincode = "";
     public boolean locationSearchShown = false;
     public boolean canOrder = false;
 
@@ -1217,13 +1219,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //		getTransactionUtils().openSupportFragment(FreshActivity.this, relativeLayoutContainer);
     }
 
-    public void openMapAddress() {
+    public void openMapAddress(Bundle bundle) {
         FlurryEventLogger.event(Address_Screen, SCREEN_TRANSITION, ADD_NEW_ADDRESS);
-        getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer);
+        getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
-    public void openAddToAddressBook() {
-        getTransactionUtils().openAddToAddressFragment(FreshActivity.this, relativeLayoutContainer);
+    public void openAddToAddressBook(Bundle bundle) {
+        getTransactionUtils().openAddToAddressFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
 
@@ -1872,5 +1874,60 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void setSelectedPromoCoupon(PromoCoupon selectedPromoCoupon) {
         this.selectedPromoCoupon = selectedPromoCoupon;
     }
+
+
+    private ApiAddHomeWorkAddress apiAddHomeWorkAddress;
+    public void hitApiAddHomeWorkAddress(final SearchResult searchResult, final boolean deleteAddress, final int matchedWithOtherId,
+                                         final boolean editThisAddress, final int placeRequestCode){
+        if(apiAddHomeWorkAddress == null){
+            apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
+                @Override
+                public void onSuccess(SearchResult searchResult, String strResult) {
+                    //TODO after address added
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onRetry(View view) {
+
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            });
+        }
+        apiAddHomeWorkAddress.addHomeAndWorkAddress(searchResult, deleteAddress, matchedWithOtherId, editThisAddress, placeRequestCode);
+    }
+
+    private int placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
+    public int getPlaceRequestCode(){
+        return placeRequestCode;
+    }
+    public void setPlaceRequestCode(int placeRequestCode){
+        this.placeRequestCode = placeRequestCode;
+    }
+
+    private SearchResult searchResult;
+    public SearchResult getSearchResult(){
+        return searchResult;
+    }
+    public void setSearchResult(SearchResult searchResult) {
+        this.searchResult = searchResult;
+    }
+
+    private boolean editThisAddress;
+    public boolean isEditThisAddress() {
+        return editThisAddress;
+    }
+    public void setEditThisAddress(boolean editThisAddress){
+        this.editThisAddress = editThisAddress;
+    }
+
 
 }

@@ -1,209 +1,236 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutMain"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/sliding_bottom_bg_color">
+<RelativeLayout android:id="@+id/linearLayoutMain"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/sliding_bottom_bg_color">
 
-    <ImageView
+    <ScrollView
+        android:id="@+id/scrollViewSuggestions"
         android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_alignParentTop="true"
-        android:src="@color/stroke_light_grey_alpha"/>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutCurrentOption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="16px"
-        android:layout_marginRight="16px"
-        android:layout_marginTop="30px"
-        android:background="@drawable/bg_white_r_bthin">
+        android:layout_height="match_parent"
+        >
 
         <LinearLayout
-            android:id="@+id/linearLayoutCurrentLocation"
             android:layout_width="match_parent"
-            android:layout_height="110px"
-            android:gravity="center_vertical">
-            <ImageView
-                android:layout_width="26px"
-                android:layout_height="25px"
-                android:layout_marginLeft="35px"
-                android:tag="mwar"
-                android:src="@drawable/ic_delivery_addess"/>
-            <TextView
-                android:id="@+id/textViewCurrentLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Current Location"
-                android:layout_marginLeft="40px"
-                android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_28"/>
-        </LinearLayout>
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:src="@color/stroke_light_grey_alpha"/>
-        <LinearLayout
-            android:id="@+id/linearLayoutChooseOnMap"
-            android:layout_width="match_parent"
-            android:layout_height="110px"
-            android:gravity="center_vertical">
-            <ImageView
-                android:layout_width="23px"
-                android:layout_height="33px"
-                android:layout_marginLeft="35px"
-                android:tag="mwar"
-                android:src="@drawable/ic_delivery_address_map_pin"/>
-            <TextView
-                android:id="@+id/textViewChooseOnMap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Choose on map"
-                android:layout_marginLeft="40px"
-                android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_28"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutAddFav"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutCurrentOption"
-        android:layout_marginLeft="16px"
-        android:layout_marginRight="16px"
-        android:layout_marginTop="30px"
-        android:background="@drawable/bg_white_r_bthin">
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutAddHome"
-            android:layout_width="match_parent"
-            android:layout_height="110px">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
             <LinearLayout
+                android:id="@+id/linearLayoutCurrentOption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_toLeftOf="@+id/imageViewEditHome"
-                android:layout_toRightOf="@+id/imageViewAddHome"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20px"
-                >
-                <TextView
-                    android:id="@+id/textViewAddHome"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_home"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28" />
+                android:layout_marginLeft="16px"
+                android:layout_marginRight="16px"
+                android:layout_marginTop="30px"
+                android:background="@drawable/bg_white_r_bthin"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textViewAddHomeValue"
+                <LinearLayout
+                    android:id="@+id/linearLayoutCurrentLocation"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="test"
-                    android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_24"
-                    android:singleLine="true"
-                    android:layout_marginTop="5px"
-                    android:visibility="gone"
-                    />
+                    android:layout_height="110px"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="26px"
+                        android:layout_height="25px"
+                        android:layout_marginLeft="35px"
+                        android:src="@drawable/ic_delivery_addess"
+                        android:tag="mwar"/>
+
+                    <TextView
+                        android:id="@+id/textViewCurrentLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40px"
+                        android:text="Current Location"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="@dimen/text_size_28"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:src="@color/stroke_light_grey_alpha"/>
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutChooseOnMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="110px"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="23px"
+                        android:layout_height="33px"
+                        android:layout_marginLeft="35px"
+                        android:src="@drawable/ic_delivery_address_map_pin"
+                        android:tag="mwar"/>
+
+                    <TextView
+                        android:id="@+id/textViewChooseOnMap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40px"
+                        android:text="Choose on map"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="@dimen/text_size_28"/>
+                </LinearLayout>
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imageViewAddHome"
-                android:layout_width="50px"
-                android:layout_height="50px"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="30px"
-                android:src="@drawable/ic_home"
-                android:tag="mwar" />
-
-
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/imageViewSep"
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="@color/stroke_light_grey_alpha" />
-
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutAddWork"
-            android:layout_width="match_parent"
-            android:visibility="visible"
-            android:layout_height="110px">
 
             <LinearLayout
+                android:id="@+id/linearLayoutFav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_toLeftOf="@+id/imageViewEditWork"
-                android:layout_toRightOf="@+id/imageViewAddWork"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20px"
-                >
-                <TextView
-                    android:id="@+id/textViewAddWork"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/add_work"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28" />
+                android:layout_marginLeft="16px"
+                android:layout_marginRight="16px"
+                android:layout_marginTop="30px"
+                android:background="@drawable/bg_white_r_bthin"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textViewAddWorkValue"
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutAddHome"
+                    android:layout_width="match_parent"
+                    android:layout_height="110px">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:layout_toLeftOf="@+id/imageViewEditHome"
+                        android:layout_toRightOf="@+id/imageViewAddHome"
+                        android:orientation="vertical"
+                        >
+
+                        <TextView
+                            android:id="@+id/textViewAddHome"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_home"
+                            android:textColor="@color/text_color_light_selector"
+                            android:textSize="@dimen/text_size_28"/>
+
+                        <TextView
+                            android:id="@+id/textViewAddHomeValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5px"
+                            android:singleLine="true"
+                            android:text="test"
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_24"
+                            android:visibility="gone"
+                            />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageViewAddHome"
+                        android:layout_width="50px"
+                        android:layout_height="50px"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30px"
+                        android:src="@drawable/ic_home"
+                        android:tag="mwar"/>
+
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/imageViewSep"
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/stroke_light_grey_alpha"/>
+
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutAddWork"
+                    android:layout_width="match_parent"
+                    android:layout_height="110px"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20px"
+                        android:layout_toLeftOf="@+id/imageViewEditWork"
+                        android:layout_toRightOf="@+id/imageViewAddWork"
+                        android:orientation="vertical"
+                        >
+
+                        <TextView
+                            android:id="@+id/textViewAddWork"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_work"
+                            android:textColor="@color/text_color_light_selector"
+                            android:textSize="@dimen/text_size_28"/>
+
+                        <TextView
+                            android:id="@+id/textViewAddWorkValue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5px"
+                            android:singleLine="true"
+                            android:text="test"
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/text_size_24"
+                            android:visibility="gone"
+                            />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imageViewAddWork"
+                        android:layout_width="50px"
+                        android:layout_height="50px"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30px"
+                        android:src="@drawable/ic_work"
+                        android:tag="mwar"/>
+
+                    <ImageView
+                        android:layout_width="660px"
+                        android:layout_height="2px"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:src="@color/text_color_hint"
+                        android:visibility="gone"/>
+                </RelativeLayout>
+
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/listViewSavedLocations"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="test"
-                    android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_24"
-                    android:singleLine="true"
-                    android:layout_marginTop="5px"
-                    android:visibility="gone"
-                    />
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0px"
+                    android:splitMotionEvents="false"/>
+
+
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imageViewAddWork"
-                android:layout_width="50px"
-                android:layout_height="50px"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="30px"
-                android:src="@drawable/ic_work"
-                android:tag="mwar" />
+            <product.clicklabs.jugnoo.utils.NonScrollListView
+                android:id="@+id/listViewDeliveryAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16px"
+                android:layout_marginRight="16px"
+                android:layout_marginTop="30px"
+                android:background="@drawable/bg_white_r_bthin"
+                android:fadeScrollbars="true"
+                android:scrollbars="vertical"
+                android:splitMotionEvents="false"
+                android:visibility="gone"
+                android:divider="@color/transparent"
+                android:dividerHeight="0px"
+                />
 
-            <ImageView
-                android:layout_width="660px"
-                android:layout_height="2px"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:src="@color/text_color_hint"
-                android:visibility="gone" />
-        </RelativeLayout>
+        </LinearLayout>
 
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewDeliveryAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayoutAddFav"
-        android:layout_marginLeft="16px"
-        android:layout_marginRight="16px"
-        android:layout_marginTop="30px"
-        android:background="@drawable/bg_white_r_bthin"
-        android:fadeScrollbars="true"
-        android:scrollbars="vertical"
-        android:splitMotionEvents="false"
-        android:visibility="gone"
-        />
+    </ScrollView>
 
     <ScrollView
         android:id="@+id/scrollViewSearch"
@@ -227,11 +254,12 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
-                android:dividerHeight="0px"
                 android:layout_marginTop="20px"
                 android:background="@drawable/background_white_rounded_bordered"
+                android:dividerHeight="0px"
                 android:splitMotionEvents="false">
             </product.clicklabs.jugnoo.utils.NonScrollListView>
+
             <ImageView
                 android:id="@+id/imageViewPoweredByGoogleSearch"
                 android:layout_width="240px"
@@ -239,15 +267,23 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16px"
                 android:layout_marginTop="24px"
-                android:tag="mwar"
-                android:src="@drawable/powered_by_google_light"/>
+                android:src="@drawable/powered_by_google_light"
+                android:tag="mwar"/>
+
             <TextView
                 android:id="@+id/textViewScrollSearch"
                 android:layout_width="10px"
                 android:layout_height="10px"
-                android:textSize="28px" />
+                android:textSize="28px"/>
         </LinearLayout>
 
     </ScrollView>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_alignParentTop="true"
+        android:src="@color/stroke_light_grey_alpha"/>
 
 </RelativeLayout>
