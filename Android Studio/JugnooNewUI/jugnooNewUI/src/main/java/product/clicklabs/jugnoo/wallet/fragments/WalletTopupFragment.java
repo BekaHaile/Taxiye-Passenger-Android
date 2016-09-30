@@ -1,0 +1,229 @@
+package product.clicklabs.jugnoo.wallet.fragments;
+
+import android.annotation.SuppressLint;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
+
+@SuppressLint("ValidFragment")
+public class WalletTopupFragment extends Fragment {
+
+	private final String TAG = WalletTopupFragment.class.getSimpleName();
+
+	RelativeLayout relative;
+
+	ImageView imageViewBack;
+	TextView textViewTitle, textViewTNC;
+
+	TextView textViewCurrentBalance, textViewCurrentBalanceValue;
+
+	TextView textViewRechargeInfo;
+	EditText editTextTopupCardCode;
+	Button buttonRecharge;
+
+	View rootView;
+	PaymentActivity activity;
+
+
+	public WalletTopupFragment(){}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		rootView = inflater.inflate(R.layout.fragment_wallet_topup, container, false);
+		activity = (PaymentActivity) getActivity();
+
+		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
+
+		new ASSL(activity, relative, 1134, 720, false);
+
+		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
+		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(activity));
+		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
+		textViewTNC = (TextView) rootView.findViewById(R.id.textViewTNC); textViewTNC.setTypeface(Fonts.mavenMedium(activity));
+
+		((TextView) rootView.findViewById(R.id.textViewAddCashHelp)).setTypeface(Fonts.mavenRegular(activity));
+
+		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance);	textViewCurrentBalance.setTypeface(Fonts.mavenRegular(activity));
+		textViewCurrentBalanceValue = (TextView) rootView.findViewById(R.id.textViewCurrentBalanceValue); textViewCurrentBalanceValue.setTypeface(Fonts.mavenRegular(activity));
+
+		textViewRechargeInfo = (TextView) rootView.findViewById(R.id.textViewRechargeInfo); textViewRechargeInfo.setTypeface(Fonts.mavenMedium(activity));
+		editTextTopupCardCode = (EditText) rootView.findViewById(R.id.editTextTopupCardCode); editTextTopupCardCode.setTypeface(Fonts.mavenRegular(activity));
+
+		buttonRecharge = (Button) rootView.findViewById(R.id.buttonRecharge); buttonRecharge.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+
+
+
+
+		imageViewBack.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Utils.hideSoftKeyboard(activity, editTextTopupCardCode);
+				performBackPressed();
+			}
+		});
+
+
+		buttonRecharge.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String code = editTextTopupCardCode.getText().toString().trim();
+				if ("".equalsIgnoreCase(code)) {
+					editTextTopupCardCode.requestFocus();
+					editTextTopupCardCode.setError(getResources().getString(R.string.topup_code_empty));
+				} else {
+					if (Data.userData != null) {
+						topupJCAPI(editTextTopupCardCode.getText().toString().trim());
+					}
+				}
+			}
+		});
+
+		textViewTNC.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					DialogPopup.alertPopupLeftOriented(activity, "", Data.userData.getJugnooCashTNC(), true, false, false);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+		return rootView;
+	}
+
+	private void updateWalletBalance(){
+		try{
+			if(Data.userData != null){
+				textViewCurrentBalanceValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
+						Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getJugnooBalance())));
+				textViewCurrentBalanceValue.setTextColor(activity.getResources().getColor(R.color.theme_green_color));
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		updateWalletBalance();
+	}
+
+
+	public void performBackPressed() {
+		activity.goBack();
+	}
+
+
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		ASSL.closeActivity(relative);
+		System.gc();
+	}
+
+
+	private void topupJCAPI(final String code) {
+		try {
+			if(AppStatus.getInstance(activity).isOnline(activity)) {
+				DialogPopup.showLoadingDialog(activity, "Loading...");
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
+				params.put(Constants.KEY_TOPUP_CARD_CODE, code);
+				params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
+
+				RestClient.getApiServices().topupJC(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						DialogPopup.dismissLoadingDialog();
+						try {
+							JSONObject jObj = new JSONObject(responseStr);
+							String message = JSONParser.getServerMessage(jObj);
+							int flag = jObj.getInt(Constants.KEY_FLAG);
+							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								DialogPopup.dialogBanner(activity, message);
+								performBackPressed();
+								activity.getBalance("");
+							} else {
+								DialogPopup.alertPopup(activity, "", message);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						}
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "paytmAddMoney error=" + error.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+					}
+				});
+			}
+			else{
+				DialogPopup.dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+						new Utils.AlertCallBackWithButtonsInterface() {
+							@Override
+							public void positiveClick(View view) {
+								topupJCAPI(code);
+							}
+
+							@Override
+							public void neutralClick(View view) {
+
+							}
+
+							@Override
+							public void negativeClick(View view) {
+
+							}
+						});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}

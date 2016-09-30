@@ -1157,6 +1157,10 @@
 	<string name="label">Label</string>
 	<string name="add_favorite">Add Favorite</string>
 	<string name="address_book">Address Book</string>
+	<string name="wallet_topup">Wallet Topup</string>
+	<string name="enter_topup_card_code">Enter Topup Card code</string>
+	<string name="recharge_jc_topup_info">Recharge Jugnoo Cash with Topup Card</string>
+	<string name="topup_code_empty">Topup code empty</string>
 
 
 </resources>
