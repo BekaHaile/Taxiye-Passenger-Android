@@ -59,7 +59,8 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
+import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -68,7 +69,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
@@ -100,9 +100,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     private Button buttonPlaceOrder;
     private RelativeLayout relativeLayoutOffers;
     private TextView textViewOffers;
-    private ImageView imageViewOffersArrow;
-    private NonScrollListView listViewOffers;
-    private PromoCouponsAdapter promoCouponsAdapter;
+    private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 
     private View rootView;
     private FreshActivity activity;
@@ -124,7 +122,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     }
 
     private List<Product> productList = new ArrayList<>();
-    private ArrayList<PromoCoupon> promoCoupons = null;
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
     @Override
@@ -269,8 +266,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
         relativeLayoutOffers = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutOffers);
         textViewOffers = (TextView)rootView.findViewById(R.id.textViewOffers); textViewOffers.setTypeface(Fonts.mavenMedium(activity));
-        imageViewOffersArrow = (ImageView) rootView.findViewById(R.id.imageViewOffersArrow);
-        listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
+        activity.setSelectedPromoCoupon(noSelectionCoupon);
 
         String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
         if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
@@ -281,34 +277,11 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             promoCoupons = Data.userData.getCoupons(ProductType.FRESH);
         }
         if(promoCoupons != null) {
-            promoCouponsAdapter = new PromoCouponsAdapter(activity, promoCoupons, new PromoCouponsAdapter.Callback() {
-                @Override
-                public void onCouponSelected() {
-                }
-
-                @Override
-                public PromoCoupon getSelectedCoupon() {
-                    return activity.getSelectedPromoCoupon();
-                }
-
-                @Override
-                public void setSelectedCoupon(int position) {
-                    if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
-                        activity.setSelectedPromoCoupon(promoCoupons.get(position));
-                    } else {
-                        activity.setSelectedPromoCoupon(noSelectionCoupon);
-                    }
-                }
-            });
-            listViewOffers.setAdapter(promoCouponsAdapter);
             if(promoCoupons.size() > 0){
-                textViewOffers.setText(R.string.offers);
-                rootView.findViewById(R.id.viewOffersSep).setVisibility(View.VISIBLE);
-                imageViewOffersArrow.setVisibility(View.VISIBLE);
+                relativeLayoutOffers.setVisibility(View.VISIBLE);
+                setCouponNameToDisplay();
             } else {
-                textViewOffers.setText(R.string.no_offers_currently);
-                rootView.findViewById(R.id.viewOffersSep).setVisibility(View.GONE);
-                imageViewOffersArrow.setVisibility(View.GONE);
+                relativeLayoutOffers.setVisibility(View.GONE);
             }
         }
 
@@ -316,17 +289,16 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         relativeLayoutOffers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(promoCoupons.size() > 0) {
-                    if (listViewOffers.getVisibility() == View.VISIBLE) {
-                        listViewOffers.setVisibility(View.GONE);
-                        imageViewOffersArrow.setRotation(90f);
-                        rootView.findViewById(R.id.viewOffersSep).setVisibility(View.GONE);
-                    } else {
-                        listViewOffers.setVisibility(View.VISIBLE);
-                        imageViewOffersArrow.setRotation(270f);
-                        rootView.findViewById(R.id.viewOffersSep).setVisibility(View.VISIBLE);
-                    }
+                ProductType productType;
+                String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+                if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
+                    productType = ProductType.MEALS;
+                } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+                    productType = ProductType.GROCERY;
+                } else {
+                    productType = ProductType.FRESH;
                 }
+                getPromoCouponsDialog().show(productType, promoCoupons);
             }
         });
 
@@ -946,6 +918,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                             DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getStartTime())
                                                     + " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime()),
                                             activity.getSlotSelected().getDayName());
+                                    activity.setSelectedPromoCoupon(noSelectionCoupon);
 
                                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ORDER_PLACED, null);
 
@@ -1185,6 +1158,44 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 }
             }
         } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private PromoCouponsDialog promoCouponsDialog;
+    public PromoCouponsDialog getPromoCouponsDialog(){
+        if(promoCouponsDialog == null){
+            promoCouponsDialog = new PromoCouponsDialog(activity, new PromoCouponsDialog.Callback() {
+                @Override
+                public void onCouponApplied() {
+                    setCouponNameToDisplay();
+                }
+
+                @Override
+                public void onSkipped() {
+                    setCouponNameToDisplay();
+                }
+
+                @Override
+                public void onInviteFriends() {
+                    Intent intent = new Intent(activity, ShareActivity.class);
+                    startActivity(intent);
+                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+
+            });
+        }
+        return promoCouponsDialog;
+    }
+
+    private void setCouponNameToDisplay(){
+        try {
+            if(activity.getSelectedPromoCoupon() != null && activity.getSelectedPromoCoupon().getId() > -1){
+				textViewOffers.setText(activity.getSelectedPromoCoupon().getTitle());
+			} else{
+				textViewOffers.setText(R.string.select_offers);
+			}
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -247,7 +247,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                         +FirebaseEvents.GET_FARE_ESTIMATE, bundle);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, getRegionSelected().getRegionName(), "get fare estimate");
             } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
-                getPromoCouponsDialog().show();
+                getPromoCouponsDialog().show(ProductType.AUTO, Data.userData.getCoupons(ProductType.AUTO));
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"

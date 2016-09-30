@@ -1358,6 +1358,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        System.gc();
         super.onDestroy();
     }
 
