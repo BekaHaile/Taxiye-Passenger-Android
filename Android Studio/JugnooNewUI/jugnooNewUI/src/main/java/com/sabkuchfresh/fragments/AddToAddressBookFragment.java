@@ -50,7 +50,7 @@ public class AddToAddressBookFragment extends Fragment {
     private GoogleMap googleMap;
     MarkerOptions marker;
 
-    Button buttonAddToAddressBook;
+    Button buttonAddToAddressBook, buttonRemove;
     RelativeLayout root;
 
     EditText editTextLabel, houseNumber, buildingStreetName, area, city, pinCode;
@@ -88,7 +88,6 @@ public class AddToAddressBookFragment extends Fragment {
             addPlaceActivity.getTextViewTitle().setVisibility(View.VISIBLE);
             addPlaceActivity.getTextViewTitle().setText(activity.getString(R.string.confirm_address));
             addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.GONE);
-            addPlaceActivity.getButtonRemove().setVisibility(View.GONE);
         }
 
 
@@ -152,6 +151,7 @@ public class AddToAddressBookFragment extends Fragment {
         pinCode = (EditText) rootView.findViewById(R.id.edt_pinCode); pinCode.setTypeface(Fonts.mavenRegular(activity));
 
         buttonAddToAddressBook = (Button) rootView.findViewById(R.id.buttonAddToAddressBook); buttonAddToAddressBook.setTypeface(Fonts.mavenRegular(activity));
+        buttonRemove = (Button) rootView.findViewById(R.id.buttonRemove); buttonRemove.setTypeface(Fonts.mavenRegular(activity));
 
         buttonAddToAddressBook.setText(activity.getResources().getString(R.string.confirm));
 
@@ -270,6 +270,17 @@ public class AddToAddressBookFragment extends Fragment {
             }
         });
 
+        buttonRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(activity instanceof AddPlaceActivity) {
+                    AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
+                    addPlaceActivity.hitApiAddHomeWorkAddress(addPlaceActivity.getSearchResult(), true, 0, addPlaceActivity.isEditThisAddress(),
+                            addPlaceActivity.getPlaceRequestCode());
+                }
+            }
+        });
+
         houseNumber.setText(current_street);
         buildingStreetName.setText(current_route);
         area.setText(current_area);
@@ -278,18 +289,21 @@ public class AddToAddressBookFragment extends Fragment {
 
         int placeRequestCode = 0;
         String label = "";
+        boolean editAddress = false;
         if(activity instanceof AddPlaceActivity){
             AddPlaceActivity addPlaceActivity = ((AddPlaceActivity) activity);
             placeRequestCode = addPlaceActivity.getPlaceRequestCode();
             if(addPlaceActivity.getSearchResult() != null && addPlaceActivity.getSearchResult().getName() != null) {
                 label = addPlaceActivity.getSearchResult().getName();
             }
+            editAddress = addPlaceActivity.isEditThisAddress();
         } else if(activity instanceof FreshActivity){
             FreshActivity freshActivity = ((FreshActivity) activity);
             placeRequestCode = freshActivity.getPlaceRequestCode();
             if(freshActivity.getSearchResult() != null && freshActivity.getSearchResult().getName() != null) {
                 label = freshActivity.getSearchResult().getName();
             }
+            editAddress = freshActivity.isEditThisAddress();
         }
 
         if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
@@ -302,6 +316,7 @@ public class AddToAddressBookFragment extends Fragment {
             editTextLabel.setText(label);
             editTextLabel.setEnabled(true);
         }
+        buttonRemove.setVisibility(editAddress ? View.VISIBLE : View.GONE);
 
     }
 

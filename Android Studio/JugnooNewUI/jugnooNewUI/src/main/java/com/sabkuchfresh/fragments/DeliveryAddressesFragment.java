@@ -354,9 +354,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             AddPlaceActivity addPlaceActivity = (AddPlaceActivity)activity;
             addPlaceActivity.getTextViewTitle().setVisibility(View.GONE);
             addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.VISIBLE);
-            if(addPlaceActivity.isEditThisAddress()) {
-                addPlaceActivity.getButtonRemove().setVisibility(View.VISIBLE);
-            }
         }
     }
 

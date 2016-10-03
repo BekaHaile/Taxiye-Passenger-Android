@@ -158,7 +158,6 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             addPlaceActivity.getTextViewTitle().setVisibility(View.VISIBLE);
             addPlaceActivity.getTextViewTitle().setText(R.string.choose_your_address);
             addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.GONE);
-            addPlaceActivity.getButtonRemove().setVisibility(View.GONE);
         }
         zoomedToMyLoc = false;
         mBus = MyApplication.getInstance().getBus();

@@ -152,15 +152,40 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/buttonAddToAddressBook"
-                style="@style/ButtonThemeBig"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="center_horizontal"
-                android:textAllCaps="false"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginBottom="70px"
                 android:layout_marginTop="70px"
-                android:text="@string/confirm"/>
+                android:layout_marginLeft="50px"
+                android:layout_marginRight="50px"
+                >
+                <Button
+                    android:id="@+id/buttonRemove"
+                    style="@style/ButtonThemeAlternate"
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:text="@string/remove"
+                    android:textAllCaps="false"
+                    android:layout_marginRight="40px"
+                    android:visibility="gone"
+                    />
+
+                <Button
+                    android:id="@+id/buttonAddToAddressBook"
+                    style="@style/ButtonTheme"
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:textAllCaps="false"
+                    android:text="@string/confirm"
+
+                    />
+
+
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/textViewScroll"

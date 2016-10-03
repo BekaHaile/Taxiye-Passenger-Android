@@ -2,7 +2,6 @@ package com.sabkuchfresh.home;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
@@ -170,14 +169,16 @@ public class TransactionUtils {
 			addToAddressBookFragment.setArguments(bundle);
 		}
         if(!checkIfFragmentAdded(activity, AddToAddressBookFragment.class.getName())) {
-            activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+			transaction.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
                     .add(container.getId(), addToAddressBookFragment,
                             AddToAddressBookFragment.class.getName())
-                    .addToBackStack(AddToAddressBookFragment.class.getName())
-                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                    .commitAllowingStateLoss();
+                    .addToBackStack(AddToAddressBookFragment.class.getName());
+			if(activity.getSupportFragmentManager().getBackStackEntryCount() > 0){
+				transaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+						.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+			}
+			transaction.commitAllowingStateLoss();
         }
     }
 
