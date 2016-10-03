@@ -223,7 +223,7 @@
                 android:fadeScrollbars="true"
                 android:scrollbars="vertical"
                 android:splitMotionEvents="false"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:divider="@color/transparent"
                 android:dividerHeight="0px"
                 />

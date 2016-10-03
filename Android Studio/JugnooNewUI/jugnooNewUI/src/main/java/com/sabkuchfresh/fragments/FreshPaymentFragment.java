@@ -98,8 +98,10 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue,
             textViewFreeCharge, textViewFreeChargeValue;
     private Button buttonPlaceOrder;
-    private RelativeLayout relativeLayoutOffers;
-    private TextView textViewOffers;
+    private RelativeLayout relativeLayoutOffers, relativeLayoutSelectedCoupon;
+    private TextView textViewOffers, textViewSelectedOffer;
+
+
     private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 
     private View rootView;
@@ -266,6 +268,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
         relativeLayoutOffers = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutOffers);
         textViewOffers = (TextView)rootView.findViewById(R.id.textViewOffers); textViewOffers.setTypeface(Fonts.mavenMedium(activity));
+        relativeLayoutSelectedCoupon = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSelectedCoupon);
+        textViewSelectedOffer = (TextView)rootView.findViewById(R.id.textViewSelectedOffer); textViewSelectedOffer.setTypeface(Fonts.mavenRegular(activity));
         activity.setSelectedPromoCoupon(noSelectionCoupon);
 
         String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
@@ -1191,12 +1195,14 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     private void setCouponNameToDisplay(){
         try {
             if(activity.getSelectedPromoCoupon() != null && activity.getSelectedPromoCoupon().getId() > -1){
-				textViewOffers.setText(activity.getSelectedPromoCoupon().getTitle());
+				relativeLayoutSelectedCoupon.setVisibility(View.VISIBLE);
+                textViewSelectedOffer.setText(activity.getSelectedPromoCoupon().getTitle());
 			} else{
-				textViewOffers.setText(R.string.select_offers);
+                relativeLayoutSelectedCoupon.setVisibility(View.GONE);
 			}
         } catch (Exception e) {
             e.printStackTrace();
+            relativeLayoutSelectedCoupon.setVisibility(View.GONE);
         }
     }
 

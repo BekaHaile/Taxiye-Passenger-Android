@@ -379,11 +379,12 @@ public class SearchListAdapter extends BaseAdapter{
 		try {
             if(showSavedPlaces) {
 				try {
-					for(SearchResult searchResult : Data.userData.getSearchResults()){
+					for(int i = Data.userData.getSearchResults().size()-1; i >= 0; i--){
+						SearchResult searchResult = Data.userData.getSearchResults().get(i);
 						if(searchResult.getName().toLowerCase().contains(searchText.toLowerCase())
 								|| searchResult.getAddress().toLowerCase().contains(searchText.toLowerCase())
 								|| searchText.equalsIgnoreCase("")){
-							searchResultsForSearch.add(searchResult);
+							searchResultsForSearch.add(0, searchResult);
 						}
 					}
 				} catch (Exception e) {

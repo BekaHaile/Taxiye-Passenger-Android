@@ -120,8 +120,8 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.text_color));
                     ((ViewHolderHeader) holder).textViewDeliveryAddress.setVisibility(View.VISIBLE);
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setText(activity.getResources().getString(R.string.delivery_address));
-                    ((ViewHolderHeader)holder).imageViewForward.setVisibility(View.GONE);
-                    ((ViewHolderHeader)holder).imageViewEditAddress.setVisibility(View.VISIBLE);
+                    ((ViewHolderHeader)holder).imageViewForward.setVisibility(View.VISIBLE);
+                    ((ViewHolderHeader)holder).imageViewEditAddress.setVisibility(View.GONE);
                 } else {
                     //((ViewHolderHeader)holder).textViewDeliveryAddress.setVisibility(View.GONE);
                     ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.text_color));

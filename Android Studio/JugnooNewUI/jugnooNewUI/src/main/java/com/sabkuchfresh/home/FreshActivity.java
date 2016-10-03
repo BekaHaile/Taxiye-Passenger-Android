@@ -1277,6 +1277,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         try {
                             setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             setUserData();
+                            Intent intent = new Intent(Constants.INTENT_ACTION_WALLET_UPDATE);
+                            LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
