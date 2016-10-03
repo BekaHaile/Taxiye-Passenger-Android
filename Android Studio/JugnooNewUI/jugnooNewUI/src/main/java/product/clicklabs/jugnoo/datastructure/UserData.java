@@ -68,7 +68,7 @@ public class UserData {
 
 	private JeanieIntroDialogContent jeanieIntroDialogContent;
 
-	private int customerRateAppFlag = 0;
+	private int customerRateAppFlag = 0, topupCardEnabled;
 	private RateAppDialogContent rateAppDialogContent;
 
 	private ArrayList<SearchResult> searchResults = new ArrayList<>();
@@ -88,7 +88,7 @@ public class UserData {
 					String fatafatUrlLink,
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int inviteFriendButton, String defaultClientId,
-					int integratedJugnooEnabled){
+					int integratedJugnooEnabled, int topupCardEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -156,6 +156,7 @@ public class UserData {
 
 		this.defaultClientId = defaultClientId;
 		this.integratedJugnooEnabled = integratedJugnooEnabled;
+		this.topupCardEnabled = topupCardEnabled;
 
 	}
 
@@ -813,7 +814,15 @@ public class UserData {
 		this.searchResults = searchResults;
 	}
 
-//	"meals_enabled": 1,
+	public int getTopupCardEnabled() {
+		return topupCardEnabled;
+	}
+
+	public void setTopupCardEnabled(int topupCardEnabled) {
+		this.topupCardEnabled = topupCardEnabled;
+	}
+
+	//	"meals_enabled": 1,
 //			"fresh_enabled": 1,
 //			"delivery_enabled": 1,
 //			"default_client_id": "FHkmrtv6zn0KuGcW",

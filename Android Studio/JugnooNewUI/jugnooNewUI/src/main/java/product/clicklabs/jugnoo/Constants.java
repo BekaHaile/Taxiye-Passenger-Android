@@ -509,4 +509,6 @@ public interface Constants {
 
 	String KEY_IS_CONFIRMED = "is_confirmed";
 
+	String KEY_TOPUP_CARD_CODE = "topup_card_code";
+
 }

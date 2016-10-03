@@ -356,6 +356,9 @@ public class ApiFindADriver {
 			if(!TextUtils.isEmpty(findADriverResponse.getGamePredictUrl())) {
 				Data.userData.setGamePredictUrl(findADriverResponse.getGamePredictUrl());
 			}
+			if(findADriverResponse.getTopupCardEnabled() != null){
+				Data.userData.setTopupCardEnabled(findADriverResponse.getTopupCardEnabled());
+			}
 
 		} catch (Exception exception) {
 			exception.printStackTrace();
