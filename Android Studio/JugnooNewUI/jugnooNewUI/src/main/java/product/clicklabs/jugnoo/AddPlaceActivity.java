@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,6 +13,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.home.TransactionUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -32,7 +35,6 @@ public class AddPlaceActivity extends BaseFragmentActivity {
     private ImageView imageViewBack;
     private LinearLayout root;
     private TextView textViewTitle;
-    private Button buttonRemove;
     private int placeRequestCode;
     private SearchResult searchResult;
     private boolean editThisAddress = false;
@@ -53,7 +55,6 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         new ASSL(this, root, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.avenirNext(this));
-        buttonRemove = (Button)findViewById(R.id.buttonRemove); buttonRemove.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
@@ -65,13 +66,6 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         imageViewSearchCross.setVisibility(View.GONE);
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
-
-        buttonRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hitApiAddHomeWorkAddress(searchResult, true, 0, editThisAddress, placeRequestCode);
-            }
-        });
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -104,21 +98,21 @@ public class AddPlaceActivity extends BaseFragmentActivity {
                     textViewTitle.setText("ADD New Address");
                     editTextDeliveryAddress.setHint("Enter location");
                 }
-                buttonRemove.setVisibility(View.GONE);
             } else {
                 searchResult = new Gson().fromJson(getIntent().getStringExtra(Constants.KEY_ADDRESS), SearchResult.class);
                 editThisAddress = true;
                 textViewTitle.setText("EDIT "+ searchResult.getName());
-                buttonRemove.setText("REMOVE "+ searchResult.getName());
                 editTextDeliveryAddress.setHint("Enter " + searchResult.getName().toLowerCase() + " location");
                 editTextDeliveryAddress.setText(searchResult.getAddress());
                 editTextDeliveryAddress.setSelection(editTextDeliveryAddress.getText().length());
-                buttonRemove.setVisibility(View.VISIBLE);
             }
         }
 
-
-        getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
+        if(editThisAddress){
+            openAddToAddressBook(getAddressBundle(searchResult));
+        } else {
+            getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
+        }
 
     }
 
@@ -202,10 +196,6 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         return editThisAddress;
     }
 
-    public Button getButtonRemove() {
-        return buttonRemove;
-    }
-
     public ImageView getImageViewSearchCross() {
         return imageViewSearchCross;
     }
@@ -250,4 +240,61 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         }
         apiAddHomeWorkAddress.addHomeAndWorkAddress(searchResult, deleteAddress, matchedWithOtherId, editThisAddress, placeRequestCode);
     }
+
+
+    private Bundle getAddressBundle(SearchResult searchResult){
+        try {
+            String current_street = "";
+            String current_route = "";
+            String current_area = "";
+            String current_city = "";
+            String current_pincode = "";
+
+            double current_latitude = searchResult.getLatLng().latitude;
+            double current_longitude = searchResult.getLatLng().longitude;
+
+            String[] address = searchResult.getAddress().split(",");
+            List<String> addressArray = Arrays.asList(address);
+            Collections.reverse(addressArray);
+            address = (String[]) addressArray.toArray();
+
+            if(address.length > 0 && (!TextUtils.isEmpty(address[0].trim())))
+                current_pincode = "" + address[0].trim();
+            if(address.length > 1 && (!TextUtils.isEmpty(address[1].trim())))
+                current_city = "" + address[1].trim();
+            if(address.length > 2 && (!TextUtils.isEmpty(address[2].trim())))
+                current_area = "" + address[2].trim();
+
+            int val = 0;
+            if(!TextUtils.isEmpty(address[address.length - 1].replaceAll("\\D+","")) && address.length>3) {
+                current_street = address[address.length - 1].replaceAll("\\D+","");
+                val = 1;
+            }
+
+            current_route = "";
+            if(address.length>3) {
+                for (int i = 3; i < address.length - val; i++) {
+                    if(i==3) {
+                        current_route = address[i].trim();
+                    } else {
+                        current_route = current_route+", "+address[i].trim();
+                    }
+                }
+            }
+            Bundle bundle = new Bundle();
+            bundle.putString("current_street", current_street);
+            bundle.putString("current_street", current_street);
+            bundle.putString("current_route", current_route);
+            bundle.putString("current_area", current_area);
+            bundle.putString("current_city", current_city);
+            bundle.putString("current_pincode", current_pincode);
+            bundle.putDouble("current_latitude", current_latitude);
+            bundle.putDouble("current_longitude", current_longitude);
+            return bundle;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Bundle();
+    }
+
 }
