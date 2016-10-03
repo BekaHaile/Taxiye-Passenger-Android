@@ -4323,6 +4323,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     @Override
+    public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
+        intentFired = true;
+        super.startActivityForResult(intent, requestCode, options);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
