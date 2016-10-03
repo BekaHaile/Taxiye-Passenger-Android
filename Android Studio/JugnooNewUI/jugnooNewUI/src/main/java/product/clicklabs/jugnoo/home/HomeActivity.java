@@ -1777,6 +1777,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onMapTouched() {
                     // Map touched
                     mapTouched = true;
+                    zoomAfterFindADriver = false;
                     try {
                         LatLng lastMapCentre = map.getCameraPosition().target;
                         LatLng currentLoc = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
@@ -4974,7 +4975,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
             } else {
-//                zoomAfterFindADriver = true;
                 try {
                     new Handler().postDelayed(new Runnable() {
                         @Override
