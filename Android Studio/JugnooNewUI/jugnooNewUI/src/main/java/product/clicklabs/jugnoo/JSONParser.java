@@ -215,6 +215,7 @@ public class JSONParser implements Constants {
         String defaultClientId = userData.optString(KEY_DEFAULT_CLIENT_ID, Config.getAutosClientId());
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
+        int topupCardEnabled = userData.optInt("topup_card_enabled", 0);
 
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
@@ -228,7 +229,8 @@ public class JSONParser implements Constants {
                 cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
-                mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, inviteFriendButton, defaultClientId, integratedJugnooEnabled);
+                mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, inviteFriendButton, defaultClientId, integratedJugnooEnabled,
+                topupCardEnabled);
 
 
         Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);

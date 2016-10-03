@@ -498,8 +498,8 @@ public interface ApiService {
                           Callback<TrackingLogReponse> callback);
 
     @FormUrlEncoded
-    @POST("/topup_jc")
-    void topupJC(@FieldMap Map<String, String> params,
+    @POST("/topup_customer_jc")
+    void topupCustomerJC(@FieldMap Map<String, String> params,
                               Callback<SettleUserDebt> callback);
 
 }

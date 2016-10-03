@@ -72,6 +72,9 @@ public class FindADriverResponse {
     @SerializedName("game_predict_url")
     @Expose
     private String gamePredictUrl = "";
+    @SerializedName("topup_card_enabled")
+    @Expose
+    private Integer topupCardEnabled;
 
 
     @SerializedName("common_promotions")
@@ -416,5 +419,13 @@ public class FindADriverResponse {
 
     public void setGroceryCoupons(List<CouponInfo> groceryCoupons) {
         this.groceryCoupons = groceryCoupons;
+    }
+
+    public Integer getTopupCardEnabled() {
+        return topupCardEnabled;
+    }
+
+    public void setTopupCardEnabled(Integer topupCardEnabled) {
+        this.topupCardEnabled = topupCardEnabled;
     }
 }

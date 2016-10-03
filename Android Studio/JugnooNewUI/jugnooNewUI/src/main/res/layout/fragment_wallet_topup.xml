@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="@string/wallet_topup"
+            android:text="@string/jugnoo_cash"
             style="@style/title" />
 
         <ImageView
@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10px"
             android:padding="15px"
-            android:text="EDIT"
+            android:text="@string/tnc"
             android:textColor="@color/text_color_light_selector"
             android:textSize="30.6px" />
 
@@ -62,6 +62,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="192px"
                     android:gravity="center"
+                    android:visibility="gone"
                     android:background="@color/menu_item_selector_color"
                     android:orientation="vertical">
 
@@ -94,6 +95,7 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="2px"
+                        android:visibility="gone"
                         android:background="@color/stroke_color_light" />
 
                     <ImageView
@@ -102,13 +104,23 @@
                         android:layout_alignParentBottom="true"
                         android:background="@color/stroke_color_light" />
 
+                    <ImageView
+                        android:id="@+id/imageViewCurrentIcon"
+                        android:layout_width="66px"
+                        android:layout_height="50px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30px"
+                        android:src="@drawable/ic_jugnoo_cash"
+                        android:tag="mwar" />
+
                     <TextView
                         android:id="@+id/textViewCurrentBalance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="50px"
+                        android:layout_toRightOf="@+id/imageViewCurrentIcon"
+                        android:layout_marginLeft="30px"
                         android:gravity="center"
                         android:text="Current Balance"
                         android:textColor="@color/text_color"
@@ -162,11 +174,12 @@
                         android:digits="0123456789"
                         android:hint="@string/enter_topup_card_code"
                         android:inputType="number|textNoSuggestions"
-                        android:maxLength="100"
+                        android:maxLength="16"
                         android:gravity="center"
                         android:paddingLeft="25px"
                         android:paddingRight="25px"
                         android:singleLine="true"
+                        android:imeOptions="actionSend"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textSize="@dimen/text_size_32" />

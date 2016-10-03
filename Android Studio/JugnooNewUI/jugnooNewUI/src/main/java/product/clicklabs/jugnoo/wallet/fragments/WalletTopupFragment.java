@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -96,6 +98,18 @@ public class WalletTopupFragment extends Fragment {
 			}
 		});
 
+		editTextTopupCardCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				boolean handled = false;
+				if(actionId == EditorInfo.IME_ACTION_SEND){
+					buttonRecharge.performClick();
+					handled = true;
+				}
+				return false;
+			}
+		});
+
 
 		buttonRecharge.setOnClickListener(new View.OnClickListener() {
 
@@ -172,7 +186,7 @@ public class WalletTopupFragment extends Fragment {
 				params.put(Constants.KEY_TOPUP_CARD_CODE, code);
 				params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 
-				RestClient.getApiServices().topupJC(params, new Callback<SettleUserDebt>() {
+				RestClient.getApiServices().topupCustomerJC(params, new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
