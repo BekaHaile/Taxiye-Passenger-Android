@@ -397,10 +397,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
     public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 10; // in meters
 
-    public static final float MAX_ZOOM = 15;
+    public static final float MAX_ZOOM = 16;
     private static final int MAP_ANIMATE_DURATION = 300;
 
-    public static final double FIX_ZOOM_DIAGONAL = 408;
+    public static final double FIX_ZOOM_DIAGONAL = 108;
+    private final float MAP_PADDING = 40f;
 
     public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
@@ -4906,7 +4907,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                                         || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                                         && bounds != null) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), MAP_ANIMATE_DURATION, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -4964,7 +4965,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                                 }
                                 else {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), MAP_ANIMATE_DURATION, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -7747,7 +7748,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     if (latLngBoundsBuilderPool != null) {
                         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, 408), (int) (minRatio * 90)),
+                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, FIX_ZOOM_DIAGONAL),
+                                (int) (minRatio * MAP_PADDING)),
                                 MAP_ANIMATE_DURATION, null);
                     }
                 } catch (Exception e) {
