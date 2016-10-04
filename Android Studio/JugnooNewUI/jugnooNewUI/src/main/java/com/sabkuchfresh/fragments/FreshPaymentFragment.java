@@ -92,8 +92,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
     private View viewLine;
 
 
-    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge;
-    private LinearLayout linearLayoutWalletContainer, linearLayoutCash;
+    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutCash;
+    private LinearLayout linearLayoutWalletContainer;
     private ImageView imageViewPaytmRadio, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewCashRadio;
     private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue,
             textViewFreeCharge, textViewFreeChargeValue;
@@ -206,7 +206,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
         relativeLayoutMobikwik = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutMobikwik);
         relativeLayoutFreeCharge = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutFreeCharge);
-        linearLayoutCash = (LinearLayout) rootView.findViewById(R.id.linearLayoutCash);
+        relativeLayoutCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCash);
         imageViewPaytmRadio = (ImageView) rootView.findViewById(R.id.imageViewPaytmRadio);
         imageViewRadioMobikwik = (ImageView)rootView.findViewById(R.id.imageViewRadioMobikwik);
         imageViewRadioFreeCharge = (ImageView)rootView.findViewById(R.id.imageViewRadioFreeCharge);
@@ -261,7 +261,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 //                }
 //            }
 //        });
-        linearLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
+        relativeLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -437,7 +437,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                 callbackPaymentOptionSelector);
                         break;
 
-                    case R.id.linearLayoutCash:
+                    case R.id.relativeLayoutCash:
                         MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
                                 +FirebaseEvents.CASH, bundle);
                         MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH,
@@ -1156,7 +1156,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(linearLayoutCash);
+                            linearLayoutWalletContainer.addView(relativeLayoutCash);
                         }
                     }
                 }
@@ -1197,12 +1197,15 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
             if(activity.getSelectedPromoCoupon() != null && activity.getSelectedPromoCoupon().getId() > -1){
 				relativeLayoutSelectedCoupon.setVisibility(View.VISIBLE);
                 textViewSelectedOffer.setText(activity.getSelectedPromoCoupon().getTitle());
+                textViewOffers.setText(R.string.offers);
 			} else{
                 relativeLayoutSelectedCoupon.setVisibility(View.GONE);
+                textViewOffers.setText(R.string.select_offers);
 			}
         } catch (Exception e) {
             e.printStackTrace();
             relativeLayoutSelectedCoupon.setVisibility(View.GONE);
+            textViewOffers.setText(R.string.select_offers);
         }
     }
 

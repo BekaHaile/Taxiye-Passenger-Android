@@ -304,7 +304,7 @@
                     android:layout_marginTop="20px"
                     android:layout_marginBottom="20px"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/payment_hearder_30"
+                    android:paddingLeft="10px"
                     android:singleLine="true"
                     android:text="@string/select_offers"
                     android:textAllCaps="true"
@@ -321,7 +321,7 @@
                     android:rotation="180"
                     android:src="@drawable/ic_back"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="30px"
+                    android:layout_marginRight="20px"
                     android:layout_marginTop="20px"
                     />
 
@@ -384,20 +384,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="70px"
                     android:gravity="center_vertical"
-                    android:paddingLeft="@dimen/payment_hearder_30"
+                    android:paddingLeft="10px"
                     android:singleLine="true"
-                    android:text="PAYMENT OPTION"
+                    android:text="PAYMENT OPTIONS"
                     android:textColor="@color/theme_color"
                     android:textSize="@dimen/text_size_22"
                     android:visibility="visible"
                     />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_marginBottom="5px"
-                    android:background="@color/divider_color"
-                    />
 
                 <LinearLayout
                     android:id="@+id/linearLayoutWalletContainer"
@@ -457,6 +451,12 @@
                             android:textColor="@color/theme_green_color"
                             android:textSize="@dimen/text_size_34"/>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:background="@color/stroke_light_grey_alpha"
+                            />
+
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -509,6 +509,12 @@
                             android:text=""
                             android:textColor="@color/theme_green_color"
                             android:textSize="@dimen/text_size_34"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:background="@color/stroke_light_grey_alpha"
+                            />
 
                     </RelativeLayout>
 
@@ -563,39 +569,59 @@
                             android:textColor="@color/theme_green_color"
                             android:textSize="@dimen/text_size_34"/>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:background="@color/stroke_light_grey_alpha"
+                            />
+
                     </RelativeLayout>
 
-                    <LinearLayout
-                        android:id="@+id/linearLayoutCash"
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutCash"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/nl_button_size"
                         android:background="@drawable/background_white_grey_light_selector"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:visibility="visible"
+                        >
 
-                        <ImageView
-                            android:id="@+id/imageViewCashRadio"
-                            android:layout_width="33px"
-                            android:layout_height="33px"
-                            android:layout_marginLeft="26px"
-                            android:src="@drawable/ic_radio_button_normal"
-                            android:tag="mwar"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            >
 
-                        <ImageView
-                            style="@style/payment_option_icon_small"
-                            android:layout_marginLeft="10px"/>
+                            <ImageView
+                                android:id="@+id/imageViewCashRadio"
+                                android:layout_width="33px"
+                                android:layout_height="33px"
+                                android:layout_marginLeft="26px"
+                                android:src="@drawable/ic_radio_button_normal"
+                                android:tag="mwar"/>
 
-                        <TextView
-                            android:id="@+id/textViewCash"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10px"
-                            android:text="@string/cash"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_34"/>
+                            <ImageView
+                                style="@style/payment_option_icon_small"
+                                android:layout_marginLeft="10px"/>
 
-                    </LinearLayout>
+                            <TextView
+                                android:id="@+id/textViewCash"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10px"
+                                android:text="@string/cash"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_34"/>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:background="@color/stroke_light_grey_alpha"
+                            />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
