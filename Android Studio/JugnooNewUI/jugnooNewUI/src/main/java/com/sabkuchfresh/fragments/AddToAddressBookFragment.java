@@ -253,7 +253,7 @@ public class AddToAddressBookFragment extends Fragment {
                             searchResult.setId(searchResultId);
                             if(activity instanceof AddPlaceActivity) {
                                 ((AddPlaceActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
-                            } else if(activity instanceof FreshActivity) {
+                            } else if(activity instanceof FreshActivity && label.length() > 0) {
                                 ((FreshActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
                             }
 
@@ -358,7 +358,7 @@ public class AddToAddressBookFragment extends Fragment {
     }
 
     private boolean fieldsAreFilled() {
-        if(editTextLabel.getText().toString().trim().length() == 0){
+        if(activity instanceof AddPlaceActivity && editTextLabel.getText().toString().trim().length() == 0){
             editTextLabel.requestFocus();
             editTextLabel.setError("required field");
             return false;
