@@ -50,7 +50,7 @@ public class AddToAddressBookFragment extends Fragment {
     private GoogleMap googleMap;
     MarkerOptions marker;
 
-    Button buttonAddToAddressBook, buttonRemove;
+    Button buttonAddToAddressBook;
     RelativeLayout root;
 
     EditText editTextLabel, houseNumber, buildingStreetName, area, city, pinCode;
@@ -151,7 +151,6 @@ public class AddToAddressBookFragment extends Fragment {
         pinCode = (EditText) rootView.findViewById(R.id.edt_pinCode); pinCode.setTypeface(Fonts.mavenRegular(activity));
 
         buttonAddToAddressBook = (Button) rootView.findViewById(R.id.buttonAddToAddressBook); buttonAddToAddressBook.setTypeface(Fonts.mavenRegular(activity));
-        buttonRemove = (Button) rootView.findViewById(R.id.buttonRemove); buttonRemove.setTypeface(Fonts.mavenRegular(activity));
 
         buttonAddToAddressBook.setText(activity.getResources().getString(R.string.confirm));
 
@@ -270,16 +269,6 @@ public class AddToAddressBookFragment extends Fragment {
             }
         });
 
-        buttonRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(activity instanceof AddPlaceActivity) {
-                    AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
-                    addPlaceActivity.hitApiAddHomeWorkAddress(addPlaceActivity.getSearchResult(), true, 0, addPlaceActivity.isEditThisAddress(),
-                            addPlaceActivity.getPlaceRequestCode());
-                }
-            }
-        });
 
         houseNumber.setText(current_street);
         buildingStreetName.setText(current_route);
@@ -297,6 +286,7 @@ public class AddToAddressBookFragment extends Fragment {
                 label = addPlaceActivity.getSearchResult().getName();
             }
             editAddress = addPlaceActivity.isEditThisAddress();
+            addPlaceActivity.getImageViewDelete().setVisibility(editAddress ? View.VISIBLE : View.GONE);
         } else if(activity instanceof FreshActivity){
             FreshActivity freshActivity = ((FreshActivity) activity);
             placeRequestCode = freshActivity.getPlaceRequestCode();
@@ -316,7 +306,8 @@ public class AddToAddressBookFragment extends Fragment {
             editTextLabel.setText(label);
             editTextLabel.setEnabled(true);
         }
-        buttonRemove.setVisibility(editAddress ? View.VISIBLE : View.GONE);
+
+        buttonAddToAddressBook.setText(editAddress ? R.string.update : R.string.confirm);
 
     }
 

@@ -32,7 +32,7 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 
     private final String TAG = AddPlaceActivity.class.getSimpleName();
 
-    private ImageView imageViewBack;
+    private ImageView imageViewBack, imageViewDelete;
     private LinearLayout root;
     private TextView textViewTitle;
     private int placeRequestCode;
@@ -56,6 +56,8 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+        imageViewDelete = (ImageView) findViewById(R.id.imageViewDelete);
+        imageViewDelete.setVisibility(View.GONE);
 
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
@@ -79,6 +81,13 @@ public class AddPlaceActivity extends BaseFragmentActivity {
             @Override
             public void onClick(View v) {
                 editTextDeliveryAddress.setText("");
+            }
+        });
+
+        imageViewDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hitApiAddHomeWorkAddress(getSearchResult(), true, 0, isEditThisAddress(), getPlaceRequestCode());
             }
         });
 
@@ -202,6 +211,10 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 
     public RelativeLayout getRelativeLayoutSearch() {
         return relativeLayoutSearch;
+    }
+
+    public ImageView getImageViewDelete(){
+        return imageViewDelete;
     }
 
     private ApiAddHomeWorkAddress apiAddHomeWorkAddress;
