@@ -166,7 +166,6 @@
                     style="@style/ButtonThemeBig"
                     android:layout_width="0px"
                     android:layout_weight="1"
-                    android:textAllCaps="false"
                     android:text="@string/confirm"
                     />
 

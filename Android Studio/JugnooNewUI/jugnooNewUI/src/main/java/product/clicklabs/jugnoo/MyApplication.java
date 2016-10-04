@@ -417,7 +417,7 @@ public class MyApplication extends Application{
      */
 	public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
 		try{
-			prodViewedAction.put(Events.TIMING, System.currentTimeMillis());
+			prodViewedAction.put(Events.TIMING, System.currentTimeMillis()/1000);
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -428,7 +428,7 @@ public class MyApplication extends Application{
 	public void charged(HashMap<String, Object> chargeDetails, ArrayList<HashMap<String, Object>> items) {
 		try {
 			try{
-				chargeDetails.put(Events.TIMING, System.currentTimeMillis());
+				chargeDetails.put(Events.TIMING, System.currentTimeMillis()/1000);
 			} catch (Exception e){
 				e.printStackTrace();
 			}

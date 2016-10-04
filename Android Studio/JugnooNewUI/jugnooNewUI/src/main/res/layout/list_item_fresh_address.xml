@@ -33,7 +33,7 @@
             android:layout_height="50px"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_loc_other"
+            android:src="@drawable/ic_recent_loc"
             android:layout_marginLeft="30px"
             android:tag="mwar" />
 

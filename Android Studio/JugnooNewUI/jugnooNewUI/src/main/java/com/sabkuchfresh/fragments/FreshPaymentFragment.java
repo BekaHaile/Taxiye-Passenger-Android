@@ -191,7 +191,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         ((TextView) rootView.findViewById(R.id.textViewPromo)).setTypeface(Fonts.mavenLight(activity));
         ((TextView) rootView.findViewById(R.id.textViewPayable)).setTypeface(Fonts.mavenLight(activity));
         textpaymentoption = ((TextView) rootView.findViewById(R.id.textViewPaymentOption));
-        textpaymentoption.setTypeface(Fonts.mavenRegular(activity));
+        textpaymentoption.setTypeface(Fonts.mavenMedium(activity));
+        ((TextView)rootView.findViewById(R.id.textViewPayment)).setTypeface(Fonts.mavenMedium(activity));
 
 
 

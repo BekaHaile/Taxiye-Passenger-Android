@@ -181,21 +181,23 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
-                    android:layout_toRightOf="@+id/imageViewAddNewAddress"
-                    android:text="@string/add_favorite"
+                    android:layout_toRightOf="@+id/textViewAddNewAddressPlus"
+                    android:text="@string/add_new_address"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_28" />
 
-                <ImageView
-                    android:id="@+id/imageViewAddNewAddress"
-                    android:layout_width="30px"
-                    android:layout_height="26px"
-                    android:layout_alignParentLeft="true"
+                <TextView
+                    android:id="@+id/textViewAddNewAddressPlus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="40px"
-                    android:src="@drawable/ic_favorite"
-                    android:tag="mwar" />
+                    android:text="+"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="46px"
+                    />
 
                 <ImageView
                     android:layout_width="660px"

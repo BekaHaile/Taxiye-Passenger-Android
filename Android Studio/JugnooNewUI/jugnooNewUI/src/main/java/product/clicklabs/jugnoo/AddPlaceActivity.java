@@ -21,6 +21,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -87,7 +88,21 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         imageViewDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hitApiAddHomeWorkAddress(getSearchResult(), true, 0, isEditThisAddress(), getPlaceRequestCode());
+                DialogPopup.alertPopupTwoButtonsWithListeners(AddPlaceActivity.this, "",
+                        getString(R.string.address_delete_confirm_message),
+                        getString(R.string.delete), getString(R.string.cancel),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                hitApiAddHomeWorkAddress(getSearchResult(), true, 0, isEditThisAddress(), getPlaceRequestCode());
+                            }
+                        },
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }, false, false);
             }
         });
 

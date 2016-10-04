@@ -251,6 +251,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             }
         });
 
+        boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
         searchListAdapter = new SearchListAdapter(activity, editTextDeliveryAddress, new LatLng(30.75, 76.78), mGoogleApiClient,
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
@@ -322,7 +323,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     public void onPlaceSaved() {
                     }
 
-                }, true);
+                }, showSavedPlaces);
 
         listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
         listViewSearch.setAdapter(searchListAdapter);

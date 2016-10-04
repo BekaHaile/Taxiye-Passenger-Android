@@ -73,6 +73,7 @@ public class SearchListAdapter extends BaseAdapter{
 	private GoogleApiClient mGoogleApiClient;
     private boolean showSavedPlaces;
     private int searchMode;
+	private int favLocationsCount = 0;
 
     /**
      * Constructor for initializing search base adapter
@@ -155,10 +156,12 @@ public class SearchListAdapter extends BaseAdapter{
                 }
                 Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
                 ArrayList<SearchResult> lastPickUp = new Gson().fromJson(json, type);
-				for(int i=0; i<lastPickUp.size(); i++){
+				int maxLast = lastPickUp.size() - favLocationsCount;
+				maxLast = maxLast > 0 ? maxLast : 0;
+				for(int i=0; i<maxLast; i++){
 					lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
+					searchResults.add(lastPickUp.get(i));
 				}
-                searchResults.addAll(lastPickUp);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -378,6 +381,7 @@ public class SearchListAdapter extends BaseAdapter{
 	private synchronized void addFavoriteLocations(String searchText){
 		try {
             if(showSavedPlaces) {
+				favLocationsCount = 0;
 				try {
 					for(int i = Data.userData.getSearchResults().size()-1; i >= 0; i--){
 						SearchResult searchResult = Data.userData.getSearchResults().get(i);
@@ -385,6 +389,7 @@ public class SearchListAdapter extends BaseAdapter{
 								|| searchResult.getAddress().toLowerCase().contains(searchText.toLowerCase())
 								|| searchText.equalsIgnoreCase("")){
 							searchResultsForSearch.add(0, searchResult);
+							favLocationsCount++;
 						}
 					}
 				} catch (Exception e) {
@@ -398,6 +403,7 @@ public class SearchListAdapter extends BaseAdapter{
                         SearchResult searchResult = new Gson().fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""), SearchResult.class);
                         searchResult.setName(SPLabels.ADD_WORK);
                         searchResultsForSearch.add(0, searchResult);
+						favLocationsCount++;
                     }
                 }
 
@@ -408,9 +414,12 @@ public class SearchListAdapter extends BaseAdapter{
                         SearchResult searchResult = new Gson().fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""), SearchResult.class);
                         searchResult.setName(SPLabels.ADD_HOME);
                         searchResultsForSearch.add(0, searchResult);
+						favLocationsCount++;
                     }
                 }
-            }
+            } else{
+				favLocationsCount = 0;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

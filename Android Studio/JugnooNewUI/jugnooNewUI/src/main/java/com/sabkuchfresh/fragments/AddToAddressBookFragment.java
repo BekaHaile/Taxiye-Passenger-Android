@@ -282,18 +282,21 @@ public class AddToAddressBookFragment extends Fragment {
         if(activity instanceof AddPlaceActivity){
             AddPlaceActivity addPlaceActivity = ((AddPlaceActivity) activity);
             placeRequestCode = addPlaceActivity.getPlaceRequestCode();
+            editAddress = addPlaceActivity.isEditThisAddress();
             if(addPlaceActivity.getSearchResult() != null && addPlaceActivity.getSearchResult().getName() != null) {
                 label = addPlaceActivity.getSearchResult().getName();
             }
-            editAddress = addPlaceActivity.isEditThisAddress();
             addPlaceActivity.getImageViewDelete().setVisibility(editAddress ? View.VISIBLE : View.GONE);
+            addPlaceActivity.getTextViewTitle().setText(editAddress ? activity.getString(R.string.edit_address) : activity.getString(R.string.confirm_address));
+
         } else if(activity instanceof FreshActivity){
             FreshActivity freshActivity = ((FreshActivity) activity);
             placeRequestCode = freshActivity.getPlaceRequestCode();
-            if(freshActivity.getSearchResult() != null && freshActivity.getSearchResult().getName() != null) {
+            editAddress = freshActivity.isEditThisAddress();
+            if(editAddress && freshActivity.getSearchResult() != null && freshActivity.getSearchResult().getName() != null) {
                 label = freshActivity.getSearchResult().getName();
             }
-            editAddress = freshActivity.isEditThisAddress();
+            freshActivity.getTopBar().title.setText(editAddress ? activity.getString(R.string.edit_address) : activity.getString(R.string.confirm_address));
         }
 
         if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
@@ -307,7 +310,7 @@ public class AddToAddressBookFragment extends Fragment {
             editTextLabel.setEnabled(true);
         }
 
-        buttonAddToAddressBook.setText(editAddress ? R.string.update : R.string.confirm);
+        buttonAddToAddressBook.setText(editAddress ? R.string.update_address : R.string.confirm);
 
     }
 
