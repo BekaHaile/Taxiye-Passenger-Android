@@ -395,7 +395,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
     public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
-    public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 10; // in meters
+    public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 5; // in meters
 
     public static final float MAX_ZOOM = 16;
     private static final int MAP_ANIMATE_DURATION = 300;

@@ -294,7 +294,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
-                android:background="@drawable/bg_white_menu_item_selector_color_selector"
+                android:background="@drawable/bg_white_menu_item_color_r_bthin_selector"
                 >
 
                 <TextView
@@ -398,13 +398,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:paddingLeft="1px"
+                    android:paddingRight="1px"
                     >
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutPaytm"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/nl_button_size"
-                        android:background="@drawable/bg_white_menu_item_color_r_bthin_selector"
+                        android:background="@drawable/bg_transparent_menu_item_selector"
                         android:visibility="visible"
 
                         >
@@ -463,7 +465,7 @@
                         android:id="@+id/relativeLayoutMobikwik"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/nl_button_size"
-                        android:background="@drawable/background_white_grey_light_selector"
+                        android:background="@drawable/bg_transparent_menu_item_selector"
                         android:visibility="visible"
 
                         >
@@ -522,7 +524,7 @@
                         android:id="@+id/relativeLayoutFreeCharge"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/nl_button_size"
-                        android:background="@drawable/background_white_grey_light_selector"
+                        android:background="@drawable/bg_transparent_menu_item_selector"
                         android:visibility="visible"
 
                         >
@@ -581,7 +583,7 @@
                         android:id="@+id/relativeLayoutCash"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/nl_button_size"
-                        android:background="@drawable/background_white_grey_light_selector"
+                        android:background="@drawable/bg_transparent_menu_item_selector"
                         android:visibility="visible"
                         >
 
