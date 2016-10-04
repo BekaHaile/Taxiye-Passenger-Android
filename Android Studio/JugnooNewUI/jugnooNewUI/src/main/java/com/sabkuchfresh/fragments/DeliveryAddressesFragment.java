@@ -79,7 +79,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private LinearLayout linearLayoutFav, linearLayoutChooseOnMap, linearLayoutCurrentLocation, linearLayoutSearch;
     private RelativeLayout linearLayoutMain, relativeLayoutAddHome, relativeLayoutAddWork;
     private TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue;
-    private ImageView imageViewSep;
+    private ImageView imageViewSep, imageViewEditHome, imageViewEditWork;
     private GoogleApiClient mGoogleApiClient;
     private SearchListAdapter searchListAdapter;
     private ScrollView scrollViewSearch;
@@ -128,6 +128,8 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         linearLayoutChooseOnMap = (LinearLayout)rootView.findViewById(R.id.linearLayoutChooseOnMap);
         relativeLayoutAddHome = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddHome);
         relativeLayoutAddWork = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutAddWork);
+        imageViewEditHome = (ImageView) rootView.findViewById(R.id.imageViewEditHome);
+        imageViewEditWork = (ImageView) rootView.findViewById(R.id.imageViewEditWork);
         textViewAddHome = (TextView)rootView.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
         textViewAddHomeValue = (TextView)rootView.findViewById(R.id.textViewAddHomeValue); textViewAddHomeValue.setTypeface(Fonts.mavenMedium(activity));
         textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
@@ -151,7 +153,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                     }
                 }
-            }, false, true);
+
+                @Override
+                public void onEditClick(SearchResult searchResult) {
+                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
+                }
+            }, true, true);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,6 +212,18 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 }
             }
         });
+        imageViewEditHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+                    final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         relativeLayoutAddWork.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,6 +237,18 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        imageViewEditWork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+                    final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

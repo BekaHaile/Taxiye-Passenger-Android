@@ -83,6 +83,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.imageViewEdit = (ImageView) convertView.findViewById(R.id.imageViewEdit);
 
             holder.relative.setTag(holder);
+            holder.imageViewEdit.setTag(holder);
 
             holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 110));
             ASSL.DoMagic(holder.relative);
@@ -124,7 +125,21 @@ public class SavedPlacesAdapter extends BaseAdapter{
 						e.printStackTrace();
 					}
 				}
+                  });
+
+            holder.imageViewEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        holder = (ViewHolderSearchItem) v.getTag();
+                        final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
+                        callback.onEditClick(autoCompleteSearchResult);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,6 +149,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
 
     public interface Callback{
         void onItemClick(SearchResult searchResult);
+        void onEditClick(SearchResult searchResult);
     }
 
 }

@@ -135,6 +135,17 @@
                         android:src="@drawable/ic_home"
                         android:tag="mwar"/>
 
+                    <ImageView
+                        android:id="@+id/imageViewEditHome"
+                        android:layout_width="60px"
+                        android:layout_height="60px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20px"
+                        android:padding="15px"
+                        android:src="@drawable/edit_icon_selector"
+                        android:tag="mwar"
+                        android:visibility="visible" />
 
                 </RelativeLayout>
 
@@ -191,6 +202,18 @@
                         android:layout_marginLeft="30px"
                         android:src="@drawable/ic_work"
                         android:tag="mwar"/>
+
+                    <ImageView
+                        android:id="@+id/imageViewEditWork"
+                        android:layout_width="60px"
+                        android:layout_height="60px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20px"
+                        android:padding="15px"
+                        android:src="@drawable/edit_icon_selector"
+                        android:tag="mwar"
+                        android:visibility="visible" />
 
                     <ImageView
                         android:layout_width="660px"

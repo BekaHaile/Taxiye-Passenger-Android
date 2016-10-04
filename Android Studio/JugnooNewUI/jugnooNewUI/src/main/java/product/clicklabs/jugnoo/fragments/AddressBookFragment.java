@@ -82,11 +82,12 @@ public class AddressBookFragment extends Fragment {
 			savedPlacesAdapter = new SavedPlacesAdapter(activity, Data.userData.getSearchResults(), new SavedPlacesAdapter.Callback() {
 				@Override
 				public void onItemClick(SearchResult searchResult) {
-					Intent intent = new Intent(activity, AddPlaceActivity.class);
-					intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-					intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
-					startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+					onSavedLocationEdit(searchResult);
+				}
+
+				@Override
+				public void onEditClick(SearchResult searchResult) {
+					onSavedLocationEdit(searchResult);
 				}
 			}, true, false);
 			listViewSavedLocations.setAdapter(savedPlacesAdapter);
@@ -195,5 +196,12 @@ public class AddressBookFragment extends Fragment {
 
 
 
+	private void onSavedLocationEdit(SearchResult searchResult){
+		Intent intent = new Intent(activity, AddPlaceActivity.class);
+		intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+		intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
+		startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+	}
 
 }

@@ -224,6 +224,11 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                     startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 }
+
+                @Override
+                public void onEditClick(SearchResult searchResult) {
+
+                }
             }, true, false);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
         } catch (Exception e) {
