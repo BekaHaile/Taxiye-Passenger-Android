@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -324,14 +325,14 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                     buttonProceedToPayment.setText(getActivity().getResources().getString(R.string.proceed_to_payment));
                                     activity.setUserCheckoutResponse(userCheckoutResponse);
                                     Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
-                                    try {
-                                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), userCheckoutResponse.getCheckoutData().getLastAddressLatitude());
-                                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), userCheckoutResponse.getCheckoutData().getLastAddressLongitude());
-                                    } catch (Exception e) {
-                                        // if sometimes data not found or some other error occures
-                                    }
                                     checkout.get(0).setCaddress(userCheckoutResponse.getCheckoutData().getLastAddress());
                                     activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+                                    activity.setSelectedAddressId(0);
+                                    try {
+                                        activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
+												Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+                                    } catch (Exception e) {
+                                    }
                                     generateSlots();
 
                                     String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
@@ -521,8 +522,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     public void onUpdateListEvent(AddressAdded event) {
         if (event.flag) {
             // New Address added
-            activity.setSelectedAddress(Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_local_address), ""));
-            checkout.get(0).setCaddress(Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_local_address), ""));
+            checkout.get(0).setCaddress(activity.getSelectedAddress());
             checkoutAdapter.setList(checkout);
 //            checkoutAdapter.notifyDataSetChanged();
         }

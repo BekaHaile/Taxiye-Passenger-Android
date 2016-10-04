@@ -195,12 +195,9 @@ public class AddToAddressBookFragment extends Fragment {
                             String savedHomeStr = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
 
                             if(activity instanceof FreshActivity) {
-                                Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), localAddress);
-                                Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), ""+current_latitude);
-                                Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), ""+current_longitude);
-
-                                mBus.post(new AddressAdded(true));
                                 ((FreshActivity) activity).setSelectedAddress(localAddress);
+                                ((FreshActivity)activity).setSelectedLatLng(new LatLng(current_latitude, current_longitude));
+
 
                                 FreshActivity freshActivity = (FreshActivity) activity;
                                 deliveryAddressesFragment = freshActivity.getDeliveryAddressesFragment();
@@ -208,7 +205,10 @@ public class AddToAddressBookFragment extends Fragment {
                                 editThisAddress = freshActivity.isEditThisAddress();
                                 if (freshActivity.isEditThisAddress() && freshActivity.getSearchResult() != null) {
                                     searchResultId = freshActivity.getSearchResult().getId();
+                                    ((FreshActivity)activity).setSelectedAddressId(searchResultId);
                                 }
+
+                                mBus.post(new AddressAdded(true));
                             }
                             else if(activity instanceof AddPlaceActivity){
                                 AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;

@@ -828,12 +828,15 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
 
-                params.put(Constants.DELIVERY_LATITUDE, Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(Data.latitude)));
-                params.put(Constants.DELIVERY_LONGITUDE, Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(Data.longitude)));
+                params.put(Constants.DELIVERY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+                params.put(Constants.DELIVERY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
 
                 params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(activity.getPaymentOption().getOrdinal()));
                 params.put(Constants.KEY_DELIVERY_SLOT_ID, String.valueOf(activity.getSlotSelected().getDeliverySlotId()));
                 params.put(Constants.KEY_DELIVERY_ADDRESS, String.valueOf(activity.getSelectedAddress()));
+                if(activity.getSelectedAddressId() > 0){
+                    params.put(Constants.KEY_DELIVERY_ADDRESS_ID, String.valueOf(activity.getSelectedAddressId()));
+                }
                 params.put(Constants.KEY_DELIVERY_NOTES, String.valueOf(activity.getSpecialInst()));
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.KEY_CART, cartItems());

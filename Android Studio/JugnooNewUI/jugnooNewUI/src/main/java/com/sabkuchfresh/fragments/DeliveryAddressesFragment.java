@@ -146,7 +146,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 public void onItemClick(SearchResult searchResult) {
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress());
+                                searchResult.getAddress(), searchResult.getId());
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                     }
@@ -196,7 +196,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress());
+                                searchResult.getAddress(), searchResult.getId());
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
                     }
@@ -214,7 +214,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress());
+                                searchResult.getAddress(), searchResult.getId());
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
                     }
@@ -491,9 +491,6 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 				freshActivity.setSearchResult(searchResult);
                 freshActivity.setEditThisAddress(editThisAddress);
 			}
-            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), String.valueOf(searchResult.getLatitude()));
-            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), String.valueOf(searchResult.getLongitude()));
-            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), searchResult.getAddress());
             setAddressToBundle(searchResult);
         } catch (Exception e) {
             e.printStackTrace();
@@ -581,15 +578,14 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     @Override
     public void onSlotSelected(int position, DeliveryAddress slot) {
-        onAddressSelected(slot.getDeliveryLatitude(), slot.getDeliveryLongitude(), slot.getLastAddress());
+        onAddressSelected(slot.getDeliveryLatitude(), slot.getDeliveryLongitude(), slot.getLastAddress(), 0);
     }
 
-    private void onAddressSelected(String latitude, String longitude, String address){
+    private void onAddressSelected(String latitude, String longitude, String address, int addressId){
         if(activity instanceof FreshActivity) {
-            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), latitude);
-            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), longitude);
-            Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), address);
             ((FreshActivity)activity).setSelectedAddress(address);
+            ((FreshActivity)activity).setSelectedLatLng(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));
+            ((FreshActivity)activity).setSelectedAddressId(addressId);
             mBus.post(new AddressAdded(true));
             ((FreshActivity)activity).performBackPressed();
         }

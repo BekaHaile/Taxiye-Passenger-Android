@@ -124,6 +124,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private UserCheckoutResponse userCheckoutResponse;
 
     private String selectedAddress = "";
+    private LatLng selectedLatLng;
+    private int selectedAddressId = 0;
     private String splInstr = "";
     private Slot slotSelected, slotToSelect;
     private PaymentOption paymentOption;
@@ -186,6 +188,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            selectedLatLng = new LatLng(Data.latitude, Data.longitude);
+            selectedAddressId = 0;
 
             linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
             relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
@@ -1885,7 +1890,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
                 @Override
                 public void onSuccess(SearchResult searchResult, String strResult) {
-                    //TODO after address added
+                    try {
+                        setSelectedAddressId(searchResult.getId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -1932,4 +1941,19 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
 
+    public LatLng getSelectedLatLng() {
+        return selectedLatLng;
+    }
+
+    public void setSelectedLatLng(LatLng selectedLatLng) {
+        this.selectedLatLng = selectedLatLng;
+    }
+
+    public int getSelectedAddressId() {
+        return selectedAddressId;
+    }
+
+    public void setSelectedAddressId(int selectedAddressId) {
+        this.selectedAddressId = selectedAddressId;
+    }
 }

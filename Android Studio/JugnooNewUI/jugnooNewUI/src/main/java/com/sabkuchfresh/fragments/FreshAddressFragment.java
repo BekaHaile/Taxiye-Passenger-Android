@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshAddressAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -21,7 +22,6 @@ import com.squareup.otto.Subscribe;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
-import product.clicklabs.jugnoo.utils.Prefs;
 
 
 public class FreshAddressFragment extends Fragment implements View.OnClickListener, FlurryEventNames, FreshAddressAdapter.Callback {
@@ -146,12 +146,9 @@ public class FreshAddressFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onSlotSelected(int position, DeliveryAddress slot) {
-
-        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), slot.getDeliveryLatitude());
-        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), slot.getDeliveryLongitude());
-        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_local_address), "" + slot.getLastAddress());
-
-        activity.setSelectedAddress("" + slot.getLastAddress());
+        activity.setSelectedAddress(slot.getLastAddress());
+        activity.setSelectedLatLng(new LatLng(Double.parseDouble(slot.getDeliveryLatitude()), Double.parseDouble(slot.getDeliveryLongitude())));
+        activity.setSelectedAddressId(0);
         FlurryEventLogger.event(Address_Screen, CHANGE_ADDRESS, ""+position);
 
         mBus.post(new AddressAdded(true));
