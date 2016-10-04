@@ -520,19 +520,19 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             if(address.length > 2 && (!TextUtils.isEmpty(address[2].trim())))
                 current_area = "" + address[2].trim();
 
-            int val = 0;
-            if(!TextUtils.isEmpty(address[address.length - 1].replaceAll("\\D+","")) && address.length>3) {
-                current_street = address[address.length - 1].replaceAll("\\D+","");
-                val = 1;
-            }
+            if(address.length > 3 && (!TextUtils.isEmpty(address[3].trim())))
+                current_route = "" + address[3].trim();
 
-            current_route = "";
-            if(address.length>3) {
-                for (int i = 3; i < address.length - val; i++) {
-                    if(i==3) {
-                        current_route = address[i].trim();
-                    } else {
-                        current_route = current_route+", "+address[i].trim();
+            if(address.length > 4 && (!TextUtils.isEmpty(address[4].trim())))
+                current_street = "" + address[4].trim();
+
+            if(address.length > 5){
+                current_street = "";
+                for(int i=address.length-1; i > 3; i--){
+                    if(current_street.equalsIgnoreCase("")){
+                        current_street = address[i].trim();
+                    } else{
+                        current_street = current_street+", "+address[i].trim();
                     }
                 }
             }
