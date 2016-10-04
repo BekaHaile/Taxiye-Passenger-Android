@@ -1,12 +1,12 @@
 package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -61,7 +61,7 @@ public class FreshAddressAdapter extends BaseAdapter {
         ViewHolderSlot holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_fresh_address, parent, false);
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+            ListView.LayoutParams layoutParams = new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT);
             convertView.setLayoutParams(layoutParams);
             ASSL.DoMagic(convertView);
             holder = new ViewHolderSlot(convertView, activity);
@@ -106,13 +106,12 @@ public class FreshAddressAdapter extends BaseAdapter {
 
     }
 
-    private class ViewHolderSlot extends RecyclerView.ViewHolder {
+    private class ViewHolderSlot {
         public int id;
         public RelativeLayout linear;
         private ImageView imageViewRadio, imageViewDivider;
         public TextView textViewLast;
         public ViewHolderSlot(View itemView, Activity context) {
-            super(itemView);
             linear = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutLast);
             imageViewRadio = (ImageView) itemView.findViewById(R.id.imageViewLast);
             imageViewDivider = (ImageView) itemView.findViewById(R.id.imageViewDivider);
