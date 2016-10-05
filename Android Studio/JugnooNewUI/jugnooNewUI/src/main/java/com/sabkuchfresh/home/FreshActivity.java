@@ -903,6 +903,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
 				topBar.imageViewDelete.setVisibility(View.VISIBLE);
+                topBar.imageViewDelete.setOnClickListener(topBar.topBarOnClickListener);
 				textViewCheckout.setVisibility(View.VISIBLE);
 				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 
@@ -1889,9 +1890,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         if(apiAddHomeWorkAddress == null){
             apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
                 @Override
-                public void onSuccess(SearchResult searchResult, String strResult) {
+                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
                     try {
-                        setSelectedAddressId(searchResult.getId());
+                        if(!addressDeleted) {
+                            setSelectedAddressId(searchResult.getId());
+                        } else{
+                            performBackPressed();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

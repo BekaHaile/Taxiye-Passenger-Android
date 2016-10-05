@@ -372,25 +372,28 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20px"
-                android:layout_marginRight="20px"
                 android:layout_marginTop="40px"
-                android:background="@drawable/bg_white_r_bthin"
                 android:orientation="vertical"
                 >
 
                 <TextView
                     android:id="@+id/textViewPaymentOption"
                     android:layout_width="match_parent"
-                    android:layout_height="70px"
+                    android:layout_height="40px"
                     android:gravity="center_vertical"
-                    android:paddingLeft="10px"
+                    android:paddingLeft="30px"
                     android:singleLine="true"
                     android:text="PAYMENT OPTIONS"
                     android:textColor="@color/theme_color"
                     android:textSize="@dimen/text_size_22"
                     android:visibility="visible"
                     />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:background="@color/divider_color"
+                    />
+
 
 
                 <LinearLayout
@@ -456,7 +459,10 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="2px"
-                            android:background="@color/stroke_light_grey_alpha"
+                            android:layout_marginLeft="30px"
+                            android:layout_marginRight="30px"
+                            android:background="@color/divider_color"
+                            android:layout_alignParentBottom="true"
                             />
 
                     </RelativeLayout>
@@ -515,7 +521,10 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="2px"
-                            android:background="@color/stroke_light_grey_alpha"
+                            android:layout_marginLeft="30px"
+                            android:layout_marginRight="30px"
+                            android:background="@color/divider_color"
+                            android:layout_alignParentBottom="true"
                             />
 
                     </RelativeLayout>
@@ -574,7 +583,10 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="2px"
-                            android:background="@color/stroke_light_grey_alpha"
+                            android:layout_marginLeft="30px"
+                            android:layout_marginRight="30px"
+                            android:background="@color/divider_color"
+                            android:layout_alignParentBottom="true"
                             />
 
                     </RelativeLayout>
@@ -620,7 +632,10 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="2px"
-                            android:background="@color/stroke_light_grey_alpha"
+                            android:layout_marginLeft="30px"
+                            android:layout_marginRight="30px"
+                            android:background="@color/divider_color"
+                            android:layout_alignParentBottom="true"
                             />
 
                     </RelativeLayout>

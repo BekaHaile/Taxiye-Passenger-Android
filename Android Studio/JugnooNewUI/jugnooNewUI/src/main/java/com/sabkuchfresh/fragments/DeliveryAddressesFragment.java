@@ -77,6 +77,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private FreshAddressAdapter addressFragment;
     private NonScrollListView listViewDeliveryAddress, listViewSavedLocations;
     private LinearLayout linearLayoutFav, linearLayoutChooseOnMap, linearLayoutCurrentLocation, linearLayoutSearch;
+    private TextView textViewSavedPlaces, textViewRecentAddresses;
     private RelativeLayout linearLayoutMain, relativeLayoutAddHome, relativeLayoutAddWork;
     private TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue;
     private ImageView imageViewSep, imageViewEditHome, imageViewEditWork;
@@ -140,6 +141,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         scrollViewSearch.setVisibility(View.GONE);
         listViewDeliveryAddress = (NonScrollListView) rootView.findViewById(R.id.listViewDeliveryAddress);
         linearLayoutFav.setVisibility(View.GONE);
+        textViewSavedPlaces = (TextView) rootView.findViewById(R.id.textViewSavedPlaces); textViewSavedPlaces.setTypeface(Fonts.mavenMedium(activity));
+        textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
+        textViewSavedPlaces.setVisibility(View.GONE);
+        textViewRecentAddresses.setVisibility(View.GONE);
 
         listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
         try {
@@ -180,6 +185,11 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             listViewDeliveryAddress.setVisibility(View.VISIBLE);
             addressFragment = new FreshAddressAdapter(((FreshActivity)activity), deliveryAddresses, this);
             listViewDeliveryAddress.setAdapter(addressFragment);
+            if(deliveryAddresses.size() > 0){
+                textViewRecentAddresses.setVisibility(View.VISIBLE);
+            } else{
+                textViewRecentAddresses.setVisibility(View.GONE);
+            }
         }
         else if(activity instanceof AddPlaceActivity){
             listViewDeliveryAddress.setVisibility(View.GONE);
@@ -382,11 +392,13 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         super.onHiddenChanged(hidden);
         if(!hidden && (activity instanceof FreshActivity)) {
             ((FreshActivity) activity).fragmentUISetup(this);
+            setSavePlaces();
         } else if(!hidden && (activity instanceof AddPlaceActivity)){
             AddPlaceActivity addPlaceActivity = (AddPlaceActivity)activity;
             addPlaceActivity.getTextViewTitle().setVisibility(View.GONE);
             addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.VISIBLE);
         }
+
     }
 
     private interface GetLatLngFromPlaceId{
@@ -486,7 +498,11 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                                 route = geocodeResponse.results.get(0).getRoute() + ", ";
 
                             if(activity instanceof FreshActivity) {
-                                ((FreshActivity)activity).openAddToAddressBook(createAddressBundle());
+                                FreshActivity freshActivity = (FreshActivity) activity;
+                                freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                                freshActivity.setSearchResult(null);
+                                freshActivity.setEditThisAddress(false);
+                                freshActivity.openAddToAddressBook(createAddressBundle());
                             }else if(activity instanceof AddPlaceActivity){
                                 ((AddPlaceActivity)activity).openAddToAddressBook(createAddressBundle());
                             }
@@ -581,12 +597,14 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
 
     private void setSavePlaces() {
+        int savedPlaces = 0;
         if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
             SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
             textViewAddHome.setText(getResources().getString(R.string.home));
             textViewAddHomeValue.setVisibility(View.VISIBLE);
             textViewAddHomeValue.setText(searchResult.getAddress());
+            savedPlaces++;
         } else{
             relativeLayoutAddHome.setVisibility(View.GONE);
             textViewAddHome.setText(getResources().getString(R.string.add_home));
@@ -600,11 +618,21 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             textViewAddWork.setText(getResources().getString(R.string.work));
             textViewAddWorkValue.setVisibility(View.VISIBLE);
             textViewAddWorkValue.setText(searchResult.getAddress());
+            savedPlaces++;
         } else{
             relativeLayoutAddWork.setVisibility(View.GONE);
             textViewAddWork.setText(getResources().getString(R.string.add_work));
             textViewAddWorkValue.setVisibility(View.GONE);
             imageViewSep.setVisibility(View.GONE);
+        }
+        if(savedPlacesAdapter != null) {
+            savedPlacesAdapter.notifyDataSetChanged();
+            savedPlaces = savedPlaces + Data.userData.getSearchResults().size();
+        }
+        if(savedPlaces > 0) {
+            textViewSavedPlaces.setVisibility(View.VISIBLE);
+        } else {
+            textViewSavedPlaces.setVisibility(View.GONE);
         }
     }
 

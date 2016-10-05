@@ -79,13 +79,27 @@
                 </LinearLayout>
             </LinearLayout>
 
+
+            <TextView
+                android:id="@+id/textViewSavedPlaces"
+                android:layout_width="wrap_content"
+                android:layout_height="40px"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/saved_places"
+                android:textAllCaps="true"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/text_size_22"
+                android:visibility="visible"
+                android:layout_marginTop="30px"
+                android:layout_marginLeft="30px"
+                />
             <LinearLayout
                 android:id="@+id/linearLayoutFav"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16px"
                 android:layout_marginRight="16px"
-                android:layout_marginTop="30px"
                 android:background="@drawable/bg_white_r_bthin"
                 android:orientation="vertical">
 
@@ -235,13 +249,27 @@
 
             </LinearLayout>
 
+
+            <TextView
+                android:id="@+id/textViewRecentAddresses"
+                android:layout_width="wrap_content"
+                android:layout_height="40px"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/recent_addresses"
+                android:textAllCaps="true"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/text_size_22"
+                android:visibility="visible"
+                android:layout_marginTop="30px"
+                android:layout_marginLeft="30px"
+                />
             <product.clicklabs.jugnoo.utils.NonScrollListView
                 android:id="@+id/listViewDeliveryAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16px"
                 android:layout_marginRight="16px"
-                android:layout_marginTop="30px"
                 android:background="@drawable/bg_white_r_bthin"
                 android:fadeScrollbars="true"
                 android:scrollbars="vertical"

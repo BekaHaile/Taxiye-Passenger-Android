@@ -238,7 +238,7 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         if(apiAddHomeWorkAddress == null){
             apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
                 @Override
-                public void onSuccess(SearchResult searchResult, String strResult) {
+                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
                     Intent intent = new Intent();
                     intent.putExtra("PLACE", strResult);
                     if("".equalsIgnoreCase(strResult)) {

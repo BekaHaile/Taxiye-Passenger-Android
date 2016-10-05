@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,6 +39,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -290,27 +293,110 @@ public class AddToAddressBookFragment extends Fragment {
             addPlaceActivity.getTextViewTitle().setText(editAddress ? activity.getString(R.string.edit_address) : activity.getString(R.string.confirm_address));
 
         } else if(activity instanceof FreshActivity){
-            FreshActivity freshActivity = ((FreshActivity) activity);
+            final FreshActivity freshActivity = ((FreshActivity) activity);
             placeRequestCode = freshActivity.getPlaceRequestCode();
             editAddress = freshActivity.isEditThisAddress();
             if(editAddress && freshActivity.getSearchResult() != null && freshActivity.getSearchResult().getName() != null) {
                 label = freshActivity.getSearchResult().getName();
             }
             freshActivity.getTopBar().title.setText(editAddress ? activity.getString(R.string.edit_address) : activity.getString(R.string.confirm_address));
+            freshActivity.getTopBar().imageViewDelete.setVisibility(editAddress ? View.VISIBLE : View.GONE);
+            freshActivity.getTopBar().imageViewDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogPopup.alertPopupTwoButtonsWithListeners(freshActivity, "",
+                            getString(R.string.address_delete_confirm_message),
+                            getString(R.string.delete), getString(R.string.cancel),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    freshActivity.hitApiAddHomeWorkAddress(freshActivity.getSearchResult(), true, 0,
+                                            freshActivity.isEditThisAddress(), freshActivity.getPlaceRequestCode());
+                                }
+                            },
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            }, false, false);
+                }
+            });
         }
 
         if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
             editTextLabel.setText(getString(R.string.home));
             editTextLabel.setEnabled(false);
+            houseNumber.requestFocus();
+            houseNumber.setSelection(houseNumber.getText().length());
         } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
             editTextLabel.setText(getString(R.string.work));
             editTextLabel.setEnabled(false);
+            houseNumber.requestFocus();
+            houseNumber.setSelection(houseNumber.getText().length());
         } else {
             editTextLabel.setText(label);
             editTextLabel.setEnabled(true);
+            editTextLabel.requestFocus();
+            editTextLabel.setSelection(editTextLabel.getText().length());
         }
 
         buttonAddToAddressBook.setText(editAddress ? R.string.update_address : R.string.confirm);
+
+        editTextLabel.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                houseNumber.requestFocus();
+                houseNumber.setSelection(houseNumber.getText().length());
+                return true;
+            }
+        });
+        houseNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                buildingStreetName.requestFocus();
+                buildingStreetName.setSelection(buildingStreetName.getText().length());
+                return true;
+            }
+        });
+        buildingStreetName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                area.requestFocus();
+                area.setSelection(area.getText().length());
+                return true;
+            }
+        });
+        area.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                city.requestFocus();
+                city.setSelection(city.getText().length());
+                return true;
+            }
+        });
+        city.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                pinCode.requestFocus();
+                pinCode.setSelection(pinCode.getText().length());
+                return true;
+            }
+        });
+        pinCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                buttonAddToAddressBook.performClick();
+                return true;
+            }
+        });
+
 
     }
 

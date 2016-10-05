@@ -156,8 +156,9 @@ public class SearchListAdapter extends BaseAdapter{
                 }
                 Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
                 ArrayList<SearchResult> lastPickUp = new Gson().fromJson(json, type);
-				int maxLast = lastPickUp.size() - favLocationsCount;
+				int maxLast = lastPickUp.size() - favLocationsCount + 2;
 				maxLast = maxLast > 0 ? maxLast : 0;
+				maxLast = maxLast > lastPickUp.size() ? lastPickUp.size() : maxLast;
 				for(int i=0; i<maxLast; i++){
 					lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
 					searchResults.add(lastPickUp.get(i));

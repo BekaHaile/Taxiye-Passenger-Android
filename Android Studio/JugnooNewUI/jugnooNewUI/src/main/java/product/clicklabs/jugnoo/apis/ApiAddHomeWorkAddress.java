@@ -136,7 +136,7 @@ public class ApiAddHomeWorkAddress {
 											}
 										}
 									}
-									callback.onSuccess(searchResult, strResult);
+									callback.onSuccess(searchResult, strResult, deleteAddress);
 								}
 
 							} else{
@@ -189,7 +189,7 @@ public class ApiAddHomeWorkAddress {
 
 
 	public interface Callback{
-		void onSuccess(SearchResult searchResult, String strResult);
+		void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted);
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);

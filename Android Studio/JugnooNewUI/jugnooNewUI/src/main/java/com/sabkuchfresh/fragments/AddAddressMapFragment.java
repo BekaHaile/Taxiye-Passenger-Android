@@ -52,6 +52,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.AddPlaceActivity;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
@@ -262,7 +263,11 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             public void onClick(View v) {
                 if(unsatflag) {
                     if(activity instanceof FreshActivity) {
-                        ((FreshActivity) activity).openAddToAddressBook(createAddressBundle());
+                        FreshActivity freshActivity = (FreshActivity) activity;
+                        freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                        freshActivity.setSearchResult(null);
+                        freshActivity.setEditThisAddress(false);
+                        freshActivity.openAddToAddressBook(createAddressBundle());
                     } else if(activity instanceof AddPlaceActivity){
                         ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle());
                     }
