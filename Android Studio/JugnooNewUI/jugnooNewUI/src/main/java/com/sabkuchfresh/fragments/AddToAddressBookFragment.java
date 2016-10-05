@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -397,7 +398,13 @@ public class AddToAddressBookFragment extends Fragment {
             }
         });
 
-        Utils.showSoftKeyboard(activity, editTextLabel);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Utils.showSoftKeyboard(activity, houseNumber);
+            }
+        }, 100);
+
 
     }
 
