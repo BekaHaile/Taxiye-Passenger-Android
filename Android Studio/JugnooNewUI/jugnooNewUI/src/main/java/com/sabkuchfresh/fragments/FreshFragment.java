@@ -221,7 +221,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                         activity.openFeedback();
                     }
                 }, 300);
-
             }
         } catch (Exception e) {
             e.printStackTrace();

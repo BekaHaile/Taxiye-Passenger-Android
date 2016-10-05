@@ -1149,6 +1149,24 @@
 	<string name="engagement_id">Engagement ID</string>
 	<string name="empty_engagement_id">Empty engagement id</string>
 	<string name="invalid_engagement_id">Invalid engagement id</string>
+	<string name="offers">Offers</string>
+	<string name="select_offers">Select Offers</string>
+	<string name="add_new_address">Add new address</string>
+	<string name="could_not_find_address">Could not find address</string>
+	<string name="label_can_not_be_empty">Label can\'t be empty</string>
+	<string name="label">Label e.g. Home/Office</string>
+	<string name="add_favorite">Add Favorite</string>
+	<string name="address_book">Address Book</string>
+	<string name="wallet_topup">Wallet Topup</string>
+	<string name="enter_topup_card_code">Enter Topup Card code</string>
+	<string name="recharge_jc_topup_info">Recharge Jugnoo Cash with Topup Card</string>
+	<string name="topup_code_empty">Topup code empty</string>
+	<string name="update_address">Update Address</string>
+	<string name="address_delete_confirm_message">Are you sure you want to delete this address?</string>
+	<string name="edit_address">Edit Address</string>
+	<string name="saved_places">Saved Places</string>
+	<string name="recent_addresses">Recent Addresses</string>
+	<string name="avail_offers">Avail Offers</string>
 
 
 </resources>

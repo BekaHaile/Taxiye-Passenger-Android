@@ -301,7 +301,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     onClickAction(MenuInfoTags.GET_A_RIDE.getTag());
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
-                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_AUTOS, null);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_AUTOS, new Bundle());
                 }
             });
 
@@ -311,7 +311,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     onClickAction(MenuInfoTags.FRESH.getTag());
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
-                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_FRESH, null);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_FRESH, new Bundle());
                 }
             });
 
@@ -321,7 +321,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     onClickAction(MenuInfoTags.MEALS.getTag());
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     holder.imageViewArrow.setRotation(270);
-                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_MEALS, null);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_MEALS, new Bundle());
                 }
             });
 
@@ -340,6 +340,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     onClickAction(MenuInfoTags.GROCERY.getTag());
                     holder.imageViewArrow.setRotation(270);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_GROCERY, new Bundle());
                 }
             });
         }

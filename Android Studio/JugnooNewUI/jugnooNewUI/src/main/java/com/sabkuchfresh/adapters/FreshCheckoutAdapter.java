@@ -120,8 +120,8 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.text_color));
                     ((ViewHolderHeader) holder).textViewDeliveryAddress.setVisibility(View.VISIBLE);
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setText(activity.getResources().getString(R.string.delivery_address));
-                    ((ViewHolderHeader)holder).imageViewForward.setVisibility(View.GONE);
-                    ((ViewHolderHeader)holder).imageViewEditAddress.setVisibility(View.VISIBLE);
+                    ((ViewHolderHeader)holder).imageViewForward.setVisibility(View.VISIBLE);
+                    ((ViewHolderHeader)holder).imageViewEditAddress.setVisibility(View.GONE);
                 } else {
                     //((ViewHolderHeader)holder).textViewDeliveryAddress.setVisibility(View.GONE);
                     ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.text_color));
@@ -208,7 +208,9 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                             int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                             if(appType == AppConstant.ApplicationType.MEALS){
                                 MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
-                            }else{
+                            } else if(appType == AppConstant.ApplicationType.GROCERY){
+                                MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
+                            } else{
                                 MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
                             }
                         } catch (Exception e) {

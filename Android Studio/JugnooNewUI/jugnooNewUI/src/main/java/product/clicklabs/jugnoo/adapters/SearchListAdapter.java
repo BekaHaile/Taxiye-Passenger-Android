@@ -41,7 +41,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -74,6 +73,7 @@ public class SearchListAdapter extends BaseAdapter{
 	private GoogleApiClient mGoogleApiClient;
     private boolean showSavedPlaces;
     private int searchMode;
+	private int favLocationsCount = 0;
 
     /**
      * Constructor for initializing search base adapter
@@ -156,10 +156,15 @@ public class SearchListAdapter extends BaseAdapter{
                 }
                 Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
                 ArrayList<SearchResult> lastPickUp = new Gson().fromJson(json, type);
-				for(int i=0; i<lastPickUp.size(); i++){
-					lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
+
+				if(favLocationsCount < 5){
+					int locationsToAdd = 5 - favLocationsCount;
+					locationsToAdd = locationsToAdd > lastPickUp.size() ? lastPickUp.size() : locationsToAdd;
+					for(int i=0; i<locationsToAdd; i++){
+						lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
+						searchResults.add(lastPickUp.get(i));
+					}
 				}
-                searchResults.addAll(lastPickUp);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -219,10 +224,10 @@ public class SearchListAdapter extends BaseAdapter{
             holder.textViewSearchName.setText(searchResults.get(position).getName());
             holder.textViewSearchAddress.setText(searchResults.get(position).getAddress());
 
-            if(searchResults.get(position).getName().equalsIgnoreCase(SPLabels.ADD_HOME)){
+            if(searchResults.get(position).getType() == SearchResult.Type.HOME){
                 holder.imageViewType.setVisibility(View.VISIBLE);
                 holder.imageViewType.setImageResource(R.drawable.ic_home);
-            } else if(searchResults.get(position).getName().equalsIgnoreCase(SPLabels.ADD_WORK)){
+            } else if(searchResults.get(position).getType() == SearchResult.Type.WORK){
                 holder.imageViewType.setVisibility(View.VISIBLE);
                 holder.imageViewType.setImageResource(R.drawable.ic_work);
             } else{
@@ -289,9 +294,9 @@ public class SearchListAdapter extends BaseAdapter{
     public synchronized void notifyDataSetChanged() {
         if (searchResults.size() > 1) {
             if (searchResults.contains(new SearchResult(context.getResources()
-                    .getString(R.string.no_results_found), "", ""))) {
+                    .getString(R.string.no_results_found), "", "", 0, 0))) {
                 searchResults.remove(searchResults.indexOf(new SearchResult(context.getResources()
-                        .getString(R.string.no_results_found), "", "")));
+                        .getString(R.string.no_results_found), "", "", 0, 0)));
             }
         }
 
@@ -323,7 +328,8 @@ public class SearchListAdapter extends BaseAdapter{
 							for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
                                 String name = autocompletePrediction.getFullText(null).toString().split(",")[0];
 								searchResultsForSearch.add(new SearchResult(name,
-                                        autocompletePrediction.getFullText(null).toString(), autocompletePrediction.getPlaceId()));
+                                        autocompletePrediction.getFullText(null).toString(),
+										autocompletePrediction.getPlaceId(), 0, 0));
 							}
 							autocompletePredictions.release();
 
@@ -362,10 +368,10 @@ public class SearchListAdapter extends BaseAdapter{
 				if ((searchResultsForSearch.size()) == 0 && (editTextForSearch.getText().toString().trim().length() > 0)) {
                     if(AppStatus.getInstance(context).isOnline(context)) {
                         searchResultsForSearch.add(new SearchResult(context.getResources()
-                                .getString(R.string.no_results_found), "", ""));
+                                .getString(R.string.no_results_found), "", "", 0, 0));
                     } else{
                         searchResultsForSearch.add(new SearchResult(context.getResources()
-                                .getString(R.string.no_internet_connection), "", ""));
+                                .getString(R.string.no_internet_connection), "", "", 0, 0));
                     }
                 }
                 SearchListAdapter.this.setResults(searchResultsForSearch);
@@ -378,13 +384,30 @@ public class SearchListAdapter extends BaseAdapter{
 	private synchronized void addFavoriteLocations(String searchText){
 		try {
             if(showSavedPlaces) {
-                if (!Prefs.with(context).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+				favLocationsCount = 0;
+				try {
+					for(int i = Data.userData.getSearchResults().size()-1; i >= 0; i--){
+						SearchResult searchResult = Data.userData.getSearchResults().get(i);
+						if(searchResult.getName().toLowerCase().contains(searchText.toLowerCase())
+								|| searchResult.getAddress().toLowerCase().contains(searchText.toLowerCase())
+								|| searchText.equalsIgnoreCase("")){
+							searchResultsForSearch.add(0, searchResult);
+							favLocationsCount++;
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				if (!Prefs.with(context).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
                     if (SPLabels.ADD_WORK.toLowerCase().contains(searchText.toLowerCase()) ||
                             Prefs.with(context).getString(SPLabels.ADD_WORK, "").toLowerCase().contains(searchText.toLowerCase())
                             || searchText.equalsIgnoreCase("")) {
-                        SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_WORK, ""));
+                        SearchResult searchResult = new Gson().fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""), SearchResult.class);
                         searchResult.setName(SPLabels.ADD_WORK);
+						searchResult.setType(SearchResult.Type.WORK);
                         searchResultsForSearch.add(0, searchResult);
+						favLocationsCount++;
                     }
                 }
 
@@ -392,12 +415,16 @@ public class SearchListAdapter extends BaseAdapter{
                     if (SPLabels.ADD_HOME.toLowerCase().contains(searchText.toLowerCase()) ||
                             Prefs.with(context).getString(SPLabels.ADD_HOME, "").toLowerCase().contains(searchText.toLowerCase())
                             || searchText.equalsIgnoreCase("")) {
-                        SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(Prefs.with(context).getString(SPLabels.ADD_HOME, ""));
+                        SearchResult searchResult = new Gson().fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""), SearchResult.class);
                         searchResult.setName(SPLabels.ADD_HOME);
+						searchResult.setType(SearchResult.Type.HOME);
                         searchResultsForSearch.add(0, searchResult);
+						favLocationsCount++;
                     }
                 }
-            }
+            } else{
+				favLocationsCount = 0;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -417,7 +444,8 @@ public class SearchListAdapter extends BaseAdapter{
                             if (places.getStatus().isSuccess()) {
                                 final Place myPlace = places.get(0);
                                 final CharSequence thirdPartyAttributions = places.getAttributions();
-                                SearchResult searchResult = new SearchResult(placeName, placeAddress, myPlace.getLatLng());
+                                SearchResult searchResult = new SearchResult(placeName, placeAddress, placeId,
+										myPlace.getLatLng().latitude, myPlace.getLatLng().longitude);
                                 searchResult.setThirdPartyAttributions(thirdPartyAttributions);
                                 setSearchResult(searchResult);
                             }

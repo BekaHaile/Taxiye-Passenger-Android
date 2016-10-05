@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -75,18 +76,11 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
         Data.AppType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
 
 		try {
-			if(Data.AppType == AppConstant.ApplicationType.MEALS) {
-				for (int i = 0; i < activity.subItemsInCart.size(); i++) {
-					MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
-							activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(), activity.subItemsInCart.get(i).getPrice(),
-							AppConstant.ApplicationType.MEALS);
-				}
-			} else {
-				for (int i = 0; i < activity.subItemsInCart.size(); i++) {
-					MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
-							activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(), activity.subItemsInCart.get(i).getPrice(),
-							AppConstant.ApplicationType.FRESH);
-				}
+			for (int i = 0; i < activity.subItemsInCart.size(); i++) {
+				MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
+						activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(),
+						activity.subItemsInCart.get(i).getPrice(),
+						Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

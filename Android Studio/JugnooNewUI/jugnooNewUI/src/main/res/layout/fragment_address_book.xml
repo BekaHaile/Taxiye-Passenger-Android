@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sliding_bottom_bg_color"
+    android:splitMotionEvents="false">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutAddHome"
+                android:layout_width="match_parent"
+                android:layout_height="110px"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_toLeftOf="@+id/imageViewEditHome"
+                    android:layout_toRightOf="@+id/imageViewAddHome"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewAddHome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_home"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="@dimen/text_size_28" />
+
+                    <TextView
+                        android:id="@+id/textViewAddHomeValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5px"
+                        android:singleLine="true"
+                        android:text="test"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="@dimen/text_size_24"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imageViewAddHome"
+                    android:layout_width="50px"
+                    android:layout_height="50px"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30px"
+                    android:src="@drawable/ic_home"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:id="@+id/imageViewEditHome"
+                    android:layout_width="60px"
+                    android:layout_height="60px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20px"
+                    android:padding="15px"
+                    android:src="@drawable/edit_icon_selector"
+                    android:tag="mwar"
+                    android:visibility="visible" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="40px"
+                    android:background="@color/stroke_color_light" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutAddWork"
+                android:layout_width="match_parent"
+                android:layout_height="110px"
+                android:background="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_toLeftOf="@+id/imageViewEditWork"
+                    android:layout_toRightOf="@+id/imageViewAddWork"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textViewAddWork"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/add_work"
+                        android:textColor="@color/text_color_light_selector"
+                        android:textSize="@dimen/text_size_28" />
+
+                    <TextView
+                        android:id="@+id/textViewAddWorkValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5px"
+                        android:singleLine="true"
+                        android:text="test"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="@dimen/text_size_24"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imageViewAddWork"
+                    android:layout_width="50px"
+                    android:layout_height="50px"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30px"
+                    android:src="@drawable/ic_work"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:id="@+id/imageViewEditWork"
+                    android:layout_width="60px"
+                    android:layout_height="60px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20px"
+                    android:padding="15px"
+                    android:src="@drawable/edit_icon_selector"
+                    android:tag="mwar"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:layout_width="660px"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@color/text_color_hint"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="40px"
+                    android:background="@color/stroke_color_light" />
+            </RelativeLayout>
+
+            <product.clicklabs.jugnoo.utils.NonScrollListView
+                android:id="@+id/listViewSavedLocations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:divider="@color/transparent"
+                android:dividerHeight="0dp"
+                android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollListView>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutAddNewAddress"
+                android:layout_width="match_parent"
+                android:layout_height="110px"
+                android:background="@color/white">
+
+                <TextView
+                    android:id="@+id/textViewAddNewAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="30px"
+                    android:layout_toRightOf="@+id/textViewAddNewAddressPlus"
+                    android:text="@string/add_new_address"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_light_selector"
+                    android:textSize="@dimen/text_size_28" />
+
+                <TextView
+                    android:id="@+id/textViewAddNewAddressPlus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40px"
+                    android:text="+"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="46px"
+                    />
+
+                <ImageView
+                    android:layout_width="660px"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:src="@color/text_color_hint"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="6px"
+                android:background="@drawable/shadow_down" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down" />
+
+</RelativeLayout>

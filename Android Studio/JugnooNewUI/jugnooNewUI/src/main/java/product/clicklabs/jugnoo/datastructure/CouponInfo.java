@@ -31,9 +31,15 @@ public class CouponInfo extends PromoCoupon{
 	@SerializedName("delivery")
 	@Expose
 	public Integer delivery;
+	@SerializedName("grocery")
+	@Expose
+	public Integer grocery;
 	@SerializedName("master_coupon")
 	@Expose
 	private Integer masterCoupon = 0;
+	@SerializedName("discount")
+	@Expose
+	private Double discount = 0d;
 
 	public CouponInfo(int id, String title, String subtitle, String description, String expiryDate){
 		this.id = id;
@@ -81,5 +87,14 @@ public class CouponInfo extends PromoCoupon{
 
 	public void setMasterCoupon(Integer masterCoupon) {
 		this.masterCoupon = masterCoupon;
+	}
+
+	@Override
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
 	}
 }

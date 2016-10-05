@@ -25,6 +25,7 @@ import com.kochava.android.tracker.Feature;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -416,11 +417,22 @@ public class MyApplication extends Application{
 	 * @param prodViewedAction
      */
 	public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
+		try{
+			prodViewedAction.put(Events.TIMING, new Date());
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
 		getCleverTap().event.push(eventName, prodViewedAction);
 	}
 
 	public void charged(HashMap<String, Object> chargeDetails, ArrayList<HashMap<String, Object>> items) {
 		try {
+			try{
+				chargeDetails.put(Events.TIMING, new Date());
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 			getCleverTap().event.push(CleverTapAPI.CHARGED_EVENT, chargeDetails, items);
 		} catch (Exception e) {
 			// You have to specify the first parameter to push()
@@ -474,12 +486,13 @@ public class MyApplication extends Application{
 			Config.CUSTOM_SERVER_URL = link;
 			configModeToSet = ConfigMode.CUSTOM;
 		}
-		Config.FRESH_SERVER_URL = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
+		String freshServerUrlToSet = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
 
-		if(configModeToSet != Config.getConfigMode()){
+		if(configModeToSet != Config.getConfigMode() || !Config.getFreshServerUrl().equalsIgnoreCase(freshServerUrlToSet)){
 			RestClient.clearRestClient();
 		}
 		Config.setConfigMode(configModeToSet);
+		Config.FRESH_SERVER_URL = freshServerUrlToSet;
 
 		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
 

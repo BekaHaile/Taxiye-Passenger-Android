@@ -15,7 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.CancelOption;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
-import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DiscountType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
@@ -41,9 +39,9 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -61,7 +59,6 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
-import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -134,36 +131,6 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SPLabels.SHOW_FAB_SETTING, fabButtonEnable);
         int integratedJugnooEnabled = userData.optInt(KEY_INTEGRATED_JUGNOO_ENABLED, 0);
 
-        if(userData.has("user_saved_addresses")){
-            JSONArray userSavedAddressArray = userData.getJSONArray("user_saved_addresses");
-            for(int i=0; i<userSavedAddressArray.length(); i++){
-                JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
-                if(jsonObject.optString("type").equalsIgnoreCase("home")){
-                    if(!jsonObject.optString("address").equalsIgnoreCase("")){
-                        JSONObject json = new JSONObject();
-                        json.put("address", jsonObject.optString("address"));
-                        json.put("name", jsonObject.optString("type"));
-                        json.put("placeId", jsonObject.optString("google_place_id"));
-                        String strResult = json.toString();
-                        Prefs.with(context).save(SPLabels.ADD_HOME, strResult);
-                    }else {
-                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
-                    }
-
-                }else if(jsonObject.optString("type").equalsIgnoreCase("work")){
-                    if(!jsonObject.optString("address").equalsIgnoreCase("")){
-                        JSONObject json = new JSONObject();
-                        json.put("address", jsonObject.optString("address"));
-                        json.put("name", jsonObject.optString("type"));
-                        json.put("placeId", jsonObject.optString("google_place_id"));
-                        String strResult = json.toString();
-                        Prefs.with(context).save(SPLabels.ADD_WORK, strResult);
-                    }else {
-                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
-                    }
-                }
-            }
-        }
 
         String defaultBranchDesktopUrl = Prefs.with(context).getString(SPLabels.BRANCH_DESKTOP_URL, "");
         String defaultBranchAndroidUrl = Prefs.with(context).getString(SPLabels.BRANCH_ANDROID_URL, "");
@@ -244,6 +211,7 @@ public class JSONParser implements Constants {
         String defaultClientId = userData.optString(KEY_DEFAULT_CLIENT_ID, Config.getAutosClientId());
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
+        int topupCardEnabled = userData.optInt(KEY_TOPUP_CARD_ENABLED, 0);
 
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
@@ -257,12 +225,40 @@ public class JSONParser implements Constants {
                 cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
-                mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, inviteFriendButton, defaultClientId, integratedJugnooEnabled);
+                mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, inviteFriendButton, defaultClientId, integratedJugnooEnabled,
+                topupCardEnabled);
 
 
         Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
 
         Data.userData.setJeanieIntroDialogContent(loginUserData.getJeanieIntroDialogContent());
+
+        Data.userData.getSearchResults().clear();
+        if(userData.has(KEY_USER_SAVED_ADDRESSES)){
+            JSONArray userSavedAddressArray = userData.getJSONArray(KEY_USER_SAVED_ADDRESSES);
+            boolean homeSaved = false, workSaved = false;
+            Gson gson = new Gson();
+            for(int i=0; i<userSavedAddressArray.length(); i++){
+                JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
+                if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_HOME) && !homeSaved){
+                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
+                        Prefs.with(context).save(SPLabels.ADD_HOME, getSearchResultStringFromJSON(jsonObject));
+                    }else {
+                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                    }
+                    homeSaved = true;
+                } else if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_WORK) && !workSaved){
+                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
+                        Prefs.with(context).save(SPLabels.ADD_WORK, getSearchResultStringFromJSON(jsonObject));
+                    }else {
+                        Prefs.with(context).save(SPLabels.ADD_WORK, "");
+                    }
+                    workSaved = true;
+                } else if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
+                    Data.userData.getSearchResults().add(gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class));
+                }
+            }
+        }
 
         MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData.optJSONObject(KEY_WALLET_BALANCE));
 
@@ -692,37 +688,6 @@ public class JSONParser implements Constants {
 				Data.autoData.setFareStructure(getDefaultFareStructure());
 			}
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void parsePromoCoupons(LoginResponse.UserData userData){
-        try{
-            if(Data.userData.getPromoCoupons() == null){
-                Data.userData.setPromoCoupons(new ArrayList<PromoCoupon>());
-            } else{
-                Data.userData.getPromoCoupons().clear();
-            }
-            if(userData.getCoupons() != null) {
-                for (CouponInfo coupon : userData.getCoupons()) {
-                    Data.userData.getPromoCoupons().add(new CouponInfo(coupon.id,
-                            coupon.title,
-                            coupon.subtitle,
-                            coupon.description,
-                            coupon.expiryDate));
-                }
-            }
-            if(userData.getPromotions() != null) {
-                for (PromotionInfo promotion : userData.getPromotions()) {
-                    Data.userData.getPromoCoupons().add(new PromotionInfo(promotion.id,
-                            promotion.title,
-                            promotion.terms));
-                }
-            }
-            if(userData.getCityId() != null){
-                Data.userData.setCurrentCity(userData.getCityId());
-            }
-        } catch(Exception e){
             e.printStackTrace();
         }
     }
@@ -1357,57 +1322,6 @@ public class JSONParser implements Constants {
 
 
 
-    public static ArrayList<CouponInfo> parseCouponsArray(JSONObject jObj){
-        ArrayList<CouponInfo> couponInfoList = new ArrayList<CouponInfo>();
-        try{
-            if (jObj.has("coupons")) {
-                JSONArray couponsData = jObj.getJSONArray("coupons");
-                if (couponsData.length() > 0) {
-                    for (int i = 0; i < couponsData.length(); i++) {
-                        JSONObject coData = couponsData.getJSONObject(i);
-
-                        CouponInfo couponInfo = new CouponInfo(coData.getInt("account_id"),
-                            coData.getString("title"),
-                            coData.getString("subtitle"),
-                            coData.getString("description"),
-                            coData.getString("expiry_date")
-                            );
-
-                        couponInfoList.add(couponInfo);
-                    }
-                    Collections.sort(couponInfoList, new DateComparatorCoupon());
-                }
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        return couponInfoList;
-    }
-
-
-    public static ArrayList<PromotionInfo> parsePromotionsArray(JSONObject jObj){
-        ArrayList<PromotionInfo> promotionInfoList = new ArrayList<PromotionInfo>();
-
-        try{
-            if (jObj.has("promotions")) {
-                JSONArray promotionsData = jObj.getJSONArray("promotions");
-                if (promotionsData.length() > 0) {
-                    for (int i = 0; i < promotionsData.length(); i++) {
-                        JSONObject poData = promotionsData.getJSONObject(i);
-
-                        PromotionInfo promotionInfo = new PromotionInfo(poData.getInt("promo_id"), poData.getString("title"),
-                            poData.getString("terms_n_conds"), poData.getString("end_on"));
-
-                        promotionInfoList.add(promotionInfo);
-                    }
-//                    Collections.sort(promotionInfoList, new DateComparatorPromotion());
-                }
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        return promotionInfoList;
-    }
 
 
     public static ArrayList<EmergencyContact> parseEmergencyContacts(JSONObject jObj){
@@ -1580,7 +1494,8 @@ public class JSONParser implements Constants {
                 String walletSelected = Prefs.with(context).getString(SP_WALLET_AT_SIGNUP, "NA");
                 Prefs.with(context).save(SP_WALLET_AT_SIGNUP, "");
 
-                MyApplication.getInstance().getCleverTapUtils().signUp(String.valueOf(loginVia), walletSelected, referralCodeEntered);
+                MyApplication.getInstance().getCleverTapUtils().signUp(String.valueOf(loginVia), walletSelected, referralCodeEntered,
+                        String.valueOf(Data.userData.getJugnooBalance()));
 
             }
             JSONObject map = new JSONObject();
@@ -1675,4 +1590,21 @@ public class JSONParser implements Constants {
         }
     }
 
+
+    public String getSearchResultStringFromJSON(JSONObject jsonObject){
+        try {
+            JSONObject json = new JSONObject();
+            json.put(KEY_ADDRESS, jsonObject.optString(KEY_ADDRESS, ""));
+            json.put(KEY_NAME, jsonObject.optString(KEY_TYPE, ""));
+            json.put(KEY_PLACEID, jsonObject.optString(KEY_GOOGLE_PLACE_ID, ""));
+            json.put(KEY_LATITUDE, jsonObject.optDouble(KEY_LATITUDE, 0));
+            json.put(KEY_LONGITUDE, jsonObject.optDouble(KEY_LONGITUDE, 0));
+            json.put(KEY_ID, jsonObject.optInt(KEY_ID, 0));
+            json.put(KEY_IS_CONFIRMED, jsonObject.optInt(KEY_IS_CONFIRMED, 0));
+            return json.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return EMPTY_JSON_OBJECT;
+        }
+    }
 }

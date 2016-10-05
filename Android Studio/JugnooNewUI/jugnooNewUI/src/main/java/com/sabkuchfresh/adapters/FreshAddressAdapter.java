@@ -1,13 +1,12 @@
 package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,19 +19,15 @@ import java.util.List;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by Gurmail S. Kang on 5/13/16.
  */
-public class FreshAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FreshAddressAdapter extends BaseAdapter {
 
     private FreshActivity activity;
     private List<DeliveryAddress> slots;
     private Callback callback;
-
-    private static final int MAIN_VIEW = 0;
-    private static final int ADD_VIEW = 1;
 
 
     public FreshAddressAdapter(FreshActivity activity, List<DeliveryAddress> slots, Callback callback) {
@@ -47,123 +42,86 @@ public class FreshAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == MAIN_VIEW){
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_fresh_address, parent, false);
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            v.setLayoutParams(layoutParams);
-            ASSL.DoMagic(v);
-            return new ViewHolderSlot(v, activity);
-
-        } else if(viewType == ADD_VIEW){
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_add_address, parent, false);
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            v.setLayoutParams(layoutParams);
-            ASSL.DoMagic(v);
-            return new ViewHolderButton(v);
-
-        } else {
-            // should not happened
-            throw new IllegalStateException(new Exception());
-        }
+    public int getCount() {
+        return slots.size();
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public Object getItem(int position) {
+        return slots.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolderSlot holder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_fresh_address, parent, false);
+            ListView.LayoutParams layoutParams = new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT);
+            convertView.setLayoutParams(layoutParams);
+            ASSL.DoMagic(convertView);
+            holder = new ViewHolderSlot(convertView, activity);
+
+            holder.linear.setTag(holder);
+
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolderSlot) convertView.getTag();
+        }
+
+        onBindViewHolder(holder, position);
+
+        return convertView;
+    }
+
+    public void onBindViewHolder(ViewHolderSlot holder, int position) {
         try {
-            if(holder instanceof ViewHolderButton){
-                ((ViewHolderButton)holder).linear.setTag(position);
-                ((ViewHolderButton)holder).addButton.setTag(position);
-                ((ViewHolderButton)holder).addButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callback.onAddAddress();
-                    }
-                });
-            } else if(holder instanceof ViewHolderSlot){
+            holder.id = position;
             DeliveryAddress slot = slots.get(position);
-
-                ((ViewHolderSlot)holder).textViewLast.setText(slot.getLastAddress());
-//                ((ViewHolderSlot)holder).textViewLast.setTypeface(Fonts.mavenRegular(activity));
-                String selectedLat = Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_loc_lati), "");
-                String selectedLongi = Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_loc_longi), "");;
-                String selectedAddress = activity.getSelectedAddress();
-
-                /*if(selectedAddress.equalsIgnoreCase(slot.getLastAddress()) && selectedLat.equalsIgnoreCase(slot.getDeliveryLatitude()) &&
-                        selectedLongi.equalsIgnoreCase(slot.getDeliveryLongitude())) {
-                    ((ViewHolderSlot)holder).imageViewRadio.setBackgroundResource(R.drawable.ic_radio_button_selected);
-                } else {
-                    ((ViewHolderSlot)holder).imageViewRadio.setBackgroundResource(R.drawable.ic_radio_button_normal);
-                }*/
-
-                if(position == slots.size()-1){
-                    ((ViewHolderSlot)holder).imageViewDivider.setVisibility(View.GONE);
-                } else{
-                    ((ViewHolderSlot)holder).imageViewDivider.setVisibility(View.VISIBLE);
-                }
-
-                ((ViewHolderSlot)holder).linear.setTag(position);
-                ((ViewHolderSlot)holder).linear.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            int pos = (int) v.getTag();
-                            callback.onSlotSelected(pos, slots.get(pos));
-                            //notifyDataSetChanged();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
+            holder.textViewLast.setText(slot.getLastAddress());
+            if (position == slots.size() - 1) {
+                holder.imageViewDivider.setVisibility(View.GONE);
+            } else {
+                holder.imageViewDivider.setVisibility(View.VISIBLE);
             }
+            holder.linear.setTag(holder);
+            holder.linear.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int pos = ((ViewHolderSlot) v.getTag()).id;
+                        callback.onSlotSelected(pos, slots.get(pos));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    @Override
-    public int getItemCount() {
-        return slots == null ? 0 : slots.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if(position == slots.size()) {
-            //return ADD_VIEW;
-        }
-        return MAIN_VIEW;
-    }
-
-    static class ViewHolderSlot extends RecyclerView.ViewHolder {
+    private class ViewHolderSlot {
+        public int id;
         public RelativeLayout linear;
         private ImageView imageViewRadio, imageViewDivider;
         public TextView textViewLast;
         public ViewHolderSlot(View itemView, Activity context) {
-            super(itemView);
             linear = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutLast);
             imageViewRadio = (ImageView) itemView.findViewById(R.id.imageViewLast);
             imageViewDivider = (ImageView) itemView.findViewById(R.id.imageViewDivider);
             textViewLast = (TextView)itemView.findViewById(R.id.textViewLast);
-            textViewLast.setTypeface(Fonts.mavenRegular(context));
-        }
-    }
-
-    static class ViewHolderButton extends RecyclerView.ViewHolder {
-        public LinearLayout linear;
-        private Button addButton;
-        public ViewHolderButton(View itemView) {
-            super(itemView);
-            linear = (LinearLayout) itemView.findViewById(R.id.linear_layout);
-            addButton = (Button) itemView.findViewById(R.id.add_button);
+            textViewLast.setTypeface(Fonts.mavenMedium(context));
         }
     }
 
     public interface Callback{
         void onSlotSelected(int position, DeliveryAddress slot);
-        void onAddAddress();
     }
-
-
 
 }

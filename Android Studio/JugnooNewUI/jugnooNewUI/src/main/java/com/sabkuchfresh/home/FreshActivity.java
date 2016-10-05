@@ -76,12 +76,15 @@ import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABView;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -121,6 +124,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private UserCheckoutResponse userCheckoutResponse;
 
     private String selectedAddress = "";
+    private LatLng selectedLatLng;
+    private int selectedAddressId = 0;
     private String splInstr = "";
     private Slot slotSelected, slotToSelect;
     private PaymentOption paymentOption;
@@ -143,14 +148,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private LocationFetcher locationFetcher;
 
     // for adding address
-    public String current_action = "";
-    public double current_latitude = 0.0;
-    public double current_longitude = 0.0;
-    public String current_street = "";
-    public String current_route = "";
-    public String current_area = "";
-    public String current_city = "";
-    public String current_pincode = "";
+//    public String current_action = "";
+//    public double current_latitude = 0.0;
+//    public double current_longitude = 0.0;
+//    public String current_street = "";
+//    public String current_route = "";
+//    public String current_area = "";
+//    public String current_city = "";
+//    public String current_pincode = "";
     public boolean locationSearchShown = false;
     public boolean canOrder = false;
 
@@ -183,6 +188,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            selectedLatLng = new LatLng(Data.latitude, Data.longitude);
+            selectedAddressId = 0;
 
             linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
             relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
@@ -238,7 +246,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 }
                             } else {
                                 getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
-                                MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.CHECKOUT, null);
+                                if(appType == AppConstant.ApplicationType.GROCERY){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + FirebaseEvents.CHECKOUT, null);
+                                } else {
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_CART + "_" + FirebaseEvents.CHECKOUT, null);
+                                }
                             }
                         } else {
                             getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
@@ -247,9 +259,17 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 MyApplication.getInstance().logEvent(FirebaseEvents.M_CART, null);
                             }else{
                                 if((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_GO, null);
+                                    if(appType == AppConstant.ApplicationType.GROCERY){
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_GO, null);
+                                    } else {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_GO, null);
+                                    }
                                 } else{
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_CART, null);
+                                    if(appType == AppConstant.ApplicationType.GROCERY){
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_CART, null);
+                                    } else {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_CART, null);
+                                    }
                                 }
                             }
                         }
@@ -280,7 +300,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         }
 
                         if((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())){
-                            MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_CART, null);
+                            int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                            if(appType == AppConstant.ApplicationType.GROCERY){
+                                MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_CART, null);
+                            } else {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_CART, null);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -895,6 +920,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
 				topBar.imageViewDelete.setVisibility(View.VISIBLE);
+                topBar.imageViewDelete.setOnClickListener(topBar.topBarOnClickListener);
 				textViewCheckout.setVisibility(View.VISIBLE);
 				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 
@@ -1095,6 +1121,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         }
                         if(type == AppConstant.ApplicationType.MEALS){
                             MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
+                        } else if(type == AppConstant.ApplicationType.GROCERY){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
                         }else{
                             MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
                         }
@@ -1107,7 +1135,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 FlurryEventNames.NUDGE_FRESH_CART_DELETE_CANCEL_CLICKED, null);
                         if(type == AppConstant.ApplicationType.MEALS){
                             MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
-                        }else{
+                        } else if(type == AppConstant.ApplicationType.GROCERY){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
+                        } else{
                             MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
                         }
                     }
@@ -1216,13 +1246,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //		getTransactionUtils().openSupportFragment(FreshActivity.this, relativeLayoutContainer);
     }
 
-    public void openMapAddress() {
+    public void openMapAddress(Bundle bundle) {
         FlurryEventLogger.event(Address_Screen, SCREEN_TRANSITION, ADD_NEW_ADDRESS);
-        getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer);
+        getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
-    public void openAddToAddressBook() {
-        getTransactionUtils().openAddToAddressFragment(FreshActivity.this, relativeLayoutContainer);
+    public void openAddToAddressBook(Bundle bundle) {
+        getTransactionUtils().openAddToAddressFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
 
@@ -1274,6 +1304,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         try {
                             setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             setUserData();
+                            Intent intent = new Intent(Constants.INTENT_ACTION_WALLET_UPDATE);
+                            LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1357,6 +1389,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        System.gc();
         super.onDestroy();
     }
 
@@ -1860,4 +1893,93 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         }
     }
 
+
+    private PromoCoupon selectedPromoCoupon;
+
+    public PromoCoupon getSelectedPromoCoupon() {
+        return selectedPromoCoupon;
+    }
+
+    public void setSelectedPromoCoupon(PromoCoupon selectedPromoCoupon) {
+        this.selectedPromoCoupon = selectedPromoCoupon;
+    }
+
+
+    private ApiAddHomeWorkAddress apiAddHomeWorkAddress;
+    public void hitApiAddHomeWorkAddress(final SearchResult searchResult, final boolean deleteAddress, final int matchedWithOtherId,
+                                         final boolean editThisAddress, final int placeRequestCode){
+        if(apiAddHomeWorkAddress == null){
+            apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
+                @Override
+                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
+                    try {
+                        if(!addressDeleted) {
+                            setSelectedAddressId(searchResult.getId());
+                        } else{
+                            performBackPressed();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onRetry(View view) {
+
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            });
+        }
+        apiAddHomeWorkAddress.addHomeAndWorkAddress(searchResult, deleteAddress, matchedWithOtherId, editThisAddress, placeRequestCode);
+    }
+
+    private int placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
+    public int getPlaceRequestCode(){
+        return placeRequestCode;
+    }
+    public void setPlaceRequestCode(int placeRequestCode){
+        this.placeRequestCode = placeRequestCode;
+    }
+
+    private SearchResult searchResult;
+    public SearchResult getSearchResult(){
+        return searchResult;
+    }
+    public void setSearchResult(SearchResult searchResult) {
+        this.searchResult = searchResult;
+    }
+
+    private boolean editThisAddress;
+    public boolean isEditThisAddress() {
+        return editThisAddress;
+    }
+    public void setEditThisAddress(boolean editThisAddress){
+        this.editThisAddress = editThisAddress;
+    }
+
+
+    public LatLng getSelectedLatLng() {
+        return selectedLatLng;
+    }
+
+    public void setSelectedLatLng(LatLng selectedLatLng) {
+        this.selectedLatLng = selectedLatLng;
+    }
+
+    public int getSelectedAddressId() {
+        return selectedAddressId;
+    }
+
+    public void setSelectedAddressId(int selectedAddressId) {
+        this.selectedAddressId = selectedAddressId;
+    }
 }

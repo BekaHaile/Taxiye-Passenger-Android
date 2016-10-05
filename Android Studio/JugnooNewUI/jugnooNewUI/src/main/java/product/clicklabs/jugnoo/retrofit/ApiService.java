@@ -497,4 +497,9 @@ public interface ApiService {
     void customerFetchRideLog(@FieldMap Map<String, String> params,
                           Callback<TrackingLogReponse> callback);
 
+    @FormUrlEncoded
+    @POST("/topup_customer_jc")
+    void topupCustomerJC(@FieldMap Map<String, String> params,
+                              Callback<SettleUserDebt> callback);
+
 }

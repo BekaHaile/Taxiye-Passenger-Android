@@ -180,6 +180,9 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 if (promoCode.length() > 0) {
                     applyPromoCodeAPI(PromotionActivity.this, promoCode);
                     FlurryEventLogger.event(PromotionActivity.this, CLICKS_ON_APPLY);
+                    HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+                    profileUpdate.put(Events.PROMO_CODE_USED, promoCode);
+                    MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                 } else {
                     editTextPromoCode.requestFocus();
                     editTextPromoCode.setError("Code can't be empty");

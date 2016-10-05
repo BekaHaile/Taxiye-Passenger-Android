@@ -115,7 +115,7 @@ public class TopBar implements FlurryEventNames {
 //		return imageViewSearch;
 //	}
 
-	private View.OnClickListener topBarOnClickListener = new View.OnClickListener() {
+	public View.OnClickListener topBarOnClickListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			switch(v.getId()){

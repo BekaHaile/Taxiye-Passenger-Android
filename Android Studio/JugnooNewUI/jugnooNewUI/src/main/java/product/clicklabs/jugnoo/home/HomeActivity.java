@@ -140,6 +140,7 @@ import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PendingCall;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
@@ -194,7 +195,6 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
-import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
@@ -395,12 +395,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
     public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
-    public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 10; // in meters
+    public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 5; // in meters
 
-    public static final float MAX_ZOOM = 15;
+    public static final float MAX_ZOOM = 16;
     private static final int MAP_ANIMATE_DURATION = 300;
 
-    public static final double FIX_ZOOM_DIAGONAL = 408;
+    public static final double FIX_ZOOM_DIAGONAL = 108;
+    private final float MAP_PADDING = 80f;
 
     public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
@@ -426,7 +427,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     CallbackManager callbackManager;
-    public final int ADD_HOME = 2, ADD_WORK = 3, FARE_ESTIMATE = 4;
+    public final int FARE_ESTIMATE = 4;
     private String dropLocationSearchText = "";
     private SlidingBottomPanelV4 slidingBottomPanel;
 
@@ -920,7 +921,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
-                slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show();
+                slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
+                        Data.userData.getCoupons(ProductType.AUTO));
             }
         });
 
@@ -1776,21 +1778,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onMapTouched() {
                     // Map touched
                     mapTouched = true;
-                    try {
-                        LatLng lastMapCentre = map.getCameraPosition().target;
-                        LatLng currentLoc = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                        if(MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
-							myLocationButtonClicked = false;
-						}
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    zoomAfterFindADriver = false;
+                    myLocationButtonClicked = false;
                 }
 
                 @Override
                 public void onMapReleased() {
                     // Map released
                     try {
+                        myLocationButtonClicked = false;
                         if(PassengerScreenMode.P_INITIAL == passengerScreenMode && zoomedForSearch){
                             if(lastSearchLatLng != null){
                                 double distance = MapUtils.distance(lastSearchLatLng, map.getCameraPosition().target);
@@ -2501,7 +2497,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (lastPickUp.size() == 0) {
                     if ((!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.home))) &&
                             (!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.work)))) {
-                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), Data.autoData.getPickupLatLng()));
+                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), ""
+                                , Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude));
                     }
                 } else {
                     boolean isSame = false;
@@ -2515,7 +2512,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (!isSame) {
                         if ((!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.home))) &&
                                 (!textViewInitialSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.work)))) {
-                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), Data.autoData.getPickupLatLng()));
+                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), ""
+                                    , Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude));
                         }
                     }
                     if (lastPickUp.size() > 3) {
@@ -4320,25 +4318,29 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     @Override
+    public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
+        intentFired = true;
+        super.startActivityForResult(intent, requestCode, options);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if(resultCode==RESULT_OK) {
-                if (requestCode == ADD_HOME) {
+                if (requestCode == Constants.REQUEST_CODE_ADD_HOME) {
                     String strResult = data.getStringExtra("PLACE");
-                    SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
+                    SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                     if(searchResult != null){
                         placeAdded = true;
-                        Prefs.with(HomeActivity.this).save(SPLabels.ADD_HOME, strResult);
                     }else {
                     }
 
-                } else if (requestCode == ADD_WORK) {
+                } else if (requestCode == Constants.REQUEST_CODE_ADD_WORK) {
                     String strResult = data.getStringExtra("PLACE");
-                    SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(strResult);
+                    SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                     if(searchResult != null) {
                         placeAdded = true;
-                        Prefs.with(HomeActivity.this).save(SPLabels.ADD_WORK, strResult);
                     }else{
                     }
                 } else if(requestCode == FARE_ESTIMATE){
@@ -4435,7 +4437,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    textViewInitialSearch.setText("");
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                 }
@@ -4898,7 +4899,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                                         || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                                         && bounds != null) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), MAP_ANIMATE_DURATION, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -4956,7 +4957,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                                 }
                                 else {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (160 * minScaleRatio)), MAP_ANIMATE_DURATION, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -4967,7 +4968,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
             } else {
-//                zoomAfterFindADriver = true;
                 try {
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -7740,7 +7740,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     if (latLngBoundsBuilderPool != null) {
                         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, 408), (int) (minRatio * 90)),
+                        map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, FIX_ZOOM_DIAGONAL),
+                                (int) (minRatio * MAP_PADDING)),
                                 MAP_ANIMATE_DURATION, null);
                     }
                 } catch (Exception e) {
@@ -8203,7 +8204,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if (lastDestination.size() == 0) {
                     if ((!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.home))) &&
                             (!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.work)))) {
-                        lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
+                        lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getPlaceId()
+                                , searchResult.getLatLng().latitude, searchResult.getLatLng().longitude));
                     }
                 } else {
                     boolean isSame = false;
@@ -8217,7 +8219,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if (!isSame) {
                         if ((!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.home))) &&
                                 (!searchResult.getName().equalsIgnoreCase(getResources().getString(R.string.work)))) {
-                            lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getLatLng()));
+                            lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getPlaceId()
+                                    , searchResult.getLatLng().latitude, searchResult.getLatLng().longitude));
                         }
                     }
                     if (lastDestination.size() > 3) {
