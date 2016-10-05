@@ -80,6 +80,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     private ArrayList<Slot> checkout = new ArrayList<>();
     private ArrayList<Slot> slots = new ArrayList<>();
     Bus mBus;
+    private double amountPayable;
 
     FreshCheckoutAdapter checkoutAdapter;
 
@@ -125,8 +126,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         try {
             if (activity.getProductsResponse() != null
                     && activity.getProductsResponse().getDeliveryInfo() != null) {
-                double totalAmount = activity.updateCartValuesGetTotalPrice().first;
-                double amountPayable = totalAmount;
+                amountPayable = activity.updateCartValuesGetTotalPrice().first;
 //                if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount) {
 //                    deliveryCharge = String.format(activity.getResources().getString(R.string.rupees_value_format),
 //                            Utils.getMoneyDecimalFormat().format(activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges()));
@@ -300,6 +300,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                     }
                 }
                 params.put(Constants.KEY_CART, jCart.toString());
+                params.put(Constants.ORDER_AMOUNT, Utils.getMoneyDecimalFormat().format(amountPayable));
 
                 int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                 if(type == AppConstant.ApplicationType.MEALS) {

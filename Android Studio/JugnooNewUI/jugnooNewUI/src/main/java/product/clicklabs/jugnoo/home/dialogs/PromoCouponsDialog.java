@@ -106,7 +106,7 @@ public class PromoCouponsDialog {
 							public void run() {
 								dialog.dismiss();
 							}
-						}, 200);
+						}, 100);
 						callback.onCouponApplied();
 					}
 				}

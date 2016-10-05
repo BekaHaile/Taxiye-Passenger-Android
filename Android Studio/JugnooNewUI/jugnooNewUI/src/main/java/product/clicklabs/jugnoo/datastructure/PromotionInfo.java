@@ -34,6 +34,9 @@ public class PromotionInfo extends PromoCoupon{
 	@SerializedName("master_coupon")
 	@Expose
 	private Integer masterCoupon = 0;
+	@SerializedName("discount")
+	@Expose
+	private Double discount = 0d;
 
 
 	public PromotionInfo(int id, String title, String terms, String endOn){
@@ -83,5 +86,14 @@ public class PromotionInfo extends PromoCoupon{
 
 	public void setMasterCoupon(Integer masterCoupon) {
 		this.masterCoupon = masterCoupon;
+	}
+
+	@Override
+	public Double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Double discount) {
+		this.discount = discount;
 	}
 }

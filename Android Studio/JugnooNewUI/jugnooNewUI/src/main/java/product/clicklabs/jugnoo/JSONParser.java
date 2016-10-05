@@ -15,7 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.CancelOption;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
-import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DiscountType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
@@ -41,7 +39,6 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -62,7 +59,6 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
-import product.clicklabs.jugnoo.utils.DateComparatorCoupon;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -692,37 +688,6 @@ public class JSONParser implements Constants {
 				Data.autoData.setFareStructure(getDefaultFareStructure());
 			}
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void parsePromoCoupons(LoginResponse.UserData userData){
-        try{
-            if(Data.userData.getPromoCoupons() == null){
-                Data.userData.setPromoCoupons(new ArrayList<PromoCoupon>());
-            } else{
-                Data.userData.getPromoCoupons().clear();
-            }
-            if(userData.getCoupons() != null) {
-                for (CouponInfo coupon : userData.getCoupons()) {
-                    Data.userData.getPromoCoupons().add(new CouponInfo(coupon.id,
-                            coupon.title,
-                            coupon.subtitle,
-                            coupon.description,
-                            coupon.expiryDate));
-                }
-            }
-            if(userData.getPromotions() != null) {
-                for (PromotionInfo promotion : userData.getPromotions()) {
-                    Data.userData.getPromoCoupons().add(new PromotionInfo(promotion.id,
-                            promotion.title,
-                            promotion.terms));
-                }
-            }
-            if(userData.getCityId() != null){
-                Data.userData.setCurrentCity(userData.getCityId());
-            }
-        } catch(Exception e){
             e.printStackTrace();
         }
     }
@@ -1357,57 +1322,6 @@ public class JSONParser implements Constants {
 
 
 
-    public static ArrayList<CouponInfo> parseCouponsArray(JSONObject jObj){
-        ArrayList<CouponInfo> couponInfoList = new ArrayList<CouponInfo>();
-        try{
-            if (jObj.has("coupons")) {
-                JSONArray couponsData = jObj.getJSONArray("coupons");
-                if (couponsData.length() > 0) {
-                    for (int i = 0; i < couponsData.length(); i++) {
-                        JSONObject coData = couponsData.getJSONObject(i);
-
-                        CouponInfo couponInfo = new CouponInfo(coData.getInt("account_id"),
-                            coData.getString("title"),
-                            coData.getString("subtitle"),
-                            coData.getString("description"),
-                            coData.getString("expiry_date")
-                            );
-
-                        couponInfoList.add(couponInfo);
-                    }
-                    Collections.sort(couponInfoList, new DateComparatorCoupon());
-                }
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        return couponInfoList;
-    }
-
-
-    public static ArrayList<PromotionInfo> parsePromotionsArray(JSONObject jObj){
-        ArrayList<PromotionInfo> promotionInfoList = new ArrayList<PromotionInfo>();
-
-        try{
-            if (jObj.has("promotions")) {
-                JSONArray promotionsData = jObj.getJSONArray("promotions");
-                if (promotionsData.length() > 0) {
-                    for (int i = 0; i < promotionsData.length(); i++) {
-                        JSONObject poData = promotionsData.getJSONObject(i);
-
-                        PromotionInfo promotionInfo = new PromotionInfo(poData.getInt("promo_id"), poData.getString("title"),
-                            poData.getString("terms_n_conds"), poData.getString("end_on"));
-
-                        promotionInfoList.add(promotionInfo);
-                    }
-//                    Collections.sort(promotionInfoList, new DateComparatorPromotion());
-                }
-            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-        return promotionInfoList;
-    }
 
 
     public static ArrayList<EmergencyContact> parseEmergencyContacts(JSONObject jObj){

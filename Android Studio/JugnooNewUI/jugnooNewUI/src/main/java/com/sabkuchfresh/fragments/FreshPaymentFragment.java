@@ -328,7 +328,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
         try {
             subTotalAmount = activity.updateCartValuesGetTotalPrice().first;
-            promoAmount = 0;
 
             if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > subTotalAmount) {
 				deliveryAmount = activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
@@ -1177,11 +1176,13 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                 @Override
                 public void onCouponApplied() {
                     setCouponNameToDisplay();
+                    updateUI();
                 }
 
                 @Override
                 public void onSkipped() {
                     setCouponNameToDisplay();
+                    updateUI();
                 }
 
                 @Override
@@ -1202,14 +1203,18 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 				relativeLayoutSelectedCoupon.setVisibility(View.VISIBLE);
                 textViewSelectedOffer.setText(activity.getSelectedPromoCoupon().getTitle());
                 textViewOffers.setText(R.string.offers);
+                promoAmount = activity.getSelectedPromoCoupon().getDiscount() != null
+                        && activity.getSelectedPromoCoupon().getDiscount() > 0.0 ? activity.getSelectedPromoCoupon().getDiscount() : 0;
 			} else{
                 relativeLayoutSelectedCoupon.setVisibility(View.GONE);
                 textViewOffers.setText(R.string.select_offers);
+                promoAmount = 0;
 			}
         } catch (Exception e) {
             e.printStackTrace();
             relativeLayoutSelectedCoupon.setVisibility(View.GONE);
             textViewOffers.setText(R.string.select_offers);
+            promoAmount = 0;
         }
     }
 
