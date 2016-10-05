@@ -1166,6 +1166,7 @@
 	<string name="edit_address">Edit Address</string>
 	<string name="saved_places">Saved Places</string>
 	<string name="recent_addresses">Recent Addresses</string>
+	<string name="avail_offers">Avail Offers</string>
 
 
 </resources>

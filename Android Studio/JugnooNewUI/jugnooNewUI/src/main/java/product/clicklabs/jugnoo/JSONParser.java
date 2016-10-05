@@ -211,7 +211,7 @@ public class JSONParser implements Constants {
         String defaultClientId = userData.optString(KEY_DEFAULT_CLIENT_ID, Config.getAutosClientId());
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
-        int topupCardEnabled = userData.optInt("topup_card_enabled", 0);
+        int topupCardEnabled = userData.optInt(KEY_TOPUP_CARD_ENABLED, 0);
 
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,

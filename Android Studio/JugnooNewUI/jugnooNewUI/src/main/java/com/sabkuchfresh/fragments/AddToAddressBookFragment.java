@@ -397,6 +397,7 @@ public class AddToAddressBookFragment extends Fragment {
             }
         });
 
+        Utils.showSoftKeyboard(activity, editTextLabel);
 
     }
 

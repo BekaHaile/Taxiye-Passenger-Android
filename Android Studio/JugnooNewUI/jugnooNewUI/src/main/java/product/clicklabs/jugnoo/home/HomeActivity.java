@@ -4444,7 +4444,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    textViewInitialSearch.setText("");
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                 }
