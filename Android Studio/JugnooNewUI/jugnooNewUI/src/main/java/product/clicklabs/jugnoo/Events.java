@@ -14,6 +14,7 @@ public interface Events {
     String MEALS_CHARGED = "Meals - Charged";
     String FRESH_ADDED_TO_CART = "Fresh - Added to Cart";
     String FRESH_CHARGED = "Fresh - Charged";
+    String GROCERY_ADDED_TO_CART = "Grocery - Added to Cart";
 
     String PROMO_CODE = "Promo Code";
     String CHANNEL = "Channel";

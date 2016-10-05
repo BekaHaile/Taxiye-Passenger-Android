@@ -246,7 +246,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 }
                             } else {
                                 getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
-                                MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.CHECKOUT, null);
+                                if(appType == AppConstant.ApplicationType.GROCERY){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + FirebaseEvents.CHECKOUT, null);
+                                } else {
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_CART + "_" + FirebaseEvents.CHECKOUT, null);
+                                }
                             }
                         } else {
                             getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
@@ -255,9 +259,17 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 MyApplication.getInstance().logEvent(FirebaseEvents.M_CART, null);
                             }else{
                                 if((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_GO, null);
+                                    if(appType == AppConstant.ApplicationType.GROCERY){
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_GO, null);
+                                    } else {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_GO, null);
+                                    }
                                 } else{
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_CART, null);
+                                    if(appType == AppConstant.ApplicationType.GROCERY){
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_CART, null);
+                                    } else {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_CART, null);
+                                    }
                                 }
                             }
                         }
@@ -288,7 +300,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         }
 
                         if((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())){
-                            MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_CART, null);
+                            int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                            if(appType == AppConstant.ApplicationType.GROCERY){
+                                MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_CART, null);
+                            } else {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_CART, null);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1104,6 +1121,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         }
                         if(type == AppConstant.ApplicationType.MEALS){
                             MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
+                        } else if(type == AppConstant.ApplicationType.GROCERY){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
                         }else{
                             MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
                         }
@@ -1116,7 +1135,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 FlurryEventNames.NUDGE_FRESH_CART_DELETE_CANCEL_CLICKED, null);
                         if(type == AppConstant.ApplicationType.MEALS){
                             MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
-                        }else{
+                        } else if(type == AppConstant.ApplicationType.GROCERY){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
+                        } else{
                             MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
                         }
                     }

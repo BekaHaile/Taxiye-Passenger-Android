@@ -25,6 +25,7 @@ import com.kochava.android.tracker.Feature;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -417,7 +418,7 @@ public class MyApplication extends Application{
      */
 	public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
 		try{
-			prodViewedAction.put(Events.TIMING, System.currentTimeMillis()/1000);
+			prodViewedAction.put(Events.TIMING, new Date());
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -428,7 +429,7 @@ public class MyApplication extends Application{
 	public void charged(HashMap<String, Object> chargeDetails, ArrayList<HashMap<String, Object>> items) {
 		try {
 			try{
-				chargeDetails.put(Events.TIMING, System.currentTimeMillis()/1000);
+				chargeDetails.put(Events.TIMING, new Date());
 			} catch (Exception e){
 				e.printStackTrace();
 			}

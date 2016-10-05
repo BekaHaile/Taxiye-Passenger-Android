@@ -208,7 +208,9 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                             int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                             if(appType == AppConstant.ApplicationType.MEALS){
                                 MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
-                            }else{
+                            } else if(appType == AppConstant.ApplicationType.GROCERY){
+                                MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
+                            } else{
                                 MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
                             }
                         } catch (Exception e) {

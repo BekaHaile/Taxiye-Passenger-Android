@@ -1,7 +1,5 @@
 package product.clicklabs.jugnoo.utils;
 
-import com.sabkuchfresh.utils.AppConstant;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +7,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.config.Config;
 
 /**
  * Created by gurmail on 02/09/16.
@@ -47,16 +46,19 @@ public class CleverTapUtils {
         MyApplication.getInstance().sendCleverTapEvent(Events.SIGNED_UP, prodViewedAction);
     }
 
-    public void addToCart(String productName, int productId, int qty, double amount, int type) {
+    public void addToCart(String productName, int productId, int qty, double amount, String clientId) {
         HashMap<String, Object> prodViewedAction = new HashMap<>();
         prodViewedAction.put(Events.PRODUCT_NAME, productName);
         prodViewedAction.put(Events.PRODUCT_ID, productId);
         prodViewedAction.put(Events.QUANTITY, qty);
         prodViewedAction.put(Events.TOTAL_AMOUNT, amount);
-        if(type == AppConstant.ApplicationType.MEALS)
+        if(clientId.equalsIgnoreCase(Config.getMealsClientId())) {
             MyApplication.getInstance().sendCleverTapEvent(Events.MEALS_ADDED_TO_CART, prodViewedAction);
-        else
+        } else if(clientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+            MyApplication.getInstance().sendCleverTapEvent(Events.GROCERY_ADDED_TO_CART, prodViewedAction);
+        } else {
             MyApplication.getInstance().sendCleverTapEvent(Events.FRESH_ADDED_TO_CART, prodViewedAction);
+        }
     }
 
     public ArrayList<String> getCouponsArray(){

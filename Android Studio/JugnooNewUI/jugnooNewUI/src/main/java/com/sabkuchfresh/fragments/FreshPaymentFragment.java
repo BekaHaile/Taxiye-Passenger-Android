@@ -318,7 +318,10 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     if(appType == AppConstant.ApplicationType.MEALS){
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
-                    }else{
+                    } else if(appType == AppConstant.ApplicationType.GROCERY){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+activity.getPaymentOption(), null);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+                    } else{
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     }
@@ -650,7 +653,9 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 
                                 if(appType == AppConstant.ApplicationType.MEALS){
                                     MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
-                                }else{
+                                } else if(appType == AppConstant.ApplicationType.GROCERY){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+                                } else{
                                     MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 }
 								placeOrderApi();
@@ -662,8 +667,10 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 								buttonPlaceOrder.setEnabled(true);
                                 if(appType == AppConstant.ApplicationType.MEALS){
                                     MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
-                                }else{
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
+                                } else if(appType == AppConstant.ApplicationType.GROCERY){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
+                                } else{
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 }
 							}
 						}, false, false);

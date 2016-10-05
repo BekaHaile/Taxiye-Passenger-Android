@@ -220,7 +220,9 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                     int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                     if(appType == AppConstant.ApplicationType.MEALS){
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
-                    }else{
+                    } else if(appType == AppConstant.ApplicationType.GROCERY){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
+                    } else{
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
                     }
                 }
