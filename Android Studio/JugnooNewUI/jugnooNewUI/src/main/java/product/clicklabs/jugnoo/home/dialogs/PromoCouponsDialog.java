@@ -96,10 +96,15 @@ public class PromoCouponsDialog {
 					if(activity instanceof HomeActivity) {
 						((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);;
 					} else if(activity instanceof FreshActivity) {
+						PromoCoupon promoCoupon;
 						if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
-							((FreshActivity)activity).setSelectedPromoCoupon(promoCoupons.get(position));
+							promoCoupon = promoCoupons.get(position);
 						} else {
-							((FreshActivity)activity).setSelectedPromoCoupon(noSelectionCoupon);
+							promoCoupon = noSelectionCoupon;
+						}
+						if(MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
+								((FreshActivity)activity).getPaymentOption().getOrdinal(), promoCoupon)){
+							((FreshActivity)activity).setSelectedPromoCoupon(promoCoupon);
 						}
 						new Handler().postDelayed(new Runnable() {
 							@Override
