@@ -146,7 +146,7 @@ public class SearchResult {
 	}
 
 	public enum Type{
-		SEARCHED, LAST_SAVED;
+		SEARCHED, LAST_SAVED, HOME, WORK;
 	}
 
 }

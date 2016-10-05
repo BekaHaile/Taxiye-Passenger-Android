@@ -401,7 +401,7 @@ public class AddToAddressBookFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Utils.showSoftKeyboard(activity, houseNumber);
+                Utils.hideSoftKeyboard(activity, houseNumber);
             }
         }, 100);
 

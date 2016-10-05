@@ -156,12 +156,14 @@ public class SearchListAdapter extends BaseAdapter{
                 }
                 Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
                 ArrayList<SearchResult> lastPickUp = new Gson().fromJson(json, type);
-				int maxLast = lastPickUp.size() - favLocationsCount + 2;
-				maxLast = maxLast > 0 ? maxLast : 0;
-				maxLast = maxLast > lastPickUp.size() ? lastPickUp.size() : maxLast;
-				for(int i=0; i<maxLast; i++){
-					lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
-					searchResults.add(lastPickUp.get(i));
+
+				if(favLocationsCount < 5){
+					int locationsToAdd = 5 - favLocationsCount;
+					locationsToAdd = locationsToAdd > lastPickUp.size() ? lastPickUp.size() : locationsToAdd;
+					for(int i=0; i<locationsToAdd; i++){
+						lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
+						searchResults.add(lastPickUp.get(i));
+					}
 				}
             }
         } catch (Exception e) {
@@ -222,10 +224,10 @@ public class SearchListAdapter extends BaseAdapter{
             holder.textViewSearchName.setText(searchResults.get(position).getName());
             holder.textViewSearchAddress.setText(searchResults.get(position).getAddress());
 
-            if(searchResults.get(position).getName().equalsIgnoreCase(SPLabels.ADD_HOME)){
+            if(searchResults.get(position).getType() == SearchResult.Type.HOME){
                 holder.imageViewType.setVisibility(View.VISIBLE);
                 holder.imageViewType.setImageResource(R.drawable.ic_home);
-            } else if(searchResults.get(position).getName().equalsIgnoreCase(SPLabels.ADD_WORK)){
+            } else if(searchResults.get(position).getType() == SearchResult.Type.WORK){
                 holder.imageViewType.setVisibility(View.VISIBLE);
                 holder.imageViewType.setImageResource(R.drawable.ic_work);
             } else{
@@ -403,6 +405,7 @@ public class SearchListAdapter extends BaseAdapter{
                             || searchText.equalsIgnoreCase("")) {
                         SearchResult searchResult = new Gson().fromJson(Prefs.with(context).getString(SPLabels.ADD_WORK, ""), SearchResult.class);
                         searchResult.setName(SPLabels.ADD_WORK);
+						searchResult.setType(SearchResult.Type.WORK);
                         searchResultsForSearch.add(0, searchResult);
 						favLocationsCount++;
                     }
@@ -414,6 +417,7 @@ public class SearchListAdapter extends BaseAdapter{
                             || searchText.equalsIgnoreCase("")) {
                         SearchResult searchResult = new Gson().fromJson(Prefs.with(context).getString(SPLabels.ADD_HOME, ""), SearchResult.class);
                         searchResult.setName(SPLabels.ADD_HOME);
+						searchResult.setType(SearchResult.Type.HOME);
                         searchResultsForSearch.add(0, searchResult);
 						favLocationsCount++;
                     }

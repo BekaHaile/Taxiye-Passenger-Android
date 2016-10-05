@@ -1217,13 +1217,13 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                         && activity.getSelectedPromoCoupon().getDiscount() > 0.0 ? activity.getSelectedPromoCoupon().getDiscount() : 0;
 			} else{
                 relativeLayoutSelectedCoupon.setVisibility(View.GONE);
-                textViewOffers.setText(R.string.select_offers);
+                textViewOffers.setText(R.string.avail_offers);
                 promoAmount = 0;
 			}
         } catch (Exception e) {
             e.printStackTrace();
             relativeLayoutSelectedCoupon.setVisibility(View.GONE);
-            textViewOffers.setText(R.string.select_offers);
+            textViewOffers.setText(R.string.avail_offers);
             promoAmount = 0;
         }
     }

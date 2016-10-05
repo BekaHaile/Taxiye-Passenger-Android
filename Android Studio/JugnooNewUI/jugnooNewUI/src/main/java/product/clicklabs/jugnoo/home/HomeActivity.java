@@ -401,7 +401,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private static final int MAP_ANIMATE_DURATION = 300;
 
     public static final double FIX_ZOOM_DIAGONAL = 108;
-    private final float MAP_PADDING = 40f;
+    private final float MAP_PADDING = 80f;
 
     public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
@@ -1779,21 +1779,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     // Map touched
                     mapTouched = true;
                     zoomAfterFindADriver = false;
-                    try {
-                        LatLng lastMapCentre = map.getCameraPosition().target;
-                        LatLng currentLoc = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                        if(MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
-							myLocationButtonClicked = false;
-						}
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    myLocationButtonClicked = false;
                 }
 
                 @Override
                 public void onMapReleased() {
                     // Map released
                     try {
+                        myLocationButtonClicked = false;
                         if(PassengerScreenMode.P_INITIAL == passengerScreenMode && zoomedForSearch){
                             if(lastSearchLatLng != null){
                                 double distance = MapUtils.distance(lastSearchLatLng, map.getCameraPosition().target);
