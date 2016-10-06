@@ -73,4 +73,15 @@ public class DeliveryAddress {
         this.deliveryLongitude = deliveryLongitude;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        try{
+            DeliveryAddress dao = (DeliveryAddress)o;
+            return dao.getLastAddress().equalsIgnoreCase(lastAddress)
+                    && Double.compare(Double.parseDouble(dao.deliveryLatitude), Double.parseDouble(deliveryLatitude)) == 0
+                    && Double.compare(Double.parseDouble(dao.deliveryLongitude), Double.parseDouble(deliveryLongitude)) == 0;
+        } catch (Exception e){
+            return false;
+        }
+    }
 }

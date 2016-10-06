@@ -35,7 +35,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sabkuchfresh.bus.AddressSearch;
@@ -437,10 +436,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             public void onClick(View view) {
                 if (currentLocation != null && googleMap != null) {
 //                    FlurryEventLogger.event(FlurryText.checkout_add_pin_loc);
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(
-                            new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).build();
-
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), 500, null);
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLocation.getLatitude(),
+                            currentLocation.getLongitude())), 500, null);
                 } else {
                     //Toast.makeText(homeActivity, Data.WAITING_FOR_LOCATION, Toast.LENGTH_SHORT).show();
 

@@ -1996,4 +1996,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void setSelectedAddressType(String selectedAddressType) {
         this.selectedAddressType = selectedAddressType;
     }
+
+    private DeliveryAddress deliveryAddressToEdit;
+    public DeliveryAddress getDeliveryAddressToEdit() {
+        return deliveryAddressToEdit;
+    }
+    public void setDeliveryAddressToEdit(DeliveryAddress deliveryAddressToEdit){
+        this.deliveryAddressToEdit = deliveryAddressToEdit;
+    }
 }

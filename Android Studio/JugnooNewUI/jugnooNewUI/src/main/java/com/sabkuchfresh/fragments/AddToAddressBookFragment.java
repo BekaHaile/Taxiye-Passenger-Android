@@ -252,8 +252,19 @@ public class AddToAddressBookFragment extends Fragment {
                             }
 
                             if(activity instanceof FreshActivity){
-                                ((FreshActivity) activity).setSelectedAddressId(searchResultId);
-                                ((FreshActivity) activity).setSelectedAddressType(label);
+                                FreshActivity freshActivity = (FreshActivity) activity;
+                                freshActivity.setSelectedAddressId(searchResultId);
+                                freshActivity.setSelectedAddressType(label);
+
+                                if(freshActivity.getDeliveryAddressToEdit() != null){
+                                    if(label.length() > 0){
+                                        freshActivity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses().remove(freshActivity.getDeliveryAddressToEdit());
+                                    } else {
+                                        freshActivity.getDeliveryAddressToEdit().setLastAddress(localAddress);
+                                        freshActivity.getDeliveryAddressToEdit().setDeliveryLatitude(String.valueOf(current_latitude));
+                                        freshActivity.getDeliveryAddressToEdit().setDeliveryLongitude(String.valueOf(current_longitude));
+                                    }
+                                }
 
                                 mBus.post(new AddressAdded(true));
                             }

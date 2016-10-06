@@ -538,6 +538,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 				freshActivity.setPlaceRequestCode(placeRequestCode);
 				freshActivity.setSearchResult(searchResult);
                 freshActivity.setEditThisAddress(editThisAddress);
+                freshActivity.setDeliveryAddressToEdit(null);
 			}
             setAddressToBundle(searchResult.getAddress(), searchResult.getLatitude(), searchResult.getLongitude());
         } catch (Exception e) {
@@ -688,6 +689,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
             freshActivity.setSearchResult(null);
             freshActivity.setEditThisAddress(false);
+            freshActivity.setDeliveryAddressToEdit(slot);
             setAddressToBundle(slot.getLastAddress(), Double.parseDouble(slot.getDeliveryLatitude()),
                     Double.parseDouble(slot.getDeliveryLongitude()));
         }
