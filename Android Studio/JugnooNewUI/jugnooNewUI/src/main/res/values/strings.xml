@@ -279,10 +279,10 @@
 		It is simply a tool to compare and reduce your commute costs.  </string>
 
 	<!-- Account Settings Strings -->
-	<string name="add_home">ADD HOME</string>
-	<string name="add_work">ADD WORK</string>
-	<string name="home">HOME</string>
-	<string name="work">WORK</string>
+	<string name="add_home">Add Home</string>
+	<string name="add_work">Add Work</string>
+	<string name="home">Home</string>
+	<string name="work">Work</string>
 
 
 	<!-- Search state strings -->
@@ -1167,6 +1167,7 @@
 	<string name="saved_places">Saved Places</string>
 	<string name="recent_addresses">Recent Addresses</string>
 	<string name="avail_offers">Avail Offers</string>
+	<string name="delivery_instructions">Delivery Instructions</string>
 
 
 </resources>

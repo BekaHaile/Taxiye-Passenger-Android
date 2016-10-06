@@ -210,7 +210,6 @@ public class AddToAddressBookFragment extends Fragment {
                                     ((FreshActivity)activity).setSelectedAddressId(searchResultId);
                                 }
 
-                                mBus.post(new AddressAdded(true));
                             }
                             else if(activity instanceof AddPlaceActivity){
                                 AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
@@ -255,6 +254,8 @@ public class AddToAddressBookFragment extends Fragment {
                             if(activity instanceof FreshActivity){
                                 ((FreshActivity) activity).setSelectedAddressId(searchResultId);
                                 ((FreshActivity) activity).setSelectedAddressType(label);
+
+                                mBus.post(new AddressAdded(true));
                             }
 
                             SearchResult searchResult = new SearchResult(label, localAddress, "", current_latitude, current_longitude);
