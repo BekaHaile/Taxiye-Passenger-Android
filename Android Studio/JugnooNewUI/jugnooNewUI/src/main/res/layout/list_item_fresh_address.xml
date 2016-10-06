@@ -47,7 +47,7 @@
             android:padding="15px"
             android:src="@drawable/edit_icon_selector"
             android:tag="mwar"
-            android:visibility="gone" />
+            />
 
         <ImageView
             android:id="@+id/imageViewDivider"
@@ -58,15 +58,4 @@
             android:src="@color/stroke_light_grey_alpha" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/add_button"
-        android:layout_width="450px"
-        android:layout_height="100px"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="70px"
-        android:background="@drawable/button_theme"
-        android:text="ADD NEW ADDRESS"
-        android:textColor="@color/white"
-        android:textSize="35px"
-        android:visibility="gone" />
 </LinearLayout>

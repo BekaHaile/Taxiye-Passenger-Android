@@ -147,7 +147,7 @@ public class AddToAddressBookFragment extends Fragment {
 
 
     private void initComponents() {
-        editTextLabel = (EditText) rootView.findViewById(R.id.editTextLabel); editTextLabel.setTypeface(Fonts.mavenMedium(activity));
+        editTextLabel = (EditText) rootView.findViewById(R.id.editTextLabel); editTextLabel.setTypeface(Fonts.mavenRegular(activity));
         houseNumber = (EditText) rootView.findViewById(R.id.edt_houseFlatNo); houseNumber.setTypeface(Fonts.mavenRegular(activity));
         buildingStreetName = (EditText) rootView.findViewById(R.id.edt_buildingStreetName); buildingStreetName.setTypeface(Fonts.mavenRegular(activity));
         area = (EditText) rootView.findViewById(R.id.edt_area); area.setTypeface(Fonts.mavenRegular(activity));
@@ -201,7 +201,6 @@ public class AddToAddressBookFragment extends Fragment {
                                 ((FreshActivity) activity).setSelectedAddress(localAddress);
                                 ((FreshActivity)activity).setSelectedLatLng(new LatLng(current_latitude, current_longitude));
 
-
                                 FreshActivity freshActivity = (FreshActivity) activity;
                                 deliveryAddressesFragment = freshActivity.getDeliveryAddressesFragment();
                                 placeRequestCode = freshActivity.getPlaceRequestCode();
@@ -252,6 +251,12 @@ public class AddToAddressBookFragment extends Fragment {
                             } else {
                                 label = editTextLabel.getText().toString().trim();
                             }
+
+                            if(activity instanceof FreshActivity){
+                                ((FreshActivity) activity).setSelectedAddressId(searchResultId);
+                                ((FreshActivity) activity).setSelectedAddressType(label);
+                            }
+
                             SearchResult searchResult = new SearchResult(label, localAddress, "", current_latitude, current_longitude);
                             searchResult.setId(searchResultId);
                             if(activity instanceof AddPlaceActivity) {

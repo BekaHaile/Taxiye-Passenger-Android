@@ -100,6 +100,19 @@ public class FreshAddressAdapter extends BaseAdapter {
                     }
                 }
             });
+
+            holder.imageViewEditOther.setTag(holder);
+            holder.imageViewEditOther.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int pos = ((ViewHolderSlot) v.getTag()).id;
+                        callback.onEditClick(pos, slots.get(pos));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,11 +122,11 @@ public class FreshAddressAdapter extends BaseAdapter {
     private class ViewHolderSlot {
         public int id;
         public RelativeLayout linear;
-        private ImageView imageViewRadio, imageViewDivider;
+        private ImageView imageViewDivider, imageViewEditOther;
         public TextView textViewLast;
         public ViewHolderSlot(View itemView, Activity context) {
             linear = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutLast);
-            imageViewRadio = (ImageView) itemView.findViewById(R.id.imageViewLast);
+            imageViewEditOther = (ImageView) itemView.findViewById(R.id.imageViewEditOther);
             imageViewDivider = (ImageView) itemView.findViewById(R.id.imageViewDivider);
             textViewLast = (TextView)itemView.findViewById(R.id.textViewLast);
             textViewLast.setTypeface(Fonts.mavenMedium(context));
@@ -122,6 +135,7 @@ public class FreshAddressAdapter extends BaseAdapter {
 
     public interface Callback{
         void onSlotSelected(int position, DeliveryAddress slot);
+        void onEditClick(int position, DeliveryAddress slot);
     }
 
 }

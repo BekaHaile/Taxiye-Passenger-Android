@@ -153,7 +153,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 public void onItemClick(SearchResult searchResult) {
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress(), searchResult.getId());
+                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                     }
@@ -174,11 +174,11 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 linearLayoutFav.setVisibility(View.VISIBLE);
                 setSavePlaces();
                 deliveryAddresses.addAll(((FreshActivity)activity).getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses());
-                for (int i = 0; i < deliveryAddresses.size(); i++) {
-                    if (((FreshActivity)activity).getSelectedAddress().equalsIgnoreCase(deliveryAddresses.get(i).getLastAddress())) {
-                        deliveryAddresses.remove(i);
-                    }
-                }
+//                for (int i = 0; i < deliveryAddresses.size(); i++) {
+//                    if (((FreshActivity)activity).getSelectedAddress().equalsIgnoreCase(deliveryAddresses.get(i).getLastAddress())) {
+//                        deliveryAddresses.remove(i);
+//                    }
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -213,7 +213,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     final SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress(), searchResult.getId());
+                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
                     }
@@ -243,7 +243,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     final SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                searchResult.getAddress(), searchResult.getId());
+                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
                     }
@@ -539,13 +539,13 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 				freshActivity.setSearchResult(searchResult);
                 freshActivity.setEditThisAddress(editThisAddress);
 			}
-            setAddressToBundle(searchResult);
+            setAddressToBundle(searchResult.getAddress(), searchResult.getLatitude(), searchResult.getLongitude());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setAddressToBundle(SearchResult searchResult){
+    private void setAddressToBundle(String addressRes, double latitude, double longitude){
         try {
             current_street = "";
             current_route = "";
@@ -553,10 +553,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             current_city = "";
             current_pincode = "";
 
-            current_latitude = searchResult.getLatLng().latitude;
-            current_longitude = searchResult.getLatLng().longitude;
+            current_latitude = latitude;
+            current_longitude = longitude;
 
-            String[] address = searchResult.getAddress().split(",");
+            String[] address = addressRes.split(",");
             List<String> addressArray = Arrays.asList(address);
             Collections.reverse(addressArray);
             address = (String[]) addressArray.toArray();
@@ -638,14 +638,15 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     @Override
     public void onSlotSelected(int position, DeliveryAddress slot) {
-        onAddressSelected(slot.getDeliveryLatitude(), slot.getDeliveryLongitude(), slot.getLastAddress(), 0);
+        onAddressSelected(slot.getDeliveryLatitude(), slot.getDeliveryLongitude(), slot.getLastAddress(), 0, "");
     }
 
-    private void onAddressSelected(String latitude, String longitude, String address, int addressId){
+    private void onAddressSelected(String latitude, String longitude, String address, int addressId, String type){
         if(activity instanceof FreshActivity) {
             ((FreshActivity)activity).setSelectedAddress(address);
             ((FreshActivity)activity).setSelectedLatLng(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));
             ((FreshActivity)activity).setSelectedAddressId(addressId);
+            ((FreshActivity)activity).setSelectedAddressType(type);
             mBus.post(new AddressAdded(true));
             ((FreshActivity)activity).performBackPressed();
         }
@@ -680,5 +681,15 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     }
 
 
-
+    @Override
+    public void onEditClick(int position, DeliveryAddress slot) {
+        if(activity instanceof FreshActivity) {
+            FreshActivity freshActivity = (FreshActivity) activity;
+            freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+            freshActivity.setSearchResult(null);
+            freshActivity.setEditThisAddress(false);
+            setAddressToBundle(slot.getLastAddress(), Double.parseDouble(slot.getDeliveryLatitude()),
+                    Double.parseDouble(slot.getDeliveryLongitude()));
+        }
+    }
 }

@@ -114,20 +114,19 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 ((ViewHolderHeader)holder).textViewDeliveryChargesValue.setText(slots.get(position).getCamount());
 //                ((ViewHolderHeader)holder).textViewAmountPayableValue.setText(slots.get(position).getCtotal());
+                ((ViewHolderHeader) holder).textViewAddressName.setVisibility(View.GONE);
                 if(!TextUtils.isEmpty(slots.get(position).getCaddress())) {
-                    ((ViewHolderHeader) holder).addressText.setText(slots.get(position).getCaddress());
+                    ((ViewHolderHeader) holder).textViewAddressValue.setText(slots.get(position).getCaddress());
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setClickable(false);
-                    ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.text_color));
                     ((ViewHolderHeader) holder).textViewDeliveryAddress.setVisibility(View.VISIBLE);
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setText(activity.getResources().getString(R.string.delivery_address));
-                    ((ViewHolderHeader)holder).imageViewForward.setVisibility(View.VISIBLE);
-                    ((ViewHolderHeader)holder).imageViewEditAddress.setVisibility(View.GONE);
+                    if(!TextUtils.isEmpty(slots.get(position).getAddressLabel())){
+                        ((ViewHolderHeader) holder).textViewAddressName.setVisibility(View.VISIBLE);
+                        ((ViewHolderHeader) holder).textViewAddressName.setText(slots.get(position).getAddressLabel());
+                    }
                 } else {
                     //((ViewHolderHeader)holder).textViewDeliveryAddress.setVisibility(View.GONE);
-                    ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.text_color));
-                    ((ViewHolderHeader) holder).addressText.setText(activity.getResources().getString(R.string.add_address));
-                    ((ViewHolderHeader)holder).imageViewForward.setVisibility(View.VISIBLE);
-                    ((ViewHolderHeader)holder).imageViewEditAddress.setVisibility(View.GONE);
+                    ((ViewHolderHeader) holder).textViewAddressValue.setText(activity.getResources().getString(R.string.add_address));
                 }
 
 
@@ -268,9 +267,8 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
     static class ViewHolderHeader extends RecyclerView.ViewHolder {
         public RelativeLayout deliveryAddress;
         public TextView textViewDeliveryCharges, textViewDeliveryChargesValue,
-//                textViewAmountPayable, textViewAmountPayableValue,
-            textViewDeliveryTime, textViewDeliveryAddress, addressText;
-        public ImageView imageViewForward, imageViewEditAddress;
+            textViewDeliveryTime, textViewDeliveryAddress, textViewAddressName, textViewAddressValue;
+        public ImageView imageViewForward;
 
 
         public ViewHolderHeader(View itemView, Context context) {
@@ -281,9 +279,9 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
             textViewDeliveryChargesValue = (TextView)itemView.findViewById(R.id.textViewDeliveryChargesValue); textViewDeliveryChargesValue.setTypeface(Fonts.mavenRegular(context));
             textViewDeliveryAddress = (TextView)itemView.findViewById(R.id.textViewDeliveryAddress); textViewDeliveryAddress.setTypeface(Fonts.mavenRegular(context));
             textViewDeliveryTime = (TextView)itemView.findViewById(R.id.textViewDeliveryTime); textViewDeliveryTime.setTypeface(Fonts.mavenRegular(context));
-            addressText = (TextView)itemView.findViewById(R.id.address_text); addressText.setTypeface(Fonts.mavenRegular(context));
+            textViewAddressName = (TextView)itemView.findViewById(R.id.textViewAddressName); textViewAddressName.setTypeface(Fonts.mavenRegular(context));
+            textViewAddressValue = (TextView)itemView.findViewById(R.id.textViewAddressValue); textViewAddressValue.setTypeface(Fonts.mavenRegular(context));
             imageViewForward = (ImageView)itemView.findViewById(R.id.imageViewForward);
-            imageViewEditAddress = (ImageView)itemView.findViewById(R.id.imageViewEditAddress);
         }
     }
 

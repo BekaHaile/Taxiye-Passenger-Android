@@ -96,6 +96,8 @@ public class Slot {
 	@Expose
 	private String caddress;
 
+	private String addressLabel;
+
 
 
 
@@ -237,5 +239,13 @@ public class Slot {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public String getAddressLabel() {
+		return addressLabel;
+	}
+
+	public void setAddressLabel(String addressLabel) {
+		this.addressLabel = addressLabel;
 	}
 }

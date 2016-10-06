@@ -50,7 +50,8 @@
                     android:inputType="textFilter|textCapSentences"
                     android:paddingLeft="25px"
                     android:singleLine="true"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
@@ -68,7 +69,8 @@
                     android:inputType="textFilter|textCapSentences"
                     android:paddingLeft="25px"
                     android:singleLine="true"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
@@ -87,7 +89,8 @@
                     android:inputType="textFilter|textCapSentences"
                     android:paddingLeft="25px"
                     android:singleLine="true"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
@@ -105,7 +108,8 @@
                     android:inputType="textFilter|textCapSentences"
                     android:paddingLeft="25px"
                     android:singleLine="true"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
@@ -123,7 +127,8 @@
                     android:inputType="textFilter|textCapSentences"
                     android:paddingLeft="25px"
                     android:singleLine="true"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
@@ -141,7 +146,8 @@
                     android:paddingLeft="25px"
                     android:inputType="textFilter|textCapSentences"
                     android:singleLine="true"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 

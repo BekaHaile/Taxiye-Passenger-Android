@@ -147,13 +147,19 @@ public class FreshAddressFragment extends Fragment implements View.OnClickListen
     @Override
     public void onSlotSelected(int position, DeliveryAddress slot) {
         activity.setSelectedAddress(slot.getLastAddress());
-        activity.setSelectedLatLng(new LatLng(Double.parseDouble(slot.getDeliveryLatitude()), Double.parseDouble(slot.getDeliveryLongitude())));
         activity.setSelectedAddressId(0);
+        activity.setSelectedAddressType("");
+        activity.setSelectedLatLng(new LatLng(Double.parseDouble(slot.getDeliveryLatitude()), Double.parseDouble(slot.getDeliveryLongitude())));
         FlurryEventLogger.event(Address_Screen, CHANGE_ADDRESS, ""+position);
 
         mBus.post(new AddressAdded(true));
 //        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_address_selected), 3);
 
         activity.performBackPressed();
+    }
+
+    @Override
+    public void onEditClick(int position, DeliveryAddress slot) {
+
     }
 }

@@ -82,47 +82,52 @@
             android:background="@color/divider_color"
             />
 
-        <TextView
-            android:id="@+id/address_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/payment_margin"
-            android:layout_toLeftOf="@+id/linearLayoutAddOrEdit"
-            android:gravity="center_vertical"
-            android:paddingRight="50px"
-            android:text="Address here"
-            android:ellipsize="end"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_32"
-            android:visibility="visible"
-            android:layout_marginTop="20px"
-            />
-
-        <LinearLayout
-            android:id="@+id/linearLayoutAddOrEdit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30px">
-
-        <ImageView
-            android:id="@+id/imageViewEditAddress"
-            android:layout_width="60px"
-            android:layout_height="60px"
-            android:padding="15px"
+            android:layout_marginLeft="36px"
             android:layout_marginTop="10px"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/edit_icon_selector"
-            android:tag="mwar"
-            android:visibility="gone" />
+            android:layout_marginBottom="10px"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:splitMotionEvents="false"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imageViewType"
+            android:layout_toLeftOf="@+id/imageViewForward"
+            >
+
+            <TextView
+                android:id="@+id/textViewAddressName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:singleLine="true"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="30px"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/textViewAddressValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7px"
+                android:maxLines="2"
+                android:text=""
+                android:textColor="@color/text_color_light"
+                android:textSize="26px"
+                />
+
+        </LinearLayout>
+
 
             <ImageView
                 android:id="@+id/imageViewForward"
                 style="@style/back_image"
-                android:rotation="180"/>
+                android:rotation="180"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5px"/>
 
-        </LinearLayout>
 
     </RelativeLayout>
 

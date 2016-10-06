@@ -109,16 +109,17 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         String ctotalAmount = "";
         String deliveryCharge = "";
         String isDeliveryCharger = "";
+        String label = "";
 
         try {
-            if (activity.getSelectedAddress().equalsIgnoreCase("")) {
+            if (TextUtils.isEmpty(activity.getSelectedAddress())) {
                 address = activity.getUserCheckoutResponse().getCheckoutData().getLastAddress();
-                activity.setSelectedAddress(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());
+                label = activity.getUserCheckoutResponse().getCheckoutData().getLastAddressType();
+                setActivityLastAddressFromResponse(activity.getUserCheckoutResponse());
             } else {
                 address = activity.getSelectedAddress();
+                label = activity.getSelectedAddressType();
             }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,6 +149,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
 
         Slot slotDay = new Slot();
         slotDay.setCaddress(address);
+        slotDay.setAddressLabel(label);
         slotDay.setCamount(ctotalAmount);
         slotDay.setCdelivery(deliveryCharge);
         slotDay.setIsdelivery(isDeliveryCharger);
@@ -211,7 +213,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                 } else if (activity.getSlotSelected() == null) {
                     Toast.makeText(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot),
                             Toast.LENGTH_LONG).show();
-                } else if (TextUtils.isEmpty(activity.getSelectedAddress()) || "".equalsIgnoreCase(activity.getSelectedAddress())) {
+                } else if (TextUtils.isEmpty(activity.getSelectedAddress())) {
                     Toast.makeText(activity, activity.getResources().getString(R.string.please_select_a_delivery_address),
                             Toast.LENGTH_LONG).show();
                 } else {
@@ -329,8 +331,10 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                     activity.setUserCheckoutResponse(userCheckoutResponse);
                                     Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
                                     checkout.get(0).setCaddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-                                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-                                    activity.setSelectedAddressId(0);
+                                    if(userCheckoutResponse.getCheckoutData().getLastAddressType() != null) {
+                                        checkout.get(0).setAddressLabel(userCheckoutResponse.getCheckoutData().getLastAddressType());
+                                    }
+                                    setActivityLastAddressFromResponse(userCheckoutResponse);
                                     try {
                                         activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
 												Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
@@ -409,6 +413,12 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
             e.printStackTrace();
         }
 
+    }
+
+    private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
+        activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+        activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+        activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {
@@ -526,6 +536,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         if (event.flag) {
             // New Address added
             checkout.get(0).setCaddress(activity.getSelectedAddress());
+            checkout.get(0).setAddressLabel(activity.getSelectedAddressType());
             checkoutAdapter.setList(checkout);
 //            checkoutAdapter.notifyDataSetChanged();
         }
@@ -541,15 +552,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     @Override
     public void onAddressClick() {
         FlurryEventLogger.event(CHECKOUT_SCREEN, SCREEN_TRANSITION, ADDRESS_SCREEN);
-        if(activity.getUserCheckoutResponse() != null
-                && activity.getUserCheckoutResponse().getCheckoutData() != null
-                && activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses() != null
-                && activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses().size() > 0) {
-            activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
-        } else {
-            //activity.openMapAddress();
-            activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
-        }
+        activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ADDRESS_CLICKED, null);
     }
 }
