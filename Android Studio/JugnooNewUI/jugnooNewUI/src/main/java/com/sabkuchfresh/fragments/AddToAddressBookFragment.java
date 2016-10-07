@@ -35,6 +35,7 @@ import com.squareup.otto.Bus;
 
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -71,6 +72,7 @@ public class AddToAddressBookFragment extends Fragment {
     public String current_area = "";
     public String current_city = "";
     public String current_pincode = "";
+    public String placeId = "";
 
 
 
@@ -147,7 +149,7 @@ public class AddToAddressBookFragment extends Fragment {
 
 
     private void initComponents() {
-        editTextLabel = (EditText) rootView.findViewById(R.id.editTextLabel); editTextLabel.setTypeface(Fonts.mavenMedium(activity));
+        editTextLabel = (EditText) rootView.findViewById(R.id.editTextLabel); editTextLabel.setTypeface(Fonts.mavenRegular(activity));
         houseNumber = (EditText) rootView.findViewById(R.id.edt_houseFlatNo); houseNumber.setTypeface(Fonts.mavenRegular(activity));
         buildingStreetName = (EditText) rootView.findViewById(R.id.edt_buildingStreetName); buildingStreetName.setTypeface(Fonts.mavenRegular(activity));
         area = (EditText) rootView.findViewById(R.id.edt_area); area.setTypeface(Fonts.mavenRegular(activity));
@@ -163,110 +165,10 @@ public class AddToAddressBookFragment extends Fragment {
             public void onClick(View view) {
                 if (fieldsAreFilled()){
                     Utils.hideSoftKeyboard(activity, editTextLabel);
-
-                    String hno = "";
-                    String building = "";
-                    String areaVal = "";
-                    String cityVal = "";
-                    String pin = "";
-
-                    if(!TextUtils.isEmpty(houseNumber.getText().toString().trim())) {
-                        hno = houseNumber.getText().toString().trim() + ", ";
+                    String localAddress = getAddressFromForm();
+                    if (checkFields()) {
+                        saveAddressFromForm(localAddress);
                     }
-                    if(!TextUtils.isEmpty(buildingStreetName.getText().toString().trim())) {
-                        building = buildingStreetName.getText().toString().trim() + ", ";
-                    }
-                    if(!TextUtils.isEmpty(area.getText().toString().trim())) {
-                        areaVal = area.getText().toString().trim() + ", ";
-                    }
-                    if(!TextUtils.isEmpty(city.getText().toString().trim())) {
-                        cityVal = city.getText().toString().trim() + ", ";
-                    }
-                    if(!TextUtils.isEmpty(pinCode.getText().toString().trim())) {
-                        pin = pinCode.getText().toString().trim();
-                    }
-
-
-                    String localAddress = hno + building + areaVal + cityVal + pin;
-
-                        if(checkFields()) {
-                            DeliveryAddressesFragment deliveryAddressesFragment = null;
-
-                            int placeRequestCode = 0, searchResultId = 0, otherId = 0;
-                            boolean editThisAddress = false;
-                            String savedWorkStr = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-                            String savedHomeStr = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-
-                            if(activity instanceof FreshActivity) {
-                                ((FreshActivity) activity).setSelectedAddress(localAddress);
-                                ((FreshActivity)activity).setSelectedLatLng(new LatLng(current_latitude, current_longitude));
-
-
-                                FreshActivity freshActivity = (FreshActivity) activity;
-                                deliveryAddressesFragment = freshActivity.getDeliveryAddressesFragment();
-                                placeRequestCode = freshActivity.getPlaceRequestCode();
-                                editThisAddress = freshActivity.isEditThisAddress();
-                                if (freshActivity.isEditThisAddress() && freshActivity.getSearchResult() != null) {
-                                    searchResultId = freshActivity.getSearchResult().getId();
-                                    ((FreshActivity)activity).setSelectedAddressId(searchResultId);
-                                }
-
-                                mBus.post(new AddressAdded(true));
-                            }
-                            else if(activity instanceof AddPlaceActivity){
-                                AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
-                                deliveryAddressesFragment = addPlaceActivity.getDeliveryAddressesFragment();
-                                placeRequestCode = addPlaceActivity.getPlaceRequestCode();
-                                editThisAddress = addPlaceActivity.isEditThisAddress();
-                                if (addPlaceActivity.isEditThisAddress() && addPlaceActivity.getSearchResult() != null) {
-                                    searchResultId = addPlaceActivity.getSearchResult().getId();
-                                }
-                            }
-
-
-                            if (placeRequestCode == Constants.REQUEST_CODE_ADD_HOME) {
-                                otherId = 0;
-                                if (!"".equalsIgnoreCase(savedWorkStr)) {
-                                    SearchResult savedWork = new Gson().fromJson(savedWorkStr, SearchResult.class);
-                                    if (savedWork.getAddress().equalsIgnoreCase(localAddress)) {
-                                        otherId = savedWork.getId();
-                                    }
-                                }
-                            } else if (placeRequestCode == Constants.REQUEST_CODE_ADD_WORK) {
-                                otherId = 0;
-                                if (!"".equalsIgnoreCase(savedHomeStr)) {
-                                    SearchResult savedHome = new Gson().fromJson(savedHomeStr, SearchResult.class);
-                                    if (savedHome.getAddress().equalsIgnoreCase(localAddress)) {
-                                        otherId = savedHome.getId();
-                                    }
-                                }
-                            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
-                                otherId = 0;
-                            }
-
-                            String label = "";
-                            if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
-                                label = Constants.TYPE_HOME;
-                            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
-                                label = Constants.TYPE_WORK;
-                            } else {
-                                label = editTextLabel.getText().toString().trim();
-                            }
-                            SearchResult searchResult = new SearchResult(label, localAddress, "", current_latitude, current_longitude);
-                            searchResult.setId(searchResultId);
-                            if(activity instanceof AddPlaceActivity) {
-                                ((AddPlaceActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
-                            } else if(activity instanceof FreshActivity && label.length() > 0) {
-                                ((FreshActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
-                            }
-
-                            if(deliveryAddressesFragment != null) {
-                                getActivity().getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                            } else {
-                                getActivity().getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                            }
-                        }
-
                 } else {
                     //new DialogPopup().alertPopup(homeActivity, "", "Please fill the address");
                 }
@@ -499,6 +401,8 @@ public class AddToAddressBookFragment extends Fragment {
             String cityVal = city.getText().toString().trim();
             String pin = pinCode.getText().toString().trim();
 
+            String label = editTextLabel.getText().toString().trim();
+
             if(hno.length() == 0 && building.length() == 0) {
                 Toast.makeText(activity, "Please fill address", Toast.LENGTH_SHORT).show();
                 return false;
@@ -508,6 +412,52 @@ public class AddToAddressBookFragment extends Fragment {
             } else if(pin.length() == 0) {
                 Toast.makeText(activity, "Please fill pin", Toast.LENGTH_SHORT).show();
                 return false;
+            } else {
+                boolean labelMatched = false;
+                String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+                if(!TextUtils.isEmpty(workString)){
+                    SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+                    if(searchResult.getName().equalsIgnoreCase(label)){
+                        labelMatched = true;
+                    }
+                }
+
+                String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+                if(!TextUtils.isEmpty(homeString)){
+                    SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+                    if(searchResult.getName().equalsIgnoreCase(label)){
+                        labelMatched = true;
+                    }
+                }
+
+                if(Data.userData != null) {
+                    for (SearchResult searchResult : Data.userData.getSearchResults()) {
+                        if(searchResult.getName().equalsIgnoreCase(label)){
+                            labelMatched = true;
+                        }
+                    }
+                }
+
+                if(labelMatched){
+                    DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+                            activity.getString(R.string.address_label_matched_message_format, label),
+                            activity.getString(R.string.yes), activity.getString(R.string.cancel),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String localAddress = getAddressFromForm();
+                                    saveAddressFromForm(localAddress);
+                                }
+                            },
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            }, false, false);
+                    return false;
+                }
+
             }
 
             return true;
@@ -526,6 +476,133 @@ public class AddToAddressBookFragment extends Fragment {
         current_pincode = bundle.getString("current_pincode", current_pincode);
         current_latitude = bundle.getDouble("current_latitude", current_latitude);
         current_longitude = bundle.getDouble("current_longitude", current_longitude);
+        placeId = bundle.getString(Constants.KEY_PLACEID, placeId);
+    }
+
+
+    private void saveAddressFromForm(String localAddress){
+        {
+            DeliveryAddressesFragment deliveryAddressesFragment = null;
+
+            int placeRequestCode = 0, searchResultId = 0, otherId = 0;
+            boolean editThisAddress = false;
+            String savedWorkStr = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+            String savedHomeStr = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+
+            if(activity instanceof FreshActivity) {
+                ((FreshActivity) activity).setSelectedAddress(localAddress);
+                ((FreshActivity)activity).setSelectedLatLng(new LatLng(current_latitude, current_longitude));
+
+                FreshActivity freshActivity = (FreshActivity) activity;
+                deliveryAddressesFragment = freshActivity.getDeliveryAddressesFragment();
+                placeRequestCode = freshActivity.getPlaceRequestCode();
+                editThisAddress = freshActivity.isEditThisAddress();
+                if (freshActivity.isEditThisAddress() && freshActivity.getSearchResult() != null) {
+                    searchResultId = freshActivity.getSearchResult().getId();
+                    ((FreshActivity)activity).setSelectedAddressId(searchResultId);
+                    placeId = freshActivity.getSearchResult().getPlaceId();
+                }
+
+            }
+            else if(activity instanceof AddPlaceActivity){
+                AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
+                deliveryAddressesFragment = addPlaceActivity.getDeliveryAddressesFragment();
+                placeRequestCode = addPlaceActivity.getPlaceRequestCode();
+                editThisAddress = addPlaceActivity.isEditThisAddress();
+                if (addPlaceActivity.isEditThisAddress() && addPlaceActivity.getSearchResult() != null) {
+                    searchResultId = addPlaceActivity.getSearchResult().getId();
+                    placeId = addPlaceActivity.getSearchResult().getPlaceId();
+                }
+            }
+
+
+            if (placeRequestCode == Constants.REQUEST_CODE_ADD_HOME) {
+                otherId = 0;
+                if (!"".equalsIgnoreCase(savedWorkStr)) {
+                    SearchResult savedWork = new Gson().fromJson(savedWorkStr, SearchResult.class);
+                    if (savedWork.getAddress().equalsIgnoreCase(localAddress)) {
+                        otherId = savedWork.getId();
+                    }
+                }
+            } else if (placeRequestCode == Constants.REQUEST_CODE_ADD_WORK) {
+                otherId = 0;
+                if (!"".equalsIgnoreCase(savedHomeStr)) {
+                    SearchResult savedHome = new Gson().fromJson(savedHomeStr, SearchResult.class);
+                    if (savedHome.getAddress().equalsIgnoreCase(localAddress)) {
+                        otherId = savedHome.getId();
+                    }
+                }
+            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
+                otherId = 0;
+            }
+
+            String label = "";
+            if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
+                label = Constants.TYPE_HOME;
+            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
+                label = Constants.TYPE_WORK;
+            } else {
+                label = editTextLabel.getText().toString().trim();
+            }
+
+            if(activity instanceof FreshActivity){
+                FreshActivity freshActivity = (FreshActivity) activity;
+                freshActivity.setSelectedAddressId(searchResultId);
+                freshActivity.setSelectedAddressType(label);
+
+                if(freshActivity.getDeliveryAddressToEdit() != null){
+                    if(label.length() > 0){
+                        freshActivity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses().remove(freshActivity.getDeliveryAddressToEdit());
+                    } else {
+                        freshActivity.getDeliveryAddressToEdit().setLastAddress(localAddress);
+                        freshActivity.getDeliveryAddressToEdit().setDeliveryLatitude(String.valueOf(current_latitude));
+                        freshActivity.getDeliveryAddressToEdit().setDeliveryLongitude(String.valueOf(current_longitude));
+                    }
+                }
+
+                mBus.post(new AddressAdded(true));
+            }
+
+            SearchResult searchResult = new SearchResult(label, localAddress, placeId, current_latitude, current_longitude);
+            searchResult.setId(searchResultId);
+            if(activity instanceof AddPlaceActivity) {
+                ((AddPlaceActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
+            } else if(activity instanceof FreshActivity && label.length() > 0) {
+                ((FreshActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
+            }
+
+            if(deliveryAddressesFragment != null) {
+                getActivity().getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            } else {
+                getActivity().getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+        }
+    }
+
+    private String getAddressFromForm(){
+        String hno = "";
+        String building = "";
+        String areaVal = "";
+        String cityVal = "";
+        String pin = "";
+
+        if (!TextUtils.isEmpty(houseNumber.getText().toString().trim())) {
+            hno = houseNumber.getText().toString().trim() + ", ";
+        }
+        if (!TextUtils.isEmpty(buildingStreetName.getText().toString().trim())) {
+            building = buildingStreetName.getText().toString().trim() + ", ";
+        }
+        if (!TextUtils.isEmpty(area.getText().toString().trim())) {
+            areaVal = area.getText().toString().trim() + ", ";
+        }
+        if (!TextUtils.isEmpty(city.getText().toString().trim())) {
+            cityVal = city.getText().toString().trim() + ", ";
+        }
+        if (!TextUtils.isEmpty(pinCode.getText().toString().trim())) {
+            pin = pinCode.getText().toString().trim();
+        }
+
+        return hno + building + areaVal + cityVal + pin;
     }
 
 }

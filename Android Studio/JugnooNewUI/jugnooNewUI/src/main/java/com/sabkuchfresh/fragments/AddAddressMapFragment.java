@@ -35,7 +35,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sabkuchfresh.bus.AddressSearch;
@@ -146,6 +145,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     public String current_area = "";
     public String current_city = "";
     public String current_pincode = "";
+    public String placeId = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -267,9 +267,9 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
                         freshActivity.setSearchResult(null);
                         freshActivity.setEditThisAddress(false);
-                        freshActivity.openAddToAddressBook(createAddressBundle());
+                        freshActivity.openAddToAddressBook(createAddressBundle(placeId));
                     } else if(activity instanceof AddPlaceActivity){
-                        ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle());
+                        ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle(placeId));
                     }
                 } else {
                     Toast.makeText(activity, "Please wait...", Toast.LENGTH_SHORT).show();
@@ -437,10 +437,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             public void onClick(View view) {
                 if (currentLocation != null && googleMap != null) {
 //                    FlurryEventLogger.event(FlurryText.checkout_add_pin_loc);
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(
-                            new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).zoom(14).build();
-
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(currentLocation.getLatitude(),
+                            currentLocation.getLongitude())), 500, null);
                 } else {
                     //Toast.makeText(homeActivity, Data.WAITING_FOR_LOCATION, Toast.LENGTH_SHORT).show();
 
@@ -818,7 +816,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         }
     }
 
-    private Bundle createAddressBundle(){
+    private Bundle createAddressBundle(String placeId){
         Bundle bundle = new Bundle();
         bundle.putString("current_street", current_street);
         bundle.putString("current_route", current_route);
@@ -827,6 +825,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         bundle.putString("current_pincode", current_pincode);
         bundle.putDouble("current_latitude", current_latitude);
         bundle.putDouble("current_longitude", current_longitude);
+        bundle.putString(Constants.KEY_PLACEID, placeId);
         return bundle;
     }
 
@@ -839,6 +838,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         current_pincode = bundle.getString("current_pincode", current_pincode);
         current_latitude = bundle.getDouble("current_latitude", current_latitude);
         current_longitude = bundle.getDouble("current_longitude", current_longitude);
+        placeId = bundle.getString(Constants.KEY_PLACEID, placeId);
     }
 
 }

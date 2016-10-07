@@ -126,6 +126,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private String selectedAddress = "";
     private LatLng selectedLatLng;
     private int selectedAddressId = 0;
+    private String selectedAddressType = "";
     private String splInstr = "";
     private Slot slotSelected, slotToSelect;
     private PaymentOption paymentOption;
@@ -190,7 +191,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             }
 
             selectedLatLng = new LatLng(Data.latitude, Data.longitude);
-            selectedAddressId = 0;
+            resetAddressFields();
 
             linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
             relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
@@ -1149,6 +1150,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         menuBar.setUserData();
     }
 
+    private void resetAddressFields(){
+        selectedAddress = "";
+        selectedAddressId = 0;
+        selectedAddressType = "";
+    }
 
     public void orderComplete() {
         clearCart();
@@ -1157,7 +1163,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 subItem.setSubItemQuantitySelected(0);
             }
         }
-        selectedAddress = "";
+        resetAddressFields();
         splInstr = "";
         slotSelected = null;
         slotToSelect = null;
@@ -1981,5 +1987,21 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void setSelectedAddressId(int selectedAddressId) {
         this.selectedAddressId = selectedAddressId;
+    }
+
+    public String getSelectedAddressType() {
+        return selectedAddressType;
+    }
+
+    public void setSelectedAddressType(String selectedAddressType) {
+        this.selectedAddressType = selectedAddressType;
+    }
+
+    private DeliveryAddress deliveryAddressToEdit;
+    public DeliveryAddress getDeliveryAddressToEdit() {
+        return deliveryAddressToEdit;
+    }
+    public void setDeliveryAddressToEdit(DeliveryAddress deliveryAddressToEdit){
+        this.deliveryAddressToEdit = deliveryAddressToEdit;
     }
 }

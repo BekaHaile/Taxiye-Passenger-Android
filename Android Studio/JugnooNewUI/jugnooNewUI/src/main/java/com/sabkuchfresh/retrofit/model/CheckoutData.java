@@ -19,6 +19,13 @@ public class CheckoutData {
 	@Expose
 	private String lastAddress;
 
+	@SerializedName("last_address_id")
+	@Expose
+	private Integer lastAddressId = 0;
+	@SerializedName("last_address_type")
+	@Expose
+	private String lastAddressType;
+
     public String getLastAddressLatitude() {
         return lastAddressLatitude;
     }
@@ -101,4 +108,19 @@ public class CheckoutData {
         this.deliveryAddresses = deliveryAddresses;
     }
 
+	public Integer getLastAddressId() {
+		return lastAddressId;
+	}
+
+	public void setLastAddressId(Integer lastAddressId) {
+		this.lastAddressId = lastAddressId;
+	}
+
+	public String getLastAddressType() {
+		return lastAddressType;
+	}
+
+	public void setLastAddressType(String lastAddressType) {
+		this.lastAddressType = lastAddressType;
+	}
 }
