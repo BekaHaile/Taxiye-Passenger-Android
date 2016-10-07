@@ -2,6 +2,8 @@ package product.clicklabs.jugnoo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -11,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.home.TransactionUtils;
 
@@ -239,6 +242,17 @@ public class AddPlaceActivity extends BaseFragmentActivity {
             apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
                 @Override
                 public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
+                    try {
+                        Fragment deliveryAddressesFragment = getDeliveryAddressesFragment();
+                        if(deliveryAddressesFragment != null) {
+							getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+						} else {
+							getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     Intent intent = new Intent();
                     intent.putExtra("PLACE", strResult);
                     if("".equalsIgnoreCase(strResult)) {

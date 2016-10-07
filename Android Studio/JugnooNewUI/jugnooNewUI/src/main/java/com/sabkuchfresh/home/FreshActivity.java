@@ -1919,6 +1919,16 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 @Override
                 public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
                     try {
+                        Fragment deliveryAddressesFragment = getDeliveryAddressesFragment();
+                        if(deliveryAddressesFragment != null) {
+							getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+						} else {
+							getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
                         if(!addressDeleted) {
                             setSelectedAddressId(searchResult.getId());
                         } else{

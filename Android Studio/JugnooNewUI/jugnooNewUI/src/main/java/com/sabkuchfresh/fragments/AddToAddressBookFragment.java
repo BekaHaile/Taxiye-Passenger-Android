@@ -581,15 +581,18 @@ public class AddToAddressBookFragment extends Fragment {
             searchResult.setId(searchResultId);
             if(activity instanceof AddPlaceActivity) {
                 ((AddPlaceActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
-            } else if(activity instanceof FreshActivity && label.length() > 0) {
-                ((FreshActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
+            } else if(activity instanceof FreshActivity) {
+                if(label.length() > 0) {
+                    ((FreshActivity) activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
+                } else{
+                    if(deliveryAddressesFragment != null) {
+                        activity.getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    } else {
+                        activity.getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    }
+                }
             }
 
-            if(deliveryAddressesFragment != null) {
-                getActivity().getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            } else {
-                getActivity().getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
         }
     }
 
