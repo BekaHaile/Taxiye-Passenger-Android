@@ -711,7 +711,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             editTextEmail.setEnabled(false); editTextEmail.setBackgroundResource(R.drawable.background_white);
             editTextPhone.setEnabled(false); linearLayoutPhone.setBackgroundResource(R.drawable.background_white);
 
-			editTextUserName.setText(Data.userData.userName.toUpperCase());
+			editTextUserName.setText(Data.userData.userName);
 			editTextEmail.setText(Data.userData.userEmail);
 			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
 
@@ -844,7 +844,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                                 String message = jObj.getString("message");
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
-                                editTextUserName.setText(Data.userData.userName.toUpperCase());
+                                editTextUserName.setText(Data.userData.userName);
                                 editTextEmail.setText(Data.userData.userEmail);
                                 if(phoneUpdated) {
                                     Intent intent = new Intent(activity, PhoneNoOTPConfirmScreen.class);

@@ -413,11 +413,25 @@ public class AddToAddressBookFragment extends Fragment {
                 Toast.makeText(activity, "Please fill pin", Toast.LENGTH_SHORT).show();
                 return false;
             } else {
+                boolean editThisAddress = false;
+                int selfId = -1;
+                if(activity instanceof AddPlaceActivity){
+                    editThisAddress = ((AddPlaceActivity)activity).isEditThisAddress();
+                    if(editThisAddress){
+                        selfId = ((AddPlaceActivity)activity).getSearchResult().getId();
+                    }
+                } else if(activity instanceof FreshActivity){
+                    editThisAddress = ((FreshActivity)activity).isEditThisAddress();
+                    if(editThisAddress){
+                        selfId = ((FreshActivity)activity).getSearchResult().getId();
+                    }
+                }
+
                 boolean labelMatched = false;
                 String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
                 if(!TextUtils.isEmpty(workString)){
                     SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-                    if(searchResult.getName().equalsIgnoreCase(label)){
+                    if(searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)){
                         labelMatched = true;
                     }
                 }
@@ -425,14 +439,14 @@ public class AddToAddressBookFragment extends Fragment {
                 String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
                 if(!TextUtils.isEmpty(homeString)){
                     SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-                    if(searchResult.getName().equalsIgnoreCase(label)){
+                    if(searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)){
                         labelMatched = true;
                     }
                 }
 
                 if(Data.userData != null) {
                     for (SearchResult searchResult : Data.userData.getSearchResults()) {
-                        if(searchResult.getName().equalsIgnoreCase(label)){
+                        if(searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)){
                             labelMatched = true;
                         }
                     }
