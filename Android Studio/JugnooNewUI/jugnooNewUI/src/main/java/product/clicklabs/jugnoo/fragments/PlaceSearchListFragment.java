@@ -195,7 +195,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.header_place_search_list, listViewSearch, false);
 		header.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
 		ASSL.DoMagic(header);
-		listViewSearch.addHeaderView(header, null, false);
+		listViewSearch.addFooterView(header, null, false);
 
 		linearLayoutAddFav = (LinearLayout) header.findViewById(R.id.linearLayoutAddFav);
 		relativeLayoutAddHome = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddHome);
@@ -284,29 +284,19 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		if(home.equalsIgnoreCase("")){
 			relativeLayoutAddHome.setVisibility(View.VISIBLE);
+			imageViewSep.setVisibility(View.VISIBLE);
 		}else{
 			relativeLayoutAddHome.setVisibility(View.GONE);
+			imageViewSep.setVisibility(View.GONE);
 		}
 
 		if(work.equalsIgnoreCase("")){
 			relativeLayoutAddWork.setVisibility(View.VISIBLE);
+			imageViewSep2.setVisibility(View.VISIBLE);
 		}else{
 			relativeLayoutAddWork.setVisibility(View.GONE);
-		}
-
-		if(home.equalsIgnoreCase("") && work.equalsIgnoreCase("")){
-			imageViewSep.setVisibility(View.VISIBLE);
-			imageViewSep2.setVisibility(View.VISIBLE);
-		}
-		else if(home.equalsIgnoreCase("") || work.equalsIgnoreCase("")){
-			imageViewSep.setVisibility(View.GONE);
-			imageViewSep2.setVisibility(View.VISIBLE);
-		}
-		else{
-			imageViewSep.setVisibility(View.GONE);
 			imageViewSep2.setVisibility(View.GONE);
 		}
-
 	}
 
 	private void hideSearchLayout(){
@@ -314,7 +304,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		relativeLayoutAddHome.setVisibility(View.GONE);
 		relativeLayoutAddWork.setVisibility(View.GONE);
 		imageViewSep.setVisibility(View.GONE);
-		imageViewSep2.setVisibility(View.GONE);
 	}
 
 

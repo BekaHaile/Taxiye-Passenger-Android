@@ -31,6 +31,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -476,19 +477,18 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                             JSONObject jObj = new JSONObject(responseStr);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt("flag");
+                                String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
                                     //activity.openOrderInvoice(historyResponse.getData().get(0));
                                     activity.getTransactionUtils().openOrderSummaryFragment(activity,
                                             activity.getRelativeLayoutContainer(), historyResponse.getData().get(0));
                                 } else {
-                                    updateListData("Some error occurred, tap to retry", true);
+                                    updateListData(message);
                                 }
-                            } else {
-                                updateListData("Some error occurred, tap to retry", true);
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            updateListData("Some error occurred, tap to retry", true);
+                            updateListData(Data.SERVER_ERROR_MSG);
                         }
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -497,43 +497,32 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                     public void failure(RetrofitError error) {
                         Log.e("TAG", "getRecentRidesAPI error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
-
-                        updateListData("Some error occurred, tap to retry", true);
+                        updateListData(Data.SERVER_NOT_RESOPNDING_MSG);
                     }
                 });
             }
             else {
-                updateListData("No internet connection, tap to retry", true);
+                updateListData(Data.CHECK_INTERNET_MSG);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updateListData(String message, boolean errorOccurred){
-        if(errorOccurred){
+    public void updateListData(String message) {
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+                activity.getString(R.string.retry), activity.getString(R.string.cancel),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getOrderData();
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-            DialogPopup.dialogNoInternet(activity,
-                    "", message,
-
-                    new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
-                        @Override
-                        public void positiveClick(View v) {
-                            getOrderData();
-                        }
-
-                        @Override
-                        public void neutralClick(View v) {
-
-                        }
-
-                        @Override
-                        public void negativeClick(View v) {
-
-                        }
-                    });
-        }
-
+                    }
+                }, false, false);
     }
 
 

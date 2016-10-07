@@ -1168,6 +1168,7 @@
 	<string name="recent_addresses">Recent Addresses</string>
 	<string name="avail_offers">Avail Offers</string>
 	<string name="delivery_instructions">Delivery Instructions</string>
+	<string name="address_label_matched_message_format">Address with label \"%s\" already present. Do you want to overwrite it?</string>
 
 
 </resources>

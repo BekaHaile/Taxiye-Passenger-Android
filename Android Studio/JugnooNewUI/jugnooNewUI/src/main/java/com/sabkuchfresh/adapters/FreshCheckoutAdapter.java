@@ -115,13 +115,15 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((ViewHolderHeader)holder).textViewDeliveryChargesValue.setText(slots.get(position).getCamount());
 //                ((ViewHolderHeader)holder).textViewAmountPayableValue.setText(slots.get(position).getCtotal());
                 ((ViewHolderHeader) holder).textViewAddressName.setVisibility(View.GONE);
+                ((ViewHolderHeader) holder).textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
                 if(!TextUtils.isEmpty(slots.get(position).getCaddress())) {
                     ((ViewHolderHeader) holder).textViewAddressValue.setText(slots.get(position).getCaddress());
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setClickable(false);
                     ((ViewHolderHeader) holder).textViewDeliveryAddress.setVisibility(View.VISIBLE);
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setText(activity.getResources().getString(R.string.delivery_address));
-                        if(!TextUtils.isEmpty(slots.get(position).getAddressLabel())){
+                    if(!TextUtils.isEmpty(slots.get(position).getAddressLabel())){
                         ((ViewHolderHeader) holder).textViewAddressName.setVisibility(View.VISIBLE);
+                        ((ViewHolderHeader) holder).textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color_light));
                         if(slots.get(position).getAddressLabel().equalsIgnoreCase(activity.getString(R.string.home))){
                             slots.get(position).setAddressLabel(activity.getString(R.string.home));
                         } else if(slots.get(position).getAddressLabel().equalsIgnoreCase(activity.getString(R.string.work))){

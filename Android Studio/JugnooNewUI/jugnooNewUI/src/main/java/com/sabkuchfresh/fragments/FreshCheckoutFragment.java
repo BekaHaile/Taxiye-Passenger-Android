@@ -340,6 +340,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
 												Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
                                     } catch (Exception e) {
                                     }
+                                    setCheckoutScreen();
                                     generateSlots();
 
                                     String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
