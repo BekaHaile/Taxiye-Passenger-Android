@@ -284,10 +284,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             @Override
             public void onClick(View v) {
                 if(activity instanceof FreshActivity) {
-                    ((FreshActivity)activity).openMapAddress(createAddressBundle());
+                    ((FreshActivity)activity).openMapAddress(createAddressBundle(""));
                 }
                 else if(activity instanceof AddPlaceActivity) {
-                    ((AddPlaceActivity)activity).openMapAddress(createAddressBundle());
+                    ((AddPlaceActivity)activity).openMapAddress(createAddressBundle(""));
                 }
             }
         });
@@ -502,9 +502,9 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                                 freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
                                 freshActivity.setSearchResult(null);
                                 freshActivity.setEditThisAddress(false);
-                                freshActivity.openAddToAddressBook(createAddressBundle());
+                                freshActivity.openAddToAddressBook(createAddressBundle(""));
                             }else if(activity instanceof AddPlaceActivity){
-                                ((AddPlaceActivity)activity).openAddToAddressBook(createAddressBundle());
+                                ((AddPlaceActivity)activity).openAddToAddressBook(createAddressBundle(""));
                             }
 
                         } catch (Exception e) {
@@ -540,13 +540,13 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 freshActivity.setEditThisAddress(editThisAddress);
                 freshActivity.setDeliveryAddressToEdit(null);
 			}
-            setAddressToBundle(searchResult.getAddress(), searchResult.getLatitude(), searchResult.getLongitude());
+            setAddressToBundle(searchResult.getAddress(), searchResult.getLatitude(), searchResult.getLongitude(), searchResult.getPlaceId());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setAddressToBundle(String addressRes, double latitude, double longitude){
+    private void setAddressToBundle(String addressRes, double latitude, double longitude, String placeId){
         try {
             current_street = "";
             current_route = "";
@@ -587,9 +587,9 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             }
             //fillAddressDetails(searchResult.getLatLng());
             if(activity instanceof FreshActivity) {
-                ((FreshActivity)activity).openAddToAddressBook(createAddressBundle());
+                ((FreshActivity)activity).openAddToAddressBook(createAddressBundle(placeId));
             }else if(activity instanceof AddPlaceActivity){
-                ((AddPlaceActivity)activity).openAddToAddressBook(createAddressBundle());
+                ((AddPlaceActivity)activity).openAddToAddressBook(createAddressBundle(placeId));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -668,9 +668,8 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     }
 
-    private Bundle createAddressBundle(){
+    private Bundle createAddressBundle(String placeId){
         Bundle bundle = new Bundle();
-        bundle.putString("current_street", current_street);
         bundle.putString("current_street", current_street);
         bundle.putString("current_route", current_route);
         bundle.putString("current_area", current_area);
@@ -678,6 +677,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         bundle.putString("current_pincode", current_pincode);
         bundle.putDouble("current_latitude", current_latitude);
         bundle.putDouble("current_longitude", current_longitude);
+        bundle.putString(Constants.KEY_PLACEID, placeId);
         return bundle;
     }
 
@@ -691,7 +691,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             freshActivity.setEditThisAddress(false);
             freshActivity.setDeliveryAddressToEdit(slot);
             setAddressToBundle(slot.getLastAddress(), Double.parseDouble(slot.getDeliveryLatitude()),
-                    Double.parseDouble(slot.getDeliveryLongitude()));
+                    Double.parseDouble(slot.getDeliveryLongitude()), "");
         }
     }
 }

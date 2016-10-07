@@ -120,7 +120,7 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setClickable(false);
                     ((ViewHolderHeader) holder).textViewDeliveryAddress.setVisibility(View.VISIBLE);
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setText(activity.getResources().getString(R.string.delivery_address));
-                    if(!TextUtils.isEmpty(slots.get(position).getAddressLabel())){
+                        if(!TextUtils.isEmpty(slots.get(position).getAddressLabel())){
                         ((ViewHolderHeader) holder).textViewAddressName.setVisibility(View.VISIBLE);
                         if(slots.get(position).getAddressLabel().equalsIgnoreCase(activity.getString(R.string.home))){
                             slots.get(position).setAddressLabel(activity.getString(R.string.home));

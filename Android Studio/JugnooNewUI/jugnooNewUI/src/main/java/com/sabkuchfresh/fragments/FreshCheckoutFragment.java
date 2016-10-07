@@ -417,8 +417,10 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
 
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
         activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-        activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
         activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
+        if(userCheckoutResponse.getCheckoutData().getLastAddressId() != null){
+            activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+        }
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {

@@ -318,6 +318,7 @@ public class AddPlaceActivity extends BaseFragmentActivity {
             bundle.putString("current_pincode", current_pincode);
             bundle.putDouble("current_latitude", current_latitude);
             bundle.putDouble("current_longitude", current_longitude);
+            bundle.putString(Constants.KEY_PLACEID, searchResult.getPlaceId());
             return bundle;
         } catch (Exception e) {
             e.printStackTrace();

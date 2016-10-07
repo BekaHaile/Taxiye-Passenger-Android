@@ -71,6 +71,7 @@ public class AddToAddressBookFragment extends Fragment {
     public String current_area = "";
     public String current_city = "";
     public String current_pincode = "";
+    public String placeId = "";
 
 
 
@@ -208,6 +209,7 @@ public class AddToAddressBookFragment extends Fragment {
                                 if (freshActivity.isEditThisAddress() && freshActivity.getSearchResult() != null) {
                                     searchResultId = freshActivity.getSearchResult().getId();
                                     ((FreshActivity)activity).setSelectedAddressId(searchResultId);
+                                    placeId = freshActivity.getSearchResult().getPlaceId();
                                 }
 
                             }
@@ -218,6 +220,7 @@ public class AddToAddressBookFragment extends Fragment {
                                 editThisAddress = addPlaceActivity.isEditThisAddress();
                                 if (addPlaceActivity.isEditThisAddress() && addPlaceActivity.getSearchResult() != null) {
                                     searchResultId = addPlaceActivity.getSearchResult().getId();
+                                    placeId = addPlaceActivity.getSearchResult().getPlaceId();
                                 }
                             }
 
@@ -269,7 +272,7 @@ public class AddToAddressBookFragment extends Fragment {
                                 mBus.post(new AddressAdded(true));
                             }
 
-                            SearchResult searchResult = new SearchResult(label, localAddress, "", current_latitude, current_longitude);
+                            SearchResult searchResult = new SearchResult(label, localAddress, placeId, current_latitude, current_longitude);
                             searchResult.setId(searchResultId);
                             if(activity instanceof AddPlaceActivity) {
                                 ((AddPlaceActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
@@ -543,6 +546,7 @@ public class AddToAddressBookFragment extends Fragment {
         current_pincode = bundle.getString("current_pincode", current_pincode);
         current_latitude = bundle.getDouble("current_latitude", current_latitude);
         current_longitude = bundle.getDouble("current_longitude", current_longitude);
+        placeId = bundle.getString(Constants.KEY_PLACEID, placeId);
     }
 
 }
