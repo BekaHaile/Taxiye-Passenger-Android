@@ -166,7 +166,7 @@ public class AppSwitcher {
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				}
 			} else if (clientId.equalsIgnoreCase(Config.getMealsClientId()) && !(activity instanceof FreshActivity)) {
-				if (Data.getFreshData() == null) {
+				if (Data.getMealsData() == null) {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 							callback);
 				} else {
@@ -192,7 +192,9 @@ public class AppSwitcher {
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				}
 			} else if (activity instanceof FreshActivity && !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))) {
-				if (Data.getFreshData() == null) {
+				if ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null)
+						|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.getMealsData() == null)
+						|| (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null)) {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 							callback);
 				} else {
