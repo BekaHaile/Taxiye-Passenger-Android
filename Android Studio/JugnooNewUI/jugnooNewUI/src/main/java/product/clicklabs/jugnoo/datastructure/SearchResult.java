@@ -46,6 +46,10 @@ public class SearchResult {
 		time = System.currentTimeMillis();
 	}
 
+	public SearchResult(Integer id){
+		this.id = id;
+	}
+
 
 	@Override
 	public boolean equals(Object o) {

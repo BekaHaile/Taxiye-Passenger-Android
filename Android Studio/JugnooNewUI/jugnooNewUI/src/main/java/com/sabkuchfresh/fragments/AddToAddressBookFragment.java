@@ -167,7 +167,7 @@ public class AddToAddressBookFragment extends Fragment {
                     Utils.hideSoftKeyboard(activity, editTextLabel);
                     String localAddress = getAddressFromForm();
                     if (checkFields()) {
-                        saveAddressFromForm(localAddress);
+                        saveAddressFromForm(localAddress, -1, -1);
                     }
                 } else {
                     //new DialogPopup().alertPopup(homeActivity, "", "Please fill the address");
@@ -428,11 +428,13 @@ public class AddToAddressBookFragment extends Fragment {
                 }
 
                 boolean labelMatched = false;
+                int newId = -1;
                 String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
                 if(!TextUtils.isEmpty(workString)){
                     SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
                     if(searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)){
                         labelMatched = true;
+                        newId = searchResult.getId();
                     }
                 }
 
@@ -441,6 +443,7 @@ public class AddToAddressBookFragment extends Fragment {
                     SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
                     if(searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)){
                         labelMatched = true;
+                        newId = searchResult.getId();
                     }
                 }
 
@@ -448,11 +451,15 @@ public class AddToAddressBookFragment extends Fragment {
                     for (SearchResult searchResult : Data.userData.getSearchResults()) {
                         if(searchResult.getName().equalsIgnoreCase(label) && !searchResult.getId().equals(selfId)){
                             labelMatched = true;
+                            newId = searchResult.getId();
+                            break;
                         }
                     }
                 }
 
                 if(labelMatched){
+                    final int finalSelfId = selfId;
+                    final int finalNewId = newId;
                     DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
                             activity.getString(R.string.address_label_matched_message_format, label),
                             activity.getString(R.string.yes), activity.getString(R.string.cancel),
@@ -460,7 +467,7 @@ public class AddToAddressBookFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     String localAddress = getAddressFromForm();
-                                    saveAddressFromForm(localAddress);
+                                    saveAddressFromForm(localAddress, finalSelfId, finalNewId);
                                 }
                             },
                             new View.OnClickListener() {
@@ -494,7 +501,7 @@ public class AddToAddressBookFragment extends Fragment {
     }
 
 
-    private void saveAddressFromForm(String localAddress){
+    private void saveAddressFromForm(String localAddress, int deleteOtherId, int newId){
         {
             DeliveryAddressesFragment deliveryAddressesFragment = null;
 
@@ -530,24 +537,36 @@ public class AddToAddressBookFragment extends Fragment {
             }
 
 
-            if (placeRequestCode == Constants.REQUEST_CODE_ADD_HOME) {
-                otherId = 0;
-                if (!"".equalsIgnoreCase(savedWorkStr)) {
-                    SearchResult savedWork = new Gson().fromJson(savedWorkStr, SearchResult.class);
-                    if (savedWork.getAddress().equalsIgnoreCase(localAddress)) {
-                        otherId = savedWork.getId();
-                    }
+            if(deleteOtherId > 0){
+                otherId = deleteOtherId;
+                searchResultId = newId;
+                if(activity instanceof FreshActivity) {
+                    ((FreshActivity)activity).getSearchResult().setId(searchResultId);
+                    ((FreshActivity)activity).setSelectedAddressId(searchResultId);
+                } else if(activity instanceof AddPlaceActivity){
+                    ((AddPlaceActivity)activity).getSearchResult().setId(searchResultId);
                 }
-            } else if (placeRequestCode == Constants.REQUEST_CODE_ADD_WORK) {
-                otherId = 0;
-                if (!"".equalsIgnoreCase(savedHomeStr)) {
-                    SearchResult savedHome = new Gson().fromJson(savedHomeStr, SearchResult.class);
-                    if (savedHome.getAddress().equalsIgnoreCase(localAddress)) {
-                        otherId = savedHome.getId();
+
+            } else {
+                if (placeRequestCode == Constants.REQUEST_CODE_ADD_HOME) {
+                    otherId = 0;
+                    if (!"".equalsIgnoreCase(savedWorkStr)) {
+                        SearchResult savedWork = new Gson().fromJson(savedWorkStr, SearchResult.class);
+                        if (savedWork.getAddress().equalsIgnoreCase(localAddress)) {
+                            otherId = savedWork.getId();
+                        }
                     }
+                } else if (placeRequestCode == Constants.REQUEST_CODE_ADD_WORK) {
+                    otherId = 0;
+                    if (!"".equalsIgnoreCase(savedHomeStr)) {
+                        SearchResult savedHome = new Gson().fromJson(savedHomeStr, SearchResult.class);
+                        if (savedHome.getAddress().equalsIgnoreCase(localAddress)) {
+                            otherId = savedHome.getId();
+                        }
+                    }
+                } else if (placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
+                    otherId = 0;
                 }
-            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
-                otherId = 0;
             }
 
             String label = "";

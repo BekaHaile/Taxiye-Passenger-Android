@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.google.gson.Gson;
@@ -101,12 +102,33 @@ public class ApiAddHomeWorkAddress {
 							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
 
 								if(matchedWithOtherId > 0){
-									if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_HOME)){
-										Prefs.with(activity).save(SPLabels.ADD_WORK, "");
-									} else if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_WORK)){
-										Prefs.with(activity).save(SPLabels.ADD_HOME, "");
+									String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+									if(!TextUtils.isEmpty(homeString)){
+										SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+										if(searchResult.getId().equals(matchedWithOtherId)){
+											Prefs.with(activity).save(SPLabels.ADD_HOME, "");
+										}
 									}
-									addHomeAndWorkAddress(searchResult, deleteAddress, 0, editThisAddress, placeRequestCode);
+
+									String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+									if(!TextUtils.isEmpty(workString)){
+										SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+										if(searchResult.getId().equals(matchedWithOtherId)){
+											Prefs.with(activity).save(SPLabels.ADD_WORK, "");
+										}
+									}
+
+									SearchResult searchResultToRemove = new SearchResult(matchedWithOtherId);
+									Data.userData.getSearchResults().remove(searchResultToRemove);
+
+									int placeCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
+									if(searchResult.getName().equalsIgnoreCase(SPLabels.ADD_HOME)){
+										placeCode = Constants.REQUEST_CODE_ADD_HOME;
+									} else if(searchResult.getName().equalsIgnoreCase(SPLabels.ADD_WORK)){
+										placeCode = Constants.REQUEST_CODE_ADD_WORK;
+									}
+
+									addHomeAndWorkAddress(searchResult, deleteAddress, 0, editThisAddress, placeCode);
 								}
 								else{
 									int id = 0;
