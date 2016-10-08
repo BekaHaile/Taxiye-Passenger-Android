@@ -142,9 +142,9 @@ public class ApiAddHomeWorkAddress {
 									if(deleteAddress){
 										strResult = "";
 									}
-									if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
+									if(searchResult.getName().equalsIgnoreCase(SPLabels.ADD_HOME)){
 										Prefs.with(activity).save(SPLabels.ADD_HOME, strResult);
-									} else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
+									} else if(searchResult.getName().equalsIgnoreCase(SPLabels.ADD_WORK)){
 										Prefs.with(activity).save(SPLabels.ADD_WORK, strResult);
 									} else {
 										if(deleteAddress){

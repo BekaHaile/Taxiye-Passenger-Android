@@ -537,14 +537,18 @@ public class AddToAddressBookFragment extends Fragment {
             }
 
 
-            if(deleteOtherId > 0){
+            if(deleteOtherId > 0 || newId > 0){
                 otherId = deleteOtherId;
                 searchResultId = newId;
                 if(activity instanceof FreshActivity) {
-                    ((FreshActivity)activity).getSearchResult().setId(searchResultId);
+                    if(((FreshActivity)activity).getSearchResult() != null) {
+                        ((FreshActivity) activity).getSearchResult().setId(searchResultId);
+                    }
                     ((FreshActivity)activity).setSelectedAddressId(searchResultId);
                 } else if(activity instanceof AddPlaceActivity){
-                    ((AddPlaceActivity)activity).getSearchResult().setId(searchResultId);
+                    if(((AddPlaceActivity)activity).getSearchResult() != null) {
+                        ((AddPlaceActivity) activity).getSearchResult().setId(searchResultId);
+                    }
                 }
 
             } else {
