@@ -417,10 +417,18 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     }
 
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
-        activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-        activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
-        if(userCheckoutResponse.getCheckoutData().getLastAddressId() != null){
-            activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+        try {
+            if(userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
+				activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+			}
+            if(userCheckoutResponse.getCheckoutData().getLastAddressType() != null) {
+				activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
+			}
+            if(userCheckoutResponse.getCheckoutData().getLastAddressId() != null){
+				activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
