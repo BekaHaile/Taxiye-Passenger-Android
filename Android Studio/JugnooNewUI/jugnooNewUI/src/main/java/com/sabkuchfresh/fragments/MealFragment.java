@@ -22,6 +22,7 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshDeliverySlotsDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -127,7 +128,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         mSwipeRefreshLayout.setEnabled(true);
 
         recyclerViewCategoryItems.setAdapter(mealAdapter);
-
 
         setSortingList();
         getAllProducts(true);
@@ -253,9 +253,31 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 int sortedBy = jObj.getInt(Constants.SORTED_BY);
 
+                                Category category = new Category();
+                                category.setCategoryBanner(null);
+                                category.setCategoryId(10);
+                                category.setCategoryImage("http://www.astonmartin.com/images/brochure/rga_astonmartin_brochureimage_one-77.jpg");
+                                category.setCategoryName("Meals Addon");
+                                category.setCurrentGroupId(productsResponse.getCategories().get(0).getCurrentGroupId());
+
+                                ArrayList<SubItem> subItems = new ArrayList<SubItem>();
+                                SubItem subItem = new SubItem();
+                                subItem.setSubItemName("Cola");
+                                subItem.setBaseUnit("1 Bottle");
+                                subItem.setPrice(10.0d);
+                                subItem.setStock(10);
+                                subItem.setSubItemImage("http://www.coca-colaproductfacts.com/content/dam/productfacts/us/productDetails/ProductImages/PDP_Coca-Cola_HFCS_2L.png");
+                                subItems.add(subItem);
+                                subItem.setGroupId(productsResponse.getCategories().get(0).getCurrentGroupId());
+                                category.setSubItems(subItems);
+
+                                productsResponse.getCategories().add(category);
+
+
                                 mealsData.clear();
                                 mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
                                 activity.setProductsResponse(productsResponse);
+
                                 setSortingList();
                                 if (Data.mealSort == -1) {
                                     slots.get(sortedBy).setCheck(true);
@@ -292,8 +314,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                         && activity.getProductsResponse().getCategories() != null) {
                                     activity.updateCartFromSP();
                                     activity.updateCartValuesGetTotalPrice();
-
                                 }
+
+
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -412,4 +435,5 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 break;
         }
     }
+
 }
