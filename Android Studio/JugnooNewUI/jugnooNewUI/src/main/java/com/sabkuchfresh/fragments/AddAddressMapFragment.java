@@ -272,7 +272,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle(placeId));
                     }
                 } else {
-                    Toast.makeText(activity, "Please wait...", Toast.LENGTH_SHORT).show();
+                    Utils.showToast(activity, "Please wait...");
                 }
             }
         });
@@ -556,9 +556,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
             // check if map is created successfully or not
             if (googleMap == null) {
-                Toast.makeText(activity,
-                        "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-                        .show();
+                Utils.showToast(activity, "Sorry! unable to create maps");
             }
 
             mapStateListener = new MapStateListener(googleMap, mapFragment, getActivity()) {

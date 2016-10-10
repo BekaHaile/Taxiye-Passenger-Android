@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**
@@ -113,7 +114,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                         selectedCount++;
                         callback.contactClicked(position, contactBeans.get(position));
                     } else {
-                        Toast.makeText(activity, "You can add only three contacts.", Toast.LENGTH_SHORT).show();
+                        Utils.showToast(activity, "You can add only three contacts.");
                     }
                     notifyDataSetChanged();
                 } else if (ListMode.EMERGENCY_CONTACTS == getListMode()) {

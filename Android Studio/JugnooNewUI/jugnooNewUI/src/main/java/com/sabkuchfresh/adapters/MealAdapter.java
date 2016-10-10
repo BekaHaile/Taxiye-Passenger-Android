@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -41,6 +42,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
+
 
     public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems) {
         this.activity = activity;
@@ -207,12 +209,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     @Override
                     public void onClick(View v) {
                         try {
-
                             int pos = (int) v.getTag();
                             if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                                 subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
                             } else {
-                                Toast.makeText(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"", Toast.LENGTH_SHORT).show();
+                                Utils.showToast(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
                             }
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
@@ -231,9 +232,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                                 subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
                             } else {
-                                Toast.makeText(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"", Toast.LENGTH_SHORT).show();
+                                Utils.showToast(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
                             }
-
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
                         } catch (Exception e) {

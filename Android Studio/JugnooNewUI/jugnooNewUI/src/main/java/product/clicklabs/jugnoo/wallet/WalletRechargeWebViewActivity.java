@@ -26,10 +26,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.utils.EncodeUtils;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 
 public class WalletRechargeWebViewActivity extends FragmentActivity {
@@ -114,7 +116,7 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();
+            Utils.showToast(this, "Some Error");
         }
     }
 

@@ -211,11 +211,9 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                 if (buttonProceedToPayment.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
                     getCheckoutData();
                 } else if (activity.getSlotSelected() == null) {
-                    Toast.makeText(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot),
-                            Toast.LENGTH_LONG).show();
+                    product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
                 } else if (TextUtils.isEmpty(activity.getSelectedAddress())) {
-                    Toast.makeText(activity, activity.getResources().getString(R.string.please_select_a_delivery_address),
-                            Toast.LENGTH_LONG).show();
+                    product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_address));
                 } else {
                     activity.getTransactionUtils().openPaymentFragment(activity, activity.getRelativeLayoutContainer());
                     NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PROCEED_TO_PAYMENT_CLICKED, null);

@@ -98,7 +98,7 @@ public class FreshSupportFragment extends Fragment implements FlurryEventNames {
                 if(!TextUtils.isEmpty(editText.getText().toString().trim())) {
                     sendQuery(editText.getText().toString().trim());
                 } else {
-                    Toast.makeText(activity, "Please enter some text!", Toast.LENGTH_SHORT).show();
+                    product.clicklabs.jugnoo.utils.Utils.showToast(activity, "Please enter some text!");
                 }
             }
         });
@@ -126,7 +126,7 @@ public class FreshSupportFragment extends Fragment implements FlurryEventNames {
 
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 editText.setText("");
-                                Toast.makeText(activity, ""+notificationInboxResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                                product.clicklabs.jugnoo.utils.Utils.showToast(activity, ""+notificationInboxResponse.getMessage());
                                 activity.finish();
                             }
                         } catch (Exception e) {

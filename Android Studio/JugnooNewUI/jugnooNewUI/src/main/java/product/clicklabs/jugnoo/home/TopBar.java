@@ -80,7 +80,7 @@ public class TopBar implements FirebaseEvents {
         buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(activity, Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
+                Utils.showToast(activity, Config.getServerUrlName());
                 FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
                 return false;
             }
