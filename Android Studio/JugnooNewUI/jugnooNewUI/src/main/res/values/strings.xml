@@ -285,6 +285,7 @@
 	<string name="work">Work</string>
 
 
+
 	<!-- Search state strings -->
 	<string name="set_pickup_location">Set pick up location</string>
 
@@ -1169,6 +1170,7 @@
 	<string name="avail_offers">Avail Offers</string>
 	<string name="delivery_instructions">Delivery Instructions</string>
 	<string name="address_label_matched_message_format">Address with label \"%s\" already present. Do you want to overwrite it?</string>
+	<string name="next">Next</string>
 
 
 </resources>
