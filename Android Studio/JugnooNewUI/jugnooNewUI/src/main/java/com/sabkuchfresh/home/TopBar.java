@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 4/8/16.
@@ -79,7 +80,7 @@ public class TopBar implements FlurryEventNames {
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				Toast.makeText(activity, Config.getFreshServerUrlName(), Toast.LENGTH_SHORT).show();
+				Utils.showToast(activity, Config.getFreshServerUrlName());
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				return false;
 			}

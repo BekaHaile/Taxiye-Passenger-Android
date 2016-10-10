@@ -427,7 +427,7 @@ public class FeedbackActivity extends BaseActivity implements FlurryEventNames{
                         int flag = jObj.getInt("flag");
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                             if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                Toast.makeText(activity, "Thank you for your valuable feedback", Toast.LENGTH_SHORT).show();
+                                Utils.showToast(activity, "Thank you for your valuable feedback");
                                 if (FeedbackMode.AFTER_RIDE == feedbackMode && HomeActivity.appInterruptHandler != null) {
                                     HomeActivity.appInterruptHandler.onAfterRideFeedbackSubmitted(givenRating);
                                 } else if (FeedbackMode.PAST_RIDE == feedbackMode && RideTransactionsActivity.updateRideTransaction != null) {

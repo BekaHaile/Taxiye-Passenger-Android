@@ -828,7 +828,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void facebookLoginError(String message) {
-					Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+					Utils.showToast(getApplicationContext(), message);
 				}
 			});
 			editTextEmail.setOnEditorActionListener(new OnEditorActionListener() {

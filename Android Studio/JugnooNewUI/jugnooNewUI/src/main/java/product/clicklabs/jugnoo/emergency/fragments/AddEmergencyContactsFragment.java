@@ -219,9 +219,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 								FlurryEventLogger.eventGA(Constants.HELP, "call your contacts", "add contact");
 								addEmergencyContactsAPI(activity, jsonArray.toString());
 							} else{
-								Toast.makeText(activity,
-										activity.getResources().getString(R.string.please_select_some_contacts_first),
-										Toast.LENGTH_SHORT).show();
+								Utils.showToast(activity, activity.getResources().getString(R.string.please_select_some_contacts_first));
 							}
 						} catch (Exception e) {
 							e.printStackTrace();

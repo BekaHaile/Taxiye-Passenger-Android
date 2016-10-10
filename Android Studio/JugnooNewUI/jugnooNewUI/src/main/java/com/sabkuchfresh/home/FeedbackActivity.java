@@ -49,11 +49,9 @@ public class FeedbackActivity extends BaseFragmentActivity implements View.OnCli
         if(fragment instanceof FeedbackFragment) {
             imageViewBack.setVisibility(View.GONE);
             title.setText("RECEIPT");
-            Toast.makeText(this, "R", Toast.LENGTH_LONG).show();
         } else if(fragment instanceof FreshOrderSummaryFragment) {
             imageViewBack.setVisibility(View.VISIBLE);
             title.setText("INVOICE");
-            Toast.makeText(this, "I", Toast.LENGTH_LONG).show();
         }
     }
     /**

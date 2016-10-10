@@ -240,7 +240,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                             //int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                             if(appType == AppConstant.ApplicationType.MEALS) {
                                 if(isAvailable()) {
-                                    Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_has_available), Toast.LENGTH_SHORT).show();
+                                    Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_has_available));
                                 } else {
                                     getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
                                     MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.CHECKOUT, null);
@@ -275,7 +275,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                             }
                         }
                     } else {
-                        Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
+                        Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty));
                     }
                 }
             };
@@ -297,7 +297,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         if(updateCartValuesGetTotalPrice().second > 0) {
                             getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
                         } else {
-                            Toast.makeText(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty), Toast.LENGTH_SHORT).show();
+                            Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty));
                         }
 
                         if((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())){

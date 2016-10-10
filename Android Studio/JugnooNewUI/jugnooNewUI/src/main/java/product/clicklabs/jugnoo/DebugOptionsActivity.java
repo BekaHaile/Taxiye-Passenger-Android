@@ -531,15 +531,15 @@ public class DebugOptionsActivity extends BaseActivity {
         super.onNewIntent(intent);
         if (Data.REGISTRATION_COMPLETE.equalsIgnoreCase(intent.getAction())) {
             if (intent.hasExtra(Data.DEVICE_TOKEN)) {
-                Toast.makeText(this, "Registration complete = " + intent.getStringExtra(Data.DEVICE_TOKEN), Toast.LENGTH_LONG).show();
+                Utils.showToast(this, "Registration complete = " + intent.getStringExtra(Data.DEVICE_TOKEN));
             } else {
-                Toast.makeText(this, "Registration failed" + "", Toast.LENGTH_LONG).show();
+                Utils.showToast(this, "Registration failed" + "");
             }
         } else if (Data.REGISTRATION_FAILED.equalsIgnoreCase(intent.getAction())) {
             if (intent.hasExtra(Data.ERROR)) {
-                Toast.makeText(this, "Registration failed = " + intent.getStringExtra(Data.ERROR), Toast.LENGTH_LONG).show();
+                Utils.showToast(this, "Registration failed = " + intent.getStringExtra(Data.ERROR));
             } else {
-                Toast.makeText(this, "Registration failed" + "", Toast.LENGTH_LONG).show();
+                Utils.showToast(this, "Registration failed" + "");
             }
         }
         if (progressDialog != null) {

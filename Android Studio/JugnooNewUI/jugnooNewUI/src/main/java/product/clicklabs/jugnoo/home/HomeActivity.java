@@ -2585,7 +2585,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Waiting for your location...", Toast.LENGTH_LONG).show();
+                    Utils.showToast(HomeActivity.this, "Waiting for your location...");
                     reconnectLocationFetchers();
                 }
             }
@@ -4614,8 +4614,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         @Override
                         public void stopRequestRide(boolean confirmedScreenOpened) {
-                            Toast.makeText(HomeActivity.this, getResources().getString(R.string.fares_updated),
-                                    Toast.LENGTH_LONG).show();
+                            Utils.showToast(HomeActivity.this, getResources().getString(R.string.fares_updated));
                             if(!confirmedScreenOpened) {
                                 Animation anim = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.rotate_shake);
                                 imageViewRideNow.startAnimation(anim);
@@ -5957,7 +5956,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     ||
                     (Utils.compareDouble(Data.autoData.getPickupLatLng().latitude, 22.971723) == 0 && Utils.compareDouble(Data.autoData.getPickupLatLng().longitude, 78.754263) == 0)){
                 myLocation = null;
-                Toast.makeText(activity, "Waiting for location...", Toast.LENGTH_SHORT).show();
+                Utils.showToast(activity, "Waiting for location...");
                 return;
             }
             else{
@@ -7481,7 +7480,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         public void displayLessAccurateToast(Context context) {
-            Toast.makeText(context, "Please wait for sometime. We need to get your more accurate location.", Toast.LENGTH_LONG).show();
+            Utils.showToast(context, "Please wait for sometime. We need to get your more accurate location.");
         }
 
         public void initRequestRideUi() {
@@ -8578,7 +8577,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 getApiCampaignAvailRequest().availCampaign(map.getCameraPosition().target,
                         Data.autoData.getCampaigns().getMapLeftButton().getCampaignId());
             } else{
-                Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
+                Utils.showToast(this, getString(R.string.no_campaign_currently));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -8632,7 +8631,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(Data.autoData.getCampaigns() != null && Data.autoData.getCampaigns().getMapLeftButton() != null) {
                 getApiCampaignRequestCancel().cancelCampaignRequest(Data.autoData.getCampaigns().getMapLeftButton().getCampaignId());
             } else{
-                Toast.makeText(this, getString(R.string.no_campaign_currently), Toast.LENGTH_SHORT).show();
+                Utils.showToast(this, getString(R.string.no_campaign_currently));
                 backFromCampaignAvailLoading();
             }
         } catch (Exception e) {

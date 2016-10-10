@@ -135,9 +135,7 @@ public class AddToAddressBookFragment extends Fragment {
 
                     // check if map is created successfully or not
                     if (googleMap == null) {
-                        Toast.makeText(activity,
-                                "Sorry! unable to create maps", Toast.LENGTH_SHORT)
-                                .show();
+                        Utils.showToast(activity, "Sorry! unable to create maps");
                     }
                     extractMapSnapShot(current_latitude, current_longitude);
                 }
@@ -404,13 +402,13 @@ public class AddToAddressBookFragment extends Fragment {
             String label = editTextLabel.getText().toString().trim();
 
             if(hno.length() == 0 && building.length() == 0) {
-                Toast.makeText(activity, "Please fill address", Toast.LENGTH_SHORT).show();
+                Utils.showToast(activity, "Please fill address");
                 return false;
             } else if(cityVal.length() == 0 && areaVal.length() == 0) {
-                Toast.makeText(activity, "Please fill area/city ", Toast.LENGTH_SHORT).show();
+                Utils.showToast(activity, "Please fill area/city ");
                 return false;
             } else if(pin.length() == 0) {
-                Toast.makeText(activity, "Please fill pin", Toast.LENGTH_SHORT).show();
+                Utils.showToast(activity, "Please fill pin");
                 return false;
             } else {
                 boolean editThisAddress = false;

@@ -33,6 +33,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.tagmanager.DataLayer;
@@ -58,6 +59,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -229,6 +231,18 @@ public class Utils {
         }
         return appInstalled;
     }
+
+	public static void showToast(Context context, String string){
+		try {
+			if(Data.toast != null){
+                Data.toast.cancel();
+            }
+			Data.toast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
+			Data.toast.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 
 

@@ -61,6 +61,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -357,7 +358,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     public void onPlaceSearchError() {
                         //progressBarSearch.setVisibility(View.GONE);
 //                        searchListActionsHandler.onPlaceSearchError();
-                        Toast.makeText(activity, R.string.could_not_find_address, Toast.LENGTH_SHORT).show();
+                        Utils.showToast(activity, getString(R.string.could_not_find_address));
                     }
 
                     @Override

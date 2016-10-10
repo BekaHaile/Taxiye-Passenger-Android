@@ -72,7 +72,7 @@ public class ReferralActions implements FirebaseEvents {
 
                                     @Override
                                     public void facebookLoginError(String message) {
-                                        Toast.makeText(activity, message, Toast.LENGTH_LONG).show();
+                                        Utils.showToast(activity, message);
                                     }
                                 });
                                 facebookLoginHelper.openFacebookSession(false);
@@ -84,7 +84,7 @@ public class ReferralActions implements FirebaseEvents {
 
                     @Override
                     public void onBranchError(String error) {
-                        Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                        Utils.showToast(activity, error);
                     }
                 }).getBranchLinkForChannel(channel,
                         channelLinkSP,
@@ -156,13 +156,13 @@ public class ReferralActions implements FirebaseEvents {
                         }
 
                     } catch (Exception e) {
-                        Toast.makeText(activity, "WhatsApp not Installed", Toast.LENGTH_SHORT).show();
+                        Utils.showToast(activity, "WhatsApp not Installed");
                     }
                 }
 
                 @Override
                 public void onBranchError(String error) {
-                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                    Utils.showToast(activity, error);
                 }
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_WHATSAPP,
                     SPLabels.BRANCH_WHATSAPP_LINK,
@@ -192,7 +192,7 @@ public class ReferralActions implements FirebaseEvents {
 
                 @Override
                 public void onBranchError(String error) {
-                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                    Utils.showToast(activity, error);
                 }
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_SMS,
                     SPLabels.BRANCH_SMS_LINK,
@@ -224,7 +224,7 @@ public class ReferralActions implements FirebaseEvents {
 
                 @Override
                 public void onBranchError(String error) {
-                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                    Utils.showToast(activity, error);
                 }
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_EMAIL,
                     SPLabels.BRANCH_EMAIL_LINK,
@@ -251,7 +251,7 @@ public class ReferralActions implements FirebaseEvents {
 
                 @Override
                 public void onBranchError(String error) {
-                    Toast.makeText(activity, error, Toast.LENGTH_SHORT).show();
+                    Utils.showToast(activity, error);
                 }
             }).getBranchLinkForChannel(BranchMetricsUtils.BRANCH_CHANNEL_GENERIC,
                     SPLabels.BRANCH_GENERIC_LINK,
