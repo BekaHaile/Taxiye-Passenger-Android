@@ -6686,14 +6686,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if (promoCouponSelectedForRide != null) {
                                     if (promoCouponSelectedForRide instanceof CouponInfo) {
                                         nameValuePairs.put("coupon_to_apply", "" + promoCouponSelectedForRide.getId());
-                                        nameValuePairs.put(KEY_MASTER_COUPON, "" + ((CouponInfo) promoCouponSelectedForRide).getMasterCoupon());
                                         if (promoCouponSelectedForRide.getId() == 0) {
                                             nameValuePairs.put("promo_to_apply", "" + promoCouponSelectedForRide.getId());
                                         }
                                     } else if (promoCouponSelectedForRide instanceof PromotionInfo) {
                                         nameValuePairs.put("promo_to_apply", "" + promoCouponSelectedForRide.getId());
-                                        nameValuePairs.put(KEY_MASTER_COUPON, "" + ((PromotionInfo) promoCouponSelectedForRide).getMasterCoupon());
                                     }
+                                    nameValuePairs.put(KEY_MASTER_COUPON, "" + promoCouponSelectedForRide.getMasterCoupon());
                                 }
 
                                 if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {

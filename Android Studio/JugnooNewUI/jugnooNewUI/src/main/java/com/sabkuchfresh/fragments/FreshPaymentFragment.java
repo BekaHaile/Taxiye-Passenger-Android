@@ -860,6 +860,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     } else if(activity.getSelectedPromoCoupon() instanceof PromotionInfo){
                         params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(activity.getSelectedPromoCoupon().getId()));
                     }
+                    params.put(Constants.KEY_MASTER_COUPON, String.valueOf(activity.getSelectedPromoCoupon().getMasterCoupon()));
                 }
 
 
