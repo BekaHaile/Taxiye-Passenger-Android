@@ -331,9 +331,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                     activity.setUserCheckoutResponse(userCheckoutResponse);
                                     Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
                                     checkout.get(0).setCaddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-                                    if(userCheckoutResponse.getCheckoutData().getLastAddressType() != null) {
-                                        checkout.get(0).setAddressLabel(userCheckoutResponse.getCheckoutData().getLastAddressType());
-                                    }
+                                    checkout.get(0).setAddressLabel(userCheckoutResponse.getCheckoutData().getLastAddressType());
                                     setActivityLastAddressFromResponse(userCheckoutResponse);
                                     try {
                                         activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
@@ -421,12 +419,8 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
             if(userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
 				activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
 			}
-            if(userCheckoutResponse.getCheckoutData().getLastAddressType() != null) {
-				activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
-			}
-            if(userCheckoutResponse.getCheckoutData().getLastAddressId() != null){
-				activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
-			}
+            activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
+            activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
         } catch (Exception e) {
             e.printStackTrace();
         }

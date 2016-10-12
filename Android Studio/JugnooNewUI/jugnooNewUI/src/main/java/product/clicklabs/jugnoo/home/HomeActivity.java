@@ -373,6 +373,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             mapTouchedOnce = false;
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, firstTimeZoom = false, zoomingForDeepLink = false;
     boolean dropLocationSet = false, myLocationButtonClicked = false;
+    boolean searchedALocation = false;
 
     Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
     PushDialog pushDialog;
@@ -511,6 +512,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         mapTouchedOnce = false;
         zoomedForSearch = false;
         firstTimeZoom = false;
+        searchedALocation = false;
         zoomingForDeepLink = false;
         freshIntroDialog = null;
         dropLocationSet = false;
@@ -2823,7 +2825,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (!zoomedForSearch && map != null) {
                                 getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
                             }
+                            textViewAssigningDropLocationClick.setText("");
+                            textViewFinalDropLocationClick.setText("");
+                            if(!searchedALocation){
+                                dropAddressName = "";
+                            }
                         }
+                        searchedALocation = false;
 
                         initAndClearInRidePath();
                         getTrackingLogHelper().uploadAllTrackLogs();
@@ -5009,6 +5017,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(Data.autoData.getDropLatLng() != null && !TextUtils.isEmpty(Data.autoData.getDropAddress())){
                     if(dropAddressName.length() == 0) {
                         textView.setText(Data.autoData.getDropAddress());
+                    } else{
+                        textView.setText(dropAddressName);
                     }
                     addressNeeded = false;
                 }
@@ -5155,6 +5165,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void customerUIBackToInitialAfterCancel() {
         firstTimeZoom = false;
+
 
         cancelTimerRequestRide();
 
@@ -8072,7 +8083,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     switchPassengerScreen(passengerScreenMode);
                 } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
                     textViewDestSearch.setText(autoCompleteSearchResult.getName());
+                    dropAddressName = autoCompleteSearchResult.getName();
                 }
+                searchedALocation = true;
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
@@ -8178,6 +8191,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode){
             if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
                 textViewDestSearch.setText("");
+                dropAddressName = "";
+            } else{
+                textViewInitialSearch.setText("");
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
