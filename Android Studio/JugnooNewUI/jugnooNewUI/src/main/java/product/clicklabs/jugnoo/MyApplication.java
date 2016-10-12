@@ -25,6 +25,7 @@ import com.kochava.android.tracker.Feature;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,10 +33,12 @@ import java.util.Map;
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.config.ConfigMode;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.AppSwitcher;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
 import product.clicklabs.jugnoo.utils.CleverTapUtils;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 
@@ -414,11 +417,22 @@ public class MyApplication extends Application{
 	 * @param prodViewedAction
      */
 	public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
+		try{
+			prodViewedAction.put(Events.TIMING, new Date());
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
 		getCleverTap().event.push(eventName, prodViewedAction);
 	}
 
 	public void charged(HashMap<String, Object> chargeDetails, ArrayList<HashMap<String, Object>> items) {
 		try {
+			try{
+				chargeDetails.put(Events.TIMING, new Date());
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 			getCleverTap().event.push(CleverTapAPI.CHARGED_EVENT, chargeDetails, items);
 		} catch (Exception e) {
 			// You have to specify the first parameter to push()
@@ -446,6 +460,44 @@ public class MyApplication extends Application{
 			cleverTapUtils = new CleverTapUtils();
 		}
 		return cleverTapUtils;
+	}
+
+
+	public Database2 getDatabase2(){
+		return Database2.getInstance(this);
+	}
+
+	public void initializeServerURL(Context context) {
+		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
+
+		ConfigMode configModeToSet;
+		if (link.equalsIgnoreCase(Config.getLiveServerUrl())
+				|| link.equalsIgnoreCase(Config.getLegacyServerUrl())) {
+			configModeToSet = ConfigMode.LIVE;
+		} else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
+			configModeToSet = ConfigMode.DEV;
+		} else if (link.equalsIgnoreCase(Config.getDev1ServerUrl())) {
+			configModeToSet = ConfigMode.DEV_1;
+		} else if (link.equalsIgnoreCase(Config.getDev2ServerUrl())) {
+			configModeToSet = ConfigMode.DEV_2;
+		} else if (link.equalsIgnoreCase(Config.getDev3ServerUrl())) {
+			configModeToSet = ConfigMode.DEV_3;
+		} else {
+			Config.CUSTOM_SERVER_URL = link;
+			configModeToSet = ConfigMode.CUSTOM;
+		}
+		String freshServerUrlToSet = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
+
+		if(configModeToSet != Config.getConfigMode() || !Config.getFreshServerUrl().equalsIgnoreCase(freshServerUrlToSet)){
+			RestClient.clearRestClient();
+		}
+		Config.setConfigMode(configModeToSet);
+		Config.FRESH_SERVER_URL = freshServerUrlToSet;
+
+		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
+
+		RestClient.setupRestClient();
+		RestClient.setupFreshApiRestClient();
 	}
 
 }

@@ -261,6 +261,22 @@ public class ApiFindADriver {
 				e.printStackTrace();
 			}
 
+			try {
+				if(Data.getGroceryData() != null && Data.getGroceryData().getPromoCoupons() == null){
+					Data.getGroceryData().setPromoCoupons(new ArrayList<PromoCoupon>());
+				} else{
+					Data.getGroceryData().getPromoCoupons().clear();
+				}
+				if(findADriverResponse.getGroceryPromotions() != null) {
+					Data.getGroceryData().getPromoCoupons().addAll(findADriverResponse.getGroceryPromotions());
+				}
+				if(findADriverResponse.getGroceryCoupons() != null) {
+					Data.getGroceryData().getPromoCoupons().addAll(findADriverResponse.getGroceryCoupons());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			// for Dodo promo and coupons
 			try {
 				if(Data.getDeliveryData() != null && Data.getDeliveryData().getPromoCoupons() == null){
@@ -331,11 +347,17 @@ public class ApiFindADriver {
 			if(findADriverResponse.getDeliveryEnabled() != null) {
 				Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
 			}
+			if(findADriverResponse.getGroceryEnabled() != null) {
+				Data.userData.setGroceryEnabled(findADriverResponse.getGroceryEnabled());
+			}
 			if(findADriverResponse.getIntegratedJugnooEnabled() != null){
 				Data.userData.setIntegratedJugnooEnabled(findADriverResponse.getIntegratedJugnooEnabled());
 			}
 			if(!TextUtils.isEmpty(findADriverResponse.getGamePredictUrl())) {
 				Data.userData.setGamePredictUrl(findADriverResponse.getGamePredictUrl());
+			}
+			if(findADriverResponse.getTopupCardEnabled() != null){
+				Data.userData.setTopupCardEnabled(findADriverResponse.getTopupCardEnabled());
 			}
 
 		} catch (Exception exception) {

@@ -13,6 +13,7 @@ public class MealsData {
 	private double amount;
 	private String feedbackDeliveryDate, rideEndGoodFeedbackText;
 	private int feedbackViewType;
+
 	public MealsData(String orderId, int pendingFeedback, double amount, String feedbackDeliveryDate, int feedbackViewType,
 					 String rideEndGoodFeedbackText) {
 		this.orderId = orderId;
@@ -78,4 +79,5 @@ public class MealsData {
 	public void setRideEndGoodFeedbackText(String rideEndGoodFeedbackText) {
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 	}
+
 }

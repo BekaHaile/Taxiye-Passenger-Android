@@ -80,9 +80,11 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/text_price"
                     android:paddingLeft="27px"
-                    android:text="Title"
+                    android:text="Title\nabc"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_32" />
+                    android:textSize="@dimen/text_size_32"
+                    android:maxLines="2"
+                    />
 
 
                 <TextView
@@ -113,7 +115,7 @@
             <RelativeLayout
                 android:id="@+id/below_layout"
                 android:layout_width="match_parent"
-                android:layout_height="100px">
+                android:layout_height="wrap_content">
 
 
 
@@ -124,10 +126,11 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/cart_layout"
                     android:layout_marginTop="20px"
+                    android:layout_marginBottom="20px"
                     android:paddingLeft="27px"
                     android:paddingRight="20px"
                     android:text="Description"
-                    android:maxLines="2"
+                    android:maxLines="3"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/text_size_24"
                     android:visibility="visible" />
@@ -139,6 +142,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20px"
+                    android:layout_marginTop="20px"
+                    android:layout_marginBottom="20px"
                     android:animateLayoutChanges="true"
                     android:gravity="center_vertical"
                     android:visibility="visible"
@@ -208,6 +213,12 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <View
+                    android:layout_below="@+id/cart_layout"
+                    android:layout_width="1px"
+                    android:layout_height="1px"
+                    />
 
             </RelativeLayout>
 

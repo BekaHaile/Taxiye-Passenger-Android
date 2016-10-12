@@ -13,8 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
@@ -32,7 +30,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NudgeClient;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -579,7 +576,6 @@ public class WalletCore {
 						ji.getInt(Constants.KEY_ENABLED));
 				paymentModeConfigDatas.add(paymentModeConfigData);
 			}
-//			paymentModeConfigDatas.add(new PaymentModeConfigData(Constants.KEY_FREECHARGE, 1));
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -588,99 +584,99 @@ public class WalletCore {
     //Todo: change logic or ask shankar
 	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas(UserData userData) {
 
-		for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
-			paymentModeConfigData.setPriority(0);
-			if(paymentModeConfigData.getEnabled() == 1){
-				if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
-						&& userData.getPaytmEnabled() == 1) {
-					paymentModeConfigData.incrementPriority();
-					if(userData.getPaytmBalance() > 0){
-						paymentModeConfigData.incrementPriority();
-						if(userData.getPaytmBalance() > userData.getMobikwikBalance()
-								&& userData.getPaytmBalance() > userData.getFreeChargeBalance()){
-							paymentModeConfigData.incrementPriority();
-							paymentModeConfigData.incrementPriority();
-						} else if(userData.getPaytmBalance() > userData.getMobikwikBalance()
-								|| userData.getPaytmBalance() > userData.getFreeChargeBalance()){
-							paymentModeConfigData.incrementPriority();
-						}
-					}
-					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
-						paymentModeConfigData.incrementPriority();
-					}
-					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
-						paymentModeConfigData.incrementPriority();
-					}
-					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
-						paymentModeConfigData.incrementPriority();
-					}
-				}
-				else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
-						&& userData.getMobikwikEnabled() == 1) {
-					paymentModeConfigData.incrementPriority();
-					if(userData.getMobikwikBalance() > 0){
-						paymentModeConfigData.incrementPriority();
-						if(userData.getMobikwikBalance() > userData.getPaytmBalance()
-								&& userData.getMobikwikBalance() > userData.getFreeChargeBalance()){
-							paymentModeConfigData.incrementPriority();
-							paymentModeConfigData.incrementPriority();
-						} else if(userData.getMobikwikBalance() > userData.getPaytmBalance()
-								|| userData.getMobikwikBalance() > userData.getFreeChargeBalance()){
-							paymentModeConfigData.incrementPriority();
-						}
-					}
-					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
-						paymentModeConfigData.incrementPriority();
-					}
-					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
-						paymentModeConfigData.incrementPriority();
-					}
-					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
-						paymentModeConfigData.incrementPriority();
-					}
-				}
-				else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()
-						&& userData.getFreeChargeEnabled() == 1) {
-					paymentModeConfigData.incrementPriority();
-					if(userData.getFreeChargeBalance() > 0){
-						paymentModeConfigData.incrementPriority();
-						if(userData.getFreeChargeBalance() > userData.getPaytmBalance()
-								&& userData.getFreeChargeBalance() > userData.getMobikwikBalance()){
-							paymentModeConfigData.incrementPriority();
-							paymentModeConfigData.incrementPriority();
-						} else if(userData.getFreeChargeBalance() > userData.getPaytmBalance()
-								|| userData.getFreeChargeBalance() > userData.getMobikwikBalance()){
-							paymentModeConfigData.incrementPriority();
-						}
-					}
-					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.FREECHARGE.getOrdinal()){
-						paymentModeConfigData.incrementPriority();
-					}
-					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.FREECHARGE.getOrdinal()){
-						paymentModeConfigData.incrementPriority();
-					}
-					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.FREECHARGE.getOrdinal()){
-						paymentModeConfigData.incrementPriority();
-					}
-				}
-			}
-		}
-
-		Collections.sort(paymentModeConfigDatas, new Comparator<PaymentModeConfigData>() {
-			@Override
-			public int compare(PaymentModeConfigData lhs, PaymentModeConfigData rhs) {
-				if(lhs.getPriority() == rhs.getPriority()){
-					return 0;
-				}
-				else if(lhs.getPriority() > rhs.getPriority()){
-					return -1;
-				}
-				else{
-					return 1;
-				}
-			}
-		});
-		Log.e("paymentModeConfigDatas", ">"+paymentModeConfigDatas);
+//		for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
+//			paymentModeConfigData.setPriority(0);
+//			if(paymentModeConfigData.getEnabled() == 1){
+//				if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
+//						&& userData.getPaytmEnabled() == 1) {
+//					paymentModeConfigData.incrementPriority();
+//					if(userData.getPaytmBalance() > 0){
+//						paymentModeConfigData.incrementPriority();
+//						if(userData.getPaytmBalance() > userData.getMobikwikBalance()
+//								&& userData.getPaytmBalance() > userData.getFreeChargeBalance()){
+//							paymentModeConfigData.incrementPriority();
+//							paymentModeConfigData.incrementPriority();
+//						} else if(userData.getPaytmBalance() > userData.getMobikwikBalance()
+//								|| userData.getPaytmBalance() > userData.getFreeChargeBalance()){
+//							paymentModeConfigData.incrementPriority();
+//						}
+//					}
+//					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
+//						paymentModeConfigData.incrementPriority();
+//					}
+//					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
+//						paymentModeConfigData.incrementPriority();
+//					}
+//					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
+//						paymentModeConfigData.incrementPriority();
+//					}
+//				}
+//				else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
+//						&& userData.getMobikwikEnabled() == 1) {
+//					paymentModeConfigData.incrementPriority();
+//					if(userData.getMobikwikBalance() > 0){
+//						paymentModeConfigData.incrementPriority();
+//						if(userData.getMobikwikBalance() > userData.getPaytmBalance()
+//								&& userData.getMobikwikBalance() > userData.getFreeChargeBalance()){
+//							paymentModeConfigData.incrementPriority();
+//							paymentModeConfigData.incrementPriority();
+//						} else if(userData.getMobikwikBalance() > userData.getPaytmBalance()
+//								|| userData.getMobikwikBalance() > userData.getFreeChargeBalance()){
+//							paymentModeConfigData.incrementPriority();
+//						}
+//					}
+//					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
+//						paymentModeConfigData.incrementPriority();
+//					}
+//					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
+//						paymentModeConfigData.incrementPriority();
+//					}
+//					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
+//						paymentModeConfigData.incrementPriority();
+//					}
+//				}
+//				else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()
+//						&& userData.getFreeChargeEnabled() == 1) {
+//					paymentModeConfigData.incrementPriority();
+//					if(userData.getFreeChargeBalance() > 0){
+//						paymentModeConfigData.incrementPriority();
+//						if(userData.getFreeChargeBalance() > userData.getPaytmBalance()
+//								&& userData.getFreeChargeBalance() > userData.getMobikwikBalance()){
+//							paymentModeConfigData.incrementPriority();
+//							paymentModeConfigData.incrementPriority();
+//						} else if(userData.getFreeChargeBalance() > userData.getPaytmBalance()
+//								|| userData.getFreeChargeBalance() > userData.getMobikwikBalance()){
+//							paymentModeConfigData.incrementPriority();
+//						}
+//					}
+//					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.FREECHARGE.getOrdinal()){
+//						paymentModeConfigData.incrementPriority();
+//					}
+//					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.FREECHARGE.getOrdinal()){
+//						paymentModeConfigData.incrementPriority();
+//					}
+//					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.FREECHARGE.getOrdinal()){
+//						paymentModeConfigData.incrementPriority();
+//					}
+//				}
+//			}
+//		}
+//
+//		Collections.sort(paymentModeConfigDatas, new Comparator<PaymentModeConfigData>() {
+//			@Override
+//			public int compare(PaymentModeConfigData lhs, PaymentModeConfigData rhs) {
+//				if(lhs.getPriority() == rhs.getPriority()){
+//					return 0;
+//				}
+//				else if(lhs.getPriority() > rhs.getPriority()){
+//					return -1;
+//				}
+//				else{
+//					return 1;
+//				}
+//			}
+//		});
+//		Log.e("paymentModeConfigDatas", ">"+paymentModeConfigDatas);
 
 		return paymentModeConfigDatas;
 	}

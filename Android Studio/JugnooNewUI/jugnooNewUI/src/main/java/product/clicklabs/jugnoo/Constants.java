@@ -39,11 +39,13 @@ public interface Constants {
 	String KEY_DELIVERY_SLOT_ID = "delivery_slot_id";
 	String KEY_DELIVERY_NOTES = "delivery_notes";
 	String KEY_DELIVERY_ADDRESS = "delivery_address";
+	String KEY_DELIVERY_ADDRESS_ID = "delivery_address_id";
 	String KEY_CART = "cart";
 	String KEY_SUB_ITEM_ID = "sub_item_id";
 	String KEY_QUANTITY = "quantity";
 	String SP_FRESH_CART= "fresh_cart";
 	String SP_MEAL_CART= "meal_cart";
+	String SP_GROCERY_CART= "grocery_cart";
 	String KEY_CATEGORY_POSITION = "category_position";
 
 
@@ -80,7 +82,6 @@ public interface Constants {
 	String KEY_APP_MONITORING_TIME_TO_SAVE = "app_monitoring_time";
 	String KEY_GOOGLE_PARCEL = "google_parcel";
 	String KEY_ETA = "eta";
-	int ADD_HOME = 2, ADD_WORK = 3;
 	String KEY_LATITUDE = "latitude";
 	String KEY_LONGITUDE = "longitude";
 
@@ -385,6 +386,7 @@ public interface Constants {
 	String KEY_TEXT = "text";
 	String KEY_CONFIRM_BUTTON_TEXT = "confirm_button_text";
 	String KEY_CANCEL_BUTTON_TEXT = "cancel_button_text";
+	String KEY_NEVER_BUTTON_TEXT = "never_button_text";
 
 	String SP_LAST_ADDED_WALLET = "sp_last_added_wallet";
 	String SP_LAST_USED_WALLET = "sp_last_used_wallet";
@@ -415,6 +417,7 @@ public interface Constants {
 	String KEY_AUTOS = "autos";
 	String KEY_FRESH = "fresh";
 	String KEY_MEALS = "meals";
+	String KEY_GROCERY = "grocery";
 
 	String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
 	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
@@ -431,6 +434,7 @@ public interface Constants {
 	String KEY_DEFAULT_CLIENT_ID = "default_client_id";
 	String KEY_MEALS_ENABLED = "meals_enabled";
 	String KEY_FRESH_ENABLED = "fresh_enabled";
+	String KEY_GROCERY_ENABLED = "grocery_enabled";
 	String KEY_DELIVERY_ENABLED = "delivery_enabled";
 	String KEY_ORDER_HISTORY = "order_history";
 	String INTENT_KEY_FROM_BAD = "FromBad";
@@ -460,5 +464,53 @@ public interface Constants {
 
 	String KEY_INTEGRATED_JUGNOO_ENABLED = "integrated_jugnoo_enabled";
 	String KEY_REDIRECT = "redirect";
+
+	String KEY_RATING_FLAG = "rating_flag";
+	String KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE = "ride_end_good_feedback_view_type";
+	String KEY_RIDE_END_GOOD_FEEDBACK_TEXT = "ride_end_good_feedback_text";
+	String KEY_RATE_APP = "rate_app";
+
+	String KEY_PICKUP_LOCATION_ADDRESS = "pickup_location_address";
+	String KEY_DROP_LOCATION_ADDRESS = "drop_location_address";
+
+	String KEY_DRIVER_LOCATIONS = "driver_locations";
+	String KEY_TRACKING_LOGS = "tracking_logs";
+
+	String INTENT_ACTION_WALLET_UPDATE = "INTENT_ACTION_WALLET_UPDATE";
+
+
+	String KEY_BEARING = "bearing";
+	String KEY_MODE = "mode";
+	String KEY_FROM_LAT = "from_lat";
+	String KEY_FROM_LONG = "from_long";
+	String KEY_DURATION = "duration";
+	String KEY_LAT = "lat";
+	String KEY_LONG = "long";
+
+	String INTENT_ACTION_DEVICE_TOKEN_UPDATE = "INTENT_ACTION_DEVICE_TOKEN_UPDATE";
+
+	String KEY_ACCOUNT_ID = "account_id";
+	String KEY_ORDER_OFFER_ID = "order_offer_id";
+	String KEY_USER_SAVED_ADDRESSES = "user_saved_addresses";
+	String KEY_TYPE = "type";
+	String TYPE_HOME = "home";
+	String TYPE_WORK = "work";
+	String KEY_ADDRESS = "address";
+	String KEY_PLACEID = "placeId";
+	String KEY_GOOGLE_PLACE_ID = "google_place_id";
+
+
+	int REQUEST_CODE_ADD_HOME = 2;
+	int REQUEST_CODE_ADD_WORK = 3;
+	int REQUEST_CODE_ADD_NEW_LOCATION = 4;
+	String KEY_REQUEST_CODE = "request_code";
+	String KEY_ADDRESS_ID = "address_id";
+	String KEY_KEEP_DUPLICATE = "keep_duplicate";
+	String KEY_DELETE_FLAG = "delete_flag";
+
+	String KEY_IS_CONFIRMED = "is_confirmed";
+
+	String KEY_TOPUP_CARD_CODE = "topup_card_code";
+	String KEY_TOPUP_CARD_ENABLED = "topup_card_enabled";
 
 }

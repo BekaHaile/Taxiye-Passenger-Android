@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,6 +45,7 @@ public class TopBar implements FirebaseEvents {
     public ImageView imageViewHelp;
     public ImageView imageViewBack, imageViewDelete;
     public TextView textViewAdd;
+    public EditText editTextDeliveryAddress;
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
         this.activity = activity;

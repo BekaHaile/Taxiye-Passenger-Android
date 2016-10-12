@@ -4,6 +4,7 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
+import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -22,8 +23,12 @@ import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.Headers;
+import retrofit.http.Multipart;
 import retrofit.http.POST;
+import retrofit.http.Part;
+import retrofit.http.PartMap;
 import retrofit.http.QueryMap;
+import retrofit.mime.TypedFile;
 import retrofit.mime.TypedInput;
 
 /**
@@ -475,5 +480,26 @@ public interface ApiService {
     @POST("/freecharge/unlink")
     void freechargeUnlink(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
+
+
+    @Multipart
+    @POST("/customer/upload_ride_log")
+    Response customerUploadRideLog(@Part("log_file") TypedFile file,
+                               @PartMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/thumbs_up_clicked")
+    void thumbsUpClicked(@FieldMap Map<String, String> params,
+                         Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/customer/fetch_ride_log")
+    void customerFetchRideLog(@FieldMap Map<String, String> params,
+                          Callback<TrackingLogReponse> callback);
+
+    @FormUrlEncoded
+    @POST("/topup_customer_jc")
+    void topupCustomerJC(@FieldMap Map<String, String> params,
+                              Callback<SettleUserDebt> callback);
 
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -87,7 +88,7 @@ public class AppSwitcher {
 						intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						activity.startActivity(intent);
 						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-						activity.finish();
+						ActivityCompat.finishAffinity(activity);
 					}
 
 				}
@@ -124,7 +125,7 @@ public class AppSwitcher {
 										intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 										activity.startActivity(intent);
 										activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-										activity.finish();
+										ActivityCompat.finishAffinity(activity);
 									}
 								}
 
@@ -147,7 +148,7 @@ public class AppSwitcher {
 					intent.setClass(activity, HomeActivity.class);
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					activity.finish();
+					ActivityCompat.finishAffinity(activity);
 					new ApiUpdateClientId().updateClientId(clientId);
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				}
@@ -159,33 +160,48 @@ public class AppSwitcher {
 					intent.setClass(activity, FreshActivity.class);
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					activity.finish();
+					ActivityCompat.finishAffinity(activity);
 
 					new ApiUpdateClientId().updateClientId(clientId);
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				}
 			} else if (clientId.equalsIgnoreCase(Config.getMealsClientId()) && !(activity instanceof FreshActivity)) {
-				if (Data.getFreshData() == null) {
+				if (Data.getMealsData() == null) {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 							callback);
 				} else {
 					intent.setClass(activity, FreshActivity.class);
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					activity.finish();
+					ActivityCompat.finishAffinity(activity);
+
+					new ApiUpdateClientId().updateClientId(clientId);
+					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				}
+			} else if (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && !(activity instanceof FreshActivity)) {
+				if (Data.getGroceryData() == null) {
+					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+							callback);
+				} else {
+					intent.setClass(activity, FreshActivity.class);
+					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					ActivityCompat.finishAffinity(activity);
 
 					new ApiUpdateClientId().updateClientId(clientId);
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				}
 			} else if (activity instanceof FreshActivity && !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))) {
-				if (Data.getFreshData() == null) {
+				if ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null)
+						|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.getMealsData() == null)
+						|| (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null)) {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 							callback);
 				} else {
 					intent.setClass(activity, FreshActivity.class);
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					activity.finish();
+					ActivityCompat.finishAffinity(activity);
 
 					new ApiUpdateClientId().updateClientId(clientId);
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
@@ -258,6 +274,19 @@ public class AppSwitcher {
 					clientId = Config.getFreshClientId();
 				}
 			}
+			else if(clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null){
+				if(Data.autoData != null) {
+					intent.setClass(activity, HomeActivity.class);
+					clientId = Config.getAutosClientId();
+					if (data != null) {
+						intent.setData(data);
+					}
+				}
+				else if(Data.getFreshData() != null){
+					intent.setClass(activity, FreshActivity.class);
+					clientId = Config.getFreshClientId();
+				}
+			}
 			else{
 				return false;
 			}
@@ -268,7 +297,7 @@ public class AppSwitcher {
 			intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 			activity.startActivity(intent);
 			activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-			activity.finish();
+			ActivityCompat.finishAffinity(activity);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

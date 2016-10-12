@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -75,6 +76,7 @@ public class PushDialog {
 				dialog.setCancelable(false);
 				dialog.setCanceledOnTouchOutside(false);
 
+				LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 				ImageView imageView = (ImageView) dialog.findViewById(R.id.imageView);
 				TextView textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 				TextView textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage); textViewMessage.setTypeface(Fonts.mavenRegular(activity));
@@ -111,25 +113,24 @@ public class PushDialog {
 					}
 				});
 
-				imageViewClose.setOnClickListener(new View.OnClickListener() {
+				View.OnClickListener onClickListener = new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Prefs.with(activity).save(Constants.SP_PUSH_DIALOG_CONTENT,
 								Constants.EMPTY_JSON_OBJECT);
 						dialog.dismiss();
-                        Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+FirebaseEvents.CANCEL+"_"+title, bundle);
+						Bundle bundle = new Bundle();
+						MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+FirebaseEvents.CANCEL+"_"+title, bundle);
 						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", "Cancel");
 					}
-				});
+				};
 
-				relative.setOnClickListener(new View.OnClickListener() {
+				imageViewClose.setOnClickListener(onClickListener);
+				relative.setOnClickListener(onClickListener);
+
+				linearLayoutInner.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						dialog.dismiss();
-                        Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTIONAL_POP_UP+"_"+FirebaseEvents.CANCEL+"_"+title, bundle);
-						FlurryEventLogger.eventGA(Constants.CAMPAIGNS, "promotional pop up", "Cancel");
 					}
 				});
 

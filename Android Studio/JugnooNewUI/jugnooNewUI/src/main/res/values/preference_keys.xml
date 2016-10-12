@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="pref_local_address">local_address</string>
-    <string name="pref_loc_lati">loc_lati</string>
-    <string name="pref_loc_longi">loc_longi</string>
     <string name="pref_address_selected">address_selected</string>
 
     <string name="pref_support_contact">support_contact</string>

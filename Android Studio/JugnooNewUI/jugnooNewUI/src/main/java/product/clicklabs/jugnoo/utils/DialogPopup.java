@@ -361,7 +361,12 @@ public class DialogPopup {
 			
 			textHead.setText(title);
 			if(inHtml){
-				textMessage.setText(Html.fromHtml(message));
+				try {
+					textMessage.setText(Html.fromHtml(message));
+				} catch (Exception e) {
+					e.printStackTrace();
+					textMessage.setText(message);
+				}
 			} else {
 				textMessage.setText(message);
 			}

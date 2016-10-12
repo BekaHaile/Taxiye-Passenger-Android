@@ -114,16 +114,26 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                 ((ViewHolderHeader)holder).textViewDeliveryChargesValue.setText(slots.get(position).getCamount());
 //                ((ViewHolderHeader)holder).textViewAmountPayableValue.setText(slots.get(position).getCtotal());
+                ((ViewHolderHeader) holder).textViewAddressName.setVisibility(View.GONE);
+                ((ViewHolderHeader) holder).textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
                 if(!TextUtils.isEmpty(slots.get(position).getCaddress())) {
-                    ((ViewHolderHeader) holder).addressText.setText(slots.get(position).getCaddress());
+                    ((ViewHolderHeader) holder).textViewAddressValue.setText(slots.get(position).getCaddress());
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setClickable(false);
-                    ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.text_color));
                     ((ViewHolderHeader) holder).textViewDeliveryAddress.setVisibility(View.VISIBLE);
                     ((ViewHolderHeader)holder).textViewDeliveryAddress.setText(activity.getResources().getString(R.string.delivery_address));
+                    if(!TextUtils.isEmpty(slots.get(position).getAddressLabel())){
+                        ((ViewHolderHeader) holder).textViewAddressName.setVisibility(View.VISIBLE);
+                        ((ViewHolderHeader) holder).textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color_light));
+                        if(slots.get(position).getAddressLabel().equalsIgnoreCase(activity.getString(R.string.home))){
+                            slots.get(position).setAddressLabel(activity.getString(R.string.home));
+                        } else if(slots.get(position).getAddressLabel().equalsIgnoreCase(activity.getString(R.string.work))){
+                            slots.get(position).setAddressLabel(activity.getString(R.string.work));
+                        }
+                        ((ViewHolderHeader) holder).textViewAddressName.setText(slots.get(position).getAddressLabel());
+                    }
                 } else {
-                    ((ViewHolderHeader)holder).textViewDeliveryAddress.setVisibility(View.GONE);
-                    ((ViewHolderHeader) holder).addressText.setTextColor(activity.getResources().getColor(R.color.theme_color));
-                    ((ViewHolderHeader) holder).addressText.setText(activity.getResources().getString(R.string.add_address));
+                    //((ViewHolderHeader)holder).textViewDeliveryAddress.setVisibility(View.GONE);
+                    ((ViewHolderHeader) holder).textViewAddressValue.setText(activity.getResources().getString(R.string.add_address));
                 }
 
 
@@ -204,7 +214,9 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                             int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                             if(appType == AppConstant.ApplicationType.MEALS){
                                 MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
-                            }else{
+                            } else if(appType == AppConstant.ApplicationType.GROCERY){
+                                MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
+                            } else{
                                 MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+((ViewHolderSlot) holder).textViewSlotTime.getText().toString(), null);
                             }
                         } catch (Exception e) {
@@ -262,8 +274,8 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
     static class ViewHolderHeader extends RecyclerView.ViewHolder {
         public RelativeLayout deliveryAddress;
         public TextView textViewDeliveryCharges, textViewDeliveryChargesValue,
-//                textViewAmountPayable, textViewAmountPayableValue,
-            textViewDeliveryTime, textViewDeliveryAddress, addressText;
+            textViewDeliveryTime, textViewDeliveryAddress, textViewAddressName, textViewAddressValue;
+        public ImageView imageViewForward;
 
 
         public ViewHolderHeader(View itemView, Context context) {
@@ -274,8 +286,9 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
             textViewDeliveryChargesValue = (TextView)itemView.findViewById(R.id.textViewDeliveryChargesValue); textViewDeliveryChargesValue.setTypeface(Fonts.mavenRegular(context));
             textViewDeliveryAddress = (TextView)itemView.findViewById(R.id.textViewDeliveryAddress); textViewDeliveryAddress.setTypeface(Fonts.mavenRegular(context));
             textViewDeliveryTime = (TextView)itemView.findViewById(R.id.textViewDeliveryTime); textViewDeliveryTime.setTypeface(Fonts.mavenRegular(context));
-            addressText = (TextView)itemView.findViewById(R.id.address_text); addressText.setTypeface(Fonts.mavenRegular(context));
-
+            textViewAddressName = (TextView)itemView.findViewById(R.id.textViewAddressName); textViewAddressName.setTypeface(Fonts.mavenRegular(context));
+            textViewAddressValue = (TextView)itemView.findViewById(R.id.textViewAddressValue); textViewAddressValue.setTypeface(Fonts.mavenRegular(context));
+            imageViewForward = (ImageView)itemView.findViewById(R.id.imageViewForward);
         }
     }
 

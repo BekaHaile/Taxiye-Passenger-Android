@@ -6,6 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/imageViewSep"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/stroke_color_light" />
     <RelativeLayout
         android:id="@+id/relativeLayoutAddHome"
         android:layout_width="match_parent"
@@ -40,11 +45,11 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/imageViewSep"
+        android:id="@+id/imageViewSep2"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:background="@color/stroke_color_light" />
-
+        android:background="@color/stroke_color_light"
+        />
 
     <RelativeLayout
         android:id="@+id/relativeLayoutAddWork"
@@ -79,11 +84,5 @@
             android:tag="mwar" />
 
     </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/imageViewSep2"
-        android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:background="@color/stroke_color_light" />
 
 </LinearLayout>

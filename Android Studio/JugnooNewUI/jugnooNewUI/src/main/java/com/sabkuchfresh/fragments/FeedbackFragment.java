@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -30,12 +31,15 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -43,6 +47,7 @@ import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -71,6 +76,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     private String dateValue = "", endRideGoodFeedbackText;
     private double orderAmount = 0;
     private String orderId = "";
+    private int rateApp = 0;
+    private RateAppDialogContent rateAppDialogContent;
 
     public boolean isUpbuttonClicked = false;
 
@@ -83,6 +90,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         activity.fragmentUISetup(this);
         updateUI();
         try {
+            rateApp = Data.userData.getCustomerRateAppFlag();
+            rateAppDialogContent = Data.userData.getRateAppDialogContent();
             if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
 				viewType = Data.getFreshData().getFeedbackViewType();
 				dateValue = Data.getFreshData().getFeedbackDeliveryDate();
@@ -97,7 +106,14 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 				orderId = Data.getMealsData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
-			} else {
+			}else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                viewType = Data.getGroceryData().getFeedbackViewType();
+                dateValue = Data.getGroceryData().getFeedbackDeliveryDate();
+                orderAmount = Data.getGroceryData().getAmount();
+                orderId = Data.getGroceryData().getOrderId();
+                activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
+                endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
+            } else {
 				activity.finish();
 			}
         } catch (Exception e) {
@@ -156,13 +172,15 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 
         if(Config.getFreshClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.feedback_fresh);
+        } else if(Config.getGroceryClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+            imageviewType.setImageResource(R.drawable.feedback_grocery);
         } else {
             imageviewType.setImageResource(R.drawable.feedback_meals);
         }
         buttonEndRideSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                backPressed();
+                backPressed(true);
             }
         });
 
@@ -174,7 +192,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 intent.putExtra("message", "This is my message!");
                 intent.putExtra("open_type", 1);
                 LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
-                backPressed();
+                backPressed(true);
             }
         });
 
@@ -190,7 +208,19 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             public void onClick(View v) {
                 sendQuery(0);
                 openSupportFragment();
-
+                try {
+                    if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+                        MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_DOWNVOTE, new Bundle());
+                    }
+                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_DOWNVOTE, new Bundle());
+                    }
+                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_DOWNVOTE, new Bundle());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -212,6 +242,20 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                         endRideWithGif();
                     }
                 }
+                try {
+                    if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+						MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_UPVOTE, new Bundle());
+					}
+					else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+						MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_UPVOTE, new Bundle());
+					}
+					else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+						MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_UPVOTE, new Bundle());
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
         activity.fragmentUISetup(this);
@@ -303,6 +347,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 Data.getFreshData().setPendingFeedback(0);
             } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
                 Data.getMealsData().setPendingFeedback(0);
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                Data.getGroceryData().setPendingFeedback(0);
             } else {
                 activity.finish();
             }
@@ -331,12 +377,12 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
-                                                backPressed();
+                                                backPressed(true);
                                             }
                                         }, 3000);
                                     } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
                                             ) {
-                                        backPressed();
+                                        backPressed(true);
                                     }
                                 } else if(rating == 0) {
                                     // for bad rating
@@ -401,6 +447,10 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             DialogPopup.dismissLoadingDialog();
             e.printStackTrace();
         }
+
+//        if(rating == 1) {
+//            getRateAppDialog().thumbsUpClickedAPI();
+//        }
     }
 
     /**
@@ -427,19 +477,18 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                             JSONObject jObj = new JSONObject(responseStr);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt("flag");
+                                String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
                                     //activity.openOrderInvoice(historyResponse.getData().get(0));
                                     activity.getTransactionUtils().openOrderSummaryFragment(activity,
                                             activity.getRelativeLayoutContainer(), historyResponse.getData().get(0));
                                 } else {
-                                    updateListData("Some error occurred, tap to retry", true);
+                                    updateListData(message);
                                 }
-                            } else {
-                                updateListData("Some error occurred, tap to retry", true);
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            updateListData("Some error occurred, tap to retry", true);
+                            updateListData(Data.SERVER_ERROR_MSG);
                         }
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -448,43 +497,32 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                     public void failure(RetrofitError error) {
                         Log.e("TAG", "getRecentRidesAPI error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
-
-                        updateListData("Some error occurred, tap to retry", true);
+                        updateListData(Data.SERVER_NOT_RESOPNDING_MSG);
                     }
                 });
             }
             else {
-                updateListData("No internet connection, tap to retry", true);
+                updateListData(Data.CHECK_INTERNET_MSG);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void updateListData(String message, boolean errorOccurred){
-        if(errorOccurred){
+    public void updateListData(String message) {
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+                activity.getString(R.string.retry), activity.getString(R.string.cancel),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getOrderData();
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-            DialogPopup.dialogNoInternet(activity,
-                    "", message,
-
-                    new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
-                        @Override
-                        public void positiveClick(View v) {
-                            getOrderData();
-                        }
-
-                        @Override
-                        public void neutralClick(View v) {
-
-                        }
-
-                        @Override
-                        public void negativeClick(View v) {
-
-                        }
-                    });
-        }
-
+                    }
+                }, false, false);
     }
 
 
@@ -499,16 +537,28 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         intent.putExtra(Constants.KEY_ORDER_ID, Integer.parseInt(orderId));
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-        backPressed();
+        backPressed(false);
     }
 
-    private void backPressed() {
+    private void backPressed(boolean goodRating) {
         try {
-            activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+            activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } catch (Exception e) {
             e.printStackTrace();
             activity.getSupportFragmentManager().popBackStackImmediate();
         }
+
+        if(goodRating && rateApp == 1){
+            getRateAppDialog().show(rateAppDialogContent);
+        }
+    }
+
+    private RateAppDialog rateAppDialog;
+    private RateAppDialog getRateAppDialog(){
+        if(rateAppDialog == null){
+            rateAppDialog = new RateAppDialog(activity);
+        }
+        return rateAppDialog;
     }
 
     @Override
@@ -520,6 +570,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
             } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
                 activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
             }
         }
     }

@@ -14,6 +14,7 @@ public interface Events {
     String MEALS_CHARGED = "Meals - Charged";
     String FRESH_ADDED_TO_CART = "Fresh - Added to Cart";
     String FRESH_CHARGED = "Fresh - Charged";
+    String GROCERY_ADDED_TO_CART = "Grocery - Added to Cart";
 
     String PROMO_CODE = "Promo Code";
     String CHANNEL = "Channel";
@@ -56,5 +57,9 @@ public interface Events {
     String IS_PUSH_AUTOS_ENABLED = "is_push_autos_enabled";
     String IS_PUSH_FRESH_ENABLED = "is_push_fresh_enabled";
     String TRAIN_TIME = "train_time";
+
+    String MAX_COUPON_VALUE = "max_coupon_value";
+    String TIMING = "timing";
+    String PROMO_CODE_USED = "PromoCodeUsed";
 
 }

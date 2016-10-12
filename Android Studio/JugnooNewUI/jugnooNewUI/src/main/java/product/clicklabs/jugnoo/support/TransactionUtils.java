@@ -132,7 +132,7 @@ public class TransactionUtils {
 
 	public void openRideSummaryFragmentWithRideCancelledFlag(FragmentActivity activity, View container, int engagementId,
 															 boolean rideCancelled, int autosStatus){
-		if(!new TransactionUtils().checkIfFragmentAdded(activity, RideSummaryFragment.class.getName())) {
+		if(!checkIfFragmentAdded(activity, RideSummaryFragment.class.getName())) {
 			activity.getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(container.getId(),

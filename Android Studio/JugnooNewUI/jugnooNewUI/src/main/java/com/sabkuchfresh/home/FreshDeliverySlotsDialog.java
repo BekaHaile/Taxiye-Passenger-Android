@@ -14,22 +14,19 @@ import com.sabkuchfresh.adapters.FreshDeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshSortingAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.fragments.FreshFragment;
-import com.sabkuchfresh.fragments.MealFragment;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.utils.AppConstant;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.Fonts;
-
-import java.util.ArrayList;
-
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FirebaseEvents;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
@@ -202,7 +199,9 @@ public class FreshDeliverySlotsDialog implements FlurryEventNames {
                     int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                     if(type == AppConstant.ApplicationType.MEALS){
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_SORT+"_"+slot.name, null);
-                    }else{
+                    } else if(type == AppConstant.ApplicationType.GROCERY){
+						MyApplication.getInstance().logEvent(FirebaseEvents.G_SORT+"_"+slot.name, null);
+					} else{
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_SORT+"_"+slot.name, null);
                     }
                 }

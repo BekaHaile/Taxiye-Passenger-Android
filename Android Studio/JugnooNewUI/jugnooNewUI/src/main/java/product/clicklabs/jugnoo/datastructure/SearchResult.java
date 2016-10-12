@@ -4,53 +4,57 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-
-public class SearchResult implements Serializable{
+public class SearchResult {
 	@SerializedName("name")
 	@Expose
 	private String name;
 	@SerializedName("address")
 	@Expose
 	private String address;
-	@SerializedName("latLng")
+	@SerializedName("placeId")
 	@Expose
-	private LatLng latLng;
+	private String placeId;
+	@SerializedName("latitude")
+	@Expose
+	private Double latitude;
+	@SerializedName("longitude")
+	@Expose
+	private Double longitude;
 	@SerializedName("thirdPartyAttributions")
 	@Expose
 	private CharSequence thirdPartyAttributions;
 	@SerializedName("time")
 	@Expose
 	private long time;
-	@SerializedName("placeId")
+	@SerializedName("id")
 	@Expose
-	private String placeId;
+	private Integer id;
+	@SerializedName("is_confirmed")
+	@Expose
+	private Integer isConfirmed = 0;
 
 	private Type type = Type.SEARCHED;
 	
-	public SearchResult(String name, String address, LatLng latLng){
-		this.name = name;
-		this.address = address;
-		this.latLng = latLng;
-		this.thirdPartyAttributions = null;
-		time = System.currentTimeMillis();
-	}
-
-	public SearchResult(String name, String address, String placeId){
+	public SearchResult(String name, String address, String placeId, double latitude, double longitude){
 		this.name = name;
 		this.address = address;
 		this.placeId = placeId;
+		this.latitude = latitude;
+		this.longitude = longitude;
+
+		thirdPartyAttributions = null;
+		time = System.currentTimeMillis();
 	}
+
+	public SearchResult(Integer id){
+		this.id = id;
+	}
+
 
 	@Override
 	public boolean equals(Object o) {
 		try{
-			if(((SearchResult)o).name.equalsIgnoreCase(this.name)){
-				return true;
-			}
-			else{
-				return false;
-			}
+			return (((SearchResult)o).id.equals(this.id));
 		} catch(Exception e){
 			return false;
 		}
@@ -73,12 +77,13 @@ public class SearchResult implements Serializable{
 	}
 
 	public LatLng getLatLng() {
-		return latLng;
+		if(latitude != null && longitude != null) {
+			return new LatLng(latitude, longitude);
+		} else{
+			return new LatLng(0, 0);
+		}
 	}
 
-	public void setLatLng(LatLng latLng) {
-		this.latLng = latLng;
-	}
 
 	public long getTime() {
 		return time;
@@ -112,9 +117,40 @@ public class SearchResult implements Serializable{
 		this.type = type;
 	}
 
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+
+	public Integer getIsConfirmed() {
+		return isConfirmed;
+	}
+
+	public void setIsConfirmed(Integer isConfirmed) {
+		this.isConfirmed = isConfirmed;
+	}
 
 	public enum Type{
-		SEARCHED, LAST_SAVED;
+		SEARCHED, LAST_SAVED, HOME, WORK;
 	}
 
 }

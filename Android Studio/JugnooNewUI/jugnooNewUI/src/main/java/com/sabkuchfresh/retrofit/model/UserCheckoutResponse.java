@@ -3,6 +3,12 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+
 /**
  * Created by shankar on 4/9/16.
  */
@@ -17,6 +23,12 @@ public class UserCheckoutResponse{
 	@SerializedName("checkout_data")
 	@Expose
 	private CheckoutData checkoutData;
+	@SerializedName("promotions")
+	@Expose
+	private List<PromotionInfo> promotions = new ArrayList<>();
+	@SerializedName("coupons")
+	@Expose
+	private List<CouponInfo> coupons = new ArrayList<>();
 
 	/**
 	 *
@@ -72,4 +84,20 @@ public class UserCheckoutResponse{
 		this.checkoutData = checkoutData;
 	}
 
+
+	public List<PromotionInfo> getPromotions() {
+		return promotions;
+	}
+
+	public void setPromotions(List<PromotionInfo> promotions) {
+		this.promotions = promotions;
+	}
+
+	public List<CouponInfo> getCoupons() {
+		return coupons;
+	}
+
+	public void setCoupons(List<CouponInfo> coupons) {
+		this.coupons = coupons;
+	}
 }

@@ -23,6 +23,7 @@ import com.flurry.android.FlurryAgent;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -179,6 +180,9 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 if (promoCode.length() > 0) {
                     applyPromoCodeAPI(PromotionActivity.this, promoCode);
                     FlurryEventLogger.event(PromotionActivity.this, CLICKS_ON_APPLY);
+                    HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+                    profileUpdate.put(Events.PROMO_CODE_USED, promoCode);
+                    MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                 } else {
                     editTextPromoCode.requestFocus();
                     editTextPromoCode.setError("Code can't be empty");
@@ -347,6 +351,11 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                         if(promCouponResponse.getDeliveryCoupons() != null)
                                             promoCoupons.addAll(promCouponResponse.getDeliveryCoupons());
 
+                                        if(promCouponResponse.getGroceryPromotions() != null)
+                                            promoCoupons.addAll(promCouponResponse.getGroceryPromotions());
+                                        if(promCouponResponse.getGroceryCoupons() != null)
+                                            promoCoupons.addAll(promCouponResponse.getGroceryCoupons());
+
                                         updateListData();
 
                                     } else {
@@ -385,16 +394,24 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     private void updateUserCoupons() {
         try{
             ArrayList<String> coupons = new ArrayList<>();
+            double maxValue = 0.0;
             if(promoCoupons != null) {
                 for(int i=0;i<promoCoupons.size();i++) {
                     coupons.add(promoCoupons.get(i).getTitle());
                     String value = MyApplication.getInstance().getCleverTapUtils().getCouponValue(promoCoupons.get(i).getTitle());
                     if(value.length()>0) {
                         coupons.add(value);
+                        maxValue = MyApplication.getInstance().getCleverTapUtils().getCouponMaxValue(maxValue, value);
                     }
                 }
             }
             MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
+
+            DecimalFormat df = new DecimalFormat("#.##");
+            HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+            profileUpdate.put(Events.MAX_COUPON_VALUE, df.format(maxValue));
+            MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
+
         } catch(Exception e) {
             e.printStackTrace();
         }

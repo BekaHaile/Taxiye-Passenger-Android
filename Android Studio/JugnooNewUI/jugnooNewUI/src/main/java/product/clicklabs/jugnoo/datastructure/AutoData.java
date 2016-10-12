@@ -4,7 +4,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 
@@ -32,9 +31,8 @@ public class AutoData {
     private String cEngagementId = "", cDriverId = "", cSessionId = "";
     private DriverInfo assignedDriverInfo;
     private EndRideData endRideData;
-    private int customerRateAppFlag = 0;
-    private RateAppDialogContent rateAppDialogContent;
     private LatLng pickupLatLng, dropLatLng;
+    private String pickupAddress = "", dropAddress = "";
     private int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
     private CancelOptionsList cancelOptionsList;
     private ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();
@@ -319,22 +317,6 @@ public class AutoData {
         this.endRideData = endRideData;
     }
 
-    public int getCustomerRateAppFlag() {
-        return customerRateAppFlag;
-    }
-
-    public void setCustomerRateAppFlag(int customerRateAppFlag) {
-        this.customerRateAppFlag = customerRateAppFlag;
-    }
-
-    public RateAppDialogContent getRateAppDialogContent() {
-        return rateAppDialogContent;
-    }
-
-    public void setRateAppDialogContent(RateAppDialogContent rateAppDialogContent) {
-        this.rateAppDialogContent = rateAppDialogContent;
-    }
-
     public LatLng getPickupLatLng() {
         return pickupLatLng;
     }
@@ -397,5 +379,21 @@ public class AutoData {
 
     public void setPromoCoupons(ArrayList<PromoCoupon> promoCoupons) {
         this.promoCoupons = promoCoupons;
+    }
+
+    public String getPickupAddress() {
+        return pickupAddress;
+    }
+
+    public void setPickupAddress(String pickupAddress) {
+        this.pickupAddress = pickupAddress;
+    }
+
+    public String getDropAddress() {
+        return dropAddress;
+    }
+
+    public void setDropAddress(String dropAddress) {
+        this.dropAddress = dropAddress;
     }
 }

@@ -6,6 +6,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,14 +16,11 @@ import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.analytics.NudgeClient;
 
-import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.Fonts;
-
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
@@ -41,7 +39,8 @@ public class TopBar implements FlurryEventNames {
 	public Button buttonCheckServer;
 	public RelativeLayout relativeLayoutNotification;
 	public TextView textViewNotificationValue;
-	public ImageView imageViewBack, imageViewDelete, imageViewNotification;//, imageViewSearch;
+	public ImageView imageViewBack, imageViewDelete, imageViewNotification, imageViewShadow, imageViewSearchCross;//, imageViewSearch;
+	public EditText editTextDeliveryAddress;
 
 
 	public TopBar(Activity activity, DrawerLayout drawerLayout){
@@ -66,6 +65,9 @@ public class TopBar implements FlurryEventNames {
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
         imageViewNotification = (ImageView) drawerLayout.findViewById(R.id.imageViewNotification);
+		editTextDeliveryAddress = (EditText) drawerLayout.findViewById(R.id.editTextDeliveryAddress);
+		editTextDeliveryAddress.setTypeface(Fonts.mavenLight(activity));
+		imageViewSearchCross = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchCross);
 //		imageViewSearch = (ImageView)drawerLayout.findViewById(R.id.imageViewSearch);
 
 		//Top bar events
@@ -77,7 +79,7 @@ public class TopBar implements FlurryEventNames {
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				Toast.makeText(activity, Config.getServerUrlName(), Toast.LENGTH_SHORT).show();
+				Toast.makeText(activity, Config.getFreshServerUrlName(), Toast.LENGTH_SHORT).show();
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				return false;
 			}
@@ -113,7 +115,7 @@ public class TopBar implements FlurryEventNames {
 //		return imageViewSearch;
 //	}
 
-	private View.OnClickListener topBarOnClickListener = new View.OnClickListener() {
+	public View.OnClickListener topBarOnClickListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			switch(v.getId()){

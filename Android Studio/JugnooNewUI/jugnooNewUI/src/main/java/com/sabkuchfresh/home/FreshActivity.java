@@ -32,6 +32,8 @@ import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
+import com.sabkuchfresh.fragments.AddToAddressBookFragment;
+import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
 import com.sabkuchfresh.fragments.FreshCartItemsFragment;
@@ -42,6 +44,7 @@ import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 import com.sabkuchfresh.fragments.FreshPaymentFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.FreshSupportFragment;
+import com.sabkuchfresh.fragments.GroceryFragment;
 import com.sabkuchfresh.fragments.HomeFragment;
 import com.sabkuchfresh.fragments.MealFragment;
 import com.sabkuchfresh.retrofit.model.Category;
@@ -73,12 +76,15 @@ import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABView;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -118,6 +124,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private UserCheckoutResponse userCheckoutResponse;
 
     private String selectedAddress = "";
+    private LatLng selectedLatLng;
+    private int selectedAddressId = 0;
+    private String selectedAddressType = "";
     private String splInstr = "";
     private Slot slotSelected, slotToSelect;
     private PaymentOption paymentOption;
@@ -140,14 +149,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private LocationFetcher locationFetcher;
 
     // for adding address
-    public String current_action = "";
-    public double current_latitude = 0.0;
-    public double current_longitude = 0.0;
-    public String current_street = "";
-    public String current_route = "";
-    public String current_area = "";
-    public String current_city = "";
-    public String current_pincode = "";
+//    public String current_action = "";
+//    public double current_latitude = 0.0;
+//    public double current_longitude = 0.0;
+//    public String current_street = "";
+//    public String current_route = "";
+//    public String current_area = "";
+//    public String current_city = "";
+//    public String current_pincode = "";
     public boolean locationSearchShown = false;
     public boolean canOrder = false;
 
@@ -172,6 +181,17 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            try {
+                if(Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0){
+                    Data.latitude = Data.loginLatitude;
+                    Data.longitude = Data.loginLongitude;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            selectedLatLng = new LatLng(Data.latitude, Data.longitude);
+            resetAddressFields();
 
             linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
             relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
@@ -227,7 +247,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 }
                             } else {
                                 getTransactionUtils().openCheckoutFragment(FreshActivity.this, relativeLayoutContainer);
-                                MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.CHECKOUT, null);
+                                if(appType == AppConstant.ApplicationType.GROCERY){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + FirebaseEvents.CHECKOUT, null);
+                                } else {
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_CART + "_" + FirebaseEvents.CHECKOUT, null);
+                                }
                             }
                         } else {
                             getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
@@ -236,9 +260,17 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 MyApplication.getInstance().logEvent(FirebaseEvents.M_CART, null);
                             }else{
                                 if((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_GO, null);
+                                    if(appType == AppConstant.ApplicationType.GROCERY){
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_GO, null);
+                                    } else {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_GO, null);
+                                    }
                                 } else{
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_CART, null);
+                                    if(appType == AppConstant.ApplicationType.GROCERY){
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_CART, null);
+                                    } else {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_CART, null);
+                                    }
                                 }
                             }
                         }
@@ -269,7 +301,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         }
 
                         if((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())){
-                            MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_CART, null);
+                            int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                            if(appType == AppConstant.ApplicationType.GROCERY){
+                                MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_CART, null);
+                            } else {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_CART, null);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -284,18 +321,19 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 public void onClick(View v) {
                     FreshFragment fragment = getFreshFragment();
                     MealFragment mealFragment = getMealFragment();
+                    GroceryFragment groceryFragment = getGroceryFragment();
 
                     if (fragment != null && !fragment.isHidden()) {
                         fragment.getFreshDeliverySlotsDialog().showSorting();
                     } else if(mealFragment != null && !mealFragment.isHidden()) {
                         mealFragment.getFreshDeliverySlotsDialog().showSorting();
+                    } else if(groceryFragment != null && !groceryFragment.isHidden()) {
+                        groceryFragment.getFreshDeliverySlotsDialog().showSorting();
                     }
                 }
             });
 
 
-            Data.latitude = Data.loginLatitude;
-            Data.longitude = Data.loginLongitude;
 
 
             try {
@@ -323,6 +361,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
                     addMealFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
+                } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+                    openCart();
+                    addGroceryFragment();
+                    Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.GROCERY);
+                    lastClientId = Config.getGroceryClientId();
                 } else {
                     openCart();
                     addFreshFragment();
@@ -467,7 +510,21 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 								}
 							} else if (type == 1) {
 								intentToShareActivity();
-							}
+							} else if(type == 2){
+                                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                                    drawerLayout.closeDrawer(GravityCompat.START);
+                                }
+                                String lastClientId = Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getGroceryClientId());
+                                if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+                                    updateCartFromSP();
+                                    relativeLayoutCart.performClick();
+                                } else {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+                                    MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
+                                            getCurrentPlaceLatLng(), bundle, false);
+                                }
+                            }
 						} else {
 							if(flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()){
 								Data.getDeepLinkIndexFromIntent(FreshActivity.this, intent);
@@ -561,6 +618,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return (MealFragment) getSupportFragmentManager().findFragmentByTag(MealFragment.class.getName());
     }
 
+    public GroceryFragment getGroceryFragment () {
+        return (GroceryFragment) getSupportFragmentManager().findFragmentByTag(GroceryFragment.class.getName());
+    }
+
     private FreshCartItemsFragment getFreshCartItemsFragment() {
         return (FreshCartItemsFragment) getSupportFragmentManager().findFragmentByTag(FreshCartItemsFragment.class.getName());
     }
@@ -571,6 +632,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public FreshAddressFragment getFreshAddressFragment() {
         return (FreshAddressFragment) getSupportFragmentManager().findFragmentByTag(FreshAddressFragment.class.getName());
+    }
+
+    public DeliveryAddressesFragment getDeliveryAddressesFragment() {
+        return (DeliveryAddressesFragment) getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName());
     }
 
     public TopBar getTopBar() {
@@ -761,6 +826,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
             fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
             imageViewFabFake.setVisibility(View.GONE);
+            topBar.editTextDeliveryAddress.setVisibility(View.GONE);
 
             if (fragment instanceof FreshFragment) {
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -813,7 +879,34 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.title.setText(getResources().getString(R.string.meals));
 				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-			} else if (fragment instanceof FreshCartItemsFragment) {
+			} else if (fragment instanceof GroceryFragment) {
+                topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                topBar.below_shadow.setVisibility(View.GONE);
+                topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.GONE);
+                topBar.imageViewDelete.setVisibility(View.GONE);
+                textViewCheckout.setVisibility(View.GONE);
+                if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
+                    relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+
+                if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    imageViewFabFake.setVisibility(View.VISIBLE);
+                    fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
+                    fabView.setFABMenuDrawable();
+                }
+
+
+                relativeLayoutCartNew.setVisibility(View.VISIBLE);
+                linearLayoutCheckout.setVisibility(View.GONE);
+
+                relativeLayoutSort.setVisibility(View.VISIBLE);
+                relativeLayoutCart.setVisibility(View.GONE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getResources().getString(R.string.grocery));
+                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+
+            } else if (fragment instanceof FreshCartItemsFragment) {
 				textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));
 				try {
 	//                String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
@@ -828,6 +921,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
 				topBar.imageViewDelete.setVisibility(View.VISIBLE);
+                topBar.imageViewDelete.setOnClickListener(topBar.topBarOnClickListener);
 				textViewCheckout.setVisibility(View.VISIBLE);
 				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 
@@ -852,7 +946,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.title.setText(getResources().getString(R.string.checkout));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-			} else if (fragment instanceof FreshAddressFragment || fragment instanceof AddAddressMapFragment) {
+			} else if (fragment instanceof FreshAddressFragment || fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -863,10 +957,32 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				relativeLayoutCart.setVisibility(View.VISIBLE);
 
 				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.setText(getResources().getString(R.string.address));
+                if(fragment instanceof AddToAddressBookFragment){
+                    topBar.title.setText(getResources().getString(R.string.confirm_address));
+                } else if(fragment instanceof AddAddressMapFragment){
+                    topBar.title.setText(getResources().getString(R.string.choose_your_address));
+                } else {
+                    topBar.title.setText(getResources().getString(R.string.address));
+                }
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-			} else if (fragment instanceof FreshPaymentFragment) {
+			} else if(fragment instanceof DeliveryAddressesFragment){
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.imageViewDelete.setVisibility(View.GONE);
+                topBar.below_shadow.setVisibility(View.GONE);
+                relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+                relativeLayoutSort.setVisibility(View.GONE);
+                relativeLayoutCart.setVisibility(View.VISIBLE);
+
+                topBar.title.setVisibility(View.GONE);
+                topBar.title.setText("Type Delivery Address");
+                topBar.editTextDeliveryAddress.setVisibility(View.VISIBLE);
+                topBar.editTextDeliveryAddress.requestFocus();
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof FreshPaymentFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -999,11 +1115,15 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
                         if(type == AppConstant.ApplicationType.FRESH) {
                             clearCart();
-                        } else {
+                        } else if(type == AppConstant.ApplicationType.GROCERY){
+                            clearGroceryCart();
+                        } else{
                             clearMealCart();
                         }
                         if(type == AppConstant.ApplicationType.MEALS){
                             MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
+                        } else if(type == AppConstant.ApplicationType.GROCERY){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
                         }else{
                             MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.YES, null);
                         }
@@ -1016,7 +1136,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 FlurryEventNames.NUDGE_FRESH_CART_DELETE_CANCEL_CLICKED, null);
                         if(type == AppConstant.ApplicationType.MEALS){
                             MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
-                        }else{
+                        } else if(type == AppConstant.ApplicationType.GROCERY){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
+                        } else{
                             MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
                         }
                     }
@@ -1028,6 +1150,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         menuBar.setUserData();
     }
 
+    private void resetAddressFields(){
+        selectedAddress = "";
+        selectedAddressId = 0;
+        selectedAddressType = "";
+    }
 
     public void orderComplete() {
         clearCart();
@@ -1036,7 +1163,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 subItem.setSubItemQuantitySelected(0);
             }
         }
-        selectedAddress = "";
+        resetAddressFields();
         splInstr = "";
         slotSelected = null;
         slotToSelect = null;
@@ -1084,6 +1211,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 .commitAllowingStateLoss();
     }
 
+    private void addGroceryFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new GroceryFragment(),
+                        GroceryFragment.class.getName())
+                .addToBackStack(GroceryFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
     private void addNewFreshFragment() {
         getSupportFragmentManager().beginTransaction()
                 .add(relativeLayoutContainer.getId(), new HomeFragment(),
@@ -1117,13 +1252,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //		getTransactionUtils().openSupportFragment(FreshActivity.this, relativeLayoutContainer);
     }
 
-    public void openMapAddress() {
+    public void openMapAddress(Bundle bundle) {
         FlurryEventLogger.event(Address_Screen, SCREEN_TRANSITION, ADD_NEW_ADDRESS);
-        getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer);
+        getTransactionUtils().openMapFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
-    public void openAddToAddressBook() {
-        getTransactionUtils().openAddToAddressFragment(FreshActivity.this, relativeLayoutContainer);
+    public void openAddToAddressBook(Bundle bundle) {
+        getTransactionUtils().openAddToAddressFragment(FreshActivity.this, relativeLayoutContainer, bundle);
     }
 
 
@@ -1175,6 +1310,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         try {
                             setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             setUserData();
+                            Intent intent = new Intent(Constants.INTENT_ACTION_WALLET_UPDATE);
+                            LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1258,6 +1395,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     @Override
     protected void onDestroy() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        System.gc();
         super.onDestroy();
     }
 
@@ -1387,7 +1525,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             int type = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
             if(type == AppConstant.ApplicationType.FRESH) {
                 Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
-            } else {
+            } else if(type == AppConstant.ApplicationType.GROCERY){
+                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
+            } else{
                 Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
             }
         } catch (Exception e) {
@@ -1397,7 +1537,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void updateCartFromSP() {
         try {
-
             for (Category category : productsResponse.getCategories()) {
                 for (SubItem subItem : category.getSubItems()) {
                     subItem.setSubItemQuantitySelected(0);
@@ -1407,7 +1546,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             int type = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
             if(type == AppConstant.ApplicationType.FRESH) {
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else {
+            } else if(type == AppConstant.ApplicationType.GROCERY){
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+            } else{
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
             }
             if (getProductsResponse() != null
@@ -1435,6 +1576,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     private void clearMealCart() {
         Prefs.with(this).save(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT);
+    }
+
+    private void clearGroceryCart() {
+        Prefs.with(this).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
     }
 
     @Subscribe
@@ -1754,4 +1899,119 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         }
     }
 
+
+    private PromoCoupon selectedPromoCoupon;
+
+    public PromoCoupon getSelectedPromoCoupon() {
+        return selectedPromoCoupon;
+    }
+
+    public void setSelectedPromoCoupon(PromoCoupon selectedPromoCoupon) {
+        this.selectedPromoCoupon = selectedPromoCoupon;
+    }
+
+
+    private ApiAddHomeWorkAddress apiAddHomeWorkAddress;
+    public void hitApiAddHomeWorkAddress(final SearchResult searchResult, final boolean deleteAddress, final int matchedWithOtherId,
+                                         final boolean editThisAddress, final int placeRequestCode){
+        if(apiAddHomeWorkAddress == null){
+            apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
+                @Override
+                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
+                    try {
+                        Fragment deliveryAddressesFragment = getDeliveryAddressesFragment();
+                        if(deliveryAddressesFragment != null) {
+							getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+						} else {
+							getSupportFragmentManager().popBackStack(AddAddressMapFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+						}
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        if(!addressDeleted) {
+                            setSelectedAddressId(searchResult.getId());
+                        } else{
+                            performBackPressed();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onRetry(View view) {
+
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            });
+        }
+        apiAddHomeWorkAddress.addHomeAndWorkAddress(searchResult, deleteAddress, matchedWithOtherId, editThisAddress, placeRequestCode);
+    }
+
+    private int placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
+    public int getPlaceRequestCode(){
+        return placeRequestCode;
+    }
+    public void setPlaceRequestCode(int placeRequestCode){
+        this.placeRequestCode = placeRequestCode;
+    }
+
+    private SearchResult searchResult;
+    public SearchResult getSearchResult(){
+        return searchResult;
+    }
+    public void setSearchResult(SearchResult searchResult) {
+        this.searchResult = searchResult;
+    }
+
+    private boolean editThisAddress;
+    public boolean isEditThisAddress() {
+        return editThisAddress;
+    }
+    public void setEditThisAddress(boolean editThisAddress){
+        this.editThisAddress = editThisAddress;
+    }
+
+
+    public LatLng getSelectedLatLng() {
+        return selectedLatLng;
+    }
+
+    public void setSelectedLatLng(LatLng selectedLatLng) {
+        this.selectedLatLng = selectedLatLng;
+    }
+
+    public int getSelectedAddressId() {
+        return selectedAddressId;
+    }
+
+    public void setSelectedAddressId(int selectedAddressId) {
+        this.selectedAddressId = selectedAddressId;
+    }
+
+    public String getSelectedAddressType() {
+        return selectedAddressType;
+    }
+
+    public void setSelectedAddressType(String selectedAddressType) {
+        this.selectedAddressType = selectedAddressType;
+    }
+
+    private DeliveryAddress deliveryAddressToEdit;
+    public DeliveryAddress getDeliveryAddressToEdit() {
+        return deliveryAddressToEdit;
+    }
+    public void setDeliveryAddressToEdit(DeliveryAddress deliveryAddressToEdit){
+        this.deliveryAddressToEdit = deliveryAddressToEdit;
+    }
 }

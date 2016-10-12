@@ -281,6 +281,8 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
                         if(appType == AppConstant.ApplicationType.FRESH){
                             MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
+                        } else if(appType == AppConstant.ApplicationType.GROCERY){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

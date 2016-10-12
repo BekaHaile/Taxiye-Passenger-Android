@@ -6,6 +6,7 @@ package product.clicklabs.jugnoo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Pair;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -50,10 +51,9 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
                 // call api
                 refreshDeviceToken(this, refreshedToken, pair.first);
             } else {
-                Intent intent = new Intent(this, SplashNewActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                Intent intent = new Intent(Constants.INTENT_ACTION_DEVICE_TOKEN_UPDATE);
                 intent.putExtra(Constants.KEY_DEVICE_TOKEN, refreshedToken);
-                startActivity(intent);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             }
         } catch (Exception e) {
             e.printStackTrace();

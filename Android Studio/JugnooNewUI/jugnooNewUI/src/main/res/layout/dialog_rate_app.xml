@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:soundEffectsEnabled="false"
+    >
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        android:soundEffectsEnabled="false"
+        android:gravity="center_horizontal"
+        >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            
+            <ImageView
+                android:id="@+id/imageViewBG"
+                android:layout_width="662px"
+                android:layout_height="288px"
+                android:src="@drawable/bg_rate_app"
+                android:tag="mwar"
+                android:scaleType="centerCrop"
+                />
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rate_app_dialog_title"
+                android:textSize="@dimen/text_size_38"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:layout_centerHorizontal="true"
+                android:layout_alignBottom="@+id/imageViewBG"
+                android:layout_marginBottom="20px"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rate_app_dialog_message"
+            android:padding="30px"
+            android:textSize="@dimen/text_size_38"
+            android:textColor="@color/text_color"
+            android:background="@color/menu_item_selector_color_F7"
+            android:gravity="center"/>
+
+
+        <Button
+            android:id="@+id/buttonYes"
+            style="@style/ButtonTheme"
+            android:textAllCaps="false"
+            android:layout_width="400px"
+            android:layout_height="80px"
+            android:textSize="@dimen/text_size_30"
+            android:text="@string/rate_now"
+            android:layout_marginTop="36px"
+            />
+
+
+        <Button
+            android:id="@+id/buttonMaybe"
+            style="@style/ButtonThemeAlternate"
+            android:textAllCaps="false"
+            android:layout_width="400px"
+            android:layout_height="80px"
+            android:textSize="@dimen/text_size_30"
+            android:text="@string/not_now"
+            android:layout_marginTop="30px"
+            />
+
+
+        <Button
+            android:id="@+id/buttonNo"
+            style="@style/ButtonThemeAlternate"
+            android:textAllCaps="false"
+            android:layout_width="400px"
+            android:layout_height="80px"
+            android:textSize="@dimen/text_size_30"
+            android:text="@string/never_ask_again"
+            android:layout_marginTop="30px"
+            android:layout_marginBottom="36px"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

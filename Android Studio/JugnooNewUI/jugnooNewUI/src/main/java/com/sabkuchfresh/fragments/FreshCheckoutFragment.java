@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -45,6 +46,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -78,6 +80,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     private ArrayList<Slot> checkout = new ArrayList<>();
     private ArrayList<Slot> slots = new ArrayList<>();
     Bus mBus;
+    private double amountPayable;
 
     FreshCheckoutAdapter checkoutAdapter;
 
@@ -106,16 +109,17 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         String ctotalAmount = "";
         String deliveryCharge = "";
         String isDeliveryCharger = "";
+        String label = "";
 
         try {
-            if (activity.getSelectedAddress().equalsIgnoreCase("")) {
+            if (TextUtils.isEmpty(activity.getSelectedAddress())) {
                 address = activity.getUserCheckoutResponse().getCheckoutData().getLastAddress();
-                activity.setSelectedAddress(activity.getUserCheckoutResponse().getCheckoutData().getLastAddress());
+                label = activity.getUserCheckoutResponse().getCheckoutData().getLastAddressType();
+                setActivityLastAddressFromResponse(activity.getUserCheckoutResponse());
             } else {
                 address = activity.getSelectedAddress();
+                label = activity.getSelectedAddressType();
             }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,8 +127,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         try {
             if (activity.getProductsResponse() != null
                     && activity.getProductsResponse().getDeliveryInfo() != null) {
-                double totalAmount = activity.updateCartValuesGetTotalPrice().first;
-                double amountPayable = totalAmount;
+                amountPayable = activity.updateCartValuesGetTotalPrice().first;
 //                if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount) {
 //                    deliveryCharge = String.format(activity.getResources().getString(R.string.rupees_value_format),
 //                            Utils.getMoneyDecimalFormat().format(activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges()));
@@ -146,6 +149,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
 
         Slot slotDay = new Slot();
         slotDay.setCaddress(address);
+        slotDay.setAddressLabel(label);
         slotDay.setCamount(ctotalAmount);
         slotDay.setCdelivery(deliveryCharge);
         slotDay.setIsdelivery(isDeliveryCharger);
@@ -209,7 +213,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                 } else if (activity.getSlotSelected() == null) {
                     Toast.makeText(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot),
                             Toast.LENGTH_LONG).show();
-                } else if (TextUtils.isEmpty(activity.getSelectedAddress()) || "".equalsIgnoreCase(activity.getSelectedAddress())) {
+                } else if (TextUtils.isEmpty(activity.getSelectedAddress())) {
                     Toast.makeText(activity, activity.getResources().getString(R.string.please_select_a_delivery_address),
                             Toast.LENGTH_LONG).show();
                 } else {
@@ -218,7 +222,9 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                     int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                     if(appType == AppConstant.ApplicationType.MEALS){
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
-                    }else{
+                    } else if(appType == AppConstant.ApplicationType.GROCERY){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
+                    } else{
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
                     }
                 }
@@ -298,6 +304,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                     }
                 }
                 params.put(Constants.KEY_CART, jCart.toString());
+                params.put(Constants.ORDER_AMOUNT, Utils.getMoneyDecimalFormat().format(amountPayable));
 
                 int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                 if(type == AppConstant.ApplicationType.MEALS) {
@@ -323,15 +330,53 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                     buttonProceedToPayment.setText(getActivity().getResources().getString(R.string.proceed_to_payment));
                                     activity.setUserCheckoutResponse(userCheckoutResponse);
                                     Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
-                                    try {
-                                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_lati), userCheckoutResponse.getCheckoutData().getLastAddressLatitude());
-                                        Prefs.with(activity).save(activity.getResources().getString(R.string.pref_loc_longi), userCheckoutResponse.getCheckoutData().getLastAddressLongitude());
-                                    } catch (Exception e) {
-                                        // if sometimes data not found or some other error occures
-                                    }
                                     checkout.get(0).setCaddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-                                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+                                    checkout.get(0).setAddressLabel(userCheckoutResponse.getCheckoutData().getLastAddressType());
+                                    setActivityLastAddressFromResponse(userCheckoutResponse);
+                                    try {
+                                        activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
+												Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+                                    } catch (Exception e) {
+                                    }
+                                    setCheckoutScreen();
                                     generateSlots();
+
+                                    String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+                                    if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
+                                        if(Data.getMealsData().getPromoCoupons() == null){
+                                            Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                        }
+                                        Data.getMealsData().getPromoCoupons().clear();
+                                        if(userCheckoutResponse.getPromotions() != null){
+                                            Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                        }
+                                        if(userCheckoutResponse.getCoupons() != null){
+                                            Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                        }
+                                    } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+                                        if(Data.getGroceryData().getPromoCoupons() == null){
+                                            Data.getGroceryData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                        }
+                                        Data.getGroceryData().getPromoCoupons().clear();
+                                        if(userCheckoutResponse.getPromotions() != null){
+                                            Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                        }
+                                        if(userCheckoutResponse.getCoupons() != null){
+                                            Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                        }
+                                    } else {
+                                        if(Data.getFreshData().getPromoCoupons() == null){
+                                            Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                        }
+                                        Data.getFreshData().getPromoCoupons().clear();
+                                        if(userCheckoutResponse.getPromotions() != null){
+                                            Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                        }
+                                        if(userCheckoutResponse.getCoupons() != null){
+                                            Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                        }
+                                    }
+
 //								setAddressAndTimeSlot();
                                 } else{
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
@@ -367,6 +412,18 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
             e.printStackTrace();
         }
 
+    }
+
+    private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
+        try {
+            if(userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
+				activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+			}
+            activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
+            activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {
@@ -483,8 +540,8 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     public void onUpdateListEvent(AddressAdded event) {
         if (event.flag) {
             // New Address added
-            activity.setSelectedAddress(Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_local_address), ""));
-            checkout.get(0).setCaddress(Prefs.with(activity).getString(activity.getResources().getString(R.string.pref_local_address), ""));
+            checkout.get(0).setCaddress(activity.getSelectedAddress());
+            checkout.get(0).setAddressLabel(activity.getSelectedAddressType());
             checkoutAdapter.setList(checkout);
 //            checkoutAdapter.notifyDataSetChanged();
         }
@@ -500,14 +557,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     @Override
     public void onAddressClick() {
         FlurryEventLogger.event(CHECKOUT_SCREEN, SCREEN_TRANSITION, ADDRESS_SCREEN);
-        if(activity.getUserCheckoutResponse() != null
-                && activity.getUserCheckoutResponse().getCheckoutData() != null
-                && activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses() != null
-                && activity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses().size() > 0) {
-            activity.getTransactionUtils().openAddressFragment(activity, activity.getRelativeLayoutContainer());
-        } else {
-            activity.openMapAddress();
-        }
+        activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
         NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ADDRESS_CLICKED, null);
     }
 }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/relativeLayoutRoot"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="1134px"
-                android:background="@drawable/bg_fresh_invoice"
-                android:splitMotionEvents="false">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="1134px"
+    android:background="@drawable/bg_fresh_invoice"
+    android:splitMotionEvents="false">
 
     <RelativeLayout
         android:id="@+id/linearLayoutReceipt"
@@ -16,14 +16,14 @@
         <ImageView
             android:layout_width="53px"
             android:layout_height="match_parent"
-            android:background="@drawable/ic_ride_summary_line"/>
+            android:background="@drawable/ic_ride_summary_line" />
 
         <ImageView
             android:layout_width="53px"
             android:layout_height="1000px"
             android:layout_alignParentRight="true"
             android:background="@drawable/ic_ride_summary_line"
-            android:rotation="180"/>
+            android:rotation="180" />
 
         <ScrollView
             android:layout_width="562px"
@@ -41,7 +41,6 @@
                 android:orientation="vertical">
 
 
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerViewOrderItems"
                     android:layout_width="match_parent"
@@ -50,8 +49,7 @@
                     android:layout_marginTop="5px"
                     android:fadeScrollbars="true"
                     android:scrollbars="vertical"
-                    android:splitMotionEvents="false"/>
-
+                    android:splitMotionEvents="false" />
 
 
             </LinearLayout>
@@ -62,13 +60,13 @@
     </RelativeLayout>
 
     <!--<Button-->
-        <!--android:id="@+id/buttonCancelOrder"-->
-        <!--style="@style/ButtonTheme"-->
-        <!--android:layout_below="@+id/linearLayoutReceipt"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_marginTop="15px"-->
-        <!--android:text="@string/cancel_order"-->
-        <!--android:visibility="gone"/>-->
+    <!--android:id="@+id/buttonCancelOrder"-->
+    <!--style="@style/ButtonTheme"-->
+    <!--android:layout_below="@+id/linearLayoutReceipt"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_marginTop="15px"-->
+    <!--android:text="@string/cancel_order"-->
+    <!--android:visibility="gone"/>-->
 
     <LinearLayout
         android:id="@+id/order_cancel"
@@ -78,10 +76,9 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="gone"
-        android:weightSum="2"
         android:splitMotionEvents="false"
-        >
+        android:visibility="gone"
+        android:weightSum="2">
 
         <Button
             android:id="@+id/cancelfeedbackBtn"
@@ -95,7 +92,7 @@
             android:text="@string/need_help"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"/>
+            android:textSize="@dimen/text_size_34" />
 
         <Button
             android:id="@+id/buttonCancelOrder"
@@ -109,7 +106,7 @@
             android:text="@string/cancel_order"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"/>
+            android:textSize="@dimen/text_size_34" />
 
     </LinearLayout>
 
@@ -121,10 +118,9 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:orientation="horizontal"
-        android:visibility="visible"
         android:splitMotionEvents="false"
-        android:weightSum="2"
-        >
+        android:visibility="visible"
+        android:weightSum="2">
 
         <Button
             android:id="@+id/feedbackBtn"
@@ -138,7 +134,7 @@
             android:text="@string/ok"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"/>
+            android:textSize="@dimen/text_size_34" />
 
         <Button
             android:id="@+id/reorderBtn"
@@ -152,7 +148,7 @@
             android:text="Re-Order"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34"/>
+            android:textSize="@dimen/text_size_34" />
 
     </LinearLayout>
 

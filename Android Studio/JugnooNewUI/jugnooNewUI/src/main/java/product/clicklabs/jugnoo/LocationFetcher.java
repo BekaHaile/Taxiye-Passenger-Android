@@ -258,7 +258,6 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	@Override
 	public void onLocationChanged(Location location) {
 		try{
-			Log.i(TAG, "onLocationChanged = "+location);
 			locationUnchecked = location;
 			if(location != null && !Utils.mockLocationEnabled(location)) {
 				this.location = location;

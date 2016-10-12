@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 
@@ -30,6 +31,7 @@ public class FABView {
     public FloatingActionButton fabMeals;
     public FloatingActionButton fabFresh;
     public FloatingActionButton fabAutos;
+    public FloatingActionButton fabGrocery;
     public View fabExtra;
 
     public FABView(Activity activity) {
@@ -45,14 +47,17 @@ public class FABView {
         fabMeals = (FloatingActionButton) activity.findViewById(R.id.fabMeals);
         fabFresh = (FloatingActionButton) activity.findViewById(R.id.fabFresh);
         fabAutos = (FloatingActionButton) activity.findViewById(R.id.fabAutos);
+        fabGrocery = (FloatingActionButton) activity.findViewById(R.id.fabGrocery);
         fabExtra = (View) activity.findViewById(R.id.fabExtra);
         //fabExtra.setVisibility(View.GONE);
         menuLabelsRight.setIconAnimated(false);
         fabDelivery.setLabelTextColor(activity.getResources().getColor(R.color.black));
         fabMeals.setLabelTextColor(activity.getResources().getColor(R.color.black));
         fabFresh.setLabelTextColor(activity.getResources().getColor(R.color.black));
+        fabGrocery.setLabelTextColor(activity.getResources().getColor(R.color.black));
         fabAutos.setLabelTextColor(activity.getResources().getColor(R.color.black));
         fabDelivery.setOnClickListener(clickListener);
+        fabGrocery.setOnClickListener(clickListener);
         fabMeals.setOnClickListener(clickListener);
         fabFresh.setOnClickListener(clickListener);
         fabAutos.setOnClickListener(clickListener);
@@ -80,12 +85,6 @@ public class FABView {
                     } else if(activity instanceof FreshActivity){
                         setRelativeLayoutFABVisibility(null);
                     }
-
-//                    if (Data.userData.getFreshEnabled() == 1) {
-//                        fabFresh.setVisibility(View.VISIBLE);
-//                    } else {
-//                        fabFresh.setVisibility(View.GONE);
-//                    }
                 }
             }
         });
@@ -121,11 +120,15 @@ public class FABView {
         //relativeLayoutFAB.setVisibility(View.INVISIBLE);
         try {
             if(Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
-                    (Data.userData.getFreshEnabled() == 1 || Data.userData.getMealsEnabled() == 1 || Data.userData.getDeliveryEnabled() == 1)
+                    (Data.userData.getFreshEnabled() == 1 || Data.userData.getMealsEnabled() == 1 || Data.userData.getDeliveryEnabled() == 1 || Data.userData.getGroceryEnabled() == 1)
                     && Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if (passengerScreenMode != null) {
                     if ((passengerScreenMode == PassengerScreenMode.P_INITIAL
                             && !((HomeActivity) activity).confirmedScreenOpened)
+                            || passengerScreenMode == PassengerScreenMode.P_ASSIGNING
+                            || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED
+                            || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
+                            || passengerScreenMode == PassengerScreenMode.P_IN_RIDE
                             || passengerScreenMode == PassengerScreenMode.P_RIDE_END
                             || ((HomeActivity)activity).dropLocationSearched) {
                         relativeLayoutFAB.setVisibility(View.INVISIBLE);
@@ -135,6 +138,7 @@ public class FABView {
                         menuLabelsRight.close(true);
                         fabFresh.setVisibility(View.INVISIBLE);
                         fabMeals.setVisibility(View.INVISIBLE);
+                        fabGrocery.setVisibility(View.INVISIBLE);
                     }
                 } else {
                     if (activity instanceof FreshActivity) {
@@ -165,12 +169,15 @@ public class FABView {
                 menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_fresh_test);
             } else if(Config.getMealsClientId().equalsIgnoreCase(currentOpenedOffering)){
                 menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_meals_test);
+            } else if(Config.getGroceryClientId().equalsIgnoreCase(currentOpenedOffering)){
+                menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_grocery_test);
             }
         } else {
             menuLabelsRight.getMenuIconView().setImageResource(R.drawable.ic_fab_menu_selector);
         }
 
         fabDelivery.setVisibility(View.GONE);
+        //fabGrocery.setVisibility(View.GONE);
         if(Config.getAutosClientId().equalsIgnoreCase(currentOpenedOffering)){
             fabAutos.setVisibility(View.GONE);
         } else if(Config.getFreshClientId().equalsIgnoreCase(currentOpenedOffering)){
@@ -179,6 +186,8 @@ public class FABView {
         } else if(Config.getMealsClientId().equalsIgnoreCase(currentOpenedOffering)){
             fabMeals.setVisibility(View.GONE);
             //fabAutos.setVisibility(View.VISIBLE);
+        } else if(Config.getGroceryClientId().equalsIgnoreCase(currentOpenedOffering)){
+            fabGrocery.setVisibility(View.GONE);
         }
 
         //setFABButtons();
@@ -186,7 +195,8 @@ public class FABView {
 
     public void setFABButtons(){
         try {
-            if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
+            if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
+                    && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
                     && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 relativeLayoutFAB.setVisibility(View.GONE);
             } else {
@@ -203,11 +213,18 @@ public class FABView {
                     fabMeals.setVisibility(View.GONE);
                 }
 
+                if(Data.userData.getGroceryEnabled() == 1){
+                    fabGrocery.setVisibility(View.VISIBLE);
+                } else{
+                    fabGrocery.setVisibility(View.GONE);
+                }
+
                 if (Data.userData.getDeliveryEnabled() == 1) {
                     fabDelivery.setVisibility(View.VISIBLE);
                 } else {
                     fabDelivery.setVisibility(View.GONE);
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -217,6 +234,15 @@ public class FABView {
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            try {
+                if(Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0){
+					Data.latitude = Data.autoData.getLastRefreshLatLng().latitude;
+					Data.longitude = Data.autoData.getLastRefreshLatLng().longitude;
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             LatLng latLng = new LatLng(Data.latitude, Data.longitude);
             if(activity instanceof HomeActivity){
                 latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
@@ -258,6 +284,17 @@ public class FABView {
                         }
                     }, 250);
                     break;
+                case R.id.fabGrocery:
+                    //Toast.makeText(HomeActivity.this, "Autos", Toast.LENGTH_SHORT).show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.GROCERY, null);
+                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getGroceryClientId(), finalLatLng, false);
+                        }
+                    }, 250);
+                    break;
+
             }
             fabExtra.performClick();
         }

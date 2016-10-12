@@ -13,6 +13,7 @@ public class SPLabels {
         SHOW_DRIVER_INFO = "showDriverInfo",
 
         SERVER_SELECTED = "serverSelected",
+                FRESH_SERVER_SELECTED = "freshServerSelected",
 
         REFERRAL_OPEN_DATE_MILLIS = "referralOpenDateMillis",
         REFERRAL_TRANSACTION_COUNT = "referralTransactionCount",

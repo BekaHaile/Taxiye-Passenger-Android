@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="80px"
+    android:tag="mwar"
+    android:splitMotionEvents="false"
+    android:background="@drawable/bg_menu_item_selector_color"
+    >
+
+    <TextView
+        android:id="@+id/textViewLogType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:singleLine="true"
+        android:textColor="@color/text_color_dark"
+        android:textSize="30px"
+        android:layout_marginLeft="20px"
+        android:layout_marginRight="20px"
+        android:layout_centerVertical="true" />
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginLeft="2px"
+        android:layout_marginRight="2px"
+        android:background="@color/stroke_color_light"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>

@@ -81,7 +81,6 @@
                 android:src="@drawable/ic_cross_et"
                 android:tag="mwar"
                 android:visibility="gone"
-
                 />
         </LinearLayout>
 
@@ -120,6 +119,13 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40px"
 
+            />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:background="@drawable/shadow_up"
+            android:layout_alignParentBottom="true"
             />
 
     </RelativeLayout>

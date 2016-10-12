@@ -8,12 +8,6 @@ public class AppConstant {
 
     public static final String REVERSE_GEO_CODING_URL = "http://maps.googleapis.com/maps/api/geocode/json?latlng=";
 
-    public static interface AppType {
-        public static final int AUTO = 0;
-        public static final int FRESH = 1;
-        public static final int MEALS = 2;
-        public static final int DELIVERY = 3;
-    }
     /**
      * Constant interface. DO NOT IMPLEMENT.
      *
@@ -60,6 +54,7 @@ public class AppConstant {
     public static interface ApplicationType {
         public static final int FRESH = 1;
         public static final int MEALS = 2;
+        public static final int GROCERY = 3;
     }
 
     public static interface OrderType {

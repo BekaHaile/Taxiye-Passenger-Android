@@ -135,7 +135,7 @@ public class Log {
 	
 	
 	
-	public static void writePathLogToFile(final String filePrefix, final String response) {
+	public static void writeTrackingLogToFile(final String filePrefix, final String response) {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -143,7 +143,7 @@ public class Log {
 					File gpxfile = getPathLogFile(filePrefix);
 					if(gpxfile != null){
 						FileWriter writer = new FileWriter(gpxfile, true);
-						writer.append("\n" + DateOperations.getCurrentTime() + " - "+ response);
+						writer.append(response);
 						writer.flush();
 						writer.close();
 					}

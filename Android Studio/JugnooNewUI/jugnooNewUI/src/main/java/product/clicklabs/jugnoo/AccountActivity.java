@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -21,6 +23,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -30,6 +33,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 import io.branch.referral.Branch;
+import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -37,10 +41,13 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.fragments.AddressBookFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.JeanieIntroDialog;
+import product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -49,8 +56,8 @@ import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LocalGson;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -59,14 +66,15 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class AccountActivity extends BaseActivity implements FlurryEventNames, FirebaseEvents {
+public class AccountActivity extends BaseFragmentActivity implements FlurryEventNames, FirebaseEvents {
 
     private final String TAG = "View Account";
 
 	LinearLayout relative;
 
-	private TextView textViewSave, textViewPasswordSave;
+	private TextView textViewTitle, textViewSave, textViewPasswordSave;
 	ImageView imageViewBack;
+    View viewTrackingLog;
 
 	ScrollView scrollView;
 	LinearLayout linearLayoutMain;
@@ -92,8 +100,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
+    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer;
+    NonScrollListView listViewSavedLocations;
+    RelativeLayout relativeLayoutAddNewAddress;
+    SavedPlacesAdapter savedPlacesAdapter;
+
     private boolean setJeanieState;
-    public static final int ADD_HOME = 2, ADD_WORK = 3;
     Bundle bundle = new Bundle();
 
 	@Override
@@ -104,8 +116,12 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
 
+        textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
         textViewSave = (TextView) findViewById(R.id.textViewSave); textViewSave.setTypeface(Fonts.mavenMedium(this));
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+        viewTrackingLog = findViewById(R.id.viewTrackingLog);
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
+        textViewTitle.setVisibility(View.GONE);
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -196,6 +212,37 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        listViewSavedLocations = (NonScrollListView) findViewById(R.id.listViewSavedLocations);
+        try {
+            savedPlacesAdapter = new SavedPlacesAdapter(this, Data.userData.getSearchResults(), new SavedPlacesAdapter.Callback() {
+                @Override
+                public void onItemClick(SearchResult searchResult) {
+                    Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
+                    intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
+                    startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+
+                @Override
+                public void onEditClick(SearchResult searchResult) {
+
+                }
+            }, true, false);
+            listViewSavedLocations.setAdapter(savedPlacesAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        relativeLayoutAddNewAddress = (RelativeLayout) findViewById(R.id.relativeLayoutAddNewAddress);
+        ((TextView) findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(this));
+
+        relativeLayoutAddressBook = (RelativeLayout) findViewById(R.id.relativeLayoutAddressBook);
+        ((TextView)findViewById(R.id.textViewAddressBook)).setTypeface(Fonts.mavenMedium(this));
+
+        relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
+
 
         imageViewPokemon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -453,7 +500,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                 } else if (newPassword.length() < 6) {
                     editTextNewPassword.requestFocus();
                     editTextNewPassword.setError(String.format(
-                            getResources().getString(R.string.new_password_length_error_format), 6));
+                            getResources().getString(R.string.new_password_length_error_format), String.valueOf(6)));
                 } else {
                     updateUserProfileChangePasswordAPI(AccountActivity.this, oldPassword, newPassword);
                 }
@@ -540,9 +587,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
-                intent.putExtra("requestCode", "HOME");
-                intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
-                startActivityForResult(intent, ADD_HOME);
+                intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_HOME);
+                intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, ""));
+                startActivityForResult(intent, Constants.REQUEST_CODE_ADD_HOME);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_HOME);
                 MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_HOME, bundle);
@@ -554,9 +601,9 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
-                intent.putExtra("requestCode", "WORK");
-                intent.putExtra("address", Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
-                startActivityForResult(intent, ADD_WORK);
+                intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_WORK);
+                intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, ""));
+                startActivityForResult(intent, Constants.REQUEST_CODE_ADD_WORK);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(AccountActivity.this, HOW_MANY_USERS_ADDED_ADD_WORK);
                 MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+FirebaseEvents.ADD_WORK, bundle);
@@ -577,6 +624,25 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                 relativeLayoutAddWork.performClick();
             }
         });
+
+        relativeLayoutAddNewAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(AccountActivity.this, AddPlaceActivity.class);
+                intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                intent.putExtra(Constants.KEY_ADDRESS, "");
+                startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
+
+        relativeLayoutAddressBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, true);
+            }
+        });
+
 
 
 		linearLayoutLogout.setOnClickListener(new View.OnClickListener() {
@@ -603,6 +669,15 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                         },
                         true, false);
 
+            }
+        });
+
+        viewTrackingLog.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startActivity(new Intent(AccountActivity.this, TrackingLogActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                return false;
             }
         });
 
@@ -636,7 +711,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             editTextEmail.setEnabled(false); editTextEmail.setBackgroundResource(R.drawable.background_white);
             editTextPhone.setEnabled(false); linearLayoutPhone.setBackgroundResource(R.drawable.background_white);
 
-			editTextUserName.setText(Data.userData.userName.toUpperCase());
+			editTextUserName.setText(Data.userData.userName);
 			editTextEmail.setText(Data.userData.userEmail);
 			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
 
@@ -659,7 +734,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 	public void performBackPressed(){
         FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Back");
         MyApplication.getInstance().logEvent(INFORMATIVE+"_"+VIEW_ACCOUNT+"_"+BACK, bundle);
-        if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+            openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
+        }
+        else if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
             if(linearLayoutPasswordChange.getVisibility() == View.VISIBLE){
                 relativeLayoutChangePassword.performClick();
             }
@@ -766,7 +844,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
                                 String message = jObj.getString("message");
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
-                                editTextUserName.setText(Data.userData.userName.toUpperCase());
+                                editTextUserName.setText(Data.userData.userName);
                                 editTextEmail.setText(Data.userData.userEmail);
                                 if(phoneUpdated) {
                                     Intent intent = new Intent(activity, PhoneNoOTPConfirmScreen.class);
@@ -1031,7 +1109,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
     private void setSavePlaces() {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
             String homeString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "");
-            SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(homeString);
+            SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
             textViewAddHome.setText(getResources().getString(R.string.home));
             textViewAddHomeValue.setVisibility(View.VISIBLE);
             textViewAddHomeValue.setText(searchResult.getAddress());
@@ -1044,7 +1122,7 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
 
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
             String workString = Prefs.with(AccountActivity.this).getString(SPLabels.ADD_WORK, "");
-            SearchResult searchResult = new LocalGson().getAutoCompleteSearchResultFromJSON(workString);
+            SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
             textViewAddWork.setText(getResources().getString(R.string.work));
             textViewAddWorkValue.setVisibility(View.VISIBLE);
             textViewAddWorkValue.setText(searchResult.getAddress());
@@ -1053,6 +1131,10 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             textViewAddWork.setText(getResources().getString(R.string.add_work));
             textViewAddWorkValue.setVisibility(View.GONE);
             imageViewEditWork.setVisibility(View.GONE);
+        }
+
+        if(savedPlacesAdapter != null){
+            savedPlacesAdapter.notifyDataSetChanged();
         }
     }
 
@@ -1122,6 +1204,45 @@ public class AccountActivity extends BaseActivity implements FlurryEventNames, F
             DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
         }
 
+    }
+
+
+    public void openAddressBookFragment(FragmentActivity activity, View container, boolean addFrag) {
+        if(addFrag) {
+            if (!new TransactionUtils().checkIfFragmentAdded(activity, AddressBookFragment.class.getName())) {
+                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                        .add(container.getId(), new AddressBookFragment(),
+                                AddressBookFragment.class.getName())
+                        .addToBackStack(AddressBookFragment.class.getName());
+                if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+                    transaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+                }
+                transaction.commitAllowingStateLoss();
+
+                textViewTitle.setVisibility(View.VISIBLE);
+                textViewTitle.setText(R.string.address_book);
+                imageViewEditProfile.setVisibility(View.GONE);
+                linearLayoutSave.setVisibility(View.GONE);
+                scrollView.setVisibility(View.GONE);
+            }
+        } else{
+            super.onBackPressed();
+            textViewTitle.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
+            if (editTextUserName.isEnabled()) {
+                imageViewEditProfile.setVisibility(View.GONE);
+                linearLayoutSave.setVisibility(View.VISIBLE);
+            } else {
+                imageViewEditProfile.setVisibility(View.VISIBLE);
+                linearLayoutSave.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public TextView getTextViewTitle(){
+        return textViewTitle;
     }
 
 }

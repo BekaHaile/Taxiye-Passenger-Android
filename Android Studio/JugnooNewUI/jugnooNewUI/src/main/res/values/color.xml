@@ -158,6 +158,7 @@
     <color name="text_color_hint">#BCBCBC</color>
     <color name="nl_white_dark">#E0E0E0</color>
     <color name="menu_item_selector_color">#EEEEEE</color>
+    <color name="menu_item_selector_color_F7">#F7F7F7</color>
     <color name="ride_history_item_text_color">#0EB2CE</color>
     <color name="google_path_polyline_color">#0889da</color>
 

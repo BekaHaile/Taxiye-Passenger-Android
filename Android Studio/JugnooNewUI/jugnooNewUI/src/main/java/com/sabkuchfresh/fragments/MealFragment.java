@@ -134,7 +134,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         try {
             if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
-                //TODO meals feedback fragment open here
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {

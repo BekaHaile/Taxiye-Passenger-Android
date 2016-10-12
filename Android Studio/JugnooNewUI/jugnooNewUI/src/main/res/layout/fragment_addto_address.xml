@@ -1,11 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/root"
-                android:layout_width="720px"
-                android:layout_height="1134px"
-                android:background="@color/white"
-                >
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="720px"
+    android:layout_height="1134px"
+    android:background="@color/white">
 
 
     <ScrollView
@@ -17,24 +15,20 @@
             android:id="@+id/linearLayoutMain"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
+            android:orientation="vertical">
 
 
             <LinearLayout
                 android:id="@+id/mapScreenShot"
                 android:layout_width="match_parent"
                 android:layout_height="324px"
+                android:orientation="vertical">
 
-                android:orientation="vertical"
-                >
                 <fragment
                     android:id="@+id/addressmapView"
                     class="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                     />
+                    android:layout_height="match_parent" />
             </LinearLayout>
 
             <LinearLayout
@@ -47,34 +41,38 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/editTextLabel"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="90px"
+                    android:background="@null"
+                    android:hint="@string/label"
+                    android:inputType="textFilter|textCapSentences"
+                    android:paddingLeft="25px"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30px" />
 
-                    <EditText
-                        android:id="@+id/edt_houseFlatNo"
-                        android:layout_width="530px"
-                        android:layout_height="90px"
-                        android:background="@null"
-                        android:hint="@string/house_flat_no_hint"
-                        android:inputType="textFilter|textCapSentences"
-                        android:paddingLeft="25px"
-                        android:singleLine="true"
-                        android:textColor="@color/black_text"
-                        android:textCursorDrawable="@null"
-                        android:textSize="30px" />
+                <ImageView
+                    android:layout_width="600px"
+                    android:layout_height="2px"
+                    android:src="@color/text_color_hint" />
 
-                    <ImageView
-                        android:id="@+id/imageViewEditHouseNumber"
-                        android:layout_width="68px"
-                        android:layout_height="68px"
-                        android:layout_gravity="center"
-                        android:padding="15px"
-                        android:src="@drawable/edit_icon_selector"
-                        android:tag="mwar"
-                        android:visibility="gone"/>
-                </LinearLayout>
+                <EditText
+                    android:id="@+id/edt_houseFlatNo"
+                    android:layout_width="match_parent"
+                    android:layout_height="90px"
+                    android:background="@null"
+                    android:hint="@string/house_flat_no_hint"
+                    android:inputType="textFilter|textCapSentences"
+                    android:paddingLeft="25px"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30px" />
 
 
                 <ImageView
@@ -82,67 +80,38 @@
                     android:layout_height="2px"
                     android:src="@color/text_color_hint" />
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/edt_buildingStreetName"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/edt_buildingStreetName"
-                        android:layout_width="530px"
-                        android:layout_height="90px"
-                        android:background="@null"
-                        android:hint="@string/building_street_name_hint"
-                        android:inputType="textFilter|textCapSentences"
-                        android:paddingLeft="25px"
-                        android:singleLine="true"
-                        android:textColor="@color/black_text"
-                        android:textCursorDrawable="@null"
-                        android:textSize="30px" />
-
-                    <ImageView
-                        android:id="@+id/imageViewEditBuilding"
-                        android:layout_width="68px"
-                        android:layout_height="68px"
-                        android:layout_gravity="center"
-                        android:padding="15px"
-                        android:src="@drawable/edit_icon_selector"
-                        android:tag="mwar"
-                        android:visibility="gone"/>
-                </LinearLayout>
+                    android:layout_height="90px"
+                    android:background="@null"
+                    android:hint="@string/building_street_name_hint"
+                    android:inputType="textFilter|textCapSentences"
+                    android:paddingLeft="25px"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30px" />
 
                 <ImageView
                     android:layout_width="600px"
                     android:layout_height="2px"
                     android:src="@color/text_color_hint" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <EditText
-                        android:id="@+id/edt_area"
-                        android:layout_width="530px"
-                        android:layout_height="90px"
-                        android:background="@null"
-                        android:hint="@string/area_hint"
-                        android:inputType="textFilter|textCapSentences"
-                        android:paddingLeft="25px"
-                        android:singleLine="true"
-                        android:textColor="@color/black_text"
-                        android:textCursorDrawable="@null"
-                        android:textSize="30px" />
-                    <ImageView
-                        android:id="@+id/imageViewEditArea"
-                        android:layout_width="68px"
-                        android:layout_height="68px"
-                        android:layout_gravity="center"
-                        android:padding="15px"
-                        android:src="@drawable/edit_icon_selector"
-                        android:tag="mwar"
-                        android:visibility="gone"/>
-                </LinearLayout>
+                <EditText
+                    android:id="@+id/edt_area"
+                    android:layout_width="530px"
+                    android:layout_height="90px"
+                    android:background="@null"
+                    android:hint="@string/area_hint"
+                    android:inputType="textFilter|textCapSentences"
+                    android:paddingLeft="25px"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textCursorDrawable="@null"
+                    android:textSize="30px" />
 
                 <ImageView
                     android:layout_width="600px"
@@ -158,7 +127,8 @@
                     android:inputType="textFilter|textCapSentences"
                     android:paddingLeft="25px"
                     android:singleLine="true"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
@@ -173,12 +143,11 @@
                     android:layout_height="90px"
                     android:background="@null"
                     android:hint="@string/pin_code_hint"
-                    android:inputType="textFilter|number"
-                    android:digits="1234567890"
-                    android:maxLength="6"
                     android:paddingLeft="25px"
+                    android:inputType="textFilter|textCapSentences"
                     android:singleLine="true"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/text_color_dark"
+                    android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
@@ -189,27 +158,31 @@
 
             </LinearLayout>
 
-
-            <Button
-                android:id="@+id/buttonAddToAddressBook"
-                android:layout_width="648px"
-                android:layout_height="100px"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_marginBottom="70px"
                 android:layout_marginTop="70px"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/button_yellow_selector"
-                android:text="@string/add_address_to_address_book"
-                android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/button_text_size" />
+                android:layout_marginLeft="50px"
+                android:layout_marginRight="50px"
+                >
+                <Button
+                    android:id="@+id/buttonAddToAddressBook"
+                    style="@style/ButtonThemeBig"
+                    android:layout_width="0px"
+                    android:layout_weight="1"
+                    android:text="@string/confirm"
+                    />
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/textViewScroll"
                 android:layout_width="20px"
                 android:layout_height="20px"
-                android:text=" "
-                />
+                android:text=" " />
 
 
         </LinearLayout>

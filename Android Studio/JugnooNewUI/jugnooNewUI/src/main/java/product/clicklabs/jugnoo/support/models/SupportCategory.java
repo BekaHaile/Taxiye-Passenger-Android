@@ -23,6 +23,11 @@ public enum SupportCategory {
 	RIDE_ACCEPT(11),
 	RIDE_ARRIVED(12),
 	RIDE_STARTED(13),
+
+	GROCERY(14),
+	GROCERY_PENDING(15),
+	GROCERY_CANCELLED(16),
+
 	;
 
 

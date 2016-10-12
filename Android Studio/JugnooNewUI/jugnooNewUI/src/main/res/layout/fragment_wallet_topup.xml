@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:text="@string/jugnoo_cash"
+            style="@style/title" />
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            style="@style/back_image" />
+
+        <TextView
+            android:id="@+id/textViewTNC"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10px"
+            android:padding="15px"
+            android:text="@string/tnc"
+            android:textColor="@color/text_color_light_selector"
+            android:textSize="30.6px" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topBar">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:splitMotionEvents="false">
+
+
+            <LinearLayout
+                android:layout_width="@dimen/screen_width"
+                android:layout_height="fill_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="192px"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:background="@color/menu_item_selector_color"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageViewJugnooCashIcon"
+                        android:layout_width="66px"
+                        android:layout_height="50px"
+                        android:src="@drawable/ic_jugnoo_cash"
+                        android:tag="mwar" />
+
+
+                    <TextView
+                        android:id="@+id/textViewAddCashHelp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10px"
+                        android:text="@string/jugnoo_cash"
+                        android:visibility="visible"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_50" />
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="@dimen/screen_width"
+                    android:layout_height="109px"
+                    android:background="@color/white">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:visibility="gone"
+                        android:background="@color/stroke_color_light" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2px"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/stroke_color_light" />
+
+                    <ImageView
+                        android:id="@+id/imageViewCurrentIcon"
+                        android:layout_width="66px"
+                        android:layout_height="50px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30px"
+                        android:src="@drawable/ic_jugnoo_cash"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:id="@+id/textViewCurrentBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_toRightOf="@+id/imageViewCurrentIcon"
+                        android:layout_marginLeft="30px"
+                        android:gravity="center"
+                        android:text="Current Balance"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_32" />
+
+
+                    <TextView
+                        android:id="@+id/textViewCurrentBalanceValue"
+                        android:layout_width="250px"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginRight="50px"
+                        android:gravity="right"
+                        android:text="5000"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_32" />
+
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutInner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:splitMotionEvents="false"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/textViewRechargeInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="@string/recharge_jc_topup_info"
+                        android:textColor="@color/grey_dark_more"
+                        android:textSize="@dimen/text_size_34"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20px"
+                        android:layout_marginRight="20px"
+                        android:layout_marginTop="100px"/>
+
+                    <EditText
+                        android:id="@+id/editTextTopupCardCode"
+                        android:layout_width="480px"
+                        android:layout_height="80px"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="40px"
+                        android:background="@color/transparent"
+                        android:digits="0123456789"
+                        android:hint="@string/enter_topup_card_code"
+                        android:inputType="number|textNoSuggestions"
+                        android:maxLength="16"
+                        android:gravity="center"
+                        android:paddingLeft="25px"
+                        android:paddingRight="25px"
+                        android:singleLine="true"
+                        android:imeOptions="actionSend"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textSize="@dimen/text_size_32" />
+
+                    <ImageView
+                        android:layout_width="480px"
+                        android:layout_height="2px"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@color/theme_color"/>
+
+                    <Button
+                        android:id="@+id/buttonRecharge"
+                        style="@style/ButtonTheme"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="66px"
+                        android:text="@string/recharge" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewScroll"
+                android:layout_width="20px"
+                android:layout_height="20px"
+                android:text=" " />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down" />
+
+</RelativeLayout>
