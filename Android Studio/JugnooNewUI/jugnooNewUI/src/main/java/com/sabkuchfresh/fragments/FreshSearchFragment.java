@@ -213,20 +213,23 @@ public class FreshSearchFragment extends Fragment {
 					subItemsInSearch.clear();
 					if(!token.equalsIgnoreCase(tokenSearched)) {
 						if(token.length() == 1 && token.length() > tokenSearched.length()) {
-							ArrayList<SubItem> subItems = new ArrayList<>();
-							for (Category category : activity.getProductsResponse().getCategories()) {
-								subItems.addAll(getSubItemsInSearch(token, category.getSubItems()));
-							}
-							subItemsInSearch.addAll(subItems);
-							listHashMap.put(token, subItems);
+							searchFromStart(token);
 						}
 						else if(token.length() > 1 && token.length() > tokenSearched.length()){
-							List<SubItem> subItems = getSubItemsInSearch(token, listHashMap.get(tokenSearched));
-							subItemsInSearch.addAll(subItems);
-							listHashMap.put(token, subItems);
+							if(listHashMap.containsKey(tokenSearched)) {
+								List<SubItem> subItems = getSubItemsInSearch(token, listHashMap.get(tokenSearched));
+								subItemsInSearch.addAll(subItems);
+								listHashMap.put(token, subItems);
+							} else {
+								searchFromStart(token);
+							}
 						}
 						else if(token.length() < tokenSearched.length()){
-							subItemsInSearch.addAll(listHashMap.get(token));
+							if(listHashMap.containsKey(token)){
+								subItemsInSearch.addAll(listHashMap.get(token));
+							} else{
+								searchFromStart(token);
+							}
 							listHashMap.remove(tokenSearched);
 						}
 						tokenSearched = token;
@@ -274,6 +277,15 @@ public class FreshSearchFragment extends Fragment {
 			}
 		}
 		return subItems;
+	}
+
+	private void searchFromStart(String token){
+		ArrayList<SubItem> subItems = new ArrayList<>();
+		for (Category category : activity.getProductsResponse().getCategories()) {
+			subItems.addAll(getSubItemsInSearch(token, category.getSubItems()));
+		}
+		subItemsInSearch.addAll(subItems);
+		listHashMap.put(token, subItems);
 	}
 
 
