@@ -3296,7 +3296,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void startStopLocationUpdateService(PassengerScreenMode mode){
         Prefs.with(this).save(Constants.SP_CURRENT_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
-        if(PassengerScreenMode.P_IN_RIDE == mode
+        if((PassengerScreenMode.P_REQUEST_FINAL == mode
+                || PassengerScreenMode.P_DRIVER_ARRIVED == mode
+                || PassengerScreenMode.P_IN_RIDE == mode)
                 && Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, LOCATION_UPDATE_INTERVAL) > 0) {
             if(!Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
                 Intent intent = new Intent(this, LocationUpdateService.class);
