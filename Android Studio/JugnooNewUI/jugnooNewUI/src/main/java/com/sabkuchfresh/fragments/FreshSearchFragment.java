@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
-import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
@@ -30,6 +29,8 @@ import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.R;
@@ -154,16 +155,19 @@ public class FreshSearchFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    imageViewSearchCross.setVisibility(View.VISIBLE);
-                    new SubItemsSearchAsync().execute(s.toString());
-                    FlurryEventLogger.event(FlurryEventNames.SEARCH_SCREEN, FlurryEventNames.PRODUCT_SEARCH, s.toString());
-                } else {
-                    imageViewSearchCross.setVisibility(View.GONE);
-                    subItemsInSearch.clear();
-                    freshCategoryItemsAdapter.notifyDataSetChanged();
-                }
-            }
+				try {
+					if (s.length() > 0) {
+						imageViewSearchCross.setVisibility(View.VISIBLE);
+						new SubItemsSearchAsync().execute(s.toString());
+					} else {
+						imageViewSearchCross.setVisibility(View.GONE);
+						clearArrays();
+						freshCategoryItemsAdapter.notifyDataSetChanged();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
         });
 
 		imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
@@ -184,8 +188,14 @@ public class FreshSearchFragment extends Fragment {
 		return rootView;
 	}
 
+	public void clearArrays(){
+		subItemsInSearch.clear();
+		tokenSearched = "";
+		listHashMap.clear();
+	}
 
-
+	private String tokenSearched = "";
+	private HashMap<String, List<SubItem>> listHashMap = new HashMap<>();
 	private class SubItemsSearchAsync extends AsyncTask<String, Integer, String> {
 
 		@Override
@@ -197,19 +207,31 @@ public class FreshSearchFragment extends Fragment {
 		@Override
 		protected String doInBackground(String... params) {
 			try{
-				String token = params[0];
 				if(activity.getProductsResponse() != null
 						&& activity.getProductsResponse().getCategories() != null) {
+					String token = params[0];
 					subItemsInSearch.clear();
-					for (Category category : activity.getProductsResponse().getCategories()) {
-						for (SubItem subItem : category.getSubItems()) {
-							if (subItem.getSubItemName().toLowerCase(Locale.ENGLISH).contains(token.toLowerCase(Locale.ENGLISH))) {
-								subItemsInSearch.add(subItem);
+					if(!token.equalsIgnoreCase(tokenSearched)) {
+						if(token.length() == 1 && token.length() > tokenSearched.length()) {
+							for (Category category : activity.getProductsResponse().getCategories()) {
+								subItemsInSearch.addAll(getSubItemsInSearch(token, category.getSubItems()));
 							}
+							ArrayList<SubItem> subItems = new ArrayList<>();
+							subItems.addAll(subItemsInSearch);
+							listHashMap.put(token, subItems);
 						}
+						else if(token.length() > 1 && token.length() > tokenSearched.length()){
+							List<SubItem> subItems = getSubItemsInSearch(token, listHashMap.get(tokenSearched));
+							subItemsInSearch.addAll(subItems);
+							listHashMap.put(token, subItems);
+						}
+						else if(token.length() < tokenSearched.length()){
+							subItemsInSearch.addAll(listHashMap.get(token));
+							listHashMap.remove(tokenSearched);
+						}
+						tokenSearched = token;
 					}
 				}
-
 			} catch(Exception e){
 				e.printStackTrace();
 			}
@@ -219,22 +241,50 @@ public class FreshSearchFragment extends Fragment {
 		@Override
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
-			progressBarSearch.setVisibility(View.GONE);
-			freshCategoryItemsAdapter.notifyDataSetChanged();
-			if(subItemsInSearch.size() > 0){
-				textViewPlaceholder.setVisibility(View.GONE);
-			} else{
-				textViewPlaceholder.setVisibility(View.VISIBLE);
+			try {
+				progressBarSearch.setVisibility(View.GONE);
+				freshCategoryItemsAdapter.notifyDataSetChanged();
+				if(subItemsInSearch.size() > 0){
+					textViewPlaceholder.setVisibility(View.GONE);
+				} else{
+					textViewPlaceholder.setVisibility(View.VISIBLE);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 
+	}
+
+	private List<SubItem> getSubItemsInSearch(String token, List<SubItem> subItemsForSearch){
+		List<SubItem> subItems = new ArrayList<>();
+		for (SubItem subItem : subItemsForSearch) {
+			String[] arr = token.toLowerCase(Locale.ENGLISH).split(" ");
+			boolean matched = false;
+			for (String tok : arr) {
+				if (subItem.getSubItemName().toLowerCase(Locale.ENGLISH).contains(tok)) {
+					matched = true;
+				} else {
+					matched = false;
+					break;
+				}
+			}
+			if (matched) {
+				subItems.add(subItem);
+			}
+		}
+		return subItems;
 	}
 
 
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
-        freshCategoryItemsAdapter.notifyDataSetChanged();
+		try {
+			freshCategoryItemsAdapter.notifyDataSetChanged();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if(!hidden){
             new Handler().postDelayed(new Runnable() {
                 @Override

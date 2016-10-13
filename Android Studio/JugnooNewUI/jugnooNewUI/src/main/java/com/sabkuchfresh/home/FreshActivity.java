@@ -1304,6 +1304,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     (getSupportFragmentManager().getBackStackEntryCount() == 4 && getFreshSearchFragment() != null)){
                 FlurryEventLogger.event(FlurryEventNames.CHECKOUT, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.REVIEW_CART_SCREEN);
             }
+            if(getFreshSearchFragment() != null){
+                getFreshSearchFragment().clearArrays();
+            }
 
             super.onBackPressed();
         }
