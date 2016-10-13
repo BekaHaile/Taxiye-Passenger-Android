@@ -213,11 +213,11 @@ public class FreshSearchFragment extends Fragment {
 					subItemsInSearch.clear();
 					if(!token.equalsIgnoreCase(tokenSearched)) {
 						if(token.length() == 1 && token.length() > tokenSearched.length()) {
-							for (Category category : activity.getProductsResponse().getCategories()) {
-								subItemsInSearch.addAll(getSubItemsInSearch(token, category.getSubItems()));
-							}
 							ArrayList<SubItem> subItems = new ArrayList<>();
-							subItems.addAll(subItemsInSearch);
+							for (Category category : activity.getProductsResponse().getCategories()) {
+								subItems.addAll(getSubItemsInSearch(token, category.getSubItems()));
+							}
+							subItemsInSearch.addAll(subItems);
 							listHashMap.put(token, subItems);
 						}
 						else if(token.length() > 1 && token.length() > tokenSearched.length()){
