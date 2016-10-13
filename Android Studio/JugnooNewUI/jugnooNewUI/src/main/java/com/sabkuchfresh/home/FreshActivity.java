@@ -21,13 +21,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
@@ -767,7 +765,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
         saveCartToSP();
         if (totalQuantity > 0) {
-            NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_FRESH_ITEMS_IN_CART, null);
         }
         pair = new Pair<>(totalPrice, totalQuantity);
         return pair;
@@ -1118,7 +1115,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void deleteCart() {
         final int type = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
-        NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_FRESH_CART_DELETE_CLICKED, null);
         DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
                 getResources().getString(R.string.delete_fresh_cart_message),
                 getResources().getString(R.string.delete),
@@ -1152,8 +1148,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        NudgeClient.trackEventUserId(FreshActivity.this,
-                                FlurryEventNames.NUDGE_FRESH_CART_DELETE_CANCEL_CLICKED, null);
                         if(type == AppConstant.ApplicationType.MEALS){
                             MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.TRASH+"_"+FirebaseEvents.NO, null);
                         } else if(type == AppConstant.ApplicationType.GROCERY){
@@ -1212,7 +1206,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             }
         }, 1000);
 
-        NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_JUGNOO_FRESH_ORDER_PLACED, null);
 
     }
 
@@ -1301,7 +1294,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             }
         } else {
             if (getFreshPaymentFragment() != null) {
-                NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_FRESH_BACK_ON_PAYMENT_CLICKED, null);
             }
             if((getSupportFragmentManager().getBackStackEntryCount() == 2 && getFreshSearchFragment() == null) ||
                     (getSupportFragmentManager().getBackStackEntryCount() == 3 && getFreshSearchFragment() != null)){

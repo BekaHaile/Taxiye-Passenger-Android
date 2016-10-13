@@ -53,7 +53,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -151,7 +150,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                NudgeClient.trackEventUserId(PromotionActivity.this, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.WANT_FREE_RIDES, bundle);
                 FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "B_WantFreeRides");

@@ -10,11 +10,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.analytics.NudgeClient;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -126,7 +124,6 @@ public class TopBar implements FlurryEventNames {
 				case R.id.imageViewMenu:
 
 					drawerLayout.openDrawer(GravityCompat.START);
-					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_MENU_CLICKED, null);
 					break;
 
 				case R.id.buttonCheckServer:

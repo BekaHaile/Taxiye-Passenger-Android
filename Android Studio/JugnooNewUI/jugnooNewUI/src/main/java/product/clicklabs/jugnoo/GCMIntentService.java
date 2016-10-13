@@ -53,7 +53,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
@@ -394,13 +393,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						} else{
 							notificationManager(this, title, message1, playSound);
 						}
-						try {
-							JSONObject map = new JSONObject();
-							map.put(KEY_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
-							NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_RIDE_ACCEPTED, map);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
 
 					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
@@ -443,13 +435,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							}
 						}
 						notificationManager(this, title, message1, playSound);
-						try {
-							JSONObject map = new JSONObject();
-							map.put(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""));
-							NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_RIDE_START, map);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
 
 						FbEvents.logEvent(this, FlurryEventNames.FB_EVENT_RIDE_STARTED);
 
@@ -477,7 +462,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
 						}
 						notificationManager(this, title, message1, playSound);
-						NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_RIDE_CANCELLED_BY_DRIVER, null);
 
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag
 							|| PushFlags.WAITING_ENDED.getOrdinal() == flag) {

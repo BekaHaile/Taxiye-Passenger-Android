@@ -53,7 +53,6 @@ import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -414,7 +413,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     gameName = gameName.replaceAll("\\W", "_");
                     MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.GAME+"_"+gameName, bundle);
                     FlurryEventLogger.event(FlurryEventNames.WORLD_CUP_MENU);
-                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_GAME_CLICKED, null);
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "game");
                 }
             } else if((MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(tag))) {
@@ -455,7 +453,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.FREE_RIDES, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Free rides");
@@ -474,7 +471,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.WALLET_MENU);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_WALLET);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.WALLET, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "wallet");

@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -164,7 +163,6 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
-		NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_CART_CLICKED, null);
 
 		return rootView;
 	}

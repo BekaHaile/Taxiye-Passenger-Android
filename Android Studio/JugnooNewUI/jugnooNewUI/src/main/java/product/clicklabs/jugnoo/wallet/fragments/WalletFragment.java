@@ -30,7 +30,6 @@ import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
@@ -260,7 +259,6 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 					suffix = FirebaseEvents.FREECHARGE_WALLET;
 				}
 				MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.WALLET+"_"+suffix, new Bundle());
-				NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
 			}
 		} catch (Exception e) {

@@ -40,7 +40,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
@@ -92,7 +91,6 @@ import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -1363,7 +1361,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		AppEventsLogger.activateApp(this);
 
-		NudgeClient.getGcmClient(this);
 
 	}
 
@@ -2751,9 +2748,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
             if (linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
-                NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
             } else {
-                NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITHOUT_PAYTM, null);
             }
 
             if (Utils.isDeviceRooted()) {
@@ -2796,7 +2791,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     SplashNewActivity.this.name = name;
                                     SplashNewActivity.this.emailId = emailId;
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
-                                    nudgeSignupEvent(phoneNo, emailId, name);
 
                                 } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
                                     SplashNewActivity.this.name = name;
@@ -2879,9 +2873,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("client_id", Config.getAutosClientId());
             params.put("reg_wallet_type", String.valueOf(linkedWallet));
             if (linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
-                NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
             } else {
-                NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITHOUT_PAYTM, null);
             }
 
             if (Utils.isDeviceRooted()) {
@@ -2921,8 +2913,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Facebook");
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
-                                    nudgeSignupEvent(phoneNo, Data.facebookUserData.userEmail,
-                                            Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
 
                                 } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
                                     SplashNewActivity.this.phoneNo = phoneNo;
@@ -2995,9 +2985,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("client_id", Config.getAutosClientId());
             params.put("reg_wallet_type", String.valueOf(linkedWallet));
             if (linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()) {
-                NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITH_PAYTM, null);
             } else {
-                NudgeClient.trackEventUserId(SplashNewActivity.this, FlurryEventNames.NUDGE_SIGNUP_WITHOUT_PAYTM, null);
             }
 
             if (Utils.isDeviceRooted()) {
@@ -3036,8 +3024,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Google");
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
-                                    nudgeSignupEvent(phoneNo, Data.googleSignInAccount.getEmail(),
-                                            Data.googleSignInAccount.getDisplayName());
 
                                 } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
                                     SplashNewActivity.this.phoneNo = phoneNo;
@@ -3076,20 +3062,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
         }
     }
 
-    private void nudgeSignupEvent(String phoneNo, String email, String userName) {
-        try {
-            NudgeClient.initialize(SplashNewActivity.this, phoneNo, userName, email, phoneNo, "", "", "");
-            JSONObject map = new JSONObject();
-            map.put(KEY_PHONE_NO, phoneNo);
-            map.put(KEY_EMAIL, email);
-            map.put(KEY_USER_NAME, userName);
-            map.put(KEY_LATITUDE, Data.loginLatitude);
-            map.put(KEY_LONGITUDE, Data.loginLongitude);
-            NudgeClient.trackEventUserId(SplashNewActivity.this, NUDGE_SIGNUP, map);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     private void parseOTPSignUpData(JSONObject jObj, String password, String referralCode, int linkedWallet) throws Exception {
