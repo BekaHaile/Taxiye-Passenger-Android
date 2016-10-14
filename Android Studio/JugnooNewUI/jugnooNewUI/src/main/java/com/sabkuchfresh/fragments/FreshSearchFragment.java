@@ -219,7 +219,9 @@ public class FreshSearchFragment extends Fragment {
 							if(listHashMap.containsKey(tokenSearched)) {
 								List<SubItem> subItems = getSubItemsInSearch(token, listHashMap.get(tokenSearched));
 								subItemsInSearch.addAll(subItems);
-								listHashMap.put(token, subItems);
+								if(subItems.size() > 0) {
+									listHashMap.put(token, subItems);
+								}
 							} else {
 								searchFromStart(token);
 							}
@@ -285,7 +287,9 @@ public class FreshSearchFragment extends Fragment {
 			subItems.addAll(getSubItemsInSearch(token, category.getSubItems()));
 		}
 		subItemsInSearch.addAll(subItems);
-		listHashMap.put(token, subItems);
+		if(subItems.size() > 0) {
+			listHashMap.put(token, subItems);
+		}
 	}
 
 
