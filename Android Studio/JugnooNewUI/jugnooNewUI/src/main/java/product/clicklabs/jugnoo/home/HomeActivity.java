@@ -7140,13 +7140,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
+            try {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     dontCallRefreshDriver = false;
                     callMapTouchedRefreshDrivers();
                 }
-            }, 600);
+            }, 900);
 
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
 
