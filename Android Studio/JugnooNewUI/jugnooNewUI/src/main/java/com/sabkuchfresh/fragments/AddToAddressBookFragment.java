@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,9 +56,8 @@ public class AddToAddressBookFragment extends Fragment {
     MarkerOptions marker;
 
     Button buttonAddToAddressBook;
-    RelativeLayout root;
+    RelativeLayout root, relativeLayoutEdit;
 
-    LinearLayout mapScreenShot;
     EditText editTextLabel, houseNumber, buildingStreetName, area, city, pinCode;
 
     View rootView;
@@ -144,28 +142,6 @@ public class AddToAddressBookFragment extends Fragment {
                         googleMap.getUiSettings().setZoomControlsEnabled(false);
                         googleMap.getUiSettings().setAllGesturesEnabled(false);
 
-                        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                            @Override
-                            public void onMapClick(LatLng latLng) {
-                                try {
-                                    boolean editAddress = false;
-                                    if(activity instanceof AddPlaceActivity){
-                                        editAddress = ((AddPlaceActivity)activity).isEditThisAddress();
-                                        if(editAddress){
-                                            ((AddPlaceActivity)activity).openMapAddress(createAddressBundle(placeId));
-                                        }
-                                    } else if(activity instanceof FreshActivity){
-                                        editAddress = ((FreshActivity)activity).isEditThisAddress();
-                                        if(editAddress){
-                                            ((FreshActivity)activity).openMapAddress(createAddressBundle(placeId));
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-
                         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                             @Override
                             public boolean onMarkerClick(Marker marker) {
@@ -189,14 +165,13 @@ public class AddToAddressBookFragment extends Fragment {
 
 
     private void initComponents() {
-        mapScreenShot = (LinearLayout) rootView.findViewById(R.id.mapScreenShot);
-
         editTextLabel = (EditText) rootView.findViewById(R.id.editTextLabel); editTextLabel.setTypeface(Fonts.mavenRegular(activity));
         houseNumber = (EditText) rootView.findViewById(R.id.edt_houseFlatNo); houseNumber.setTypeface(Fonts.mavenRegular(activity));
         buildingStreetName = (EditText) rootView.findViewById(R.id.edt_buildingStreetName); buildingStreetName.setTypeface(Fonts.mavenRegular(activity));
         area = (EditText) rootView.findViewById(R.id.edt_area); area.setTypeface(Fonts.mavenRegular(activity));
         city = (EditText) rootView.findViewById(R.id.edt_city); city.setTypeface(Fonts.mavenRegular(activity));
         pinCode = (EditText) rootView.findViewById(R.id.edt_pinCode); pinCode.setTypeface(Fonts.mavenRegular(activity));
+        relativeLayoutEdit = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEdit);
 
         buttonAddToAddressBook = (Button) rootView.findViewById(R.id.buttonAddToAddressBook); buttonAddToAddressBook.setTypeface(Fonts.mavenRegular(activity));
 
@@ -268,6 +243,28 @@ public class AddToAddressBookFragment extends Fragment {
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
                 buttonAddToAddressBook.performClick();
                 return true;
+            }
+        });
+
+        relativeLayoutEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    boolean editAddress = false;
+                    if(activity instanceof AddPlaceActivity){
+                        editAddress = ((AddPlaceActivity)activity).isEditThisAddress();
+                        if(editAddress){
+                            ((AddPlaceActivity)activity).openMapAddress(createAddressBundle(placeId));
+                        }
+                    } else if(activity instanceof FreshActivity){
+                        editAddress = ((FreshActivity)activity).isEditThisAddress();
+                        if(editAddress){
+                            ((FreshActivity)activity).openMapAddress(createAddressBundle(placeId));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -354,6 +351,7 @@ public class AddToAddressBookFragment extends Fragment {
         }
 
         buttonAddToAddressBook.setText(editAddress ? R.string.update_address : R.string.confirm);
+        relativeLayoutEdit.setVisibility(editAddress ? View.VISIBLE : View.GONE);
 
     }
 

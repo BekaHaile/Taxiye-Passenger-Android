@@ -113,6 +113,11 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 							@Override
 							public void onDeleteClicked(int position, SubItem subItem) {
 							}
+
+							@Override
+							public boolean checkForMinus(int position, SubItem subItem) {
+								return true;
+							}
 						} ,AppConstant.ListType.HOME, FlurryEventNames.HOME_SCREEN, 1);
 				recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 			}

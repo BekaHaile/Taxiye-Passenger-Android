@@ -156,6 +156,25 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 							checkIfEmpty();
 						}
 					}
+
+					@Override
+					public boolean checkForMinus(int position, SubItem subItem) {
+						if(activity.isMealAddonItemsAvailable()){
+							boolean addOnAdded = false;
+							boolean itemIsAddon = false;
+							for(SubItem si : activity.getProductsResponse().getCategories().get(1).getSubItems()){
+								if(si.getSubItemQuantitySelected() > 0){
+									addOnAdded = true;
+								}
+								if(si.getSubItemId().equals(subItem.getSubItemId())){
+									itemIsAddon = true;
+								}
+							}
+							return !(addOnAdded && !itemIsAddon && subItem.getSubItemQuantitySelected() == 1);
+						} else {
+							return true;
+						}
+					}
 				}, AppConstant.ListType.OTHER, FlurryEventNames.REVIEW_CART, currentGroupId);
 
 

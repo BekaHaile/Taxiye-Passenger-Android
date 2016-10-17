@@ -34,6 +34,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
     private AddOnItemsAdapter addOnItemsAdapter;
     private RecyclerView recyclerViewCategoryItems;
     private RelativeLayout relativeLayoutProceed;
+    private TextView textViewProceed;
 
     private Bus mBus;
 
@@ -41,6 +42,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
     private FreshActivity activity;
 
     private ArrayList<SubItem> mealsAddonData = new ArrayList<>();
+    private int addOnSelectedCount = 0;
 
 
     public MealAddonItemsFragment() {
@@ -71,14 +73,18 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         recyclerViewCategoryItems.setHasFixedSize(false);
 
         relativeLayoutProceed = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutProceed);
-        ((TextView) rootView.findViewById(R.id.textViewProceed)).setTypeface(Fonts.mavenMedium(activity));
+        textViewProceed = (TextView) rootView.findViewById(R.id.textViewProceed); textViewProceed.setTypeface(Fonts.mavenMedium(activity));
 
         try {
             mealsAddonData.clear();
             mealsAddonData.addAll(activity.getProductsResponse().getCategories().get(1).getSubItems());
+            for(SubItem subItem : mealsAddonData){
+                addOnSelectedCount = addOnSelectedCount + subItem.getSubItemQuantitySelected();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        updateBottomBar();
 
         addOnItemsAdapter = new AddOnItemsAdapter(activity, mealsAddonData, this);
         recyclerViewCategoryItems.setAdapter(addOnItemsAdapter);
@@ -133,11 +139,19 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
         activity.updateCartValuesGetTotalPrice();
+        addOnSelectedCount++;
+        updateBottomBar();
     }
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
         activity.updateCartValuesGetTotalPrice();
+        addOnSelectedCount--;
+        updateBottomBar();
+    }
+
+    private void updateBottomBar(){
+        textViewProceed.setText((addOnSelectedCount > 0) ? R.string.proceed : R.string.skip_and_proceed);
     }
 
 }

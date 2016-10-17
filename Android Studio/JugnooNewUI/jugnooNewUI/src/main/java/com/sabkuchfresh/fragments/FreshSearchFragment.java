@@ -138,6 +138,11 @@ public class FreshSearchFragment extends Fragment {
 					public void onDeleteClicked(int position, SubItem subItem) {
 						activity.updateCartValuesGetTotalPrice();
 					}
+
+					@Override
+					public boolean checkForMinus(int position, SubItem subItem) {
+						return true;
+					}
 				}, AppConstant.ListType.OTHER, FlurryEventNames.SEARCH_SCREEN, currentGroupId);
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 

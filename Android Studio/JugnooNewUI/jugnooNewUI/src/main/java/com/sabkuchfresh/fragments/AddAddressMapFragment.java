@@ -80,7 +80,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
     public static final float MAX_ZOOM = 15;
     private static final int MAP_ANIMATE_DURATION = 300;
-    private final double MAP_PAN_DISTANCE = 100;
+    private final double MAP_PAN_DISTANCE = 200;
 
     Button getMyLocation, buttonOk;
     boolean zoomedToMyLoc = false;
@@ -226,6 +226,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             }
         });
 
+        buttonOk.setText(editThisAddress ? R.string.save : R.string.next);
 
         searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
