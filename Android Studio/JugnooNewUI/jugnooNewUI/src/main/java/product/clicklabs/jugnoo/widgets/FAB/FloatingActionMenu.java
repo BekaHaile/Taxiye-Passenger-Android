@@ -12,7 +12,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,54 +26,55 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
-/**
- * Created by ankit on 8/19/16.
- */
 public class FloatingActionMenu extends ViewGroup {
+
     private static final int ANIMATION_DURATION = 300;
-    private static final float CLOSED_PLUS_ROTATION = 0.0F;
-    private static final float OPENED_PLUS_ROTATION_LEFT = -135.0F;
-    private static final float OPENED_PLUS_ROTATION_RIGHT = 135.0F;
+    private static final float CLOSED_PLUS_ROTATION = 0f;
+    private static final float OPENED_PLUS_ROTATION_LEFT = -90f - 45f;
+    private static final float OPENED_PLUS_ROTATION_RIGHT = 90f + 45f;
+
     private static final int OPEN_UP = 0;
     private static final int OPEN_DOWN = 1;
+
     private static final int LABELS_POSITION_LEFT = 0;
     private static final int LABELS_POSITION_RIGHT = 1;
-    private AnimatorSet mOpenAnimatorSet;
-    private AnimatorSet mCloseAnimatorSet;
+
+    private AnimatorSet mOpenAnimatorSet = new AnimatorSet();
+    private AnimatorSet mCloseAnimatorSet = new AnimatorSet();
     private AnimatorSet mIconToggleSet;
-    private int mButtonSpacing;
+
+    private int mButtonSpacing = Utils.dpToPx(getContext(), 0f);
     private FloatingActionButton mMenuButton;
     private int mMaxButtonWidth;
-    private int mLabelsMargin;
-    private int mLabelsVerticalOffset;
+    private int mLabelsMargin = Utils.dpToPx(getContext(), 0f);
+    private int mLabelsVerticalOffset = Utils.dpToPx(getContext(), 0f);
     private int mButtonsCount;
     private boolean mMenuOpened;
     private boolean mIsMenuOpening;
-    private Handler mUiHandler;
+    private Handler mUiHandler = new Handler();
     private int mLabelsShowAnimation;
     private int mLabelsHideAnimation;
-    private int mLabelsPaddingTop;
-    private int mLabelsPaddingRight;
-    private int mLabelsPaddingBottom;
-    private int mLabelsPaddingLeft;
+    private int mLabelsPaddingTop = Utils.dpToPx(getContext(), 4f);
+    private int mLabelsPaddingRight = Utils.dpToPx(getContext(), 8f);
+    private int mLabelsPaddingBottom = Utils.dpToPx(getContext(), 4f);
+    private int mLabelsPaddingLeft = Utils.dpToPx(getContext(), 8f);
     private ColorStateList mLabelsTextColor;
     private float mLabelsTextSize;
-    private int mLabelsCornerRadius;
+    private int mLabelsCornerRadius = Utils.dpToPx(getContext(), 3f);
     private boolean mLabelsShowShadow;
     private int mLabelsColorNormal;
     private int mLabelsColorPressed;
     private int mLabelsColorRipple;
     private boolean mMenuShowShadow;
     private int mMenuShadowColor;
-    private float mMenuShadowRadius;
-    private float mMenuShadowXOffset;
-    private float mMenuShadowYOffset;
+    private float mMenuShadowRadius = 4f;
+    private float mMenuShadowXOffset = 1f;
+    private float mMenuShadowYOffset = 3f;
     private int mMenuColorNormal;
     private int mMenuColorPressed;
     private int mMenuColorRipple;
@@ -79,14 +82,14 @@ public class FloatingActionMenu extends ViewGroup {
     private int mAnimationDelayPerItem;
     private Interpolator mOpenInterpolator;
     private Interpolator mCloseInterpolator;
-    private boolean mIsAnimated;
+    private boolean mIsAnimated = true;
     private boolean mLabelsSingleLine;
     private int mLabelsEllipsize;
     private int mLabelsMaxLines;
     private int mMenuFabSize;
     private int mLabelsStyle;
     private Typeface mCustomTypefaceFromFont;
-    private boolean mIconAnimated;
+    private boolean mIconAnimated = true;
     private ImageView mImageToggle;
     private Animation mMenuButtonShowAnimation;
     private Animation mMenuButtonHideAnimation;
@@ -95,21 +98,23 @@ public class FloatingActionMenu extends ViewGroup {
     private boolean mIsMenuButtonAnimationRunning;
     private boolean mIsSetClosedOnTouchOutside;
     private int mOpenDirection;
-    private FloatingActionMenu.OnMenuToggleListener mToggleListener;
+    private OnMenuToggleListener mToggleListener;
+
     private ValueAnimator mShowBackgroundAnimator;
     private ValueAnimator mHideBackgroundAnimator;
     private int mBackgroundColor;
+
     private int mLabelsPosition;
     private Context mLabelsContext;
     private String mMenuLabelText;
     private boolean mUsingMenuLabel;
 
-    public OnMenuToggleListener getmToggleListener() {
-        return mToggleListener;
+    public interface OnMenuToggleListener {
+        void onMenuToggle(boolean opened);
     }
 
     public FloatingActionMenu(Context context) {
-        this(context, (AttributeSet)null);
+        this(context, null);
     }
 
     public FloatingActionMenu(Context context, AttributeSet attrs) {
@@ -118,373 +123,418 @@ public class FloatingActionMenu extends ViewGroup {
 
     public FloatingActionMenu(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.mOpenAnimatorSet = new AnimatorSet();
-        this.mCloseAnimatorSet = new AnimatorSet();
-        this.mButtonSpacing = Utils.dpToPx(this.getContext(), 0.0F);
-        this.mLabelsMargin = Utils.dpToPx(this.getContext(), 0.0F);
-        this.mLabelsVerticalOffset = Utils.dpToPx(this.getContext(), 0.0F);
-        this.mUiHandler = new Handler();
-        this.mLabelsPaddingTop = Utils.dpToPx(this.getContext(), 4.0F);
-        this.mLabelsPaddingRight = Utils.dpToPx(this.getContext(), 8.0F);
-        this.mLabelsPaddingBottom = Utils.dpToPx(this.getContext(), 4.0F);
-        this.mLabelsPaddingLeft = Utils.dpToPx(this.getContext(), 8.0F);
-        this.mLabelsCornerRadius = Utils.dpToPx(this.getContext(), 3.0F);
-        this.mMenuShadowRadius = 4.0F;
-        this.mMenuShadowXOffset = 1.0F;
-        this.mMenuShadowYOffset = 3.0F;
-        this.mIsAnimated = true;
-        this.mIconAnimated = true;
-        this.init(context, attrs);
+        init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
         TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.FloatingActionMenu, 0, 0);
-        this.mButtonSpacing = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_buttonSpacing, this.mButtonSpacing);
-        this.mLabelsMargin = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_margin, this.mLabelsMargin);
-        this.mLabelsPosition = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_position, 0);
-        this.mLabelsShowAnimation = attr.getResourceId(R.styleable.FloatingActionMenu_menu_labels_showAnimation, this.mLabelsPosition == 0? R.anim.fab_slide_in_from_right: R.anim.fab_slide_in_from_left);
-        this.mLabelsHideAnimation = attr.getResourceId(R.styleable.FloatingActionMenu_menu_labels_hideAnimation, this.mLabelsPosition == 0? R.anim.fab_slide_out_to_right: R.anim.fab_slide_out_to_left);
-        this.mLabelsPaddingTop = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingTop, this.mLabelsPaddingTop);
-        this.mLabelsPaddingRight = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingRight, this.mLabelsPaddingRight);
-        this.mLabelsPaddingBottom = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingBottom, this.mLabelsPaddingBottom);
-        this.mLabelsPaddingLeft = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingLeft, this.mLabelsPaddingLeft);
-        this.mLabelsTextColor = attr.getColorStateList(R.styleable.FloatingActionMenu_menu_labels_textColor);
-        if(this.mLabelsTextColor == null) {
-            this.mLabelsTextColor = ColorStateList.valueOf(-1);
+        mButtonSpacing = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_buttonSpacing, mButtonSpacing);
+        mLabelsMargin = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_margin, mLabelsMargin);
+        mLabelsPosition = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_position, LABELS_POSITION_LEFT);
+        mLabelsShowAnimation = attr.getResourceId(R.styleable.FloatingActionMenu_menu_labels_showAnimation,
+                mLabelsPosition == LABELS_POSITION_LEFT ? R.anim.fab_slide_in_from_right : R.anim.fab_slide_in_from_left);
+        mLabelsHideAnimation = attr.getResourceId(R.styleable.FloatingActionMenu_menu_labels_hideAnimation,
+                mLabelsPosition == LABELS_POSITION_LEFT ? R.anim.fab_slide_out_to_right : R.anim.fab_slide_out_to_left);
+        mLabelsPaddingTop = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingTop, mLabelsPaddingTop);
+        mLabelsPaddingRight = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingRight, mLabelsPaddingRight);
+        mLabelsPaddingBottom = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingBottom, mLabelsPaddingBottom);
+        mLabelsPaddingLeft = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_paddingLeft, mLabelsPaddingLeft);
+        mLabelsTextColor = attr.getColorStateList(R.styleable.FloatingActionMenu_menu_labels_textColor);
+        // set default value if null same as for textview
+        if (mLabelsTextColor == null) {
+            mLabelsTextColor = ColorStateList.valueOf(Color.WHITE);
         }
-
-        this.mLabelsTextSize = attr.getDimension(R.styleable.FloatingActionMenu_menu_labels_textSize, this.getResources().getDimension(R.dimen.labels_text_size));
-        this.mLabelsCornerRadius = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_cornerRadius, this.mLabelsCornerRadius);
-        this.mLabelsShowShadow = attr.getBoolean(R.styleable.FloatingActionMenu_menu_labels_showShadow, true);
-        this.mLabelsColorNormal = attr.getColor(R.styleable.FloatingActionMenu_menu_labels_colorNormal, -13421773);
-        this.mLabelsColorPressed = attr.getColor(R.styleable.FloatingActionMenu_menu_labels_colorPressed, -12303292);
-        this.mLabelsColorRipple = attr.getColor(R.styleable.FloatingActionMenu_menu_labels_colorRipple, 1728053247);
-        this.mMenuShowShadow = attr.getBoolean(R.styleable.FloatingActionMenu_menu_showShadow, true);
-        this.mMenuShadowColor = attr.getColor(R.styleable.FloatingActionMenu_menu_shadowColor, 1711276032);
-        this.mMenuShadowRadius = attr.getDimension(R.styleable.FloatingActionMenu_menu_shadowRadius, this.mMenuShadowRadius);
-        this.mMenuShadowXOffset = attr.getDimension(R.styleable.FloatingActionMenu_menu_shadowXOffset, this.mMenuShadowXOffset);
-        this.mMenuShadowYOffset = attr.getDimension(R.styleable.FloatingActionMenu_menu_shadowYOffset, this.mMenuShadowYOffset);
-        this.mMenuColorNormal = attr.getColor(R.styleable.FloatingActionMenu_menu_colorNormal, -2473162);
-        this.mMenuColorPressed = attr.getColor(R.styleable.FloatingActionMenu_menu_colorPressed, -1617853);
-        this.mMenuColorRipple = attr.getColor(R.styleable.FloatingActionMenu_menu_colorRipple, -1711276033);
-        this.mAnimationDelayPerItem = attr.getInt(R.styleable.FloatingActionMenu_menu_animationDelayPerItem, 50);
-        this.mIcon = attr.getDrawable(R.styleable.FloatingActionMenu_menu_icon);
-        if(this.mIcon == null) {
-            this.mIcon = this.getResources().getDrawable(R.drawable.fab_add);
+        mLabelsTextSize = attr.getDimension(R.styleable.FloatingActionMenu_menu_labels_textSize, getResources().getDimension(R.dimen.labels_text_size));
+        mLabelsCornerRadius = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_cornerRadius, mLabelsCornerRadius);
+        mLabelsShowShadow = attr.getBoolean(R.styleable.FloatingActionMenu_menu_labels_showShadow, true);
+        mLabelsColorNormal = attr.getColor(R.styleable.FloatingActionMenu_menu_labels_colorNormal, 0xFF333333);
+        mLabelsColorPressed = attr.getColor(R.styleable.FloatingActionMenu_menu_labels_colorPressed, 0xFF444444);
+        mLabelsColorRipple = attr.getColor(R.styleable.FloatingActionMenu_menu_labels_colorRipple, 0x66FFFFFF);
+        mMenuShowShadow = attr.getBoolean(R.styleable.FloatingActionMenu_menu_showShadow, true);
+        mMenuShadowColor = attr.getColor(R.styleable.FloatingActionMenu_menu_shadowColor, 0x66000000);
+        mMenuShadowRadius = attr.getDimension(R.styleable.FloatingActionMenu_menu_shadowRadius, mMenuShadowRadius);
+        mMenuShadowXOffset = attr.getDimension(R.styleable.FloatingActionMenu_menu_shadowXOffset, mMenuShadowXOffset);
+        mMenuShadowYOffset = attr.getDimension(R.styleable.FloatingActionMenu_menu_shadowYOffset, mMenuShadowYOffset);
+        mMenuColorNormal = attr.getColor(R.styleable.FloatingActionMenu_menu_colorNormal, 0xFFDA4336);
+        mMenuColorPressed = attr.getColor(R.styleable.FloatingActionMenu_menu_colorPressed, 0xFFE75043);
+        mMenuColorRipple = attr.getColor(R.styleable.FloatingActionMenu_menu_colorRipple, 0x99FFFFFF);
+        mAnimationDelayPerItem = attr.getInt(R.styleable.FloatingActionMenu_menu_animationDelayPerItem, 50);
+        mIcon = attr.getDrawable(R.styleable.FloatingActionMenu_menu_icon);
+        if (mIcon == null) {
+            mIcon = getResources().getDrawable(R.drawable.fab_add);
         }
-
-        this.mLabelsSingleLine = attr.getBoolean(R.styleable.FloatingActionMenu_menu_labels_singleLine, false);
-        this.mLabelsEllipsize = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_ellipsize, 0);
-        this.mLabelsMaxLines = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_maxLines, -1);
-        this.mMenuFabSize = attr.getInt(R.styleable.FloatingActionMenu_menu_fab_size, 0);
-        this.mLabelsStyle = attr.getResourceId(R.styleable.FloatingActionMenu_menu_labels_style, 0);
+        mLabelsSingleLine = attr.getBoolean(R.styleable.FloatingActionMenu_menu_labels_singleLine, false);
+        mLabelsEllipsize = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_ellipsize, 0);
+        mLabelsMaxLines = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_maxLines, -1);
+        mMenuFabSize = attr.getInt(R.styleable.FloatingActionMenu_menu_fab_size, FloatingActionButton.SIZE_NORMAL);
+        mLabelsStyle = attr.getResourceId(R.styleable.FloatingActionMenu_menu_labels_style, 0);
         String customFont = attr.getString(R.styleable.FloatingActionMenu_menu_labels_customFont);
-
         try {
-            if(!TextUtils.isEmpty(customFont)) {
-                this.mCustomTypefaceFromFont = Typeface.createFromAsset(this.getContext().getAssets(), customFont);
+            if (!TextUtils.isEmpty(customFont)) {
+                mCustomTypefaceFromFont = Typeface.createFromAsset(getContext().getAssets(), customFont);
             }
-        } catch (RuntimeException var6) {
-            throw new IllegalArgumentException("Unable to load specified custom font: " + customFont, var6);
+        } catch (RuntimeException ex) {
+            throw new IllegalArgumentException("Unable to load specified custom font: " + customFont, ex);
+        }
+        mOpenDirection = attr.getInt(R.styleable.FloatingActionMenu_menu_openDirection, OPEN_UP);
+        mBackgroundColor = attr.getColor(R.styleable.FloatingActionMenu_menu_backgroundColor, Color.TRANSPARENT);
+
+        if (attr.hasValue(R.styleable.FloatingActionMenu_menu_fab_label)) {
+            mUsingMenuLabel = true;
+            mMenuLabelText = attr.getString(R.styleable.FloatingActionMenu_menu_fab_label);
         }
 
-        this.mOpenDirection = attr.getInt(R.styleable.FloatingActionMenu_menu_openDirection, 0);
-        this.mBackgroundColor = attr.getColor(R.styleable.FloatingActionMenu_menu_backgroundColor, 0);
-        if(attr.hasValue(R.styleable.FloatingActionMenu_menu_fab_label)) {
-            this.mUsingMenuLabel = true;
-            this.mMenuLabelText = attr.getString(R.styleable.FloatingActionMenu_menu_fab_label);
-        }
-
-        if(attr.hasValue(R.styleable.FloatingActionMenu_menu_labels_padding)) {
+        if (attr.hasValue(R.styleable.FloatingActionMenu_menu_labels_padding)) {
             int padding = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_padding, 0);
-            this.initPadding(padding);
+            initPadding(padding);
         }
 
-        this.mOpenInterpolator = new OvershootInterpolator();
-        this.mCloseInterpolator = new AnticipateInterpolator();
-        this.mLabelsContext = new ContextThemeWrapper(this.getContext(), this.mLabelsStyle);
-        this.initBackgroundDimAnimation();
-        this.createMenuButton();
-        this.initMenuButtonAnimations(attr);
+        mOpenInterpolator = new OvershootInterpolator();
+        mCloseInterpolator = new AnticipateInterpolator();
+        mLabelsContext = new ContextThemeWrapper(getContext(), mLabelsStyle);
+
+        initBackgroundDimAnimation();
+        createMenuButton();
+        initMenuButtonAnimations(attr);
+
         attr.recycle();
     }
 
     private void initMenuButtonAnimations(TypedArray attr) {
         int showResId = attr.getResourceId(R.styleable.FloatingActionMenu_menu_fab_show_animation, R.anim.fab_scale_up);
-        this.setMenuButtonShowAnimation(AnimationUtils.loadAnimation(this.getContext(), showResId));
-        this.mImageToggleShowAnimation = AnimationUtils.loadAnimation(this.getContext(), showResId);
-        mImageToggleShowAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-                Log.d("start animation", "start Animation");
-            }
+        setMenuButtonShowAnimation(AnimationUtils.loadAnimation(getContext(), showResId));
+        mImageToggleShowAnimation = AnimationUtils.loadAnimation(getContext(), showResId);
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                //mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_down));
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
         int hideResId = attr.getResourceId(R.styleable.FloatingActionMenu_menu_fab_hide_animation, R.anim.fab_scale_down);
-        this.setMenuButtonHideAnimation(AnimationUtils.loadAnimation(this.getContext(), hideResId));
-        this.mImageToggleHideAnimation = AnimationUtils.loadAnimation(this.getContext(), hideResId);
+        setMenuButtonHideAnimation(AnimationUtils.loadAnimation(getContext(), hideResId));
+        mImageToggleHideAnimation = AnimationUtils.loadAnimation(getContext(), hideResId);
     }
 
     private void initBackgroundDimAnimation() {
-        int maxAlpha = Color.alpha(this.mBackgroundColor);
-        final int red = Color.red(this.mBackgroundColor);
-        final int green = Color.green(this.mBackgroundColor);
-        final int blue = Color.blue(this.mBackgroundColor);
-        this.mShowBackgroundAnimator = ValueAnimator.ofInt(new int[]{0, maxAlpha});
-        this.mShowBackgroundAnimator.setDuration(300L);
-        this.mShowBackgroundAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        final int maxAlpha = Color.alpha(mBackgroundColor);
+        final int red = Color.red(mBackgroundColor);
+        final int green = Color.green(mBackgroundColor);
+        final int blue = Color.blue(mBackgroundColor);
+
+        mShowBackgroundAnimator = ValueAnimator.ofInt(0, maxAlpha);
+        mShowBackgroundAnimator.setDuration(ANIMATION_DURATION);
+        mShowBackgroundAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                Integer alpha = (Integer)animation.getAnimatedValue();
-                FloatingActionMenu.this.setBackgroundColor(Color.argb(alpha.intValue(), red, green, blue));
+                Integer alpha = (Integer) animation.getAnimatedValue();
+                setBackgroundColor(Color.argb(alpha, red, green, blue));
             }
         });
-        this.mHideBackgroundAnimator = ValueAnimator.ofInt(new int[]{maxAlpha, 0});
-        this.mHideBackgroundAnimator.setDuration(300L);
-        this.mHideBackgroundAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+        mHideBackgroundAnimator = ValueAnimator.ofInt(maxAlpha, 0);
+        mHideBackgroundAnimator.setDuration(ANIMATION_DURATION);
+        mHideBackgroundAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                Integer alpha = (Integer)animation.getAnimatedValue();
-                FloatingActionMenu.this.setBackgroundColor(Color.argb(alpha.intValue(), red, green, blue));
+                Integer alpha = (Integer) animation.getAnimatedValue();
+                setBackgroundColor(Color.argb(alpha, red, green, blue));
             }
         });
     }
 
     private boolean isBackgroundEnabled() {
-        return this.mBackgroundColor != 0;
+        return mBackgroundColor != Color.TRANSPARENT;
     }
 
     private void initPadding(int padding) {
-        this.mLabelsPaddingTop = padding;
-        this.mLabelsPaddingRight = padding;
-        this.mLabelsPaddingBottom = padding;
-        this.mLabelsPaddingLeft = padding;
+        mLabelsPaddingTop = padding;
+        mLabelsPaddingRight = padding;
+        mLabelsPaddingBottom = padding;
+        mLabelsPaddingLeft = padding;
     }
 
     private void createMenuButton() {
-        this.mMenuButton = new FloatingActionButton(this.getContext());
-        this.mMenuButton.mShowShadow = this.mMenuShowShadow;
-        if(this.mMenuShowShadow) {
-            this.mMenuButton.mShadowRadius = Utils.dpToPx(this.getContext(), this.mMenuShadowRadius);
-            this.mMenuButton.mShadowXOffset = Utils.dpToPx(this.getContext(), this.mMenuShadowXOffset);
-            this.mMenuButton.mShadowYOffset = Utils.dpToPx(this.getContext(), this.mMenuShadowYOffset);
-        }
+        mMenuButton = new FloatingActionButton(getContext());
 
-        this.mMenuButton.setColors(this.mMenuColorNormal, this.mMenuColorPressed, this.mMenuColorRipple);
-        this.mMenuButton.mShadowColor = this.mMenuShadowColor;
-        this.mMenuButton.mFabSize = this.mMenuFabSize;
-        this.mMenuButton.updateBackground();
-        this.mMenuButton.setLabelText(this.mMenuLabelText);
-        this.mImageToggle = new ImageView(this.getContext());
-        this.mImageToggle.setImageDrawable(this.mIcon);
-        this.addView(this.mMenuButton, super.generateDefaultLayoutParams());
-        this.addView(this.mImageToggle);
-        this.createDefaultIconAnimation();
+        mMenuButton.mShowShadow = mMenuShowShadow;
+        if (mMenuShowShadow) {
+            mMenuButton.mShadowRadius = Utils.dpToPx(getContext(), mMenuShadowRadius);
+            mMenuButton.mShadowXOffset = Utils.dpToPx(getContext(), mMenuShadowXOffset);
+            mMenuButton.mShadowYOffset = Utils.dpToPx(getContext(), mMenuShadowYOffset);
+        }
+        mMenuButton.setColors(mMenuColorNormal, mMenuColorPressed, mMenuColorRipple);
+        mMenuButton.mShadowColor = mMenuShadowColor;
+        mMenuButton.mFabSize = mMenuFabSize;
+        mMenuButton.updateBackground();
+        mMenuButton.setLabelText(mMenuLabelText);
+
+        mImageToggle = new ImageView(getContext());
+        mImageToggle.setImageDrawable(mIcon);
+
+        addView(mMenuButton, super.generateDefaultLayoutParams());
+        addView(mImageToggle);
+
+        createDefaultIconAnimation();
     }
 
     private void createDefaultIconAnimation() {
         float collapseAngle;
         float expandAngle;
-        if(this.mOpenDirection == 0) {
-            collapseAngle = this.mLabelsPosition == 0?-135.0F:135.0F;
-            expandAngle = this.mLabelsPosition == 0?-135.0F:135.0F;
+        if (mOpenDirection == OPEN_UP) {
+            collapseAngle = mLabelsPosition == LABELS_POSITION_LEFT ? OPENED_PLUS_ROTATION_LEFT : OPENED_PLUS_ROTATION_RIGHT;
+            expandAngle = mLabelsPosition == LABELS_POSITION_LEFT ? OPENED_PLUS_ROTATION_LEFT : OPENED_PLUS_ROTATION_RIGHT;
         } else {
-            collapseAngle = this.mLabelsPosition == 0?135.0F:-135.0F;
-            expandAngle = this.mLabelsPosition == 0?135.0F:-135.0F;
+            collapseAngle = mLabelsPosition == LABELS_POSITION_LEFT ? OPENED_PLUS_ROTATION_RIGHT : OPENED_PLUS_ROTATION_LEFT;
+            expandAngle = mLabelsPosition == LABELS_POSITION_LEFT ? OPENED_PLUS_ROTATION_RIGHT : OPENED_PLUS_ROTATION_LEFT;
         }
 
-        ObjectAnimator collapseAnimator = ObjectAnimator.ofFloat(this.mImageToggle, "rotation", new float[]{collapseAngle, 0.0F});
-        ObjectAnimator expandAnimator = ObjectAnimator.ofFloat(this.mImageToggle, "rotation", new float[]{0.0F, expandAngle});
-        this.mOpenAnimatorSet.play(expandAnimator);
-        this.mCloseAnimatorSet.play(collapseAnimator);
-        this.mOpenAnimatorSet.setInterpolator(this.mOpenInterpolator);
-        this.mCloseAnimatorSet.setInterpolator(this.mCloseInterpolator);
-        this.mOpenAnimatorSet.setDuration(300L);
-        this.mCloseAnimatorSet.setDuration(300L);
+        ObjectAnimator collapseAnimator = ObjectAnimator.ofFloat(
+                mImageToggle,
+                "rotation",
+                collapseAngle,
+                CLOSED_PLUS_ROTATION
+        );
 
+        ObjectAnimator expandAnimator = ObjectAnimator.ofFloat(
+                mImageToggle,
+                "rotation",
+                CLOSED_PLUS_ROTATION,
+                expandAngle
+        );
+
+        mOpenAnimatorSet.play(expandAnimator);
+        mCloseAnimatorSet.play(collapseAnimator);
+
+        mOpenAnimatorSet.setInterpolator(mOpenInterpolator);
+        mCloseAnimatorSet.setInterpolator(mCloseInterpolator);
+
+        mOpenAnimatorSet.setDuration(ANIMATION_DURATION);
+        mCloseAnimatorSet.setDuration(ANIMATION_DURATION);
     }
 
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        boolean width = false;
+        int width = 0;
         int height = 0;
-        this.mMaxButtonWidth = 0;
+        mMaxButtonWidth = 0;
         int maxLabelWidth = 0;
-        this.measureChildWithMargins(this.mImageToggle, widthMeasureSpec, 0, heightMeasureSpec, 0);
 
-        int i;
-        for(i = 0; i < this.mButtonsCount; ++i) {
-            View usedWidth = this.getChildAt(i);
-            if(usedWidth.getVisibility() != 8 && usedWidth != this.mImageToggle) {
-                this.measureChildWithMargins(usedWidth, widthMeasureSpec, 0, heightMeasureSpec, 0);
-                this.mMaxButtonWidth = Math.max(this.mMaxButtonWidth, usedWidth.getMeasuredWidth());
+        measureChildWithMargins(mImageToggle, widthMeasureSpec, 0, heightMeasureSpec, 0);
+
+        for (int i = 0; i < mButtonsCount; i++) {
+            View child = getChildAt(i);
+
+            if (child.getVisibility() == GONE || child == mImageToggle) continue;
+
+            measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
+            mMaxButtonWidth = Math.max(mMaxButtonWidth, child.getMeasuredWidth());
+        }
+
+        for (int i = 0; i < mButtonsCount; i++) {
+            int usedWidth = 0;
+            View child = getChildAt(i);
+
+            if (child.getVisibility() == GONE || child == mImageToggle) continue;
+
+            usedWidth += child.getMeasuredWidth();
+            height += child.getMeasuredHeight();
+
+            Label label = (Label) child.getTag(R.id.fab_label);
+            if (label != null) {
+                int labelOffset = (mMaxButtonWidth - child.getMeasuredWidth()) / (mUsingMenuLabel ? 1 : 2);
+                int labelUsedWidth = child.getMeasuredWidth() + label.calculateShadowWidth() + mLabelsMargin + labelOffset;
+                measureChildWithMargins(label, widthMeasureSpec, labelUsedWidth, heightMeasureSpec, 0);
+                usedWidth += label.getMeasuredWidth();
+                maxLabelWidth = Math.max(maxLabelWidth, usedWidth + labelOffset);
             }
         }
 
-        for(i = 0; i < this.mButtonsCount; ++i) {
-            byte var13 = 0;
-            View child = this.getChildAt(i);
-            if(child.getVisibility() != 8 && child != this.mImageToggle) {
-                int var14 = var13 + child.getMeasuredWidth();
-                height += child.getMeasuredHeight();
-                Label label = (Label)child.getTag(R.id.fab_label);
-                if(label != null) {
-                    int labelOffset = (this.mMaxButtonWidth - child.getMeasuredWidth()) / (this.mUsingMenuLabel?1:2);
-                    int labelUsedWidth = child.getMeasuredWidth() + label.calculateShadowWidth() + this.mLabelsMargin + labelOffset;
-                    this.measureChildWithMargins(label, widthMeasureSpec, labelUsedWidth, heightMeasureSpec, 0);
-                    var14 += label.getMeasuredWidth();
-                    maxLabelWidth = Math.max(maxLabelWidth, var14 + labelOffset);
-                }
-            }
+        width = Math.max(mMaxButtonWidth, maxLabelWidth + mLabelsMargin) + getPaddingLeft() + getPaddingRight();
+
+        height += mButtonSpacing * (mButtonsCount - 1) + getPaddingTop() + getPaddingBottom();
+        height = adjustForOvershoot(height);
+
+        if (getLayoutParams().width == LayoutParams.MATCH_PARENT) {
+            width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         }
 
-        int var12 = Math.max(this.mMaxButtonWidth, maxLabelWidth + this.mLabelsMargin) + this.getPaddingLeft() + this.getPaddingRight();
-        height += this.mButtonSpacing * (this.mButtonsCount - 1) + this.getPaddingTop() + this.getPaddingBottom();
-        height = this.adjustForOvershoot(height);
-        if(this.getLayoutParams().width == -1) {
-            var12 = getDefaultSize(this.getSuggestedMinimumWidth(), widthMeasureSpec);
+        if (getLayoutParams().height == LayoutParams.MATCH_PARENT) {
+            height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         }
 
-        if(this.getLayoutParams().height == -1) {
-            height = getDefaultSize(this.getSuggestedMinimumHeight(), heightMeasureSpec);
-        }
-
-        this.setMeasuredDimension(var12, height);
+        setMeasuredDimension(width, height);
     }
 
+    @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        int buttonsHorizontalCenter = this.mLabelsPosition == 0?r - l - this.mMaxButtonWidth / 2 - this.getPaddingRight():this.mMaxButtonWidth / 2 + this.getPaddingLeft();
-        boolean openUp = this.mOpenDirection == 0;
-        int menuButtonTop = openUp?b - t - this.mMenuButton.getMeasuredHeight() - this.getPaddingBottom():this.getPaddingTop();
-        int menuButtonLeft = buttonsHorizontalCenter - this.mMenuButton.getMeasuredWidth() / 2;
-        this.mMenuButton.layout(menuButtonLeft, menuButtonTop, menuButtonLeft + this.mMenuButton.getMeasuredWidth(), menuButtonTop + this.mMenuButton.getMeasuredHeight());
-        int imageLeft = buttonsHorizontalCenter - this.mImageToggle.getMeasuredWidth() / 2;
-        int imageTop = menuButtonTop + this.mMenuButton.getMeasuredHeight() / 2 - this.mImageToggle.getMeasuredHeight() / 2;
-        this.mImageToggle.layout(imageLeft, imageTop, imageLeft + this.mImageToggle.getMeasuredWidth(), imageTop + this.mImageToggle.getMeasuredHeight());
-        int nextY = openUp?menuButtonTop + this.mMenuButton.getMeasuredHeight() + this.mButtonSpacing:menuButtonTop;
+        int buttonsHorizontalCenter = mLabelsPosition == LABELS_POSITION_LEFT
+                ? r - l - mMaxButtonWidth / 2 - getPaddingRight()
+                : mMaxButtonWidth / 2 + getPaddingLeft();
+        boolean openUp = mOpenDirection == OPEN_UP;
 
-        for(int i = this.mButtonsCount - 1; i >= 0; --i) {
-            View child = this.getChildAt(i);
-            if(child != this.mImageToggle) {
-                FloatingActionButton fab = (FloatingActionButton)child;
-                if(fab.getVisibility() != 8) {
-                    int childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2;
-                    int childY = openUp?nextY - fab.getMeasuredHeight() - this.mButtonSpacing:nextY;
-                    if(fab != this.mMenuButton) {
-                        fab.layout(childX, childY, childX + fab.getMeasuredWidth(), childY + fab.getMeasuredHeight());
-                        if(!this.mIsMenuOpening) {
-                            fab.hide(false);
-                        }
-                    }
+        int menuButtonTop = openUp
+                ? b - t - mMenuButton.getMeasuredHeight() - getPaddingBottom()
+                : getPaddingTop();
+        int menuButtonLeft = buttonsHorizontalCenter - mMenuButton.getMeasuredWidth() / 2;
 
-                    View label = (View)fab.getTag(R.id.fab_label);
-                    if(label != null) {
-                        int labelsOffset = (this.mUsingMenuLabel?this.mMaxButtonWidth / 2:fab.getMeasuredWidth() / 2) + this.mLabelsMargin;
-                        int labelXNearButton = this.mLabelsPosition == 0?buttonsHorizontalCenter - labelsOffset:buttonsHorizontalCenter + labelsOffset;
-                        int labelXAwayFromButton = this.mLabelsPosition == 0?labelXNearButton - label.getMeasuredWidth():labelXNearButton + label.getMeasuredWidth();
-                        int labelLeft = this.mLabelsPosition == 0?labelXAwayFromButton:labelXNearButton;
-                        int labelRight = this.mLabelsPosition == 0?labelXNearButton:labelXAwayFromButton;
-                        int labelTop = childY - this.mLabelsVerticalOffset + (fab.getMeasuredHeight() - label.getMeasuredHeight()) / 2;
-                        label.layout(labelLeft, labelTop, labelRight, labelTop + label.getMeasuredHeight());
-                        if(!this.mIsMenuOpening) {
-                            label.setVisibility(4);
-                        }
-                    }
+        mMenuButton.layout(menuButtonLeft, menuButtonTop, menuButtonLeft + mMenuButton.getMeasuredWidth(),
+                menuButtonTop + mMenuButton.getMeasuredHeight());
 
-                    nextY = openUp?childY - this.mButtonSpacing:childY + child.getMeasuredHeight() + this.mButtonSpacing;
+        int imageLeft = buttonsHorizontalCenter - mImageToggle.getMeasuredWidth() / 2;
+        int imageTop = menuButtonTop + mMenuButton.getMeasuredHeight() / 2 - mImageToggle.getMeasuredHeight() / 2;
+
+        mImageToggle.layout(imageLeft, imageTop, imageLeft + mImageToggle.getMeasuredWidth(),
+                imageTop + mImageToggle.getMeasuredHeight());
+
+        int nextY = openUp
+                ? menuButtonTop + mMenuButton.getMeasuredHeight() + mButtonSpacing
+                : menuButtonTop;
+
+        for (int i = mButtonsCount - 1; i >= 0; i--) {
+            View child = getChildAt(i);
+
+            if (child == mImageToggle) continue;
+
+            FloatingActionButton fab = (FloatingActionButton) child;
+
+            if (fab.getVisibility() == GONE) continue;
+
+            int childX = buttonsHorizontalCenter - fab.getMeasuredWidth() / 2;
+            int childY = openUp ? nextY - fab.getMeasuredHeight() - mButtonSpacing : nextY;
+
+            if (fab != mMenuButton) {
+                fab.layout(childX, childY, childX + fab.getMeasuredWidth(),
+                        childY + fab.getMeasuredHeight());
+
+                if (!mIsMenuOpening) {
+                    fab.hide(false);
                 }
             }
-        }
 
+            View label = (View) fab.getTag(R.id.fab_label);
+            if (label != null) {
+                int labelsOffset = (mUsingMenuLabel ? mMaxButtonWidth / 2 : fab.getMeasuredWidth() / 2) + mLabelsMargin;
+                int labelXNearButton = mLabelsPosition == LABELS_POSITION_LEFT
+                        ? buttonsHorizontalCenter - labelsOffset
+                        : buttonsHorizontalCenter + labelsOffset;
+
+                int labelXAwayFromButton = mLabelsPosition == LABELS_POSITION_LEFT
+                        ? labelXNearButton - label.getMeasuredWidth()
+                        : labelXNearButton + label.getMeasuredWidth();
+
+                int labelLeft = mLabelsPosition == LABELS_POSITION_LEFT
+                        ? labelXAwayFromButton
+                        : labelXNearButton;
+
+                int labelRight = mLabelsPosition == LABELS_POSITION_LEFT
+                        ? labelXNearButton
+                        : labelXAwayFromButton;
+
+                int labelTop = childY - mLabelsVerticalOffset + (fab.getMeasuredHeight()
+                        - label.getMeasuredHeight()) / 2;
+
+                label.layout(labelLeft, labelTop, labelRight, labelTop + label.getMeasuredHeight());
+
+                if (!mIsMenuOpening) {
+                    label.setVisibility(INVISIBLE);
+                }
+            }
+
+            nextY = openUp
+                    ? childY - mButtonSpacing
+                    : childY + child.getMeasuredHeight() + mButtonSpacing;
+        }
     }
 
     private int adjustForOvershoot(int dimension) {
-        return (int)((double)dimension * 0.03D + (double)dimension);
+        return (int) (dimension * 0.03 + dimension);
     }
 
+    @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        this.bringChildToFront(this.mMenuButton);
-        this.bringChildToFront(this.mImageToggle);
-        this.mButtonsCount = this.getChildCount();
-        this.createLabels();
+        bringChildToFront(mMenuButton);
+        bringChildToFront(mImageToggle);
+        mButtonsCount = getChildCount();
+        createLabels();
     }
 
     private void createLabels() {
-        for(int i = 0; i < this.mButtonsCount; ++i) {
-            if(this.getChildAt(i) != this.mImageToggle) {
-                FloatingActionButton fab = (FloatingActionButton)this.getChildAt(i);
-                if(fab.getTag(R.id.fab_label) == null) {
-                    this.addLabel(fab);
-                    if(fab == this.mMenuButton) {
-                        this.mMenuButton.setOnClickListener(new OnClickListener() {
-                            public void onClick(View v) {
-                                FloatingActionMenu.this.toggle(FloatingActionMenu.this.mIsAnimated);
-                            }
-                        });
+        for (int i = 0; i < mButtonsCount; i++) {
+
+            if (getChildAt(i) == mImageToggle) continue;
+
+            final FloatingActionButton fab = (FloatingActionButton) getChildAt(i);
+
+            if (fab.getTag(R.id.fab_label) != null) continue;
+
+            addLabel(fab);
+
+            if (fab == mMenuButton) {
+                mMenuButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggle(mIsAnimated);
                     }
-                }
+                });
             }
         }
-
     }
 
     private void addLabel(FloatingActionButton fab) {
         String text = fab.getLabelText();
-        if(!TextUtils.isEmpty(text)) {
-            Label label = new Label(this.mLabelsContext);
-            label.setClickable(true);
-            label.setFab(fab);
-            label.setShowAnimation(AnimationUtils.loadAnimation(this.getContext(), this.mLabelsShowAnimation));
-            label.setHideAnimation(AnimationUtils.loadAnimation(this.getContext(), this.mLabelsHideAnimation));
-            if(this.mLabelsStyle > 0) {
-                label.setTextAppearance(this.getContext(), this.mLabelsStyle);
-                label.setShowShadow(false);
-                label.setUsingStyle(true);
-            } else {
-                label.setColors(this.mLabelsColorNormal, this.mLabelsColorPressed, this.mLabelsColorRipple);
-                label.setShowShadow(this.mLabelsShowShadow);
-                label.setCornerRadius(this.mLabelsCornerRadius);
-                if(this.mLabelsEllipsize > 0) {
-                    this.setLabelEllipsize(label);
-                }
 
-                label.setMaxLines(this.mLabelsMaxLines);
-                label.updateBackground();
-                label.setTextSize(0, this.mLabelsTextSize);
-                label.setTextColor(this.mLabelsTextColor);
-                int left = this.mLabelsPaddingLeft;
-                int top = this.mLabelsPaddingTop;
-                if(this.mLabelsShowShadow) {
-                    left += fab.getShadowRadius() + Math.abs(fab.getShadowXOffset());
-                    top += fab.getShadowRadius() + Math.abs(fab.getShadowYOffset());
-                }
+        if (TextUtils.isEmpty(text)) return;
 
-                label.setPadding(left, top, this.mLabelsPaddingLeft, this.mLabelsPaddingTop);
-                if(this.mLabelsMaxLines < 0 || this.mLabelsSingleLine) {
-                    label.setSingleLine(this.mLabelsSingleLine);
-                }
+        final Label label = new Label(mLabelsContext);
+        label.setClickable(true);
+        label.setFab(fab);
+        label.setShowAnimation(AnimationUtils.loadAnimation(getContext(), mLabelsShowAnimation));
+        label.setHideAnimation(AnimationUtils.loadAnimation(getContext(), mLabelsHideAnimation));
+
+        if (mLabelsStyle > 0) {
+            label.setTextAppearance(getContext(), mLabelsStyle);
+            label.setShowShadow(false);
+            label.setUsingStyle(true);
+        } else {
+            label.setColors(mLabelsColorNormal, mLabelsColorPressed, mLabelsColorRipple);
+            label.setShowShadow(mLabelsShowShadow);
+            label.setCornerRadius(mLabelsCornerRadius);
+            if (mLabelsEllipsize > 0) {
+                setLabelEllipsize(label);
+            }
+            label.setMaxLines(mLabelsMaxLines);
+            label.updateBackground();
+
+            label.setTextSize(TypedValue.COMPLEX_UNIT_PX, mLabelsTextSize);
+            label.setTextColor(mLabelsTextColor);
+
+            int left = mLabelsPaddingLeft;
+            int top = mLabelsPaddingTop;
+            if (mLabelsShowShadow) {
+                left += fab.getShadowRadius() + Math.abs(fab.getShadowXOffset());
+                top += fab.getShadowRadius() + Math.abs(fab.getShadowYOffset());
             }
 
-            if(this.mCustomTypefaceFromFont != null) {
-                label.setTypeface(this.mCustomTypefaceFromFont);
-            }
+            label.setPadding(
+                    left,
+                    top,
+                    mLabelsPaddingLeft,
+                    mLabelsPaddingTop
+            );
 
-            label.setText(text);
-            label.setOnClickListener(fab.getOnClickListener());
-            this.addView(label);
-            fab.setTag(R.id.fab_label, label);
+            if (mLabelsMaxLines < 0 || mLabelsSingleLine) {
+                label.setSingleLine(mLabelsSingleLine);
+            }
         }
+
+        if (mCustomTypefaceFromFont != null) {
+            label.setTypeface(mCustomTypefaceFromFont);
+        }
+        label.setText(text);
+        label.setOnClickListener(fab.getOnClickListener());
+
+        addView(label);
+        fab.setTag(R.id.fab_label, label);
     }
 
     private void setLabelEllipsize(Label label) {
-        switch(this.mLabelsEllipsize) {
+        switch (mLabelsEllipsize) {
             case 1:
                 label.setEllipsize(TextUtils.TruncateAt.START);
                 break;
@@ -496,462 +546,474 @@ public class FloatingActionMenu extends ViewGroup {
                 break;
             case 4:
                 label.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                break;
         }
-
     }
 
+    @Override
     public MarginLayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new MarginLayoutParams(this.getContext(), attrs);
+        return new MarginLayoutParams(getContext(), attrs);
     }
 
+    @Override
     protected MarginLayoutParams generateLayoutParams(LayoutParams p) {
         return new MarginLayoutParams(p);
     }
 
+    @Override
     protected MarginLayoutParams generateDefaultLayoutParams() {
-        return new MarginLayoutParams(-2, -2);
+        return new MarginLayoutParams(MarginLayoutParams.WRAP_CONTENT,
+                MarginLayoutParams.WRAP_CONTENT);
     }
 
+    @Override
     protected boolean checkLayoutParams(LayoutParams p) {
         return p instanceof MarginLayoutParams;
     }
 
     private void hideMenuButtonWithImage(boolean animate) {
-        if(!this.isMenuButtonHidden()) {
-            this.mMenuButton.hide(animate);
-            if(animate) {
-                this.mImageToggle.startAnimation(this.mImageToggleHideAnimation);
+        if (!isMenuButtonHidden()) {
+            mMenuButton.hide(animate);
+            if (animate) {
+                mImageToggle.startAnimation(mImageToggleHideAnimation);
             }
-
-            this.mImageToggle.setVisibility(4);
-            this.mIsMenuButtonAnimationRunning = false;
+            mImageToggle.setVisibility(INVISIBLE);
+            mIsMenuButtonAnimationRunning = false;
         }
-
     }
 
     private void showMenuButtonWithImage(boolean animate) {
-        if(this.isMenuButtonHidden()) {
-            this.mMenuButton.show(animate);
-            if(animate) {
-                this.mImageToggle.startAnimation(this.mImageToggleShowAnimation);
+        if (isMenuButtonHidden()) {
+            mMenuButton.show(animate);
+            if (animate) {
+                mImageToggle.startAnimation(mImageToggleShowAnimation);
             }
-
-            this.mImageToggle.setVisibility(0);
+            mImageToggle.setVisibility(VISIBLE);
         }
-
     }
 
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(this.mIsSetClosedOnTouchOutside) {
+        if (mIsSetClosedOnTouchOutside) {
             boolean handled = false;
-            switch(event.getAction()) {
-                case 0:
-                    handled = this.isOpened();
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    handled = isOpened();
                     break;
-                case 1:
-                    this.close(this.mIsAnimated);
+                case MotionEvent.ACTION_UP:
+                    close(mIsAnimated);
                     handled = true;
             }
 
             return handled;
-        } else {
-            return super.onTouchEvent(event);
         }
+
+        return super.onTouchEvent(event);
     }
 
+    /* ===== API methods ===== */
+
     public boolean isOpened() {
-        return this.mMenuOpened;
+        return mMenuOpened;
     }
 
     public void toggle(boolean animate) {
-        if(this.isOpened()) {
-            this.close(animate);
+        if (isOpened()) {
+            close(animate);
         } else {
-            this.open(animate);
+            open(animate);
         }
-
     }
 
     public void open(final boolean animate) {
-        if(!this.isOpened()) {
-            if(this.isBackgroundEnabled()) {
-                this.mShowBackgroundAnimator.start();
+        if (!isOpened()) {
+            if (isBackgroundEnabled()) {
+                mShowBackgroundAnimator.start();
             }
 
-            if(this.mIconAnimated) {
-                if(this.mIconToggleSet != null) {
-                    this.mIconToggleSet.start();
+            if (mIconAnimated) {
+                if (mIconToggleSet != null) {
+                    mIconToggleSet.start();
                 } else {
-                    this.mCloseAnimatorSet.cancel();
-                    this.mOpenAnimatorSet.start();
+                    mCloseAnimatorSet.cancel();
+                    mOpenAnimatorSet.start();
                 }
             }
 
             int delay = 0;
             int counter = 0;
-            this.mIsMenuOpening = true;
+            mIsMenuOpening = true;
+            for (int i = getChildCount() - 1; i >= 0; i--) {
+                View child = getChildAt(i);
+                if (child instanceof FloatingActionButton && child.getVisibility() != GONE) {
+                    counter++;
 
-            for(int i = this.getChildCount() - 1; i >= 0; --i) {
-                View child = this.getChildAt(i);
-                if(child instanceof FloatingActionButton && child.getVisibility() != 8) {
-                    ++counter;
-                    final FloatingActionButton fab = (FloatingActionButton)child;
-                    this.mUiHandler.postDelayed(new Runnable() {
+                    final FloatingActionButton fab = (FloatingActionButton) child;
+                    mUiHandler.postDelayed(new Runnable() {
+                        @Override
                         public void run() {
-                            if(!FloatingActionMenu.this.isOpened()) {
-                                if(fab != FloatingActionMenu.this.mMenuButton) {
-                                    fab.show(animate);
-                                }
+                            if (isOpened()) return;
 
-                                Label label = (Label)fab.getTag(R.id.fab_label);
-                                if(label != null && label.isHandleVisibilityChanges()) {
-                                    label.show(animate);
-                                }
+                            if (fab != mMenuButton) {
+                                fab.show(animate);
+                            }
+
+                            Label label = (Label) fab.getTag(R.id.fab_label);
+                            if (label != null && label.isHandleVisibilityChanges()) {
+                                label.show(animate);
                             }
                         }
-                    }, (long)delay);
-                    delay += this.mAnimationDelayPerItem;
+                    }, delay);
+                    delay += mAnimationDelayPerItem;
                 }
             }
 
-            Handler var10000 = this.mUiHandler;
-            Runnable var10001 = new Runnable() {
+            mUiHandler.postDelayed(new Runnable() {
+                @Override
                 public void run() {
-                    FloatingActionMenu.this.mMenuOpened = true;
-                    if(FloatingActionMenu.this.mToggleListener != null) {
-                        FloatingActionMenu.this.mToggleListener.onMenuToggle(true);
-                        //mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_down));
+                    mMenuOpened = true;
+
+                    if (mToggleListener != null) {
+                        mToggleListener.onMenuToggle(true);
                     }
-
                 }
-            };
-            ++counter;
-            var10000.postDelayed(var10001, (long)(counter * this.mAnimationDelayPerItem));
+            }, ++counter * mAnimationDelayPerItem);
         }
-
     }
 
     public void close(final boolean animate) {
-        if(this.isOpened()) {
-            if(this.isBackgroundEnabled()) {
-                this.mHideBackgroundAnimator.start();
+        if (isOpened()) {
+            if (isBackgroundEnabled()) {
+                mHideBackgroundAnimator.start();
             }
 
-            if(this.mIconAnimated) {
-                if(this.mIconToggleSet != null) {
-                    this.mIconToggleSet.start();
+            if (mIconAnimated) {
+                if (mIconToggleSet != null) {
+                    mIconToggleSet.start();
                 } else {
-                    this.mCloseAnimatorSet.start();
-                    this.mOpenAnimatorSet.cancel();
+                    mCloseAnimatorSet.start();
+                    mOpenAnimatorSet.cancel();
                 }
             }
 
             int delay = 0;
             int counter = 0;
-            this.mIsMenuOpening = false;
+            mIsMenuOpening = false;
+            for (int i = 0; i < getChildCount(); i++) {
+                View child = getChildAt(i);
+                if (child instanceof FloatingActionButton && child.getVisibility() != GONE) {
+                    counter++;
 
-            for(int i = 0; i < this.getChildCount(); ++i) {
-                View child = this.getChildAt(i);
-                if(child instanceof FloatingActionButton && child.getVisibility() != 8) {
-                    ++counter;
-                    final FloatingActionButton fab = (FloatingActionButton)child;
-                    this.mUiHandler.postDelayed(new Runnable() {
+                    final FloatingActionButton fab = (FloatingActionButton) child;
+                    mUiHandler.postDelayed(new Runnable() {
+                        @Override
                         public void run() {
-                            if(FloatingActionMenu.this.isOpened()) {
-                                if(fab != FloatingActionMenu.this.mMenuButton) {
-                                    fab.hide(animate);
-                                }
+                            if (!isOpened()) return;
 
-                                Label label = (Label)fab.getTag(R.id.fab_label);
-                                if(label != null && label.isHandleVisibilityChanges()) {
-                                    label.hide(animate);
-                                }
+                            if (fab != mMenuButton) {
+                                fab.hide(animate);
+                            }
 
+                            Label label = (Label) fab.getTag(R.id.fab_label);
+                            if (label != null && label.isHandleVisibilityChanges()) {
+                                label.hide(animate);
                             }
                         }
-                    }, (long)delay);
-                    delay += this.mAnimationDelayPerItem;
+                    }, delay);
+                    delay += mAnimationDelayPerItem;
                 }
             }
 
-            Handler var10000 = this.mUiHandler;
-            Runnable var10001 = new Runnable() {
+            mUiHandler.postDelayed(new Runnable() {
+                @Override
                 public void run() {
-                    FloatingActionMenu.this.mMenuOpened = false;
-                    if(FloatingActionMenu.this.mToggleListener != null) {
-                        FloatingActionMenu.this.mToggleListener.onMenuToggle(false);
-                        //mImageToggle.setImageDrawable(getResources().getDrawable(R.drawable.ic_fab_menu));
+                    mMenuOpened = false;
+
+                    if (mToggleListener != null) {
+                        mToggleListener.onMenuToggle(false);
                     }
-
                 }
-            };
-            ++counter;
-            var10000.postDelayed(var10001, (long)(counter * this.mAnimationDelayPerItem));
+            }, ++counter * mAnimationDelayPerItem);
         }
-
     }
 
+    /**
+     * Sets the {@link Interpolator} for <b>FloatingActionButton's</b> icon animation.
+     *
+     * @param interpolator the Interpolator to be used in animation
+     */
     public void setIconAnimationInterpolator(Interpolator interpolator) {
-        this.mOpenAnimatorSet.setInterpolator(interpolator);
-        this.mCloseAnimatorSet.setInterpolator(interpolator);
+        mOpenAnimatorSet.setInterpolator(interpolator);
+        mCloseAnimatorSet.setInterpolator(interpolator);
     }
 
     public void setIconAnimationOpenInterpolator(Interpolator openInterpolator) {
-        this.mOpenAnimatorSet.setInterpolator(openInterpolator);
+        mOpenAnimatorSet.setInterpolator(openInterpolator);
     }
 
     public void setIconAnimationCloseInterpolator(Interpolator closeInterpolator) {
-        this.mCloseAnimatorSet.setInterpolator(closeInterpolator);
+        mCloseAnimatorSet.setInterpolator(closeInterpolator);
     }
 
+    /**
+     * Sets whether open and close actions should be animated
+     *
+     * @param animated if <b>false</b> - menu items will appear/disappear instantly without any animation
+     */
     public void setAnimated(boolean animated) {
-        this.mIsAnimated = animated;
-        this.mOpenAnimatorSet.setDuration(animated?300L:0L);
-        this.mCloseAnimatorSet.setDuration(animated?300L:0L);
+        mIsAnimated = animated;
+        mOpenAnimatorSet.setDuration(animated ? ANIMATION_DURATION : 0);
+        mCloseAnimatorSet.setDuration(animated ? ANIMATION_DURATION : 0);
     }
 
     public boolean isAnimated() {
-        return this.mIsAnimated;
+        return mIsAnimated;
     }
 
     public void setAnimationDelayPerItem(int animationDelayPerItem) {
-        this.mAnimationDelayPerItem = animationDelayPerItem;
+        mAnimationDelayPerItem = animationDelayPerItem;
     }
 
     public int getAnimationDelayPerItem() {
-        return this.mAnimationDelayPerItem;
+        return mAnimationDelayPerItem;
     }
 
-    public void setOnMenuToggleListener(FloatingActionMenu.OnMenuToggleListener listener) {
-        this.mToggleListener = listener;
+    public void setOnMenuToggleListener(OnMenuToggleListener listener) {
+        mToggleListener = listener;
     }
 
     public void setIconAnimated(boolean animated) {
-        this.mIconAnimated = animated;
+        mIconAnimated = animated;
     }
 
     public boolean isIconAnimated() {
-        return this.mIconAnimated;
+        return mIconAnimated;
     }
 
     public ImageView getMenuIconView() {
-        return this.mImageToggle;
+        return mImageToggle;
     }
 
     public void setIconToggleAnimatorSet(AnimatorSet toggleAnimatorSet) {
-        this.mIconToggleSet = toggleAnimatorSet;
+        mIconToggleSet = toggleAnimatorSet;
     }
 
     public AnimatorSet getIconToggleAnimatorSet() {
-        return this.mIconToggleSet;
+        return mIconToggleSet;
     }
 
     public void setMenuButtonShowAnimation(Animation showAnimation) {
-        this.mMenuButtonShowAnimation = showAnimation;
-        this.mMenuButton.setShowAnimation(showAnimation);
+        mMenuButtonShowAnimation = showAnimation;
+        mMenuButton.setShowAnimation(showAnimation);
     }
 
     public void setMenuButtonHideAnimation(Animation hideAnimation) {
-        this.mMenuButtonHideAnimation = hideAnimation;
-        this.mMenuButton.setHideAnimation(hideAnimation);
+        mMenuButtonHideAnimation = hideAnimation;
+        mMenuButton.setHideAnimation(hideAnimation);
     }
 
     public boolean isMenuHidden() {
-        return this.getVisibility() == 4;
+        return getVisibility() == INVISIBLE;
     }
 
     public boolean isMenuButtonHidden() {
-        return this.mMenuButton.isHidden();
+        return mMenuButton.isHidden();
     }
 
+    /**
+     * Makes the whole {@link #FloatingActionMenu} to appear and sets its visibility to {@link #VISIBLE}
+     *
+     * @param animate if true - plays "show animation"
+     */
     public void showMenu(boolean animate) {
-        if(this.isMenuHidden()) {
-            if(animate) {
-                this.startAnimation(this.mMenuButtonShowAnimation);
+        if (isMenuHidden()) {
+            if (animate) {
+                startAnimation(mMenuButtonShowAnimation);
             }
-
-            this.setVisibility(0);
+            setVisibility(VISIBLE);
         }
-
     }
 
+    /**
+     * Makes the {@link #FloatingActionMenu} to disappear and sets its visibility to {@link #INVISIBLE}
+     *
+     * @param animate if true - plays "hide animation"
+     */
     public void hideMenu(final boolean animate) {
-        if(!this.isMenuHidden() && !this.mIsMenuButtonAnimationRunning) {
-            this.mIsMenuButtonAnimationRunning = true;
-            if(this.isOpened()) {
-                this.close(animate);
-                this.mUiHandler.postDelayed(new Runnable() {
+        if (!isMenuHidden() && !mIsMenuButtonAnimationRunning) {
+            mIsMenuButtonAnimationRunning = true;
+            if (isOpened()) {
+                close(animate);
+                mUiHandler.postDelayed(new Runnable() {
+                    @Override
                     public void run() {
-                        if(animate) {
-                            FloatingActionMenu.this.startAnimation(FloatingActionMenu.this.mMenuButtonHideAnimation);
+                        if (animate) {
+                            startAnimation(mMenuButtonHideAnimation);
                         }
-
-                        FloatingActionMenu.this.setVisibility(4);
-                        FloatingActionMenu.this.mIsMenuButtonAnimationRunning = false;
+                        setVisibility(INVISIBLE);
+                        mIsMenuButtonAnimationRunning = false;
                     }
-                }, (long)(this.mAnimationDelayPerItem * this.mButtonsCount));
+                }, mAnimationDelayPerItem * mButtonsCount);
             } else {
-                if(animate) {
-                    this.startAnimation(this.mMenuButtonHideAnimation);
+                if (animate) {
+                    startAnimation(mMenuButtonHideAnimation);
                 }
-
-                this.setVisibility(4);
-                this.mIsMenuButtonAnimationRunning = false;
+                setVisibility(INVISIBLE);
+                mIsMenuButtonAnimationRunning = false;
             }
         }
-
     }
 
     public void toggleMenu(boolean animate) {
-        if(this.isMenuHidden()) {
-            this.showMenu(animate);
+        if (isMenuHidden()) {
+            showMenu(animate);
         } else {
-            this.hideMenu(animate);
+            hideMenu(animate);
         }
-
     }
 
+    /**
+     * Makes the {@link FloatingActionButton} to appear inside the {@link #FloatingActionMenu} and
+     * sets its visibility to {@link #VISIBLE}
+     *
+     * @param animate if true - plays "show animation"
+     */
     public void showMenuButton(boolean animate) {
-        if(this.isMenuButtonHidden()) {
-            this.showMenuButtonWithImage(animate);
+        if (isMenuButtonHidden()) {
+            showMenuButtonWithImage(animate);
         }
-
     }
 
+    /**
+     * Makes the {@link FloatingActionButton} to disappear inside the {@link #FloatingActionMenu} and
+     * sets its visibility to {@link #INVISIBLE}
+     *
+     * @param animate if true - plays "hide animation"
+     */
     public void hideMenuButton(final boolean animate) {
-        if(!this.isMenuButtonHidden() && !this.mIsMenuButtonAnimationRunning) {
-            this.mIsMenuButtonAnimationRunning = true;
-            if(this.isOpened()) {
-                this.close(animate);
-                this.mUiHandler.postDelayed(new Runnable() {
+        if (!isMenuButtonHidden() && !mIsMenuButtonAnimationRunning) {
+            mIsMenuButtonAnimationRunning = true;
+            if (isOpened()) {
+                close(animate);
+                mUiHandler.postDelayed(new Runnable() {
+                    @Override
                     public void run() {
-                        FloatingActionMenu.this.hideMenuButtonWithImage(animate);
+                        hideMenuButtonWithImage(animate);
                     }
-                }, (long)(this.mAnimationDelayPerItem * this.mButtonsCount));
+                }, mAnimationDelayPerItem * mButtonsCount);
             } else {
-                this.hideMenuButtonWithImage(animate);
+                hideMenuButtonWithImage(animate);
             }
         }
-
     }
 
     public void toggleMenuButton(boolean animate) {
-        if(this.isMenuButtonHidden()) {
-            this.showMenuButton(animate);
+        if (isMenuButtonHidden()) {
+            showMenuButton(animate);
         } else {
-            this.hideMenuButton(animate);
+            hideMenuButton(animate);
         }
-
     }
 
     public void setClosedOnTouchOutside(boolean close) {
-        this.mIsSetClosedOnTouchOutside = close;
+        mIsSetClosedOnTouchOutside = close;
     }
 
     public void setMenuButtonColorNormal(int color) {
-        this.mMenuColorNormal = color;
-        this.mMenuButton.setColorNormal(color);
+        mMenuColorNormal = color;
+        mMenuButton.setColorNormal(color);
     }
 
     public void setMenuButtonColorNormalResId(int colorResId) {
-        this.mMenuColorNormal = this.getResources().getColor(colorResId);
-        this.mMenuButton.setColorNormalResId(colorResId);
+        mMenuColorNormal = getResources().getColor(colorResId);
+        mMenuButton.setColorNormalResId(colorResId);
     }
 
     public int getMenuButtonColorNormal() {
-        return this.mMenuColorNormal;
+        return mMenuColorNormal;
     }
 
     public void setMenuButtonColorPressed(int color) {
-        this.mMenuColorPressed = color;
-        this.mMenuButton.setColorPressed(color);
+        mMenuColorPressed = color;
+        mMenuButton.setColorPressed(color);
     }
 
     public void setMenuButtonColorPressedResId(int colorResId) {
-        this.mMenuColorPressed = this.getResources().getColor(colorResId);
-        this.mMenuButton.setColorPressedResId(colorResId);
+        mMenuColorPressed = getResources().getColor(colorResId);
+        mMenuButton.setColorPressedResId(colorResId);
     }
 
     public int getMenuButtonColorPressed() {
-        return this.mMenuColorPressed;
+        return mMenuColorPressed;
     }
 
     public void setMenuButtonColorRipple(int color) {
-        this.mMenuColorRipple = color;
-        this.mMenuButton.setColorRipple(color);
+        mMenuColorRipple = color;
+        mMenuButton.setColorRipple(color);
     }
 
     public void setMenuButtonColorRippleResId(int colorResId) {
-        this.mMenuColorRipple = this.getResources().getColor(colorResId);
-        this.mMenuButton.setColorRippleResId(colorResId);
+        mMenuColorRipple = getResources().getColor(colorResId);
+        mMenuButton.setColorRippleResId(colorResId);
     }
 
     public int getMenuButtonColorRipple() {
-        return this.mMenuColorRipple;
+        return mMenuColorRipple;
     }
 
     public void addMenuButton(FloatingActionButton fab) {
-        this.addView(fab, this.mButtonsCount - 2);
-        ++this.mButtonsCount;
-        this.addLabel(fab);
+        addView(fab, mButtonsCount - 2);
+        mButtonsCount++;
+        addLabel(fab);
     }
 
     public void removeMenuButton(FloatingActionButton fab) {
-        this.removeView(fab.getLabelView());
-        this.removeView(fab);
-        --this.mButtonsCount;
+        removeView(fab.getLabelView());
+        removeView(fab);
+        mButtonsCount--;
     }
 
     public void addMenuButton(FloatingActionButton fab, int index) {
-        int size = this.mButtonsCount - 2;
-        if(index < 0) {
+        int size = mButtonsCount - 2;
+        if (index < 0) {
             index = 0;
-        } else if(index > size) {
+        } else if (index > size) {
             index = size;
         }
 
-        this.addView(fab, index);
-        ++this.mButtonsCount;
-        this.addLabel(fab);
+        addView(fab, index);
+        mButtonsCount++;
+        addLabel(fab);
     }
 
     public void removeAllMenuButtons() {
-        this.close(true);
-        ArrayList viewsToRemove = new ArrayList();
-
-        for(int i = 0; i < this.getChildCount(); ++i) {
-            View v = this.getChildAt(i);
-            if(v != this.mMenuButton && v != this.mImageToggle && v instanceof FloatingActionButton) {
-                viewsToRemove.add((FloatingActionButton)v);
+        close(true);
+        
+        List<FloatingActionButton> viewsToRemove = new ArrayList<>();
+        for (int i = 0; i < getChildCount(); i++) {
+            View v = getChildAt(i);
+            if (v != mMenuButton && v != mImageToggle && v instanceof FloatingActionButton) {
+                viewsToRemove.add((FloatingActionButton) v);
             }
         }
-
-        Iterator var4 = viewsToRemove.iterator();
-
-        while(var4.hasNext()) {
-            FloatingActionButton var5 = (FloatingActionButton)var4.next();
-            this.removeMenuButton(var5);
+        for (FloatingActionButton v : viewsToRemove) {
+            removeMenuButton(v);
         }
-
     }
 
     public void setMenuButtonLabelText(String text) {
-        this.mMenuButton.setLabelText(text);
+        mMenuButton.setLabelText(text);
     }
 
     public String getMenuButtonLabelText() {
-        return this.mMenuLabelText;
+        return mMenuLabelText;
     }
 
     public void setOnMenuButtonClickListener(OnClickListener clickListener) {
-        this.mMenuButton.setOnClickListener(clickListener);
+        mMenuButton.setOnClickListener(clickListener);
     }
 
     public void setOnMenuButtonLongClickListener(OnLongClickListener longClickListener) {
-        this.mMenuButton.setOnLongClickListener(longClickListener);
-    }
-
-    public interface OnMenuToggleListener {
-        void onMenuToggle(boolean var1);
+        mMenuButton.setOnLongClickListener(longClickListener);
     }
 }
