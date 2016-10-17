@@ -5340,7 +5340,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 int flag = jObj.getInt("flag");
                                 if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
                                     try {
-                                        int rideEndGoodFeedbackViewType = jObj.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+                                        int rideEndGoodFeedbackViewType = jObj.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, Data.autoData.getRideEndGoodFeedbackViewType());
                                         Data.autoData.setRideEndGoodFeedbackViewType(rideEndGoodFeedbackViewType);
                                     } catch (Exception e) {
                                         e.printStackTrace();
