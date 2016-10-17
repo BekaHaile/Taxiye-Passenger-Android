@@ -2936,11 +2936,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
-                        imageViewFabFakeAssigning.setVisibility(View.VISIBLE);
-                        fabView.setRelativeLayoutFABVisibility(mode);
-                        int dpAsPixels = (int) (150f*scale + 0.5f);
-                        fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
-                        setMargins(imageViewFabFakeAssigning, (int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
+
+
 
                         try {
                             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
@@ -2952,6 +2949,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                        }
+
+                        if(setJeanieVisibility()){
+                            imageViewFabFakeAssigning.setVisibility(View.VISIBLE);
+                            fabView.setRelativeLayoutFABVisibility(mode);
+                            int dpAsPixels = (int) (150f*scale + 0.5f);
+                            fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
+                            setMargins(imageViewFabFakeAssigning, (int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
+                        } else{
+                            imageViewFabFakeAssigning.setVisibility(View.GONE);
                         }
 
 //                        genieLayout.setVisibility(View.GONE);
@@ -3021,10 +3028,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
-                        imageViewFabFakeFinal.setVisibility(View.VISIBLE);
-                        setFabViewAtRide(mode);
 
-//                        genieLayout.setVisibility(View.GONE);
+
+                        if(setJeanieVisibility()){
+                            imageViewFabFakeFinal.setVisibility(View.VISIBLE);
+                            setFabViewAtRide(mode);
+                        } else{
+                            imageViewFabFakeFinal.setVisibility(View.GONE);
+                        }
 
                         break;
 
@@ -3095,10 +3106,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
-                        imageViewFabFakeFinal.setVisibility(View.VISIBLE);
-                        setFabViewAtRide(mode);
 
-//                        genieLayout.setVisibility(View.GONE);
+
+                        if(setJeanieVisibility()){
+                            imageViewFabFakeFinal.setVisibility(View.VISIBLE);
+                            setFabViewAtRide(mode);
+                        } else{
+                            imageViewFabFakeFinal.setVisibility(View.GONE);
+                        }
 
                         break;
 
@@ -3158,8 +3173,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                         checkForGoogleLogoVisibilityInRide();
-                        imageViewFabFakeFinal.setVisibility(View.VISIBLE);
-                        setFabViewAtRide(mode);
 
 //                        genieLayout.setVisibility(View.GONE);
 
@@ -3167,6 +3180,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             getTrackingLogHelper().uploadAllTrackLogs();
                         } catch (Exception e) {
                             e.printStackTrace();
+                        }
+
+                        if(setJeanieVisibility()){
+                            imageViewFabFakeFinal.setVisibility(View.VISIBLE);
+                            setFabViewAtRide(mode);
+                        } else{
+                            imageViewFabFakeFinal.setVisibility(View.GONE);
                         }
 
 
@@ -4646,6 +4666,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void findADriverFinishing(boolean showPoolIntro){
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            if(setJeanieVisibility()){
+                imageViewFabFake.setVisibility(View.VISIBLE);
+            } else{
+                imageViewFabFake.setVisibility(View.GONE);
+            }
             try {
                 slidingBottomPanel.update();
             } catch (Exception e) {
@@ -4670,8 +4695,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setupFreshUI();
                     setupInAppCampaignUI();
                     if(Data.userData.getIntegratedJugnooEnabled() == 1) {
-                        if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
-                                && (Data.userData.getGroceryEnabled() == 0)) {
+                        if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) &&
+                                (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)) {
                             imageViewFabFake.setVisibility(View.GONE);
                             fabView.menuLabelsRight.setVisibility(View.INVISIBLE);
                         } else {
@@ -4691,6 +4716,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
         }
+    }
+
+    private boolean setJeanieVisibility(){
+        try {
+            if(Data.userData.getIntegratedJugnooEnabled() == 1) {
+				if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) &&
+						(Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)) {
+					imageViewFabFake.setVisibility(View.GONE);
+					fabView.menuLabelsRight.setVisibility(View.INVISIBLE);
+					fabView.setFABButtons();
+					return false;
+				} else {
+					if (Prefs.with(HomeActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+						imageViewFabFake.setVisibility(View.VISIBLE);
+						fabView.menuLabelsRight.setVisibility(View.VISIBLE);
+						fabView.setFABButtons();
+						return true;
+					}
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return false;
     }
 
 
@@ -5290,7 +5340,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 int flag = jObj.getInt("flag");
                                 if (ApiResponseFlags.RIDE_ENDED.getOrdinal() == flag) {
                                     try {
-                                        int rideEndGoodFeedbackViewType = jObj.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+                                        int rideEndGoodFeedbackViewType = jObj.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, Data.autoData.getRideEndGoodFeedbackViewType());
                                         Data.autoData.setRideEndGoodFeedbackViewType(rideEndGoodFeedbackViewType);
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -7090,13 +7140,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
+            try {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     dontCallRefreshDriver = false;
                     callMapTouchedRefreshDrivers();
                 }
-            }, 600);
+            }, 900);
 
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
 
