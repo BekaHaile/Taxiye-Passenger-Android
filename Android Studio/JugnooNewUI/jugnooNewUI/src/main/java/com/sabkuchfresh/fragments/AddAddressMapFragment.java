@@ -133,16 +133,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         rootView = inflater.inflate(R.layout.fragment_add_address, container, false);
         activity = getActivity();
 
-        if(activity instanceof FreshActivity) {
-            ((FreshActivity) activity).fragmentUISetup(this);
-            editThisAddress = ((FreshActivity) activity).isEditThisAddress();
-        } else if(activity instanceof AddPlaceActivity) {
-            AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
-            addPlaceActivity.getTextViewTitle().setVisibility(View.VISIBLE);
-            addPlaceActivity.getTextViewTitle().setText(R.string.choose_your_address);
-            addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.GONE);
-            editThisAddress = addPlaceActivity.isEditThisAddress();
-        }
+        updateFragUI();
+
         zoomedToMyLoc = false;
         mBus = MyApplication.getInstance().getBus();
         relative = (RelativeLayout) rootView.findViewById(R.id.root);
@@ -212,11 +204,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             public void onClick(View v) {
                 if(unsatflag) {
                     if(activity instanceof FreshActivity) {
-                        FreshActivity freshActivity = (FreshActivity) activity;
-                        freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-                        freshActivity.setSearchResult(null);
-                        freshActivity.setEditThisAddress(false);
-                        freshActivity.openAddToAddressBook(createAddressBundle(placeId));
+                        ((FreshActivity) activity).openAddToAddressBook(createAddressBundle(placeId));
                     } else if(activity instanceof AddPlaceActivity){
                         ((AddPlaceActivity) activity).openAddToAddressBook(createAddressBundle(placeId));
                     }
@@ -406,8 +394,24 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (!hidden && (activity instanceof FreshActivity)) {
+        if (!hidden) {
+            updateFragUI();
+        }
+    }
+
+    private void updateFragUI(){
+        if(activity instanceof FreshActivity) {
             ((FreshActivity) activity).fragmentUISetup(this);
+            editThisAddress = ((FreshActivity) activity).isEditThisAddress();
+        } else if(activity instanceof AddPlaceActivity) {
+            AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
+            addPlaceActivity.getTextViewTitle().setVisibility(View.VISIBLE);
+            addPlaceActivity.getTextViewTitle().setText(R.string.choose_your_address);
+            addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.GONE);
+            editThisAddress = addPlaceActivity.isEditThisAddress();
+            if(editThisAddress){
+                addPlaceActivity.getImageViewDelete().setVisibility(View.GONE);
+            }
         }
     }
 

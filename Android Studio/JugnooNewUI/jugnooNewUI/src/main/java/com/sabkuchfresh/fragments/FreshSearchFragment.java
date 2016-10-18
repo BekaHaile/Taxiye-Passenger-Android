@@ -323,6 +323,9 @@ public class FreshSearchFragment extends Fragment {
                 }
             }, 700);
 			activity.fragmentUISetup(this);
+			if(editTextSearch.getText().toString().trim().length() > 0){
+				new SubItemsSearchAsync().execute(editTextSearch.getText().toString().trim());
+			}
 		}
 	}
 

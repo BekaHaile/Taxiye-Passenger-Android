@@ -38,6 +38,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_margin="20px"
                     android:visibility="gone"
+                    android:tag="mwar"
 
                     >
                     <ImageView
