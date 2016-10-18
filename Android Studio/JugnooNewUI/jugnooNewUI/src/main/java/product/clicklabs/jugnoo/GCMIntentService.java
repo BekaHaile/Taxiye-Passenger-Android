@@ -401,7 +401,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String driverArrivedMessage = jObj.getString(KEY_MESSAGE);
-						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
+						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "")));
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_DRIVER_ARRIVED.getOrdinal());
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
@@ -422,7 +422,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
-						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
+						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "")));
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_IN_RIDE.getOrdinal());
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(0, message1);
