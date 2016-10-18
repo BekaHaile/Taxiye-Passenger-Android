@@ -160,30 +160,12 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 
 					@Override
 					public boolean checkForMinus(int position, SubItem subItem) {
-						if(activity.isMealAddonItemsAvailable()){
-							boolean addOnAdded = false;
-							boolean itemIsAddon = false;
-							for(SubItem si : activity.getProductsResponse().getCategories().get(1).getSubItems()){
-								if(si.getSubItemQuantitySelected() > 0){
-									addOnAdded = true;
-								}
-								if(si.getSubItemId().equals(subItem.getSubItemId())){
-									itemIsAddon = true;
-								}
-							}
-							int mealsQuantity = 0;
-							for(SubItem si : activity.getProductsResponse().getCategories().get(0).getSubItems()){
-								mealsQuantity = mealsQuantity + si.getSubItemQuantitySelected();
-							}
-							return !(addOnAdded && !itemIsAddon && mealsQuantity == 1);
-						} else {
-							return true;
-						}
+						return activity.checkForMinus(position, subItem);
 					}
 
 					@Override
 					public void minusNotDone(int position, SubItem subItem) {
-						Utils.showToast(activity, "Can't remove main item");
+						Utils.showToast(activity, activity.getString(R.string.cant_remove_main_item));
 					}
 				}, AppConstant.ListType.OTHER, FlurryEventNames.REVIEW_CART, currentGroupId);
 
@@ -217,6 +199,9 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 
 	private void checkIfEmpty(){
 		if(activity.subItemsInCart.size() == 0){
+			if(activity.isMealAddonItemsAvailable()){
+				activity.performBackPressed();
+			}
 			activity.performBackPressed();
 		}
 	}
@@ -234,4 +219,5 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
     public void onRefresh() {
 
     }
+
 }

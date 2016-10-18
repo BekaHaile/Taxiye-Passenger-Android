@@ -1175,6 +1175,7 @@
 	<string name="lets_complete_your_meal">Let\'s complete your meal</string>
 	<string name="pick_addons">Pick Add-Ons</string>
 	<string name="proceed">Proceed</string>
+	<string name="cant_remove_main_item">Can\'t remove main item</string>
 
 
 </resources>

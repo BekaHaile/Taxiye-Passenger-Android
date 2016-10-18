@@ -154,4 +154,13 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         textViewProceed.setText((addOnSelectedCount > 0) ? R.string.proceed : R.string.skip_and_proceed);
     }
 
+    @Override
+    public boolean checkForMinus(int position, SubItem subItem) {
+        return true;
+    }
+
+    @Override
+    public void minusNotDone(int position, SubItem subItem) {
+
+    }
 }
