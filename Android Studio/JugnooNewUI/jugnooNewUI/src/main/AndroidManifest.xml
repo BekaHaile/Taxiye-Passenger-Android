@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="product.clicklabs.jugnoo"
           xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="252"
-          android:versionName="2.5.2">
+          android:versionCode="253"
+          android:versionName="2.5.3">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -398,23 +398,6 @@
             android:exported="false">
         </service>
 
-        <!-- nudgesopt integration -->
-        <receiver
-            android:name="com.nudgespot.notification.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-
-                <category android:name="product.clicklabs.jugnoo"/>
-            </intent-filter>
-        </receiver>
-
-        <service android:name="com.nudgespot.notification.GcmIntentService"/>
-
-        <activity
-            android:name="com.nudgespot.notification.ReceiverActivity"
-            android:theme="@android:style/Theme.NoDisplay">
-        </activity>
 
         <!-- for fresh Application -->
         <activity

@@ -128,7 +128,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         recyclerViewCategoryItems.setAdapter(mealAdapter);
 
-
         setSortingList();
         getAllProducts(true);
 
@@ -256,6 +255,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                 mealsData.clear();
                                 mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
                                 activity.setProductsResponse(productsResponse);
+
                                 setSortingList();
                                 if (Data.mealSort == -1) {
                                     slots.get(sortedBy).setCheck(true);
@@ -292,8 +292,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                         && activity.getProductsResponse().getCategories() != null) {
                                     activity.updateCartFromSP();
                                     activity.updateCartValuesGetTotalPrice();
-
                                 }
+
+
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -412,4 +413,5 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 break;
         }
     }
+
 }

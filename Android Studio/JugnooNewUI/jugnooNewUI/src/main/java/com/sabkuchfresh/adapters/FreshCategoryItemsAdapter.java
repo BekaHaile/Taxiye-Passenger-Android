@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -251,12 +250,16 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 public void onClick(View v) {
                     try {
                         int pos = (int) v.getTag();
-                        FlurryEventLogger.event(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
-                        subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
-                                subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
-                        callback.onMinusClicked(pos, subItems.get(pos));
+                        if(callback.checkForMinus(pos, subItems.get(pos))) {
+                            FlurryEventLogger.event(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
+                            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
+                                    subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
+                            callback.onMinusClicked(pos, subItems.get(pos));
 
-                        notifyDataSetChanged();
+                            notifyDataSetChanged();
+                        } else{
+                            callback.minusNotDone(pos, subItems.get(pos));
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -440,6 +443,8 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         void onPlusClicked(int position, SubItem subItem);
         void onMinusClicked(int position, SubItem subItem);
         void onDeleteClicked(int position, SubItem subItem);
+        boolean checkForMinus(int position, SubItem subItem);
+        void minusNotDone(int position, SubItem subItem);
     }
 
     public enum OpenMode{

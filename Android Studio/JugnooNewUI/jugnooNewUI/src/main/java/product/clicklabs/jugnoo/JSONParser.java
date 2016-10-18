@@ -64,7 +64,6 @@ import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -580,23 +579,6 @@ public class JSONParser implements Constants {
         }
         sb.append(KEY_DOWNLOAD_SOURCE).append("=").append(Config.getDownloadSource());
         return sb.toString();
-    }
-
-    private void nudgeSignupVerifiedEvent(Context context, String userId, String phoneNo, String email, String userName,
-                                          String referralCode, String referralCodeEntered){
-        try {
-            JSONObject map = new JSONObject();
-            map.put(KEY_PHONE_NO, phoneNo);
-            map.put(KEY_EMAIL, email);
-            map.put(KEY_USER_NAME, userName);
-            map.put(KEY_LATITUDE, Data.loginLatitude);
-            map.put(KEY_LONGITUDE, Data.loginLongitude);
-            map.put(KEY_REFERRAL_CODE, referralCode);
-            map.put(KEY_REFERRAL_CODE_ENTERED, referralCodeEntered);
-            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_SIGNUP_VERIFIED, map);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -1417,17 +1399,6 @@ public class JSONParser implements Constants {
         }
     }
 
-    private void couponsEvent(Context context){
-        try{
-            JSONObject map = new JSONObject();
-            for(PromoCoupon promoCoupon : Data.userData.getPromoCoupons()){
-                map.put(promoCoupon.getTitle(), 1);
-            }
-            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
 
     public static RateAppDialogContent parseRateAppDialogContent(JSONObject jObj){
         try{
@@ -1475,18 +1446,12 @@ public class JSONParser implements Constants {
         loginClevertap(context);
         try {
             FlurryEventLogger.setGAUserId(Data.userData.getUserId());
-            NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
-                    Data.userData.userEmail, Data.userData.phoneNo,
-                    Data.userData.getCity(), Data.userData.getCityReg(), Data.userData.referralCode);
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
                 MyApplication.getInstance().getkTracker().event(Constants.KOCHAVA_REG_KEY, ""+loginVia);
-                couponsEvent(context);
                 String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
                 Prefs.with(context).save(SP_REFERRAL_CODE, "");
-                nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
-                        Data.userData.userEmail, Data.userData.userName, Data.userData.referralCode, referralCodeEntered);
                 BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
                 FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
                 FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
@@ -1500,7 +1465,6 @@ public class JSONParser implements Constants {
             }
             JSONObject map = new JSONObject();
             map.put(KEY_SOURCE, getAppSource(context));
-            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_LOGIN_APP_SOURCE, map);
 
         } catch (Exception e) {
             e.printStackTrace();

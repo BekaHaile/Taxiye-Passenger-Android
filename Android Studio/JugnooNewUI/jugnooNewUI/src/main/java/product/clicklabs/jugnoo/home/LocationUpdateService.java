@@ -89,8 +89,10 @@ public class LocationUpdateService extends Service {
 	@Override
 	public void onTaskRemoved(Intent rootIntent) {
 		try {
-			if(!oneShot && PassengerScreenMode.P_IN_RIDE.getOrdinal() == Prefs.with(this)
-					.getInt(Constants.SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal())) {
+			int mode = Prefs.with(this).getInt(Constants.SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal());
+			if(!oneShot && (PassengerScreenMode.P_REQUEST_FINAL.getOrdinal() == mode
+					|| PassengerScreenMode.P_DRIVER_ARRIVED.getOrdinal() == mode
+					|| PassengerScreenMode.P_IN_RIDE.getOrdinal() == mode)) {
 				stopSelf();
 				Intent restartService = new Intent(getApplicationContext(), this.getClass());
 				restartService.setPackage(getPackageName());

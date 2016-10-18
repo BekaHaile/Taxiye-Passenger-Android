@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="164px"
+    android:background="@drawable/background_white"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/textViewCompleteMeal"
+        android:layout_width="556px"
+        android:layout_height="68px"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_white_dark1_round_corners"
+        android:textSize="@dimen/text_size_30"
+        android:textColor="@color/text_color"
+        android:text="@string/lets_complete_your_meal"
+        android:gravity="center"
+        android:textAllCaps="true"
+        />
+
+
+</RelativeLayout>

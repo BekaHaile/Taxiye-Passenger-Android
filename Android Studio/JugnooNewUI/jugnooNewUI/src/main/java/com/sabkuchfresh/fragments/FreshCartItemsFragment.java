@@ -14,11 +14,11 @@ import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -157,6 +157,34 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 							checkIfEmpty();
 						}
 					}
+
+					@Override
+					public boolean checkForMinus(int position, SubItem subItem) {
+						if(activity.isMealAddonItemsAvailable()){
+							boolean addOnAdded = false;
+							boolean itemIsAddon = false;
+							for(SubItem si : activity.getProductsResponse().getCategories().get(1).getSubItems()){
+								if(si.getSubItemQuantitySelected() > 0){
+									addOnAdded = true;
+								}
+								if(si.getSubItemId().equals(subItem.getSubItemId())){
+									itemIsAddon = true;
+								}
+							}
+							int mealsQuantity = 0;
+							for(SubItem si : activity.getProductsResponse().getCategories().get(0).getSubItems()){
+								mealsQuantity = mealsQuantity + si.getSubItemQuantitySelected();
+							}
+							return !(addOnAdded && !itemIsAddon && mealsQuantity == 1);
+						} else {
+							return true;
+						}
+					}
+
+					@Override
+					public void minusNotDone(int position, SubItem subItem) {
+						Utils.showToast(activity, "Can't remove main item");
+					}
 				}, AppConstant.ListType.OTHER, FlurryEventNames.REVIEW_CART, currentGroupId);
 
 
@@ -164,7 +192,6 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
-		NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_CART_CLICKED, null);
 
 		return rootView;
 	}

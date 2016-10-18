@@ -30,6 +30,7 @@ public class ProductsResponse {
 	@Expose
 	private String supportContact;
 
+
 	/**
 	 *
 	 * @return
@@ -107,4 +108,5 @@ public class ProductsResponse {
 	public void setSupportContact(String supportContact) {
 		this.supportContact = supportContact;
 	}
+
 }

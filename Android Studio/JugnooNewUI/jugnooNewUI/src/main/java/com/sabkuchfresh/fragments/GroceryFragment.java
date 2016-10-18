@@ -22,7 +22,6 @@ import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
@@ -187,9 +186,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                 try {
                     if (activity.getProductsResponse() != null
                             && activity.getProductsResponse().getCategories() != null) {
-                        NudgeClient.trackEventUserId(activity,
-                                String.format(FlurryEventNames.NUDGE_FRESH_CATEGORY_CLICKED_FORMAT,
-                                        activity.getProductsResponse().getCategories().get(position).getCategoryName()), null);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

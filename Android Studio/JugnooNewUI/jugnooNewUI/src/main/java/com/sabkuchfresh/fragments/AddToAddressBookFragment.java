@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.sabkuchfresh.bus.AddressAdded;
@@ -56,7 +56,7 @@ public class AddToAddressBookFragment extends Fragment {
     MarkerOptions marker;
 
     Button buttonAddToAddressBook;
-    RelativeLayout root;
+    RelativeLayout root, relativeLayoutEdit;
 
     EditText editTextLabel, houseNumber, buildingStreetName, area, city, pinCode;
 
@@ -81,20 +81,13 @@ public class AddToAddressBookFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_addto_address, container, false);
 
         activity = getActivity();
-        fetchAddressBundle();
+        fetchAddressBundle(getArguments());
 
         root = (RelativeLayout) rootView.findViewById(R.id.root);
         new ASSL(activity, root, 1134, 720, false);
 
         mBus = MyApplication.getInstance().getBus();
-        if(activity instanceof FreshActivity) {
-            ((FreshActivity) activity).fragmentUISetup(this);
-        } else if(activity instanceof AddPlaceActivity){
-            AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
-            addPlaceActivity.getTextViewTitle().setVisibility(View.VISIBLE);
-            addPlaceActivity.getTextViewTitle().setText(activity.getString(R.string.confirm_address));
-            addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.GONE);
-        }
+        fragmentUiSetup();
 
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -105,6 +98,24 @@ public class AddToAddressBookFragment extends Fragment {
         return rootView;
     }
 
+    private void fragmentUiSetup(){
+        if(activity instanceof FreshActivity) {
+            ((FreshActivity) activity).fragmentUISetup(this);
+        } else if(activity instanceof AddPlaceActivity) {
+            AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
+            addPlaceActivity.getTextViewTitle().setVisibility(View.VISIBLE);
+            addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            fragmentUiSetup();
+            setDataToUI();
+        }
+    }
 
     @Override
     public void onStart() {
@@ -131,6 +142,13 @@ public class AddToAddressBookFragment extends Fragment {
                         googleMap.getUiSettings().setZoomControlsEnabled(false);
                         googleMap.getUiSettings().setAllGesturesEnabled(false);
 
+                        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker) {
+                                return true;
+                            }
+                        });
+
                     }
 
                     // check if map is created successfully or not
@@ -153,6 +171,7 @@ public class AddToAddressBookFragment extends Fragment {
         area = (EditText) rootView.findViewById(R.id.edt_area); area.setTypeface(Fonts.mavenRegular(activity));
         city = (EditText) rootView.findViewById(R.id.edt_city); city.setTypeface(Fonts.mavenRegular(activity));
         pinCode = (EditText) rootView.findViewById(R.id.edt_pinCode); pinCode.setTypeface(Fonts.mavenRegular(activity));
+        relativeLayoutEdit = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEdit);
 
         buttonAddToAddressBook = (Button) rootView.findViewById(R.id.buttonAddToAddressBook); buttonAddToAddressBook.setTypeface(Fonts.mavenRegular(activity));
 
@@ -173,6 +192,95 @@ public class AddToAddressBookFragment extends Fragment {
             }
         });
 
+        editTextLabel.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                houseNumber.requestFocus();
+                houseNumber.setSelection(houseNumber.getText().length());
+                return true;
+            }
+        });
+        houseNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                buildingStreetName.requestFocus();
+                buildingStreetName.setSelection(buildingStreetName.getText().length());
+                return true;
+            }
+        });
+        buildingStreetName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                area.requestFocus();
+                area.setSelection(area.getText().length());
+                return true;
+            }
+        });
+        area.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                city.requestFocus();
+                city.setSelection(city.getText().length());
+                return true;
+            }
+        });
+        city.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                pinCode.requestFocus();
+                pinCode.setSelection(pinCode.getText().length());
+                return true;
+            }
+        });
+        pinCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                buttonAddToAddressBook.performClick();
+                return true;
+            }
+        });
+
+        relativeLayoutEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    boolean editAddress = false;
+                    if(activity instanceof AddPlaceActivity){
+                        editAddress = ((AddPlaceActivity)activity).isEditThisAddress();
+                        if(editAddress){
+                            ((AddPlaceActivity)activity).openMapAddress(createAddressBundle(placeId));
+                        }
+                    } else if(activity instanceof FreshActivity){
+                        editAddress = ((FreshActivity)activity).isEditThisAddress();
+                        if(editAddress){
+                            ((FreshActivity)activity).openMapAddress(createAddressBundle(placeId));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Utils.hideSoftKeyboard(activity, houseNumber);
+            }
+        }, 100);
+
+
+        setDataToUI();
+
+    }
+
+    private void setDataToUI(){
 
         houseNumber.setText(current_street);
         buildingStreetName.setText(current_route);
@@ -243,69 +351,20 @@ public class AddToAddressBookFragment extends Fragment {
         }
 
         buttonAddToAddressBook.setText(editAddress ? R.string.update_address : R.string.confirm);
+        relativeLayoutEdit.setVisibility(editAddress ? View.VISIBLE : View.GONE);
 
-        editTextLabel.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+    }
 
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                houseNumber.requestFocus();
-                houseNumber.setSelection(houseNumber.getText().length());
-                return true;
-            }
-        });
-        houseNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                buildingStreetName.requestFocus();
-                buildingStreetName.setSelection(buildingStreetName.getText().length());
-                return true;
-            }
-        });
-        buildingStreetName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                area.requestFocus();
-                area.setSelection(area.getText().length());
-                return true;
-            }
-        });
-        area.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                city.requestFocus();
-                city.setSelection(city.getText().length());
-                return true;
-            }
-        });
-        city.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                pinCode.requestFocus();
-                pinCode.setSelection(pinCode.getText().length());
-                return true;
-            }
-        });
-        pinCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                buttonAddToAddressBook.performClick();
-                return true;
-            }
-        });
-
+    public void setNewArgumentsToUI(Bundle bundle){
+        fetchAddressBundle(bundle);
+        setDataToUI();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Utils.hideSoftKeyboard(activity, houseNumber);
+                extractMapSnapShot(current_latitude, current_longitude);
             }
-        }, 100);
-
-
+        }, 500);
     }
 
     @Override
@@ -486,8 +545,20 @@ public class AddToAddressBookFragment extends Fragment {
         return true;
     }
 
-    private void fetchAddressBundle(){
-        Bundle bundle = getArguments();
+    private Bundle createAddressBundle(String placeId){
+        Bundle bundle = new Bundle();
+        bundle.putString("current_street", current_street);
+        bundle.putString("current_route", current_route);
+        bundle.putString("current_area", current_area);
+        bundle.putString("current_city", current_city);
+        bundle.putString("current_pincode", current_pincode);
+        bundle.putDouble("current_latitude", current_latitude);
+        bundle.putDouble("current_longitude", current_longitude);
+        bundle.putString(Constants.KEY_PLACEID, placeId);
+        return bundle;
+    }
+
+    private void fetchAddressBundle(Bundle bundle){
         current_street = bundle.getString("current_street", current_street);
         current_route = bundle.getString("current_route", current_route);
         current_area = bundle.getString("current_area", current_area);

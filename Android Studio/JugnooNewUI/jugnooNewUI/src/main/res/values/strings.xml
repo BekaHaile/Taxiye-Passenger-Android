@@ -1171,6 +1171,10 @@
 	<string name="delivery_instructions">Delivery Instructions</string>
 	<string name="address_label_matched_message_format">Address with label \"%s\" already present. Do you want to overwrite it?</string>
 	<string name="next">Next</string>
+	<string name="skip_and_proceed">Skip and proceed</string>
+	<string name="lets_complete_your_meal">Let\'s complete your meal</string>
+	<string name="pick_addons">Pick Add-Ons</string>
+	<string name="proceed">Proceed</string>
 
 
 </resources>

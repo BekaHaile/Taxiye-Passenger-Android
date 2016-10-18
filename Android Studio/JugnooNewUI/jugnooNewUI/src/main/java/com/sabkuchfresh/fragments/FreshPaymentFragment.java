@@ -24,7 +24,6 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
@@ -273,13 +272,17 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
         textViewSelectedOffer = (TextView)rootView.findViewById(R.id.textViewSelectedOffer); textViewSelectedOffer.setTypeface(Fonts.mavenRegular(activity));
         activity.setSelectedPromoCoupon(noSelectionCoupon);
 
-        String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
-        if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
-            promoCoupons = Data.userData.getCoupons(ProductType.MEALS);
-        } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
-            promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
-        } else {
-            promoCoupons = Data.userData.getCoupons(ProductType.FRESH);
+        try {
+            String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+            if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
+				promoCoupons = Data.userData.getCoupons(ProductType.MEALS);
+			} else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+				promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
+			} else {
+				promoCoupons = Data.userData.getCoupons(ProductType.FRESH);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         if(promoCoupons != null) {
             if(promoCoupons.size() > 0){
@@ -325,7 +328,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     }
-                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PLACE_ORDER_CLICKED, null);
                     FlurryEventLogger.event(PAYMENT_SCREEN, ORDER_PLACED, ORDER_PLACED);
                 }
             }
@@ -938,7 +940,6 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                             activity.getSlotSelected().getDayName());
                                     activity.setSelectedPromoCoupon(noSelectionCoupon);
 
-                                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ORDER_PLACED, null);
 
                                 } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
                                     final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");

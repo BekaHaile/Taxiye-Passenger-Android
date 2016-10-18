@@ -36,7 +36,6 @@ import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -171,7 +170,6 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_FRIENDS, null);
 				} else{
 					DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 				}
