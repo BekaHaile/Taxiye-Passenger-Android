@@ -143,6 +143,11 @@ public class FreshSearchFragment extends Fragment {
 					public boolean checkForMinus(int position, SubItem subItem) {
 						return true;
 					}
+
+					@Override
+					public void minusNotDone(int position, SubItem subItem) {
+
+					}
 				}, AppConstant.ListType.OTHER, FlurryEventNames.SEARCH_SCREEN, currentGroupId);
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 

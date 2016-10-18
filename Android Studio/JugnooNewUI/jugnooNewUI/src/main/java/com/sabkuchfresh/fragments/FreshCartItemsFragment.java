@@ -18,6 +18,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -170,10 +171,19 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 									itemIsAddon = true;
 								}
 							}
-							return !(addOnAdded && !itemIsAddon && subItem.getSubItemQuantitySelected() == 1);
+							int mealsQuantity = 0;
+							for(SubItem si : activity.getProductsResponse().getCategories().get(0).getSubItems()){
+								mealsQuantity = mealsQuantity + si.getSubItemQuantitySelected();
+							}
+							return !(addOnAdded && !itemIsAddon && mealsQuantity == 1);
 						} else {
 							return true;
 						}
+					}
+
+					@Override
+					public void minusNotDone(int position, SubItem subItem) {
+						Utils.showToast(activity, "Can't remove main item");
 					}
 				}, AppConstant.ListType.OTHER, FlurryEventNames.REVIEW_CART, currentGroupId);
 

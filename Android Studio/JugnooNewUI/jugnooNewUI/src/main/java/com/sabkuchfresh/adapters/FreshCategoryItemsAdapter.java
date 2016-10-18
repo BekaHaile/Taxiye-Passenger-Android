@@ -258,7 +258,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
                             notifyDataSetChanged();
                         } else{
-
+                            callback.minusNotDone(pos, subItems.get(pos));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -444,6 +444,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         void onMinusClicked(int position, SubItem subItem);
         void onDeleteClicked(int position, SubItem subItem);
         boolean checkForMinus(int position, SubItem subItem);
+        void minusNotDone(int position, SubItem subItem);
     }
 
     public enum OpenMode{
