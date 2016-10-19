@@ -139,7 +139,7 @@
     <!--<dimen name="labels_text_size">26px</dimen>-->
     <!--<item name="fab_label" type="id" />-->
     <dimen name="fab_size_mini">40dp</dimen>
-    <dimen name="fab_size_normal">56dp</dimen>
+    <dimen name="fab_size_normal">50dp</dimen>
     <dimen name="labels_text_size">14sp</dimen>
     <item name="fab_label" type="id" />
 

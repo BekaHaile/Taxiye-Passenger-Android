@@ -80,7 +80,9 @@
                     android:soundEffectsEnabled="false"
                     />
 
-                <include layout="@layout/layout_home_activity_fab_test"/>
+                <include
+                    android:id="@+id/fabViewIntial"
+                    layout="@layout/layout_home_activity_fab_test"/>
 
             </RelativeLayout>
 
@@ -146,6 +148,10 @@
 
         <!-- end ride layout -->
         <include layout="@layout/layout_ride_summary_new"/>
+
+        <include
+            android:id="@+id/fabViewFinal"
+            layout="@layout/layout_home_activity_fab_test"/>
 
 
         <!-- search layout -->

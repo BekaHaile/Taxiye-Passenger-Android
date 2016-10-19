@@ -223,9 +223,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
             menuBar = new MenuBar(this, drawerLayout);
             topBar = new TopBar(this, drawerLayout);
-            fabViewTest = new FABViewTest(this);
+            fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
 
-            int dpAsPixels = (int) (100f*scale + 0.5f);
+            int dpAsPixels = (int) (80f*scale + 0.5f);
             fabViewTest.menuLabelsRightTest.setPadding((int) (30 * ASSL.Yscale()), 0, 0, dpAsPixels);
 
 //        if(BuildConfig.DEBUG_MODE)

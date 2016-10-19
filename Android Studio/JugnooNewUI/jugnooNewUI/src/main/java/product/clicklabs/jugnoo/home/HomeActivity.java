@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.home;
 
 import android.animation.LayoutTransition;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -443,13 +444,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private PokestopHelper pokestopHelper;
     ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffAssigning, imageViewPokemonOnOffEngaged;
-    private ImageView imageViewFabFake, imageViewFabFakeAssigning, imageViewFabFakeFinal;
     private Bundle bundle;
     public float scale = 0f;
     private boolean rideNowClicked = false;
     private String dropAddressName = "";
     private RelativeLayout relativeLayoutFABTest, relativeLayoutSlidingBottomParent;
     private View viewSlidingExtra;
+    private View fabViewIntial;
+    private View fabViewFinal;
     /*private RelativeLayout relativeLayoutFAB;
     private FloatingActionMenu menuLabelsRight;
     private FloatingActionButton fabDelivery;
@@ -542,7 +544,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         //FAB View
         //fabView = new FABView(this);
-        fabViewTest = new FABViewTest(this);
+
 
 
         //Map Layout
@@ -808,47 +810,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewPokemonOnOffAssigning = (ImageView) findViewById(R.id.imageViewPokemonOnOffAssigning); imageViewPokemonOnOffAssigning.setVisibility(View.GONE);
         imageViewPokemonOnOffEngaged = (ImageView) findViewById(R.id.imageViewPokemonOnOffEngaged); imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
 
-        imageViewFabFake = (ImageView) findViewById(R.id.imageViewFabFake);
-        imageViewFabFake.setVisibility(View.GONE);
-
-        imageViewFabFakeAssigning = (ImageView) findViewById(R.id.imageViewFabFakeAssigning);
-        imageViewFabFakeAssigning.setVisibility(View.GONE);
-
-        imageViewFabFakeFinal = (ImageView) findViewById(R.id.imageViewFabFakeFinal);
-        imageViewFabFakeFinal.setVisibility(View.GONE);
-
+        fabViewIntial = (View)findViewById(R.id.fabViewIntial);
+        fabViewFinal = (View)findViewById(R.id.fabViewFinal);
+//        fabViewTest = new FABViewTest(this, fabViewIntial);
         relativeLayoutFABTest = (RelativeLayout)findViewById(R.id.relativeLayoutFABTest);
         relativeLayoutSlidingBottomParent = (RelativeLayout)findViewById(R.id.relativeLayoutSlidingBottomParent);
         viewSlidingExtra = (View)findViewById(R.id.viewSlidingExtra);
 
-        imageViewFabFake.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(viewPoolInfoBarAnim.getVisibility() == View.VISIBLE){
-                    fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 8, (int) (162f * ASSL.Yscale()));
-                } else{
-                    fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 8, (int) (235f * ASSL.Yscale()));
-                }
-                //openFABView();
-                //imageViewFabFake.setVisibility(View.INVISIBLE);
-            }
-        });
 
-        imageViewFabFakeAssigning.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //openFABView();
-                imageViewFabFake.setVisibility(View.GONE);
-            }
-        });
-
-        imageViewFabFakeFinal.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //openFABView();
-                imageViewFabFake.setVisibility(View.GONE);
-            }
-        });
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -1968,9 +1937,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return relativeLayoutSlidingBottomParent;
     }
 
-    public ImageView getImageViewFabFake() {
-        return imageViewFabFake;
-    }
 
     public View getViewSlidingExtra() {
         return viewSlidingExtra;
@@ -1998,7 +1964,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void run() {
                     //fabView.fabExtra.setVisibility(View.VISIBLE);
-                    imageViewFabFake.setVisibility(View.INVISIBLE);
                     //imageViewFabFakeAssigning.setVisibility(View.INVISIBLE);
                     //imageViewFabFakeFinal.setVisibility(View.INVISIBLE);
                 }
@@ -2717,7 +2682,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 switch (mode) {
 
                     case P_INITIAL:
-
+                        fabViewTest = new FABViewTest(this, fabViewIntial);
                         GCMIntentService.clearNotifications(HomeActivity.this);
 
                         if(!dropLocationSet) {
@@ -2739,7 +2704,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.VISIBLE);
                         relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
-                        fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
                         checkForMyLocationButtonVisibility();
@@ -2824,8 +2788,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             updateConfirmedStateFare();
 
                             //fabView.setRelativeLayoutFABVisibility(mode);
-                            int dpAsPixels = (int) (200f*scale + 0.5f);
-                            fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
+
                         } else{
                             if (!zoomedForSearch && map != null) {
                                 getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
@@ -2837,6 +2800,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         }
                         searchedALocation = false;
+
+                        setFabMarginInitial(false);
 
                         initAndClearInRidePath();
                         getTrackingLogHelper().uploadAllTrackLogs();
@@ -2866,7 +2831,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                     case P_ASSIGNING:
-
+                        fabViewTest = new FABViewTest(this, fabViewFinal);
                         findDriverJugnooAnimation.setVisibility(View.VISIBLE);
                         jugnooAnimation.start();
                         initialLayout.setVisibility(View.GONE);
@@ -2941,11 +2906,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
-                        imageViewFabFakeAssigning.setVisibility(View.VISIBLE);
-                        //fabView.setRelativeLayoutFABVisibility(mode);
-                        int dpAsPixels = (int) (150f*scale + 0.5f);
-                        fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
-                        setMargins(imageViewFabFakeAssigning, (int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
 
                         try {
                             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
@@ -2959,23 +2919,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
 
-                        if(setJeanieVisibility()){
-                            imageViewFabFakeAssigning.setVisibility(View.VISIBLE);
-                            fabView.setRelativeLayoutFABVisibility(mode);
-                            int dpAsPixels = (int) (150f*scale + 0.5f);
-                            fabView.menuLabelsRight.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
-                            setMargins(imageViewFabFakeAssigning, (int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
-                        } else{
-                            imageViewFabFakeAssigning.setVisibility(View.GONE);
-                        }
 
-//                        genieLayout.setVisibility(View.GONE);
+                        fabViewIntial.setVisibility(View.GONE);
+                        fabViewFinal.setVisibility(View.VISIBLE);
+                        int dpAsPixels = (int) (160f*scale + 0.5f);
+                        fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
+                        setJeanieVisibility();
 
                         break;
 
 
                     case P_REQUEST_FINAL:
-
+                        fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
 
                             Log.e("Data.autoData.getAssignedDriverInfo().latLng", "=" + Data.autoData.getAssignedDriverInfo().latLng);
@@ -3038,17 +2993,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 
 
-                        if(setJeanieVisibility()){
-                            imageViewFabFakeFinal.setVisibility(View.VISIBLE);
-                            setFabViewAtRide(mode);
-                        } else{
-                            imageViewFabFakeFinal.setVisibility(View.GONE);
-                        }
+                        fabViewIntial.setVisibility(View.GONE);
+                        fabViewFinal.setVisibility(View.VISIBLE);
+                        //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (160f*scale + 0.5f));
+                        setFabViewAtRide(mode);
+                        setJeanieVisibility();
+
+
 
                         break;
 
                     case P_DRIVER_ARRIVED:
-
+                        fabViewTest = new FABViewTest(this, fabViewFinal);
 
                         if (map != null) {
 
@@ -3115,19 +3071,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                         checkForGoogleLogoVisibilityInRide();
 
+                        fabViewIntial.setVisibility(View.GONE);
+                        fabViewFinal.setVisibility(View.VISIBLE);
+                        //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (160f*scale + 0.5f));
+                        setFabViewAtRide(mode);
+                        setJeanieVisibility();
 
-                        if(setJeanieVisibility()){
-                            imageViewFabFakeFinal.setVisibility(View.VISIBLE);
-                            setFabViewAtRide(mode);
-                        } else{
-                            imageViewFabFakeFinal.setVisibility(View.GONE);
-                        }
 
                         break;
 
 
                     case P_IN_RIDE:
-
+                        fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
                             clearMap();
 
@@ -3182,6 +3137,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                         checkForGoogleLogoVisibilityInRide();
 
+                        fabViewIntial.setVisibility(View.GONE);
+                        fabViewFinal.setVisibility(View.VISIBLE);
+                        //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (160f*scale + 0.5f));
+                        setFabViewAtRide(mode);
+                        setJeanieVisibility();
+
 //                        genieLayout.setVisibility(View.GONE);
 
                         try {
@@ -3190,18 +3151,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
 
-                        if(setJeanieVisibility()){
-                            imageViewFabFakeFinal.setVisibility(View.VISIBLE);
-                            setFabViewAtRide(mode);
-                        } else{
-                            imageViewFabFakeFinal.setVisibility(View.GONE);
-                        }
 
 
                         break;
 
                     case P_RIDE_END:
-
+                        fabViewTest = new FABViewTest(this, fabViewFinal);
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -3280,7 +3235,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         dpAsPixels1 = (int) (containerHeight * scale + 0.5f);
         fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels1);
-        setMargins(imageViewFabFakeFinal, (int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels1);
     }
 
 
@@ -4207,7 +4161,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 //fabView.setRelativeLayoutFABVisibility(passengerScreenMode);
             } else {
-                imageViewFabFake.setVisibility(View.GONE);
+                //imageViewFabFake.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -4674,13 +4628,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void findADriverFinishing(boolean showPoolIntro){
-        fabViewTest.setFABButtons();
+        //fabViewTest.setFABButtons();
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-            if(setJeanieVisibility()){
-                imageViewFabFake.setVisibility(View.VISIBLE);
-            } else{
-                imageViewFabFake.setVisibility(View.GONE);
-            }
             try {
                 slidingBottomPanel.update();
             } catch (Exception e) {
@@ -4704,6 +4653,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     setServiceAvailablityUI(Data.autoData.getFarAwayCity());
                     setupFreshUI();
                     setupInAppCampaignUI();
+                    fabViewTest = new FABViewTest(this, fabViewIntial);
                     setJeanieVisibility();
                     if(showPoolIntro) {
 //                        showPoolIntroDialog();
@@ -4727,7 +4677,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } else {
                     if (Prefs.with(HomeActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         //imageViewFabFake.setVisibility(View.VISIBLE); // fab existing
-                        relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                        fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                         fabViewTest.menuLabelsRightTest.setVisibility(View.VISIBLE);
                     }
                 }
@@ -4794,14 +4744,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.GONE);
-                imageViewFabFake.setVisibility(View.GONE);
                 fabViewTest.menuLabelsRightTest.setVisibility(View.GONE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
                 //imageViewFabFake.setVisibility(View.VISIBLE);
-                fabViewTest.menuLabelsRightTest.setVisibility(View.VISIBLE);
             }
             showPokestopOnOffButton(passengerScreenMode);
         }
@@ -8380,6 +8328,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
             }
             viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
+            setFabMarginInitial(false);
             setGoogleMapPadding(0);
         }
         slidingBottomPanel.getRequestRideOptionsFragment()
@@ -8399,6 +8348,43 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             }
         }, 500);
+    }
+
+    public void setFabMarginInitial(boolean isSliding){
+        fabViewFinal.setVisibility(View.GONE);
+        fabViewIntial.setVisibility(View.VISIBLE);
+        final ValueAnimator animator;
+        int handlerTime = 0;
+        if(viewPoolInfoBarAnim.getVisibility() == View.VISIBLE) {
+            //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (22f * scale + 0.5f));
+            animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (22f * scale + 0.5f));
+            handlerTime = 0;
+        } else{
+            //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (52f * scale + 0.5f));
+            animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (52f * scale + 0.5f));
+            if(isSliding) {
+                handlerTime = 0;
+            } else{
+                handlerTime = 250;
+            }
+
+        }
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator){
+                fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (Integer) valueAnimator.getAnimatedValue());
+            }
+        });
+        animator.setDuration(300);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                animator.start();
+            }
+        }, handlerTime);
+
+
+        setJeanieVisibility();
     }
 
     public void setDestinationBarPlaceholderText(int rideTypeValue){
@@ -8421,6 +8407,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
+                setFabMarginInitial(false);
                 textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1());
                 //setGoogleMapPadding(70);
             }
