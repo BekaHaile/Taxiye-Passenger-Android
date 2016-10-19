@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relativeLayoutRoot"
-    android:layout_width="match_parent"
-    android:layout_height="1134px"
-    android:background="@drawable/bg_fresh_invoice"
-    android:splitMotionEvents="false">
+<RelativeLayout android:id="@+id/relativeLayoutRoot"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="1134px"
+                android:background="@drawable/bg_fresh_invoice"
+                android:splitMotionEvents="false">
 
     <RelativeLayout
         android:id="@+id/linearLayoutReceipt"
@@ -16,16 +16,16 @@
         <ImageView
             android:layout_width="53px"
             android:layout_height="match_parent"
-            android:background="@drawable/ic_ride_summary_line" />
+            android:background="@drawable/ic_ride_summary_line"/>
 
         <ImageView
             android:layout_width="53px"
             android:layout_height="1000px"
             android:layout_alignParentRight="true"
             android:background="@drawable/ic_ride_summary_line"
-            android:rotation="180" />
+            android:rotation="180"/>
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="562px"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
@@ -33,28 +33,22 @@
             android:layout_marginLeft="-6px"
             android:layout_marginRight="-6px"
             android:layout_marginTop="6px"
-            android:background="@drawable/background_white_top_bottom_border">
-
-            <LinearLayout
-                android:layout_width="562px"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            android:background="@drawable/background_white_top_bottom_border"
+            android:orientation="vertical">
 
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerViewOrderItems"
-                    android:layout_width="match_parent"
-                    android:layout_height="890px"
-                    android:layout_marginBottom="5px"
-                    android:layout_marginTop="5px"
-                    android:fadeScrollbars="true"
-                    android:scrollbars="vertical"
-                    android:splitMotionEvents="false" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewOrderItems"
+                android:layout_width="match_parent"
+                android:layout_height="890px"
+                android:layout_marginBottom="5px"
+                android:layout_marginTop="5px"
+                android:fadeScrollbars="true"
+                android:scrollbars="vertical"
+                android:splitMotionEvents="false"/>
 
 
-            </LinearLayout>
-
-        </ScrollView>
+        </LinearLayout>
 
 
     </RelativeLayout>
@@ -92,7 +86,7 @@
             android:text="@string/need_help"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34" />
+            android:textSize="@dimen/text_size_34"/>
 
         <Button
             android:id="@+id/buttonCancelOrder"
@@ -106,7 +100,7 @@
             android:text="@string/cancel_order"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34" />
+            android:textSize="@dimen/text_size_34"/>
 
     </LinearLayout>
 
@@ -134,7 +128,7 @@
             android:text="@string/ok"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34" />
+            android:textSize="@dimen/text_size_34"/>
 
         <Button
             android:id="@+id/reorderBtn"
@@ -148,7 +142,7 @@
             android:text="Re-Order"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_34" />
+            android:textSize="@dimen/text_size_34"/>
 
     </LinearLayout>
 

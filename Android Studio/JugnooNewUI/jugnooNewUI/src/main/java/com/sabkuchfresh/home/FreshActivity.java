@@ -2053,4 +2053,26 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 && getProductsResponse().getCategories().get(1).getSubItems().size() > 0;
     }
 
+    public boolean checkForMinus(int position, SubItem subItem) {
+        if(isMealAddonItemsAvailable()){
+            boolean addOnAdded = false;
+            boolean itemIsAddon = false;
+            for(SubItem si : getProductsResponse().getCategories().get(1).getSubItems()){
+                if(si.getSubItemQuantitySelected() > 0){
+                    addOnAdded = true;
+                }
+                if(si.getSubItemId().equals(subItem.getSubItemId())){
+                    itemIsAddon = true;
+                }
+            }
+            int mealsQuantity = 0;
+            for(SubItem si : getProductsResponse().getCategories().get(0).getSubItems()){
+                mealsQuantity = mealsQuantity + si.getSubItemQuantitySelected();
+            }
+            return !(addOnAdded && !itemIsAddon && mealsQuantity == 1);
+        } else {
+            return true;
+        }
+    }
+
 }

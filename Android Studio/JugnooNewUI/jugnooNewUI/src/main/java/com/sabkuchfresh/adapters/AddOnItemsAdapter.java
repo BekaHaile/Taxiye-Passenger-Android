@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -143,7 +142,7 @@ public class AddOnItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                             subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
                         } else {
-                            Toast.makeText(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"", Toast.LENGTH_SHORT).show();
+                            Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"");
                         }
                         callback.onPlusClicked(pos, subItems.get(pos));
                         notifyDataSetChanged();
@@ -167,7 +166,7 @@ public class AddOnItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                             subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
                         } else {
-                            Toast.makeText(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"", Toast.LENGTH_SHORT).show();
+                            Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"");
                         }
 
                         callback.onPlusClicked(pos, subItems.get(pos));

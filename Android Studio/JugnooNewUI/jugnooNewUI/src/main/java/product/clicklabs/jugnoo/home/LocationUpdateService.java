@@ -157,6 +157,7 @@ public class LocationUpdateService extends Service {
 						emergencyLoc = false;
 					} else{
 						String engagementId = Prefs.with(context).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "");
+						Log.i(TAG, "customonReceive engagementId=" + engagementId);
 						if(!"".equalsIgnoreCase(engagementId)) {
 							params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
 							Log.i(TAG, "customonReceive params=" + params);

@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -285,7 +284,11 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             @Override
             public void onClick(View v) {
                 if(activity instanceof FreshActivity) {
-                    ((FreshActivity)activity).openMapAddress(createAddressBundle(""));
+                    FreshActivity freshActivity = (FreshActivity) activity;
+                    freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    freshActivity.setSearchResult(null);
+                    freshActivity.setEditThisAddress(false);
+                    freshActivity.openMapAddress(createAddressBundle(""));
                 }
                 else if(activity instanceof AddPlaceActivity) {
                     ((AddPlaceActivity)activity).openMapAddress(createAddressBundle(""));

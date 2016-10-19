@@ -56,6 +56,11 @@ public class DeepLinkAction {
 			else if(AppLinkIndex.AUTO_PAGE.getOrdinal() == Data.deepLinkIndex){
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.GET_A_RIDE.getTag());
 			}
+			else if(AppLinkIndex.GROCERY_PAGE.getOrdinal() == Data.deepLinkIndex){
+				if(Data.userData.getGroceryEnabled() == 1) {
+					menuBar.menuAdapter.onClickAction(MenuInfoTags.GROCERY.getTag());
+				}
+			}
 
 		} catch(Exception e){
 			e.printStackTrace();

@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -20,7 +19,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -195,11 +193,15 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     public void onClick(View v) {
                         try {
                             int pos = (int) v.getTag();
-                            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
-                                    subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
-                            callback.onMinusClicked(pos, subItems.get(pos));
+                            if(callback.checkForMinus(pos, subItems.get(pos))) {
+                                subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
+                                        subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
+                                callback.onMinusClicked(pos, subItems.get(pos));
 
-                            notifyDataSetChanged();
+                                notifyDataSetChanged();
+                            } else{
+                                callback.minusNotDone(pos, subItems.get(pos));
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -348,6 +350,10 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void onPlusClicked(int position, SubItem subItem);
 
         void onMinusClicked(int position, SubItem subItem);
+
+        boolean checkForMinus(int position, SubItem subItem);
+        void minusNotDone(int position, SubItem subItem);
+
     }
 
 }
