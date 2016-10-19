@@ -630,7 +630,7 @@ public class AddToAddressBookFragment extends Fragment {
                 }
 
             } else {
-                otherId = getOtherMatchedId(placeRequestCode, localAddress, editThisAddress, searchResultId);
+                otherId = getOtherMatchedId(placeRequestCode, localAddress, searchResultId);
             }
 
             String label = "";
@@ -679,14 +679,13 @@ public class AddToAddressBookFragment extends Fragment {
         }
     }
 
-    private int getOtherMatchedId(int placeRequestCode, String localAddress, boolean editThisAddress, int searchResultId){
+    private int getOtherMatchedId(int placeRequestCode, String localAddress, int searchResultId){
         int otherId = 0;
         String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
         if((placeRequestCode == Constants.REQUEST_CODE_ADD_HOME || placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION)
                 && !TextUtils.isEmpty(workString)){
             SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-            if((!editThisAddress && searchResult.getName().equalsIgnoreCase(localAddress))
-                    || (editThisAddress && !searchResult.getId().equals(searchResultId) && searchResult.getName().equalsIgnoreCase(localAddress))){
+            if(searchResult.getAddress().equalsIgnoreCase(localAddress)){
                 otherId = searchResult.getId();
             }
         }
@@ -695,20 +694,22 @@ public class AddToAddressBookFragment extends Fragment {
         if((placeRequestCode == Constants.REQUEST_CODE_ADD_WORK || placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION)
                 && !TextUtils.isEmpty(homeString)){
             SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-            if((!editThisAddress && searchResult.getName().equalsIgnoreCase(localAddress))
-                    || (editThisAddress && !searchResult.getId().equals(searchResultId) && searchResult.getName().equalsIgnoreCase(localAddress))){
+            if(searchResult.getAddress().equalsIgnoreCase(localAddress)){
                 otherId = searchResult.getId();
             }
         }
 
         if(Data.userData != null) {
             for (SearchResult searchResult : Data.userData.getSearchResults()) {
-                if((!editThisAddress && searchResult.getName().equalsIgnoreCase(localAddress))
-                        || (editThisAddress && !searchResult.getId().equals(searchResultId) && searchResult.getName().equalsIgnoreCase(localAddress))){
+                if(searchResult.getAddress().equalsIgnoreCase(localAddress)){
                     otherId = searchResult.getId();
                     break;
                 }
             }
+        }
+
+        if(otherId == searchResultId){
+            otherId = 0;
         }
 
         return otherId;
