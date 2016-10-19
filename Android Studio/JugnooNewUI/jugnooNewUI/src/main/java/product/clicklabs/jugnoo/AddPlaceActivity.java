@@ -163,7 +163,7 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         final AddToAddressBookFragment fragment = getAddToAddressBookFragment();
         if(fragment != null && fragment.locationEdited){
             DialogPopup.alertPopupTwoButtonsWithListeners(AddPlaceActivity.this, "",
-                    getString(R.string.changes_not_saved_exit),
+                    getString(R.string.changes_not_updated_exit),
                     getString(R.string.ok), getString(R.string.cancel),
                     new View.OnClickListener() {
                         @Override

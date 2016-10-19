@@ -387,6 +387,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     @Override
     public void minusNotDone(int position, SubItem subItem) {
         activity.clearMealsCartIfNoMainMeal();
+        mealAdapter.notifyDataSetChanged();
     }
 
     public void onSortEvent(int postion) {

@@ -1283,7 +1283,26 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             finish();
         }
         Utils.hideSoftKeyboard(this, textViewCartItemsCount);
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+        final AddToAddressBookFragment fragment = getAddToAddressBookFragment();
+        if(fragment != null && fragment.locationEdited){
+            DialogPopup.alertPopupTwoButtonsWithListeners(FreshActivity.this, "",
+                    getString(R.string.changes_not_updated_exit),
+                    getString(R.string.ok), getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fragment.locationEdited = false;
+                            performBackPressed();
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }, false, false);
+        }
+        else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
         } else if(locationSearchShown) {
             locationSearchShown = false;
@@ -2096,6 +2115,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public AddToAddressBookFragment getAddToAddressBookFragment(){
+        return (AddToAddressBookFragment) getSupportFragmentManager().findFragmentByTag(AddToAddressBookFragment.class.getName());
     }
 
 }

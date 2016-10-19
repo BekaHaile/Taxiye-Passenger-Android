@@ -1780,7 +1780,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     // Map released
                     try {
                         myLocationButtonClicked = false;
-                        if(PassengerScreenMode.P_INITIAL == passengerScreenMode && zoomedForSearch){
+                        if(PassengerScreenMode.P_INITIAL == passengerScreenMode && zoomedForSearch
+                                && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()){
                             if(lastSearchLatLng != null){
                                 double distance = MapUtils.distance(lastSearchLatLng, map.getCameraPosition().target);
                                 if(distance > MAP_PAN_DISTANCE_CHECK){
