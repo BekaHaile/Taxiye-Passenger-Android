@@ -191,7 +191,13 @@ public class AddPlaceActivity extends BaseFragmentActivity {
     }
 
     public AddToAddressBookFragment getAddToAddressBookFragment(){
-        return (AddToAddressBookFragment) getSupportFragmentManager().findFragmentByTag(AddToAddressBookFragment.class.getName());
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
+        if(fragmentTag.equalsIgnoreCase(AddToAddressBookFragment.class.getName())){
+            return (AddToAddressBookFragment) fragmentManager.findFragmentByTag(fragmentTag);
+        } else{
+            return null;
+        }
     }
 
 	@Override

@@ -214,7 +214,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             }
         });
 
-        buttonOk.setText(editThisAddress ? R.string.pick : R.string.next);
+        buttonOk.setText(editThisAddress ? R.string.set : R.string.next);
 
         searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
