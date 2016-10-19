@@ -1176,6 +1176,7 @@
 	<string name="pick_addons">Pick Add-Ons</string>
 	<string name="proceed">Proceed</string>
 	<string name="cant_remove_main_item">Can\'t remove main item</string>
+	<string name="changes_not_saved_exit">Your changes are not saved. Do you want to exit?</string>
 
 
 </resources>

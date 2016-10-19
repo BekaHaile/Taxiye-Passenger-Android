@@ -74,12 +74,15 @@ public class AddToAddressBookFragment extends Fragment {
     public String current_pincode = "";
     public String placeId = "";
 
+    public boolean locationEdited = false;
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_addto_address, container, false);
 
+        locationEdited = false;
         activity = getActivity();
         fetchAddressBundle(getArguments());
 
@@ -357,8 +360,14 @@ public class AddToAddressBookFragment extends Fragment {
 
 
     public void setNewArgumentsToUI(Bundle bundle){
+        double oldLatitude = current_latitude;
+        double oldLongitude = current_longitude;
+
         fetchAddressBundle(bundle);
         setDataToUI();
+
+        locationEdited = (Utils.compareDouble(oldLatitude, current_latitude) != 0 && Utils.compareDouble(oldLongitude, current_longitude) != 0);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
