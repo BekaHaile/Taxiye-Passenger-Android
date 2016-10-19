@@ -165,7 +165,7 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 
 					@Override
 					public void minusNotDone(int position, SubItem subItem) {
-						Utils.showToast(activity, activity.getString(R.string.cant_remove_main_item));
+						activity.clearMealsCartIfNoMainMeal();
 					}
 				}, AppConstant.ListType.OTHER, FlurryEventNames.REVIEW_CART, currentGroupId);
 

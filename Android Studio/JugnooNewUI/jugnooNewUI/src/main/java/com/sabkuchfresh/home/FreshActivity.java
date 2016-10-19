@@ -2075,4 +2075,27 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         }
     }
 
+    public void clearMealsCartIfNoMainMeal(){
+        try {
+            FreshCartItemsFragment frag = getFreshCartItemsFragment();
+            if (frag != null) {
+				frag.deleteCart();
+			} else{
+				if(getProductsResponse() != null && getProductsResponse().getCategories() != null) {
+					for (Category category : getProductsResponse().getCategories()) {
+						for (SubItem subItem : category.getSubItems()) {
+							if (subItem.getSubItemQuantitySelected() > 0) {
+								subItem.setSubItemQuantitySelected(0);
+							}
+						}
+					}
+				}
+				updateCartValuesGetTotalPrice();
+			}
+            clearMealCart();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
