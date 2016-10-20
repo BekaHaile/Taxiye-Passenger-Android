@@ -36,7 +36,6 @@ public class CustomCampaignTrackingReceiver extends BroadcastReceiver {
 		// When you're done, pass the intent to the Google Analytics receiver.
 		new CampaignTrackingReceiver().onReceive(context, intent);
 		new com.google.ads.conversiontracking.InstallReceiver().onReceive(context, intent);
-        new com.kochava.android.tracker.ReferralCapture().onReceive(context, intent);
 		new com.clevertap.android.sdk.InstallReferrerBroadcastReceiver().onReceive(context, intent);
 
 	}

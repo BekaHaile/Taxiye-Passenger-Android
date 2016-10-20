@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.flurry.android.FlurryAgent;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,7 +19,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -72,16 +69,15 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
     @Override
     public void onStart() {
         super.onStart();
-        FlurryAgent.init(activity, Config.getFlurryKey());
-        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(SupportMainFragment.class.getSimpleName() + " started");
+//        FlurryAgent.init(activity, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//        FlurryAgent.onEvent(SupportMainFragment.class.getSimpleName() + " started");
     }
 
     @Override
     public void onStop() {
-
 		super.onStop();
-        FlurryAgent.onEndSession(activity);
+//        FlurryAgent.onEndSession(activity);
     }
 	
 

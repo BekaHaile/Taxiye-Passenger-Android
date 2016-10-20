@@ -13,7 +13,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.flurry.android.FlurryAgent;
 
 import org.json.JSONObject;
 
@@ -57,15 +56,15 @@ public class ChangePasswordActivity extends BaseActivity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		FlurryAgent.init(this, Config.getFlurryKey());
-		FlurryAgent.onStartSession(this, Config.getFlurryKey());
-		FlurryAgent.onEvent("Login started");
+//		FlurryAgent.init(this, Config.getFlurryKey());
+//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//		FlurryAgent.onEvent("Login started");
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(this);
+//		FlurryAgent.onEndSession(this);
 	}
 	
 	@Override

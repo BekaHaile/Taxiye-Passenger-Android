@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -77,15 +76,15 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
     @Override
     public void onStart() {
         super.onStart();
-        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
-        FlurryAgent.onStartSession(paymentActivity, Config.getFlurryKey());
-        FlurryAgent.onEvent("WalletTransactions started");
+//        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(paymentActivity, Config.getFlurryKey());
+//        FlurryAgent.onEvent("WalletTransactions started");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        FlurryAgent.onEndSession(paymentActivity);
+//        FlurryAgent.onEndSession(paymentActivity);
     }
 	
 	@Override

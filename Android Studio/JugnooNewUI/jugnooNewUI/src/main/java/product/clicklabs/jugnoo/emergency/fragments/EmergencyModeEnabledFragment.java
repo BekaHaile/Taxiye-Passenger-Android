@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
-
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
@@ -23,7 +21,6 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyAlert;
 import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
@@ -71,15 +68,15 @@ public class EmergencyModeEnabledFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		FlurryAgent.init(activity, Config.getFlurryKey());
-		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-		FlurryAgent.onEvent(EmergencyModeEnabledFragment.class.getSimpleName() + " started");
+//		FlurryAgent.init(activity, Config.getFlurryKey());
+//		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//		FlurryAgent.onEvent(EmergencyModeEnabledFragment.class.getSimpleName() + " started");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(activity);
+//		FlurryAgent.onEndSession(activity);
 	}
 
 	@Override

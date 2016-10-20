@@ -14,8 +14,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
-
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
@@ -23,7 +21,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchT20Schedule;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.t20.adapters.MatchScheduleAdapter;
@@ -58,15 +55,15 @@ public class T20ScheduleFragment extends Fragment implements FlurryEventNames, C
     @Override
     public void onStart() {
         super.onStart();
-        FlurryAgent.init(activity, Config.getFlurryKey());
-        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-		FlurryAgent.onEvent(TAG + " started");
+//        FlurryAgent.init(activity, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//		FlurryAgent.onEvent(TAG + " started");
     }
 
     @Override
     public void onStop() {
 		super.onStop();
-        FlurryAgent.onEndSession(activity);
+//        FlurryAgent.onEndSession(activity);
     }
 
     @Override

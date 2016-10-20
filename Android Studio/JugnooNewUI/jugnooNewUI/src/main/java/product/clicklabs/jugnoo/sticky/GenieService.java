@@ -32,7 +32,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONObject;
@@ -45,7 +44,6 @@ import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -122,8 +120,8 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
 
         MyApplication.getInstance().initializeServerURL(this);
 
-        FlurryAgent.init(this, Config.getFlurryKey());
-        FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//        FlurryAgent.init(this, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(this, Config.getFlurryKey());
 
         locationFetcherBG = new LocationFetcherBG(this, 60000, LocationReceiver.class);
         //if(getIntent.hasExtra("package_name")){
@@ -1691,7 +1689,7 @@ public class GenieService extends Service implements View.OnClickListener, Flurr
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FlurryAgent.onEndSession(this);
+//        FlurryAgent.onEndSession(this);
         Prefs.with(this).save("remove_chat_head", packageName);
         Log.v("onDestroy service", "onDestroy service "+Prefs.with(this).getString("remove_chat_head", ""));
         try {

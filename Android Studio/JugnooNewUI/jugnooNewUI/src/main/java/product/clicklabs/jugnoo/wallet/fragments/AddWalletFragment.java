@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
 
 import org.json.JSONObject;
 
@@ -84,14 +83,14 @@ public class AddWalletFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		FlurryAgent.init(getActivity(), Config.getFlurryKey());
-		FlurryAgent.onStartSession(getActivity(), Config.getFlurryKey());
+//		FlurryAgent.init(getActivity(), Config.getFlurryKey());
+//		FlurryAgent.onStartSession(getActivity(), Config.getFlurryKey());
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(getActivity());
+//		FlurryAgent.onEndSession(getActivity());
 	}
 
 	@Override

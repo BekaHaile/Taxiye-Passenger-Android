@@ -17,13 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.flurry.android.FlurryAgent;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -58,14 +55,14 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
     @Override
     protected void onStart() {
         super.onStart();
-        FlurryAgent.init(this, Config.getFlurryKey());
-        FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//        FlurryAgent.init(this, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(this, Config.getFlurryKey());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        FlurryAgent.onEndSession(this);
+//        FlurryAgent.onEndSession(this);
     }
 
     @Override
