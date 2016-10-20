@@ -13,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.flurry.android.FlurryAgent;
-
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
@@ -24,7 +22,6 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -66,15 +63,15 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 	@Override
 	public void onStart() {
 		super.onStart();
-		FlurryAgent.init(activity, Config.getFlurryKey());
-		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-		FlurryAgent.onEvent(SupportRideIssuesFragment.class.getSimpleName() + " started");
+//		FlurryAgent.init(activity, Config.getFlurryKey());
+//		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//		FlurryAgent.onEvent(SupportRideIssuesFragment.class.getSimpleName() + " started");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(activity);
+//		FlurryAgent.onEndSession(activity);
 	}
 
 	public SupportRideIssuesFragment(){}

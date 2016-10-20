@@ -25,7 +25,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -101,14 +100,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	@Override
 	protected void onStart() {
 		super.onStart();
-		FlurryAgent.init(this, Config.getFlurryKey());
-		FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//		FlurryAgent.init(this, Config.getFlurryKey());
+//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(this);
+//		FlurryAgent.onEndSession(this);
 	}
 
 	@Override

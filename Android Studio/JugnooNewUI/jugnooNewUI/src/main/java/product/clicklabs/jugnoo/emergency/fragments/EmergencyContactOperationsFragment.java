@@ -20,7 +20,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
 import com.tokenautocomplete.FilteredArrayAdapter;
 
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyContactsList;
 import product.clicklabs.jugnoo.apis.ApiEmergencySendRideStatus;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.emergency.ContactsFetchAsync;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
@@ -93,15 +91,15 @@ public class EmergencyContactOperationsFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		FlurryAgent.init(activity, Config.getFlurryKey());
-		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-		FlurryAgent.onEvent(EmergencyContactOperationsFragment.class.getSimpleName() + " started");
+//		FlurryAgent.init(activity, Config.getFlurryKey());
+//		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//		FlurryAgent.onEvent(EmergencyContactOperationsFragment.class.getSimpleName() + " started");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(activity);
+//		FlurryAgent.onEndSession(activity);
 	}
 
 	@Override

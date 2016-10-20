@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -34,7 +33,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -120,15 +118,15 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
     @Override
     public void onStart() {
         super.onStart();
-        FlurryAgent.init(activity, Config.getFlurryKey());
-        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(RideSummaryFragment.class.getSimpleName() + " started");
+//        FlurryAgent.init(activity, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//        FlurryAgent.onEvent(RideSummaryFragment.class.getSimpleName() + " started");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        FlurryAgent.onEndSession(activity);
+//        FlurryAgent.onEndSession(activity);
     }
 
 

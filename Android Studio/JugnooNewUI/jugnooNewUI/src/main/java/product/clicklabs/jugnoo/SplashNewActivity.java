@@ -45,7 +45,6 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
@@ -184,7 +183,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	protected void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(this);
+//		FlurryAgent.onEndSession(this);
 	}
 
 
@@ -241,9 +240,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			e.printStackTrace();
 		}
 
-		FlurryAgent.init(this, Config.getFlurryKey());
-		FlurryAgent.onStartSession(this, Config.getFlurryKey());
-		FlurryAgent.onEvent("Splash started");
+//		FlurryAgent.init(this, Config.getFlurryKey());
+//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//		FlurryAgent.onEvent("Splash started");
 
 		firstTimeEvents();
 	}
@@ -322,7 +321,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Data.setFreshData(null);
 
 
-			FlurryAgent.init(this, Config.getFlurryKey());
+//			FlurryAgent.init(this, Config.getFlurryKey());
 
 
 			Locale locale = new Locale("en");
@@ -1751,7 +1750,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					if(SplashNewActivity.this.hasWindowFocus() && loginDataFetched){
 						Map<String, String> articleParams = new HashMap<String, String>();
 						articleParams.put("username", Data.userData.userName);
-						FlurryAgent.logEvent("App Login", articleParams);
+//						FlurryAgent.logEvent("App Login", articleParams);
 
 						loginDataFetched = false;
 

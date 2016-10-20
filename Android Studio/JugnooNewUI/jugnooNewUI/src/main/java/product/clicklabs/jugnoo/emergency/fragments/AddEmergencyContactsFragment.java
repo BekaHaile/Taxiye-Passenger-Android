@@ -16,9 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.flurry.android.FlurryAgent;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
@@ -84,15 +82,15 @@ public class AddEmergencyContactsFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		FlurryAgent.init(activity, Config.getFlurryKey());
-		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-		FlurryAgent.onEvent(AddEmergencyContactsFragment.class.getSimpleName() + " started");
+//		FlurryAgent.init(activity, Config.getFlurryKey());
+//		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//		FlurryAgent.onEvent(AddEmergencyContactsFragment.class.getSimpleName() + " started");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(activity);
+//		FlurryAgent.onEndSession(activity);
 	}
 
 	@Override

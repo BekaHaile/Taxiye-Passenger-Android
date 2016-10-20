@@ -19,7 +19,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.flurry.android.FlurryAgent;
 
 import org.json.JSONObject;
 
@@ -73,14 +72,14 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	@Override
 	protected void onStart() {
 		super.onStart();
-		FlurryAgent.init(this, Config.getFlurryKey());
-		FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//		FlurryAgent.init(this, Config.getFlurryKey());
+//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(this);
+//		FlurryAgent.onEndSession(this);
 	}
 
 	@Override

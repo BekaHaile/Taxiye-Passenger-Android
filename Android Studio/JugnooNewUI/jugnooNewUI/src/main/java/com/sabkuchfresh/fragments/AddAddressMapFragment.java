@@ -646,7 +646,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                                 current_routeLocal = "" + geocodeResponse.results.get(0).getRoute();
                                 current_areaLocal = "" + geocodeResponse.results.get(0).getLocality();
                                 current_cityLocal = "" + geocodeResponse.results.get(0).getCity();
-                                current_pincodeLocal = "" + geocodeResponse.results.get(0).getPin();
+                                current_pincodeLocal = "" + geocodeResponse.results.get(0).getCountry();
 
                                 streetNum = current_streetLocal;
                                 if (current_streetLocal.length() > 0)

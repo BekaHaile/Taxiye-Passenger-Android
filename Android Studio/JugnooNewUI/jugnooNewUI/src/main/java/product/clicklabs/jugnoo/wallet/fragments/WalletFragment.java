@@ -11,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
-
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
@@ -20,7 +18,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -64,15 +61,15 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
     @Override
     public void onStart() {
         super.onStart();
-        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
-        FlurryAgent.onStartSession(paymentActivity, Config.getFlurryKey());
-        FlurryAgent.onEvent("Register started");
+//        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(paymentActivity, Config.getFlurryKey());
+//        FlurryAgent.onEvent("Register started");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        FlurryAgent.onEndSession(paymentActivity);
+//        FlurryAgent.onEndSession(paymentActivity);
     }
 	
 

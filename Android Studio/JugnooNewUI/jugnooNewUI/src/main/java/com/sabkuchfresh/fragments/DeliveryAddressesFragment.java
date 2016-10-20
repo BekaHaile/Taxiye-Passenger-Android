@@ -492,7 +492,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                             current_route = ""+geocodeResponse.results.get(0).getRoute();
                             current_area = "" + geocodeResponse.results.get(0).getLocality();
                             current_city = "" + geocodeResponse.results.get(0).getCity();
-                            current_pincode = "" + geocodeResponse.results.get(0).getPin();
+                            current_pincode = "" + geocodeResponse.results.get(0).getCountry();
                             String streetNum = current_street;
                             if(current_street.length()>0)
                                 streetNum = geocodeResponse.results.get(0).getStreetNumber()+", ";

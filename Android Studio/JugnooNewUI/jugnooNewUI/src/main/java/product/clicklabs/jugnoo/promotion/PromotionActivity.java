@@ -19,8 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
-
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -36,7 +34,6 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
@@ -83,14 +80,14 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     @Override
     protected void onStart() {
         super.onStart();
-        FlurryAgent.init(this, Config.getFlurryKey());
-        FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//        FlurryAgent.init(this, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(this, Config.getFlurryKey());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        FlurryAgent.onEndSession(this);
+//        FlurryAgent.onEndSession(this);
     }
 
     @Override

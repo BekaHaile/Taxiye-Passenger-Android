@@ -62,7 +62,6 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.flurry.android.FlurryAgent;
 import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.google.android.gms.analytics.ecommerce.Product;
@@ -1895,7 +1894,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         try{
             Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
-            FlurryAgent.setUserId(Data.userData.getUserId());
+//            FlurryAgent.setUserId(Data.userData.getUserId());
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -4432,7 +4431,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             if(PassengerScreenMode.P_RIDE_END == passengerScreenMode
 					&& relativeLayoutRideEndWithImage.getVisibility() == View.VISIBLE){
-				eventKochavaFirstRide();
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -6488,9 +6486,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     protected void onStart() {
         try {
             super.onStart();
-            FlurryAgent.init(this, Config.getFlurryKey());
-            FlurryAgent.onStartSession(this, Config.getFlurryKey());
-            FlurryAgent.onEvent("HomeActivity started");
+//            FlurryAgent.init(this, Config.getFlurryKey());
+//            FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//            FlurryAgent.onEvent("HomeActivity started");
             mGoogleApiClient.connect();
         } catch (Exception e) {
             e.printStackTrace();
@@ -6501,7 +6499,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     protected void onStop() {
         try {
             super.onStop();
-            FlurryAgent.onEndSession(this);
+//            FlurryAgent.onEndSession(this);
             mGoogleApiClient.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
@@ -7045,16 +7043,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     }
 
-    private void eventKochavaFirstRide(){
-        try {
-            if(Data.autoData.getEndRideData() != null && Data.autoData.getEndRideData().getTotalRide() == 1) {
-                MyApplication.getInstance().getkTracker().event(Constants.KOCHAVA_FIRST_RIDE_KEY, ""+Data.autoData.getEndRideData().finalFare);
-                Data.autoData.getEndRideData().setTotalRide(Data.autoData.getEndRideData().getTotalRide()+1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void afterRideFeedbackSubmitted(final int givenRating){
         try {
@@ -7064,8 +7052,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
-            eventKochavaFirstRide();
-            
+
             ReferralActions.incrementTransactionCount(HomeActivity.this);
             userMode = UserMode.PASSENGER;
 
