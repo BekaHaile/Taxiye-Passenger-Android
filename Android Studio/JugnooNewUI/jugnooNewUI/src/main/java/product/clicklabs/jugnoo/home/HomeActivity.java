@@ -8368,37 +8368,39 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void setFabMarginInitial(boolean isSliding){
         try {
-            fabViewFinal.setVisibility(View.GONE);
-            fabViewIntial.setVisibility(View.VISIBLE);
-            final ValueAnimator animator;
-            int handlerTime = 0;
-            if(viewPoolInfoBarAnim.getVisibility() == View.VISIBLE) {
-				//fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (22f * scale + 0.5f));
-				animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (22f * scale + 0.5f));
-				handlerTime = 0;
-			} else{
-				//fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (52f * scale + 0.5f));
-				animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (52f * scale + 0.5f));
-				if(isSliding) {
-					handlerTime = 0;
-				} else{
-					handlerTime = 250;
-				}
+            if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                fabViewFinal.setVisibility(View.GONE);
+                fabViewIntial.setVisibility(View.VISIBLE);
+                final ValueAnimator animator;
+                int handlerTime = 0;
+                if (viewPoolInfoBarAnim.getVisibility() == View.VISIBLE) {
+                    //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (22f * scale + 0.5f));
+                    animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (22f * scale + 0.5f));
+                    handlerTime = 0;
+                } else {
+                    //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (52f * scale + 0.5f));
+                    animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (52f * scale + 0.5f));
+                    if (isSliding) {
+                        handlerTime = 0;
+                    } else {
+                        handlerTime = 250;
+                    }
 
-			}
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-				@Override
-				public void onAnimationUpdate(ValueAnimator valueAnimator){
-					fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (Integer) valueAnimator.getAnimatedValue());
-				}
-			});
-            animator.setDuration(300);
-            new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					animator.start();
-				}
-			}, handlerTime);
+                }
+                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                        fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (Integer) valueAnimator.getAnimatedValue());
+                    }
+                });
+                animator.setDuration(300);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        animator.start();
+                    }
+                }, handlerTime);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
