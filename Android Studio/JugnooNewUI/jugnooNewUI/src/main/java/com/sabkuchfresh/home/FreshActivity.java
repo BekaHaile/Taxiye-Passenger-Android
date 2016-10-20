@@ -1283,7 +1283,26 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             finish();
         }
         Utils.hideSoftKeyboard(this, textViewCartItemsCount);
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+        final AddToAddressBookFragment fragment = getAddToAddressBookFragment();
+        if(fragment != null && fragment.locationEdited){
+            DialogPopup.alertPopupTwoButtonsWithListeners(FreshActivity.this, "",
+                    getString(R.string.changes_not_updated_exit),
+                    getString(R.string.ok), getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fragment.locationEdited = false;
+                            performBackPressed();
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }, false, false);
+        }
+        else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
         } else if(locationSearchShown) {
             locationSearchShown = false;
@@ -2072,6 +2091,39 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             return !(addOnAdded && !itemIsAddon && mealsQuantity == 1);
         } else {
             return true;
+        }
+    }
+
+    public void clearMealsCartIfNoMainMeal(){
+        try {
+            FreshCartItemsFragment frag = getFreshCartItemsFragment();
+            if (frag != null) {
+				frag.deleteCart();
+			} else{
+				if(getProductsResponse() != null && getProductsResponse().getCategories() != null) {
+					for (Category category : getProductsResponse().getCategories()) {
+						for (SubItem subItem : category.getSubItems()) {
+							if (subItem.getSubItemQuantitySelected() > 0) {
+								subItem.setSubItemQuantitySelected(0);
+							}
+						}
+					}
+				}
+				updateCartValuesGetTotalPrice();
+			}
+            clearMealCart();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public AddToAddressBookFragment getAddToAddressBookFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
+        if(fragmentTag.equalsIgnoreCase(AddToAddressBookFragment.class.getName())){
+            return (AddToAddressBookFragment) fragmentManager.findFragmentByTag(fragmentTag);
+        } else{
+            return null;
         }
     }
 

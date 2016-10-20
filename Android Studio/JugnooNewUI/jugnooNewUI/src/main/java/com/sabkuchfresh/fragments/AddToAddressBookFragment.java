@@ -74,12 +74,15 @@ public class AddToAddressBookFragment extends Fragment {
     public String current_pincode = "";
     public String placeId = "";
 
+    public boolean locationEdited = false;
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_addto_address, container, false);
 
+        locationEdited = false;
         activity = getActivity();
         fetchAddressBundle(getArguments());
 
@@ -357,8 +360,14 @@ public class AddToAddressBookFragment extends Fragment {
 
 
     public void setNewArgumentsToUI(Bundle bundle){
+        double oldLatitude = current_latitude;
+        double oldLongitude = current_longitude;
+
         fetchAddressBundle(bundle);
         setDataToUI();
+
+        locationEdited = (Utils.compareDouble(oldLatitude, current_latitude) != 0 && Utils.compareDouble(oldLongitude, current_longitude) != 0);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -621,25 +630,7 @@ public class AddToAddressBookFragment extends Fragment {
                 }
 
             } else {
-                if (placeRequestCode == Constants.REQUEST_CODE_ADD_HOME) {
-                    otherId = 0;
-                    if (!"".equalsIgnoreCase(savedWorkStr)) {
-                        SearchResult savedWork = new Gson().fromJson(savedWorkStr, SearchResult.class);
-                        if (savedWork.getAddress().equalsIgnoreCase(localAddress)) {
-                            otherId = savedWork.getId();
-                        }
-                    }
-                } else if (placeRequestCode == Constants.REQUEST_CODE_ADD_WORK) {
-                    otherId = 0;
-                    if (!"".equalsIgnoreCase(savedHomeStr)) {
-                        SearchResult savedHome = new Gson().fromJson(savedHomeStr, SearchResult.class);
-                        if (savedHome.getAddress().equalsIgnoreCase(localAddress)) {
-                            otherId = savedHome.getId();
-                        }
-                    }
-                } else if (placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
-                    otherId = 0;
-                }
+                otherId = getOtherMatchedId(placeRequestCode, localAddress, searchResultId);
             }
 
             String label = "";
@@ -686,6 +677,42 @@ public class AddToAddressBookFragment extends Fragment {
             }
 
         }
+    }
+
+    private int getOtherMatchedId(int placeRequestCode, String localAddress, int searchResultId){
+        int otherId = 0;
+        String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+        if((placeRequestCode == Constants.REQUEST_CODE_ADD_HOME || placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION)
+                && !TextUtils.isEmpty(workString)){
+            SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+            if(searchResult.getAddress().equalsIgnoreCase(localAddress)){
+                otherId = searchResult.getId();
+            }
+        }
+
+        String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+        if((placeRequestCode == Constants.REQUEST_CODE_ADD_WORK || placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION)
+                && !TextUtils.isEmpty(homeString)){
+            SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+            if(searchResult.getAddress().equalsIgnoreCase(localAddress)){
+                otherId = searchResult.getId();
+            }
+        }
+
+        if(Data.userData != null) {
+            for (SearchResult searchResult : Data.userData.getSearchResults()) {
+                if(searchResult.getAddress().equalsIgnoreCase(localAddress)){
+                    otherId = searchResult.getId();
+                    break;
+                }
+            }
+        }
+
+        if(otherId == searchResultId){
+            otherId = 0;
+        }
+
+        return otherId;
     }
 
     private String getAddressFromForm(){

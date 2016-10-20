@@ -232,32 +232,7 @@ public class JSONParser implements Constants {
 
         Data.userData.setJeanieIntroDialogContent(loginUserData.getJeanieIntroDialogContent());
 
-        Data.userData.getSearchResults().clear();
-        if(userData.has(KEY_USER_SAVED_ADDRESSES)){
-            JSONArray userSavedAddressArray = userData.getJSONArray(KEY_USER_SAVED_ADDRESSES);
-            boolean homeSaved = false, workSaved = false;
-            Gson gson = new Gson();
-            for(int i=0; i<userSavedAddressArray.length(); i++){
-                JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
-                if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_HOME) && !homeSaved){
-                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
-                        Prefs.with(context).save(SPLabels.ADD_HOME, getSearchResultStringFromJSON(jsonObject));
-                    }else {
-                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
-                    }
-                    homeSaved = true;
-                } else if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_WORK) && !workSaved){
-                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
-                        Prefs.with(context).save(SPLabels.ADD_WORK, getSearchResultStringFromJSON(jsonObject));
-                    }else {
-                        Prefs.with(context).save(SPLabels.ADD_WORK, "");
-                    }
-                    workSaved = true;
-                } else if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
-                    Data.userData.getSearchResults().add(gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class));
-                }
-            }
-        }
+        parseSavedAddresses(context, userData, KEY_USER_SAVED_ADDRESSES);
 
         MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData.optJSONObject(KEY_WALLET_BALANCE));
 
@@ -1569,6 +1544,39 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
             return EMPTY_JSON_OBJECT;
+        }
+    }
+
+    public void parseSavedAddresses(Context context, JSONObject userData, String arrayKey){
+        try {
+            if(userData.has(arrayKey)){
+                Data.userData.getSearchResults().clear();
+				JSONArray userSavedAddressArray = userData.getJSONArray(arrayKey);
+				boolean homeSaved = false, workSaved = false;
+				Gson gson = new Gson();
+				for(int i=0; i<userSavedAddressArray.length(); i++){
+					JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
+					if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_HOME) && !homeSaved){
+						if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
+							Prefs.with(context).save(SPLabels.ADD_HOME, getSearchResultStringFromJSON(jsonObject));
+						}else {
+							Prefs.with(context).save(SPLabels.ADD_HOME, "");
+						}
+						homeSaved = true;
+					} else if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_WORK) && !workSaved){
+						if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
+							Prefs.with(context).save(SPLabels.ADD_WORK, getSearchResultStringFromJSON(jsonObject));
+						}else {
+							Prefs.with(context).save(SPLabels.ADD_WORK, "");
+						}
+						workSaved = true;
+					} else if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
+						Data.userData.getSearchResults().add(gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class));
+					}
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

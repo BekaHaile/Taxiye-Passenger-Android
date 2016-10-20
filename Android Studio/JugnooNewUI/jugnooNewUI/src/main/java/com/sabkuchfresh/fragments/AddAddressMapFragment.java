@@ -117,13 +117,13 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     RelativeLayout relativeLayoutLocationError;
     RelativeLayout relativeLayoutLocationErrorSearchBar;
 
-    public double current_latitude = 0.0;
-    public double current_longitude = 0.0;
-    public String current_street = "";
-    public String current_route = "";
-    public String current_area = "";
-    public String current_city = "";
-    public String current_pincode = "";
+    public double current_latitude = 0.0, current_latitudeLocal = 0.0;
+    public double current_longitude = 0.0, current_longitudeLocal = 0.0;
+    public String current_street = "", current_streetLocal = "";
+    public String current_route = "", current_routeLocal = "";
+    public String current_area = "", current_areaLocal = "";
+    public String current_city = "", current_cityLocal = "";
+    public String current_pincode = "", current_pincodeLocal = "";
     public String placeId = "";
     private boolean editThisAddress = false;
 
@@ -214,7 +214,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             }
         });
 
-        buttonOk.setText(editThisAddress ? R.string.save : R.string.next);
+        buttonOk.setText(editThisAddress ? R.string.set : R.string.next);
 
         searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient,
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
@@ -266,14 +266,14 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         mAddressName.setVisibility(View.VISIBLE);
                         progressWheel.setVisibility(View.GONE);
 
-                        current_street = "";
-                        current_route = "";
-                        current_area = "";
-                        current_city = "";
-                        current_pincode = "";
+                        current_streetLocal = "";
+                        current_routeLocal = "";
+                        current_areaLocal = "";
+                        current_cityLocal = "";
+                        current_pincodeLocal = "";
 
-                        current_latitude = searchResult.getLatLng().latitude;
-                        current_longitude = searchResult.getLatLng().longitude;
+                        current_latitudeLocal = searchResult.getLatLng().latitude;
+                        current_longitudeLocal = searchResult.getLatLng().longitude;
 
                         String[] address = searchResult.getAddress().split(",");
                         List<String> addressArray = Arrays.asList(address);
@@ -281,25 +281,25 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         address = (String[]) addressArray.toArray();
 
                         if(address.length > 0 && (!TextUtils.isEmpty(address[0].trim())))
-                            current_pincode = "" + address[0].trim();
+                            current_pincodeLocal = "" + address[0].trim();
                         if(address.length > 1 && (!TextUtils.isEmpty(address[1].trim())))
-                            current_city = "" + address[1].trim();
+                            current_cityLocal = "" + address[1].trim();
                         if(address.length > 2 && (!TextUtils.isEmpty(address[2].trim())))
-                            current_area = "" + address[2].trim();
+                            current_areaLocal = "" + address[2].trim();
 
                         if(address.length > 3 && (!TextUtils.isEmpty(address[3].trim())))
-                            current_route = "" + address[3].trim();
+                            current_routeLocal = "" + address[3].trim();
 
                         if(address.length > 4 && (!TextUtils.isEmpty(address[4].trim())))
-                            current_street = "" + address[4].trim();
+                            current_streetLocal = "" + address[4].trim();
 
                         if(address.length > 5){
-                            current_street = "";
+                            current_streetLocal = "";
                             for(int i=address.length-1; i > 3; i--){
-                                if(current_street.equalsIgnoreCase("")){
-                                    current_street = address[i].trim();
+                                if(current_streetLocal.equalsIgnoreCase("")){
+                                    current_streetLocal = address[i].trim();
                                 } else{
-                                    current_street = current_street+", "+address[i].trim();
+                                    current_streetLocal = current_streetLocal+", "+address[i].trim();
                                 }
                             }
                         }
@@ -503,10 +503,16 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                     if(!locationUpdate) {
                         if(editThisAddress
                                 && MapUtils.distance(googleMap.getCameraPosition().target,
-                                new LatLng(current_latitude, current_longitude)) < MAP_PAN_DISTANCE){
-                            setNewAddressLatLng(googleMap.getCameraPosition().target);
+                                new LatLng(current_latitude, current_longitude)) < MAP_PAN_DISTANCE) {
+                            unsatflag = true;
+                            mSelectedLoc.setVisibility(View.VISIBLE);
+                            mAddressName.setVisibility(View.VISIBLE);
+                            progressWheel.setVisibility(View.GONE);
+                            current_latitudeLocal = googleMap.getCameraPosition().target.latitude;
+                            current_longitudeLocal = googleMap.getCameraPosition().target.longitude;
+                            fillAddressDetails(googleMap.getCameraPosition().target, false);
                         } else {
-                            fillAddressDetails(googleMap.getCameraPosition().target);
+                            fillAddressDetails(googleMap.getCameraPosition().target, true);
                         }
                     } else {
                         mSelectedLoc.setVisibility(View.VISIBLE);
@@ -609,7 +615,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     }
 
 
-    private void fillAddressDetails(final LatLng latLng) {
+    private void fillAddressDetails(final LatLng latLng ,final boolean setData) {
         try {
             if (AppStatus.getInstance(getActivity()).isOnline(getActivity())) {
                 final Map<String, String> params = new HashMap<String, String>(6);
@@ -622,24 +628,44 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                     @Override
                     public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
                         try {
-                            setNewAddressLatLng(latLng);
+                            unsatflag = true;
 
-                            current_street = ""+geocodeResponse.results.get(0).getStreetNumber();
-                            current_route = ""+geocodeResponse.results.get(0).getRoute();
-                            current_area = "" + geocodeResponse.results.get(0).getLocality();
-                            current_city = "" + geocodeResponse.results.get(0).getCity();
-                            current_pincode = "" + geocodeResponse.results.get(0).getPin();
-                            String streetNum = current_street;
-                            if(current_street.length()>0)
-                                streetNum = geocodeResponse.results.get(0).getStreetNumber()+", ";
+                            mSelectedLoc.setVisibility(View.VISIBLE);
+                            mAddressName.setVisibility(View.VISIBLE);
+                            progressWheel.setVisibility(View.GONE);
 
-                            String route = current_route;
-                            if(route.length()>0)
-                                route = geocodeResponse.results.get(0).getRoute() + ", ";
-                            route = current_route;
+                            String streetNum = geocodeResponse.results.get(0).getStreetNumber();
+                            String route = geocodeResponse.results.get(0).getRoute();
+                            String city = geocodeResponse.results.get(0).getCity();
+                            if(setData) {
+                                current_latitudeLocal = latLng.latitude;
+                                current_longitudeLocal = latLng.longitude;
+                                placeId = "";
 
-                            mAddressName.setText("For\n"+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+current_city);
-                            textVeiwSearch.setText(""+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+current_city);
+                                current_streetLocal = "" + geocodeResponse.results.get(0).getStreetNumber();
+                                current_routeLocal = "" + geocodeResponse.results.get(0).getRoute();
+                                current_areaLocal = "" + geocodeResponse.results.get(0).getLocality();
+                                current_cityLocal = "" + geocodeResponse.results.get(0).getCity();
+                                current_pincodeLocal = "" + geocodeResponse.results.get(0).getPin();
+
+                                streetNum = current_streetLocal;
+                                if (current_streetLocal.length() > 0)
+                                    streetNum = geocodeResponse.results.get(0).getStreetNumber() + ", ";
+
+                                route = current_routeLocal;
+                                if (route.length() > 0)
+                                    route = geocodeResponse.results.get(0).getRoute() + ", ";
+
+                            } else{
+                                if (streetNum.length() > 0)
+                                    streetNum = streetNum + ", ";
+
+                                if (route.length() > 0)
+                                    route = route + ", ";
+                            }
+
+                            mAddressName.setText("For\n"+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+city);
+                            textVeiwSearch.setText(""+streetNum + route + geocodeResponse.results.get(0).getAddAddress()+", "+city);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -662,16 +688,6 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
     }
 
-    private void setNewAddressLatLng(LatLng latLng){
-        unsatflag = true;
-
-        mSelectedLoc.setVisibility(View.VISIBLE);
-        mAddressName.setVisibility(View.VISIBLE);
-        progressWheel.setVisibility(View.GONE);
-
-        current_latitude = latLng.latitude;
-        current_longitude = latLng.longitude;
-    }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -700,6 +716,17 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     }
 
     private Bundle createAddressBundle(String placeId){
+        if(editThisAddress
+                && MapUtils.distance(new LatLng(current_latitudeLocal, current_longitudeLocal),
+                new LatLng(current_latitude, current_longitude)) >= MAP_PAN_DISTANCE){
+            current_street = current_streetLocal;
+            current_route = current_routeLocal;
+            current_area = current_areaLocal;
+            current_city = current_cityLocal;
+            current_pincode = current_pincodeLocal;
+            current_latitude = current_latitudeLocal;
+            current_longitude = current_longitudeLocal;
+        }
         Bundle bundle = new Bundle();
         bundle.putString("current_street", current_street);
         bundle.putString("current_route", current_route);
@@ -722,6 +749,15 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         current_latitude = bundle.getDouble("current_latitude", current_latitude);
         current_longitude = bundle.getDouble("current_longitude", current_longitude);
         placeId = bundle.getString(Constants.KEY_PLACEID, placeId);
+
+        current_streetLocal = current_street;
+        current_routeLocal = current_route;
+        current_areaLocal = current_area;
+        current_cityLocal = current_city;
+        current_pincodeLocal = current_pincode;
+        current_latitudeLocal = current_latitude;
+        current_longitudeLocal = current_longitude;
+
     }
 
 }

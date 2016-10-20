@@ -29,7 +29,6 @@ import com.sabkuchfresh.retrofit.model.SubItemCompare;
 import com.sabkuchfresh.retrofit.model.SubItemComparePrice;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceRev;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 
 import org.json.JSONObject;
@@ -387,7 +386,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
     @Override
     public void minusNotDone(int position, SubItem subItem) {
-        Utils.showToast(activity, activity.getString(R.string.cant_remove_main_item));
+        activity.clearMealsCartIfNoMainMeal();
+        mealAdapter.notifyDataSetChanged();
     }
 
     public void onSortEvent(int postion) {
