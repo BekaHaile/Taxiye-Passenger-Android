@@ -1,11 +1,14 @@
 package product.clicklabs.jugnoo.home;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.home.FreshActivity;
@@ -55,7 +58,7 @@ public class FABViewTest {
             fabGroceryTest = (FloatingActionButton) view.findViewById(R.id.fabGroceryTest);
             //fabExtra = (View) activity.findViewById(R.id.fabExtra);
             //fabExtra.setVisibility(View.GONE);
-            menuLabelsRightTest.setIconAnimated(false);
+            menuLabelsRightTest.setIconAnimated(true);
             menuLabelsRightTest.setClosedOnTouchOutside(true);
             fabDeliveryTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabMealsTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
@@ -72,6 +75,36 @@ public class FABViewTest {
             menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
             menuLabelsRightTest.setMenuButtonColorRipple(activity.getResources().getColor(R.color.grey_light_alpha));
             menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
+
+            AnimatorSet set = new AnimatorSet();
+
+            ObjectAnimator scaleOutX = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleX", 1.0f, 0.2f);
+            ObjectAnimator scaleOutY = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleY", 1.0f, 0.2f);
+
+            ObjectAnimator scaleInX = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleX", 0.2f, 1.0f);
+            ObjectAnimator scaleInY = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleY", 0.2f, 1.0f);
+
+            scaleOutX.setDuration(50);
+            scaleOutY.setDuration(50);
+
+            scaleInX.setDuration(150);
+            scaleInY.setDuration(150);
+
+            scaleInX.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
+                            ? R.drawable.ic_fab_jeanie : R.drawable.ic_cross_et);
+                }
+            });
+
+            set.play(scaleOutX).with(scaleOutY);
+            set.play(scaleInX).with(scaleInY).after(scaleOutX);
+            set.setInterpolator(new OvershootInterpolator(2));
+
+            menuLabelsRightTest.setIconToggleAnimatorSet(set);
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -113,6 +146,8 @@ public class FABViewTest {
                 }
             }
         });
+
+
 
 
         /*fabExtra.setOnClickListener(new View.OnClickListener() {
