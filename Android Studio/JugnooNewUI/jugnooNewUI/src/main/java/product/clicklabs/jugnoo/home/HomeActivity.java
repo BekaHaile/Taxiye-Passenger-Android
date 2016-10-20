@@ -1058,7 +1058,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutDestSearchBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
                 ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
                 int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
                 if(index == 1 && Data.autoData.getDropLatLng() == null) {
@@ -1328,7 +1327,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutFinalDropLocationClick.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
                 if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() != 1) {
                     initDropLocationSearchUI(true);
                     Bundle bundle = new Bundle();
@@ -1944,31 +1942,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return relativeLayoutFABTest;
     }
 
-    private void openFABView(){
-        fabViewTest.setFABButtons();
-        //fabViewTest.setFABMenuDrawable();
-        if (fabViewTest.menuLabelsRightTest.isOpened()) {
-            fabViewTest.menuLabelsRightTest.close(true);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //fabView.fabExtra.setVisibility(View.GONE);
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.INVISIBLE);
-                }
-            }, 300);
-        } else {
-            fabViewTest.menuLabelsRightTest.open(true);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //fabView.fabExtra.setVisibility(View.VISIBLE);
-                    //imageViewFabFakeAssigning.setVisibility(View.INVISIBLE);
-                    //imageViewFabFakeFinal.setVisibility(View.INVISIBLE);
-                }
-            },300);
-
-        }
-    }
 
     private void endRideWithGif(){
         relativeLayoutGreat.setVisibility(View.VISIBLE);
@@ -2820,6 +2793,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         topBar.imageViewHelp.setVisibility(View.GONE);
                         topBar.imageViewBack.setVisibility(View.VISIBLE);
                         topBar.imageViewMenu.setVisibility(View.GONE);
+
+                        fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
                         //fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
 //                        genieLayout.setVisibility(View.GONE);
                         //fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
@@ -3457,6 +3432,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         } else{
             //fabViewTest.setRelativeLayoutFABVisibility(passengerScreenMode);
+            setJeanieVisibility();
             relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
             if(frag != null) {
@@ -3491,6 +3467,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         } else{
             //fabViewTest.setRelativeLayoutFABVisibility(passengerScreenMode);
+            setJeanieVisibility();
             relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL);
             if(frag != null) {
