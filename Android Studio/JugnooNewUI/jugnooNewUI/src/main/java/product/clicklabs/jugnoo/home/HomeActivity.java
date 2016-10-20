@@ -208,8 +208,6 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
-import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
-import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -3840,11 +3838,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public static boolean checkIfUserDataNull(Activity activity) {
         Log.e("checkIfUserDataNull", "Data.userData = " + Data.userData);
+        String clientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
         if (Data.userData == null) {
-            activity.startActivity(new Intent(activity, SplashNewActivity.class));
-            activity.finish();
-            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            return true;
+            boolean dataFoundNull = false;
+            if(clientId.equalsIgnoreCase(Config.getAutosClientId()) && Data.autoData == null){
+                dataFoundNull = true;
+            } else if(clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null){
+                dataFoundNull = true;
+            } else if(clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.getMealsData() == null){
+                dataFoundNull = true;
+            } else if(clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null){
+                dataFoundNull = true;
+            }
+            if(dataFoundNull) {
+                activity.startActivity(new Intent(activity, SplashNewActivity.class));
+                activity.finish();
+                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                return true;
+            } else{
+                return false;
+            }
         } else {
             return false;
         }
@@ -4682,6 +4695,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                 }
                 fabViewTest.setFABButtons();
+            } else {
+                fabViewTest.menuLabelsRightTest.setVisibility(View.GONE);
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -8351,37 +8367,42 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void setFabMarginInitial(boolean isSliding){
-        fabViewFinal.setVisibility(View.GONE);
-        fabViewIntial.setVisibility(View.VISIBLE);
-        final ValueAnimator animator;
-        int handlerTime = 0;
-        if(viewPoolInfoBarAnim.getVisibility() == View.VISIBLE) {
-            //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (22f * scale + 0.5f));
-            animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (22f * scale + 0.5f));
-            handlerTime = 0;
-        } else{
-            //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (52f * scale + 0.5f));
-            animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (52f * scale + 0.5f));
-            if(isSliding) {
-                handlerTime = 0;
-            } else{
-                handlerTime = 250;
-            }
+        try {
+            fabViewFinal.setVisibility(View.GONE);
+            fabViewIntial.setVisibility(View.VISIBLE);
+            final ValueAnimator animator;
+            int handlerTime = 0;
+            if(viewPoolInfoBarAnim.getVisibility() == View.VISIBLE) {
+				//fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (22f * scale + 0.5f));
+				animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (22f * scale + 0.5f));
+				handlerTime = 0;
+			} else{
+				//fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (52f * scale + 0.5f));
+				animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (52f * scale + 0.5f));
+				if(isSliding) {
+					handlerTime = 0;
+				} else{
+					handlerTime = 250;
+				}
 
+			}
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+				@Override
+				public void onAnimationUpdate(ValueAnimator valueAnimator){
+					fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (Integer) valueAnimator.getAnimatedValue());
+				}
+			});
+            animator.setDuration(300);
+            new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					animator.start();
+				}
+			}, handlerTime);
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator){
-                fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (Integer) valueAnimator.getAnimatedValue());
-            }
-        });
-        animator.setDuration(300);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                animator.start();
-            }
-        }, handlerTime);
+
 
 
         setJeanieVisibility();
@@ -8891,6 +8912,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             trackingLogHelper = new TrackingLogHelper(this);
         }
         return trackingLogHelper;
+    }
+
+    public FABViewTest getFabViewTest(){
+        return fabViewTest;
     }
 
 }
