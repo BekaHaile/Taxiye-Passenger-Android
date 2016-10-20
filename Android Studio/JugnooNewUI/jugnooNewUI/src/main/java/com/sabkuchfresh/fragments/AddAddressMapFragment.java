@@ -724,9 +724,9 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
             current_area = current_areaLocal;
             current_city = current_cityLocal;
             current_pincode = current_pincodeLocal;
-            current_latitude = current_latitudeLocal;
-            current_longitude = current_longitudeLocal;
         }
+        current_latitude = current_latitudeLocal;
+        current_longitude = current_longitudeLocal;
         Bundle bundle = new Bundle();
         bundle.putString("current_street", current_street);
         bundle.putString("current_route", current_route);
