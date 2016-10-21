@@ -63,6 +63,22 @@
 
     </LinearLayout>
 
+
+    <TextView
+        android:id="@+id/textViewOutOfStock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="Out\nof\nStock"
+        android:textColor="@color/off_text"
+        android:textSize="@dimen/text_size_34"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="40px"
+        android:visibility="gone"/>
+
+
     <LinearLayout
         android:id="@+id/linearLayoutQuantitySelector"
         android:layout_width="wrap_content"

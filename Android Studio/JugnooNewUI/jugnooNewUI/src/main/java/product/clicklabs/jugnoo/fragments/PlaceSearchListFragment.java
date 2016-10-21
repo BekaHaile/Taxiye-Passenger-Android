@@ -106,6 +106,8 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		linearLayoutScrollSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutScrollSearch);
 		textViewScrollSearch = (TextView) rootView.findViewById(R.id.textViewScrollSearch);
 
+
+
 		imageViewSearchGPSIcon = (ImageView) rootView.findViewById(R.id.imageViewSearchGPSIcon);
 
 		editTextSearch.setOnClickListener(new View.OnClickListener() {

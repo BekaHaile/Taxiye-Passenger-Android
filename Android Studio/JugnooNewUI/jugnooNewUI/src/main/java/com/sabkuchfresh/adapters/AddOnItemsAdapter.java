@@ -103,13 +103,16 @@ public class AddOnItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (subItem.getSubItemQuantitySelected() == 0) {
                 if(subItem.getStock() > 0){
                     mHolder.mAddButton.setVisibility(View.VISIBLE);
+                    mHolder.textViewOutOfStock.setVisibility(View.GONE);
                 } else{
                     mHolder.mAddButton.setVisibility(View.GONE);
+                    mHolder.textViewOutOfStock.setVisibility(View.VISIBLE);
                 }
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
             } else {
                 mHolder.mAddButton.setVisibility(View.GONE);
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
+                mHolder.textViewOutOfStock.setVisibility(View.GONE);
             }
 
 
@@ -141,10 +144,10 @@ public class AddOnItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         int pos = (int) v.getTag();
                         if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                             subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+                            callback.onPlusClicked(pos, subItems.get(pos));
                         } else {
                             Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"");
                         }
-                        callback.onPlusClicked(pos, subItems.get(pos));
                         notifyDataSetChanged();
                         int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
                         if(appType == AppConstant.ApplicationType.FRESH){
@@ -165,11 +168,11 @@ public class AddOnItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         int pos = (int) v.getTag();
                         if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                             subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+                            callback.onPlusClicked(pos, subItems.get(pos));
                         } else {
                             Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"");
                         }
 
-                        callback.onPlusClicked(pos, subItems.get(pos));
                         notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -205,7 +208,7 @@ public class AddOnItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     static class MainViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
         private ImageView imageViewItemImage, imageViewMinus, imageViewPlus;
-        public TextView textViewItemName, textViewItemUnit, textViewItemPrice, textViewQuantity;
+        public TextView textViewItemName, textViewItemUnit, textViewItemPrice, textViewQuantity, textViewOutOfStock;
         public Button mAddButton;
         public LinearLayout linearLayoutQuantitySelector;
         public MainViewHolder(View itemView, Context context) {
@@ -221,6 +224,7 @@ public class AddOnItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             textViewItemUnit = (TextView)itemView.findViewById(R.id.textViewItemUnit); textViewItemUnit.setTypeface(Fonts.mavenRegular(context));
             textViewItemPrice = (TextView)itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenRegular(context));
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
+            textViewOutOfStock = (TextView)itemView.findViewById(R.id.textViewOutOfStock); textViewOutOfStock.setTypeface(Fonts.mavenRegular(context));
         }
     }
 

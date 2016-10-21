@@ -86,6 +86,7 @@ public class SlidingBottomPanelV4 {
                 //Log.v("slideOffset", "---> "+slideOffset);
                 if(slideOffset > 0.2f){
                     activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
+                    activity.setFabMarginInitial(true);
                 }
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
                 if (activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
@@ -101,6 +102,7 @@ public class SlidingBottomPanelV4 {
                 activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
                 activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
+                activity.setFabMarginInitial(true);
             }
 
             @Override
@@ -295,6 +297,7 @@ public class SlidingBottomPanelV4 {
             linearLayoutSlidingBottomSingle.setVisibility(View.VISIBLE);
             linearLayoutSlidingBottom.setVisibility(View.GONE);
             activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
+            activity.setFabMarginInitial(true);
         }
     }
 
