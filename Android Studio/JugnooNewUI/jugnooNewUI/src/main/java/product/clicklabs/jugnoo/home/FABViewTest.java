@@ -38,6 +38,7 @@ public class FABViewTest {
     public FloatingActionButton fabAutosTest;
     public FloatingActionButton fabGroceryTest;
     public View view;
+    private boolean isOpened;
     //public View fabExtra;
 
     public FABViewTest(Activity activity, View view) {
@@ -74,35 +75,7 @@ public class FABViewTest {
             menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
             menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
             menuLabelsRightTest.setMenuButtonColorRipple(activity.getResources().getColor(R.color.grey_light_alpha));
-            menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
-
-            AnimatorSet set = new AnimatorSet();
-
-            ObjectAnimator scaleOutX = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleX", 1.0f, 0.2f);
-            ObjectAnimator scaleOutY = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleY", 1.0f, 0.2f);
-
-            ObjectAnimator scaleInX = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleX", 0.2f, 1.0f);
-            ObjectAnimator scaleInY = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleY", 0.2f, 1.0f);
-
-            scaleOutX.setDuration(50);
-            scaleOutY.setDuration(50);
-
-            scaleInX.setDuration(150);
-            scaleInY.setDuration(150);
-
-            scaleInX.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-                    menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
-                            ? R.drawable.ic_fab_jeanie : R.drawable.ic_cross_et);
-                }
-            });
-
-            set.play(scaleOutX).with(scaleOutY);
-            set.play(scaleInX).with(scaleInY).after(scaleOutX);
-            set.setInterpolator(new OvershootInterpolator(2));
-
-            menuLabelsRightTest.setIconToggleAnimatorSet(set);
+            //menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
 
 
         } catch (Exception e) {
@@ -110,25 +83,28 @@ public class FABViewTest {
         }
         //setFABButtons();
 
-        /*menuLabelsRightTest.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
+        menuLabelsRightTest.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
                 if (opened) {
+                    isOpened = true;
                     if(activity instanceof HomeActivity){
-                        //Toast.makeText(activity, "clicked", Toast.LENGTH_SHORT).show();
                         ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
                         ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
                     }
                 } else {
+                    isOpened = false;
                     if(activity instanceof HomeActivity){
                         ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.GONE);
                         ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
                     }
                 }
             }
-        });*/
+        });
 
-        menuLabelsRightTest.setOnClickListener(new View.OnClickListener() {
+        createCustomAnimation();
+
+        /*menuLabelsRightTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(menuLabelsRightTest.isOpened()){
@@ -145,7 +121,7 @@ public class FABViewTest {
                     }
                 }
             }
-        });
+        });*/
 
 
 
@@ -175,6 +151,36 @@ public class FABViewTest {
 
             }
         });*/
+    }
+
+    private void createCustomAnimation() {
+        AnimatorSet set = new AnimatorSet();
+
+        ObjectAnimator scaleOutX = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleX", 1.0f, 0.2f);
+        ObjectAnimator scaleOutY = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleY", 1.0f, 0.2f);
+
+        ObjectAnimator scaleInX = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleX", 0.2f, 1.0f);
+        ObjectAnimator scaleInY = ObjectAnimator.ofFloat(menuLabelsRightTest.getMenuIconView(), "scaleY", 0.2f, 1.0f);
+
+        scaleOutX.setDuration(100);
+        scaleOutY.setDuration(100);
+
+        scaleInX.setDuration(150);
+        scaleInY.setDuration(150);
+
+        scaleInX.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
+                        ? R.drawable.ic_fab_jeanie : R.drawable.ic_cross_et);
+            }
+        });
+
+        set.play(scaleOutX).with(scaleOutY);
+        set.play(scaleInX).with(scaleInY).after(scaleOutX);
+        set.setInterpolator(new OvershootInterpolator(2));
+
+        menuLabelsRightTest.setIconToggleAnimatorSet(set);
     }
 
     public void setRelativeLayoutFABVisibility(PassengerScreenMode passengerScreenMode){
