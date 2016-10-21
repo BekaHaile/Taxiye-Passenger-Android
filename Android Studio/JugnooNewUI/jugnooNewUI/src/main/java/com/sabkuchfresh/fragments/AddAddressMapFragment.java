@@ -716,9 +716,10 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
     }
 
     private Bundle createAddressBundle(String placeId){
-        if(editThisAddress
+        if((editThisAddress
                 && MapUtils.distance(new LatLng(current_latitudeLocal, current_longitudeLocal),
-                new LatLng(current_latitude, current_longitude)) >= MAP_PAN_DISTANCE){
+                new LatLng(current_latitude, current_longitude)) >= MAP_PAN_DISTANCE)
+                || !editThisAddress){
             current_street = current_streetLocal;
             current_route = current_routeLocal;
             current_area = current_areaLocal;

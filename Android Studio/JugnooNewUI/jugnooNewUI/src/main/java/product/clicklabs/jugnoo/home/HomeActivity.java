@@ -401,7 +401,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private static final int MAP_ANIMATE_DURATION = 300;
 
     public static final double FIX_ZOOM_DIAGONAL = 108;
-    private final float MAP_PADDING = 80f;
+    private final float MAP_PADDING = 100f;
 
     public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
@@ -8282,7 +8282,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
             viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
             setFabMarginInitial(false);
-            setGoogleMapPadding(0);
+            if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                setGoogleMapPadding(0);
+            }
         }
         slidingBottomPanel.getRequestRideOptionsFragment()
                 .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
