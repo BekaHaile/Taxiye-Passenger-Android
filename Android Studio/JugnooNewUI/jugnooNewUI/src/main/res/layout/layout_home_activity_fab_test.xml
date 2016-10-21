@@ -42,16 +42,16 @@
             fab:fab_label="Delivery" />
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
-            android:id="@+id/fabMealsTest"
+            android:id="@+id/fabGroceryTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_fab_meals"
+            android:src="@drawable/ic_fab_grocery"
             fab:fab_size="normal"
+            android:tag="DontTouchMe"
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/grey_light"
             fab:fab_colorRipple="@color/grey_light_alpha"
-            android:tag="DontTouchMe"
-            fab:fab_label="Meals"/>
+            fab:fab_label="Grocery" />
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabFreshTest"
@@ -65,18 +65,18 @@
             fab:fab_colorRipple="@color/grey_light_alpha"
             fab:fab_label="Fresh" />
 
-
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
-            android:id="@+id/fabGroceryTest"
+            android:id="@+id/fabMealsTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_fab_grocery"
+            android:src="@drawable/ic_fab_meals"
             fab:fab_size="normal"
-            android:tag="DontTouchMe"
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/grey_light"
             fab:fab_colorRipple="@color/grey_light_alpha"
-            fab:fab_label="Grocery" />
+            android:tag="DontTouchMe"
+            fab:fab_label="Meals"/>
+
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabAutosTest"

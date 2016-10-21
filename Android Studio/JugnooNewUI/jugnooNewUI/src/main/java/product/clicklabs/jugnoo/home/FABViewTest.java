@@ -200,7 +200,7 @@ public class FABViewTest {
                             || ((HomeActivity)activity).dropLocationSearched) {
                         relativeLayoutFABTest.setVisibility(View.INVISIBLE);
                         //((HomeActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
-                        ((HomeActivity) activity).getRelativeLayoutFABTest().setVisibility(View.VISIBLE);
+                        //((HomeActivity) activity).getRelativeLayoutFABTest().setVisibility(View.VISIBLE);
                     } else {
                         relativeLayoutFABTest.setVisibility(View.VISIBLE);
                         menuLabelsRightTest.close(true);
