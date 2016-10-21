@@ -1,16 +1,13 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -309,18 +306,18 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
         imageViewJugnooJeanie.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isAccessibilitySettingsOn(getApplicationContext())) {
-                    if (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false) {
-                        Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-                        imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
-                    } else {
-                        Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
-                        imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
-                    }
-                } else {
-                    startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
-                    setJeanieState = true;
-                }
+//                if (isAccessibilitySettingsOn(getApplicationContext())) {
+//                    if (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false) {
+//                        Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+//                        imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
+//                    } else {
+//                        Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+//                        imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
+//                    }
+//                } else {
+//                    startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
+//                    setJeanieState = true;
+//                }
             }
         });
 
@@ -758,25 +755,25 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 	@Override
 	protected void onResume() {
 		super.onResume();
-        if(setJeanieState){
-            setJeanieState = false;
-            if(isAccessibilitySettingsOn(getApplicationContext())){
-                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
-            }else{ //((!isAccessibilitySettingsOn(getApplicationContext()) && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false))) {
-                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
-                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
-            }
-        }else{
-            if((isAccessibilitySettingsOn(getApplicationContext())
-                    && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == true))){
-                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
-                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
-            }else{ //((!isAccessibilitySettingsOn(getApplicationContext()) && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false))) {
-                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
-                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
-            }
-        }
+//        if(setJeanieState){
+//            setJeanieState = false;
+//            if(isAccessibilitySettingsOn(getApplicationContext())){
+//                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+//                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
+//            }else{ //((!isAccessibilitySettingsOn(getApplicationContext()) && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false))) {
+//                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+//                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
+//            }
+//        }else{
+//            if((isAccessibilitySettingsOn(getApplicationContext())
+//                    && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == true))){
+//                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, true);
+//                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_on);
+//            }else{ //((!isAccessibilitySettingsOn(getApplicationContext()) && (Prefs.with(AccountActivity.this).getBoolean(SPLabels.JUGNOO_JEANIE_STATE, false) == false))) {
+//                Prefs.with(AccountActivity.this).save(SPLabels.JUGNOO_JEANIE_STATE, false);
+//                imageViewJugnooJeanie.setImageResource(R.drawable.jugnoo_sticky_off);
+//            }
+//        }
 
 		HomeActivity.checkForAccessTokenChange(this);
 
@@ -1065,46 +1062,6 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
     }
 
 
-    // To check if service is enabled
-    private boolean isAccessibilitySettingsOn(Context mContext) {
-        int accessibilityEnabled = 0;
-        final String service = "product.clicklabs.jugnoo/product.clicklabs.jugnoo.sticky.WindowChangeDetectingService";
-        boolean accessibilityFound = false;
-        try {
-            accessibilityEnabled = Settings.Secure.getInt(
-                    mContext.getApplicationContext().getContentResolver(),
-                    android.provider.Settings.Secure.ACCESSIBILITY_ENABLED);
-            Log.v("Jugnoo Jeanie", "accessibilityEnabled = " + accessibilityEnabled);
-        } catch (Settings.SettingNotFoundException e) {
-            Log.e("Jugnoo Jeanie", "Error finding setting, default accessibility to not found: "
-                    + e.getMessage());
-        }
-        TextUtils.SimpleStringSplitter mStringColonSplitter = new TextUtils.SimpleStringSplitter(':');
-
-        if (accessibilityEnabled == 1) {
-            Log.v("Jugnoo Jeanie", "***ACCESSIBILIY IS ENABLED*** -----------------");
-            String settingValue = Settings.Secure.getString(
-                    mContext.getApplicationContext().getContentResolver(),
-                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-            if (settingValue != null) {
-                TextUtils.SimpleStringSplitter splitter = mStringColonSplitter;
-                splitter.setString(settingValue);
-                while (splitter.hasNext()) {
-                    String accessabilityService = splitter.next();
-
-                    Log.v("Jugnoo Jeanie", "-------------- > accessabilityService :: " + accessabilityService);
-                    if (accessabilityService.equalsIgnoreCase(service)) {
-                        Log.v("Jugnoo Jeanie", "We've found the correct setting - accessibility is switched on!");
-                        return true;
-                    }
-                }
-            }
-        } else {
-            Log.v("Jugnoo Jeanie", "***ACCESSIBILIY IS DISABLED***");
-        }
-
-        return accessibilityFound;
-    }
 
     private void setSavePlaces() {
         if (!Prefs.with(AccountActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
