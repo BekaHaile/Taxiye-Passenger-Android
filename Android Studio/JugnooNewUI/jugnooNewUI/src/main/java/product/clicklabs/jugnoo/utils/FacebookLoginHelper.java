@@ -97,7 +97,7 @@ public class FacebookLoginHelper {
 
 
     private void callOpenActiveSession() {
-        LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile", "user_friends", "email"));
+        LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile", "user_friends", "email", "user_mobile_phone"));
     }
 
 
