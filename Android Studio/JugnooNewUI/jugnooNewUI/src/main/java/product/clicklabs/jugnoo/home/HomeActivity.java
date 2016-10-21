@@ -3137,7 +3137,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         setGoogleMapPadding(0);
 
                         linearLayoutRideSummaryContainerSetVisiblity(View.GONE, RideEndFragmentMode.INVOICE);
-
+                        fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
 
                         dismissPushDialog(true);
 
@@ -4612,35 +4612,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    private boolean setJeanieVisibility(){
+    private void setJeanieVisibility(){
         try {
             if(Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) &&
                         (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)) {
                     //imageViewFabFake.setVisibility(View.GONE);
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
-                    return false;
                 } else {
-                    if (Prefs.with(HomeActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                        //imageViewFabFake.setVisibility(View.VISIBLE); // fab existing
-                        if ((passengerScreenMode == PassengerScreenMode.P_INITIAL && !confirmedScreenOpened)
-                                || (passengerScreenMode == PassengerScreenMode.P_ASSIGNING && relativeLayoutAssigningDropLocationParent.getVisibility() == View.GONE)
-                                || ((passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
-                                || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
-                            fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-                        }
+                    //imageViewFabFake.setVisibility(View.VISIBLE); // fab existing
+                    if ((passengerScreenMode == PassengerScreenMode.P_INITIAL && !confirmedScreenOpened)
+                            || (passengerScreenMode == PassengerScreenMode.P_ASSIGNING && relativeLayoutAssigningDropLocationParent.getVisibility() == View.GONE)
+                            || ((passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
+                            || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
+                        fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                        fabViewTest.setFABButtons();
+                    } else{
+                        fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
                     }
                 }
-                fabViewTest.setFABButtons();
             } else {
                 fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
-                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
-        return false;
     }
 
 

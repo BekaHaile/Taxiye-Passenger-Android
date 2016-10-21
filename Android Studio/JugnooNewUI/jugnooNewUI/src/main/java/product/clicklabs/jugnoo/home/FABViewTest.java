@@ -172,7 +172,7 @@ public class FABViewTest {
             @Override
             public void onAnimationStart(Animator animation) {
                 menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
-                        ? R.drawable.ic_fab_jeanie : R.drawable.ic_cross_et);
+                        ? R.drawable.ic_fab_jeanie : R.drawable.ic_fab_cross);
             }
         });
 
