@@ -3177,7 +3177,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
 
-                try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
+                try {
+                    fabViewTest.menuLabelsRightTest.close(false);
+                    getViewSlidingExtra().setVisibility(View.GONE);
+                    getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
+                } catch (Exception e) {e.printStackTrace();}
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -8317,7 +8321,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     handlerTime = 0;
                 } else {
                     //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (52f * scale + 0.5f));
-                    animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (52f * scale + 0.5f));
+                    animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (62f * scale + 0.5f));
                     if (isSliding) {
                         handlerTime = 0;
                     } else {
