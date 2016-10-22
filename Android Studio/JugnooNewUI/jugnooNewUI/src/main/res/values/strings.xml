@@ -1179,6 +1179,7 @@
 	<string name="changes_not_updated_exit">Your changes are not updated. Do you want to exit?</string>
 	<string name="pick">Pick</string>
 	<string name="set">Set</string>
+	<string name="payment_via">Payment Via</string>
 
 
 </resources>
