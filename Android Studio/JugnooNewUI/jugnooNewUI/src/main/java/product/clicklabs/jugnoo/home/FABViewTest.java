@@ -87,6 +87,7 @@ public class FABViewTest {
             @Override
             public void onMenuToggle(boolean opened) {
                 if (opened) {
+                    setButtonsVisibilityOnOpen();
                     isOpened = true;
                     if(activity instanceof HomeActivity){
                         ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
@@ -271,24 +272,63 @@ public class FABViewTest {
                 relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 if (Data.userData.getFreshEnabled() != 1) {
                     fabFreshTest.setVisibility(View.GONE);
+                } else {
+                    if(isOpened) {
+                        fabFreshTest.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 if (Data.userData.getMealsEnabled() != 1) {
                     fabMealsTest.setVisibility(View.GONE);
+                } else {
+                    if(isOpened) {
+                        fabMealsTest.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 if(Data.userData.getGroceryEnabled() != 1){
                     fabGroceryTest.setVisibility(View.GONE);
+                } else {
+                    if(isOpened) {
+                        fabGroceryTest.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 if (Data.userData.getDeliveryEnabled() != 1) {
                     fabDeliveryTest.setVisibility(View.GONE);
+                } else {
+                    if(isOpened) {
+                        fabDeliveryTest.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private void setButtonsVisibilityOnOpen(){
+        try {
+            if (Data.userData.getFreshEnabled() == 1) {
+                fabFreshTest.setVisibility(View.VISIBLE);
+            }
+
+            if (Data.userData.getMealsEnabled() == 1) {
+                fabMealsTest.setVisibility(View.VISIBLE);
+            }
+
+            if (Data.userData.getGroceryEnabled() == 1) {
+                fabGroceryTest.setVisibility(View.VISIBLE);
+            }
+
+            if (Data.userData.getDeliveryEnabled() == 1) {
+                fabDeliveryTest.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private View.OnClickListener clickListener = new View.OnClickListener() {
         @Override
