@@ -1180,6 +1180,7 @@
 	<string name="pick">Pick</string>
 	<string name="set">Set</string>
 	<string name="payment_via">Payment Via</string>
+	<string name="add_special_notes">Add special notes to driver..</string>
 
 
 </resources>
