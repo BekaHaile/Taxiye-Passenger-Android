@@ -3176,6 +3176,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                try {
+                    fabViewTest.menuLabelsRightTest.close(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
