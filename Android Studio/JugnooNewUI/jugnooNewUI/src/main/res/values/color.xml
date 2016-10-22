@@ -162,6 +162,8 @@
     <color name="ride_history_item_text_color">#0EB2CE</color>
     <color name="google_path_polyline_color">#0889da</color>
 
+    <color name="text_green_color">#22BD21</color>
+
 
     <color name="red_google">#CF5D3A</color>
     <color name="red_google_alpha">#99CF5D3A</color>

@@ -149,6 +149,12 @@
         <item name="android:tag">mwar</item>
     </style>
 
+    <style name="ic_radio_button_style">
+        <item name="android:layout_width">28px</item>
+        <item name="android:layout_height">28px</item>
+        <item name="android:src">@drawable/ic_radio_button_off</item>
+        <item name="android:tag">mwar</item>
+    </style>
 
 
 
