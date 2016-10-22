@@ -3177,11 +3177,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
 
-                try {
-                    fabViewTest.menuLabelsRightTest.close(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -7606,21 +7602,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     map.addMarker(poolMarkerOptionEnd);
 
                     poolPathZoomAtConfirm();
+                    try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
                 }
 
                 @Override
                 public void onRetry() {
-
+                    try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
                 }
 
                 @Override
                 public void onNoRetry() {
-
+                    try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
                 }
 
                 @Override
                 public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
-
+                    try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
                 }
 
                 @Override
@@ -7634,6 +7631,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewTotalFareValue.setText(" " +String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
 
                     textViewIncludes.setText(text);
+                    try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
                 }
             }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, callFareEstimate,
                     getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
@@ -7651,6 +7649,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                     textViewDestSearch.startAnimation(shake);
                 }
+            try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
         }
     }
 
