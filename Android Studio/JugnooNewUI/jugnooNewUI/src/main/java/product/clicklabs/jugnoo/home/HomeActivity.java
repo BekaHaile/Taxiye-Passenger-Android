@@ -2895,7 +2895,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         fabViewIntial.setVisibility(View.GONE);
                         fabViewFinal.setVisibility(View.VISIBLE);
                         int dpAsPixels = (int) (160f*scale + 0.5f);
-                        fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels);
+                        fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
                         setJeanieVisibility();
 
                         break;
@@ -3203,7 +3203,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             containerHeight = containerHeight + 40f;
         }
         dpAsPixels1 = (int) (containerHeight * scale + 0.5f);
-        fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, dpAsPixels1);
+        fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels1);
     }
 
 
@@ -8325,7 +8325,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (Integer) valueAnimator.getAnimatedValue());
+                        fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, (Integer) valueAnimator.getAnimatedValue());
                     }
                 });
                 animator.setDuration(300);

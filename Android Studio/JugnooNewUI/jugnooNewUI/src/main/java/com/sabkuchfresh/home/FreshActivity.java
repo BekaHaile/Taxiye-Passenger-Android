@@ -85,7 +85,6 @@ import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
-import product.clicklabs.jugnoo.home.FABView;
 import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.MenuBar;
@@ -225,8 +224,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar = new TopBar(this, drawerLayout);
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
 
-            int dpAsPixels = (int) (80f*scale + 0.5f);
-            fabViewTest.menuLabelsRightTest.setPadding((int) (30 * ASSL.Yscale()), 0, 0, dpAsPixels);
+            int dpAsPixels = (int) (90f*scale + 0.5f);
+            fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
 
 //        if(BuildConfig.DEBUG_MODE)
 //            Utils.showPaystorePopup(FreshActivity.this, "", "please rate us");
