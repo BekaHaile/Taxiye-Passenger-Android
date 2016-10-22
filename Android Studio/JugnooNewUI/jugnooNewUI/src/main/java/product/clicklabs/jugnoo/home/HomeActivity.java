@@ -3428,7 +3428,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         } else{
             //fabViewTest.setRelativeLayoutFABVisibility(passengerScreenMode);
-            setJeanieVisibility();
             relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
             if(frag != null) {
@@ -3437,6 +3436,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         .commit();
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
+            setJeanieVisibility();
         }
     }
 
@@ -3463,7 +3463,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         } else{
             //fabViewTest.setRelativeLayoutFABVisibility(passengerScreenMode);
-            setJeanieVisibility();
             relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL);
             if(frag != null) {
@@ -3472,6 +3471,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         .commit();
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
+            setJeanieVisibility();
         }
     }
 
@@ -4627,8 +4627,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
                         fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons();
-                    } else{
-                        fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
                     }
                 }
             } else {
