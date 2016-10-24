@@ -45,6 +45,11 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		this.mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+	public void setList(ArrayList<PromoCoupon> offerList){
+		this.offerList = offerList;
+		notifyDataSetChanged();
+	}
+
 	@Override
 	public int getCount() {
 		return offerList.size();
