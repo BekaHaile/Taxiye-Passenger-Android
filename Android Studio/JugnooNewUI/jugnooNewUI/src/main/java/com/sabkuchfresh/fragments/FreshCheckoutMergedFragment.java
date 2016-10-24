@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
+import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
+import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -93,10 +96,17 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class FreshCheckoutMergedFragment extends Fragment implements FlurryEventNames, DeliverySlotsAdapter.Callback {
+public class FreshCheckoutMergedFragment extends Fragment implements FlurryEventNames, DeliverySlotsAdapter.Callback,
+        FreshCategoryItemsAdapter.Callback, PromoCouponsAdapter.Callback {
 
     private final String TAG = FreshCheckoutMergedFragment.class.getSimpleName();
     private LinearLayout linearLayoutRoot;
+
+    private RelativeLayout relativeLayoutCartTop;
+    private TextView textViewCartItems, textViewCartTotalUndiscount, textViewCartTotal;
+    private ImageView imageViewCartArrow, imageViewDeleteCart;
+    private NonScrollListView listViewCart;
+    private FreshCartItemsAdapter freshCartItemsAdapter;
 
     private RecyclerView recyclerViewDeliverySlots;
     private DeliverySlotsAdapter deliverySlotsAdapter;
@@ -141,6 +151,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private Bus mBus;
     private double amountPayable;
+    private int currentGroupId = 1;
 
     public FreshCheckoutMergedFragment() {
     }
@@ -182,11 +193,43 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         mBus = (activity).getBus();
 
+        if(activity.subItemsInCart == null) {
+            activity.subItemsInCart = new ArrayList<>();
+        }
+        activity.subItemsInCart.clear();
+
+        if(activity.getProductsResponse() != null
+                && activity.getProductsResponse().getCategories() != null) {
+            for (Category category : activity.getProductsResponse().getCategories()) {
+                for (SubItem subItem : category.getSubItems()) {
+                    if (subItem.getSubItemQuantitySelected() > 0) {
+                        activity.subItemsInCart.add(subItem);
+                    }
+                }
+                if(Data.AppType == AppConstant.ApplicationType.MEALS) {
+                    currentGroupId = category.getCurrentGroupId();
+                }
+            }
+        }
+
         ((TextView)rootView.findViewById(R.id.textViewDeliverySlot)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewPaymentVia)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDeliveryInstructions)).setTypeface(Fonts.mavenMedium(activity));
+
+
+        relativeLayoutCartTop = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCartTop);
+        textViewCartItems = (TextView) rootView.findViewById(R.id.textViewCartItems); textViewCartItems.setTypeface(Fonts.mavenMedium(activity));
+        textViewCartTotalUndiscount = (TextView) rootView.findViewById(R.id.textViewCartTotalUndiscount); textViewCartTotalUndiscount.setTypeface(Fonts.mavenMedium(activity));
+        textViewCartTotal = (TextView) rootView.findViewById(R.id.textViewCartTotal); textViewCartTotal.setTypeface(Fonts.mavenMedium(activity));
+        imageViewCartArrow = (ImageView) rootView.findViewById(R.id.imageViewCartArrow);
+        imageViewDeleteCart = (ImageView) rootView.findViewById(R.id.imageViewDeleteCart);
+        listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
+
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity,
+                activity.subItemsInCart, this, FlurryEventNames.REVIEW_CART, currentGroupId);
+        listViewCart.setAdapter(freshCartItemsAdapter);
 
         recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
         recyclerViewDeliverySlots.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
@@ -220,32 +263,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
         listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
-        promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_promo_coupon, promoCoupons, new PromoCouponsAdapter.Callback() {
-            @Override
-            public void onCouponSelected() {
-
-            }
-
-            @Override
-            public PromoCoupon getSelectedCoupon() {
-                return activity.getSelectedPromoCoupon();
-            }
-
-            @Override
-            public void setSelectedCoupon(int position) {
-                PromoCoupon promoCoupon;
-                if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
-                    promoCoupon = promoCoupons.get(position);
-                } else {
-                    promoCoupon = noSelectionCoupon;
-                }
-                if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, activity.getPaymentOption().getOrdinal(), promoCoupon)) {
-                    activity.setSelectedPromoCoupon(promoCoupon);
-                }
-                setCouponNameToDisplay();
-                updateUI();
-            }
-        });
+        promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this);
         listViewOffers.setAdapter(promoCouponsAdapter);
 
         editTextDeliveryInstructions = (EditText) rootView.findViewById(R.id.editTextDeliveryInstructions);
@@ -301,6 +319,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             }
         });
 
+        imageViewDeleteCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.deleteCart();
+            }
+        });
+
         setCheckoutScreen();
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.CHECKOUT, activity.productList);
@@ -308,7 +333,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
         try {
-            subTotalAmount = activity.updateCartValuesGetTotalPrice().first;
+            Pair<Double, Integer> pair = activity.updateCartValuesGetTotalPrice();
+            subTotalAmount = pair.first;
+            updateCartView(pair);
 
             if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > subTotalAmount) {
 				deliveryAmount = activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
@@ -1431,6 +1458,93 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         slotDay.setCtotal(camountPayable);
         slotDay.setSlotViewType(FreshCheckoutAdapter.SlotViewType.HEADER);
 
+    }
+
+
+    @Override
+    public void onPlusClicked(int position, SubItem subItem) {
+        updateCartView(activity.updateCartValuesGetTotalPrice());
+    }
+
+    @Override
+    public void onMinusClicked(int position, SubItem subItem) {
+        updateCartView(activity.updateCartValuesGetTotalPrice());
+        if(subItem.getSubItemQuantitySelected() == 0){
+            activity.subItemsInCart.remove(position);
+            checkIfEmpty();
+        }
+    }
+
+    @Override
+    public void onDeleteClicked(int position, SubItem subItem) {
+        updateCartView(activity.updateCartValuesGetTotalPrice());
+        if(subItem.getSubItemQuantitySelected() == 0){
+            activity.subItemsInCart.remove(position);
+            checkIfEmpty();
+        }
+    }
+
+    @Override
+    public boolean checkForMinus(int position, SubItem subItem) {
+        return activity.checkForMinus(position, subItem);
+    }
+
+    @Override
+    public void minusNotDone(int position, SubItem subItem) {
+        activity.clearMealsCartIfNoMainMeal();
+    }
+
+    public void deleteCart() {
+        for(SubItem subItem : activity.subItemsInCart){
+            subItem.setSubItemQuantitySelected(0);
+        }
+        updateCartView(activity.updateCartValuesGetTotalPrice());
+        activity.subItemsInCart.clear();
+        freshCartItemsAdapter.notifyDataSetChanged();
+        checkIfEmpty();
+
+    }
+
+    private void checkIfEmpty(){
+        if(activity.subItemsInCart.size() == 0){
+            if(activity.isMealAddonItemsAvailable()){
+                activity.performBackPressed();
+            }
+            activity.performBackPressed();
+        }
+    }
+
+
+    @Override
+    public void onCouponSelected() {
+
+    }
+
+    @Override
+    public PromoCoupon getSelectedCoupon() {
+        return activity.getSelectedPromoCoupon();
+    }
+
+    @Override
+    public void setSelectedCoupon(int position) {
+        PromoCoupon promoCoupon;
+        if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
+            promoCoupon = promoCoupons.get(position);
+        } else {
+            promoCoupon = noSelectionCoupon;
+        }
+        if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, activity.getPaymentOption().getOrdinal(), promoCoupon)) {
+            activity.setSelectedPromoCoupon(promoCoupon);
+        }
+        setCouponNameToDisplay();
+        updateUI();
+    }
+
+
+    private void updateCartView(Pair<Double, Integer> pair){
+        textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
+        textViewCartTotal.setText(activity.getString(R.string.rupees_value_format_without_space,
+                Utils.getMoneyDecimalFormatWithoutFloat().format(pair.first)));
     }
 
 }
