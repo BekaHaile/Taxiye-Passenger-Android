@@ -65,12 +65,6 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     private final String TAG = FreshCheckoutFragment.class.getSimpleName();
     private LinearLayout linearLayoutRoot;
     //
-//	private TextView textViewTotalAmountValue, textViewDeliveryChargesValue, textViewAmountPayableValue;
-//	private RelativeLayout relativeLayoutAddress;
-//	private TextView textViewAddAddress, textViewAddressValue;
-//	private ImageView imageViewEditAddress, imageViewEditSlot;
-//	private RelativeLayout relativeLayoutSlot;
-//	private TextView textViewDay, textViewSlotValue;
     private Button buttonProceedToPayment;
 
     private View rootView;
@@ -126,15 +120,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
             if (activity.getProductsResponse() != null
                     && activity.getProductsResponse().getDeliveryInfo() != null) {
                 amountPayable = activity.updateCartValuesGetTotalPrice().first;
-//                if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount) {
-//                    deliveryCharge = String.format(activity.getResources().getString(R.string.rupees_value_format),
-//                            Utils.getMoneyDecimalFormat().format(activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges()));
-//                    isDeliveryCharger = "yes";
-//                    amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
-//
-//                } else {
                     isDeliveryCharger = "";
-//                }
 
                 ctotalAmount = String.format(activity.getResources().getString(R.string.rupees_value_format),
                         Utils.getMoneyDecimalFormat().format(amountPayable));
@@ -155,8 +141,6 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         slotDay.setSlotViewType(FreshCheckoutAdapter.SlotViewType.HEADER);
 
         checkout.add(slotDay);
-//        checkoutAdapter.setList(checkout);
-//        checkoutAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -470,20 +454,12 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                 }
             }
 
-//            Slot slotDayHeader = new Slot();
-//            slotDayHeader.setSlotViewType(FreshCheckoutAdapter.SlotViewType.SLOT_STATUS);
-//            checkout.add(slotDayHeader);
-//
             checkout.addAll(slots);
-//            Slot slotLine = new Slot();
-//            slotLine.setSlotViewType(FreshCheckoutAdapter.SlotViewType.DIVIDER);
-//            checkout.add(slotLine);
 
             Slot slotDay = new Slot();
             slotDay.setSlotViewType(FreshCheckoutAdapter.SlotViewType.FEED);
             checkout.add(slotDay);
             checkoutAdapter.setList(checkout);
-//            checkoutAdapter.notifyDataSetChanged();
         }
     }
 
