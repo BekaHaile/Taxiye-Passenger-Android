@@ -248,4 +248,8 @@ public class Slot {
 	public void setAddressLabel(String addressLabel) {
 		this.addressLabel = addressLabel;
 	}
+
+	public String getTimeSlotDisplay(){
+		return DateOperations.convertDayTimeAPViaFormat(getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(getEndTime());
+	}
 }

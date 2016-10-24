@@ -74,7 +74,7 @@ public class PromoCouponsDialog {
 				FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "b_offer");
 			}
 
-			promoCouponsAdapter = new PromoCouponsAdapter(activity, promoCoupons, new PromoCouponsAdapter.Callback() {
+			promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_promo_coupon, promoCoupons, new PromoCouponsAdapter.Callback() {
 				@Override
 				public void onCouponSelected() {
 

@@ -31,13 +31,15 @@ import product.clicklabs.jugnoo.utils.Fonts;
  */
 public class PromoCouponsAdapter extends BaseAdapter {
 
+	private int layoutRID;
 	private Activity activity;
 	private ArrayList<PromoCoupon> offerList = new ArrayList<>();
 	private Callback callback;
 	private LayoutInflater mInflater;
 
-	public PromoCouponsAdapter(Activity activity, ArrayList<PromoCoupon> offerList, Callback callback) {
+	public PromoCouponsAdapter(Activity activity, int layoutRID, ArrayList<PromoCoupon> offerList, Callback callback) {
 		this.activity = activity;
+		this.layoutRID = layoutRID;
 		this.offerList = offerList;
 		this.callback = callback;
 		this.mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -62,7 +64,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.list_item_promo_coupon, null);
+			convertView = mInflater.inflate(layoutRID, null);
 			holder = new ViewHolder(convertView, activity);
 
 			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 84));
@@ -128,7 +130,6 @@ public class PromoCouponsAdapter extends BaseAdapter {
                     Bundle bundle = new Bundle();
                     MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.PROMOTIONS+"_"+FirebaseEvents.COUPON_PROMOTION, bundle);
 					notifyDataSetChanged();
-					//activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPromoCouponsDialog().setContinueButton();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

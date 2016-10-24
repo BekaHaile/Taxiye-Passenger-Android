@@ -21,236 +21,6 @@
             >
 
 
-
-            <TextView
-                android:id="@+id/textViewPayment"
-                android:layout_width="match_parent"
-                android:layout_height="40px"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="44px"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/payment_hearder_30"
-                android:singleLine="true"
-                android:text="PAYMENT DETAILS"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_22"
-                android:visibility="visible"
-                />
-
-            <View
-                android:id="@+id/view_line"
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginBottom="5px"
-                android:background="@color/divider_color"
-                />
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutSubTotalLayout"
-                android:layout_width="match_parent"
-                android:layout_height="70px"
-                android:gravity="center_vertical"
-                >
-
-                <TextView
-                    android:id="@+id/textViewSubTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/payment_margin"
-                    android:singleLine="true"
-                    android:text="@string/sub_total_amount"
-                    android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_28"
-                    />
-
-                <TextView
-                    android:id="@+id/textViewSubTotalValue"
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/payment_margin"
-                    android:gravity="right"
-                    android:singleLine="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
-                    android:visibility="visible"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutPromo"
-                android:layout_width="match_parent"
-                android:layout_height="70px"
-                android:gravity="center_vertical"
-                >
-
-                <TextView
-                    android:id="@+id/textViewPromo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/payment_margin"
-                    android:singleLine="true"
-                    android:text="Promotional Discount"
-                    android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_28"
-                    />
-
-                <TextView
-                    android:id="@+id/textViewPromoValue"
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/payment_margin"
-                    android:gravity="right"
-                    android:singleLine="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
-                    android:visibility="visible"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutdelivery"
-                android:layout_width="match_parent"
-                android:layout_height="70px"
-                android:gravity="center_vertical"
-                >
-
-                <TextView
-                    android:id="@+id/textViewdelivery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/payment_margin"
-                    android:singleLine="true"
-                    android:text="@string/delivery_charges"
-                    android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_28"
-                    />
-
-                <TextView
-                    android:id="@+id/textViewdeliveryValue"
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/payment_margin"
-                    android:gravity="right"
-                    android:singleLine="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
-                    android:visibility="visible"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutTotalLayout"
-                android:layout_width="match_parent"
-                android:layout_height="70px"
-                android:gravity="center_vertical"
-                >
-
-                <TextView
-                    android:id="@+id/textViewTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/payment_margin"
-                    android:singleLine="true"
-                    android:text="@string/total_amount"
-                    android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_28"
-                    />
-
-                <TextView
-                    android:id="@+id/textViewTotalValue"
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/payment_margin"
-                    android:gravity="right"
-                    android:singleLine="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
-                    android:visibility="visible"
-                    />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutJC"
-                android:layout_width="match_parent"
-                android:layout_height="70px"
-                android:gravity="center_vertical"
-                >
-
-                <TextView
-                    android:id="@+id/textViewJC"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/payment_margin"
-                    android:singleLine="true"
-                    android:text="@string/jugnoo_cash"
-                    android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_28"
-                    />
-
-                <TextView
-                    android:id="@+id/textViewJCValue"
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/payment_margin"
-                    android:gravity="right"
-                    android:singleLine="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
-                    android:visibility="visible"
-                    />
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginBottom="5px"
-                android:background="@color/divider_color"
-                />
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutPayable"
-                android:layout_width="match_parent"
-                android:layout_height="80px"
-                android:gravity="center_vertical"
-                >
-
-                <TextView
-                    android:id="@+id/textViewPayable"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/payment_margin"
-                    android:singleLine="true"
-                    android:text="@string/amount_payable"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30"
-                    />
-
-                <TextView
-                    android:id="@+id/textViewPayableValue"
-                    android:layout_width="300px"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/payment_margin"
-                    android:gravity="right"
-                    android:singleLine="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30"
-                    android:visibility="visible"
-                    />
-
-            </RelativeLayout>
-
-
             <LinearLayout
                 android:id="@+id/linearLayoutDeliverySlot"
                 android:layout_width="match_parent"
@@ -302,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40px"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 >
 
                 <TextView
@@ -331,6 +101,7 @@
                     >
 
                     <RelativeLayout
+                        android:id="@+id/relativeLayoutDeliveryAddress"
                         android:layout_width="match_parent"
                         android:layout_height="116px">
 
@@ -397,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40px"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 >
 
                 <TextView
@@ -635,15 +406,6 @@
 
                             </LinearLayout>
 
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="2px"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginLeft="30px"
-                                android:layout_marginRight="30px"
-                                android:background="@color/divider_color"
-                                />
-
                         </RelativeLayout>
 
                     </LinearLayout>
@@ -659,7 +421,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40px"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 >
 
                 <TextView
@@ -708,7 +470,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40px"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="visible"
                 >
 
                 <TextView
@@ -763,7 +525,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="70px"
                 android:layout_marginTop="34px"
-                android:text="@string/place_order"
+                android:text="@string/confirm_pay"
                 android:textSize="@dimen/text_size_34"
                 />
 
