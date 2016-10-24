@@ -16,10 +16,136 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:orientation="vertical"
             >
 
+            <LinearLayout
+                android:id="@+id/linearLayoutCart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40px"
+                android:orientation="vertical"
+                android:visibility="visible"
+                >
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardViewCart"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="20px"
+                    card_view:cardBackgroundColor="@color/white"
+                    card_view:cardCornerRadius="4px"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutCartTop"
+                            android:layout_width="match_parent"
+                            android:layout_height="96px">
+
+                            <TextView
+                                android:id="@+id/textViewCartItems"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="54px"
+                                android:gravity="center_vertical"
+                                android:text="@string/cart_items"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+                            <ImageView
+                                android:id="@+id/imageViewCartArrow"
+                                android:layout_width="19px"
+                                android:layout_height="12px"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="14px"
+                                android:layout_toRightOf="@+id/textViewCartItems"
+                                android:src="@drawable/triangle_grey"
+                                android:tag="mwar"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/textViewCartTotalUndiscount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="20px"
+                                android:layout_toLeftOf="@+id/textViewCartTotal"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color_light"
+                                android:textSize="@dimen/text_size_32"
+                                />
+
+                            <TextView
+                                android:id="@+id/textViewCartTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="54px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_44"
+                                />
+
+
+                        </RelativeLayout>
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            >
+                            
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:src="@color/stroke_color_light"
+                                />
+                            
+                        </LinearLayout>
+
+
+                        <product.clicklabs.jugnoo.utils.NonScrollListView
+                            android:id="@+id/listViewCart"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:divider="@color/transparent"
+                            android:dividerHeight="0dp"
+                            android:splitMotionEvents="false"
+                            >
+                        </product.clicklabs.jugnoo.utils.NonScrollListView>
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+
+                <ImageView
+                    android:id="@+id/imageViewDeleteCart"
+                    android:layout_width="133px"
+                    android:layout_height="133px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="-60px"
+                    android:src="@drawable/ic_checkout_delete_cart"
+                    android:tag="mwar"
+                    />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayoutDeliverySlot"
@@ -48,10 +174,10 @@
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8px"
                     android:layout_marginLeft="20px"
                     android:layout_marginRight="20px"
                     android:layout_marginTop="14px"
-                    android:layout_marginBottom="8px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px"
                     >
@@ -60,7 +186,7 @@
                         android:id="@+id/recyclerViewDeliverySlots"
                         android:layout_width="match_parent"
                         android:layout_height="95px"
-                        android:splitMotionEvents="false" />
+                        android:splitMotionEvents="false"/>
 
                 </android.support.v7.widget.CardView>
 
@@ -71,7 +197,7 @@
                 android:id="@+id/linearLayoutDeliveryAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40px"
+                android:layout_marginTop="32px"
                 android:orientation="vertical"
                 android:visibility="visible"
                 >
@@ -94,10 +220,10 @@
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8px"
                     android:layout_marginLeft="20px"
                     android:layout_marginRight="20px"
                     android:layout_marginTop="14px"
-                    android:layout_marginBottom="5px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px"
                     >
@@ -105,7 +231,9 @@
                     <RelativeLayout
                         android:id="@+id/relativeLayoutDeliveryAddress"
                         android:layout_width="match_parent"
-                        android:layout_height="116px">
+                        android:layout_height="116px"
+                        android:background="@drawable/bg_transparent_menu_item_selector"
+                        >
 
                         <ImageView
                             android:id="@+id/imageViewAddressType"
@@ -115,15 +243,15 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="20px"
                             android:src="@drawable/ic_home"
-                            android:tag="mwar" />
+                            android:tag="mwar"/>
 
                         <LinearLayout
                             android:layout_width="500px"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="10px"
-                            android:orientation="vertical"
                             android:layout_toRightOf="@+id/imageViewAddressType"
+                            android:orientation="vertical"
                             >
 
                             <TextView
@@ -168,7 +296,7 @@
                 android:id="@+id/linearLayoutPayment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40px"
+                android:layout_marginTop="32px"
                 android:orientation="vertical"
                 android:visibility="visible"
                 >
@@ -179,7 +307,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="26px"
-                    android:text="@string/payment_via"
+                    android:text="@string/payment_mode"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_26"
@@ -191,10 +319,10 @@
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8px"
                     android:layout_marginLeft="20px"
                     android:layout_marginRight="20px"
                     android:layout_marginTop="14px"
-                    android:layout_marginBottom="5px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px"
                     >
@@ -422,7 +550,7 @@
                 android:id="@+id/linearLayoutOffers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40px"
+                android:layout_marginTop="32px"
                 android:orientation="vertical"
                 android:visibility="visible"
                 >
@@ -445,10 +573,10 @@
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8px"
                     android:layout_marginLeft="20px"
                     android:layout_marginRight="20px"
                     android:layout_marginTop="14px"
-                    android:layout_marginBottom="5px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px"
                     >
@@ -472,7 +600,7 @@
                 android:id="@+id/linearLayoutDeliveryInstructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40px"
+                android:layout_marginTop="32px"
                 android:orientation="vertical"
                 android:visibility="visible"
                 >
@@ -495,10 +623,10 @@
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8px"
                     android:layout_marginLeft="20px"
                     android:layout_marginRight="20px"
                     android:layout_marginTop="14px"
-                    android:layout_marginBottom="5px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px"
                     >
@@ -529,7 +657,7 @@
                 style="@style/ButtonTheme"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="70px"
-                android:layout_marginTop="34px"
+                android:layout_marginTop="32px"
                 android:text="@string/confirm_pay"
                 android:textSize="@dimen/text_size_34"
                 />

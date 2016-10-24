@@ -18,7 +18,6 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -75,16 +74,6 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 
         Data.AppType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
 
-		try {
-			for (int i = 0; i < activity.subItemsInCart.size(); i++) {
-				MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
-						activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(),
-						activity.subItemsInCart.get(i).getPrice(),
-						Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
 		recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
@@ -116,19 +105,16 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
                 }
 			}
 		}
-//		if(Data.AppType == AppConstant.ApplicationType.MEALS) {
-//			for (int i = 0; i < activity.subItemsInCart.size(); i++) {
-//				MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
-//						activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(), activity.subItemsInCart.get(i).getPrice(),
-//						AppConstant.ApplicationType.MEALS);
-//			}
-//		} else {
-//			for (int i = 0; i < activity.subItemsInCart.size(); i++) {
-//				MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
-//						activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(), activity.subItemsInCart.get(i).getPrice(),
-//						AppConstant.ApplicationType.FRESH);
-//			}
-//		}
+		try {
+			for (int i = 0; i < activity.subItemsInCart.size(); i++) {
+				MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
+						activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(),
+						activity.subItemsInCart.get(i).getPrice(),
+						Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 
 		freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity,

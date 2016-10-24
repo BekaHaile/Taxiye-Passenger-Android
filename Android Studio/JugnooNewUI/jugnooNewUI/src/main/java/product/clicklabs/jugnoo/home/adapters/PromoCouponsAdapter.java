@@ -72,7 +72,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 			convertView = mInflater.inflate(layoutRID, null);
 			holder = new ViewHolder(convertView, activity);
 
-			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 84));
+			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
 			ASSL.DoMagic(holder.relative);
 
 			convertView.setTag(holder);
