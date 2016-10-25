@@ -50,7 +50,7 @@
                         android:digits="@string/digits_characters_numbers"
                         android:gravity="center_vertical"
                         android:hint="@string/nl_signup_name"
-                        android:inputType="textNoSuggestions"
+                        android:inputType="textNoSuggestions|textCapWords"
                         android:maxLength="50"
                         android:paddingLeft="20px"
                         android:paddingRight="20px"

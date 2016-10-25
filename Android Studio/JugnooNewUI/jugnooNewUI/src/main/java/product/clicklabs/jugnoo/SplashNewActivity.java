@@ -21,8 +21,11 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
@@ -94,6 +97,7 @@ import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.OwnerInfo;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.UserEmailFetcher;
@@ -149,7 +153,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
 
-	int debugState = 0;
+	int debugState = 0, userVerfied = 0;
 	boolean hold1 = false, hold2 = false;
 	boolean holdForBranch = false;
 	int clickCount = 0, linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
@@ -163,7 +167,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	boolean emailRegister = false, facebookRegister = false, googleRegister = false, sendToOtpScreen = false, fromPreviousAccounts = false;
 	String phoneNoOfUnverifiedAccount = "", otpErrorMsg = "", notRegisteredMsg = "", accessToken = "",
 			emailNeedRegister = "", linkedWalletErrorMsg = "";
-	private String enteredEmail = "";
+	private String enteredEmail = "", fbVerifiedNumber = "";
 	public static boolean phoneNoLogin = false;
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
 
@@ -1366,7 +1370,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 		retryAccessTokenLogin();
 		resumed = true;
-
+		userVerfied = 0;
 		AppEventsLogger.activateApp(this);
 
 
@@ -1782,7 +1786,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						googleRegister = false;
 						sendIntentToRegisterScreen(RegisterationType.GOOGLE);
 					} else if (SplashNewActivity.this.hasWindowFocus() && sendToOtpScreen) {
-						sendIntentToOtpScreen();
+						sendIntentToOtpScreen(userVerfied);
 					}
 				}
 			}
@@ -2168,12 +2172,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL);
 									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
-									loginDataFetched = true;
+
 								}
 							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -2269,6 +2274,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								String error = jObj.getString("error");
 								facebookRegister = true;
 								notRegisteredMsg = error;
+								fbVerifiedNumber = jObj.optString("fb_verified_number");
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
@@ -2286,14 +2292,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 								sendToOtpScreen = true;
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.FACEBOOK);
-									loginDataFetched = true;
+
 
 									Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
 								}
+								DialogPopup.showLoadingDialog(activity, "Loading...");
 							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
@@ -2449,7 +2457,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	 * Send intent to otp screen by making required data objects
 	 * flag 0 for email, 1 for Facebook
 	 */
-	public void sendIntentToOtpScreen() {
+	public void sendIntentToOtpScreen(int userVerified) {
 		if (State.LOGIN == state) {
 			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "", otpErrorMsg, new View.OnClickListener() {
 
@@ -2490,6 +2498,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			intent.putExtra("show_timer", 1);
 			intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
 			intent.putExtra(LINKED_WALLET, linkedWallet);
+			intent.putExtra(USER_VERIFIED, userVerified);
 			startActivity(intent);
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -2606,9 +2615,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				if (Data.facebookUserData.userEmail != null && !Data.facebookUserData.userEmail.equalsIgnoreCase("")) {
 					editTextSEmail.setEnabled(false);
 				} else {
-
 					editTextSEmail.setEnabled(true);
 				}
+				editTextSPhone.setText(fbVerifiedNumber);
+
 			} else if (RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 				editTextSName.setText(Data.googleSignInAccount.getDisplayName());
 				editTextSEmail.setText(Data.googleSignInAccount.getEmail());
@@ -2629,16 +2639,21 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(emailNeedRegister));
 				} else{
 					if(emailNeedRegister.equalsIgnoreCase("")){
-						if(UserEmailFetcher.getEmail(SplashNewActivity.this) != null){
-							editTextSEmail.setText(UserEmailFetcher.getEmail(SplashNewActivity.this));
+						String ownerEmail = UserEmailFetcher.getEmail(SplashNewActivity.this);
+						if(ownerEmail != null && (!ownerEmail.equalsIgnoreCase(""))){
+							editTextSEmail.setText(ownerEmail);
+							editTextSName.setText(Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail)));
 						} else{
 							editTextSEmail.setText("");
 						}
 					} else {
 						editTextSEmail.setText(emailNeedRegister);
 					}
-
 				}
+				TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+				String mPhoneNumber = tMgr.getLine1Number();
+				editTextSPhone.setText(mPhoneNumber);
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2930,6 +2945,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Facebook");
+									userVerfied = jObj.optInt("user_verified", 0);
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
                                     SplashNewActivity.this.phoneNo = phoneNo;

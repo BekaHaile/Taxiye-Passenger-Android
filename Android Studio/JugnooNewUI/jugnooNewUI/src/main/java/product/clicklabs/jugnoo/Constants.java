@@ -142,6 +142,7 @@ public interface Constants {
 	String KEY_NOTIFICATION_ID = "notification_id";
 
 	String LINKED_WALLET = "linked_wallet";
+	String USER_VERIFIED = "user_verified";
 	String LINKED_WALLET_MESSAGE = "linked_wallet_message";
 
 	String SERVER_TIMEOUT = "SERVER_TIMEOUT";

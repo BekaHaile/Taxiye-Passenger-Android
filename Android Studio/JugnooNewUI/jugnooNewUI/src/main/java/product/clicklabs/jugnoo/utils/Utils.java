@@ -755,6 +755,16 @@ public class Utils {
         dataLayer.pushEvent("closeScreen", DataLayer.mapOf("screenName", screenName));
     }
 
+	public static String firstCharCapital(String str){
+		String[] strArray = str.split(" ");
+		StringBuilder builder = new StringBuilder();
+		for (String s : strArray) {
+			String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
+			builder.append(cap + " ");
+		}
+		return builder.toString();
+	}
+
 	public static int dpToPx(Context context, float dp) {
 		int temp = (int)dp;
 		final float scale = context.getResources().getDisplayMetrics().density;

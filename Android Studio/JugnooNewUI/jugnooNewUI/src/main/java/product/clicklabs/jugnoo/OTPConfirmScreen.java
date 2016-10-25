@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -85,10 +86,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	ScrollView scrollView;
 	LinearLayout linearLayoutMain;
-	TextView textViewScroll;
+	TextView textViewScroll, textViewSkip;
 	
 	boolean loginDataFetched = false;
-	private int linkedWallet = 0;
+	private int linkedWallet = 0, userVerified = 0;
 	private String linkedWalletErrorMsg = "";
 	
 	public static boolean intentFromRegister = true, backFromMissedCall;
@@ -131,6 +132,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		}
 
+		if(getIntent().hasExtra(USER_VERIFIED)){
+			userVerified = getIntent().getIntExtra(USER_VERIFIED, 0);
+		}
+
 
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
@@ -158,7 +163,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		textViewOr = (TextView) findViewById(R.id.textViewOr); textViewOr.setTypeface(Fonts.mavenLight(this));
 		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
 		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenRegular(this));
+		textViewSkip = (TextView)findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.mavenRegular(this));
 
+		if(userVerified == 1){
+			textViewSkip.setVisibility(View.VISIBLE);
+		} else{
+			textViewSkip.setVisibility(View.GONE);
+		}
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -175,6 +186,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			public void onClick(View v) {
 				FlurryEventLogger.eventGA(ACQUISITION, TAG, "Back");
 				performBackPressed();
+			}
+		});
+
+		textViewSkip.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sendFacebookLoginValues(OTPConfirmScreen.this);
 			}
 		});
 
@@ -969,6 +987,109 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
 			});
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+
+	public void sendFacebookLoginValues(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+			HashMap<String, String> params = new HashMap<>();
+
+			if (Data.locationFetcher != null) {
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+
+			params.put("user_fb_id", Data.facebookUserData.fbId);
+			params.put("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+			params.put("fb_access_token", Data.facebookUserData.accessToken);
+			params.put("fb_mail", Data.facebookUserData.userEmail);
+			params.put("username", Data.facebookUserData.userName);
+
+			params.put("device_token", MyApplication.getInstance().getDeviceToken());
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", Data.deviceName);
+			params.put("app_version", "" + Data.appVersion);
+			params.put("os_version", Data.osVersion);
+			params.put("country", Data.country);
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
+			params.put("client_id", Config.getAutosClientId());
+
+			if (Utils.isDeviceRooted()) {
+				params.put("device_rooted", "1");
+			} else {
+				params.put("device_rooted", "0");
+			}
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
+			params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
+
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
+
+			Log.i("params", "" + params);
+
+			RestClient.getApiServices().loginUsingFacebook(params, new Callback<LoginResponse>() {
+				@Override
+				public void success(LoginResponse loginResponse, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "loginUsingFacebook response = " + responseStr);
+
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+
+						int flag = jObj.getInt("flag");
+
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+								loginDataFetched = true;
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+											loginResponse, LoginVia.FACEBOOK);
+
+
+									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
+								}
+								DialogPopup.showLoadingDialog(activity, "Loading...");
+							} else {
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+							DialogPopup.dismissLoadingDialog();
+						} else {
+							DialogPopup.dismissLoadingDialog();
+						}
+
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "loginUsingFacebook error=" + error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
 		}
 		else {
 			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
