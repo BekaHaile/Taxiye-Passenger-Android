@@ -51,7 +51,7 @@
 
     <ImageView
         android:id="@+id/imageViewSep"
-        android:layout_width="1px"
+        android:layout_width="1dp"
         android:layout_height="match_parent"
         android:src="@color/stroke_light_grey_alpha"
         android:layout_alignParentRight="true"

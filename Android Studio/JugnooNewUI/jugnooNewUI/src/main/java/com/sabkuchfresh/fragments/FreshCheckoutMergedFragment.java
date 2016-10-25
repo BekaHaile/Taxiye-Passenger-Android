@@ -249,8 +249,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity,
-                activity.subItemsInCart, this, FlurryEventNames.REVIEW_CART, currentGroupId);
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart);
         listViewCart.setAdapter(freshCartItemsAdapter);
 
         recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
@@ -361,7 +360,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     imageViewCartArrow.setRotation(180f);
                 } else {
                     linearLayoutCartExpansion.setVisibility(View.VISIBLE);
-                    imageViewDeleteCart.setVisibility(View.VISIBLE);
+                    imageViewDeleteCart.setVisibility(View.GONE);
                     imageViewCartArrow.setRotation(0f);
                 }
             }
@@ -1549,6 +1548,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 activity.performBackPressed();
             }
             activity.performBackPressed();
+            int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+            if(appType != AppConstant.ApplicationType.MEALS){
+                activity.performBackPressed();
+            }
         }
     }
 

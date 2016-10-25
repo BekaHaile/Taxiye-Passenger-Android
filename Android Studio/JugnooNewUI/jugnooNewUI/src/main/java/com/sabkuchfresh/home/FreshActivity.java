@@ -261,7 +261,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                             if(isMealAddonItemsAvailable()){
                                 addMealAddonItemsFragment();
                             } else {
-                                getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+                                openCart(appType);
 
                                 if (appType == AppConstant.ApplicationType.MEALS) {
                                     MyApplication.getInstance().logEvent(FirebaseEvents.M_CART, null);
@@ -303,7 +303,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                             return;
 
                         if(updateCartValuesGetTotalPrice().second > 0) {
-                            getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+                            int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                            openCart(appType);
                         } else {
                             Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty));
                         }
@@ -1124,9 +1125,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     public void onClick(View v) {
                         FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.DELETE, FlurryEventNames.ALL);
 
-                        FreshCheckoutMergedFragment frag = getFreshCheckoutMergedFragment();
+                        Fragment frag = getFreshCheckoutMergedFragment();
                         if (frag != null) {
-                            frag.deleteCart();
+                            ((FreshCheckoutMergedFragment)frag).deleteCart();
+                        } else {
+                            frag = getFreshCartItemsFragment();
+                            if(frag != null){
+                                ((FreshCartItemsFragment)frag).deleteCart();
+                            }
                         }
 
                         if(type == AppConstant.ApplicationType.FRESH) {
@@ -2096,20 +2102,25 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void clearMealsCartIfNoMainMeal(){
         try {
-            FreshCheckoutMergedFragment frag = getFreshCheckoutMergedFragment();
+            Fragment frag = getFreshCheckoutMergedFragment();
             if (frag != null) {
-				frag.deleteCart();
-			} else{
-				if(getProductsResponse() != null && getProductsResponse().getCategories() != null) {
-					for (Category category : getProductsResponse().getCategories()) {
-						for (SubItem subItem : category.getSubItems()) {
-							if (subItem.getSubItemQuantitySelected() > 0) {
-								subItem.setSubItemQuantitySelected(0);
-							}
-						}
-					}
-				}
-				updateCartValuesGetTotalPrice();
+                ((FreshCheckoutMergedFragment)frag).deleteCart();
+            } else{
+                frag = getFreshCartItemsFragment();
+                if(frag != null){
+                    ((FreshCartItemsFragment)frag).deleteCart();
+                } else {
+                    if (getProductsResponse() != null && getProductsResponse().getCategories() != null) {
+                        for (Category category : getProductsResponse().getCategories()) {
+                            for (SubItem subItem : category.getSubItems()) {
+                                if (subItem.getSubItemQuantitySelected() > 0) {
+                                    subItem.setSubItemQuantitySelected(0);
+                                }
+                            }
+                        }
+                    }
+                    updateCartValuesGetTotalPrice();
+                }
 			}
             clearMealCart();
         } catch (Exception e) {
@@ -2139,4 +2150,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             return null;
         }
     }
+
+    private void openCart(int appType){
+        if(appType == AppConstant.ApplicationType.MEALS) {
+            getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+        } else {
+            getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+        }
+    }
+
 }
