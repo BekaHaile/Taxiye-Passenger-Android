@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.facebook.appevents.AppEventsConstants;
@@ -74,8 +75,6 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
-import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
-import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -83,6 +82,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -104,7 +104,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private RelativeLayout relativeLayoutCartTop;
     private TextView textViewCartItems, textViewCartTotalUndiscount, textViewCartTotal;
-    private ImageView imageViewCartArrow, imageViewDeleteCart;
+    private ImageView imageViewCartArrow, imageViewDeleteCart, imageViewCartSep;
+    private LinearLayout linearLayoutCartDetails;
+    private RelativeLayout relativeLayoutDiscount, relativeLayoutDeliveryCharges;
+    private TextView textViewDiscountValue, textViewDeliveryChargesValue;
     private NonScrollListView listViewCart;
     private FreshCartItemsAdapter freshCartItemsAdapter;
 
@@ -128,6 +131,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private EditText editTextDeliveryInstructions;
     private Button buttonPlaceOrder;
 
+    private ScrollView scrollView;
+    private LinearLayout linearLayoutMain;
+    private TextView textViewScroll;
 
 
 
@@ -225,8 +231,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         textViewCartTotal = (TextView) rootView.findViewById(R.id.textViewCartTotal); textViewCartTotal.setTypeface(Fonts.mavenMedium(activity));
         imageViewCartArrow = (ImageView) rootView.findViewById(R.id.imageViewCartArrow);
         imageViewDeleteCart = (ImageView) rootView.findViewById(R.id.imageViewDeleteCart);
-        listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
+        imageViewCartSep = (ImageView) rootView.findViewById(R.id.imageViewCartSep);
+        linearLayoutCartDetails = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartDetails);
+        relativeLayoutDiscount = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDiscount);
+        relativeLayoutDeliveryCharges = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDeliveryCharges);
+        textViewDiscountValue = (TextView) rootView.findViewById(R.id.textViewDiscountValue); textViewDiscountValue.setTypeface(Fonts.mavenMedium(activity));
+        textViewDeliveryChargesValue = (TextView) rootView.findViewById(R.id.textViewDeliveryChargesValue); textViewDeliveryChargesValue.setTypeface(Fonts.mavenMedium(activity));
 
+
+        listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
         freshCartItemsAdapter = new FreshCartItemsAdapter(activity,
                 activity.subItemsInCart, this, FlurryEventNames.REVIEW_CART, currentGroupId);
         listViewCart.setAdapter(freshCartItemsAdapter);
@@ -271,6 +284,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         buttonPlaceOrder = (Button) rootView.findViewById(R.id.buttonPlaceOrder); buttonPlaceOrder.setTypeface(Fonts.mavenRegular(activity));
 
+        scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
+        linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
+        textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
+
 
         relativeLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -279,7 +296,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         activity.setSelectedPromoCoupon(noSelectionCoupon);
 
-        updateCouponsView();
+        updateCouponsDataView();
 
 
 
@@ -295,7 +312,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             @Override
             public void onClick(View v) {
                 if (buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
-                    getCheckoutData();
+                    getCheckoutDataAPI();
                 } else if (activity.getSlotSelected() == null) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
                 } else if (TextUtils.isEmpty(activity.getSelectedAddress())) {
@@ -326,36 +343,50 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             }
         });
 
-        setCheckoutScreen();
+        relativeLayoutCartTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listViewCart.getVisibility() == View.VISIBLE){
+                    listViewCart.setVisibility(View.GONE);
+                    imageViewDeleteCart.setVisibility(View.GONE);
+                    imageViewCartArrow.setRotation(180f);
+                } else {
+                    listViewCart.setVisibility(View.VISIBLE);
+                    imageViewDeleteCart.setVisibility(View.VISIBLE);
+                    imageViewCartArrow.setRotation(0f);
+                }
+            }
+        });
+
+        updateAddressView();
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.CHECKOUT, activity.productList);
-        getCheckoutData();
+        getCheckoutDataAPI();
 
-
-        try {
-            Pair<Double, Integer> pair = activity.updateCartValuesGetTotalPrice();
-            subTotalAmount = pair.first;
-            updateCartView(pair);
-
-            if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > subTotalAmount) {
-				deliveryAmount = activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
-			}
-            jcAmount = getTotalJCPaid();
-            totalAmount = subTotalAmount - promoAmount + deliveryAmount;
-            payableAmount = subTotalAmount - promoAmount + deliveryAmount - jcAmount;
-            updateUI();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        updateCartDataView();
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.PAYMENT, activity.productList);
         fetchWalletBalance();
 
 
+        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+                scrollView.scrollTo(0, buttonPlaceOrder.getBottom());
+            }
+
+            @Override
+            public void keyBoardClosed() {
+
+            }
+        });
+        keyboardLayoutListener.setResizeTextView(false);
+        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
         return rootView;
     }
 
-    private void updateUI() {
+    private void updateCartUI() {
 
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
 
@@ -363,6 +394,26 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         payableAmount = subTotalAmount - promoAmount + deliveryAmount - jcAmount;
         if(payableAmount < 0) {
             payableAmount = 0;
+        }
+
+        listViewCart.setVisibility(View.GONE);
+        imageViewDeleteCart.setVisibility(View.GONE);
+        imageViewCartArrow.setRotation(180f);
+
+        if (deliveryAmount > 0) {
+            relativeLayoutDeliveryCharges.setVisibility(View.VISIBLE);
+            String deliveryCharge = String.format(activity.getResources().getString(R.string.rupees_value_format),
+                    Utils.getMoneyDecimalFormat().format(activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges()));
+            textViewDeliveryChargesValue.setText(deliveryCharge);
+        } else {
+            relativeLayoutDeliveryCharges.setVisibility(View.GONE);
+        }
+
+        if (promoAmount > 0) {
+            relativeLayoutDiscount.setVisibility(View.VISIBLE);
+            textViewDiscountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(promoAmount)));
+        } else {
+            relativeLayoutDiscount.setVisibility(View.GONE);
         }
 
     }
@@ -1059,35 +1110,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
-    private PromoCouponsDialog promoCouponsDialog;
-    public PromoCouponsDialog getPromoCouponsDialog(){
-        if(promoCouponsDialog == null){
-            promoCouponsDialog = new PromoCouponsDialog(activity, new PromoCouponsDialog.Callback() {
-                @Override
-                public void onCouponApplied() {
-                    setCouponNameToDisplay();
-                    updateUI();
-                }
 
-                @Override
-                public void onSkipped() {
-                    setCouponNameToDisplay();
-                    updateUI();
-                }
-
-                @Override
-                public void onInviteFriends() {
-                    Intent intent = new Intent(activity, ShareActivity.class);
-                    startActivity(intent);
-                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                }
-
-            });
-        }
-        return promoCouponsDialog;
-    }
-
-    private void updateCouponsView(){
+    private void updateCouponsDataView(){
         try {
             String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
             if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
@@ -1103,7 +1127,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         if(promoCoupons != null) {
             if(promoCoupons.size() > 0){
                 linearLayoutOffers.setVisibility(View.VISIBLE);
-                setCouponNameToDisplay();
+                setPromoAmount();
             } else {
                 linearLayoutOffers.setVisibility(View.GONE);
             }
@@ -1111,7 +1135,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
-    private void setCouponNameToDisplay(){
+    private void setPromoAmount(){
         try {
             if(activity.getSelectedPromoCoupon() != null && activity.getSelectedPromoCoupon().getId() > -1){
                 promoAmount = activity.getSelectedPromoCoupon().getDiscount() != null
@@ -1133,7 +1157,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
 
-    public void getCheckoutData() {
+    public void getCheckoutDataAPI() {
         try {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
 
@@ -1220,8 +1244,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                                 Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
                                     } catch (Exception e) {
                                     }
-                                    setCheckoutScreen();
-                                    generateSlots();
+                                    updateCartDataView();
+
+                                    setDeliverySlotsDataUI();
+
+                                    updateAddressView();
 
                                     String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
                                     if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
@@ -1258,10 +1285,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
                                         }
                                     }
-                                    updateCouponsView();
+                                    updateCouponsDataView();
 
-
-//								setAddressAndTimeSlot();
                                 } else{
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
@@ -1316,7 +1341,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        getCheckoutData();
+                        getCheckoutDataAPI();
                     }
 
                     @Override
@@ -1331,7 +1356,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
 
-    private void generateSlots() {
+    private void setDeliverySlotsDataUI() {
         if (activity.getUserCheckoutResponse() != null
                 && activity.getUserCheckoutResponse().getCheckoutData() != null
                 && activity.getUserCheckoutResponse().getCheckoutData().getDeliverySlots() != null) {
@@ -1389,6 +1414,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private void updateAddressView(){
+        try {
+            if (TextUtils.isEmpty(activity.getSelectedAddress())) {
+                setActivityLastAddressFromResponse(activity.getUserCheckoutResponse());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
         textViewAddressName.setVisibility(View.GONE);
         textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
@@ -1412,63 +1445,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
-    private void setCheckoutScreen() {
-
-        String address = "";
-        String camountPayable = "";
-        String ctotalAmount = "";
-        String deliveryCharge = "";
-        String isDeliveryCharger = "";
-        String label = "";
-
-        try {
-            if (TextUtils.isEmpty(activity.getSelectedAddress())) {
-                address = activity.getUserCheckoutResponse().getCheckoutData().getLastAddress();
-                label = activity.getUserCheckoutResponse().getCheckoutData().getLastAddressType();
-                setActivityLastAddressFromResponse(activity.getUserCheckoutResponse());
-            } else {
-                address = activity.getSelectedAddress();
-                label = activity.getSelectedAddressType();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            if (activity.getProductsResponse() != null
-                    && activity.getProductsResponse().getDeliveryInfo() != null) {
-                amountPayable = activity.updateCartValuesGetTotalPrice().first;
-                isDeliveryCharger = "";
-
-                ctotalAmount = String.format(activity.getResources().getString(R.string.rupees_value_format),
-                        Utils.getMoneyDecimalFormat().format(amountPayable));
-                camountPayable = String.format(activity.getResources().getString(R.string.rupees_value_format),
-                        Utils.getMoneyDecimalFormat().format(amountPayable));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        Slot slotDay = new Slot();
-        slotDay.setCaddress(address);
-        slotDay.setAddressLabel(label);
-        slotDay.setCamount(ctotalAmount);
-        slotDay.setCdelivery(deliveryCharge);
-        slotDay.setIsdelivery(isDeliveryCharger);
-        slotDay.setCtotal(camountPayable);
-        slotDay.setSlotViewType(FreshCheckoutAdapter.SlotViewType.HEADER);
-
-    }
-
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
-        updateCartView(activity.updateCartValuesGetTotalPrice());
+        updateCartDataView();
     }
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
-        updateCartView(activity.updateCartValuesGetTotalPrice());
+        updateCartDataView();
         if(subItem.getSubItemQuantitySelected() == 0){
             activity.subItemsInCart.remove(position);
             checkIfEmpty();
@@ -1477,7 +1462,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     @Override
     public void onDeleteClicked(int position, SubItem subItem) {
-        updateCartView(activity.updateCartValuesGetTotalPrice());
+        updateCartDataView();
         if(subItem.getSubItemQuantitySelected() == 0){
             activity.subItemsInCart.remove(position);
             checkIfEmpty();
@@ -1498,7 +1483,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         for(SubItem subItem : activity.subItemsInCart){
             subItem.setSubItemQuantitySelected(0);
         }
-        updateCartView(activity.updateCartValuesGetTotalPrice());
+        updateCartDataView();
         activity.subItemsInCart.clear();
         freshCartItemsAdapter.notifyDataSetChanged();
         checkIfEmpty();
@@ -1536,15 +1521,34 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, activity.getPaymentOption().getOrdinal(), promoCoupon)) {
             activity.setSelectedPromoCoupon(promoCoupon);
         }
-        setCouponNameToDisplay();
-        updateUI();
+        setPromoAmount();
+        updateCartUI();
     }
 
 
-    private void updateCartView(Pair<Double, Integer> pair){
+    private void updateCartTopBarView(Pair<Double, Integer> pair){
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format_without_space,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(pair.first)));
+    }
+
+    private void updateCartDataView(){
+        try {
+            Pair<Double, Integer> pair = activity.updateCartValuesGetTotalPrice();
+            subTotalAmount = pair.first;
+            amountPayable = pair.first;
+            updateCartTopBarView(pair);
+
+            if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > subTotalAmount) {
+                deliveryAmount = activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+            }
+            jcAmount = getTotalJCPaid();
+            totalAmount = subTotalAmount - promoAmount + deliveryAmount;
+            payableAmount = subTotalAmount - promoAmount + deliveryAmount - jcAmount;
+            updateCartUI();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

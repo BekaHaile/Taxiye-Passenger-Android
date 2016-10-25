@@ -72,6 +72,12 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
             } else{
                 holder.relative.setAlpha(0.4f);
             }
+            if(position == getItemCount()-1){
+                holder.imageViewSep.setVisibility(View.GONE);
+            } else{
+                holder.imageViewSep.setVisibility(View.VISIBLE);
+            }
+
             holder.relative.setEnabled(slot.isEnabled());
             holder.relative.setTag(position);
             holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -117,14 +123,15 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
 
     static class ViewHolderSlot extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
-        public ImageView imageViewSelected;
+        public ImageView imageViewSelected, imageViewSep;
         public TextView textViewSlotDay, textViewSlotTime;
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
             imageViewSelected = (ImageView) itemView.findViewById(R.id.imageViewSelected);
+            imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
             textViewSlotDay = (TextView)itemView.findViewById(R.id.textViewSlotDay); textViewSlotDay.setTypeface(Fonts.mavenMedium(context));
-            textViewSlotTime = (TextView)itemView.findViewById(R.id.textViewSlotTime); textViewSlotTime.setTypeface(Fonts.mavenMedium(context));
+            textViewSlotTime = (TextView)itemView.findViewById(R.id.textViewSlotTime); textViewSlotTime.setTypeface(Fonts.mavenRegular(context));
         }
     }
 
