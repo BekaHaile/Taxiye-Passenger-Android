@@ -36,6 +36,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20px"
                     android:layout_marginRight="20px"
+                    android:layout_marginBottom="8px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px"
                     >
@@ -57,7 +58,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:layout_marginLeft="54px"
+                                android:layout_marginLeft="30px"
                                 android:gravity="center_vertical"
                                 android:text="@string/cart_items"
                                 android:textAllCaps="true"
@@ -70,7 +71,7 @@
                                 android:layout_width="19px"
                                 android:layout_height="12px"
                                 android:layout_centerVertical="true"
-                                android:layout_marginLeft="14px"
+                                android:layout_marginLeft="20px"
                                 android:layout_toRightOf="@+id/textViewCartItems"
                                 android:src="@drawable/triangle_grey"
                                 android:tag="mwar"
@@ -82,7 +83,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="20px"
+                                android:layout_marginRight="15px"
                                 android:layout_toLeftOf="@+id/textViewCartTotal"
                                 android:gravity="center_vertical"
                                 android:text="@string/rupee_0"
@@ -97,7 +98,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="54px"
+                                android:layout_marginRight="30px"
                                 android:gravity="center_vertical"
                                 android:text="@string/rupee_0"
                                 android:textAllCaps="true"
@@ -289,6 +290,7 @@
                     android:layout_marginTop="-60px"
                     android:src="@drawable/ic_checkout_delete_cart"
                     android:tag="mwar"
+                    android:visibility="gone"
                     />
 
             </LinearLayout>
@@ -479,6 +481,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:layout_marginTop="5px"
+                        android:layout_marginBottom="5px"
                         >
 
                         <RelativeLayout
@@ -499,7 +503,7 @@
                                 <ImageView
                                     android:id="@+id/imageViewPaytmRadio"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="48px"
+                                    android:layout_marginLeft="30px"
                                     />
 
                                 <ImageView
@@ -554,7 +558,7 @@
                                 <ImageView
                                     android:id="@+id/imageViewRadioMobikwik"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="48px"/>
+                                    android:layout_marginLeft="30px"/>
 
                                 <ImageView
                                     android:layout_width="120px"
@@ -608,7 +612,7 @@
                                 <ImageView
                                     android:id="@+id/imageViewRadioFreeCharge"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="48px"/>
+                                    android:layout_marginLeft="30px"/>
 
                                 <ImageView
                                     android:layout_width="123px"
@@ -662,7 +666,7 @@
                                 <ImageView
                                     android:id="@+id/imageViewCashRadio"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="48px"/>
+                                    android:layout_marginLeft="30px"/>
 
                                 <ImageView
                                     android:layout_width="47px"
