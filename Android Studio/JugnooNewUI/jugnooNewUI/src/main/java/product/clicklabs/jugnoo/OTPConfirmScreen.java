@@ -91,7 +91,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	private int linkedWallet = 0;
 	private String linkedWalletErrorMsg = "";
 	
-	public static boolean intentFromRegister = true;
+	public static boolean intentFromRegister = true, backFromMissedCall;
 	public static EmailRegisterData emailRegisterData;
 	public static FacebookRegisterData facebookRegisterData;
 	public static GoogleRegisterData googleRegisterData;
@@ -288,6 +288,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									public void onClick(View v) {
 										Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
 												.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+										backFromMissedCall = true;
 										FlurryEventLogger.event(GIVE_MISSED_CALL);
                                         Bundle bundle = new Bundle();
                                         MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.GIVE_A_MISS_CALL, bundle);
@@ -569,6 +570,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 		HomeActivity.checkForAccessTokenChange(this);
 
+		if(backFromMissedCall){
+			backFromMissedCall = false;
+
+		}
 	}
 
 

@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -24,6 +26,7 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -57,6 +60,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -92,6 +96,7 @@ import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
+import product.clicklabs.jugnoo.utils.UserEmailFetcher;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -505,6 +510,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			keyboardLayoutListener.setResizeTextView(false);
 			linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
+
 			linearLayoutPaytm.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -856,6 +862,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			editTextSPassword.setOnFocusChangeListener(onFocusChangeListener);
 			editTextSPromo.setOnFocusChangeListener(onFocusChangeListener);
 
+
 			buttonEmailSignup.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -1071,6 +1078,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	}
 
+
 	private void logSome(){
 		Log.i("Splash", "temp");
 	}
@@ -1144,6 +1152,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				break;
 
 			case SIGNUP:
+
 				viewInitJugnoo.setVisibility(View.GONE);
 				viewInitSplashJugnoo.setVisibility(View.GONE);
 				viewInitLS.setVisibility(View.GONE);
@@ -2528,7 +2537,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	private void setSignupScreenValuesOnCreate() {
 
 		editTextSName.setText(""); editTextSName.setEnabled(true);
-		editTextSEmail.setText(""); editTextSEmail.setEnabled(true);
+		editTextSEmail.setText("");
+		editTextSEmail.setEnabled(true);
 		editTextSPromo.setText("");
 		editTextSPhone.setText("");
 		editTextSPassword.setText("");
@@ -2618,7 +2628,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				if(Utils.checkIfOnlyDigits(emailNeedRegister)){
 					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(emailNeedRegister));
 				} else{
-					editTextSEmail.setText(emailNeedRegister);
+					if(emailNeedRegister.equalsIgnoreCase("")){
+						if(UserEmailFetcher.getEmail(SplashNewActivity.this) != null){
+							editTextSEmail.setText(UserEmailFetcher.getEmail(SplashNewActivity.this));
+						} else{
+							editTextSEmail.setText("");
+						}
+					} else {
+						editTextSEmail.setText(emailNeedRegister);
+					}
+
 				}
 			}
 		} catch (Exception e) {
@@ -2912,7 +2931,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Facebook");
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
-
                                 } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
                                     SplashNewActivity.this.phoneNo = phoneNo;
                                     SplashNewActivity.this.password = password;
@@ -2922,7 +2940,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                 } else if (ApiResponseFlags.PAYTM_WALLET_NOT_ADDED.getOrdinal() == flag) {
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
-                                } else {
+                                } else if(ApiResponseFlags.AUTH_VERIFICATION_SUCCESSFUL.getOrdinal() == flag){
+									sendFacebookLoginValues(SplashNewActivity.this);
+								} else{
                                     DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                                 }
                                 DialogPopup.dismissLoadingDialog();
