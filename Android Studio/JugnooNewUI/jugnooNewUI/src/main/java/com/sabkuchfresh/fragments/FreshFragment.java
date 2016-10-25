@@ -207,7 +207,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         });
 
         setSortingList();
-        getAllProducts(true);
+
 
         try {
             if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
@@ -239,11 +239,13 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		return rootView;
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		getAllProducts(true);
+	}
 
-
-
-
-    private void showPromoFailedAtSignupDialog(){
+	private void showPromoFailedAtSignupDialog(){
         try{
             if(Data.userData.getPromoSuccess() == 0) {
                 DialogPopup.alertPopupWithListener(activity, "",

@@ -129,7 +129,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         recyclerViewCategoryItems.setAdapter(mealAdapter);
 
         setSortingList();
-        getAllProducts(true);
+
 
         try {
             if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
@@ -145,6 +145,12 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAllProducts(true);
     }
 
     @Override

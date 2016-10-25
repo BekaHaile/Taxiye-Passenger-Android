@@ -207,7 +207,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
         });
 
         setSortingList();
-        getAllProducts(true);
 
         try {
             if(Data.getGroceryData() != null && Data.getGroceryData().pendingFeedback == 1) {
@@ -241,10 +240,13 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 	}
 
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		getAllProducts(true);
+	}
 
-
-
-    private void showPromoFailedAtSignupDialog(){
+	private void showPromoFailedAtSignupDialog(){
         try{
             if(Data.userData.getPromoSuccess() == 0) {
                 DialogPopup.alertPopupWithListener(activity, "",
