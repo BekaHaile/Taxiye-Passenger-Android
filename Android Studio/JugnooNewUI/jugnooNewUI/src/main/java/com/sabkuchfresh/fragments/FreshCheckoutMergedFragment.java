@@ -402,8 +402,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
 
-        promoAmount = 10;
-        jcAmount = 5;
 
         totalAmount = subTotalAmount - promoAmount + deliveryAmount;
         payableAmount = subTotalAmount - promoAmount + deliveryAmount - jcAmount;
@@ -1596,6 +1594,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
             if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > subTotalAmount) {
                 deliveryAmount = activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
+            } else {
+                deliveryAmount = 0;
             }
             jcAmount = getTotalJCPaid();
             totalAmount = subTotalAmount - promoAmount + deliveryAmount;
