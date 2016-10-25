@@ -261,7 +261,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                             if(isMealAddonItemsAvailable()){
                                 addMealAddonItemsFragment();
                             } else {
-                                getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+                                getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
 
                                 if (appType == AppConstant.ApplicationType.MEALS) {
                                     MyApplication.getInstance().logEvent(FirebaseEvents.M_CART, null);
@@ -303,7 +303,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                             return;
 
                         if(updateCartValuesGetTotalPrice().second > 0) {
-                            getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+                            getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
                         } else {
                             Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty));
                         }
@@ -624,6 +624,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     private FreshCartItemsFragment getFreshCartItemsFragment() {
         return (FreshCartItemsFragment) getSupportFragmentManager().findFragmentByTag(FreshCartItemsFragment.class.getName());
+    }
+    private FreshCheckoutMergedFragment getFreshCheckoutMergedFragment() {
+        return (FreshCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutMergedFragment.class.getName());
     }
 
     private FreshCheckoutFragment getFreshCheckoutFragment() {
@@ -1121,7 +1124,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     public void onClick(View v) {
                         FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.DELETE, FlurryEventNames.ALL);
 
-                        FreshCartItemsFragment frag = getFreshCartItemsFragment();
+                        FreshCheckoutMergedFragment frag = getFreshCheckoutMergedFragment();
                         if (frag != null) {
                             frag.deleteCart();
                         }
@@ -2093,7 +2096,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void clearMealsCartIfNoMainMeal(){
         try {
-            FreshCartItemsFragment frag = getFreshCartItemsFragment();
+            FreshCheckoutMergedFragment frag = getFreshCheckoutMergedFragment();
             if (frag != null) {
 				frag.deleteCart();
 			} else{

@@ -11,9 +11,6 @@
         android:id="@+id/imageViewRadio"
         style="@style/ic_radio_button_style"
         android:layout_marginLeft="48px"
-        android:layout_width="78px"
-        android:layout_height="78px"
-        android:padding="25px"
         android:layout_centerVertical="true"
 
         />
@@ -29,6 +26,7 @@
         android:maxLines="2"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_30"
+        android:layout_marginLeft="20px"
         />
 
     <TextView
@@ -37,10 +35,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:paddingBottom="20px"
+        android:paddingBottom="30px"
         android:paddingLeft="20px"
         android:paddingRight="10px"
-        android:paddingTop="20px"
+        android:paddingTop="30px"
         android:layout_marginRight="20px"
         android:text="@string/tnc"
         android:textColor="@color/text_color_light"
