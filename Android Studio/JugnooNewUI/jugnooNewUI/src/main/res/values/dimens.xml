@@ -195,5 +195,6 @@
     <dimen name="checkout_margin">54px</dimen>
     <dimen name="payment_hearder_30">30px</dimen>
     <dimen name="payment_margin">36px</dimen>
+    <dimen name="px_25">25px</dimen>
 
 </resources>

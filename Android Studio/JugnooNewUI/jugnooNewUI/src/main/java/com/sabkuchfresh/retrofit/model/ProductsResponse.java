@@ -29,7 +29,12 @@ public class ProductsResponse {
 	@SerializedName("support_contact")
 	@Expose
 	private String supportContact;
-
+	@SerializedName("recent_orders")
+	@Expose
+	private List<RecentOrder> recentOrders = new ArrayList<RecentOrder>();
+	@SerializedName("recent_orders_possible_status")
+	@Expose
+	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
 
 	/**
 	 *
@@ -109,4 +114,19 @@ public class ProductsResponse {
 		this.supportContact = supportContact;
 	}
 
+	public List<RecentOrder> getRecentOrders() {
+		return recentOrders;
+	}
+
+	public void setRecentOrders(List<RecentOrder> recentOrders) {
+		this.recentOrders = recentOrders;
+	}
+
+	public List<String> getRecentOrdersPossibleStatus() {
+		return recentOrdersPossibleStatus;
+	}
+
+	public void setRecentOrdersPossibleStatus(List<String> recentOrdersPossibleStatus) {
+		this.recentOrdersPossibleStatus = recentOrdersPossibleStatus;
+	}
 }
