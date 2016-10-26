@@ -2945,6 +2945,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Facebook");
+									Prefs.with()
 									userVerfied = jObj.optInt("user_verified", 0);
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {

@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -202,6 +203,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				editTextOTP.setError(null);
 			}
 		});
+
+
 		
 		buttonVerify.setOnClickListener(new View.OnClickListener() {
 
@@ -210,7 +213,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				String otpCode = editTextOTP.getText().toString().trim();
 				if (otpCode.length() > 0) {
 					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
-						verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
+						if(userVerified == 1){
+							sendOTP(otpCode);
+						} else {
+							verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
+						}
+
 					} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode, linkedWallet);
 					} else {
@@ -1255,6 +1263,69 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void sendOTP(final String otp) {
+		try {
+			if(AppStatus.getInstance(OTPConfirmScreen.this).isOnline(OTPConfirmScreen.this)) {
+				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
+				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+				params.put(Constants.KEY_OTP, otp);
+
+				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "loginWithOtp response = " + responseStr);
+						DialogPopup.dismissLoadingDialog();
+						try {
+							textViewSkip.performClick();
+						} catch (Exception e) {
+							e.printStackTrace();
+							DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
+						}
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "loginWithOtp error=" + error.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
+					}
+				};
+				if(linkedWallet == PaymentOption.PAYTM.getOrdinal()) {
+					RestClient.getApiServices().paytmLoginWithOtp(params, callback);
+				} else if(linkedWallet == PaymentOption.MOBIKWIK.getOrdinal()){
+					RestClient.getApiServices().mobikwikLoginWithOtp(params, callback);
+				} else if(linkedWallet == PaymentOption.FREECHARGE.getOrdinal()) {
+					RestClient.getApiServices().freeChargeLoginWithOtp(params, callback);
+				}
+			} else{
+				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+						new Utils.AlertCallBackWithButtonsInterface() {
+							@Override
+							public void positiveClick(View view) {
+								sendOTP(otp);
+							}
+
+							@Override
+							public void neutralClick(View view) {
+
+							}
+
+							@Override
+							public void negativeClick(View view) {
+
+							}
+						});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			DialogPopup.dismissLoadingDialog();
 		}
 	}
 
