@@ -1550,6 +1550,8 @@ public class JSONParser implements Constants {
         try {
             if(userData.has(arrayKey)){
                 Data.userData.getSearchResults().clear();
+                Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                Prefs.with(context).save(SPLabels.ADD_WORK, "");
 				JSONArray userSavedAddressArray = userData.getJSONArray(arrayKey);
 				boolean homeSaved = false, workSaved = false;
 				Gson gson = new Gson();
