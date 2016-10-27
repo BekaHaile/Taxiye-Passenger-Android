@@ -509,4 +509,8 @@ public interface Constants {
 	String KEY_TOPUP_CARD_CODE = "topup_card_code";
 	String KEY_TOPUP_CARD_ENABLED = "topup_card_enabled";
 
+	String SP_FRESH_CHECKOUT_SAVE_DATA = "sp_fresh_checkout_save_data";
+	String SP_MEALS_CHECKOUT_SAVE_DATA = "sp_meals_checkout_save_data";
+	String SP_GROCERY_CHECKOUT_SAVE_DATA = "sp_grocery_checkout_save_data";
+
 }

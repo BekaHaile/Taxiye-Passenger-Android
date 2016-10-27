@@ -11,7 +11,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,7 @@ import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressAdded;
+import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
@@ -159,12 +162,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private Bus mBus;
     private double amountPayable;
     private int currentGroupId = 1;
+    private boolean orderPlaced = false;
 
     public FreshCheckoutMergedFragment() {
     }
 
     private List<Product> productList = new ArrayList<>();
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
+
+    private CheckoutSaveData checkoutSaveData;
 
     @Override
     public void onStart() {
@@ -178,6 +184,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     public void onStop() {
         super.onStop();
         mBus.unregister(this);
+        if(!orderPlaced){
+            activity.saveCheckoutData(false);
+        }
     }
 
 
@@ -199,6 +208,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
         mBus = (activity).getBus();
+        orderPlaced = false;
+        checkoutSaveData = new CheckoutSaveData();
 
         if(activity.subItemsInCart == null) {
             activity.subItemsInCart = new ArrayList<>();
@@ -327,6 +338,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_address));
                 } else if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
                         activity.getPaymentOption().getOrdinal(), activity.getSelectedPromoCoupon())){
+                    activity.setSplInstr(editTextDeliveryInstructions.getText().toString().trim());
                     placeOrder();
                     int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                     if(appType == AppConstant.ApplicationType.MEALS){
@@ -365,6 +377,26 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
         });
+
+        editTextDeliveryInstructions.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                activity.setSplInstr(""+s);
+            }
+        });
+
+        checkoutSaveData = activity.getCheckoutSaveData();
+        activity.setSplInstr(checkoutSaveData.getSpecialInstructions());
 
         updateAddressView();
 
@@ -538,7 +570,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private BroadcastReceiver broadcastReceiverWalletUpdate = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+            activity.setPaymentOption(getSavedPaymentOption());
             onResume();
         }
     };
@@ -553,7 +585,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     @Override
                     public void onSuccess() {
                         try {
-                            activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            activity.setPaymentOption(getSavedPaymentOption());
                             orderPaymentModes();
                             setPaymentOptionUI();
                             activity.updateMenu();
@@ -565,7 +597,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     @Override
                     public void onFailure() {
                         try {
-                            activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            activity.setPaymentOption(getSavedPaymentOption());
                             orderPaymentModes();
                             setPaymentOptionUI();
                             activity.updateMenu();
@@ -880,6 +912,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                    orderPlaced = true;
+                                    activity.saveCheckoutData(true);
                                     long time = 0L;
                                     Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
                                     activity.resumeMethod();
@@ -935,7 +969,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             new UserDebtDialog.Callback() {
                                                 @Override
                                                 public void successFullyDeducted(double userDebt) {
-                                                    activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                                                    activity.setPaymentOption(getSavedPaymentOption());
                                                     setPaymentOptionUI();
                                                     activity.updateMenu();
                                                 }
@@ -1291,11 +1325,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                     activity.setUserCheckoutResponse(userCheckoutResponse);
                                     Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
                                     setActivityLastAddressFromResponse(userCheckoutResponse);
-                                    try {
-                                        activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
-                                                Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
-                                    } catch (Exception e) {
-                                    }
                                     updateCartDataView();
 
                                     setDeliverySlotsDataUI();
@@ -1379,9 +1408,24 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         try {
             if(userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
                 activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+            } else {
+                activity.setSelectedAddress("");
             }
             activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
             activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+            try {
+                activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
+                        Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+            } catch (Exception e) {
+                activity.setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
+            }
+
+            if(!checkoutSaveData.isDefault()){
+                activity.setSelectedAddress(checkoutSaveData.getAddress());
+                activity.setSelectedAddressType(checkoutSaveData.getAddressType());
+                activity.setSelectedAddressId(checkoutSaveData.getAddressId());
+                activity.setSelectedLatLng(new LatLng(checkoutSaveData.getLatitude(), checkoutSaveData.getLongitude()));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1606,6 +1650,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             updateCartUI();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private PaymentOption getSavedPaymentOption(){
+        if(checkoutSaveData.isDefault()){
+            return MyApplication.getInstance().getWalletCore().getDefaultPaymentOption();
+        } else{
+            return MyApplication.getInstance().getWalletCore().getPaymentOptionFromInt(checkoutSaveData.getPaymentMode());
         }
     }
 

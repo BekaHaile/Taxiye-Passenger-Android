@@ -24,11 +24,13 @@ import android.widget.TextView;
 
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
+import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
@@ -192,7 +194,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 e.printStackTrace();
             }
 
-            selectedLatLng = new LatLng(Data.latitude, Data.longitude);
             resetAddressFields();
 
             linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
@@ -1174,6 +1175,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         selectedAddress = "";
         selectedAddressId = 0;
         selectedAddressType = "";
+        selectedLatLng = new LatLng(Data.latitude, Data.longitude);
     }
 
     public void orderComplete() {
@@ -1472,13 +1474,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return relativeLayoutContainer;
     }
 
-    public String getSelectedAddress() {
-        return selectedAddress;
-    }
-
-    public void setSelectedAddress(String selectedAddress) {
-        this.selectedAddress = selectedAddress;
-    }
 
     public String getSpecialInst() {
         return splInstr.trim();
@@ -2024,6 +2019,15 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
 
+
+    public String getSelectedAddress() {
+        return selectedAddress;
+    }
+
+    public void setSelectedAddress(String selectedAddress) {
+        this.selectedAddress = selectedAddress;
+    }
+
     public LatLng getSelectedLatLng() {
         return selectedLatLng;
     }
@@ -2047,6 +2051,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void setSelectedAddressType(String selectedAddressType) {
         this.selectedAddressType = selectedAddressType;
     }
+
+
 
     private DeliveryAddress deliveryAddressToEdit;
     public DeliveryAddress getDeliveryAddressToEdit() {
@@ -2159,4 +2165,42 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         }
     }
 
+
+    public void saveCheckoutData(boolean clearData){
+        Gson gson = new Gson();
+        int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+        CheckoutSaveData checkoutSaveData;
+        if(clearData){
+            checkoutSaveData = new CheckoutSaveData();
+        } else {
+            checkoutSaveData = new CheckoutSaveData(getPaymentOption().getOrdinal(), getSpecialInst(), getSelectedAddress(),
+                    getSelectedLatLng(), getSelectedAddressId(), getSelectedAddressType());
+        }
+        if(appType == AppConstant.ApplicationType.FRESH){
+            Prefs.with(this).save(Constants.SP_FRESH_CHECKOUT_SAVE_DATA, gson.toJson(checkoutSaveData, CheckoutSaveData.class));
+        }
+        else if(appType == AppConstant.ApplicationType.MEALS){
+            Prefs.with(this).save(Constants.SP_MEALS_CHECKOUT_SAVE_DATA, gson.toJson(checkoutSaveData, CheckoutSaveData.class));
+        }
+        else if(appType == AppConstant.ApplicationType.GROCERY){
+            Prefs.with(this).save(Constants.SP_GROCERY_CHECKOUT_SAVE_DATA, gson.toJson(checkoutSaveData, CheckoutSaveData.class));
+        }
+    }
+
+    public CheckoutSaveData getCheckoutSaveData(){
+        Gson gson = new Gson();
+        int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+        if(appType == AppConstant.ApplicationType.MEALS){
+            return gson.fromJson(Prefs.with(this).getString(Constants.SP_MEALS_CHECKOUT_SAVE_DATA,
+                    gson.toJson(new CheckoutSaveData(), CheckoutSaveData.class)), CheckoutSaveData.class);
+        }
+        else if(appType == AppConstant.ApplicationType.GROCERY){
+            return gson.fromJson(Prefs.with(this).getString(Constants.SP_GROCERY_CHECKOUT_SAVE_DATA,
+                    gson.toJson(new CheckoutSaveData(), CheckoutSaveData.class)), CheckoutSaveData.class);
+        }
+        else {
+            return gson.fromJson(Prefs.with(this).getString(Constants.SP_FRESH_CHECKOUT_SAVE_DATA,
+                    gson.toJson(new CheckoutSaveData(), CheckoutSaveData.class)), CheckoutSaveData.class);
+        }
+    }
 }

@@ -311,11 +311,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                     checkout.get(0).setCaddress(userCheckoutResponse.getCheckoutData().getLastAddress());
                                     checkout.get(0).setAddressLabel(userCheckoutResponse.getCheckoutData().getLastAddressType());
                                     setActivityLastAddressFromResponse(userCheckoutResponse);
-                                    try {
-                                        activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
-												Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
-                                    } catch (Exception e) {
-                                    }
+
                                     setCheckoutScreen();
                                     generateSlots();
 
@@ -396,9 +392,17 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         try {
             if(userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
 				activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-			}
+			} else {
+                activity.setSelectedAddress("");
+            }
             activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
             activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+            try {
+                activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
+                        Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+            } catch (Exception e) {
+                activity.setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
