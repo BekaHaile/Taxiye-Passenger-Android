@@ -150,7 +150,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     @Override
     public void onResume() {
         super.onResume();
-        getAllProducts(true);
+        if(!isHidden()) {
+            getAllProducts(true);
+        }
     }
 
     @Override

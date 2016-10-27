@@ -243,7 +243,9 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 	@Override
 	public void onResume() {
 		super.onResume();
-		getAllProducts(true);
+		if(!isHidden()) {
+			getAllProducts(true);
+		}
 	}
 
 	private void showPromoFailedAtSignupDialog(){

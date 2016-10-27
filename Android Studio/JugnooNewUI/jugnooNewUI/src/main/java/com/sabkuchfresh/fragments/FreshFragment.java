@@ -242,7 +242,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	@Override
 	public void onResume() {
 		super.onResume();
-		getAllProducts(true);
+		if(!isHidden()) {
+			getAllProducts(true);
+		}
 	}
 
 	private void showPromoFailedAtSignupDialog(){
