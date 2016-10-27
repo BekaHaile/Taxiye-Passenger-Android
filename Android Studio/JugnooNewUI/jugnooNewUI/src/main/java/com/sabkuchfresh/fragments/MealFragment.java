@@ -289,12 +289,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                     mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                                     activity.hideBottomBar(true);
                                 } else {
-                                    Fragment fragment = activity.getTopFragment();
-                                    if(fragment != null && fragment instanceof MealFragment) {
-                                        noMealsView.setVisibility(View.VISIBLE);
-                                        //mSwipeRefreshLayout.setVisibility(View.GONE);
-                                        activity.hideBottomBar(false);
-                                    }
+                                    noMealsView.setVisibility(View.VISIBLE);
+                                    //mSwipeRefreshLayout.setVisibility(View.GONE);
+                                    activity.hideBottomBar(false);
                                 }
 
                                 if (activity.getProductsResponse() != null
@@ -319,7 +316,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                         if(!isHidden()) {
                             activity.hideBottomBar(true);
                         } else {
-                            activity.hideBottomBar(false);
+                            Fragment fragment = activity.getTopFragment();
+                            if(fragment != null && fragment instanceof MealFragment) {
+                                activity.hideBottomBar(false);
+                            }
                         }
                     }
 
