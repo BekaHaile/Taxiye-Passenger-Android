@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:animateLayoutChanges="true"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            style="@style/title"
+            android:text="@string/ride_history" />
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            style="@style/back_image" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topBar"
+        android:background="#f5f5f5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28px"
+            android:layout_marginRight="28px"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20px"
+                android:paddingBottom="25px"
+                android:paddingTop="25px">
+
+                <TextView
+                    android:id="@+id/tvOrderStatus"
+                    android:layout_width="200px"
+                    android:layout_height="wrap_content"
+                    android:text="@string/order_status_txt"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_24" />
+
+                <TextView
+                    android:id="@+id/tvOrderStatusVal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tvOrderStatus"
+                    android:text="@string/order_status_txt"
+                    android:textAllCaps="true"
+                    android:textColor="@color/order_history_status_color"
+                    android:textSize="@dimen/text_size_28" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/apply_btn_pressed" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25px"
+                android:paddingTop="25px">
+
+                <TextView
+                    android:id="@+id/tvOrderTime"
+                    android:layout_width="200px"
+                    android:layout_height="wrap_content"
+                    android:text="@string/order_time"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_24" />
+
+                <TextView
+                    android:id="@+id/tvOrderTimeVal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tvOrderTime"
+                    android:text="@string/order_status_txt"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_28" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/apply_btn_pressed" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25px"
+                android:paddingTop="25px">
+
+                <TextView
+                    android:id="@+id/tvDeliveryTime"
+                    android:layout_width="200px"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delivery_time"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_24" />
+
+                <TextView
+                    android:id="@+id/tvDeliveryTimeVal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tvDeliveryTime"
+                    android:text="@string/order_status_txt"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_28" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/apply_btn_pressed" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="25px"
+                android:paddingTop="25px">
+
+                <TextView
+                    android:id="@+id/tvDeliveryTo"
+                    android:layout_width="200px"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delivery_to"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_24" />
+
+                <LinearLayout
+                    android:id="@+id/llDeliveryPlace"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:layout_toRightOf="@+id/tvDeliveryTo"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="50px"
+                        android:layout_height="50px"
+                        android:src="@drawable/ic_home"/>
+
+                    <TextView
+                        android:id="@+id/tvDelveryPlace"
+                        android:layout_width="200px"
+                        android:layout_height="wrap_content"
+                        android:text="HOME"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvDeliveryToVal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/tvDeliveryTo"
+                    android:layout_below="@+id/llDeliveryPlace"
+                    android:text="@string/order_status_txt"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_28" />
+            </RelativeLayout>
+
+            <product.clicklabs.jugnoo.utils.NonScrollListView
+                android:id="@+id/listViewCart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/transparent"
+                android:background="@color/white"
+                android:dividerHeight="0dp"
+                android:splitMotionEvents="false"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down" />
+
+</RelativeLayout>

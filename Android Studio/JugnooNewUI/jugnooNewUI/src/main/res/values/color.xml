@@ -175,6 +175,7 @@
     <color name="rank_4">#E4E4E4</color>
     <color name="rank_5">#D7D7D7</color>
     <color name="rank_6">#CBCBCB</color>
+    <color name="order_status_green">#14c52a</color>
 
     <color name="stroke_color_light">#CDCDCD</color>
     <color name="stroke_color_dark">#858585</color>
@@ -217,6 +218,7 @@
     <color name="text_color_red">#DE5B5B</color>
 
     <color name="stroke_light_grey_alpha">#33979797</color>
+    <color name="order_history_status_color">#1fbd2a</color>
 
 
 </resources>

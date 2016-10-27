@@ -1185,6 +1185,10 @@
 	<string name="cart_items">Cart Items</string>
 	<string name="cart_items_format">Cart Items(%s)</string>
 	<string name="payment_mode">Payment Mode</string>
+	<string name="order_status_txt">Order Status:</string>
+	<string name="order_time">Order Time:</string>
+	<string name="delivery_time">Delivery Time:</string>
+	<string name="delivery_to">Delivery To:</string>
 
 
 </resources>

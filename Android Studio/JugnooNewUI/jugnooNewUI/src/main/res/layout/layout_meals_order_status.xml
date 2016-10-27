@@ -22,18 +22,26 @@
         app:cardBackgroundColor="@color/white">
 
         <RelativeLayout
+            android:id="@+id/container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
+
+            <RelativeLayout
+                android:id="@+id/relativeInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20px">
 
             <TextView
                 android:id="@+id/tvOrderId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="27px"
-                android:layout_marginTop="20px"
-                android:text="Order ID:"
+                android:text="Order:"
+                android:layout_centerVertical="true"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_28"
+                android:textSize="@dimen/text_size_24"
                 android:maxLines="1"/>
 
             <TextView
@@ -42,46 +50,59 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/tvOrderId"
                 android:paddingLeft="10px"
-                android:layout_marginTop="20px"
+                android:layout_centerVertical="true"
                 android:text="13AF67"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"
+                android:textSize="@dimen/text_size_24"
                 android:maxLines="1"/>
 
             <TextView
+                android:id="@+id/tvDeliveryBefore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/tvDeliveryTime"
                 android:text="Delivery before:"
-                android:layout_marginTop="20px"
+                android:layout_centerVertical="true"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_28"
+                android:textSize="@dimen/text_size_24"
                 android:maxLines="1"/>
 
             <TextView
                 android:id="@+id/tvDeliveryTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_toLeftOf="@+id/ivArrow"
                 android:paddingLeft="10px"
-                android:layout_marginTop="20px"
+                android:layout_centerVertical="true"
                 android:paddingRight="27px"
                 android:text="8:30 PM"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"
+                android:textSize="@dimen/text_size_24"
                 android:maxLines="1"/>
+
+            <ImageView
+                android:id="@+id/ivArrow"
+                android:layout_width="12px"
+                android:layout_height="20px"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="27px"
+                android:src="@drawable/ic_arrow_orange_bold"/>
+
+            </RelativeLayout>
 
             <View
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/stroke_color_light"
-                android:layout_below="@+id/tvOrderId"
+                android:layout_below="@+id/relativeInfo"
                 android:layout_marginTop="20px"
                 android:layout_marginLeft="27px"
                 android:layout_marginRight="27px"/>
 
             <RelativeLayout
+                android:id="@+id/relativeStatusBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/divider"
@@ -103,53 +124,53 @@
                         android:layout_width="@dimen/px_25"
                         android:layout_height="@dimen/px_25"
                         android:tag="mwar"
-                        android:visibility="gone"
-                        android:background="@drawable/circle_grey"/>
+                        android:visibility="visible"
+                        android:background="@drawable/circle_order_status"/>
 
                     <View
                         android:id="@+id/lineStatus1"
-                        android:layout_width="150px"
+                        android:layout_width="135px"
                         android:layout_height="8px"
-                        android:visibility="gone"
-                        android:background="@color/text_color_light"/>
+                        android:visibility="visible"
+                        android:background="@color/rank_5"/>
 
                     <ImageView
                         android:id="@+id/ivStatus1"
                         android:layout_width="@dimen/px_25"
                         android:layout_height="@dimen/px_25"
                         android:tag="mwar"
-                        android:visibility="gone"
-                        android:background="@drawable/circle_grey"/>
+                        android:visibility="visible"
+                        android:background="@drawable/circle_order_status"/>
 
                     <View
                         android:id="@+id/lineStatus2"
-                        android:layout_width="150px"
+                        android:layout_width="135px"
                         android:layout_height="8px"
-                        android:visibility="gone"
-                        android:background="@color/text_color_light"/>
+                        android:visibility="visible"
+                        android:background="@color/rank_5"/>
 
                     <ImageView
                         android:id="@+id/ivStatus2"
                         android:layout_width="@dimen/px_25"
                         android:layout_height="@dimen/px_25"
                         android:tag="mwar"
-                        android:visibility="gone"
-                        android:background="@drawable/circle_grey"/>
+                        android:visibility="visible"
+                        android:background="@drawable/circle_order_status"/>
 
                     <View
                         android:id="@+id/lineStatus3"
-                        android:layout_width="150px"
+                        android:layout_width="135px"
                         android:layout_height="8px"
-                        android:visibility="gone"
-                        android:background="@color/text_color_light"/>
+                        android:visibility="visible"
+                        android:background="@color/rank_5"/>
 
                     <ImageView
                         android:id="@+id/ivStatus3"
                         android:layout_width="@dimen/px_25"
                         android:layout_height="@dimen/px_25"
                         android:tag="mwar"
-                        android:visibility="gone"
-                        android:background="@drawable/circle_grey"/>
+                        android:visibility="visible"
+                        android:background="@drawable/circle_order_status"/>
                 </LinearLayout>
 
                 <TextView
@@ -158,12 +179,13 @@
                     android:layout_height="wrap_content"
                     android:text="Statu0"
                     android:layout_below="@+id/llOrderPath"
-                    android:layout_marginTop="10px"
+                    android:layout_marginTop="15px"
+                    android:layout_marginLeft="-6px"
                     android:gravity="center"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_alignLeft="@+id/llOrderPath"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
+                    android:textSize="@dimen/text_size_22"
                     android:maxLines="2"/>
 
                 <TextView
@@ -173,12 +195,12 @@
                     android:text="Status1"
                     android:layout_below="@+id/llOrderPath"
                     android:layout_toRightOf="@+id/tvStatus0"
-                    android:layout_marginLeft="60px"
-                    android:layout_marginTop="10px"
+                    android:layout_marginLeft="45px"
+                    android:layout_marginTop="15px"
                     android:gravity="center"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
+                    android:textSize="@dimen/text_size_22"
                     android:maxLines="2"/>
 
                 <TextView
@@ -189,11 +211,11 @@
                     android:layout_below="@+id/llOrderPath"
                     android:layout_toRightOf="@+id/tvStatus1"
                     android:gravity="center"
-                    android:layout_marginLeft="60px"
-                    android:layout_marginTop="10px"
-                    android:visibility="gone"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginTop="15px"
+                    android:visibility="visible"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
+                    android:textSize="@dimen/text_size_22"
                     android:maxLines="2"/>
 
                 <TextView
@@ -203,11 +225,12 @@
                     android:text="Status3"
                     android:layout_below="@+id/llOrderPath"
                     android:layout_alignRight="@+id/llOrderPath"
-                    android:layout_marginTop="10px"
+                    android:layout_marginTop="15px"
                     android:gravity="center"
-                    android:visibility="gone"
+                    android:layout_marginRight="-10px"
+                    android:visibility="visible"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
+                    android:textSize="@dimen/text_size_22"
                     android:maxLines="2"/>
             </RelativeLayout>
 

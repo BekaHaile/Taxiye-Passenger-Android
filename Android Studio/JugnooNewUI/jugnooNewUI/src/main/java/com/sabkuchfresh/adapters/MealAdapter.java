@@ -1,6 +1,7 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +21,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -109,11 +112,35 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         try {
             if (holder instanceof ViewTitleStatus) {
-                ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
-                final RecentOrder recentOrder = recentOrders.get(position);
-                showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
-                statusHolder.tvOrderIdValue.setText(recentOrder.getOrderId());
-                statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
+                final ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
+                try {
+                    final RecentOrder recentOrder = recentOrders.get(position);
+                    for(int i=0; i<statusHolder.relativeStatusBar.getChildCount(); i++){
+                        if(statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup){
+                            ViewGroup viewGroup = (ViewGroup)(statusHolder.relativeStatusBar.getChildAt(i));
+                            for(int j=0; j<viewGroup.getChildCount(); j++){
+                                viewGroup.getChildAt(j).setVisibility(View.GONE);
+                            }
+                        } else{
+                            statusHolder.relativeStatusBar.getChildAt(i).setVisibility(View.GONE);
+                        }
+                    }
+                    showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
+                    statusHolder.tvOrderIdValue.setText(recentOrder.getOrderId().toString());
+                    statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
+
+                    statusHolder.container.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(activity, OrderStatusActivity.class);
+                            intent.putExtra(Constants.KEY_ORDER_ID, recentOrder.getOrderId());
+                            activity.startActivity(intent);
+                            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             } else if (holder instanceof ViewHolderSlot) {
                 position = position - recentOrders.size();
@@ -283,7 +310,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             } else if (holder instanceof ViewTitleHolder) {
                 ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
-                titleholder.linearLayout.setVisibility(View.VISIBLE);
+                titleholder.relative.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -291,8 +318,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     }
 
-    private void showPossibleStatus(ArrayList<String> possibleStatus,int status, ViewTitleStatus statusHolder){
-        int selectedSize = (int)(30*ASSL.Xscale());
+    private void showPossibleStatus(ArrayList<String> possibleStatus, int status, ViewTitleStatus statusHolder){
+        int selectedSize = (int)(35*ASSL.Xscale());
         switch (possibleStatus.size()){
             case 4:
                 statusHolder.tvStatus3.setVisibility(View.VISIBLE);
@@ -300,13 +327,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 statusHolder.lineStatus3.setVisibility(View.VISIBLE);
                 statusHolder.tvStatus3.setText(possibleStatus.get(3));
                 if(status == 3){
-                    statusHolder.ivStatus3.setBackgroundResource(R.drawable.circle_green);
-                    statusHolder.lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.green));
+                    statusHolder.ivStatus3.setBackgroundResource(R.drawable.circle_order_status_green);
+                    statusHolder.lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
                 } else if(status > 3){
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     statusHolder.ivStatus3.setLayoutParams(layoutParams);
-                    statusHolder.ivStatus3.setBackgroundResource(R.drawable.emergency_verified_icon);
-                    statusHolder.lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.green));
+                    statusHolder.ivStatus3.setBackgroundResource(R.drawable.ic_order_status_green);
+                    statusHolder.lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
                 }
             case 3:
                 statusHolder.tvStatus2.setVisibility(View.VISIBLE);
@@ -314,13 +341,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 statusHolder.lineStatus2.setVisibility(View.VISIBLE);
                 statusHolder.tvStatus2.setText(possibleStatus.get(2));
                 if(status == 2){
-                    statusHolder.ivStatus2.setBackgroundResource(R.drawable.circle_green);
-                    statusHolder.lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.green));
+                    statusHolder.ivStatus2.setBackgroundResource(R.drawable.circle_order_status_green);
+                    statusHolder.lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
                 } else if(status > 2){
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     statusHolder.ivStatus2.setLayoutParams(layoutParams);
-                    statusHolder.ivStatus2.setBackgroundResource(R.drawable.emergency_verified_icon);
-                    statusHolder.lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.green));
+                    statusHolder.ivStatus2.setBackgroundResource(R.drawable.ic_order_status_green);
+                    statusHolder.lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
                 }
             case 2:
                 statusHolder.tvStatus1.setVisibility(View.VISIBLE);
@@ -328,24 +355,24 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 statusHolder.lineStatus1.setVisibility(View.VISIBLE);
                 statusHolder.tvStatus1.setText(possibleStatus.get(1));
                 if(status == 1){
-                    statusHolder.ivStatus1.setBackgroundResource(R.drawable.circle_green);
-                    statusHolder.lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.green));
+                    statusHolder.ivStatus1.setBackgroundResource(R.drawable.circle_order_status_green);
+                    statusHolder.lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
                 } else if(status > 1){
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     statusHolder.ivStatus1.setLayoutParams(layoutParams);
-                    statusHolder.ivStatus1.setBackgroundResource(R.drawable.emergency_verified_icon);
-                    statusHolder.lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.green));
+                    statusHolder.ivStatus1.setBackgroundResource(R.drawable.ic_order_status_green);
+                    statusHolder.lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
                 }
             case 1:
                 statusHolder.tvStatus0.setVisibility(View.VISIBLE);
                 statusHolder.ivStatus0.setVisibility(View.VISIBLE);
                 statusHolder.tvStatus0.setText(possibleStatus.get(0));
                 if(status == 0){
-                    statusHolder.ivStatus0.setBackgroundResource(R.drawable.circle_green);
+                    statusHolder.ivStatus0.setBackgroundResource(R.drawable.circle_order_status_green);
                 } else if(status > 0){
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
                     statusHolder.ivStatus0.setLayoutParams(layoutParams);
-                    statusHolder.ivStatus0.setBackgroundResource(R.drawable.emergency_verified_icon);
+                    statusHolder.ivStatus0.setBackgroundResource(R.drawable.ic_order_status_green);
                 }
             break;
         }
@@ -385,7 +412,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class ViewHolderSlot extends RecyclerView.ViewHolder {
         public LinearLayout linear;
-        RelativeLayout belowLayout;
+        public RelativeLayout belowLayout;
         public LinearLayout linearLayoutQuantitySelector, cartLayout;
         private ImageView imageViewMmeals, foodType;
         private ImageView imageViewMinus, imageViewPlus, imageClosed;
@@ -425,31 +452,35 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class ViewTitleHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout linearLayout;
+        public RelativeLayout relative;
 
         public ViewTitleHolder(View itemView) {
             super(itemView);
-            linearLayout = (LinearLayout) itemView.findViewById(R.id.linear);
+            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
         }
     }
 
     static class ViewTitleStatus extends RecyclerView.ViewHolder {
 
-        public RelativeLayout relative;
-        public TextView tvOrderId, tvOrderIdValue, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
+        public LinearLayout linear;
+        public RelativeLayout container, relativeStatusBar;
+        public TextView tvOrderId, tvOrderIdValue,tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
         public View lineStatus1, lineStatus2, lineStatus3;
 
         public ViewTitleStatus(View itemView, Context context) {
             super(itemView);
-            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
-            tvOrderId = (TextView) itemView.findViewById(R.id.tvOrderId);
-            tvOrderIdValue = (TextView) itemView.findViewById(R.id.tvOrderIdValue);
-            tvDeliveryTime = (TextView) itemView.findViewById(R.id.tvDeliveryTime);
-            tvStatus0 = (TextView) itemView.findViewById(R.id.tvStatus0);
-            tvStatus1 = (TextView) itemView.findViewById(R.id.tvStatus1);
-            tvStatus2 = (TextView) itemView.findViewById(R.id.tvStatus2);
-            tvStatus3 = (TextView) itemView.findViewById(R.id.tvStatus3);
+            linear = (LinearLayout) itemView.findViewById(R.id.linear);
+            container = (RelativeLayout) itemView.findViewById(R.id.container);
+            relativeStatusBar = (RelativeLayout) itemView.findViewById(R.id.relativeStatusBar);
+            tvOrderId = (TextView) itemView.findViewById(R.id.tvOrderId); tvOrderId.setTypeface(Fonts.mavenRegular(context));
+            tvOrderIdValue = (TextView) itemView.findViewById(R.id.tvOrderIdValue); tvOrderIdValue.setTypeface(Fonts.mavenMedium(context));
+            tvDeliveryBefore = (TextView) itemView.findViewById(R.id.tvDeliveryBefore); tvDeliveryBefore.setTypeface(Fonts.mavenRegular(context));
+            tvDeliveryTime = (TextView) itemView.findViewById(R.id.tvDeliveryTime); tvDeliveryTime.setTypeface(Fonts.mavenMedium(context));
+            tvStatus0 = (TextView) itemView.findViewById(R.id.tvStatus0); tvStatus0.setTypeface(Fonts.mavenRegular(context));
+            tvStatus1 = (TextView) itemView.findViewById(R.id.tvStatus1); tvStatus1.setTypeface(Fonts.mavenRegular(context));
+            tvStatus2 = (TextView) itemView.findViewById(R.id.tvStatus2); tvStatus2.setTypeface(Fonts.mavenRegular(context));
+            tvStatus3 = (TextView) itemView.findViewById(R.id.tvStatus3); tvStatus3.setTypeface(Fonts.mavenRegular(context));
             ivStatus0 = (ImageView) itemView.findViewById(R.id.ivStatus0);
             ivStatus1 = (ImageView) itemView.findViewById(R.id.ivStatus1);
             ivStatus2 = (ImageView) itemView.findViewById(R.id.ivStatus2);

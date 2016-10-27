@@ -422,6 +422,11 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
+
+        <activity
+            android:name=".OrderStatusActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
