@@ -332,8 +332,11 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                     activity.hideBottomBar(true);
                                     activity.getTopBar().below_shadow.setVisibility(View.GONE);
                                 } else {
-                                    activity.hideBottomBar(false);
-                                    activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
+									Fragment fragment = activity.getTopFragment();
+									if(fragment != null && fragment instanceof GroceryFragment) {
+										activity.hideBottomBar(false);
+										activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
+									}
                                 }
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);

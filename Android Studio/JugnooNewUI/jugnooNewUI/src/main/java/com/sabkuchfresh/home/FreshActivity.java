@@ -2123,4 +2123,16 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         }
     }
 
+
+
+    public Fragment getTopFragment(){
+        try {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
+            return fragmentManager.findFragmentByTag(fragmentTag);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
