@@ -90,7 +90,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	TextView textViewScroll, textViewSkip;
 	
 	boolean loginDataFetched = false;
-	private int linkedWallet = 0, userVerified = 0;
+	private int linkedWallet = 0;
+	//private int userVerified = 0;
 	private String linkedWalletErrorMsg = "";
 	
 	public static boolean intentFromRegister = true, backFromMissedCall;
@@ -133,9 +134,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		}
 
-		if(getIntent().hasExtra(USER_VERIFIED)){
+		/*if(getIntent().hasExtra(USER_VERIFIED)){
 			userVerified = getIntent().getIntExtra(USER_VERIFIED, 0);
-		}
+		}*/
 
 
 		relative = (RelativeLayout) findViewById(R.id.relative);
@@ -166,11 +167,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenRegular(this));
 		textViewSkip = (TextView)findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.mavenRegular(this));
 
-		if(userVerified == 1){
+		/*if(userVerified == 1){
 			textViewSkip.setVisibility(View.VISIBLE);
 		} else{
 			textViewSkip.setVisibility(View.GONE);
-		}
+		}*/
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -213,11 +214,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				String otpCode = editTextOTP.getText().toString().trim();
 				if (otpCode.length() > 0) {
 					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
-						if(userVerified == 1){
+						verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
+						/*if(userVerified == 1){
 							sendOTP(otpCode);
 						} else {
 							verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
-						}
+						}*/
 
 					} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode, linkedWallet);

@@ -32,6 +32,7 @@
             android:textSize="@dimen/text_size_34"
             android:textAllCaps="true"
             android:layout_alignParentRight="true"
+            android:visibility="gone"
             android:gravity="center"
             android:padding="20px"/>
     </RelativeLayout>
