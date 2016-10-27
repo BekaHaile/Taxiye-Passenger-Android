@@ -139,8 +139,7 @@ public class T20Dialog {
 
 						case R.id.buttonSubmit:
 							if(schedule.getSelectedTeamId().equals(-1)){
-								Toast.makeText(activity, activity.getResources().getString(R.string.team_not_selected_error),
-										Toast.LENGTH_LONG).show();
+								Utils.showToast(activity, activity.getResources().getString(R.string.team_not_selected_error));
 							} else{
 								submitSelectedTeam();
 							}

@@ -28,7 +28,9 @@ public enum AppLinkIndex {
 
 	DELIVERY_PAGE(12), // open Delivery Screen
 
-	AUTO_PAGE(13) // open Auto Screen
+	AUTO_PAGE(13), // open Auto Screen
+
+	GROCERY_PAGE(14) // open Grocery Screen
 
 	;
 

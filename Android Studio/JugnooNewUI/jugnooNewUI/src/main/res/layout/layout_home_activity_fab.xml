@@ -17,12 +17,12 @@
         android:visibility="gone"
         android:background="@color/transparent"/>
 
+
     <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu
         android:id="@+id/menu_labels_right"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/linearLayoutCheckoutContainer"
-        android:paddingBottom="80dp"
         android:paddingLeft="15dp"
         android:tag="DontTouchMe"
         fab:menu_buttonSpacing="0px"
@@ -30,7 +30,6 @@
         fab:fab_colorNormal="@color/theme_color"
         fab:fab_colorPressed="@color/theme_color_alpha"
         fab:fab_colorRipple="@color/theme_color_end"
-        fab:menu_animationDelayPerItem="50"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
         fab:menu_backgroundColor="#ccffffff"

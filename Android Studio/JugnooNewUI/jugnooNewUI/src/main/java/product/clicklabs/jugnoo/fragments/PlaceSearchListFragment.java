@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
@@ -26,7 +25,6 @@ import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -77,15 +75,15 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
     @Override
     public void onStart() {
         super.onStart();
-        FlurryAgent.init(activity, Config.getFlurryKey());
-        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(PlaceSearchListFragment.class.getSimpleName() + " started");
+//        FlurryAgent.init(activity, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//        FlurryAgent.onEvent(PlaceSearchListFragment.class.getSimpleName() + " started");
     }
 
     @Override
     public void onStop() {
 		super.onStop();
-        FlurryAgent.onEndSession(activity);
+//        FlurryAgent.onEndSession(activity);
     }
 	
 
@@ -107,6 +105,8 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
 		linearLayoutScrollSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutScrollSearch);
 		textViewScrollSearch = (TextView) rootView.findViewById(R.id.textViewScrollSearch);
+
+
 
 		imageViewSearchGPSIcon = (ImageView) rootView.findViewById(R.id.imageViewSearchGPSIcon);
 

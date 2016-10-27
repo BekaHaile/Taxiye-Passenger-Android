@@ -158,6 +158,9 @@ public class ApiAddHomeWorkAddress {
 											}
 										}
 									}
+
+									new JSONParser().parseSavedAddresses(activity, jObj, Constants.KEY_ADDRESS);
+
 									callback.onSuccess(searchResult, strResult, deleteAddress);
 								}
 

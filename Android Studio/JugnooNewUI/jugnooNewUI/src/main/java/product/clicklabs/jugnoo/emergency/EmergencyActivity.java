@@ -3,18 +3,15 @@ package product.clicklabs.jugnoo.emergency;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
 
-import com.flurry.android.FlurryAgent;
-
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyContactsFragment;
 import product.clicklabs.jugnoo.emergency.fragments.EmergencyModeEnabledFragment;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 
@@ -33,15 +30,15 @@ public class EmergencyActivity extends BaseFragmentActivity {
     @Override
     public void onStart() {
         super.onStart();
-        FlurryAgent.init(this, Config.getFlurryKey());
-        FlurryAgent.onStartSession(this, Config.getFlurryKey());
-        FlurryAgent.onEvent(EmergencyActivity.class.getSimpleName() + " started");
+//        FlurryAgent.init(this, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//        FlurryAgent.onEvent(EmergencyActivity.class.getSimpleName() + " started");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        FlurryAgent.onEndSession(this);
+//        FlurryAgent.onEndSession(this);
     }
 
     @Override

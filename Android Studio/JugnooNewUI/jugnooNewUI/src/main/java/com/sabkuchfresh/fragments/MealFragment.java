@@ -128,9 +128,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         recyclerViewCategoryItems.setAdapter(mealAdapter);
 
-
         setSortingList();
-        getAllProducts(true);
+
 
         try {
             if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
@@ -146,6 +145,14 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!isHidden()) {
+            getAllProducts(true);
+        }
     }
 
     @Override
@@ -256,6 +263,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                 mealsData.clear();
                                 mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
                                 activity.setProductsResponse(productsResponse);
+
                                 setSortingList();
                                 if (Data.mealSort == -1) {
                                     slots.get(sortedBy).setCheck(true);
@@ -292,8 +300,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                         && activity.getProductsResponse().getCategories() != null) {
                                     activity.updateCartFromSP();
                                     activity.updateCartValuesGetTotalPrice();
-
                                 }
+
+
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -309,7 +318,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                         if(!isHidden()) {
                             activity.hideBottomBar(true);
                         } else {
-                            activity.hideBottomBar(false);
+                            Fragment fragment = activity.getTopFragment();
+                            if(fragment != null && fragment instanceof MealFragment) {
+                                activity.hideBottomBar(false);
+                            }
                         }
                     }
 
@@ -378,6 +390,16 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         activity.updateCartValuesGetTotalPrice();
     }
 
+    @Override
+    public boolean checkForMinus(int position, SubItem subItem) {
+        return activity.checkForMinus(position, subItem);
+    }
+
+    @Override
+    public void minusNotDone(int position, SubItem subItem) {
+        activity.clearMealsCartIfNoMainMeal();
+        mealAdapter.notifyDataSetChanged();
+    }
 
     public void onSortEvent(int postion) {
         switch (postion) {
@@ -412,4 +434,5 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 break;
         }
     }
+
 }

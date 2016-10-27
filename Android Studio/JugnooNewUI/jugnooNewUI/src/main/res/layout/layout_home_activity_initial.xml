@@ -211,6 +211,7 @@
                 android:tag="mwar"
                 android:visibility="visible" />
 
+
             <ImageView
                 android:id="@+id/imageViewRideNow"
                 android:layout_width="187px"

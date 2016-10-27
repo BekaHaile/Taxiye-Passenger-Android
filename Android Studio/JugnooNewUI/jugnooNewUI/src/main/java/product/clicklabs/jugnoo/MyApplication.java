@@ -21,7 +21,6 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.kochava.android.tracker.Feature;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -70,7 +69,6 @@ public class MyApplication extends Application{
     private FirebaseAnalytics mFirebaseAnalytics;
     // [END declare_analytics]
 
-    private Feature kTracker;
 
 	/**
 	 * Reference to the bus (OTTO By Square)
@@ -104,7 +102,6 @@ public class MyApplication extends Application{
 //				Feature.enableDebug(true);
 				CleverTapAPI.setDebugLevel(1);
 			}
-            kTracker = new Feature( this , Config.KOCHAVA_KEY );
 
 			mInstance = this;
 			mBus = new Bus();
@@ -372,12 +369,6 @@ public class MyApplication extends Application{
 		return deviceToken;
 	}
 
-    public Feature getkTracker() {
-        if(kTracker == null) {
-            kTracker = new Feature(this, Config.KOCHAVA_KEY);
-        }
-        return kTracker;
-    }
 
 	private AppSwitcher appSwitcher;
 	public AppSwitcher getAppSwitcher(){

@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
@@ -36,7 +34,6 @@ import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -57,15 +54,15 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
     @Override
     public void onStart() {
         super.onStart();
-        FlurryAgent.init(activity, Config.getFlurryKey());
-        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(ReferralsFragment.class.getSimpleName() + " started");
+//        FlurryAgent.init(activity, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//        FlurryAgent.onEvent(ReferralsFragment.class.getSimpleName() + " started");
     }
 
     @Override
     public void onStop() {
 		super.onStop();
-        FlurryAgent.onEndSession(activity);
+//        FlurryAgent.onEndSession(activity);
     }
 	
 
@@ -171,7 +168,6 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_INVITE_FRIENDS, null);
 				} else{
 					DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 				}

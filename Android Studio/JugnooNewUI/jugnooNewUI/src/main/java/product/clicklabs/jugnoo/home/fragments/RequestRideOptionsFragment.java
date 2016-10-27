@@ -43,7 +43,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -203,7 +202,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_PAYMENT_MODE, bundle);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
                 FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Home Screen", "b_payment_mode");
             } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.linearLayoutMinFareMS){
                 if(getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
@@ -221,7 +219,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                     FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Auto", "base fare");
                 }
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
 
 
             } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
@@ -240,7 +237,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.FARE_ESTIMATE);
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_GET_FARE_ESTIMATE);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
 
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
@@ -252,7 +248,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_OFFER, bundle);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_OFFERS_TAB_CLICKED, null);
             }
         }
     };

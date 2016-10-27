@@ -64,7 +64,6 @@ import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -233,32 +232,7 @@ public class JSONParser implements Constants {
 
         Data.userData.setJeanieIntroDialogContent(loginUserData.getJeanieIntroDialogContent());
 
-        Data.userData.getSearchResults().clear();
-        if(userData.has(KEY_USER_SAVED_ADDRESSES)){
-            JSONArray userSavedAddressArray = userData.getJSONArray(KEY_USER_SAVED_ADDRESSES);
-            boolean homeSaved = false, workSaved = false;
-            Gson gson = new Gson();
-            for(int i=0; i<userSavedAddressArray.length(); i++){
-                JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
-                if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_HOME) && !homeSaved){
-                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
-                        Prefs.with(context).save(SPLabels.ADD_HOME, getSearchResultStringFromJSON(jsonObject));
-                    }else {
-                        Prefs.with(context).save(SPLabels.ADD_HOME, "");
-                    }
-                    homeSaved = true;
-                } else if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_WORK) && !workSaved){
-                    if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
-                        Prefs.with(context).save(SPLabels.ADD_WORK, getSearchResultStringFromJSON(jsonObject));
-                    }else {
-                        Prefs.with(context).save(SPLabels.ADD_WORK, "");
-                    }
-                    workSaved = true;
-                } else if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
-                    Data.userData.getSearchResults().add(gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class));
-                }
-            }
-        }
+        parseSavedAddresses(context, userData, KEY_USER_SAVED_ADDRESSES);
 
         MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData.optJSONObject(KEY_WALLET_BALANCE));
 
@@ -580,23 +554,6 @@ public class JSONParser implements Constants {
         }
         sb.append(KEY_DOWNLOAD_SOURCE).append("=").append(Config.getDownloadSource());
         return sb.toString();
-    }
-
-    private void nudgeSignupVerifiedEvent(Context context, String userId, String phoneNo, String email, String userName,
-                                          String referralCode, String referralCodeEntered){
-        try {
-            JSONObject map = new JSONObject();
-            map.put(KEY_PHONE_NO, phoneNo);
-            map.put(KEY_EMAIL, email);
-            map.put(KEY_USER_NAME, userName);
-            map.put(KEY_LATITUDE, Data.loginLatitude);
-            map.put(KEY_LONGITUDE, Data.loginLongitude);
-            map.put(KEY_REFERRAL_CODE, referralCode);
-            map.put(KEY_REFERRAL_CODE_ENTERED, referralCodeEntered);
-            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_SIGNUP_VERIFIED, map);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -1417,17 +1374,6 @@ public class JSONParser implements Constants {
         }
     }
 
-    private void couponsEvent(Context context){
-        try{
-            JSONObject map = new JSONObject();
-            for(PromoCoupon promoCoupon : Data.userData.getPromoCoupons()){
-                map.put(promoCoupon.getTitle(), 1);
-            }
-            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_COUPON_AVAILABLE, map);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
 
     public static RateAppDialogContent parseRateAppDialogContent(JSONObject jObj){
         try{
@@ -1475,18 +1421,11 @@ public class JSONParser implements Constants {
         loginClevertap(context);
         try {
             FlurryEventLogger.setGAUserId(Data.userData.getUserId());
-            NudgeClient.initialize(context, Data.userData.getUserId(), Data.userData.userName,
-                    Data.userData.userEmail, Data.userData.phoneNo,
-                    Data.userData.getCity(), Data.userData.getCityReg(), Data.userData.referralCode);
             if(loginVia == LoginVia.EMAIL_OTP
                     || loginVia == LoginVia.FACEBOOK_OTP
                     || loginVia == LoginVia.GOOGLE_OTP) {
-                MyApplication.getInstance().getkTracker().event(Constants.KOCHAVA_REG_KEY, ""+loginVia);
-                couponsEvent(context);
                 String referralCodeEntered = Prefs.with(context).getString(SP_REFERRAL_CODE, "");
                 Prefs.with(context).save(SP_REFERRAL_CODE, "");
-                nudgeSignupVerifiedEvent(context, Data.userData.getUserId(), Data.userData.phoneNo,
-                        Data.userData.userEmail, Data.userData.userName, Data.userData.referralCode, referralCodeEntered);
                 BranchMetricsUtils.logEvent(context, FlurryEventNames.BRANCH_EVENT_REGISTRATION, false);
                 FbEvents.logEvent(context, FlurryEventNames.FB_EVENT_REGISTRATION);
                 FbEvents.logEvent(context, AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION);
@@ -1500,7 +1439,6 @@ public class JSONParser implements Constants {
             }
             JSONObject map = new JSONObject();
             map.put(KEY_SOURCE, getAppSource(context));
-            NudgeClient.trackEventUserId(context, FlurryEventNames.NUDGE_LOGIN_APP_SOURCE, map);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1605,6 +1543,41 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
             return EMPTY_JSON_OBJECT;
+        }
+    }
+
+    public void parseSavedAddresses(Context context, JSONObject userData, String arrayKey){
+        try {
+            if(userData.has(arrayKey)){
+                Data.userData.getSearchResults().clear();
+                Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                Prefs.with(context).save(SPLabels.ADD_WORK, "");
+				JSONArray userSavedAddressArray = userData.getJSONArray(arrayKey);
+				boolean homeSaved = false, workSaved = false;
+				Gson gson = new Gson();
+				for(int i=0; i<userSavedAddressArray.length(); i++){
+					JSONObject jsonObject = userSavedAddressArray.getJSONObject(i);
+					if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_HOME) && !homeSaved){
+						if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
+							Prefs.with(context).save(SPLabels.ADD_HOME, getSearchResultStringFromJSON(jsonObject));
+						}else {
+							Prefs.with(context).save(SPLabels.ADD_HOME, "");
+						}
+						homeSaved = true;
+					} else if(jsonObject.optString(KEY_TYPE).equalsIgnoreCase(TYPE_WORK) && !workSaved){
+						if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")){
+							Prefs.with(context).save(SPLabels.ADD_WORK, getSearchResultStringFromJSON(jsonObject));
+						}else {
+							Prefs.with(context).save(SPLabels.ADD_WORK, "");
+						}
+						workSaved = true;
+					} else if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
+						Data.userData.getSearchResults().add(gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class));
+					}
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

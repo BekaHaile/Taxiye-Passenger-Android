@@ -53,7 +53,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
@@ -381,10 +380,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
+						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
+						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_REQUEST_FINAL.getOrdinal());
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
+						} else{
+							startLocationUpdateService();
 						}
-						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
 
 						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
@@ -394,20 +396,17 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						} else{
 							notificationManager(this, title, message1, playSound);
 						}
-						try {
-							JSONObject map = new JSONObject();
-							map.put(KEY_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
-							NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_RIDE_ACCEPTED, map);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
 
 					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String driverArrivedMessage = jObj.getString(KEY_MESSAGE);
+						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "")));
+						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_DRIVER_ARRIVED.getOrdinal());
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
+						} else{
+							startLocationUpdateService();
 						}
 
 						int pushCallDriver = jObj.optInt(KEY_PUSH_CALL_DRIVER, 0);
@@ -423,6 +422,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
+						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "")));
+						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_IN_RIDE.getOrdinal());
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.startRideForCustomer(0, message1);
 						} else {
@@ -433,23 +434,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							Editor editor = pref.edit();
 							editor.putString(SP_CUSTOMER_SCREEN_MODE, P_IN_RIDE);
 							editor.apply();
-							if(!"".equalsIgnoreCase(Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""))
-									&& Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
-									LOCATION_UPDATE_INTERVAL) > 0
-									&& !Utils.isServiceRunning(this, LocationUpdateService.class.getName())){
-								Intent intent = new Intent(this, LocationUpdateService.class);
-								intent.putExtra(KEY_ONE_SHOT, false);
-								startService(intent);
-							}
+							startLocationUpdateService();
 						}
 						notificationManager(this, title, message1, playSound);
-						try {
-							JSONObject map = new JSONObject();
-							map.put(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""));
-							NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_RIDE_START, map);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
 
 						FbEvents.logEvent(this, FlurryEventNames.FB_EVENT_RIDE_STARTED);
 
@@ -465,9 +452,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							}
 						}
 						notificationManager(this, title, message1, playSound);
-						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_RIDE_END.getOrdinal());
-						Intent intent = new Intent(this, LocationUpdateService.class);
-						stopService(intent);
+						stopLocationUpdateService();
 
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
@@ -477,7 +462,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
 						}
 						notificationManager(this, title, message1, playSound);
-						NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_RIDE_CANCELLED_BY_DRIVER, null);
+						stopLocationUpdateService();
 
 					} else if (PushFlags.WAITING_STARTED.getOrdinal() == flag
 							|| PushFlags.WAITING_ENDED.getOrdinal() == flag) {
@@ -671,6 +656,23 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			e.printStackTrace();
 		}
     }
+
+	private void startLocationUpdateService(){
+		if(!"".equalsIgnoreCase(Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""))
+				&& Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
+				LOCATION_UPDATE_INTERVAL) > 0
+				&& !Utils.isServiceRunning(this, LocationUpdateService.class.getName())){
+			Intent intent = new Intent(this, LocationUpdateService.class);
+			intent.putExtra(KEY_ONE_SHOT, false);
+			startService(intent);
+		}
+	}
+
+	private void stopLocationUpdateService(){
+		Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal());
+		Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, "");
+		stopService(new Intent(this, LocationUpdateService.class));
+	}
 
 	private void incrementPushCounter(JSONObject jObj, int flag){
 		try {

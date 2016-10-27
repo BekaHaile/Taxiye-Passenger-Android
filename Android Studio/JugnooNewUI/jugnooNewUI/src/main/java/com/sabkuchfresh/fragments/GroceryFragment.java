@@ -22,7 +22,6 @@ import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
@@ -187,9 +186,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                 try {
                     if (activity.getProductsResponse() != null
                             && activity.getProductsResponse().getCategories() != null) {
-                        NudgeClient.trackEventUserId(activity,
-                                String.format(FlurryEventNames.NUDGE_FRESH_CATEGORY_CLICKED_FORMAT,
-                                        activity.getProductsResponse().getCategories().get(position).getCategoryName()), null);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -211,7 +207,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
         });
 
         setSortingList();
-        getAllProducts(true);
 
         try {
             if(Data.getGroceryData() != null && Data.getGroceryData().pendingFeedback == 1) {
@@ -245,10 +240,15 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 	}
 
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		if(!isHidden()) {
+			getAllProducts(true);
+		}
+	}
 
-
-
-    private void showPromoFailedAtSignupDialog(){
+	private void showPromoFailedAtSignupDialog(){
         try{
             if(Data.userData.getPromoSuccess() == 0) {
                 DialogPopup.alertPopupWithListener(activity, "",
@@ -334,8 +334,11 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                     activity.hideBottomBar(true);
                                     activity.getTopBar().below_shadow.setVisibility(View.GONE);
                                 } else {
-                                    activity.hideBottomBar(false);
-                                    activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
+									Fragment fragment = activity.getTopFragment();
+									if(fragment != null && fragment instanceof GroceryFragment) {
+										activity.hideBottomBar(false);
+										activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
+									}
                                 }
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);

@@ -371,7 +371,7 @@ public class TrackingLogActivity extends BaseFragmentActivity implements FlurryE
 			}
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Some error occured "+e.getLocalizedMessage()+":"+e.getMessage()+":"+e.getCause(), Toast.LENGTH_LONG).show();
+            Utils.showToast(this, "Some error occured "+e.getLocalizedMessage()+":"+e.getMessage()+":"+e.getCause());
         }
     }
 

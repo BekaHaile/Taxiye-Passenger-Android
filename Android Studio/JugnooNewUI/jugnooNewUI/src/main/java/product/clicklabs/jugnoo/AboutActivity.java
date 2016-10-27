@@ -111,7 +111,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(AboutActivity.this, "Facebook app not enabled", Toast.LENGTH_SHORT).show();
+                    Utils.showToast(AboutActivity.this, "Facebook app not enabled");
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("https://www.facebook.com/" + facebookPageName));
                     startActivity(intent);

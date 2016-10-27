@@ -22,7 +22,6 @@ import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
 /**
@@ -87,6 +86,7 @@ public class SlidingBottomPanelV4 {
                 //Log.v("slideOffset", "---> "+slideOffset);
                 if(slideOffset > 0.2f){
                     activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
+                    activity.setFabMarginInitial(true);
                 }
                 imageViewExtraForSliding.setVisibility(View.VISIBLE);
                 if (activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
@@ -102,6 +102,7 @@ public class SlidingBottomPanelV4 {
                 activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
                 requestRideOptionsFragment.setSurgeImageVisibility();
                 activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
+                activity.setFabMarginInitial(true);
             }
 
             @Override
@@ -160,7 +161,6 @@ public class SlidingBottomPanelV4 {
                 if (Data.userData.getCoupons(ProductType.AUTO).size() > 0) {
                     textViewOffersValue.setText(String.valueOf(Data.userData.getCoupons(ProductType.AUTO).size()));
                 } else {
-                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_NO_COUPONS, null);
                     textViewOffersValue.setText("-");
                 }
                 requestRideOptionsFragment.initSelectedCoupon();
@@ -243,7 +243,6 @@ public class SlidingBottomPanelV4 {
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PAYTM);
                 MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_PAYMENT_MODE, bundle);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_PAYMENT_TAB_CLICKED, null);
                 break;
 
             case R.id.linearLayoutFare:
@@ -255,7 +254,6 @@ public class SlidingBottomPanelV4 {
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_MIN_FARE);
                 MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.FARE_POPUP, bundle);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FARE_TAB_CLICKED, null);
                 break;
 
             case R.id.linearLayoutOffers:
@@ -267,7 +265,6 @@ public class SlidingBottomPanelV4 {
                 FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_OFFERS);
                 MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.HOME_SCREEN+"_"
                         +FirebaseEvents.B_OFFER, bundle);
-                NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_OFFERS_TAB_CLICKED, null);
                 break;
         }
     }
@@ -300,6 +297,7 @@ public class SlidingBottomPanelV4 {
             linearLayoutSlidingBottomSingle.setVisibility(View.VISIBLE);
             linearLayoutSlidingBottom.setVisibility(View.GONE);
             activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
+            activity.setFabMarginInitial(true);
         }
     }
 

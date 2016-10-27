@@ -179,7 +179,13 @@ public class TransactionUtils {
 						.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
 			}
 			transaction.commitAllowingStateLoss();
-        }
+        } else{
+			addToAddressBookFragment = (AddToAddressBookFragment) activity.getSupportFragmentManager().findFragmentByTag(AddToAddressBookFragment.class.getName());
+			if(addToAddressBookFragment != null && bundle != null) {
+				activity.onBackPressed();
+				addToAddressBookFragment.setNewArgumentsToUI(bundle);
+			}
+		}
     }
 
 	public void openFeedback(FragmentActivity activity, View container) {

@@ -26,12 +26,8 @@ import android.view.ViewOutlineProvider;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
-/**
- * Created by ankit on 8/19/16.
- */
 public class Label extends TextView {
 
     private static final Xfermode PORTER_DUFF_CLEAR = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
@@ -120,7 +116,7 @@ public class Label extends TextView {
             });
         }
 
-        //setBackgroundCompat(layerDrawable);
+        setBackgroundCompat(layerDrawable);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -169,8 +165,8 @@ public class Label extends TextView {
     private void setShadow(FloatingActionButton fab) {
         mShadowColor = fab.getShadowColor();
         mShadowRadius = fab.getShadowRadius();
-        mShadowXOffset = fab.getShadowXOffset();
-        mShadowYOffset = fab.getShadowYOffset();
+        mShadowXOffset = fab.getShadowXOffset();//Utils.dpToPx(getContext(), 0);//fab.getShadowXOffset();
+        mShadowYOffset = fab.getShadowYOffset();//Utils.dpToPx(getContext(), 0);//fab.getShadowYOffset();
         mShowShadow = fab.hasShadow();
     }
 
@@ -182,7 +178,6 @@ public class Label extends TextView {
         } else {
             setBackgroundDrawable(drawable);
         }
-        //setTextColor(getResources().getColor(R.color.text_color));
     }
 
     private void playShowAnimation() {
@@ -249,7 +244,7 @@ public class Label extends TextView {
     }
 
     void setColors(int colorNormal, int colorPressed, int colorRipple) {
-        mColorNormal = getResources().getColor(R.color.text_color);
+        mColorNormal = colorNormal;
         mColorPressed = colorPressed;
         mColorRipple = colorRipple;
     }

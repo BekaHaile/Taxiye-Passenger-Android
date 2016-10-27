@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -41,6 +40,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
+
 
     public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems) {
         this.activity = activity;
@@ -193,11 +193,15 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     public void onClick(View v) {
                         try {
                             int pos = (int) v.getTag();
-                            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
-                                    subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
-                            callback.onMinusClicked(pos, subItems.get(pos));
+                            if(callback.checkForMinus(pos, subItems.get(pos))) {
+                                subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
+                                        subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
+                                callback.onMinusClicked(pos, subItems.get(pos));
 
-                            notifyDataSetChanged();
+                                notifyDataSetChanged();
+                            } else{
+                                callback.minusNotDone(pos, subItems.get(pos));
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -207,12 +211,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     @Override
                     public void onClick(View v) {
                         try {
-
                             int pos = (int) v.getTag();
                             if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                                 subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
                             } else {
-                                Toast.makeText(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"", Toast.LENGTH_SHORT).show();
+                                Utils.showToast(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
                             }
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
@@ -231,9 +234,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                                 subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
                             } else {
-                                Toast.makeText(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()) +"", Toast.LENGTH_SHORT).show();
+                                Utils.showToast(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
                             }
-
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
                         } catch (Exception e) {
@@ -348,6 +350,10 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void onPlusClicked(int position, SubItem subItem);
 
         void onMinusClicked(int position, SubItem subItem);
+
+        boolean checkForMinus(int position, SubItem subItem);
+        void minusNotDone(int position, SubItem subItem);
+
     }
 
 }

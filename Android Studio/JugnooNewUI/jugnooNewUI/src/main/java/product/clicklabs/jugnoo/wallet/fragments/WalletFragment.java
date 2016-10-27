@@ -11,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
-
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
@@ -20,7 +18,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -30,7 +27,6 @@ import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
@@ -65,15 +61,15 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
     @Override
     public void onStart() {
         super.onStart();
-        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
-        FlurryAgent.onStartSession(paymentActivity, Config.getFlurryKey());
-        FlurryAgent.onEvent("Register started");
+//        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(paymentActivity, Config.getFlurryKey());
+//        FlurryAgent.onEvent("Register started");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        FlurryAgent.onEndSession(paymentActivity);
+//        FlurryAgent.onEndSession(paymentActivity);
     }
 	
 
@@ -260,7 +256,6 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 					suffix = FirebaseEvents.FREECHARGE_WALLET;
 				}
 				MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+FirebaseEvents.WALLET+"_"+suffix, new Bundle());
-				NudgeClient.trackEventUserId(paymentActivity, FlurryEventNames.NUDGE_PAYTM_WALLET_CLICKED, null);
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "Paytm Wallet");
 			}
 		} catch (Exception e) {

@@ -11,14 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
@@ -211,14 +209,11 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                 if (buttonProceedToPayment.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
                     getCheckoutData();
                 } else if (activity.getSlotSelected() == null) {
-                    Toast.makeText(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot),
-                            Toast.LENGTH_LONG).show();
+                    product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
                 } else if (TextUtils.isEmpty(activity.getSelectedAddress())) {
-                    Toast.makeText(activity, activity.getResources().getString(R.string.please_select_a_delivery_address),
-                            Toast.LENGTH_LONG).show();
+                    product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_address));
                 } else {
                     activity.getTransactionUtils().openPaymentFragment(activity, activity.getRelativeLayoutContainer());
-                    NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_PROCEED_TO_PAYMENT_CLICKED, null);
                     int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                     if(appType == AppConstant.ApplicationType.MEALS){
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
@@ -232,7 +227,6 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         });
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.CHECKOUT, activity.productList);
         getCheckoutData();
-        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_CHECKOUT_CLICKED, null);
 
         return rootView;
     }
@@ -558,6 +552,5 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     public void onAddressClick() {
         FlurryEventLogger.event(CHECKOUT_SCREEN, SCREEN_TRANSITION, ADDRESS_SCREEN);
         activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
-        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_ADDRESS_CLICKED, null);
     }
 }

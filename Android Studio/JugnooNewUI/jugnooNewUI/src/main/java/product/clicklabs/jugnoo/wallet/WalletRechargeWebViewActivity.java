@@ -18,7 +18,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -30,6 +29,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.utils.EncodeUtils;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 
 public class WalletRechargeWebViewActivity extends FragmentActivity {
@@ -114,7 +114,7 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Some Error", Toast.LENGTH_SHORT).show();
+            Utils.showToast(this, "Some Error");
         }
     }
 
@@ -206,31 +206,31 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
 			Log.e("url", "=" + url);
 
             if(walletType == PaymentOption.PAYTM.getOrdinal()) {
-                if (PAYTM_SUCCESS_URL.equalsIgnoreCase(url)) {
+                if (url.contains(PAYTM_SUCCESS_URL)) {
                     Intent returnIntent = new Intent();
                     setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);
                     finish();
-                } else if (PAYTM_FAILURE_URL.equalsIgnoreCase(url)) {
+                } else if (url.contains(PAYTM_FAILURE_URL)) {
                     Intent returnIntent = new Intent();
                     setResult(WalletAddMoneyState.FAILURE.getOrdinal(), returnIntent);
                     finish();
                 }
             } else if(walletType == PaymentOption.MOBIKWIK.getOrdinal()){
-                if (MOBIKWIK_SUCCESS_URL.equalsIgnoreCase(url)) {
+                if (url.contains(MOBIKWIK_SUCCESS_URL)) {
                     Intent returnIntent = new Intent();
                     setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);
                     finish();
-                } else if (MOBIKWIK_FAILURE_URL.equalsIgnoreCase(url)) {
+                } else if (url.contains(MOBIKWIK_FAILURE_URL)) {
                     Intent returnIntent = new Intent();
                     setResult(WalletAddMoneyState.FAILURE.getOrdinal(), returnIntent);
                     finish();
                 }
             } else if(walletType == PaymentOption.FREECHARGE.getOrdinal()) {
-                if (FREECHARGE_SUCCESS_URL.equalsIgnoreCase(url)) {
+                if (url.contains(FREECHARGE_SUCCESS_URL)) {
                     Intent returnIntent = new Intent();
                     setResult(WalletAddMoneyState.SUCCESS.getOrdinal(), returnIntent);
                     finish();
-                } else if (FREECHARGE_FAILURE_URL.equalsIgnoreCase(url)) {
+                } else if (url.contains(FREECHARGE_FAILURE_URL)) {
                     Intent returnIntent = new Intent();
                     setResult(WalletAddMoneyState.FAILURE.getOrdinal(), returnIntent);
                     finish();

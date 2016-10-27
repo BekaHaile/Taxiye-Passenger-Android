@@ -302,6 +302,35 @@ public class GoogleGeocodeResponse {
             return city;
         }
 
+        public String getCountry() {
+            String country = "", political = "";
+            if(addressComponents.size()>0) {
+                for(int i=0;i<addressComponents.size(); i++) {
+                    ArrayList<String> addressTypes = new ArrayList<String>();
+                    for (int j = 0; j < addressComponents.get(i).types.size(); j++) {
+                        addressTypes.add(addressComponents.get(i).types.get(j));
+                    }
+                    if (addressTypes.contains("country")) {
+                        country = addressComponents.get(i).longName;
+                    }
+                    if (addressTypes.contains("political")) {
+                        political = addressComponents.get(i).longName;
+                    }
+                }
+                if(!TextUtils.isEmpty(country)) {
+                    return country;
+                } else if(!TextUtils.isEmpty(political)) {
+                    return political;
+                } else {
+                    return "India";
+                }
+            } else {
+                String[] address = getAddress();
+                country = address[address.length - 1].trim();
+            }
+            return country;
+        }
+
     }
 
     public class AddressComponent {

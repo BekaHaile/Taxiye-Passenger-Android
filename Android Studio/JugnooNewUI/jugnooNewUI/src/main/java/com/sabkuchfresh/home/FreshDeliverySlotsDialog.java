@@ -72,8 +72,8 @@ public class FreshDeliverySlotsDialog implements FlurryEventNames {
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
 			layoutParams.dimAmount = 0.6f;
 			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(false);
-			dialog.setCanceledOnTouchOutside(false);
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(true);
 
 			TextView textViewSelectDeliverySlot = (TextView) dialog.findViewById(R.id.textViewSelectDeliverySlot);
 			textViewSelectDeliverySlot.setTypeface(Fonts.mavenRegular(activity));
@@ -135,8 +135,8 @@ public class FreshDeliverySlotsDialog implements FlurryEventNames {
             WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
             layoutParams.dimAmount = 0.6f;
             dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            dialog.setCancelable(false);
-            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCancelable(true);
+            dialog.setCanceledOnTouchOutside(true);
 
             TextView textViewSelectDeliverySlot = (TextView) dialog.findViewById(R.id.textViewSelectDeliverySlot);
             textViewSelectDeliverySlot.setTypeface(Fonts.mavenRegular(activity));
@@ -158,7 +158,7 @@ public class FreshDeliverySlotsDialog implements FlurryEventNames {
             relative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dialog.dismiss();
+//                    dialog.dismiss();
                 }
             });
 

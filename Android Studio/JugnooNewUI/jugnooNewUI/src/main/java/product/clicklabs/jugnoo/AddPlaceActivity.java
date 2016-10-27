@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
+import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.home.TransactionUtils;
 
@@ -159,7 +160,26 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 	}
 
     public void performBackPressed(){
-        if(getSupportFragmentManager().getBackStackEntryCount() == 1){
+        final AddToAddressBookFragment fragment = getAddToAddressBookFragment();
+        if(fragment != null && fragment.locationEdited){
+            DialogPopup.alertPopupTwoButtonsWithListeners(AddPlaceActivity.this, "",
+                    getString(R.string.changes_not_updated_exit),
+                    getString(R.string.ok), getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            fragment.locationEdited = false;
+                            performBackPressed();
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }, false, false);
+        }
+        else if(getSupportFragmentManager().getBackStackEntryCount() == 1){
             Intent intent=new Intent();
             setResult(RESULT_CANCELED, intent);
             finish();
@@ -168,6 +188,16 @@ public class AddPlaceActivity extends BaseFragmentActivity {
             super.onBackPressed();
         }
 
+    }
+
+    public AddToAddressBookFragment getAddToAddressBookFragment(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
+        if(fragmentTag.equalsIgnoreCase(AddToAddressBookFragment.class.getName())){
+            return (AddToAddressBookFragment) fragmentManager.findFragmentByTag(fragmentTag);
+        } else{
+            return null;
+        }
     }
 
 	@Override

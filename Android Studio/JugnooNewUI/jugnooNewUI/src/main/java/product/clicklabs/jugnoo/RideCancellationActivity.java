@@ -21,13 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ActivityCloser;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CancelOption;
@@ -42,7 +39,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -86,14 +82,14 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 	@Override
 	protected void onStart() {
 		super.onStart();
-		FlurryAgent.init(this, Config.getFlurryKey());
-		FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//		FlurryAgent.init(this, Config.getFlurryKey());
+//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(this);
+//		FlurryAgent.onEndSession(this);
 	}
 	
 	@Override
@@ -479,7 +475,6 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 										}
 									});
 									FlurryEventLogger.event(RIDE_CANCELLED_COMPLETE);
-									NudgeClient.trackEventUserId(RideCancellationActivity.this, NUDGE_CANCEL_RIDE, null);
 								} else {
 									DialogPopup.alertPopup(activity, "", serverMessage);
 								}

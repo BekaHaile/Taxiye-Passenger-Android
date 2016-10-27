@@ -19,8 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
-
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -36,7 +34,6 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
@@ -53,7 +50,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -84,14 +80,14 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     @Override
     protected void onStart() {
         super.onStart();
-        FlurryAgent.init(this, Config.getFlurryKey());
-        FlurryAgent.onStartSession(this, Config.getFlurryKey());
+//        FlurryAgent.init(this, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(this, Config.getFlurryKey());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        FlurryAgent.onEndSession(this);
+//        FlurryAgent.onEndSession(this);
     }
 
     @Override
@@ -151,7 +147,6 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                 intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
                 startActivity(intent);
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                NudgeClient.trackEventUserId(PromotionActivity.this, FlurryEventNames.NUDGE_FREE_RIDES_CLICKED, null);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+ FirebaseEvents.PROMOTION+"_"+ FirebaseEvents.WANT_FREE_RIDES, bundle);
                 FlurryEventLogger.eventGA(Constants.REFERRAL, "Promotions", "B_WantFreeRides");

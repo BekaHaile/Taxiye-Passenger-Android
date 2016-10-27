@@ -32,7 +32,7 @@ public class FABView {
     public FloatingActionButton fabFresh;
     public FloatingActionButton fabAutos;
     public FloatingActionButton fabGrocery;
-    public View fabExtra;
+    //public View fabExtra;
 
     public FABView(Activity activity) {
         this.activity = activity;
@@ -48,9 +48,10 @@ public class FABView {
         fabFresh = (FloatingActionButton) activity.findViewById(R.id.fabFresh);
         fabAutos = (FloatingActionButton) activity.findViewById(R.id.fabAutos);
         fabGrocery = (FloatingActionButton) activity.findViewById(R.id.fabGrocery);
-        fabExtra = (View) activity.findViewById(R.id.fabExtra);
+        //fabExtra = (View) activity.findViewById(R.id.fabExtra);
         //fabExtra.setVisibility(View.GONE);
         menuLabelsRight.setIconAnimated(false);
+        menuLabelsRight.setClosedOnTouchOutside(true);
         fabDelivery.setLabelTextColor(activity.getResources().getColor(R.color.black));
         fabMeals.setLabelTextColor(activity.getResources().getColor(R.color.black));
         fabFresh.setLabelTextColor(activity.getResources().getColor(R.color.black));
@@ -75,11 +76,11 @@ public class FABView {
                 //setFABButtons();
                 if (opened) {
                     text = "Menu opened";
-                    fabExtra.setVisibility(View.VISIBLE);
+                    //fabExtra.setVisibility(View.VISIBLE);
                     relativeLayoutFAB.setVisibility(View.VISIBLE);
                 } else {
                     text = "Menu closed";
-                    fabExtra.setVisibility(View.GONE);
+                    //fabExtra.setVisibility(View.GONE);
                     if(activity instanceof HomeActivity){
                         setRelativeLayoutFABVisibility(HomeActivity.passengerScreenMode);
                     } else if(activity instanceof FreshActivity){
@@ -89,7 +90,7 @@ public class FABView {
             }
         });
 
-        fabExtra.setOnClickListener(new View.OnClickListener() {
+        /*fabExtra.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (menuLabelsRight.isOpened()) {
@@ -113,7 +114,7 @@ public class FABView {
                 }
 
             }
-        });
+        });*/
     }
 
     public void setRelativeLayoutFABVisibility(PassengerScreenMode passengerScreenMode){
@@ -132,7 +133,7 @@ public class FABView {
                             || passengerScreenMode == PassengerScreenMode.P_RIDE_END
                             || ((HomeActivity)activity).dropLocationSearched) {
                         relativeLayoutFAB.setVisibility(View.INVISIBLE);
-                        ((HomeActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
+                        //((HomeActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
                     } else {
                         relativeLayoutFAB.setVisibility(View.VISIBLE);
                         menuLabelsRight.close(true);
@@ -143,7 +144,7 @@ public class FABView {
                 } else {
                     if (activity instanceof FreshActivity) {
                         relativeLayoutFAB.setVisibility(View.INVISIBLE);
-                        ((FreshActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
+                        //((FreshActivity) activity).getImageViewFabFake().setVisibility(View.VISIBLE);
                     } else {
                         relativeLayoutFAB.setVisibility(View.INVISIBLE);
                     }
@@ -296,7 +297,7 @@ public class FABView {
                     break;
 
             }
-            fabExtra.performClick();
+            //fabExtra.performClick();
         }
     };
 

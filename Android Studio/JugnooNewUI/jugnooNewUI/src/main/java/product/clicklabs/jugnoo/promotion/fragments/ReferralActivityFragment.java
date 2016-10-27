@@ -8,14 +8,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.flurry.android.FlurryAgent;
-
 import java.text.DecimalFormat;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -35,15 +32,15 @@ public class ReferralActivityFragment extends Fragment implements FlurryEventNam
     @Override
     public void onStart() {
         super.onStart();
-        FlurryAgent.init(activity, Config.getFlurryKey());
-        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-        FlurryAgent.onEvent(ReferralActivityFragment.class.getSimpleName() + " started");
+//        FlurryAgent.init(activity, Config.getFlurryKey());
+//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//        FlurryAgent.onEvent(ReferralActivityFragment.class.getSimpleName() + " started");
     }
 
     @Override
     public void onStop() {
 		super.onStop();
-        FlurryAgent.onEndSession(activity);
+//        FlurryAgent.onEndSession(activity);
     }
 	
 

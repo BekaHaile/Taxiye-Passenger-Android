@@ -16,9 +16,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.flurry.android.FlurryAgent;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
@@ -84,15 +82,15 @@ public class AddEmergencyContactsFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
-		FlurryAgent.init(activity, Config.getFlurryKey());
-		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-		FlurryAgent.onEvent(AddEmergencyContactsFragment.class.getSimpleName() + " started");
+//		FlurryAgent.init(activity, Config.getFlurryKey());
+//		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
+//		FlurryAgent.onEvent(AddEmergencyContactsFragment.class.getSimpleName() + " started");
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		FlurryAgent.onEndSession(activity);
+//		FlurryAgent.onEndSession(activity);
 	}
 
 	@Override
@@ -219,9 +217,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 								FlurryEventLogger.eventGA(Constants.HELP, "call your contacts", "add contact");
 								addEmergencyContactsAPI(activity, jsonArray.toString());
 							} else{
-								Toast.makeText(activity,
-										activity.getResources().getString(R.string.please_select_some_contacts_first),
-										Toast.LENGTH_SHORT).show();
+								Utils.showToast(activity, activity.getResources().getString(R.string.please_select_some_contacts_first));
 							}
 						} catch (Exception e) {
 							e.printStackTrace();

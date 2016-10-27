@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -61,6 +60,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -284,7 +284,11 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             @Override
             public void onClick(View v) {
                 if(activity instanceof FreshActivity) {
-                    ((FreshActivity)activity).openMapAddress(createAddressBundle(""));
+                    FreshActivity freshActivity = (FreshActivity) activity;
+                    freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                    freshActivity.setSearchResult(null);
+                    freshActivity.setEditThisAddress(false);
+                    freshActivity.openMapAddress(createAddressBundle(""));
                 }
                 else if(activity instanceof AddPlaceActivity) {
                     ((AddPlaceActivity)activity).openMapAddress(createAddressBundle(""));
@@ -357,7 +361,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     public void onPlaceSearchError() {
                         //progressBarSearch.setVisibility(View.GONE);
 //                        searchListActionsHandler.onPlaceSearchError();
-                        Toast.makeText(activity, R.string.could_not_find_address, Toast.LENGTH_SHORT).show();
+                        Utils.showToast(activity, getString(R.string.could_not_find_address));
                     }
 
                     @Override
@@ -488,7 +492,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                             current_route = ""+geocodeResponse.results.get(0).getRoute();
                             current_area = "" + geocodeResponse.results.get(0).getLocality();
                             current_city = "" + geocodeResponse.results.get(0).getCity();
-                            current_pincode = "" + geocodeResponse.results.get(0).getPin();
+                            current_pincode = "" + geocodeResponse.results.get(0).getCountry();
                             String streetNum = current_street;
                             if(current_street.length()>0)
                                 streetNum = geocodeResponse.results.get(0).getStreetNumber()+", ";

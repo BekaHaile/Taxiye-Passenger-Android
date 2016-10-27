@@ -44,7 +44,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
-import product.clicklabs.jugnoo.utils.NudgeClient;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -330,7 +329,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 @Override
                 public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
 
-                    NudgeClient.trackEventUserId(FareEstimateActivity.this, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
                     textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
                             getResources().getString(R.string.rupee) + "" + maxFare);
 
@@ -347,7 +345,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 public void onPoolSuccess(double fare, double rideDistance, String rideDistanceUnit,
                                           double rideTime, String rideTimeUnit, int poolFareId, double convenienceCharge,
                                           String text) {
-                    NudgeClient.trackEventUserId(FareEstimateActivity.this, FlurryEventNames.NUDGE_FARE_ESTIMATE_CLICKED, null);
                     textViewEstimateFare.setText(getResources().getString(R.string.rupee)
                             + "" + Utils.getMoneyDecimalFormat().format(fare));
 

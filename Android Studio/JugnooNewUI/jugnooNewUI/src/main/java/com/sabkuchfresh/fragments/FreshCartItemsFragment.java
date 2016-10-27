@@ -14,11 +14,11 @@ import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.analytics.NudgeClient;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -157,6 +157,16 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 							checkIfEmpty();
 						}
 					}
+
+					@Override
+					public boolean checkForMinus(int position, SubItem subItem) {
+						return activity.checkForMinus(position, subItem);
+					}
+
+					@Override
+					public void minusNotDone(int position, SubItem subItem) {
+						activity.clearMealsCartIfNoMainMeal();
+					}
 				}, AppConstant.ListType.OTHER, FlurryEventNames.REVIEW_CART, currentGroupId);
 
 
@@ -164,7 +174,6 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
-		NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_FRESH_CART_CLICKED, null);
 
 		return rootView;
 	}
@@ -190,6 +199,9 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 
 	private void checkIfEmpty(){
 		if(activity.subItemsInCart.size() == 0){
+			if(activity.isMealAddonItemsAvailable()){
+				activity.performBackPressed();
+			}
 			activity.performBackPressed();
 		}
 	}
@@ -207,4 +219,5 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
     public void onRefresh() {
 
     }
+
 }
