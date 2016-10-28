@@ -296,6 +296,10 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
+			if(activity.isRefreshCart()){
+				getAllProducts(true);
+			}
+			activity.setRefreshCart(false);
 		}
 	}
 

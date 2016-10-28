@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -909,6 +910,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = JSONParser.getServerMessage(jObj);
+                            jObj.put(Constants.KEY_FLAG, ApiResponseFlags.CART_OUT_OF_STOCK.getOrdinal());
+                            jObj.put(Constants.KEY_FULL_OUT_OF_STOCK, 1);
+
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
@@ -982,6 +986,36 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             fetchWalletBalance();
                                         }
                                     });
+                                } else if (ApiResponseFlags.CART_OUT_OF_STOCK.getOrdinal() == flag){
+                                    final int fullOutOffStock = jObj.optInt(Constants.KEY_FULL_OUT_OF_STOCK, 0);
+                                    DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            try {
+                                                int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                                                String fragName = FreshCheckoutMergedFragment.class.getName();
+                                                if(fullOutOffStock == 1){
+													if(appType == AppConstant.ApplicationType.MEALS){
+                                                        if(activity.isMealAddonItemsAvailable()){
+                                                            fragName = MealAddonItemsFragment.class.getName();
+                                                        } else {
+                                                            fragName = FreshCheckoutMergedFragment.class.getName();
+                                                        }
+													}  else if(appType == AppConstant.ApplicationType.GROCERY){
+														fragName = FreshCartItemsFragment.class.getName();
+													} else {
+														fragName = FreshCartItemsFragment.class.getName();
+													}
+												} else {
+													fragName = FreshCheckoutMergedFragment.class.getName();
+												}
+                                                activity.setRefreshCart(true);
+                                                activity.getSupportFragmentManager().popBackStack(fragName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
                                 }
                                 else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -1021,7 +1055,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         if(apiHit == 1)
                             placeOrderApi();
                         else if(apiHit == 0) {
-                        //TODO commented api applyPromo();
+                        // commented api applyPromo();
                         }
                     }
 

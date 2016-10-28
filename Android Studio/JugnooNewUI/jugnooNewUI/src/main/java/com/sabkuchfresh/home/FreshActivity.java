@@ -1589,15 +1589,24 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             }
             if (getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
+                boolean cartUpdated = false;
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
                         try {
-                            subItem.setSubItemQuantitySelected(jCart.optInt(String.valueOf(subItem.getSubItemId()),
-                                    (int) subItem.getSubItemQuantitySelected()));
+                            int savedQuant = jCart.optInt(String.valueOf(subItem.getSubItemId()),
+                                    (int) subItem.getSubItemQuantitySelected());
+                            if(subItem.getStock() < savedQuant){
+                                savedQuant = subItem.getStock();
+                                cartUpdated = true;
+                            }
+                            subItem.setSubItemQuantitySelected(savedQuant);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
+                }
+                if(cartUpdated) {
+                    saveCartToSP();
                 }
             }
 
@@ -2203,4 +2212,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     gson.toJson(new CheckoutSaveData(), CheckoutSaveData.class)), CheckoutSaveData.class);
         }
     }
+
+    private boolean refreshCart = false;
+    public boolean isRefreshCart(){
+        return refreshCart;
+    }
+    public void setRefreshCart(boolean refreshCart){
+        this.refreshCart = refreshCart;
+    }
+
 }

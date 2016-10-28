@@ -162,6 +162,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             activity.fragmentUISetup(this);
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
+            if(activity.isRefreshCart()){
+                getAllProducts(true);
+            }
+            activity.setRefreshCart(false);
         }
     }
 

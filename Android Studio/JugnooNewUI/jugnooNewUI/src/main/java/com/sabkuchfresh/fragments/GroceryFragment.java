@@ -297,6 +297,10 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
+			if(activity.isRefreshCart()){
+				getAllProducts(true);
+			}
+			activity.setRefreshCart(false);
 		}
 	}
 
