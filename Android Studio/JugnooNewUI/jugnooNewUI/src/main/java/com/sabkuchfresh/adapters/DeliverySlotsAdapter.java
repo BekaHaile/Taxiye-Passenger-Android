@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -85,15 +86,19 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
                 public void onClick(View v) {
                     try {
                         int pos = (int) v.getTag();
-                        callback.onSlotSelected(pos, slots.get(pos));
-                        notifyDataSetChanged();
-                        int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                        if(appType == AppConstant.ApplicationType.MEALS){
-                            MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+slots.get(pos).getDayName()+", "+slots.get(pos).getTimeSlotDisplay(), null);
-                        } else if(appType == AppConstant.ApplicationType.GROCERY){
-                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+slots.get(pos).getDayName()+", "+slots.get(pos).getTimeSlotDisplay(), null);
-                        } else{
-                            MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+slots.get(pos).getDayName()+", "+slots.get(pos).getTimeSlotDisplay(), null);
+                        if(slots.get(pos).isEnabled()) {
+                            callback.onSlotSelected(pos, slots.get(pos));
+                            notifyDataSetChanged();
+                            int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                            if (appType == AppConstant.ApplicationType.MEALS) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.M_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
+                            } else if (appType == AppConstant.ApplicationType.GROCERY) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
+                            } else {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.F_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
+                            }
+                        } else {
+                            Utils.showToast(activity, activity.getString(R.string.slot_is_disabled));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -117,6 +117,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private FreshCartItemsAdapter freshCartItemsAdapter;
 
     private RecyclerView recyclerViewDeliverySlots;
+    private TextView textViewNoDeliverySlot;
     private DeliverySlotsAdapter deliverySlotsAdapter;
 
     private RelativeLayout relativeLayoutDeliveryAddress;
@@ -270,6 +271,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         recyclerViewDeliverySlots.setHasFixedSize(false);
         deliverySlotsAdapter = new DeliverySlotsAdapter(activity, slots, this);
         recyclerViewDeliverySlots.setAdapter(deliverySlotsAdapter);
+        textViewNoDeliverySlot = (TextView) rootView.findViewById(R.id.textViewNoDeliverySlot);
+        textViewNoDeliverySlot.setTypeface(Fonts.mavenMedium(activity));
+        textViewNoDeliverySlot.setVisibility(View.GONE);
 
         relativeLayoutDeliveryAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDeliveryAddress);
         imageViewAddressType = (ImageView) rootView.findViewById(R.id.imageViewAddressType);
@@ -910,9 +914,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = JSONParser.getServerMessage(jObj);
-                            jObj.put(Constants.KEY_FLAG, ApiResponseFlags.CART_OUT_OF_STOCK.getOrdinal());
-                            jObj.put(Constants.KEY_FULL_OUT_OF_STOCK, 1);
-
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
@@ -986,39 +987,41 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             fetchWalletBalance();
                                         }
                                     });
-                                } else if (ApiResponseFlags.CART_OUT_OF_STOCK.getOrdinal() == flag){
-                                    final int fullOutOffStock = jObj.optInt(Constants.KEY_FULL_OUT_OF_STOCK, 0);
-                                    DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            try {
-                                                int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                                                String fragName = FreshCheckoutMergedFragment.class.getName();
-                                                if(fullOutOffStock == 1){
-													if(appType == AppConstant.ApplicationType.MEALS){
-                                                        if(activity.isMealAddonItemsAvailable()){
-                                                            fragName = MealAddonItemsFragment.class.getName();
-                                                        } else {
-                                                            fragName = FreshCheckoutMergedFragment.class.getName();
-                                                        }
-													}  else if(appType == AppConstant.ApplicationType.GROCERY){
-														fragName = FreshCartItemsFragment.class.getName();
-													} else {
-														fragName = FreshCartItemsFragment.class.getName();
-													}
-												} else {
-													fragName = FreshCheckoutMergedFragment.class.getName();
-												}
-                                                activity.setRefreshCart(true);
-                                                activity.getSupportFragmentManager().popBackStack(fragName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
                                 }
                                 else {
-                                    DialogPopup.alertPopup(activity, "", message);
+                                    final int validStockCount = jObj.optInt(Constants.KEY_VALID_STOCK_COUNT, -1);
+                                    if(validStockCount > -1){
+                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                try {
+                                                    int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                                                    String fragName = FreshCheckoutMergedFragment.class.getName();
+                                                    if(validStockCount == 0){
+                                                        if(appType == AppConstant.ApplicationType.MEALS){
+                                                            if(activity.isMealAddonItemsAvailable()){
+                                                                fragName = MealAddonItemsFragment.class.getName();
+                                                            } else {
+                                                                fragName = FreshCheckoutMergedFragment.class.getName();
+                                                            }
+                                                        }  else if(appType == AppConstant.ApplicationType.GROCERY){
+                                                            fragName = FreshCartItemsFragment.class.getName();
+                                                        } else {
+                                                            fragName = FreshCartItemsFragment.class.getName();
+                                                        }
+                                                    } else {
+                                                        fragName = FreshCheckoutMergedFragment.class.getName();
+                                                    }
+                                                    activity.setRefreshCart(true);
+                                                    activity.getSupportFragmentManager().popBackStack(fragName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        DialogPopup.alertPopup(activity, "", message);
+                                    }
                                 }
                             }
                         } catch (Exception exception) {
@@ -1515,6 +1518,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
 
+            if(slots.size() == 0){
+                textViewNoDeliverySlot.setVisibility(View.VISIBLE);
+            } else {
+                textViewNoDeliverySlot.setVisibility(View.GONE);
+            }
             deliverySlotsAdapter.notifyDataSetChanged();
         }
     }

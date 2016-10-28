@@ -513,5 +513,5 @@ public interface Constants {
 	String SP_MEALS_CHECKOUT_SAVE_DATA = "sp_meals_checkout_save_data";
 	String SP_GROCERY_CHECKOUT_SAVE_DATA = "sp_grocery_checkout_save_data";
 
-	String KEY_FULL_OUT_OF_STOCK = "full_out_of_stock";
+	String KEY_VALID_STOCK_COUNT = "valid_stock_count";
 }

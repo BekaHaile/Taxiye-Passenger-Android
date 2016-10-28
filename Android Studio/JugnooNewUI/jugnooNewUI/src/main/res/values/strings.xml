@@ -1185,6 +1185,8 @@
 	<string name="cart_items">Cart Items</string>
 	<string name="cart_items_format">Cart Items(%s)</string>
 	<string name="payment_mode">Payment Mode</string>
+	<string name="no_delivery_slot">No delivery slots</string>
+	<string name="slot_is_disabled">Slot is disabled</string>
 
 
 </resources>
