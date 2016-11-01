@@ -1010,7 +1010,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                                             fragName = FreshCartItemsFragment.class.getName();
                                                         }
                                                     } else {
-                                                        fragName = FreshCheckoutMergedFragment.class.getName();
+                                                        if(appType == AppConstant.ApplicationType.MEALS && activity.isMealAddonItemsAvailable()){
+                                                            fragName = MealAddonItemsFragment.class.getName();
+                                                        } else {
+                                                            fragName = FreshCheckoutMergedFragment.class.getName();
+                                                        }
                                                     }
                                                     activity.setRefreshCart(true);
                                                     activity.getSupportFragmentManager().popBackStack(fragName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
