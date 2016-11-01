@@ -67,7 +67,7 @@ public class AddOnItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             return new MainViewHolder(v, context);
         } else if (viewType == HEADER) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_addon_header, parent, false);
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, 164);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, 124);
             v.setLayoutParams(layoutParams);
 
             ASSL.DoMagic(v);
