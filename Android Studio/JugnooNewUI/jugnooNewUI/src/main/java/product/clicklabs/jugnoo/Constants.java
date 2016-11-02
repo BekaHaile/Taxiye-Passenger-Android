@@ -40,6 +40,7 @@ public interface Constants {
 	String KEY_DELIVERY_NOTES = "delivery_notes";
 	String KEY_DELIVERY_ADDRESS = "delivery_address";
 	String KEY_DELIVERY_ADDRESS_ID = "delivery_address_id";
+	String KEY_DELIVERY_ADDRESS_TYPE = "delivery_address_type";
 	String KEY_CART = "cart";
 	String KEY_SUB_ITEM_ID = "sub_item_id";
 	String KEY_QUANTITY = "quantity";
