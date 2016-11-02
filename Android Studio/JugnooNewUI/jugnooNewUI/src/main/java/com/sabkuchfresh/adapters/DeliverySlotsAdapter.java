@@ -68,7 +68,7 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
             } else{
                 holder.imageViewSelected.setVisibility(View.VISIBLE);
             }
-            if(slot.isEnabled()){
+            if(slot.getIsActiveSlot() == 1){
                 holder.relative.setAlpha(1.0f);
             } else{
                 holder.relative.setAlpha(0.4f);
@@ -79,14 +79,14 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
                 holder.imageViewSep.setVisibility(View.VISIBLE);
             }
 
-            holder.relative.setEnabled(slot.isEnabled());
+            holder.relative.setEnabled(slot.getIsActiveSlot() == 1);
             holder.relative.setTag(position);
             holder.relative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         int pos = (int) v.getTag();
-                        if(slots.get(pos).isEnabled()) {
+                        if(slots.get(pos).getIsActiveSlot() == 1) {
                             callback.onSlotSelected(pos, slots.get(pos));
                             notifyDataSetChanged();
                             int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);

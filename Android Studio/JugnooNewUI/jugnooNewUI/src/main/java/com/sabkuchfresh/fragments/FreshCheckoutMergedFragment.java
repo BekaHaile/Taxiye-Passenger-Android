@@ -1500,8 +1500,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             slots.clear();
 
             if (activity.getSlotSelected() != null) {
-                verifySlotTiming(activity.getSlotSelected());
-                if (!activity.getSlotSelected().isEnabled()) {
+                if (activity.getSlotSelected().getIsActiveSlot() != 1) {
                     activity.setSlotSelected(null);
                 }
             }
@@ -1512,10 +1511,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 for (Slot slot : deliverySlot.getSlots()) {
                     slot.setSlotViewType(FreshCheckoutAdapter.SlotViewType.SLOT_TIME);
                     slot.setDayName(deliverySlot.getDayName());
-                    verifySlotTiming(slot);
-                    slotsEnabled = slot.isEnabled() ? slotsEnabled + 1 : slotsEnabled;
+                    slotsEnabled = slot.getIsActiveSlot() == 1 ? slotsEnabled + 1 : slotsEnabled;
                     slots.add(slot);
-                    if (activity.getSlotSelected() == null && slot.isEnabled()) {
+                    if (activity.getSlotSelected() == null && slot.getIsActiveSlot() == 1) {
                         activity.setSlotSelected(slot);
                     }
                     activity.setSlotToSelect(activity.getSlotSelected());
@@ -1531,21 +1529,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
-    private void verifySlotTiming(Slot slot) {
-        if (slot != null) {
-            if (slot.getDayId() == DateOperations.getCurrentDayInt()) {
-                if (slot.getThresholdTimeSeconds() < DateOperations.getCurrentDayTimeSeconds()) {
-                    slot.setEnabled(false);
-                } else {
-                    slot.setEnabled(true);
-                }
-            } else {
-                slot.setEnabled(true);
-            }
-            slot.setEnabled(!(slot.getDayId() == DateOperations.getCurrentDayInt()
-                    && slot.getThresholdTimeSeconds() < DateOperations.getCurrentDayTimeSeconds()));
-        }
-    }
 
 
     @Subscribe
@@ -1575,12 +1558,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color_light));
                 if(activity.getSelectedAddressType().equalsIgnoreCase(activity.getString(R.string.home))){
                     imageViewAddressType.setImageResource(R.drawable.ic_home);
-                } else if(activity.getSelectedAddressType().equalsIgnoreCase(activity.getString(R.string.work))){
-                    imageViewAddressType.setImageResource(R.drawable.ic_work);
-                } else {
-                    imageViewAddressType.setImageResource(R.drawable.ic_recent_loc);
+                    textViewAddressName.setText(activity.getString(R.string.home));
                 }
-                textViewAddressName.setText(activity.getSelectedAddressType());
+                else if(activity.getSelectedAddressType().equalsIgnoreCase(activity.getString(R.string.work))){
+                    imageViewAddressType.setImageResource(R.drawable.ic_work);
+                    textViewAddressName.setText(activity.getString(R.string.work));
+                }
+                else {
+                    imageViewAddressType.setImageResource(R.drawable.ic_recent_loc);
+                    textViewAddressName.setText(activity.getSelectedAddressType());
+                }
             }
         } else {
             textViewAddressValue.setText(activity.getResources().getString(R.string.add_address));

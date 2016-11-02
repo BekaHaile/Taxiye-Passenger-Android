@@ -29,6 +29,9 @@ public class Slot {
 	@SerializedName("end_time")
 	@Expose
 	private String endTime;
+	@SerializedName("is_active_slot")
+	@Expose
+	private Integer isActiveSlot;
 
 
     /**
@@ -103,7 +106,6 @@ public class Slot {
 
 	private FreshCheckoutAdapter.SlotViewType slotViewType;
 	private String dayName;
-	private boolean enabled = true;
 
 	/**
 	 *
@@ -233,14 +235,6 @@ public class Slot {
 		this.dayName = dayName;
 	}
 
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
 	public String getAddressLabel() {
 		return addressLabel;
 	}
@@ -251,5 +245,13 @@ public class Slot {
 
 	public String getTimeSlotDisplay(){
 		return DateOperations.convertDayTimeAPViaFormat(getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(getEndTime());
+	}
+
+	public Integer getIsActiveSlot() {
+		return isActiveSlot;
+	}
+
+	public void setIsActiveSlot(Integer isActiveSlot) {
+		this.isActiveSlot = isActiveSlot;
 	}
 }

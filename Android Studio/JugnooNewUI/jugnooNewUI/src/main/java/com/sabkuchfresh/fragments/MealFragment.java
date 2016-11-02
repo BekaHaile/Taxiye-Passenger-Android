@@ -104,6 +104,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         } catch (Exception e) {
             e.printStackTrace();
         }
+        linearLayoutRoot.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
 
         mealAdapter = new MealAdapter(activity, mealsData, this);
 

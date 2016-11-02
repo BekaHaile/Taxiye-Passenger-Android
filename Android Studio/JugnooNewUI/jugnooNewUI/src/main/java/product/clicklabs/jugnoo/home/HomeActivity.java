@@ -6993,6 +6993,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
             dropLocationSet = false;
+            zoomedForSearch = false;
             confirmedScreenOpened = false;
 
             MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
@@ -7950,6 +7951,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode){
             myLocationButtonClicked = false;
+            zoomAfterFindADriver = false;
             if(!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     FlurryEventLogger.event(PICKUP_LOCATION_SET);

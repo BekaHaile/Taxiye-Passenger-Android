@@ -263,6 +263,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } else if (holder instanceof ViewTitleHolder) {
                 ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
                 titleholder.relative.setVisibility(View.VISIBLE);
+                titleholder.relative.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
             }
         } catch (Exception e) {
             e.printStackTrace();
