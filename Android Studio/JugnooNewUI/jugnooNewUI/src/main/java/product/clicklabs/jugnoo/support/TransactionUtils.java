@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.support;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,6 +11,7 @@ import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
@@ -115,9 +117,9 @@ public class TransactionUtils {
 					new SupportRideIssuesFragment(engagementId, orderId, endRideData, items, rideCancelled, autosStatus, datum),
 					SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName());
-			if(fromBadFeedback == 0){
-				fragmentTransaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-						.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+			if(fromBadFeedback == 0 && fragmentManager.getBackStackEntryCount() > 0){
+				fragmentTransaction.hide(fragmentManager.findFragmentByTag(fragmentManager
+						.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName()));
 			}
 			fragmentTransaction.commitAllowingStateLoss();
 			FlurryEventLogger.event(FlurryEventNames.SUPPORT_ISSUE_WITH_RECENT_RIDE);
@@ -155,6 +157,27 @@ public class TransactionUtils {
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openOrderStatusFragment(FragmentActivity activity, View container, int orderId) {
+		if(!checkIfFragmentAdded(activity, SupportRideIssuesFragment.class.getName())) {
+			FragmentManager fragmentManager = activity.getSupportFragmentManager();
+			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+			fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+			OrderStatusActivity orderStatusActivity = new OrderStatusActivity();
+			Bundle bundle = new Bundle();
+			bundle.putInt(Constants.KEY_ORDER_ID, orderId);
+			orderStatusActivity.setArguments(bundle);
+			fragmentTransaction.add(container.getId(),
+					orderStatusActivity,
+					OrderStatusActivity.class.getName())
+					.addToBackStack(OrderStatusActivity.class.getName());
+			if(fragmentManager.getBackStackEntryCount() > 0){
+				fragmentTransaction.hide(fragmentManager.findFragmentByTag(fragmentManager
+						.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName()));
+			}
+			fragmentTransaction.commitAllowingStateLoss();
 		}
 	}
 

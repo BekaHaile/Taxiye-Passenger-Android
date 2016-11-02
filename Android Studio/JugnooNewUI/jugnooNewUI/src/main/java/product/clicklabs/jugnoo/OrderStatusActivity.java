@@ -5,8 +5,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,10 +30,15 @@ import java.util.zip.Inflater;
 
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -45,72 +55,96 @@ import retrofit.mime.TypedByteArray;
  * Created by ankit on 27/10/16.
  */
 
-public class OrderStatusActivity extends BaseActivity {
+public class OrderStatusActivity extends Fragment {
 
     private RelativeLayout relative;
-    private TextView textViewTitle, tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,
-            tvDelveryPlace, tvDeliveryToVal, tvSubAmount, tvSubAmountVal;
-    private ImageView imageViewBack;
+    private TextView tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,
+            tvDelveryPlace, tvDeliveryToVal, tvSubAmount, tvSubAmountVal, tvPaymentMethod;
+    private ImageView ivPaymentMethodVal, ivDeliveryPlace;
+    private Button bNeedHelp;
     private int orderId;
     private NonScrollListView listViewOrder;
     private OrderItemsAdapter orderItemsAdapter;
-    private LinearLayout llFinalAmount;
+    private LinearLayout llFinalAmount, llDeliveryPlace;
     private ArrayList<HistoryResponse.OrderItem> subItemsOrders = new ArrayList<HistoryResponse.OrderItem>();
+    private HistoryResponse.Datum orderHistory;
+    private FragmentActivity activity;
+    private View rootView;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_status);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.activity_order_status, container, false);
+        relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 
-        relative = (RelativeLayout) findViewById(R.id.relative);
-        new ASSL(this, relative, 1134, 720, false);
+        activity = getActivity();
 
-        if(getIntent().hasExtra(Constants.KEY_ORDER_ID)){
-            orderId = getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0);
+        new ASSL(activity, relative, 1134, 720, false);
+
+
+        try {
+            orderId = getArguments().getInt(Constants.KEY_ORDER_ID, 0);
+            setFragTitle();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(this));
-        imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+        tvOrderStatus = (TextView) rootView.findViewById(R.id.tvOrderStatus); tvOrderStatus.setTypeface(Fonts.mavenMedium(activity));
+        tvOrderStatusVal = (TextView) rootView.findViewById(R.id.tvOrderStatusVal); tvOrderStatusVal.setTypeface(Fonts.mavenMedium(activity));
+        tvOrderTime = (TextView) rootView.findViewById(R.id.tvOrderTime); tvOrderTime.setTypeface(Fonts.mavenMedium(activity));
+        tvOrderTimeVal = (TextView) rootView.findViewById(R.id.tvOrderTimeVal);tvOrderTimeVal.setTypeface(Fonts.mavenMedium(activity));
+        tvDeliveryTime = (TextView) rootView.findViewById(R.id.tvDeliveryTime); tvDeliveryTime.setTypeface(Fonts.mavenMedium(activity));
+        tvDeliveryTimeVal = (TextView) rootView.findViewById(R.id.tvDeliveryTimeVal); tvDeliveryTimeVal.setTypeface(Fonts.mavenMedium(activity));
+        tvDeliveryTo = (TextView) rootView.findViewById(R.id.tvDeliveryTo); tvDeliveryTo.setTypeface(Fonts.mavenMedium(activity));
+        tvDelveryPlace = (TextView) rootView.findViewById(R.id.tvDelveryPlace); tvDelveryPlace.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        tvDeliveryToVal = (TextView) rootView.findViewById(R.id.tvDeliveryToVal); tvDeliveryToVal.setTypeface(Fonts.mavenMedium(activity));
+        tvSubAmount = (TextView) rootView.findViewById(R.id.tvSubAmount); tvSubAmount.setTypeface(Fonts.mavenMedium(activity));
+        tvSubAmountVal = (TextView) rootView.findViewById(R.id.tvSubAmountVal); tvSubAmountVal.setTypeface(Fonts.mavenMedium(activity));
+        llFinalAmount = (LinearLayout) rootView.findViewById(R.id.llFinalAmount);
+        tvPaymentMethod = (TextView) rootView.findViewById(R.id.tvPaymentMethod); tvPaymentMethod.setTypeface(Fonts.mavenMedium(activity));
+        ivPaymentMethodVal = (ImageView) rootView.findViewById(R.id.ivPaymentMethodVal);
+        bNeedHelp = (Button) rootView.findViewById(R.id.bNeedHelp);
+        llDeliveryPlace = (LinearLayout) rootView.findViewById(R.id.llDeliveryPlace);
+        ivDeliveryPlace = (ImageView) rootView.findViewById(R.id.ivDeliveryPlace);
 
-        textViewTitle.setText("Order #"+orderId);
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
-        tvOrderStatus = (TextView) findViewById(R.id.tvOrderStatus); tvOrderStatus.setTypeface(Fonts.mavenMedium(this));
-        tvOrderStatusVal = (TextView) findViewById(R.id.tvOrderStatusVal); tvOrderStatusVal.setTypeface(Fonts.mavenMedium(this));
-        tvOrderTime = (TextView) findViewById(R.id.tvOrderTime); tvOrderTime.setTypeface(Fonts.mavenMedium(this));
-        tvOrderTimeVal = (TextView) findViewById(R.id.tvOrderTimeVal);tvOrderTimeVal.setTypeface(Fonts.mavenMedium(this));
-        tvDeliveryTime = (TextView) findViewById(R.id.tvDeliveryTime); tvDeliveryTime.setTypeface(Fonts.mavenMedium(this));
-        tvDeliveryTimeVal = (TextView) findViewById(R.id.tvDeliveryTimeVal); tvDeliveryTimeVal.setTypeface(Fonts.mavenMedium(this));
-        tvDeliveryTo = (TextView) findViewById(R.id.tvDeliveryTo); tvDeliveryTo.setTypeface(Fonts.mavenMedium(this));
-        tvDelveryPlace = (TextView) findViewById(R.id.tvDelveryPlace); tvDelveryPlace.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
-        tvDeliveryToVal = (TextView) findViewById(R.id.tvDeliveryToVal); tvDeliveryToVal.setTypeface(Fonts.mavenMedium(this));
-        tvSubAmount = (TextView) findViewById(R.id.tvSubAmount); tvSubAmount.setTypeface(Fonts.mavenMedium(this));
-        tvSubAmountVal = (TextView) findViewById(R.id.tvSubAmountVal); tvSubAmountVal.setTypeface(Fonts.mavenMedium(this));
-        llFinalAmount = (LinearLayout) findViewById(R.id.llFinalAmount);
-
-
-        listViewOrder = (NonScrollListView) findViewById(R.id.listViewCart);
-        orderItemsAdapter = new OrderItemsAdapter(OrderStatusActivity.this, subItemsOrders);
+        listViewOrder = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
+        orderItemsAdapter = new OrderItemsAdapter(activity, subItemsOrders);
         listViewOrder.setAdapter(orderItemsAdapter);
 
-        imageViewBack.setOnClickListener(new View.OnClickListener() {
+        getOrderData(activity);
+
+
+        bNeedHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performBackPressed();
+                if (activity instanceof RideTransactionsActivity) {
+                    new TransactionUtils().openRideIssuesFragment(activity,
+                            ((RideTransactionsActivity) activity).getContainer(),
+                            -1, -1, null, null, 0, false, 0, orderHistory);
+                } else{
+                    activity.onBackPressed();
+                }
             }
         });
 
-        getOrderData(OrderStatusActivity.this);
-    }
-
-    public void performBackPressed(){
-            finish();
-            overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        return relative;
     }
 
     @Override
-    public void onBackPressed() {
-        performBackPressed();
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            setFragTitle();
+        }
+    }
+
+    private void setFragTitle(){
+        if(activity instanceof RideTransactionsActivity) {
+            ((RideTransactionsActivity) activity).setTitle("Order #" + orderId);
+        } else if(activity instanceof SupportActivity) {
+            ((SupportActivity) activity).setTitle("Order #" + orderId);
+        }
     }
 
     /**
@@ -139,6 +173,7 @@ public class OrderStatusActivity extends BaseActivity {
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
+                                    orderHistory = historyResponse.getData().get(0);
                                     subItemsOrders.clear();
                                     subItemsOrders.addAll(historyResponse.getData().get(0).getOrderItems());
                                     orderItemsAdapter.notifyDataSetChanged();
@@ -172,13 +207,14 @@ public class OrderStatusActivity extends BaseActivity {
     }
 
     private void addFinalAmountView(LinearLayout llFinalAmount, String fieldText, String fieldTextVal){
-        LayoutInflater layoutInflater = (LayoutInflater) getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater layoutInflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.layout_order_amount_new, null);
         RelativeLayout relative = (RelativeLayout) view.findViewById(R.id.relative);
-        TextView tvDelCharges = (TextView) view.findViewById(R.id.tvDelCharges);
-        TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
+        TextView tvDelCharges = (TextView) view.findViewById(R.id.tvDelCharges); tvDelCharges.setTypeface(Fonts.mavenMedium(activity));
+        TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal); tvDelChargesVal.setTypeface(Fonts.mavenMedium(activity));
         tvDelCharges.setText(fieldText);
-        tvDelChargesVal.setText(fieldTextVal);
+//        tvDelChargesVal.setText(fieldTextVal);
+        tvDelChargesVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Float.parseFloat(fieldTextVal))));
         llFinalAmount.addView(view);
         ASSL.DoMagic(relative);
     }
@@ -193,6 +229,7 @@ public class OrderStatusActivity extends BaseActivity {
         try {
             tvOrderStatusVal.setText(historyResponse.getData().get(0).getOrderStatus());
             tvOrderTimeVal.setText(historyResponse.getData().get(0).getOrderTime());
+            tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(historyResponse.getData().get(0).getOrderTime())));
             tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate());
             tvDeliveryToVal.setText(historyResponse.getData().get(0).getDeliveryAddress());
             try {
@@ -201,6 +238,32 @@ public class OrderStatusActivity extends BaseActivity {
                 e.printStackTrace();
             }
             tvOrderStatusVal.setTextColor(Color.parseColor(historyResponse.getData().get(0).getOrderStatusColor()));
+
+            if(!historyResponse.getData().get(0).getDeliveryAddressType().equalsIgnoreCase("")){
+                llDeliveryPlace.setVisibility(View.VISIBLE);
+                tvDelveryPlace.setText(historyResponse.getData().get(0).getDeliveryAddressType());
+                if(historyResponse.getData().get(0).getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.home))){
+                    ivDeliveryPlace.setImageResource(R.drawable.home);
+                } else if(historyResponse.getData().get(0).getDeliveryAddressType().equalsIgnoreCase(activity.getString(R.string.work))){
+                    ivDeliveryPlace.setImageResource(R.drawable.work);
+                } else{
+                    ivDeliveryPlace.setImageResource(R.drawable.ic_loc_other);
+                }
+            } else{
+                llDeliveryPlace.setVisibility(View.GONE);
+            }
+
+            if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.CASH.getOrdinal()){
+                ivPaymentMethodVal.setImageResource(R.drawable.ic_cash_small);
+            } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.PAYTM.getOrdinal()){
+                ivPaymentMethodVal.setImageResource(R.drawable.ic_paytm_small);
+            } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()){
+                ivPaymentMethodVal.setImageResource(R.drawable.ic_mobikwik_small);
+            } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()){
+                ivPaymentMethodVal.setImageResource(R.drawable.ic_freecharge_small);
+            } else{
+                ivPaymentMethodVal.setImageResource(R.drawable.ic_cash_small);
+            }
 
             if((historyResponse.getData().get(0).getDeliveryCharges() != null) && (historyResponse.getData().get(0).getDeliveryCharges() != 0)){
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.delivery_charges).toString(), historyResponse.getData().get(0).getDeliveryCharges().toString());
@@ -215,7 +278,8 @@ public class OrderStatusActivity extends BaseActivity {
             if((historyResponse.getData().get(0).getJugnooDeducted() != null) && (historyResponse.getData().get(0).getJugnooDeducted() != 0)){
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.jugnoo_cash).toString(), historyResponse.getData().get(0).getJugnooDeducted().toString());
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.amount_payable).toString(),
-                        String.valueOf(getSubTotalAmount(historyResponse) - ((historyResponse.getData().get(0).getDiscount()).intValue() + (historyResponse.getData().get(0).getJugnooDeducted()).intValue())));
+                        String.valueOf(getSubTotalAmount(historyResponse) - ((historyResponse.getData().get(0).getDiscount()).intValue()
+                                + (historyResponse.getData().get(0).getJugnooDeducted()).intValue())));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -212,6 +212,9 @@ public class HistoryResponse {
         @SerializedName("phone_no")
         @Expose
         private String phoneNo;
+        @SerializedName("delivery_address_type")
+        @Expose
+        private String deliveryAddressType;
 
         /**
          * @return The pickupAddress
@@ -824,6 +827,14 @@ public class HistoryResponse {
         public void setPhoneNo(String phoneNo) {
             this.phoneNo = phoneNo;
         }
+
+        public String getDeliveryAddressType() {
+            return deliveryAddressType;
+        }
+
+        public void setDeliveryAddressType(String deliveryAddressType) {
+            this.deliveryAddressType = deliveryAddressType;
+        }
     }
 
 
@@ -847,6 +858,9 @@ public class HistoryResponse {
         @SerializedName("unit")
         @Expose
         private String unit;
+        @SerializedName("unit_amount")
+        @Expose
+        private Double unitAmount;
 
         /**
          * @return The subItemId
@@ -932,5 +946,12 @@ public class HistoryResponse {
             this.unit = unit;
         }
 
+        public Double getUnitAmount() {
+            return unitAmount;
+        }
+
+        public void setUnitAmount(Double unitAmount) {
+            this.unitAmount = unitAmount;
+        }
     }
 }

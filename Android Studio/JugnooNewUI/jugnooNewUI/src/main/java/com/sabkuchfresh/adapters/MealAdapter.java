@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -132,7 +133,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     statusHolder.container.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(activity, OrderStatusActivity.class);
+                            Intent intent = new Intent(activity, RideTransactionsActivity.class);
                             intent.putExtra(Constants.KEY_ORDER_ID, recentOrder.getOrderId());
                             activity.startActivity(intent);
                             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
