@@ -91,7 +91,7 @@
     <ImageView
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
-        android:layout_height="2px"
+        android:layout_height="4px"
         android:layout_marginLeft="140px"
         android:layout_marginRight="34px"
         android:layout_below="@+id/linearLayoutContent"

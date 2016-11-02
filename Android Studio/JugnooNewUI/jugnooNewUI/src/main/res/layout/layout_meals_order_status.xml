@@ -25,7 +25,7 @@
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
+            android:background="@drawable/bg_transparent_menu_item_selector">
 
             <RelativeLayout
                 android:id="@+id/relativeInfo"

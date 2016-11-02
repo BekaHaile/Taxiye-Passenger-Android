@@ -119,6 +119,10 @@ public class OrderItemsAdapter extends BaseAdapter {
 			textViewItemQuantity = (TextView) itemView.findViewById(R.id.textViewItemQuantity); textViewItemQuantity.setTypeface(Fonts.mavenMedium(context));
 			textViewItemTotalPrice = (TextView) itemView.findViewById(R.id.textViewItemTotalPrice); textViewItemTotalPrice.setTypeface(Fonts.mavenMedium(context));
 
+			RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewSep.getLayoutParams();
+			layoutParams.setMargins(55, 0, 34, 0);
+			imageViewSep.setLayoutParams(layoutParams);
+
 		}
 	}
 }
