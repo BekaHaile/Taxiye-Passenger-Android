@@ -386,7 +386,12 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             tvOrderStatusVal.setText(historyResponse.getData().get(0).getOrderStatus());
             tvOrderTimeVal.setText(historyResponse.getData().get(0).getOrderTime());
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(historyResponse.getData().get(0).getOrderTime())));
-            tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate());
+            if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
+                tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate()+" "+
+                        DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+            } else {
+                tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate());
+            }
             tvDeliveryToVal.setText(historyResponse.getData().get(0).getDeliveryAddress());
             try {
                 tvSubAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Integer.toString(getSubTotalAmount(historyResponse))));

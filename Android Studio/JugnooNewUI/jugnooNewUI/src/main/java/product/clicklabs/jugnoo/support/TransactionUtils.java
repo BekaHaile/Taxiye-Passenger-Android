@@ -161,7 +161,7 @@ public class TransactionUtils {
 	}
 
 	public void openOrderStatusFragment(FragmentActivity activity, View container, int orderId) {
-		if(!checkIfFragmentAdded(activity, SupportRideIssuesFragment.class.getName())) {
+		if(!checkIfFragmentAdded(activity, OrderStatusActivity.class.getName())) {
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 			fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
