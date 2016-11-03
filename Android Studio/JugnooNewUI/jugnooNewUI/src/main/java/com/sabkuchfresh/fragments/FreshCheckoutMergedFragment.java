@@ -902,6 +902,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     chargeDetails.put(Events.TYPE, "Fresh");
                 }
                 params.put(Constants.INTERATED, "1");
+                params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
 
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());
@@ -1553,7 +1555,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
         if(!TextUtils.isEmpty(activity.getSelectedAddress())) {
             textViewAddressValue.setText(activity.getSelectedAddress());
-            imageViewAddressType.setImageResource(R.drawable.ic_recent_loc);
+            imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
             if(!TextUtils.isEmpty(activity.getSelectedAddressType())){
                 textViewAddressName.setVisibility(View.VISIBLE);
                 textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color_light));
@@ -1566,7 +1568,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     textViewAddressName.setText(activity.getString(R.string.work));
                 }
                 else {
-                    imageViewAddressType.setImageResource(R.drawable.ic_recent_loc);
+                    imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
                     textViewAddressName.setText(activity.getSelectedAddressType());
                 }
             }

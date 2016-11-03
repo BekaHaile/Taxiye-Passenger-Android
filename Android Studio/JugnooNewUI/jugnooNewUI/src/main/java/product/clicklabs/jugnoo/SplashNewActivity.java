@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
@@ -1612,7 +1611,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				int currentVersion = jupdatePopupInfo.getInt("cur_version");
 				int isForce = jupdatePopupInfo.getInt("is_force");
 
-				if (Data.appVersion >= currentVersion) {
+				if (MyApplication.getInstance().appVersion() >= currentVersion) {
 					return false;
 				} else {
 					SplashNewActivity.appUpdatePopup(title, text, isForce, activity);
@@ -1936,28 +1935,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void initiateDeviceInfoVariables() {
 		try {                                                                                        // to get AppVersion, OS version, country code and device name
-			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			Data.appVersion = pInfo.versionCode;
-			Log.i("appVersion", Data.appVersion + "..");
-			Data.osVersion = android.os.Build.VERSION.RELEASE;
-			Log.i("osVersion", Data.osVersion + "..");
-			Data.country = getApplicationContext().getResources().getConfiguration().locale.getDisplayCountry(Locale.getDefault());
-			Log.i("countryCode", Data.country + "..");
-			Data.deviceName = (android.os.Build.MANUFACTURER + android.os.Build.MODEL).toString();
-			Log.i("deviceName", Data.deviceName + "..");
-
 			if (Config.getConfigMode() == ConfigMode.LIVE) {
 				Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
 			} else {
 				Data.uniqueDeviceId = UniqueIMEIID.getUniqueIMEIId(this);
 			}
-
-			Log.e("Data.uniqueDeviceId = ", "=" + Data.uniqueDeviceId);
-
-			Utils.generateKeyHash(this);
-
 		} catch (Exception e) {
-			Log.e("error in fetching appVersion and gcm key", ".." + e.toString());
 		}
 	}
 
@@ -2096,10 +2079,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("password", password);
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
-			params.put("device_name", Data.deviceName);
-			params.put("app_version", "" + Data.appVersion);
-			params.put("os_version", Data.osVersion);
-			params.put("country", Data.country);
+			params.put("device_name", MyApplication.getInstance().deviceName());
+			params.put("app_version", "" + MyApplication.getInstance().appVersion());
+			params.put("os_version", MyApplication.getInstance().osVersion());
+			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
@@ -2217,10 +2200,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
-			params.put("device_name", Data.deviceName);
-			params.put("app_version", "" + Data.appVersion);
-			params.put("os_version", Data.osVersion);
-			params.put("country", Data.country);
+			params.put("device_name", MyApplication.getInstance().deviceName());
+			params.put("app_version", "" + MyApplication.getInstance().appVersion());
+			params.put("os_version", MyApplication.getInstance().osVersion());
+			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
@@ -2331,10 +2314,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
 			params.put("device_type", Data.DEVICE_TYPE);
-			params.put("device_name", Data.deviceName);
-			params.put("app_version", "" + Data.appVersion);
-			params.put("os_version", Data.osVersion);
-			params.put("country", Data.country);
+			params.put("device_name", MyApplication.getInstance().deviceName());
+			params.put("app_version", "" + MyApplication.getInstance().appVersion());
+			params.put("os_version", MyApplication.getInstance().osVersion());
+			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
@@ -2734,10 +2717,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("longitude", "" + Data.loginLongitude);
 
             params.put("device_type", Data.DEVICE_TYPE);
-            params.put("device_name", Data.deviceName);
-            params.put("app_version", "" + Data.appVersion);
-            params.put("os_version", Data.osVersion);
-            params.put("country", Data.country);
+            params.put("device_name", MyApplication.getInstance().deviceName());
+            params.put("app_version", "" + MyApplication.getInstance().appVersion());
+            params.put("os_version", MyApplication.getInstance().osVersion());
+            params.put("country", MyApplication.getInstance().country());
 
             params.put("client_id", Config.getAutosClientId());
             params.put(KEY_REFERRAL_CODE, referralCode);
@@ -2864,10 +2847,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("longitude", "" + Data.loginLongitude);
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("device_type", Data.DEVICE_TYPE);
-            params.put("device_name", Data.deviceName);
-            params.put("app_version", "" + Data.appVersion);
-            params.put("os_version", Data.osVersion);
-            params.put("country", Data.country);
+            params.put("device_name", MyApplication.getInstance().deviceName());
+            params.put("app_version", "" + MyApplication.getInstance().appVersion());
+            params.put("os_version", MyApplication.getInstance().osVersion());
+            params.put("country", MyApplication.getInstance().country());
             params.put("unique_device_id", Data.uniqueDeviceId);
             params.put("client_id", Config.getAutosClientId());
             params.put("reg_wallet_type", String.valueOf(linkedWallet));
@@ -2976,10 +2959,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("longitude", "" + Data.loginLongitude);
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("device_type", Data.DEVICE_TYPE);
-            params.put("device_name", Data.deviceName);
-            params.put("app_version", "" + Data.appVersion);
-            params.put("os_version", Data.osVersion);
-            params.put("country", Data.country);
+            params.put("device_name", MyApplication.getInstance().deviceName());
+            params.put("app_version", "" + MyApplication.getInstance().appVersion());
+            params.put("os_version", MyApplication.getInstance().osVersion());
+            params.put("country", MyApplication.getInstance().country());
             params.put("unique_device_id", Data.uniqueDeviceId);
             params.put("client_id", Config.getAutosClientId());
             params.put("reg_wallet_type", String.valueOf(linkedWallet));
@@ -3135,10 +3118,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("password", "");
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("device_type", Data.DEVICE_TYPE);
-            params.put("device_name", Data.deviceName);
-            params.put("app_version", "" + Data.appVersion);
-            params.put("os_version", Data.osVersion);
-            params.put("country", Data.country);
+            params.put("device_name", MyApplication.getInstance().deviceName());
+            params.put("app_version", "" + MyApplication.getInstance().appVersion());
+            params.put("os_version", MyApplication.getInstance().osVersion());
+            params.put("country", MyApplication.getInstance().country());
             params.put("unique_device_id", Data.uniqueDeviceId);
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
