@@ -138,6 +138,9 @@
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_below="@+id/linearLayoutContent"
-        android:background="@color/text_color_hint"/>
+        android:background="@color/stroke_color_light"
+        android:layout_marginLeft="30px"
+        android:layout_marginRight="30px"
+        />
 
 </RelativeLayout>

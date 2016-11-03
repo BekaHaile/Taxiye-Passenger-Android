@@ -22,7 +22,7 @@
         android:layout_width="400px"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="55px"
+        android:layout_marginLeft="35px"
         android:layout_marginTop="34px"
         android:layout_marginBottom="34px"
         android:layout_toRightOf="@+id/imageViewItemImage"
@@ -91,7 +91,7 @@
     <ImageView
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
-        android:layout_height="4px"
+        android:layout_height="2px"
         android:layout_marginLeft="140px"
         android:layout_marginRight="34px"
         android:layout_below="@+id/linearLayoutContent"

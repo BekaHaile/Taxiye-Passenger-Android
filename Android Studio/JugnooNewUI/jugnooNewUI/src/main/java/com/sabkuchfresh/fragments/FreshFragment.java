@@ -242,7 +242,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	@Override
 	public void onResume() {
 		super.onResume();
-		getAllProducts(true);
+		if(!isHidden()) {
+			getAllProducts(true);
+		}
 	}
 
 	private void showPromoFailedAtSignupDialog(){
@@ -294,6 +296,10 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
+			if(activity.isRefreshCart()){
+				getAllProducts(true);
+			}
+			activity.setRefreshCart(false);
 		}
 	}
 
@@ -332,8 +338,11 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                     activity.hideBottomBar(true);
                                     activity.getTopBar().below_shadow.setVisibility(View.GONE);
                                 } else {
-                                    activity.hideBottomBar(false);
-                                    activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
+									Fragment fragment = activity.getTopFragment();
+									if(fragment != null && fragment instanceof FreshFragment) {
+										activity.hideBottomBar(false);
+										activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
+									}
                                 }
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);

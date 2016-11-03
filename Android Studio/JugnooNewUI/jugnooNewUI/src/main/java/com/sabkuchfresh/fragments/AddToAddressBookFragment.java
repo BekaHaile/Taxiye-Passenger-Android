@@ -585,20 +585,29 @@ public class AddToAddressBookFragment extends Fragment {
 
             int placeRequestCode = 0, searchResultId = 0, otherId = 0;
             boolean editThisAddress = false;
-            String savedWorkStr = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-            String savedHomeStr = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+            String label = "";
 
             if(activity instanceof FreshActivity) {
                 ((FreshActivity) activity).setSelectedAddress(localAddress);
                 ((FreshActivity)activity).setSelectedLatLng(new LatLng(current_latitude, current_longitude));
+                ((FreshActivity)activity).setSelectedAddressId(0);
+                ((FreshActivity)activity).setSelectedAddressType("");
 
                 FreshActivity freshActivity = (FreshActivity) activity;
                 deliveryAddressesFragment = freshActivity.getDeliveryAddressesFragment();
                 placeRequestCode = freshActivity.getPlaceRequestCode();
                 editThisAddress = freshActivity.isEditThisAddress();
+                if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
+                    label = Constants.TYPE_HOME;
+                } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
+                    label = Constants.TYPE_WORK;
+                } else {
+                    label = editTextLabel.getText().toString().trim();
+                }
                 if (freshActivity.isEditThisAddress() && freshActivity.getSearchResult() != null) {
                     searchResultId = freshActivity.getSearchResult().getId();
                     ((FreshActivity)activity).setSelectedAddressId(searchResultId);
+                    ((FreshActivity)activity).setSelectedAddressType(label);
                     placeId = freshActivity.getSearchResult().getPlaceId();
                 }
 
@@ -633,7 +642,6 @@ public class AddToAddressBookFragment extends Fragment {
                 otherId = getOtherMatchedId(placeRequestCode, localAddress, searchResultId);
             }
 
-            String label = "";
             if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
                 label = Constants.TYPE_HOME;
             } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){

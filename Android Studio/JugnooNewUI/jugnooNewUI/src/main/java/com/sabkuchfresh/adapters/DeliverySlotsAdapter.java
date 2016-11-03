@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -62,12 +63,14 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
             Log.d("position", "position = "+(position));
             holder.textViewSlotDay.setText(slot.getDayName());
             holder.textViewSlotTime.setText(slot.getTimeSlotDisplay());
-            if(activity.getSlotToSelect() == null || !activity.getSlotToSelect().getDeliverySlotId().equals(slot.getDeliverySlotId())){
+            if(activity.getSlotSelected() == null
+                    || !activity.getSlotSelected().getDeliverySlotId().equals(slot.getDeliverySlotId())
+                    || getItemCount() == 1){
                 holder.imageViewSelected.setVisibility(View.GONE);
             } else{
                 holder.imageViewSelected.setVisibility(View.VISIBLE);
             }
-            if(slot.isEnabled()){
+            if(slot.getIsActiveSlot() == 1){
                 holder.relative.setAlpha(1.0f);
             } else{
                 holder.relative.setAlpha(0.4f);
@@ -78,22 +81,26 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
                 holder.imageViewSep.setVisibility(View.VISIBLE);
             }
 
-            holder.relative.setEnabled(slot.isEnabled());
+            holder.relative.setEnabled(slot.getIsActiveSlot() == 1);
             holder.relative.setTag(position);
             holder.relative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         int pos = (int) v.getTag();
-                        callback.onSlotSelected(pos, slots.get(pos));
-                        notifyDataSetChanged();
-                        int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                        if(appType == AppConstant.ApplicationType.MEALS){
-                            MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+slots.get(pos).getDayName()+", "+slots.get(pos).getTimeSlotDisplay(), null);
-                        } else if(appType == AppConstant.ApplicationType.GROCERY){
-                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+slots.get(pos).getDayName()+", "+slots.get(pos).getTimeSlotDisplay(), null);
-                        } else{
-                            MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+slots.get(pos).getDayName()+", "+slots.get(pos).getTimeSlotDisplay(), null);
+                        if(slots.get(pos).getIsActiveSlot() == 1) {
+                            callback.onSlotSelected(pos, slots.get(pos));
+                            notifyDataSetChanged();
+                            int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                            if (appType == AppConstant.ApplicationType.MEALS) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.M_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
+                            } else if (appType == AppConstant.ApplicationType.GROCERY) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
+                            } else {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.F_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
+                            }
+                        } else {
+                            Utils.showToast(activity, activity.getString(R.string.slot_is_disabled));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

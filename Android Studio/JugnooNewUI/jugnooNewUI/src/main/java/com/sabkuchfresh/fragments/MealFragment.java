@@ -106,6 +106,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         } catch (Exception e) {
             e.printStackTrace();
         }
+        linearLayoutRoot.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
 
         mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
 
@@ -152,7 +153,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     @Override
     public void onResume() {
         super.onResume();
-        getAllProducts(true);
+        if(!isHidden()) {
+            getAllProducts(true);
+        }
     }
 
     @Override
@@ -162,6 +165,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             activity.fragmentUISetup(this);
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
+            if(activity.isRefreshCart()){
+                getAllProducts(true);
+            }
+            activity.setRefreshCart(false);
         }
     }
 
@@ -322,7 +329,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                         if(!isHidden()) {
                             activity.hideBottomBar(true);
                         } else {
-                            activity.hideBottomBar(false);
+                            Fragment fragment = activity.getTopFragment();
+                            if(fragment != null && fragment instanceof MealFragment) {
+                                activity.hideBottomBar(false);
+                            }
                         }
                     }
 

@@ -1190,6 +1190,8 @@
 	<string name="delivery_time">Delivery Time:</string>
 	<string name="delivery_to">Delivery To:</string>
 	<string name="payment_method">Payment Method</string>
+	<string name="no_delivery_slot">No delivery slots</string>
+	<string name="slot_is_disabled">Slot is disabled</string>
 
 
 </resources>

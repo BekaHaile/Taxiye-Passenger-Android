@@ -3178,7 +3178,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
 
                 try {
-                    fabViewTest.menuLabelsRightTest.close(false);
+                    fabViewTest.closeMenu();
                     getViewSlidingExtra().setVisibility(View.GONE);
                     getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
                 } catch (Exception e) {e.printStackTrace();}
@@ -4602,11 +4602,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                     }, 300);
                     updateImageViewRideNowIcon();
-                    setServiceAvailablityUI(Data.autoData.getFarAwayCity());
                     setupFreshUI();
                     setupInAppCampaignUI();
                     fabViewTest = new FABViewTest(this, fabViewIntial);
                     setJeanieVisibility();
+                    setServiceAvailablityUI(Data.autoData.getFarAwayCity());
                     if(showPoolIntro) {
 //                        showPoolIntroDialog();
                     }
@@ -4697,12 +4697,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.GONE);
-                fabViewTest.menuLabelsRightTest.setVisibility(View.GONE);
+                fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
                 //imageViewFabFake.setVisibility(View.VISIBLE);
+                setJeanieVisibility();
             }
             showPokestopOnOffButton(passengerScreenMode);
         }
@@ -6992,6 +6993,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
             dropLocationSet = false;
+            zoomedForSearch = false;
             confirmedScreenOpened = false;
 
             MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
@@ -7606,22 +7608,22 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     map.addMarker(poolMarkerOptionEnd);
 
                     poolPathZoomAtConfirm();
-                    try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
+                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                 }
 
                 @Override
                 public void onRetry() {
-                    try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
+                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                 }
 
                 @Override
                 public void onNoRetry() {
-                    try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
+                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                 }
 
                 @Override
                 public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
-                    try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
+                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                 }
 
                 @Override
@@ -7635,7 +7637,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewTotalFareValue.setText(" " +String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
 
                     textViewIncludes.setText(text);
-                    try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
+                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                 }
             }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, callFareEstimate,
                     getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
@@ -7653,7 +7655,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
                     textViewDestSearch.startAnimation(shake);
                 }
-            try {fabViewTest.menuLabelsRightTest.close(false);} catch (Exception e) {e.printStackTrace();}
+            try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
         }
     }
 
@@ -7949,6 +7951,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode){
             myLocationButtonClicked = false;
+            zoomAfterFindADriver = false;
             if(!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     FlurryEventLogger.event(PICKUP_LOCATION_SET);
