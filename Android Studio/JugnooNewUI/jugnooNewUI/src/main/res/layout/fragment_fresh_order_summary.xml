@@ -71,7 +71,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:splitMotionEvents="false"
-        android:visibility="gone"
+        android:visibility="visible"
         android:weightSum="2">
 
         <Button
