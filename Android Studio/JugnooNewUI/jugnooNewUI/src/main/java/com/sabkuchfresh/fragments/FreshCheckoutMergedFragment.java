@@ -1277,6 +1277,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
             promoAmount = 0;
         }
+
     }
 
 
