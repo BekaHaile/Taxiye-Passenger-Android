@@ -63,7 +63,9 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
             Log.d("position", "position = "+(position));
             holder.textViewSlotDay.setText(slot.getDayName());
             holder.textViewSlotTime.setText(slot.getTimeSlotDisplay());
-            if(activity.getSlotToSelect() == null || !activity.getSlotToSelect().getDeliverySlotId().equals(slot.getDeliverySlotId())){
+            if(activity.getSlotSelected() == null
+                    || !activity.getSlotSelected().getDeliverySlotId().equals(slot.getDeliverySlotId())
+                    || getItemCount() == 1){
                 holder.imageViewSelected.setVisibility(View.GONE);
             } else{
                 holder.imageViewSelected.setVisibility(View.VISIBLE);

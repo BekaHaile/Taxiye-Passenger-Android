@@ -1283,7 +1283,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onSlotSelected(int position, Slot slot) {
         FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
-        activity.setSlotToSelect(slot);
+        activity.setSlotSelected(slot);
     }
 
 
@@ -1358,7 +1358,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     public void success(UserCheckoutResponse userCheckoutResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
-                        DialogPopup.dismissLoadingDialog();
                         try {
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = JSONParser.getServerMessage(jObj);
@@ -1519,7 +1518,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     if (activity.getSlotSelected() == null && slot.getIsActiveSlot() == 1) {
                         activity.setSlotSelected(slot);
                     }
-                    activity.setSlotToSelect(activity.getSlotSelected());
                 }
             }
 

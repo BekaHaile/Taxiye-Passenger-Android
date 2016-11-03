@@ -81,8 +81,8 @@ public class FreshDeliverySlotsAdapter extends RecyclerView.Adapter<RecyclerView
 
 				((ViewHolderSlot)holder).textViewSlotTime.setText(DateOperations.convertDayTimeAPViaFormat(slot.getStartTime())
                         + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime()));
-                if(activity.getSlotToSelect() == null
-                        || !activity.getSlotToSelect().getDeliverySlotId().equals(slot.getDeliverySlotId())){
+                if(activity.getSlotSelected() == null
+                        || !activity.getSlotSelected().getDeliverySlotId().equals(slot.getDeliverySlotId())){
                     ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 } else{
                     ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);

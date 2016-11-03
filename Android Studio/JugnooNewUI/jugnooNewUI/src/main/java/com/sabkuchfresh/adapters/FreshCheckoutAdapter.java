@@ -189,7 +189,7 @@ public class FreshCheckoutAdapter extends RecyclerView.Adapter<RecyclerView.View
                 Log.d("position", "position = "+(position));
                 ((ViewHolderSlot)holder).textViewSlotTime.setText(slot.getDayName()+", "+ DateOperations.convertDayTimeAPViaFormat(slot.getStartTime())
                         + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime()));
-                if(activity.getSlotToSelect() == null || !activity.getSlotToSelect().getDeliverySlotId().equals(slot.getDeliverySlotId())){
+                if(activity.getSlotSelected() == null || !activity.getSlotSelected().getDeliverySlotId().equals(slot.getDeliverySlotId())){
                     ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 } else{
                     ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);

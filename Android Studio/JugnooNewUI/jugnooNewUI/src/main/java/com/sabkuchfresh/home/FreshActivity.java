@@ -1491,14 +1491,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         this.slotSelected = slotSelected;
     }
 
-    public Slot getSlotToSelect() {
-        return slotToSelect;
-    }
-
-    public void setSlotToSelect(Slot slotToSelect) {
-        this.slotToSelect = slotToSelect;
-    }
-
     public void setDeliveryAddresses(List<DeliveryAddress> deliveryAddresses) {
         this.deliveryAddresses = deliveryAddresses;
     }

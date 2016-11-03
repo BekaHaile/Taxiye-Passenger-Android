@@ -150,7 +150,6 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
 
-        activity.setSlotToSelect(null);
         activity.setSlotSelected(null);
 
         mBus = (activity).getBus();
@@ -451,7 +450,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                     if (activity.getSlotSelected() == null && slot.getIsActiveSlot() == 1) {
                         activity.setSlotSelected(slot);
                     }
-                    activity.setSlotToSelect(activity.getSlotSelected());
+                    activity.setSlotSelected(activity.getSlotSelected());
                 }
             }
 
@@ -505,7 +504,6 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     @Override
     public void onSlotSelected(int position, Slot slot) {
         FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
-        activity.setSlotToSelect(slot);
         activity.setSlotSelected(slot);
     }
 

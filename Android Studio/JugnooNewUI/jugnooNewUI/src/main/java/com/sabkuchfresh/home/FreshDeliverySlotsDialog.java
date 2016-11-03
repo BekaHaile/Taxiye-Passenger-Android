@@ -89,7 +89,7 @@ public class FreshDeliverySlotsDialog implements FlurryEventNames {
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					activity.setSlotSelected(activity.getSlotToSelect());
+					activity.setSlotSelected(activity.getSlotSelected());
 					callback.onOkClicked();
 					dialog.dismiss();
 				}
@@ -107,7 +107,7 @@ public class FreshDeliverySlotsDialog implements FlurryEventNames {
 						@Override
 						public void onSlotSelected(int position, Slot slot) {
                             FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, ""+(position+1));
-							activity.setSlotToSelect(slot);
+							activity.setSlotSelected(slot);
 						}
 					});
 
@@ -192,7 +192,7 @@ public class FreshDeliverySlotsDialog implements FlurryEventNames {
                 public void onSlotSelected(int position, SortResponseModel slot) {
 //                    activity.setSlotToSelect(slot);
                     pos = position;
-                    activity.setSlotSelected(activity.getSlotToSelect());
+                    activity.setSlotSelected(activity.getSlotSelected());
                     sortDialogCallback.onOkClicked(pos);
                     dialog.dismiss();
 
