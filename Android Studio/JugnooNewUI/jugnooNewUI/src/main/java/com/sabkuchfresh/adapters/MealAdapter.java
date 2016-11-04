@@ -321,6 +321,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void showPossibleStatus(ArrayList<String> possibleStatus, int status, ViewTitleStatus statusHolder){
+        setDefaultState(statusHolder);
         int selectedSize = (int)(35*ASSL.Xscale());
         switch (possibleStatus.size()){
             case 4:
@@ -378,6 +379,22 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             break;
         }
+    }
+
+    private void setDefaultState(ViewTitleStatus statusHolder) {
+        int selectedSize = (int)(25*ASSL.Xscale());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+        statusHolder.ivStatus3.setBackgroundResource(R.drawable.circle_order_status);
+        statusHolder.ivStatus3.setLayoutParams(layoutParams);
+        statusHolder.lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.rank_5));
+        statusHolder.ivStatus2.setBackgroundResource(R.drawable.circle_order_status);
+        statusHolder.ivStatus2.setLayoutParams(layoutParams);
+        statusHolder.lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.rank_5));
+        statusHolder.ivStatus1.setBackgroundResource(R.drawable.circle_order_status);
+        statusHolder.ivStatus1.setLayoutParams(layoutParams);
+        statusHolder.lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.rank_5));
+        statusHolder.ivStatus0.setBackgroundResource(R.drawable.circle_order_status);
+        statusHolder.ivStatus0.setLayoutParams(layoutParams);
     }
 
     @Override
