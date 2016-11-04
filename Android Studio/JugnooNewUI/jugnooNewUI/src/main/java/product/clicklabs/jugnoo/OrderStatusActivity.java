@@ -25,6 +25,7 @@ import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.FreshOrderItemAdapter;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.home.OrderStatus;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.SubItem;
 
@@ -46,6 +47,7 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppConstant;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -71,7 +73,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             tvDelveryPlace, tvDeliveryToVal, tvSubAmount, tvSubAmountVal, tvPaymentMethod, tvPaymentMethodCash, tvDeliveryCharges,
             tvDeliveryChargesVal, tvTotalAmount, tvTotalAmountVal, tvAmountPayable, tvAmountPayableVal, tvBilledAmount, tvBilledAmountVal,
             tvRefund, tvRefundVal;
-    private ImageView ivPaymentMethodVal, ivDeliveryPlace;
+    private ImageView ivPaymentMethodVal, ivDeliveryPlace, ivOrderCompleted;
     private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn;
     private int orderId;
     private NonScrollListView listViewOrder;
@@ -134,6 +136,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         ivDeliveryPlace = (ImageView) rootView.findViewById(R.id.ivDeliveryPlace);
         orderComplete = (LinearLayout) rootView.findViewById(R.id.order_complete);
         orderCancel = (LinearLayout) rootView.findViewById(R.id.order_cancel);
+        ivOrderCompleted = (ImageView) rootView.findViewById(R.id.ivOrderCompleted);
 
         buttonCancelOrder = (Button) rootView.findViewById(R.id.buttonCancelOrder);
         buttonCancelOrder.setTypeface(Fonts.mavenRegular(activity));
@@ -412,6 +415,12 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
     private void setStatusResponse(HistoryResponse historyResponse) {
         try {
             tvOrderStatusVal.setText(historyResponse.getData().get(0).getOrderStatus());
+            if((historyResponse.getData().get(0).getOrderStatusInt() == OrderStatus.ORDER_COMPLETED.getOrdinal())
+                    || historyResponse.getData().get(0).getOrderStatusInt() == OrderStatus.CASH_RECEIVED.getOrdinal()){
+                ivOrderCompleted.setVisibility(View.VISIBLE);
+            } else{
+                ivOrderCompleted.setVisibility(View.GONE);
+            }
             tvOrderTimeVal.setText(historyResponse.getData().get(0).getOrderTime());
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(historyResponse.getData().get(0).getOrderTime())));
             if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
@@ -466,12 +475,6 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             }
 
             tvTotalAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf((historyResponse.getData().get(0).getOriginalOrderAmount()).intValue())));
-
-            /*if((historyResponse.getData().get(0).getDeliveryCharges() != null) && (historyResponse.getData().get(0).getDeliveryCharges() != 0)){
-                addFinalAmountView(llFinalAmount, getResources().getString(R.string.delivery_charges).toString(), historyResponse.getData().get(0).getDeliveryCharges().toString());
-                addFinalAmountView(llFinalAmount, getResources().getString(R.string.total_amount).toString(),
-                        String.valueOf(getSubTotalAmount(historyResponse) + (historyResponse.getData().get(0).getDeliveryCharges()).intValue()));
-            }*/
 
             if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)){
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.discount).toString(), historyResponse.getData().get(0).getDiscount().toString());

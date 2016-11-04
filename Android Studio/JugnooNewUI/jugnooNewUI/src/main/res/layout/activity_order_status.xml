@@ -37,7 +37,7 @@
 
                 <TextView
                     android:id="@+id/tvOrderStatusVal"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/tvOrderStatus"
                     android:text="@string/order_status_txt"
@@ -45,6 +45,16 @@
                     android:textColor="@color/text_color"
                     android:layout_centerVertical="true"
                     android:textSize="@dimen/text_size_28" />
+                
+                <ImageView
+                    android:id="@+id/ivOrderCompleted"
+                    android:layout_width="34px"
+                    android:layout_height="34px"
+                    android:layout_toRightOf="@+id/tvOrderStatusVal"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10px"
+                    android:tag="mwar"
+                    android:src="@drawable/ic_order_status_green"/>
             </RelativeLayout>
 
             <View

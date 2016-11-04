@@ -163,6 +163,9 @@ public class HistoryResponse {
         @SerializedName("payment_mode")
         @Expose
         private Integer paymentMode;
+        @SerializedName("order_status_int")
+        @Expose
+        private Integer orderStatusInt;
         @SerializedName("order_status")
         @Expose
         private String orderStatus;
@@ -357,6 +360,14 @@ public class HistoryResponse {
          */
         public void setProductType(Integer productType) {
             this.productType = productType;
+        }
+
+        public Integer getOrderStatusInt() {
+            return orderStatusInt;
+        }
+
+        public void setOrderStatusInt(Integer orderStatusInt) {
+            this.orderStatusInt = orderStatusInt;
         }
 
         /**
