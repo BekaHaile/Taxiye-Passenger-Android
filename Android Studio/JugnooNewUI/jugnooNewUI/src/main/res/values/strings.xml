@@ -1192,6 +1192,10 @@
 	<string name="payment_method">Payment Method</string>
 	<string name="no_delivery_slot">No delivery slots</string>
 	<string name="slot_is_disabled">Slot is disabled</string>
+	<string name="free">Free</string>
+	<string name="paid_via">Paid via</string>
+	<string name="billed_amount">Billed Amount</string>
+	<string name="refund">Refund</string>
 
 
 </resources>

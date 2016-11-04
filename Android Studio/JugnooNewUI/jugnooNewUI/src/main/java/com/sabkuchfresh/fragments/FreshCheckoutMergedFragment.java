@@ -903,7 +903,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
                 params.put(Constants.INTERATED, "1");
                 params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+                params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());
@@ -1351,7 +1351,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     params.put(Constants.GROUP_ID, ""+activity.getProductsResponse().getCategories().get(0).getCurrentGroupId());
                 }
                 params.put(Constants.INTERATED, "1");
-                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));params.put(Constants.INTERATED, "1");
+                params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
+                params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
                 RestClient.getFreshApiService().userCheckoutData(params, new Callback<UserCheckoutResponse>() {

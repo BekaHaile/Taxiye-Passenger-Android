@@ -13,7 +13,7 @@
             android:layout_marginLeft="40px"
             android:text="@string/delivery_charges"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_32" />
+            android:textSize="@dimen/text_size_30" />
 
         <TextView
             android:id="@+id/tvDelChargesVal"
@@ -23,6 +23,6 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="30px"
             android:text="@string/rupee_0"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_38" />
+            android:textColor="@color/order_status_green"
+            android:textSize="@dimen/text_size_32" />
     </RelativeLayout>

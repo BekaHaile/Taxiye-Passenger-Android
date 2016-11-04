@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -65,15 +66,17 @@ import retrofit.mime.TypedByteArray;
 
 public class OrderStatusActivity extends Fragment implements View.OnClickListener{
 
-    private RelativeLayout relative;
+    private RelativeLayout relative, rlAmountPayable, rlBilledAmount, rlRefund;
     private TextView tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,
-            tvDelveryPlace, tvDeliveryToVal, tvSubAmount, tvSubAmountVal, tvPaymentMethod, tvPaymentMethodCash;
+            tvDelveryPlace, tvDeliveryToVal, tvSubAmount, tvSubAmountVal, tvPaymentMethod, tvPaymentMethodCash, tvDeliveryCharges,
+            tvDeliveryChargesVal, tvTotalAmount, tvTotalAmountVal, tvAmountPayable, tvAmountPayableVal, tvBilledAmount, tvBilledAmountVal,
+            tvRefund, tvRefundVal;
     private ImageView ivPaymentMethodVal, ivDeliveryPlace;
     private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn;
     private int orderId;
     private NonScrollListView listViewOrder;
     private OrderItemsAdapter orderItemsAdapter;
-    private LinearLayout llFinalAmount, llDeliveryPlace, orderComplete, orderCancel;
+    private LinearLayout llFinalAmount, llDeliveryPlace, orderComplete, orderCancel, llRefund;
     private ArrayList<HistoryResponse.OrderItem> subItemsOrders = new ArrayList<HistoryResponse.OrderItem>();
     private HistoryResponse.Datum orderHistory;
     private FragmentActivity activity;
@@ -108,10 +111,24 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         tvDeliveryToVal = (TextView) rootView.findViewById(R.id.tvDeliveryToVal); tvDeliveryToVal.setTypeface(Fonts.mavenMedium(activity));
         tvSubAmount = (TextView) rootView.findViewById(R.id.tvSubAmount); tvSubAmount.setTypeface(Fonts.mavenMedium(activity));
         tvSubAmountVal = (TextView) rootView.findViewById(R.id.tvSubAmountVal); tvSubAmountVal.setTypeface(Fonts.mavenMedium(activity));
+        tvDeliveryCharges = (TextView) rootView.findViewById(R.id.tvDeliveryCharges); tvDeliveryCharges.setTypeface(Fonts.mavenRegular(activity));
+        tvDeliveryChargesVal = (TextView) rootView.findViewById(R.id.tvDeliveryChargesVal); tvDeliveryChargesVal.setTypeface(Fonts.mavenMedium(activity));
+        tvTotalAmount = (TextView) rootView.findViewById(R.id.tvTotalAmount); tvTotalAmount.setTypeface(Fonts.mavenMedium(activity));
+        tvTotalAmountVal = (TextView) rootView.findViewById(R.id.tvTotalAmountVal); tvTotalAmountVal.setTypeface(Fonts.mavenMedium(activity));
+        rlAmountPayable = (RelativeLayout) rootView.findViewById(R.id.rlAmountPayable);
+        tvAmountPayable = (TextView) rootView.findViewById(R.id.tvAmountPayable); tvAmountPayable.setTypeface(Fonts.mavenMedium(activity));
+        tvAmountPayableVal = (TextView) rootView.findViewById(R.id.tvAmountPayableVal); tvAmountPayableVal.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
         llFinalAmount = (LinearLayout) rootView.findViewById(R.id.llFinalAmount);
-        tvPaymentMethod = (TextView) rootView.findViewById(R.id.tvPaymentMethod); tvPaymentMethod.setTypeface(Fonts.mavenMedium(activity));
+        tvPaymentMethod = (TextView) rootView.findViewById(R.id.tvPaymentMethod); tvPaymentMethod.setTypeface(Fonts.mavenRegular(activity));
         ivPaymentMethodVal = (ImageView) rootView.findViewById(R.id.ivPaymentMethodVal);
         tvPaymentMethodCash = (TextView) rootView.findViewById(R.id.tvPaymentMethodCash); tvPaymentMethodCash.setTypeface(Fonts.mavenMedium(activity));
+        llRefund = (LinearLayout) rootView.findViewById(R.id.llRefund);
+        rlBilledAmount = (RelativeLayout) rootView.findViewById(R.id.rlBilledAmount);
+        rlRefund = (RelativeLayout) rootView.findViewById(R.id.rlRefund);
+        tvBilledAmount = (TextView) rootView.findViewById(R.id.tvBilledAmount); tvBilledAmount.setTypeface(Fonts.mavenRegular(activity));
+        tvBilledAmountVal = (TextView) rootView.findViewById(R.id.tvBilledAmountVal); tvBilledAmountVal.setTypeface(Fonts.mavenMedium(activity));
+        tvRefund = (TextView) rootView.findViewById(R.id.tvRefund); tvRefund.setTypeface(Fonts.mavenRegular(activity));
+        tvRefundVal = (TextView) rootView.findViewById(R.id.tvRefundVal); tvRefundVal.setTypeface(Fonts.mavenMedium(activity));
         bNeedHelp = (Button) rootView.findViewById(R.id.bNeedHelp);
         llDeliveryPlace = (LinearLayout) rootView.findViewById(R.id.llDeliveryPlace);
         ivDeliveryPlace = (ImageView) rootView.findViewById(R.id.ivDeliveryPlace);
@@ -363,22 +380,33 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
     }
 
     private void addFinalAmountView(LinearLayout llFinalAmount, String fieldText, String fieldTextVal){
-        LayoutInflater layoutInflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = layoutInflater.inflate(R.layout.layout_order_amount_new, null);
-        RelativeLayout relative = (RelativeLayout) view.findViewById(R.id.relative);
-        TextView tvDelCharges = (TextView) view.findViewById(R.id.tvDelCharges); tvDelCharges.setTypeface(Fonts.mavenMedium(activity));
-        TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal); tvDelChargesVal.setTypeface(Fonts.mavenMedium(activity));
-        tvDelCharges.setText(fieldText);
-//        tvDelChargesVal.setText(fieldTextVal);
-        tvDelChargesVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Float.parseFloat(fieldTextVal))));
-        llFinalAmount.addView(view);
-        ASSL.DoMagic(relative);
+        try {
+            llFinalAmount.setVisibility(View.VISIBLE);
+            LayoutInflater layoutInflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = layoutInflater.inflate(R.layout.layout_order_amount_new, null);
+            RelativeLayout relative = (RelativeLayout) view.findViewById(R.id.relative);
+            TextView tvDelCharges = (TextView) view.findViewById(R.id.tvDelCharges);
+            tvDelCharges.setTypeface(Fonts.mavenRegular(activity));
+            TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
+            tvDelChargesVal.setTypeface(Fonts.mavenMedium(activity));
+            tvDelCharges.setText(fieldText);
+            tvDelChargesVal.setText("- " + String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Float.parseFloat(fieldTextVal))));
+            llFinalAmount.addView(view);
+            ASSL.DoMagic(relative);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private int getSubTotalAmount(HistoryResponse historyResponse){
-        int subTotal = Integer.parseInt(Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderAmount() - historyResponse.getData().get(0).getDeliveryCharges()
-                + historyResponse.getData().get(0).getJugnooDeducted() + historyResponse.getData().get(0).getDiscount()));
+        int subTotal = Integer.parseInt(Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOriginalOrderAmount() - historyResponse.getData().get(0).getDeliveryCharges()));
         return subTotal;
+    }
+
+    private int getBilledAmount(HistoryResponse historyResponse){
+        int billedAmount = Integer.parseInt(Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderAmount() + historyResponse.getData().get(0).getJugnooDeducted()
+                + historyResponse.getData().get(0).getDiscount()));
+        return billedAmount;
     }
 
     private void setStatusResponse(HistoryResponse historyResponse) {
@@ -430,10 +458,20 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             }
 
             if((historyResponse.getData().get(0).getDeliveryCharges() != null) && (historyResponse.getData().get(0).getDeliveryCharges() != 0)){
+                tvDeliveryChargesVal.setTextColor(activity.getResources().getColor(R.color.text_color));
+                tvDeliveryChargesVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getDeliveryCharges().intValue())));
+            } else{
+                tvDeliveryChargesVal.setTextColor(activity.getResources().getColor(R.color.order_status_green));
+                tvDeliveryChargesVal.setText(activity.getResources().getString(R.string.free));
+            }
+
+            tvTotalAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf((historyResponse.getData().get(0).getOriginalOrderAmount()).intValue())));
+
+            /*if((historyResponse.getData().get(0).getDeliveryCharges() != null) && (historyResponse.getData().get(0).getDeliveryCharges() != 0)){
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.delivery_charges).toString(), historyResponse.getData().get(0).getDeliveryCharges().toString());
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.total_amount).toString(),
                         String.valueOf(getSubTotalAmount(historyResponse) + (historyResponse.getData().get(0).getDeliveryCharges()).intValue()));
-            }
+            }*/
 
             if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)){
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.discount).toString(), historyResponse.getData().get(0).getDiscount().toString());
@@ -443,8 +481,25 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.jugnoo_cash).toString(), historyResponse.getData().get(0).getJugnooDeducted().toString());
             }
 
-            addFinalAmountView(llFinalAmount, getResources().getString(R.string.amount_payable).toString(),
-                    String.valueOf(historyResponse.getData().get(0).getOrderAmount().intValue() - historyResponse.getData().get(0).getWalletDeducted().intValue()));
+            if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)
+                    || (historyResponse.getData().get(0).getJugnooDeducted() != null) && (historyResponse.getData().get(0).getJugnooDeducted() != 0)){
+                rlAmountPayable.setVisibility(View.VISIBLE);
+                tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format)
+                        , String.valueOf(historyResponse.getData().get(0).getOriginalOrderAmount().intValue() - historyResponse.getData().get(0).getJugnooDeducted().intValue()
+                                - historyResponse.getData().get(0).getDiscount().intValue() - historyResponse.getData().get(0).getWalletDeducted().intValue())));
+            } else{
+                rlAmountPayable.setVisibility(View.GONE);
+                llFinalAmount.setVisibility(View.GONE);
+            }
+
+            if(getBilledAmount(historyResponse) < historyResponse.getData().get(0).getOriginalOrderAmount().intValue()){
+                llRefund.setVisibility(View.VISIBLE);
+                tvBilledAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(getBilledAmount(historyResponse))));
+                tvRefundVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderRefundAmount().intValue())));
+            } else{
+                llRefund.setVisibility(View.GONE);
+            }
+
 
             if (orderHistory.getCancellable() == 1) {
                 orderCancel.setVisibility(View.VISIBLE);

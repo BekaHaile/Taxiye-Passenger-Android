@@ -208,6 +208,7 @@
     <color name="cart_price">#303d39</color>
 
     <color name="divider_color">#d9d9d9</color>
+    <color name="dotted_color">#9d9d9d</color>
     <color name="divider_color_dark">#acacac</color>
 
     <color name="address_stoke">#EF8F2C</color>

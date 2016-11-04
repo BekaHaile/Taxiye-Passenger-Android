@@ -121,6 +121,9 @@ public class HistoryResponse {
         @SerializedName("store_id")
         @Expose
         private Integer storeId;
+        @SerializedName("original_order_amount")
+        @Expose
+        private Double originalOrderAmount;
         @SerializedName("order_amount")
         @Expose
         private Double orderAmount;
@@ -396,6 +399,14 @@ public class HistoryResponse {
          */
         public void setDate(String date) {
             this.date = date;
+        }
+
+        public Double getOriginalOrderAmount() {
+            return originalOrderAmount;
+        }
+
+        public void setOriginalOrderAmount(Double originalOrderAmount) {
+            this.originalOrderAmount = originalOrderAmount;
         }
 
         /**
