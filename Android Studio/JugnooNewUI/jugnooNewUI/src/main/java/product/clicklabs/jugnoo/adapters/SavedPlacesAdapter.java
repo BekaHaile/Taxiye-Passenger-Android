@@ -22,7 +22,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 public class SavedPlacesAdapter extends BaseAdapter{
 
     private class ViewHolderSearchItem {
-        TextView textViewSearchName, textViewSearchAddress;
+        TextView textViewSearchName, textViewSearchAddress, textViewAddressUsed;
         ImageView imageViewType, imageViewSep, imageViewEdit;
         RelativeLayout relative;
         int id;
@@ -77,6 +77,8 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context));
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
             holder.textViewSearchAddress.setTypeface(Fonts.mavenMedium(context));
+            holder.textViewAddressUsed = (TextView) convertView.findViewById(R.id.textViewAddressUsed);
+            holder.textViewAddressUsed.setTypeface(Fonts.mavenRegular(context));
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
             holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
@@ -85,7 +87,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.relative.setTag(holder);
             holder.imageViewEdit.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 110));
+            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
@@ -99,6 +101,8 @@ public class SavedPlacesAdapter extends BaseAdapter{
 
             holder.textViewSearchName.setText(searchResults.get(position).getName());
             holder.textViewSearchAddress.setText(searchResults.get(position).getAddress());
+            holder.textViewAddressUsed.setText(context.getString(R.string.address_used_format,
+                    String.valueOf(searchResults.get(position).getFreq())));
 			holder.imageViewType.setVisibility(View.VISIBLE);
 			holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
 

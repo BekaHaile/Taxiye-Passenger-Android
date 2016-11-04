@@ -32,6 +32,9 @@ public class SearchResult {
 	@SerializedName("is_confirmed")
 	@Expose
 	private Integer isConfirmed = 0;
+	@SerializedName("freq")
+	@Expose
+	private Integer freq = 0;
 
 	private Type type = Type.SEARCHED;
 	
@@ -41,6 +44,20 @@ public class SearchResult {
 		this.placeId = placeId;
 		this.latitude = latitude;
 		this.longitude = longitude;
+
+		thirdPartyAttributions = null;
+		time = System.currentTimeMillis();
+	}
+
+	public SearchResult(String name, String address, String placeId, double latitude, double longitude, int id, int isConfirmed, int freq){
+		this.name = name;
+		this.address = address;
+		this.placeId = placeId;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.id = id;
+		this.isConfirmed = isConfirmed;
+		this.freq = freq;
 
 		thirdPartyAttributions = null;
 		time = System.currentTimeMillis();
@@ -147,6 +164,14 @@ public class SearchResult {
 
 	public void setIsConfirmed(Integer isConfirmed) {
 		this.isConfirmed = isConfirmed;
+	}
+
+	public Integer getFreq() {
+		return freq;
+	}
+
+	public void setFreq(Integer freq) {
+		this.freq = freq;
 	}
 
 	public enum Type{

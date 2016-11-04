@@ -54,6 +54,7 @@ import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
+import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
@@ -1542,6 +1543,7 @@ public class JSONParser implements Constants {
             json.put(KEY_LONGITUDE, jsonObject.optDouble(KEY_LONGITUDE, 0));
             json.put(KEY_ID, jsonObject.optInt(KEY_ID, 0));
             json.put(KEY_IS_CONFIRMED, jsonObject.optInt(KEY_IS_CONFIRMED, 0));
+            json.put(KEY_FREQ, jsonObject.optInt(KEY_FREQ, 0));
             return json.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1579,6 +1581,43 @@ public class JSONParser implements Constants {
 					}
 				}
 			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void parseSavedAddressesFromNew(Context context, FetchUserAddressResponse addressResponse){
+        try {
+            if(addressResponse.getAddresses() != null) {
+                Data.userData.getSearchResults().clear();
+                Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                Prefs.with(context).save(SPLabels.ADD_WORK, "");
+                boolean homeSaved = false, workSaved = false;
+                Gson gson = new Gson();
+                for (int i = 0; i < addressResponse.getAddresses().size(); i++) {
+                    FetchUserAddressResponse.Address address = addressResponse.getAddresses().get(i);
+                    SearchResult searchResult = new SearchResult(address.getType(), address.getAddr(), address.getPlaceId(),
+                            address.getLat(), address.getLng(), address.getId(), address.getIsConfirmed(), address.getFreq());
+                    if (address.getType().equalsIgnoreCase(TYPE_HOME) && !homeSaved) {
+                        if (!searchResult.getAddress().equalsIgnoreCase("")) {
+                            Prefs.with(context).save(SPLabels.ADD_HOME, gson.toJson(searchResult, SearchResult.class));
+                        } else {
+                            Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                        }
+                        homeSaved = true;
+                    } else if (address.getType().equalsIgnoreCase(TYPE_WORK) && !workSaved) {
+                        if (!searchResult.getAddress().equalsIgnoreCase("")) {
+                            Prefs.with(context).save(SPLabels.ADD_WORK, gson.toJson(searchResult, SearchResult.class));
+                        } else {
+                            Prefs.with(context).save(SPLabels.ADD_WORK, "");
+                        }
+                        workSaved = true;
+                    } else if (!searchResult.getAddress().equalsIgnoreCase("")) {
+                        Data.userData.getSearchResults().add(searchResult);
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

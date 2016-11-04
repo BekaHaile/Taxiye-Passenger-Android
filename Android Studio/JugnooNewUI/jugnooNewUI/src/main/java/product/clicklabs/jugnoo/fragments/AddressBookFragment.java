@@ -19,6 +19,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
+import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -28,6 +29,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class AddressBookFragment extends Fragment {
@@ -139,6 +141,8 @@ public class AddressBookFragment extends Fragment {
 
 		setSavePlaces();
 
+		getApiFetchUserAddress().hit();
+
 		return rootView;
 	}
 
@@ -202,6 +206,36 @@ public class AddressBookFragment extends Fragment {
 		intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
 		startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
 		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+	}
+
+
+	private ApiFetchUserAddress apiFetchUserAddress;
+	private ApiFetchUserAddress getApiFetchUserAddress(){
+		if(apiFetchUserAddress == null){
+			apiFetchUserAddress = new ApiFetchUserAddress(activity, new ApiFetchUserAddress.Callback() {
+				@Override
+				public void onSuccess() {
+					Utils.showToast(activity, "addresses fetched");
+					setSavePlaces();
+				}
+
+				@Override
+				public void onFailure() {
+
+				}
+
+				@Override
+				public void onRetry(View view) {
+
+				}
+
+				@Override
+				public void onNoRetry(View view) {
+
+				}
+			});
+		}
+		return apiFetchUserAddress;
 	}
 
 }

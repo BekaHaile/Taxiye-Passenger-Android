@@ -5,6 +5,7 @@ import java.util.Map;
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
+import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -501,5 +502,10 @@ public interface ApiService {
     @POST("/topup_customer_jc")
     void topupCustomerJC(@FieldMap Map<String, String> params,
                               Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/customer/fetch_user_address")
+    void customerFetchUserAddress(@FieldMap Map<String, String> params,
+                            Callback<FetchUserAddressResponse> callback);
 
 }
