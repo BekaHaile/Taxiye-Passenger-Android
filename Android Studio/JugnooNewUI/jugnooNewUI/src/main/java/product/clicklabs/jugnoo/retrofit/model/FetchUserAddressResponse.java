@@ -95,13 +95,13 @@ public class FetchUserAddressResponse {
 		private String type;
 		@SerializedName("id")
 		@Expose
-		private Integer id;
+		private Integer id = 0;
 		@SerializedName("place_id")
 		@Expose
 		private String placeId;
 		@SerializedName("is_confirmed")
 		@Expose
-		private Integer isConfirmed;
+		private Integer isConfirmed = 0;
 
 		/**
 		 *
