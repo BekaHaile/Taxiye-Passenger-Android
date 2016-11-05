@@ -228,7 +228,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
     /**
      * Method used to get order information
      */
-    private void getOrderData(final Activity activity) {
+    public void getOrderData(final Activity activity) {
         try {
             if(AppStatus.getInstance(activity).isOnline(activity)) {
 

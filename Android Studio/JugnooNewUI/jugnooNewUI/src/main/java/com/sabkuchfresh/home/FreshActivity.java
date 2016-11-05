@@ -77,6 +77,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -532,6 +533,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 String message = intent.getStringExtra(Constants.KEY_MESSAGE);
                                 Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
                                 openPaytmRechargeDialog();
+                            } else if(PushFlags.STATUS_CHANGED.getOrdinal() == flag){
+                                Fragment fragment = getTopFragment();
+                                if(fragment instanceof MealFragment){
+                                    ((MealFragment)fragment).getAllProducts(true);
+                                } else if(fragment instanceof OrderStatusActivity){
+                                    ((OrderStatusActivity)fragment).getOrderData(FreshActivity.this);
+                                }
                             }
 						}
                     } catch (Exception e) {
