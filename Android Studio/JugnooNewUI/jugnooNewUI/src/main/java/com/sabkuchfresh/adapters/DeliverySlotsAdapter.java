@@ -123,8 +123,8 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
     }
 
     private int getItemWidth(){
-        int width = (int)((680f / (getItemCount() > 3 ? 3 : getItemCount())) * ASSL.Xscale());
-        int minWidth = (int) (220f * ASSL.Xscale());
+        int width = (int)(((getItemCount() > 3 ? 660f : 680f) / (getItemCount() > 3 ? 3 : getItemCount())) * ASSL.Xscale());
+        int minWidth = (int) (200f * ASSL.Xscale());
         return width >= minWidth ? width : minWidth;
     }
 

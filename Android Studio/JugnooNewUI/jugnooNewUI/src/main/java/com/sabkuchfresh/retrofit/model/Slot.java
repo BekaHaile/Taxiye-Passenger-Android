@@ -244,7 +244,8 @@ public class Slot {
 	}
 
 	public String getTimeSlotDisplay(){
-		return DateOperations.convertDayTimeAPViaFormat(getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(getEndTime());
+		String startTime = DateOperations.convertDayTimeAPViaFormat(getStartTime()).replace("AM", "").replace("PM", "");
+		return startTime + " - " + DateOperations.convertDayTimeAPViaFormat(getEndTime());
 	}
 
 	public Integer getIsActiveSlot() {

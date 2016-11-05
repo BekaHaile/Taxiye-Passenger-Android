@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/tvOrderStatus"
-                    android:text="@string/order_status_txt"
+                    android:text=""
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:layout_centerVertical="true"
@@ -54,6 +54,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10px"
                     android:tag="mwar"
+                    android:visibility="gone"
                     android:src="@drawable/ic_order_status_green"/>
             </RelativeLayout>
 
@@ -81,8 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/tvOrderTime"
-                    android:text="@string/order_status_txt"
-                    android:textAllCaps="true"
+                    android:text=""
                     android:layout_centerVertical="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28" />
@@ -112,9 +112,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/tvDeliveryTime"
-                    android:text="@string/order_status_txt"
+                    android:text=""
                     android:layout_centerVertical="true"
-                    android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28" />
             </RelativeLayout>
@@ -181,7 +180,6 @@
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/tvDeliveryTo"
                     android:text=""
-                    android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28" />
 
@@ -249,7 +247,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/rank_1">
+                        android:background="@color/rank_1"
+                        android:layout_marginTop="-10px">
 
                         <TextView
                             android:id="@+id/tvDeliveryCharges"
