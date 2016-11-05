@@ -18,14 +18,17 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutAddHome"
                 android:layout_width="match_parent"
-                android:layout_height="110px"
-                android:background="@color/white">
+                android:layout_height="wrap_content"
+                android:minHeight="110px"
+                android:background="@drawable/bg_white_menu_item_selector_color_selector">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20px"
+                    android:layout_marginTop="20px"
+                    android:layout_marginBottom="20px"
                     android:layout_toLeftOf="@+id/imageViewEditHome"
                     android:layout_toRightOf="@+id/imageViewAddHome"
                     android:orientation="vertical">
@@ -43,11 +46,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5px"
-                        android:singleLine="true"
                         android:text="test"
                         android:textColor="@color/text_color_light"
                         android:textSize="@dimen/text_size_24"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/textViewAddressUsedHome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7px"
+                        android:text="@string/address_used_format"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="@dimen/text_size_24"
+                        />
                 </LinearLayout>
 
                 <ImageView
@@ -84,14 +96,17 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutAddWork"
                 android:layout_width="match_parent"
-                android:layout_height="110px"
-                android:background="@color/white">
+                android:layout_height="wrap_content"
+                android:minHeight="110px"
+                android:background="@drawable/bg_white_menu_item_selector_color_selector">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20px"
+                    android:layout_marginTop="20px"
+                    android:layout_marginBottom="20px"
                     android:layout_toLeftOf="@+id/imageViewEditWork"
                     android:layout_toRightOf="@+id/imageViewAddWork"
                     android:orientation="vertical">
@@ -109,11 +124,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5px"
-                        android:singleLine="true"
                         android:text="test"
                         android:textColor="@color/text_color_light"
                         android:textSize="@dimen/text_size_24"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/textViewAddressUsedWork"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="7px"
+                        android:text="@string/address_used_format"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="@dimen/text_size_24"
+                        />
+
                 </LinearLayout>
 
                 <ImageView
@@ -167,13 +192,13 @@
                 android:background="@color/white"
                 android:divider="@color/transparent"
                 android:dividerHeight="0dp"
-                android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollListView>
+                android:splitMotionEvents="false"/>
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutAddNewAddress"
                 android:layout_width="match_parent"
                 android:layout_height="110px"
-                android:background="@color/white">
+                android:background="@drawable/bg_white_menu_item_selector_color_selector">
 
                 <TextView
                     android:id="@+id/textViewAddNewAddress"
@@ -212,6 +237,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="6px"
                 android:background="@drawable/shadow_down" />
+
+
+            <TextView
+                android:id="@+id/textViewRecentAddresses"
+                android:layout_width="wrap_content"
+                android:layout_height="40px"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/recent_addresses"
+                android:textAllCaps="true"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/text_size_22"
+                android:visibility="visible"
+                android:layout_marginTop="30px"
+                android:layout_marginLeft="30px"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/stroke_light_grey_alpha" />
+
+            <product.clicklabs.jugnoo.utils.NonScrollListView
+                android:id="@+id/listViewRecentAddresses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:fadeScrollbars="true"
+                android:scrollbars="vertical"
+                android:splitMotionEvents="false"
+                android:visibility="visible"
+                android:divider="@color/transparent"
+                android:dividerHeight="0px"
+                />
 
         </LinearLayout>
 

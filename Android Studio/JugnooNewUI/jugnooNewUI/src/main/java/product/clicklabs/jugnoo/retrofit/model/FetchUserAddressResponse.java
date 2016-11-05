@@ -109,7 +109,11 @@ public class FetchUserAddressResponse {
 		 * The addr
 		 */
 		public String getAddr() {
-			return addr;
+			if(addr != null) {
+				return addr;
+			} else{
+				return "";
+			}
 		}
 
 		/**
@@ -181,7 +185,11 @@ public class FetchUserAddressResponse {
 		 * The type
 		 */
 		public String getType() {
-			return type;
+			if(type != null) {
+				return type;
+			} else{
+				return "";
+			}
 		}
 
 		/**
@@ -194,7 +202,11 @@ public class FetchUserAddressResponse {
 		}
 
 		public Integer getId() {
-			return id;
+			if(id != null) {
+				return id;
+			} else{
+				return 0;
+			}
 		}
 
 		public void setId(Integer id) {
@@ -202,7 +214,11 @@ public class FetchUserAddressResponse {
 		}
 
 		public String getPlaceId() {
-			return placeId;
+			if(placeId != null) {
+				return placeId;
+			} else{
+				return "";
+			}
 		}
 
 		public void setPlaceId(String placeId) {
@@ -210,7 +226,11 @@ public class FetchUserAddressResponse {
 		}
 
 		public Integer getIsConfirmed() {
-			return isConfirmed;
+			if(isConfirmed != null) {
+				return isConfirmed;
+			} else{
+				return 0;
+			}
 		}
 
 		public void setIsConfirmed(Integer isConfirmed) {

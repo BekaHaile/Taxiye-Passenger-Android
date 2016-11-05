@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
@@ -1591,6 +1592,7 @@ public class JSONParser implements Constants {
         try {
             if(addressResponse.getAddresses() != null) {
                 Data.userData.getSearchResults().clear();
+                Data.userData.getSearchResultsRecent().clear();
                 Prefs.with(context).save(SPLabels.ADD_HOME, "");
                 Prefs.with(context).save(SPLabels.ADD_WORK, "");
                 boolean homeSaved = false, workSaved = false;
@@ -1600,21 +1602,27 @@ public class JSONParser implements Constants {
                     SearchResult searchResult = new SearchResult(address.getType(), address.getAddr(), address.getPlaceId(),
                             address.getLat(), address.getLng(), address.getId(), address.getIsConfirmed(), address.getFreq());
                     if (address.getType().equalsIgnoreCase(TYPE_HOME) && !homeSaved) {
-                        if (!searchResult.getAddress().equalsIgnoreCase("")) {
+                        if (!TextUtils.isEmpty(searchResult.getAddress())) {
                             Prefs.with(context).save(SPLabels.ADD_HOME, gson.toJson(searchResult, SearchResult.class));
                         } else {
                             Prefs.with(context).save(SPLabels.ADD_HOME, "");
                         }
                         homeSaved = true;
                     } else if (address.getType().equalsIgnoreCase(TYPE_WORK) && !workSaved) {
-                        if (!searchResult.getAddress().equalsIgnoreCase("")) {
+                        if (!TextUtils.isEmpty(searchResult.getAddress())) {
                             Prefs.with(context).save(SPLabels.ADD_WORK, gson.toJson(searchResult, SearchResult.class));
                         } else {
                             Prefs.with(context).save(SPLabels.ADD_WORK, "");
                         }
                         workSaved = true;
-                    } else if (!searchResult.getAddress().equalsIgnoreCase("")) {
+                    } else if (!TextUtils.isEmpty(searchResult.getAddress())
+                            && !TextUtils.isEmpty(address.getType())
+                            && address.getId() > 0) {
                         Data.userData.getSearchResults().add(searchResult);
+                    } else if (!TextUtils.isEmpty(searchResult.getAddress())
+                            && TextUtils.isEmpty(address.getType())) {
+                        searchResult.setType(SearchResult.Type.RECENT);
+                        Data.userData.getSearchResultsRecent().add(searchResult);
                     }
                 }
             }

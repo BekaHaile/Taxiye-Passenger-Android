@@ -19,7 +19,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
@@ -88,9 +88,9 @@ public class ApiAddHomeWorkAddress {
 				}
 				Log.i(TAG, "addHomeAndWorkAddress params=" + params.toString());
 
-				RestClient.getApiServices().addHomeAndWorkAddress(params, new retrofit.Callback<SettleUserDebt>() {
+				RestClient.getApiServices().addHomeAndWorkAddress(params, new retrofit.Callback<FetchUserAddressResponse>() {
 					@Override
-					public void success(SettleUserDebt settleUserDebt, Response response) {
+					public void success(FetchUserAddressResponse fetchUserAddressResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "addHomeAndWorkAddress response = " + responseStr);
 						DialogPopup.dismissLoadingDialog();
@@ -159,7 +159,7 @@ public class ApiAddHomeWorkAddress {
 										}
 									}
 
-									new JSONParser().parseSavedAddresses(activity, jObj, Constants.KEY_ADDRESS);
+									new JSONParser().parseSavedAddressesFromNew(activity, fetchUserAddressResponse);
 
 									callback.onSuccess(searchResult, strResult, deleteAddress);
 								}

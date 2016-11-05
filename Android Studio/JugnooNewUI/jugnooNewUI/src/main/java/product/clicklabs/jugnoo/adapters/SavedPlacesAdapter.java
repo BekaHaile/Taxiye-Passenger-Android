@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,12 +100,28 @@ public class SavedPlacesAdapter extends BaseAdapter{
         try {
             holder.id = position;
 
-            holder.textViewSearchName.setText(searchResults.get(position).getName());
-            holder.textViewSearchAddress.setText(searchResults.get(position).getAddress());
-            holder.textViewAddressUsed.setText(context.getString(R.string.address_used_format,
-                    String.valueOf(searchResults.get(position).getFreq())));
+            SearchResult searchResult = searchResults.get(position);
+            holder.textViewSearchName.setVisibility(View.GONE);
+            if(!TextUtils.isEmpty(searchResult.getName())){
+                holder.textViewSearchName.setVisibility(View.VISIBLE);
+                holder.textViewSearchName.setText(searchResult.getName());
+            }
+
+            holder.textViewSearchAddress.setText(searchResult.getAddress());
+
+            holder.textViewAddressUsed.setVisibility(View.GONE);
+            if(searchResult.getFreq() > 0) {
+                holder.textViewAddressUsed.setText(context.getString(R.string.address_used_format,
+                        String.valueOf(searchResults.get(position).getFreq())));
+                holder.textViewAddressUsed.setVisibility(View.VISIBLE);
+            }
+
 			holder.imageViewType.setVisibility(View.VISIBLE);
-			holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
+            if(searchResult.getType() == SearchResult.Type.RECENT){
+                holder.imageViewType.setImageResource(R.drawable.ic_recent_loc);
+            } else {
+                holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
+            }
 
             holder.imageViewSep.setVisibility(View.VISIBLE);
 

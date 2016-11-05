@@ -300,9 +300,9 @@ public interface ApiService {
                              Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/add_home_and_work_address")
+    @POST("/v2/add_home_and_work_address")
     void addHomeAndWorkAddress(@FieldMap Map<String, String> params,
-                    Callback<SettleUserDebt> callback);
+                    Callback<FetchUserAddressResponse> callback);
 
     @FormUrlEncoded
     @POST("/update_device_token")

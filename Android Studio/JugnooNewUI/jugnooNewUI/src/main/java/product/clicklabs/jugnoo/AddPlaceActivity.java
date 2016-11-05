@@ -129,10 +129,15 @@ public class AddPlaceActivity extends BaseFragmentActivity {
             } else {
                 searchResult = new Gson().fromJson(getIntent().getStringExtra(Constants.KEY_ADDRESS), SearchResult.class);
                 editThisAddress = true;
-                textViewTitle.setText("EDIT "+ searchResult.getName());
-                editTextDeliveryAddress.setHint("Enter " + searchResult.getName().toLowerCase() + " location");
-                editTextDeliveryAddress.setText(searchResult.getAddress());
-                editTextDeliveryAddress.setSelection(editTextDeliveryAddress.getText().length());
+                if(!searchResult.isRecentAddress()){
+                    textViewTitle.setText("EDIT "+ searchResult.getName());
+                    editTextDeliveryAddress.setHint("Enter " + searchResult.getName().toLowerCase() + " location");
+                    editTextDeliveryAddress.setText(searchResult.getAddress());
+                    editTextDeliveryAddress.setSelection(editTextDeliveryAddress.getText().length());
+                } else {
+                    textViewTitle.setText("ADD New Address");
+                    editTextDeliveryAddress.setHint("Enter location");
+                }
             }
         }
 

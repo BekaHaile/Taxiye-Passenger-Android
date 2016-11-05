@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.text.TextUtils;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -175,7 +177,11 @@ public class SearchResult {
 	}
 
 	public enum Type{
-		SEARCHED, LAST_SAVED, HOME, WORK;
+		SEARCHED, LAST_SAVED, HOME, WORK, SAVED, RECENT;
+	}
+
+	public boolean isRecentAddress(){
+		return TextUtils.isEmpty(getName()) || getId() == 0;
 	}
 
 }

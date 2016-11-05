@@ -29,7 +29,6 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class AddressBookFragment extends Fragment {
@@ -39,11 +38,16 @@ public class AddressBookFragment extends Fragment {
 	private RelativeLayout relativeLayoutRoot;
 	private ImageView imageViewEditHome, imageViewEditWork;
 	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork;
-	private TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue;
+	private TextView textViewAddHome, textViewAddHomeValue, textViewAddressUsedHome,
+			textViewAddWork, textViewAddWorkValue, textViewAddressUsedWork;
 
 	private NonScrollListView listViewSavedLocations;
 	private RelativeLayout relativeLayoutAddNewAddress;
 	private SavedPlacesAdapter savedPlacesAdapter;
+
+	private TextView textViewRecentAddresses;
+	private NonScrollListView listViewRecentAddresses;
+	private SavedPlacesAdapter savedPlacesAdapterRecent;
 
 	private View rootView;
     private FragmentActivity activity;
@@ -74,10 +78,15 @@ public class AddressBookFragment extends Fragment {
 		imageViewEditHome = (ImageView)rootView.findViewById(R.id.imageViewEditHome);
 		textViewAddHome = (TextView) rootView.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
 		textViewAddHomeValue = (TextView) rootView.findViewById(R.id.textViewAddHomeValue); textViewAddHomeValue.setTypeface(Fonts.mavenMedium(activity));
+		textViewAddressUsedHome = (TextView) rootView.findViewById(R.id.textViewAddressUsedHome); textViewAddressUsedHome.setTypeface(Fonts.mavenMedium(activity));
 		relativeLayoutAddWork = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddWork);
 		imageViewEditWork = (ImageView)rootView.findViewById(R.id.imageViewEditWork);
 		textViewAddWork = (TextView) rootView.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
 		textViewAddWorkValue = (TextView) rootView.findViewById(R.id.textViewAddWorkValue); textViewAddWorkValue.setTypeface(Fonts.mavenMedium(activity));
+		textViewAddressUsedWork = (TextView) rootView.findViewById(R.id.textViewAddressUsedWork); textViewAddressUsedWork.setTypeface(Fonts.mavenMedium(activity));
+
+		relativeLayoutAddHome.setMinimumHeight((int)(ASSL.Yscale() * 110f));
+		relativeLayoutAddWork.setMinimumHeight((int)(ASSL.Yscale() * 110f));
 
 		listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
 		try {
@@ -99,6 +108,28 @@ public class AddressBookFragment extends Fragment {
 
 		relativeLayoutAddNewAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddNewAddress);
 		((TextView) rootView.findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(activity));
+
+		textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
+		listViewRecentAddresses = (NonScrollListView) rootView.findViewById(R.id.listViewRecentAddresses);
+		textViewRecentAddresses.setVisibility(View.GONE);
+		listViewRecentAddresses.setVisibility(View.GONE);
+		try {
+			savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
+				@Override
+				public void onItemClick(SearchResult searchResult) {
+					onSavedLocationEdit(searchResult);
+				}
+
+				@Override
+				public void onEditClick(SearchResult searchResult) {
+					onSavedLocationEdit(searchResult);
+				}
+			}, true, false);
+			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 
 		relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -139,15 +170,20 @@ public class AddressBookFragment extends Fragment {
 			}
 		});
 
-		setSavePlaces();
+		setSavedPlaces();
 
 		getApiFetchUserAddress().hit();
 
 		return rootView;
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		setSavedPlaces();
+	}
 
-    @Override
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
         ASSL.closeActivity(relativeLayoutRoot);
@@ -159,14 +195,14 @@ public class AddressBookFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == FragmentActivity.RESULT_OK) {
-			setSavePlaces();
+//			setSavedPlaces();
 		} else if (resultCode == FragmentActivity.RESULT_CANCELED) {
-			setSavePlaces();
+//			setSavedPlaces();
 		}
 	}
 
 
-	private void setSavePlaces() {
+	private void setSavedPlaces() {
 		if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
 			String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
 			SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
@@ -174,10 +210,17 @@ public class AddressBookFragment extends Fragment {
 			textViewAddHomeValue.setVisibility(View.VISIBLE);
 			textViewAddHomeValue.setText(searchResult.getAddress());
 			imageViewEditHome.setVisibility(View.VISIBLE);
+			textViewAddressUsedHome.setVisibility(View.GONE);
+			if(searchResult.getFreq() > 0){
+				textViewAddressUsedHome.setVisibility(View.VISIBLE);
+				textViewAddressUsedHome.setText(activity.getString(R.string.address_used_format,
+						String.valueOf(searchResult.getFreq())));
+			}
 		} else{
 			textViewAddHome.setText(getResources().getString(R.string.add_home));
 			textViewAddHomeValue.setVisibility(View.GONE);
 			imageViewEditHome.setVisibility(View.GONE);
+			textViewAddressUsedHome.setVisibility(View.GONE);
 		}
 
 		if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
@@ -187,14 +230,32 @@ public class AddressBookFragment extends Fragment {
 			textViewAddWorkValue.setVisibility(View.VISIBLE);
 			textViewAddWorkValue.setText(searchResult.getAddress());
 			imageViewEditWork.setVisibility(View.VISIBLE);
+			textViewAddressUsedWork.setVisibility(View.GONE);
+			if(searchResult.getFreq() > 0){
+				textViewAddressUsedWork.setVisibility(View.VISIBLE);
+				textViewAddressUsedWork.setText(activity.getString(R.string.address_used_format,
+						String.valueOf(searchResult.getFreq())));
+			}
 		} else{
 			textViewAddWork.setText(getResources().getString(R.string.add_work));
 			textViewAddWorkValue.setVisibility(View.GONE);
 			imageViewEditWork.setVisibility(View.GONE);
+			textViewAddressUsedWork.setVisibility(View.GONE);
 		}
 
 		if(savedPlacesAdapter != null){
 			savedPlacesAdapter.notifyDataSetChanged();
+		}
+
+		if(savedPlacesAdapterRecent != null){
+			savedPlacesAdapterRecent.notifyDataSetChanged();
+			if(Data.userData.getSearchResultsRecent().size() > 0){
+				textViewRecentAddresses.setVisibility(View.VISIBLE);
+				listViewRecentAddresses.setVisibility(View.VISIBLE);
+			} else {
+				textViewRecentAddresses.setVisibility(View.GONE);
+				listViewRecentAddresses.setVisibility(View.GONE);
+			}
 		}
 	}
 
@@ -215,8 +276,7 @@ public class AddressBookFragment extends Fragment {
 			apiFetchUserAddress = new ApiFetchUserAddress(activity, new ApiFetchUserAddress.Callback() {
 				@Override
 				public void onSuccess() {
-					Utils.showToast(activity, "addresses fetched");
-					setSavePlaces();
+					setSavedPlaces();
 				}
 
 				@Override
