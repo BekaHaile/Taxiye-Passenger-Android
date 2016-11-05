@@ -120,7 +120,7 @@ public class Utils {
 			}
 		}
 	}
-	
+
 	
 	/**
 	 * Expands ListView for fixed height of item inside a ScrollView

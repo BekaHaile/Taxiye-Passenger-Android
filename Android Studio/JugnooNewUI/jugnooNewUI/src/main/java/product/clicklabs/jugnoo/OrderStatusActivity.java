@@ -1,8 +1,10 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
+import com.sabkuchfresh.fragments.MealFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
@@ -35,6 +40,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -60,7 +66,7 @@ import retrofit.mime.TypedByteArray;
 
 public class OrderStatusActivity extends Fragment implements View.OnClickListener{
 
-    private RelativeLayout relative, rlAmountPayable, rlBilledAmount, rlRefund;
+    private RelativeLayout relative, rlAmountPayable, rlBilledAmount, rlRefund, rlOrderStatus;
     private TextView tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,
             tvDelveryPlace, tvDeliveryToVal, tvSubAmount, tvSubAmountVal, tvPaymentMethod, tvPaymentMethodCash, tvDeliveryCharges,
             tvDeliveryChargesVal, tvTotalAmount, tvTotalAmountVal, tvAmountPayable, tvAmountPayableVal, tvBilledAmount, tvBilledAmountVal,
@@ -74,6 +80,10 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
     private ArrayList<HistoryResponse.OrderItem> subItemsOrders = new ArrayList<HistoryResponse.OrderItem>();
     private HistoryResponse.Datum orderHistory;
     private FragmentActivity activity;
+    private CardView cvOrderStatus;
+    public TextView tvStatus0, tvStatus1, tvStatus2, tvStatus3;
+    public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
+    public View lineStatus1, lineStatus2, lineStatus3;
     private View rootView;
 
     @Nullable
@@ -129,6 +139,21 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         orderComplete = (LinearLayout) rootView.findViewById(R.id.order_complete);
         orderCancel = (LinearLayout) rootView.findViewById(R.id.order_cancel);
         ivOrderCompleted = (ImageView) rootView.findViewById(R.id.ivOrderCompleted);
+        rlOrderStatus = (RelativeLayout) rootView.findViewById(R.id.rlOrderStatus);
+
+        // Order Status
+        cvOrderStatus = (CardView) rootView.findViewById(R.id.cvOrderStatus);
+        tvStatus0 = (TextView) rootView.findViewById(R.id.tvStatus0); tvStatus0.setTypeface(Fonts.mavenRegular(activity));
+        tvStatus1 = (TextView) rootView.findViewById(R.id.tvStatus1); tvStatus1.setTypeface(Fonts.mavenRegular(activity));
+        tvStatus2 = (TextView) rootView.findViewById(R.id.tvStatus2); tvStatus2.setTypeface(Fonts.mavenRegular(activity));
+        tvStatus3 = (TextView) rootView.findViewById(R.id.tvStatus3); tvStatus3.setTypeface(Fonts.mavenRegular(activity));
+        ivStatus0 = (ImageView) rootView.findViewById(R.id.ivStatus0);
+        ivStatus1 = (ImageView) rootView.findViewById(R.id.ivStatus1);
+        ivStatus2 = (ImageView) rootView.findViewById(R.id.ivStatus2);
+        ivStatus3 = (ImageView) rootView.findViewById(R.id.ivStatus3);
+        lineStatus1 = (View) rootView.findViewById(R.id.lineStatus1);
+        lineStatus2 = (View) rootView.findViewById(R.id.lineStatus2);
+        lineStatus3 = (View) rootView.findViewById(R.id.lineStatus3);
 
         buttonCancelOrder = (Button) rootView.findViewById(R.id.buttonCancelOrder);
         buttonCancelOrder.setTypeface(Fonts.mavenRegular(activity));
@@ -166,7 +191,15 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             }
         });
 
+        LocalBroadcastManager.getInstance(activity).registerReceiver(orderUpdateBroadcast, new IntentFilter(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE));
+
         return relative;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(activity).unregisterReceiver(orderUpdateBroadcast);
     }
 
     @Override
@@ -193,6 +226,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.need_help);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }
                 } else {
                     if (orderHistory.getCanReorder() == 1 && !(activity instanceof FreshActivity)) {
@@ -202,14 +237,20 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     } else if (orderHistory.getCanReorder() == 0 && !(activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }  else {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.need_help);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }
 
                 }
@@ -374,6 +415,83 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 });
     }
 
+    private void showPossibleStatus(ArrayList<String> possibleStatus, int status){
+        setDefaultState();
+        int selectedSize = (int)(35*ASSL.Xscale());
+        switch (possibleStatus.size()){
+            case 4:
+                tvStatus3.setVisibility(View.VISIBLE);
+                ivStatus3.setVisibility(View.VISIBLE);
+                lineStatus3.setVisibility(View.VISIBLE);
+                tvStatus3.setText(possibleStatus.get(3));
+                if(status == 3){
+                    ivStatus3.setBackgroundResource(R.drawable.circle_order_status_green);
+                    lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                } else if(status > 3){
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+                    ivStatus3.setLayoutParams(layoutParams);
+                    ivStatus3.setBackgroundResource(R.drawable.ic_order_status_green);
+                    lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                }
+            case 3:
+                tvStatus2.setVisibility(View.VISIBLE);
+                ivStatus2.setVisibility(View.VISIBLE);
+                lineStatus2.setVisibility(View.VISIBLE);
+                tvStatus2.setText(possibleStatus.get(2));
+                if(status == 2){
+                    ivStatus2.setBackgroundResource(R.drawable.circle_order_status_green);
+                    lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                } else if(status > 2){
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+                    ivStatus2.setLayoutParams(layoutParams);
+                    ivStatus2.setBackgroundResource(R.drawable.ic_order_status_green);
+                    lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                }
+            case 2:
+                tvStatus1.setVisibility(View.VISIBLE);
+                ivStatus1.setVisibility(View.VISIBLE);
+                lineStatus1.setVisibility(View.VISIBLE);
+                tvStatus1.setText(possibleStatus.get(1));
+                if(status == 1){
+                    ivStatus1.setBackgroundResource(R.drawable.circle_order_status_green);
+                    lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                } else if(status > 1){
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+                    ivStatus1.setLayoutParams(layoutParams);
+                    ivStatus1.setBackgroundResource(R.drawable.ic_order_status_green);
+                    lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.order_status_green));
+                }
+            case 1:
+                tvStatus0.setVisibility(View.VISIBLE);
+                ivStatus0.setVisibility(View.VISIBLE);
+                tvStatus0.setText(possibleStatus.get(0));
+                if(status == 0){
+                    ivStatus0.setBackgroundResource(R.drawable.circle_order_status_green);
+                } else if(status > 0){
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+                    ivStatus0.setLayoutParams(layoutParams);
+                    ivStatus0.setBackgroundResource(R.drawable.ic_order_status_green);
+                }
+                break;
+        }
+    }
+
+    private void setDefaultState() {
+        int selectedSize = (int)(25*ASSL.Xscale());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+        ivStatus3.setBackgroundResource(R.drawable.circle_order_status);
+        ivStatus3.setLayoutParams(layoutParams);
+        lineStatus3.setBackgroundColor(activity.getResources().getColor(R.color.rank_5));
+        ivStatus2.setBackgroundResource(R.drawable.circle_order_status);
+        ivStatus2.setLayoutParams(layoutParams);
+        lineStatus2.setBackgroundColor(activity.getResources().getColor(R.color.rank_5));
+        ivStatus1.setBackgroundResource(R.drawable.circle_order_status);
+        ivStatus1.setLayoutParams(layoutParams);
+        lineStatus1.setBackgroundColor(activity.getResources().getColor(R.color.rank_5));
+        ivStatus0.setBackgroundResource(R.drawable.circle_order_status);
+        ivStatus0.setLayoutParams(layoutParams);
+    }
+
     private void addFinalAmountView(LinearLayout llFinalAmount, String fieldText, String fieldTextVal){
         try {
             llFinalAmount.setVisibility(View.VISIBLE);
@@ -413,6 +531,18 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             } else{
                 ivOrderCompleted.setVisibility(View.GONE);
             }
+
+            if(historyResponse.getRecentOrdersPossibleStatus().size() > 0){
+                cvOrderStatus.setVisibility(View.VISIBLE);
+                rlOrderStatus.setVisibility(View.GONE);
+                setDefaultState();
+                showPossibleStatus(historyResponse.getRecentOrdersPossibleStatus(), historyResponse.getData().get(0).getOrderStatusPosition());
+            } else{
+                cvOrderStatus.setVisibility(View.GONE);
+                rlOrderStatus.setVisibility(View.VISIBLE);
+            }
+
+
             tvOrderTimeVal.setText(historyResponse.getData().get(0).getOrderTime());
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(historyResponse.getData().get(0).getOrderTime())));
             if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
@@ -515,6 +645,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.need_help);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }
                 } else {
                     if (orderHistory.getCanReorder() == 1 && !(activity instanceof FreshActivity)) {
@@ -524,18 +656,26 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     } else if (orderHistory.getCanReorder() == 0 && !(activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     } else if (orderHistory.getCanReorder() == 0 && (activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }  else {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.need_help);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }
 
                 }
@@ -635,4 +775,24 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         intent.putExtra("open_type", type);
         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
     }
+
+    private BroadcastReceiver orderUpdateBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
+                        if(PushFlags.STATUS_CHANGED.getOrdinal() == flag){
+                            getOrderData(activity);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+        }
+    };
 }

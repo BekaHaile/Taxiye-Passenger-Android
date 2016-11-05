@@ -535,10 +535,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 openPaytmRechargeDialog();
                             } else if(PushFlags.STATUS_CHANGED.getOrdinal() == flag){
                                 Fragment fragment = getTopFragment();
-                                if(fragment instanceof MealFragment){
+                                if(fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()){
                                     ((MealFragment)fragment).getAllProducts(true);
-                                } else if(fragment instanceof OrderStatusActivity){
-                                    ((OrderStatusActivity)fragment).getOrderData(FreshActivity.this);
+                                } else {
+                                    Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
+                                    intent1.putExtra(Constants.KEY_FLAG, flag);
+                                    LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
                                 }
                             }
 						}
