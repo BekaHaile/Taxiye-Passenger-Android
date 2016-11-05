@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relativeLayoutConfirmRequest"
+    android:id="@+id/rlSpecialPickup"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:visibility="visible">
 
     <Button
-        android:id="@+id/confirmMyLocationBtn"
+        android:id="@+id/specialPickupLocationBtn"
         android:layout_width="121px"
         android:layout_height="117px"
         android:layout_alignParentRight="true"
@@ -17,113 +17,59 @@
         android:tag="mwar"
         android:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/imageViewPokemonOnOffConfirm"
-        android:layout_width="90px"
-        android:layout_height="90px"
-        android:src="@drawable/ic_poke_on_off_button"
-        android:tag="mwar"
-        android:layout_marginLeft="56px"
-        android:layout_marginTop="15px"
-        android:visibility="gone"
-        />
-
     <RelativeLayout
-        android:id="@+id/relativeLayoutConfirmBottom"
+        android:id="@+id/rlConfirmBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/confirmMyLocationBtn"
+        android:layout_below="@+id/specialPickupLocationBtn"
         android:background="@drawable/white_alpha_gradient_up">
+
+
+        <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cvConfirmOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="30px"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="8px"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true">
+
 
         <LinearLayout
             android:id="@+id/linearLayoutConfirmOption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30px"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
-            android:layout_marginTop="30px"
-            android:background="@drawable/background_white_rounded_bordered"
             android:orientation="vertical"
             android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="102px">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/linearLayoutPaymentModeConfirm"
-                    android:layout_width="330px"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_transparent_menu_item_selector_color_tlrb_selector"
+                <TextView
+                    android:id="@+id/tvSpecialPicupTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CHOOSE YOUR EXACT PICKUP"
+                    android:layout_marginTop="10px"
+                    android:padding="10px"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="visible">
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_34"/>
 
-                    <ImageView
-                        android:id="@+id/imageViewPaymentModeConfirm"
-                        style="@style/payment_option_icon_small" />
+                <TextView
+                    android:id="@+id/tvSpecialPicupDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_driver_available_message"
+                    android:padding="10px"
+                    android:gravity="center"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_30"/>
 
-                    <TextView
-                        android:id="@+id/textViewPaymentModeValueConfirm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10px"
-                        android:gravity="center"
-                        android:text="200"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26" />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="-1dp"
-                    android:src="@color/text_color_hint" />
-
-                <RelativeLayout
-                    android:id="@+id/linearLayoutOfferConfirm"
-                    android:layout_width="330px"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:id="@+id/imageViewPromoConfirm"
-                        android:layout_width="30px"
-                        android:layout_height="29px"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/textViewOffersConfirm"
-                        android:src="@drawable/ic_gift"
-                        android:tag="mwar" />
-
-                    <TextView
-                        android:id="@+id/textViewOffersConfirm"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
-                        android:gravity="center"
-                        android:text="@string/nl_offers"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26" />
-
-                    <ImageView
-                        android:id="@+id/imageViewOfferConfirm"
-                        android:layout_width="31px"
-                        android:layout_height="31px"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="50px"
-                        android:src="@drawable/tick"
-                        android:tag="mwar"
-                        android:visibility="gone" />
-
-                </RelativeLayout>
 
             </LinearLayout>
 
@@ -210,15 +156,17 @@
 
         </LinearLayout>
 
+        </android.support.v7.widget.CardView>
+
         <Button
-            android:id="@+id/buttonConfirmRequest"
+            android:id="@+id/bSpecialPicupConfirmRequest"
             android:layout_width="@dimen/button_big_width"
             android:layout_height="@dimen/button_big_height"
             android:background="@drawable/background_theme_gradient_selector"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_38"
             android:textAllCaps="true"
-            android:layout_below="@+id/linearLayoutConfirmOption"
+            android:layout_below="@+id/cvConfirmOption"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="30px"
             android:text="@string/confirm_request" />
