@@ -92,7 +92,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         relativeLayoutProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.getTransactionUtils().openCartFragment(activity, activity.getRelativeLayoutContainer());
+                activity.getTransactionUtils().openCheckoutMergedFragment(activity, activity.getRelativeLayoutContainer());
             }
         });
 

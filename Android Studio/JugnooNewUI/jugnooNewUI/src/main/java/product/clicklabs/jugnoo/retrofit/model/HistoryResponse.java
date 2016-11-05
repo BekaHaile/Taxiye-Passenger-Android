@@ -121,6 +121,9 @@ public class HistoryResponse {
         @SerializedName("store_id")
         @Expose
         private Integer storeId;
+        @SerializedName("original_order_amount")
+        @Expose
+        private Double originalOrderAmount;
         @SerializedName("order_amount")
         @Expose
         private Double orderAmount;
@@ -160,6 +163,9 @@ public class HistoryResponse {
         @SerializedName("payment_mode")
         @Expose
         private Integer paymentMode;
+        @SerializedName("order_status_int")
+        @Expose
+        private Integer orderStatusInt;
         @SerializedName("order_status")
         @Expose
         private String orderStatus;
@@ -212,6 +218,9 @@ public class HistoryResponse {
         @SerializedName("phone_no")
         @Expose
         private String phoneNo;
+        @SerializedName("delivery_address_type")
+        @Expose
+        private String deliveryAddressType;
 
         /**
          * @return The pickupAddress
@@ -353,6 +362,14 @@ public class HistoryResponse {
             this.productType = productType;
         }
 
+        public Integer getOrderStatusInt() {
+            return orderStatusInt;
+        }
+
+        public void setOrderStatusInt(Integer orderStatusInt) {
+            this.orderStatusInt = orderStatusInt;
+        }
+
         /**
          * @return The customerFareFactor
          */
@@ -393,6 +410,14 @@ public class HistoryResponse {
          */
         public void setDate(String date) {
             this.date = date;
+        }
+
+        public Double getOriginalOrderAmount() {
+            return originalOrderAmount;
+        }
+
+        public void setOriginalOrderAmount(Double originalOrderAmount) {
+            this.originalOrderAmount = originalOrderAmount;
         }
 
         /**
@@ -824,6 +849,14 @@ public class HistoryResponse {
         public void setPhoneNo(String phoneNo) {
             this.phoneNo = phoneNo;
         }
+
+        public String getDeliveryAddressType() {
+            return deliveryAddressType;
+        }
+
+        public void setDeliveryAddressType(String deliveryAddressType) {
+            this.deliveryAddressType = deliveryAddressType;
+        }
     }
 
 
@@ -847,6 +880,9 @@ public class HistoryResponse {
         @SerializedName("unit")
         @Expose
         private String unit;
+        @SerializedName("unit_amount")
+        @Expose
+        private Double unitAmount;
 
         /**
          * @return The subItemId
@@ -932,5 +968,12 @@ public class HistoryResponse {
             this.unit = unit;
         }
 
+        public Double getUnitAmount() {
+            return unitAmount;
+        }
+
+        public void setUnitAmount(Double unitAmount) {
+            this.unitAmount = unitAmount;
+        }
     }
 }

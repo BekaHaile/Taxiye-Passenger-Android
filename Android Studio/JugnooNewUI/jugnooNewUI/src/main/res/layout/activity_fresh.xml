@@ -37,12 +37,12 @@
                 android:id="@+id/textViewMinOrder"
                 android:layout_width="match_parent"
                 android:layout_height="74px"
-                android:background="@drawable/background_initial_instruction"
+                android:background="@drawable/background_white_below_line"
                 android:gravity="center"
                 android:text="Free Delivery on Orders above 299"
                 android:textColor="@color/theme_color"
                 android:textSize="@dimen/text_size_32"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutCheckoutBar"

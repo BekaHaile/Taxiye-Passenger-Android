@@ -162,6 +162,7 @@ public class DateOperations {
 	 * @return
 	 */
 	public static String convertDateViaFormat(String dateTime) {
+
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy hh:mm a");
 		try {
@@ -413,6 +414,8 @@ public class DateOperations {
             return utcTime;
         }
     }
+
+
 
 
 	@SuppressLint("SimpleDateFormat")

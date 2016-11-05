@@ -71,7 +71,7 @@ public class FreshDeliverySlotsAdapter extends RecyclerView.Adapter<RecyclerView
         try {
             if(holder instanceof ViewHolderSlotDay){
 				((ViewHolderSlotDay)holder).textViewSlotDay.setText(slots.get(position).getDayName());
-                if(slots.get(position).isEnabled()){
+                if(slots.get(position).getIsActiveSlot() == 1){
                     ((ViewHolderSlotDay)holder).textViewSlotDay.setAlpha(1.0f);
                 } else{
                     ((ViewHolderSlotDay)holder).textViewSlotDay.setAlpha(0.4f);
@@ -81,20 +81,20 @@ public class FreshDeliverySlotsAdapter extends RecyclerView.Adapter<RecyclerView
 
 				((ViewHolderSlot)holder).textViewSlotTime.setText(DateOperations.convertDayTimeAPViaFormat(slot.getStartTime())
                         + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime()));
-                if(activity.getSlotToSelect() == null
-                        || !activity.getSlotToSelect().getDeliverySlotId().equals(slot.getDeliverySlotId())){
+                if(activity.getSlotSelected() == null
+                        || !activity.getSlotSelected().getDeliverySlotId().equals(slot.getDeliverySlotId())){
                     ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 } else{
                     ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 }
-                if(slot.isEnabled()){
+                if(slot.getIsActiveSlot() == 1){
                     ((ViewHolderSlot)holder).textViewSlotTime.setAlpha(1.0f);
                     ((ViewHolderSlot)holder).imageViewRadio.setAlpha(1.0f);
                 } else{
                     ((ViewHolderSlot)holder).textViewSlotTime.setAlpha(0.4f);
                     ((ViewHolderSlot)holder).imageViewRadio.setAlpha(0.4f);
                 }
-                ((ViewHolderSlot)holder).linear.setEnabled(slot.isEnabled());
+                ((ViewHolderSlot)holder).linear.setEnabled(slot.getIsActiveSlot() == 1);
 				((ViewHolderSlot)holder).linear.setTag(position);
 				((ViewHolderSlot)holder).linear.setOnClickListener(new View.OnClickListener() {
 					@Override

@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.branch.referral.Branch;
@@ -489,6 +491,29 @@ public class MyApplication extends Application{
 
 		RestClient.setupRestClient();
 		RestClient.setupFreshApiRestClient();
+	}
+
+
+	public int appVersion(){
+		try {
+			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			return pInfo.versionCode;
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+			return 0;
+		}
+	}
+
+	public String osVersion(){
+		return android.os.Build.VERSION.RELEASE;
+	}
+
+	public String country(){
+		return getResources().getConfiguration().locale.getDisplayCountry(Locale.getDefault());
+	}
+
+	public String deviceName(){
+		return android.os.Build.MANUFACTURER + android.os.Build.MODEL;
 	}
 
 }

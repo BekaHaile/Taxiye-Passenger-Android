@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
-    android:layout_height="164px"
+    android:layout_height="124px"
     android:background="@drawable/background_white"
     android:orientation="vertical">
 
@@ -12,7 +12,9 @@
         android:id="@+id/textViewCompleteMeal"
         android:layout_width="556px"
         android:layout_height="68px"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20px"
         android:background="@drawable/bg_white_dark1_round_corners"
         android:textSize="@dimen/text_size_30"
         android:textColor="@color/text_color"

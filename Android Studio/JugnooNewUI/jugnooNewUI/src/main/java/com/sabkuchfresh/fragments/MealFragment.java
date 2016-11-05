@@ -23,6 +23,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshDeliverySlotsDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
+import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SubItemCompare;
@@ -77,8 +78,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     private TextView swipe_text;
 
     private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
+    private ArrayList<RecentOrder> recentOrder = new ArrayList<>();
+    private ArrayList<String> status = new ArrayList<>();
     private ArrayList<SubItem> mealsData = new ArrayList<>();
-
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
 
     public MealFragment() {
@@ -104,8 +106,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         } catch (Exception e) {
             e.printStackTrace();
         }
+        linearLayoutRoot.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
 
-        mealAdapter = new MealAdapter(activity, mealsData, this);
+        mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
 
         recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
         recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
@@ -162,6 +165,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             activity.fragmentUISetup(this);
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
+            if(activity.isRefreshCart()){
+                getAllProducts(true);
+            }
+            activity.setRefreshCart(false);
         }
     }
 
@@ -262,6 +269,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
                                 mealsData.clear();
                                 mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
+                                recentOrder.clear();
+                                recentOrder.addAll(productsResponse.getRecentOrders());
+                                status.clear();
+                                status.addAll(productsResponse.getRecentOrdersPossibleStatus());
                                 activity.setProductsResponse(productsResponse);
 
                                 setSortingList();

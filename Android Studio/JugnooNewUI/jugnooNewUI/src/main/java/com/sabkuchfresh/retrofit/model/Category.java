@@ -33,6 +33,7 @@ public class Category {
 	@Expose
 	private List<SubItem> subItems = new ArrayList<SubItem>();
 
+
     public Integer getCurrentGroupId() {
         return currentGroupId;
     }

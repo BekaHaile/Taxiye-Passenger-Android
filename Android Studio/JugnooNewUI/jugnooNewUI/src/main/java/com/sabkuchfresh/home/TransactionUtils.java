@@ -12,6 +12,7 @@ import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshAddressFragment;
 import com.sabkuchfresh.fragments.FreshCartItemsFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutFragment;
+import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshOrderHistoryFragment;
 import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 import com.sabkuchfresh.fragments.FreshPaymentFragment;
@@ -46,6 +47,19 @@ public class TransactionUtils {
 					.add(container.getId(), new FreshCheckoutFragment(),
 							FreshCheckoutFragment.class.getName())
 					.addToBackStack(FreshCheckoutFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openCheckoutMergedFragment(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, FreshCheckoutMergedFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+					.add(container.getId(), new FreshCheckoutMergedFragment(),
+							FreshCheckoutMergedFragment.class.getName())
+					.addToBackStack(FreshCheckoutMergedFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();
