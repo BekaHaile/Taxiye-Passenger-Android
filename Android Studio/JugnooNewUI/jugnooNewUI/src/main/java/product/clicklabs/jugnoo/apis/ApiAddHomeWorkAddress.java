@@ -78,7 +78,9 @@ public class ApiAddHomeWorkAddress {
 					params.put(Constants.KEY_LONGITUDE, String.valueOf(searchResult.getLongitude()));
 
 					if(editThisAddress){
-						params.put(Constants.KEY_ADDRESS_ID, String.valueOf(searchResult.getId()));
+						if(searchResult.getId() > 0) {
+							params.put(Constants.KEY_ADDRESS_ID, String.valueOf(searchResult.getId()));
+						}
 						if(deleteAddress) {
 							params.put(Constants.KEY_DELETE_FLAG, "1");
 						}

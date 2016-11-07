@@ -1532,7 +1532,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     slot.setDayName(deliverySlot.getDayName());
                     slotsEnabled = slot.getIsActiveSlot() == 1 ? slotsEnabled + 1 : slotsEnabled;
                     slots.add(slot);
-                    if (activity.getSlotSelected() == null && slot.getIsActiveSlot() == 1) {
+                    if ((activity.getSlotSelected() == null || activity.getSlotSelected().getIsActiveSlot() != 1)
+                            && slot.getIsActiveSlot() == 1) {
                         activity.setSlotSelected(slot);
                     }
                 }

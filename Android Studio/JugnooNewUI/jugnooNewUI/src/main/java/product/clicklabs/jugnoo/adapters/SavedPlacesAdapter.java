@@ -128,7 +128,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.imageViewEdit.setVisibility(showEditIcon ? View.VISIBLE : View.GONE);
             if(separatorOnTop){
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.imageViewSep.getLayoutParams();
-                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+                params.addRule(RelativeLayout.BELOW, 0);
                 params.setMargins(0, 0, 0, 0);
                 holder.imageViewSep.setLayoutParams(params);
                 holder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.stroke_light_grey_alpha));
