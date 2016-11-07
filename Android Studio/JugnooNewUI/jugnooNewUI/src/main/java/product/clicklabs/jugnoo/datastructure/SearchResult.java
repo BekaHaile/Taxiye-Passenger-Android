@@ -137,7 +137,11 @@ public class SearchResult {
 	}
 
 	public Integer getId() {
-		return id;
+		if(id != null) {
+			return id;
+		} else{
+			return 0;
+		}
 	}
 
 	public void setId(Integer id) {

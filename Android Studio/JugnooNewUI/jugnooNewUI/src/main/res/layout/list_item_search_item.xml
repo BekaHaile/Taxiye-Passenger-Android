@@ -68,8 +68,8 @@
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_marginLeft="4px"
-        android:layout_marginRight="4px"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px"
         android:background="@color/stroke_color_light"
         android:layout_below="@+id/linearLayoutContent"
         />

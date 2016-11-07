@@ -137,17 +137,18 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				searchResults.add(searchResult);
 				savedPlaces++;
 			}
+			searchResults.addAll(Data.userData.getSearchResults());
 			savedPlaces = savedPlaces + Data.userData.getSearchResults().size();
 
 			savedPlacesAdapter = new SavedPlacesAdapter(activity, searchResults, new SavedPlacesAdapter.Callback() {
 				@Override
 				public void onItemClick(SearchResult searchResult) {
-
+					clickOnSavedItem(searchResult);
 				}
 
 				@Override
 				public void onEditClick(SearchResult searchResult) {
-
+					clickOnSavedItem(searchResult);
 				}
 			}, false, false);
 			listViewSavedLocations.setAdapter(savedPlacesAdapter);
@@ -155,12 +156,12 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 			savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
 				@Override
 				public void onItemClick(SearchResult searchResult) {
-
+					clickOnSavedItem(searchResult);
 				}
 
 				@Override
 				public void onEditClick(SearchResult searchResult) {
-
+					clickOnSavedItem(searchResult);
 				}
 			}, false, false);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
@@ -271,7 +272,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.header_place_search_list, listViewSearch, false);
 		header.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
 		ASSL.DoMagic(header);
-		listViewSearch.addFooterView(header, null, false);
+		listViewSavedLocations.addFooterView(header, null, false);
 
 		linearLayoutAddFav = (LinearLayout) header.findViewById(R.id.linearLayoutAddFav);
 		relativeLayoutAddHome = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddHome);
@@ -464,6 +465,13 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		public void setOrdinal(int ordinal) {
 			this.ordinal = ordinal;
 		}
+	}
+
+	private void clickOnSavedItem(SearchResult searchResult){
+		searchListActionsHandler.onPlaceClick(searchResult);
+		searchListActionsHandler.onPlaceSearchPre();
+		searchListActionsHandler.onPlaceSearchPost(searchResult);
+		Utils.hideSoftKeyboard(activity, editTextSearch);
 	}
 
 }

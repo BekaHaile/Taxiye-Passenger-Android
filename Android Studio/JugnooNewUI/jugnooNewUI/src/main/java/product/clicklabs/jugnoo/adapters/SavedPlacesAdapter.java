@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -105,6 +106,11 @@ public class SavedPlacesAdapter extends BaseAdapter{
             if(!TextUtils.isEmpty(searchResult.getName())){
                 holder.textViewSearchName.setVisibility(View.VISIBLE);
                 holder.textViewSearchName.setText(searchResult.getName());
+            }
+            if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_HOME)){
+                holder.textViewSearchName.setText(R.string.home);
+            } else if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_WORK)){
+                holder.textViewSearchName.setText(R.string.work);
             }
 
             holder.textViewSearchAddress.setText(searchResult.getAddress());

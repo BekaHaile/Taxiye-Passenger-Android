@@ -119,7 +119,6 @@ public class SearchListAdapter extends BaseAdapter{
 						}
 						else{
 							searchResultsForSearch.clear();
-							addFavoriteLocations("");
 							setResults(searchResultsForSearch);
 						}
 					} catch (Exception e) {
@@ -175,7 +174,6 @@ public class SearchListAdapter extends BaseAdapter{
 
     public void addSavedLocationsToList(){
         searchResultsForSearch.clear();
-        addFavoriteLocations("");
         setResults(searchResultsForSearch);
     }
 
