@@ -173,9 +173,9 @@ public class HistoryResponse {
         @SerializedName("payment_mode")
         @Expose
         private Integer paymentMode;
-        @SerializedName("order_status_position")
+        @SerializedName("order_tracking_index")
         @Expose
-        private Integer orderStatusPosition;
+        private Integer orderTrackingIndex;
         @SerializedName("order_status_int")
         @Expose
         private Integer orderStatusInt;
@@ -319,12 +319,12 @@ public class HistoryResponse {
             this.isCancelledRide = isCancelledRide;
         }
 
-        public Integer getOrderStatusPosition() {
-            return orderStatusPosition;
+        public Integer getOrderTrackingIndex() {
+            return orderTrackingIndex;
         }
 
-        public void setOrderStatusPosition(Integer orderStatusPosition) {
-            this.orderStatusPosition = orderStatusPosition;
+        public void setOrderTrackingIndex(Integer orderTrackingIndex) {
+            this.orderTrackingIndex = orderTrackingIndex;
         }
 
         /**

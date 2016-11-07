@@ -536,7 +536,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 cvOrderStatus.setVisibility(View.VISIBLE);
                 rlOrderStatus.setVisibility(View.GONE);
                 setDefaultState();
-                showPossibleStatus(historyResponse.getRecentOrdersPossibleStatus(), historyResponse.getData().get(0).getOrderStatusPosition());
+                showPossibleStatus(historyResponse.getRecentOrdersPossibleStatus(), historyResponse.getData().get(0).getOrderTrackingIndex());
             } else{
                 cvOrderStatus.setVisibility(View.GONE);
                 rlOrderStatus.setVisibility(View.VISIBLE);
