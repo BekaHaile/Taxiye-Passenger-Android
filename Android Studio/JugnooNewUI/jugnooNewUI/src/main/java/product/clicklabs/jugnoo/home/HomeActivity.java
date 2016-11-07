@@ -30,6 +30,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -50,6 +51,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -82,6 +84,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
+import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -152,6 +156,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
+import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
@@ -169,6 +174,7 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
+import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -200,6 +206,7 @@ import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.MarkerAnimation;
 import product.clicklabs.jugnoo.utils.NonScrollGridView;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
@@ -449,13 +456,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private View viewSlidingExtra;
     private View fabViewIntial;
     private View fabViewFinal;
-    /*private RelativeLayout relativeLayoutFAB;
-    private FloatingActionMenu menuLabelsRight;
-    private FloatingActionButton fabDelivery;
-    private FloatingActionButton fabMeals;
-    private FloatingActionButton fabFresh;
-    private FloatingActionButton fabAutos;
-    private View fabExtra;*/
+    private CardView cvSpecialPickup;
+    private ListView lvSpecialPickup;
+    private SpecialPickupItemsAdapter specialPickupItemsAdapter;
+    private RelativeLayout rlSelectedPickup;
+    private TextView tvSelectedPickup, tvSpecialPicupTitle, tvSpecialPicupDesc;
+    private ImageView ivSpecialPickupArrow;
+    public ArrayList<String> specialPickups;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -758,6 +765,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove); textViewRSWhatImprove.setTypeface(Fonts.mavenLight(this));
         textViewRSOtherError = (TextView) findViewById(R.id.textViewRSOtherError); textViewRSOtherError.setTypeface(Fonts.mavenLight(this));
         gridViewRSFeedbackReasons = (NonScrollGridView) findViewById(R.id.gridViewRSFeedbackReasons);
+
+        // Special Pickup views
+        tvSpecialPicupTitle = (TextView) findViewById(R.id.tvSpecialPicupTitle); tvSpecialPicupTitle.setTypeface(Fonts.mavenMedium(this));
+        tvSpecialPicupDesc = (TextView) findViewById(R.id.tvSpecialPicupDesc); tvSpecialPicupDesc.setTypeface(Fonts.mavenRegular(this));
+        cvSpecialPickup = (CardView) findViewById(R.id.cvSpecialPickup); cvSpecialPickup.setVisibility(View.GONE);
+        lvSpecialPickup = (ListView) findViewById(R.id.lvSpecialPickup);
+        rlSelectedPickup = (RelativeLayout) findViewById(R.id.rlSelectedPickup);
+        tvSelectedPickup = (TextView) findViewById(R.id.tvSelectedPickup);
+        ivSpecialPickupArrow = (ImageView) findViewById(R.id.ivSpecialPickupArrow);
+        specialPickupItemsAdapter = new SpecialPickupItemsAdapter(HomeActivity.this, specialPickups, new SpecialPickupItemsAdapter.Callback() {
+            @Override
+            public void onPickedSelected(String pickedName) {
+                cvSpecialPickup.setVisibility(View.GONE);
+                tvSelectedPickup.setText(pickedName);
+            }
+        });
+        lvSpecialPickup.setAdapter(specialPickupItemsAdapter);
+
         try {
             feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.autoData.getFeedbackReasons(),
 					new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
@@ -785,6 +810,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         layoutParams.height = (int)(ASSL.Yscale() * 200);
         editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
+
+        rlSelectedPickup.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation animation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.scale_in);
+                cvSpecialPickup.setVisibility(View.VISIBLE);
+                cvSpecialPickup.setAnimation(animation);
+            }
+        });
 
 
         try {
