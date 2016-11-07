@@ -15,7 +15,8 @@
         android:id="@+id/relativeLayoutAddHome"
         android:layout_width="match_parent"
         android:layout_height="110px"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:background="@drawable/bg_white_menu_item_selector_color_selector">
 
         <TextView
             android:id="@+id/textViewAddHome"
@@ -55,7 +56,8 @@
         android:id="@+id/relativeLayoutAddWork"
         android:layout_width="match_parent"
         android:layout_height="110px"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:background="@drawable/bg_white_menu_item_selector_color_selector">
 
 
         <TextView

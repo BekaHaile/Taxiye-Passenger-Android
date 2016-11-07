@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -21,9 +22,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -51,9 +56,13 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	private TextView textViewAddHome, textViewAddWork;
 	private ImageView imageViewSep, imageViewSep2;
 
-	private LinearLayout linearLayoutScrollSearch;
+	private ScrollView scrollViewSearch;
 	private NonScrollListView listViewSearch;
-	private TextView textViewScrollSearch;
+
+	private ScrollView scrollViewSuggestions;
+	private TextView textViewSavedPlaces, textViewRecentAddresses;
+	private NonScrollListView listViewSavedLocations, listViewRecentAddresses;
+	private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
 
 	private View rootView;
     private Activity activity;
@@ -103,9 +112,73 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
 		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.imageViewSearchCross); imageViewSearchCross.setVisibility(View.GONE);
 		listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
-		linearLayoutScrollSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutScrollSearch);
-		textViewScrollSearch = (TextView) rootView.findViewById(R.id.textViewScrollSearch);
+		scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
+		scrollViewSearch.setVisibility(View.GONE);
 
+
+		scrollViewSuggestions = (ScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
+		textViewSavedPlaces = (TextView) rootView.findViewById(R.id.textViewSavedPlaces); textViewSavedPlaces.setTypeface(Fonts.mavenMedium(activity));
+		textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
+		listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
+		listViewRecentAddresses = (NonScrollListView) rootView.findViewById(R.id.listViewRecentAddresses);
+
+		try {
+			ArrayList<SearchResult> searchResults = new ArrayList<>();
+			int savedPlaces = 0;
+			if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+				String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+				SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+				searchResults.add(searchResult);
+				savedPlaces++;
+			}
+			if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+				String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+				SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+				searchResults.add(searchResult);
+				savedPlaces++;
+			}
+			savedPlaces = savedPlaces + Data.userData.getSearchResults().size();
+
+			savedPlacesAdapter = new SavedPlacesAdapter(activity, searchResults, new SavedPlacesAdapter.Callback() {
+				@Override
+				public void onItemClick(SearchResult searchResult) {
+
+				}
+
+				@Override
+				public void onEditClick(SearchResult searchResult) {
+
+				}
+			}, false, false);
+			listViewSavedLocations.setAdapter(savedPlacesAdapter);
+
+			savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
+				@Override
+				public void onItemClick(SearchResult searchResult) {
+
+				}
+
+				@Override
+				public void onEditClick(SearchResult searchResult) {
+
+				}
+			}, false, false);
+			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+
+			if(savedPlaces > 0) {
+				textViewSavedPlaces.setVisibility(View.VISIBLE);
+			} else {
+				textViewSavedPlaces.setVisibility(View.GONE);
+			}
+
+			if (savedPlacesAdapterRecent.getCount() > 0) {
+				textViewRecentAddresses.setVisibility(View.VISIBLE);
+			} else {
+				textViewRecentAddresses.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 
 		imageViewSearchGPSIcon = (ImageView) rootView.findViewById(R.id.imageViewSearchGPSIcon);
@@ -138,10 +211,12 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					public void onTextChange(String text) {
 						try {
 							if(text.length() > 0){
+								scrollViewSearch.setVisibility(View.VISIBLE);
 								imageViewSearchCross.setVisibility(View.VISIBLE);
 								hideSearchLayout();
 							}
 							else{
+								scrollViewSearch.setVisibility(View.GONE);
 								imageViewSearchCross.setVisibility(View.GONE);
 								showSearchLayout();
 							}
@@ -176,6 +251,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 					@Override
 					public void onPlaceSearchPost(SearchResult searchResult) {
+						scrollViewSearch.setVisibility(View.GONE);
 						progressBarSearch.setVisibility(View.GONE);
 						searchListActionsHandler.onPlaceSearchPost(searchResult);
 					}

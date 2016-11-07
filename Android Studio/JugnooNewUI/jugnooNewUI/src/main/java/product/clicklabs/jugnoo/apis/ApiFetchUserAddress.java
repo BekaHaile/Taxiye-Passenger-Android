@@ -40,11 +40,13 @@ public class ApiFetchUserAddress {
 		this.callback = callback;
 	}
 
-	public void hit() {
+	public void hit(boolean showDialog) {
 		try {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 
-				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+				if(showDialog) {
+					DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+				}
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);

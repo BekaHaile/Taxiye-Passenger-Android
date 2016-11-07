@@ -132,6 +132,10 @@ public class SavedPlacesAdapter extends BaseAdapter{
                 params.setMargins(0, 0, 0, 0);
                 holder.imageViewSep.setLayoutParams(params);
                 holder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.stroke_light_grey_alpha));
+            } else {
+                if(position == getCount()-1){
+                    holder.imageViewSep.setVisibility(View.GONE);
+                }
             }
 
             holder.relative.setOnClickListener(new View.OnClickListener() {

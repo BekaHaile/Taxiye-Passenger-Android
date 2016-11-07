@@ -82,7 +82,8 @@
     <ScrollView
         android:id="@+id/scrollViewSearch"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/linearLayoutScrollSearch"
@@ -90,17 +91,32 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <product.clicklabs.jugnoo.utils.NonScrollListView
-                android:id="@+id/listViewSearch"
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewSearch"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20px"
-                android:layout_marginRight="20px"
-                android:dividerHeight="0px"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16px"
+                android:layout_marginRight="16px"
                 android:layout_marginTop="20px"
-                android:splitMotionEvents="false"
-                android:background="@drawable/background_white_rounded_bordered"
-                />
+                android:layout_marginBottom="10px"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4px"
+                >
+
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/listViewSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0px"
+                    android:fadeScrollbars="true"
+                    android:scrollbars="vertical"
+                    android:splitMotionEvents="false"
+                    android:visibility="visible"
+                    />
+
+            </android.support.v7.widget.CardView>
 
             <ImageView
                 android:id="@+id/imageViewPoweredByGoogleSearch"
@@ -119,6 +135,102 @@
                 android:textSize="28px" />
 
         </LinearLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/scrollViewSuggestions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/textViewSavedPlaces"
+                android:layout_width="wrap_content"
+                android:layout_height="40px"
+                android:layout_marginLeft="30px"
+                android:layout_marginTop="30px"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/saved_places"
+                android:textAllCaps="true"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/text_size_22"
+                android:visibility="visible"
+                />
+
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewSavedPlaces"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16px"
+                android:layout_marginRight="16px"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4px"
+                >
+
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/listViewSavedLocations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0px"
+                    android:splitMotionEvents="false"/>
+
+            </android.support.v7.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/textViewRecentAddresses"
+                android:layout_width="wrap_content"
+                android:layout_height="40px"
+                android:layout_marginLeft="30px"
+                android:layout_marginTop="30px"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/recent_addresses"
+                android:textAllCaps="true"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/text_size_22"
+                android:visibility="visible"
+                />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewRecentAddresses"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16px"
+                android:layout_marginRight="16px"
+                android:layout_marginBottom="20px"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4px"
+                >
+
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/listViewRecentAddresses"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0px"
+                    android:fadeScrollbars="true"
+                    android:scrollbars="vertical"
+                    android:splitMotionEvents="false"
+                    android:visibility="visible"
+                    />
+
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
     </ScrollView>
 
 

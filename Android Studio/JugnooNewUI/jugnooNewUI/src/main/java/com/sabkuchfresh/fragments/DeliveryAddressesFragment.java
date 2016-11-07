@@ -197,7 +197,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
             setSavedPlaces();
 
-            getApiFetchUserAddress().hit();
+            getApiFetchUserAddress().hit(true);
         }
         else if(activity instanceof AddPlaceActivity){
             cardViewRecentAddresses.setVisibility(View.GONE);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -54,7 +55,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 public class SearchListAdapter extends BaseAdapter{
 
     class ViewHolderSearchItem {
-        TextView textViewSearchName, textViewSearchAddress;
+        TextView textViewSearchName, textViewSearchAddress, textViewAddressUsed;
         ImageView imageViewType, imageViewSep;
         RelativeLayout relative;
         int id;
@@ -203,13 +204,15 @@ public class SearchListAdapter extends BaseAdapter{
             holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context));
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
             holder.textViewSearchAddress.setTypeface(Fonts.mavenMedium(context));
+			holder.textViewAddressUsed = (TextView) convertView.findViewById(R.id.textViewAddressUsed);
+			holder.textViewAddressUsed.setTypeface(Fonts.mavenRegular(context));
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
             holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
 
             holder.relative.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 110));
+            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
@@ -221,29 +224,45 @@ public class SearchListAdapter extends BaseAdapter{
         try {
             holder.id = position;
 
-            holder.textViewSearchName.setText(searchResults.get(position).getName());
-            holder.textViewSearchAddress.setText(searchResults.get(position).getAddress());
+			SearchResult searchResult = searchResults.get(position);
 
-            if(searchResults.get(position).getType() == SearchResult.Type.HOME){
+            holder.textViewSearchName.setText(searchResult.getName());
+            holder.textViewSearchAddress.setText(searchResult.getAddress());
+			if(searchResult.getAddress().equalsIgnoreCase("")){
+				holder.textViewSearchAddress.setVisibility(View.GONE);
+			}else {
+				holder.textViewSearchAddress.setVisibility(View.VISIBLE);
+			}
+
+			if(TextUtils.isEmpty(searchResult.getName())){
+				holder.textViewSearchName.setText(searchResult.getAddress());
+				holder.textViewSearchAddress.setVisibility(View.GONE);
+			}
+
+            if(searchResult.getType() == SearchResult.Type.HOME){
                 holder.imageViewType.setVisibility(View.VISIBLE);
                 holder.imageViewType.setImageResource(R.drawable.ic_home);
-            } else if(searchResults.get(position).getType() == SearchResult.Type.WORK){
+            } else if(searchResult.getType() == SearchResult.Type.WORK){
                 holder.imageViewType.setVisibility(View.VISIBLE);
                 holder.imageViewType.setImageResource(R.drawable.ic_work);
             } else{
 				holder.imageViewType.setVisibility(View.VISIBLE);
-				if(searchResults.get(position).getType() == SearchResult.Type.LAST_SAVED) {
+				if(searchResult.getType() == SearchResult.Type.LAST_SAVED
+						|| searchResult.getType() == SearchResult.Type.RECENT) {
 					holder.imageViewType.setImageResource(R.drawable.ic_recent_loc);
 				} else{
 					holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
 				}
             }
 
-            if(searchResults.get(position).getAddress().equalsIgnoreCase("")){
-                holder.textViewSearchAddress.setVisibility(View.GONE);
-            }else {
-                holder.textViewSearchAddress.setVisibility(View.VISIBLE);
-            }
+
+
+			holder.textViewAddressUsed.setVisibility(View.GONE);
+			if(searchResult.getFreq() > 0) {
+				holder.textViewAddressUsed.setText(context.getString(R.string.address_used_format,
+						String.valueOf(searchResults.get(position).getFreq())));
+				holder.textViewAddressUsed.setVisibility(View.VISIBLE);
+			}
 
             if(position == getCount()-1){
                 holder.imageViewSep.setVisibility(View.GONE);
@@ -386,6 +405,20 @@ public class SearchListAdapter extends BaseAdapter{
             if(showSavedPlaces) {
 				favLocationsCount = 0;
 				try {
+					for(int i = Data.userData.getSearchResultsRecent().size()-1; i >= 0; i--){
+						SearchResult searchResult = Data.userData.getSearchResultsRecent().get(i);
+						if(searchResult.getName().toLowerCase().contains(searchText.toLowerCase())
+								|| searchResult.getAddress().toLowerCase().contains(searchText.toLowerCase())
+								|| searchText.equalsIgnoreCase("")){
+							searchResult.setType(SearchResult.Type.RECENT);
+							searchResultsForSearch.add(0, searchResult);
+							favLocationsCount++;
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				try {
 					for(int i = Data.userData.getSearchResults().size()-1; i >= 0; i--){
 						SearchResult searchResult = Data.userData.getSearchResults().get(i);
 						if(searchResult.getName().toLowerCase().contains(searchText.toLowerCase())
@@ -447,7 +480,7 @@ public class SearchListAdapter extends BaseAdapter{
                                 SearchResult searchResult = new SearchResult(placeName, placeAddress, placeId,
 										myPlace.getLatLng().latitude, myPlace.getLatLng().longitude);
                                 searchResult.setThirdPartyAttributions(thirdPartyAttributions);
-                                setSearchResult(searchResult);
+                                sendSearchResult(searchResult);
                             }
                             places.release();
                         } catch (Exception e) {
@@ -458,7 +491,7 @@ public class SearchListAdapter extends BaseAdapter{
         Log.v("after call back", "after call back");
     }
 
-    private synchronized void setSearchResult(final SearchResult searchResult) {
+    private synchronized void sendSearchResult(final SearchResult searchResult) {
         ((Activity)context).runOnUiThread(new Runnable() {
             @Override
             public void run() {

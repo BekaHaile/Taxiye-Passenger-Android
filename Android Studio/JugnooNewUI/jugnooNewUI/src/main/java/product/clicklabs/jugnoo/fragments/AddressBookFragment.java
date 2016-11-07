@@ -172,7 +172,7 @@ public class AddressBookFragment extends Fragment {
 
 		setSavedPlaces();
 
-		getApiFetchUserAddress().hit();
+		getApiFetchUserAddress().hit(true);
 
 		return rootView;
 	}
