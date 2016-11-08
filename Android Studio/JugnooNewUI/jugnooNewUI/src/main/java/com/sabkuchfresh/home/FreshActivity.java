@@ -1143,9 +1143,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         if (frag != null) {
                             ((FreshCheckoutMergedFragment)frag).deleteCart();
                         } else {
-                            frag = getFreshCartItemsFragment();
+                            frag = getMealAddonItemsFragment();
                             if(frag != null){
-                                ((FreshCartItemsFragment)frag).deleteCart();
+                                ((MealAddonItemsFragment)frag).deleteCart();
+                            } else{
+                                frag = getFreshCartItemsFragment();
+                                if(frag != null){
+                                    ((FreshCartItemsFragment)frag).deleteCart();
+                                }
                             }
                         }
 
@@ -2125,23 +2130,28 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             Fragment frag = getFreshCheckoutMergedFragment();
             if (frag != null) {
                 ((FreshCheckoutMergedFragment)frag).deleteCart();
-            } else{
-                frag = getFreshCartItemsFragment();
-                if(frag != null){
-                    ((FreshCartItemsFragment)frag).deleteCart();
+            } else {
+                frag = getMealAddonItemsFragment();
+                if (frag != null) {
+                    ((MealAddonItemsFragment) frag).deleteCart();
                 } else {
-                    if (getProductsResponse() != null && getProductsResponse().getCategories() != null) {
-                        for (Category category : getProductsResponse().getCategories()) {
-                            for (SubItem subItem : category.getSubItems()) {
-                                if (subItem.getSubItemQuantitySelected() > 0) {
-                                    subItem.setSubItemQuantitySelected(0);
+                    frag = getFreshCartItemsFragment();
+                    if (frag != null) {
+                        ((FreshCartItemsFragment) frag).deleteCart();
+                    } else {
+                        if (getProductsResponse() != null && getProductsResponse().getCategories() != null) {
+                            for (Category category : getProductsResponse().getCategories()) {
+                                for (SubItem subItem : category.getSubItems()) {
+                                    if (subItem.getSubItemQuantitySelected() > 0) {
+                                        subItem.setSubItemQuantitySelected(0);
+                                    }
                                 }
                             }
                         }
+                        updateCartValuesGetTotalPrice();
                     }
-                    updateCartValuesGetTotalPrice();
                 }
-			}
+            }
             clearMealCart();
         } catch (Exception e) {
             e.printStackTrace();

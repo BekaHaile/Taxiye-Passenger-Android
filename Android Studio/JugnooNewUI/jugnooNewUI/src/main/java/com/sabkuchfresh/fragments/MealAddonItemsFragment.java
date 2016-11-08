@@ -141,6 +141,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {
                         updateCartDataView();
+                        addOnItemsAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -150,6 +151,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                             activity.subItemsInCart.remove(position);
                             checkIfEmpty();
                         }
+                        addOnItemsAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -159,6 +161,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                             activity.subItemsInCart.remove(position);
                             checkIfEmpty();
                         }
+                        addOnItemsAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -169,6 +172,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                     @Override
                     public void minusNotDone(int position, SubItem subItem) {
                         activity.clearMealsCartIfNoMainMeal();
+                        addOnItemsAdapter.notifyDataSetChanged();
                     }
                 });
         listViewCart.setAdapter(freshCartItemsAdapter);
@@ -193,6 +197,14 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
             }
         });
 
+        imageViewDeleteCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.deleteCart();
+            }
+        });
+
+        updateCartDataView();
 
         return rootView;
     }
@@ -308,5 +320,16 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         if(freshCartItemsAdapter != null){
             freshCartItemsAdapter.notifyDataSetChanged();
         }
+    }
+
+    public void deleteCart() {
+        for(SubItem subItem : activity.subItemsInCart){
+            subItem.setSubItemQuantitySelected(0);
+        }
+        updateCartDataView();
+        activity.subItemsInCart.clear();
+        freshCartItemsAdapter.notifyDataSetChanged();
+        checkIfEmpty();
+
     }
 }
