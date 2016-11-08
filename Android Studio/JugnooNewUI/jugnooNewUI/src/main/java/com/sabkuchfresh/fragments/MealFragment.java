@@ -133,6 +133,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         setSortingList();
 
+        getAllProducts(true);
 
         try {
             if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
@@ -153,8 +154,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     @Override
     public void onResume() {
         super.onResume();
-        if(!isHidden()) {
+        if(!isHidden() && activity.isRefreshCart()) {
             getAllProducts(true);
+            activity.setRefreshCart(false);
         }
     }
 

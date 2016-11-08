@@ -155,7 +155,21 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textViewSkip"
+            android:layout_width="100px"
+            android:layout_height="80px"
+            android:gravity="center"
+            android:text="@string/skip"
+            android:textAllCaps="true"
+            android:textColor="@color/text_color_selector"
+            android:textSize="@dimen/text_size_30"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20px"
+            android:visibility="gone"
 
+            />
 
 
 

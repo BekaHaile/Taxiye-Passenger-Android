@@ -77,7 +77,6 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -524,6 +523,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                     MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
                                             getCurrentPlaceLatLng(), bundle, false);
                                 }
+                            } else if(type == 3){
+                                setRefreshCart(true);
                             }
 						} else {
 							if(flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()){
@@ -830,6 +831,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar.below_shadow.setVisibility(View.VISIBLE);
             relativeLayoutCartNew.setVisibility(View.GONE);
             linearLayoutCheckout.setVisibility(View.VISIBLE);
+            topBar.textViewSkip.setVisibility(View.GONE);
 
 //        Utils.hideViewByScale(relativeLayoutCartRound);
 //        relativeLayoutCartRound.hide();
@@ -1110,6 +1112,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.pick_addons));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                topBar.textViewSkip.setVisibility(View.VISIBLE);
 
             }
         } catch (Exception e) {

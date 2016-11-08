@@ -208,6 +208,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
         setSortingList();
 
+		getAllProducts(true);
 
         try {
             if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
@@ -242,8 +243,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(!isHidden()) {
+		if(!isHidden() && activity.isRefreshCart()) {
 			getAllProducts(true);
+			activity.setRefreshCart(false);
 		}
 	}
 

@@ -79,12 +79,14 @@ public class ApiFareEstimate {
                                             FlurryEventLogger.event(FlurryEventNames.GOOGLE_API_DIRECTIONS_FAILURE);
                                             DialogPopup.dismissLoadingDialog();
                                             retryDialogDirections("Fare could not be estimated between the selected pickup and drop location", sourceLatLng, destLatLng, isPooled, callFareEstimate, region);
+                                            callback.onDirectionsFailure();
                                         }
 
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                         DialogPopup.dismissLoadingDialog();
                                         retryDialogDirections(Data.SERVER_ERROR_MSG, sourceLatLng, destLatLng, isPooled, callFareEstimate, region);
+                                        callback.onDirectionsFailure();
                                     }
                                 }
 
@@ -92,14 +94,19 @@ public class ApiFareEstimate {
                                 public void failure(RetrofitError error) {
                                     DialogPopup.dismissLoadingDialog();
                                     retryDialogDirections(Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, destLatLng, isPooled, callFareEstimate, region);
+                                    callback.onDirectionsFailure();
                                 }
                             });
+                } else {
+                    callback.onDirectionsFailure();
                 }
             } else {
                 retryDialogDirections(Data.CHECK_INTERNET_MSG, sourceLatLng, destLatLng, isPooled, callFareEstimate, region);
+                callback.onDirectionsFailure();
             }
         } catch (Exception e) {
             e.printStackTrace();
+            callback.onDirectionsFailure();
         }
     }
 
@@ -111,6 +118,8 @@ public class ApiFareEstimate {
         void onPoolSuccess(double fare, double rideDistance, String rideDistanceUnit,
                            double rideTime, String rideTimeUnit, int poolFareId, double convenienceCharge,
                            String text);
+        void onDirectionsFailure();
+        void onFareEstimateFailure();
     }
 
     /**
@@ -160,11 +169,15 @@ public class ApiFareEstimate {
 
                                 } else {
                                     retryDialog(activity, message, sourceLatLng, desLatLng, distanceValue, timeValue, isPooled, region);
+                                    callback.onFareEstimateFailure();
                                 }
+                            } else {
+                                callback.onFareEstimateFailure();
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, desLatLng, distanceValue, timeValue, isPooled, region);
+                            callback.onFareEstimateFailure();
                         }
 
                     }
@@ -174,15 +187,18 @@ public class ApiFareEstimate {
                         Log.e("response", "getFareEstimate error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
                         retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, desLatLng, distanceValue, timeValue, isPooled, region);
+                        callback.onFareEstimateFailure();
                     }
                 });
 
             } else {
                 retryDialog(activity, Data.CHECK_INTERNET_MSG, sourceLatLng, desLatLng, distanceValue, timeValue, isPooled, region);
                 DialogPopup.dismissLoadingDialog();
+                callback.onFareEstimateFailure();
             }
         } else{
             DialogPopup.dismissLoadingDialog();
+            callback.onFareEstimateFailure();
         }
     }
 

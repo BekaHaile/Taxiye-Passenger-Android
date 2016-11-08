@@ -208,6 +208,8 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
         setSortingList();
 
+		getAllProducts(true);
+
         try {
             if(Data.getGroceryData() != null && Data.getGroceryData().pendingFeedback == 1) {
                 new Handler().postDelayed(new Runnable() {
@@ -243,8 +245,9 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(!isHidden()) {
+		if(!isHidden() && activity.isRefreshCart()) {
 			getAllProducts(true);
+			activity.setRefreshCart(false);
 		}
 	}
 

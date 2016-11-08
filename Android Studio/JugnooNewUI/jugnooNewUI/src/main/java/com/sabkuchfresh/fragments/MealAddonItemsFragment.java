@@ -96,6 +96,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
             }
         });
 
+        setSkipOnCLickListener();
 
         return rootView;
     }
@@ -106,10 +107,19 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         if (!hidden) {
             activity.fragmentUISetup(this);
             addOnItemsAdapter.notifyDataSetChanged();
+            setSkipOnCLickListener();
         }
     }
 
 
+    private void setSkipOnCLickListener(){
+        activity.getTopBar().textViewSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutProceed.performClick();
+            }
+        });
+    }
 
     @Override
     public void onDestroy() {

@@ -23,9 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
-import com.sabkuchfresh.fragments.MealFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
@@ -361,7 +359,14 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
                                         Data.isOrderCancelled = true;
                                         orderHistory.setCancellable(0);
+
+                                        Intent intent = new Intent(Data.LOCAL_BROADCAST);
+                                        intent.putExtra("message", "Order cancelled, refresh inventory");
+                                        intent.putExtra("open_type", 3);
+                                        LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
+
                                         activity.onBackPressed();
+
                                     }
                                 });
                             } else {

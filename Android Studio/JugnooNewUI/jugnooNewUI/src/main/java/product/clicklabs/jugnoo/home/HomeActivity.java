@@ -7639,6 +7639,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     textViewIncludes.setText(text);
                     try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                 }
+
+                @Override
+                public void onDirectionsFailure() {
+                    jugnooPoolFareId = 0;
+                    textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
+                    textViewTotalFareValue.setText("-");
+
+                    textViewIncludes.setText("");
+                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+                }
+
+                @Override
+                public void onFareEstimateFailure() {
+                    jugnooPoolFareId = 0;
+                    textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
+                    textViewTotalFareValue.setText("-");
+
+                    textViewIncludes.setText("");
+                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+                }
             }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, callFareEstimate,
                     getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
         } else{
