@@ -313,6 +313,9 @@ public class LoginResponse {
 		@SerializedName("bad_rating_reasons")
 		@Expose
 		private List<String> badRatingReasons = new ArrayList<>();
+		@SerializedName("nearbyPickupRegions")
+		@Expose
+		private NearbyPickupRegions nearbyPickupRegions;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -416,6 +419,14 @@ public class LoginResponse {
 
 		public void setCoupons(List<CouponInfo> coupons) {
 			this.coupons = coupons;
+		}
+
+		public NearbyPickupRegions getNearbyPickupRegions() {
+			return nearbyPickupRegions;
+		}
+
+		public void setNearbyPickupRegions(NearbyPickupRegions nearbyPickupRegions) {
+			this.nearbyPickupRegions = nearbyPickupRegions;
 		}
 	}
 

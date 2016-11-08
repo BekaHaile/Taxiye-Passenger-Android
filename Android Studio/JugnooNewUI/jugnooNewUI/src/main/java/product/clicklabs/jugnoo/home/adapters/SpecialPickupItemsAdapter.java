@@ -19,6 +19,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -31,24 +32,24 @@ public class SpecialPickupItemsAdapter extends BaseAdapter {
 
 	private Context context;
 	private LayoutInflater mInflater;
-	private List<String> subItems;
+	private List<NearbyPickupRegions.HoverInfo> subItems;
 	private Callback callback;
 
-	public SpecialPickupItemsAdapter(Context context, ArrayList<String> subItems, Callback callback) {
+	public SpecialPickupItemsAdapter(Context context, ArrayList<NearbyPickupRegions.HoverInfo> subItems) {
 		this.context = context;
 		this.subItems = subItems;
-		this.callback = callback;
+		//this.callback = callback;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-	public synchronized void setResults(ArrayList<String> subItems) {
+	public synchronized void setResults(List<NearbyPickupRegions.HoverInfo> subItems) {
 		this.subItems = subItems;
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return subItems == null ? 5 : 5;
+		return subItems == null ? 0 : subItems.size();
 	}
 
 	@Override
@@ -68,7 +69,7 @@ public class SpecialPickupItemsAdapter extends BaseAdapter {
 			convertView = mInflater.inflate(R.layout.list_item_special_pickup, null);
 			holder = new MainViewHolder(convertView, context);
 
-			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 80));
+			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 100));
 			ASSL.DoMagic(holder.relative);
 
 			convertView.setTag(holder);
@@ -84,14 +85,8 @@ public class SpecialPickupItemsAdapter extends BaseAdapter {
 
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		final MainViewHolder mHolder = ((MainViewHolder) holder);
-
 		try {
-			mHolder.tvPickupName.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					callback.onPickedSelected(mHolder.tvPickupName.getText().toString());
-				}
-			});
+				mHolder.tvPickupName.setText(subItems.get(position).getText());
 
 		} catch (Exception e) {
 			e.printStackTrace();

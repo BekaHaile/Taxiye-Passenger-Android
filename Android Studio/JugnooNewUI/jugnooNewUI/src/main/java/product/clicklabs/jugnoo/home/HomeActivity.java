@@ -46,6 +46,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -55,6 +56,7 @@ import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -178,6 +180,7 @@ import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -428,7 +431,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private int showAllDrivers = 0, showDriverInfo = 0, rating = 0, jugnooPoolFareId = 0;
 
-    public boolean intentFired = false, dropLocationSearched = false, confirmedScreenOpened;
+    public boolean intentFired = false, dropLocationSearched = false, confirmedScreenOpened, specialPickupScreenOpened;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -456,13 +459,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private View viewSlidingExtra;
     private View fabViewIntial;
     private View fabViewFinal;
-    private CardView cvSpecialPickup;
-    private ListView lvSpecialPickup;
     private SpecialPickupItemsAdapter specialPickupItemsAdapter;
-    private RelativeLayout rlSelectedPickup;
+    private RelativeLayout rlSelectedPickup, rlSpecialPickup;
     private TextView tvSelectedPickup, tvSpecialPicupTitle, tvSpecialPicupDesc;
     private ImageView ivSpecialPickupArrow;
-    public ArrayList<String> specialPickups;
+    private Button bSpecialPicupConfirmRequest;
+    public ArrayList<NearbyPickupRegions.HoverInfo> specialPickups;
+    private Spinner spin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -767,21 +770,56 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         gridViewRSFeedbackReasons = (NonScrollGridView) findViewById(R.id.gridViewRSFeedbackReasons);
 
         // Special Pickup views
+        rlSpecialPickup = (RelativeLayout) findViewById(R.id.rlSpecialPickup);
+        spin = (Spinner) findViewById(R.id.simpleSpinner);
         tvSpecialPicupTitle = (TextView) findViewById(R.id.tvSpecialPicupTitle); tvSpecialPicupTitle.setTypeface(Fonts.mavenMedium(this));
         tvSpecialPicupDesc = (TextView) findViewById(R.id.tvSpecialPicupDesc); tvSpecialPicupDesc.setTypeface(Fonts.mavenRegular(this));
-        cvSpecialPickup = (CardView) findViewById(R.id.cvSpecialPickup); cvSpecialPickup.setVisibility(View.GONE);
-        lvSpecialPickup = (ListView) findViewById(R.id.lvSpecialPickup);
         rlSelectedPickup = (RelativeLayout) findViewById(R.id.rlSelectedPickup);
         tvSelectedPickup = (TextView) findViewById(R.id.tvSelectedPickup);
         ivSpecialPickupArrow = (ImageView) findViewById(R.id.ivSpecialPickupArrow);
-        specialPickupItemsAdapter = new SpecialPickupItemsAdapter(HomeActivity.this, specialPickups, new SpecialPickupItemsAdapter.Callback() {
+        bSpecialPicupConfirmRequest = (Button) findViewById(R.id.bSpecialPicupConfirmRequest); bSpecialPicupConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        specialPickupItemsAdapter = new SpecialPickupItemsAdapter(HomeActivity.this, specialPickups);
+        spin.setDropDownWidth((int)(ASSL.Xscale()*550));
+        spin.setDropDownVerticalOffset((int)(ASSL.Xscale()*1));
+        spin.setAdapter(specialPickupItemsAdapter);
+
+        rlSpecialPickup.setOnClickListener(new OnClickListener() {
             @Override
-            public void onPickedSelected(String pickedName) {
-                cvSpecialPickup.setVisibility(View.GONE);
-                tvSelectedPickup.setText(pickedName);
+            public void onClick(View v) {
+
             }
         });
-        lvSpecialPickup.setAdapter(specialPickupItemsAdapter);
+
+        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //Toast.makeText(getApplicationContext(), Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText(), Toast.LENGTH_LONG).show();
+                LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLatitude()),
+                        Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLongitude()));
+                Data.autoData.setPickupLatLng(specialPicupLatLng);
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                Data.autoData.setPickupAddress(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText()+", " +
+                        Data.autoData.getPickupAddress());
+                textViewInitialSearch.setText(Data.autoData.getPickupAddress());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        bSpecialPicupConfirmRequest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*if(getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())){
+                    findDriversETACall(true, false);
+                } else {
+                    requestRideClick();
+                }*/
+                imageViewRideNow.performClick();
+            }
+        });
 
         try {
             feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.autoData.getFeedbackReasons(),
@@ -811,14 +849,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
 
-        rlSelectedPickup.setOnClickListener(new OnClickListener() {
+        /*rlSelectedPickup.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 Animation animation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.scale_in);
                 cvSpecialPickup.setVisibility(View.VISIBLE);
                 cvSpecialPickup.setAnimation(animation);
             }
-        });
+        });*/
 
 
         try {
@@ -2682,6 +2720,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 relativeLayoutConfirmRequest.setVisibility(View.GONE);
+                rlSpecialPickup.setVisibility(View.GONE);
 
                 switch (mode) {
 
@@ -2774,6 +2813,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         linearLayoutRequestMain.setVisibility(View.VISIBLE);
                         relativeLayoutInitialSearchBar.setEnabled(true);
                         imageViewConfirmDropLocationEdit.setVisibility(View.GONE);
+
+                        if(specialPickupScreenOpened){
+                            rlSpecialPickup.setVisibility(View.VISIBLE);
+                            topBar.imageViewMenu.setVisibility(View.GONE);
+                            topBar.imageViewBack.setVisibility(View.VISIBLE);
+                            specialPickupItemsAdapter.setResults(Data.autoData.getNearbyPickupRegionses().getHoverInfo());
+                        } else{
+                            rlSpecialPickup.setVisibility(View.GONE);
+                        }
+
                         if(confirmedScreenOpened){
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
@@ -2790,7 +2839,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
                             updateConfirmedStateFare();
-
                             //fabView.setRelativeLayoutFABVisibility(mode);
 
                         } else{
@@ -4471,6 +4519,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     initialMyLocationBtn.performClick();
+                } else if(specialPickupScreenOpened){
+                    specialPickupScreenOpened = false;
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
+                    initialMyLocationBtn.performClick();
                 }
                 else{
                     MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
@@ -4644,10 +4697,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     if(showPoolIntro) {
 //                        showPoolIntroDialog();
                     }
+                    updateSpecialPickupScreen();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private boolean updateSpecialPickupScreen(){
+        if((Data.autoData.getNearbyPickupRegionses() != null) && (Data.autoData.getNearbyPickupRegionses().getHoverInfo().size() > 0)){
+
+            return true;
+        } else{
+            specialPickupScreenOpened = false;
+            rlSpecialPickup.setVisibility(View.GONE);
+            updateTopBar();
+            return false;
         }
     }
 
@@ -6803,7 +6869,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     AdWordsConversionReporter.reportWithConversionId(HomeActivity.this.getApplicationContext(),
                                                             GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
-
+                                                    specialPickupScreenOpened = false;
                                                     String offerCode = "NA";
                                                     if (promoCouponSelectedForRide != null) {
                                                         if (promoCouponSelectedForRide instanceof CouponInfo) {
@@ -7029,6 +7095,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             dropLocationSet = false;
             zoomedForSearch = false;
             confirmedScreenOpened = false;
+            specialPickupScreenOpened = false;
 
             MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
             setUserData();
@@ -7248,6 +7315,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                     || PassengerScreenMode.P_IN_RIDE == passengerScreenMode
+                    || PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                     || (PassengerScreenMode.P_RIDE_END == passengerScreenMode
                     && relativeLayoutRideEndWithImage.getVisibility() == View.GONE && relativeLayoutGreat.getVisibility() == View.GONE)){
                 int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
@@ -7273,6 +7341,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 topBar.textViewTitle.setText(getResources().getString(R.string.autos));
                 if(confirmedScreenOpened){
                     topBar.textViewTitle.setText(getResources().getString(R.string.confirmation));
+                }
+                if(specialPickupScreenOpened){
+                    topBar.textViewTitle.setText(getResources().getString(R.string.choose_pickup));
                 }
 
                 localModeEnabled = 0;
@@ -8662,29 +8733,49 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void imageViewRideNowPoolCheck(){
-        if(getSlidingBottomPanel().getRequestRideOptionsFragment()
-                .getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-            if(Data.autoData.getDropLatLng() != null){
-                //requestRideClick();
-                shakeAnim = 0;
-                openConfirmRequestView();
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 " +
-                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
-            } else{
-                destinationRequiredShake();
+            rlSpecialPickup.setVisibility(View.GONE);
+            if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                    .getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+                if (Data.autoData.getDropLatLng() != null) {
+                    //requestRideClick();
+                    shakeAnim = 0;
+                    if(updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()){
+                        // show special pickup screen
+                        specialPickupScreenOpened = true;
+                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        switchPassengerScreen(passengerScreenMode);
+                        map.moveCamera(CameraUpdateFactory.zoomOut());
+                    } else {
+                        specialPickupScreenOpened = false;
+                        rlSpecialPickup.setVisibility(View.GONE);
+                        updateTopBar();
+                        openConfirmRequestView();
+                        FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 " +
+                                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
+                    }
+                } else {
+                    destinationRequiredShake();
+                }
+            } else {
+                if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
+                        .getRegionSelected().getDestinationMandatory() == 1) {
+                    destinationRequiredShake();
+                } else {
+                    if(updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()){
+                        // show special pickup screen
+                        specialPickupScreenOpened = true;
+                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        switchPassengerScreen(passengerScreenMode);
+                        map.moveCamera(CameraUpdateFactory.zoomOut());
+                    } else {
+                        requestRideClick();
+                        //openConfirmRequestView();
+                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                        FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 " +
+                                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
+                    }
+                }
             }
-        } else {
-            if(Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
-                    .getRegionSelected().getDestinationMandatory() == 1){
-                destinationRequiredShake();
-            }else {
-                requestRideClick();
-                //openConfirmRequestView();
-                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, TAG, "request ride l1 " +
-                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
-            }
-        }
     }
 
     private void destinationRequiredShake(){
@@ -8736,6 +8827,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 && confirmedScreenOpened
                 && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()
                 && Data.autoData.getDropLatLng() != null;
+    }
+
+    private boolean isSpecialPickupScreenOpened(){
+        return PassengerScreenMode.P_INITIAL == passengerScreenMode
+                && specialPickupScreenOpened;
     }
 
 
