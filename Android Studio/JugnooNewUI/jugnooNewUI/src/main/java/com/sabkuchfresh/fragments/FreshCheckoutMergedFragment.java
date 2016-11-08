@@ -259,10 +259,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         ((TextView)rootView.findViewById(R.id.textViewDiscount)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewJugnooCash)).setTypeface(Fonts.mavenMedium(activity));
-
-
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart);
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, this);
         listViewCart.setAdapter(freshCartItemsAdapter);
 
         recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
@@ -377,7 +375,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     imageViewCartArrow.setRotation(180f);
                 } else {
                     linearLayoutCartExpansion.setVisibility(View.VISIBLE);
-                    imageViewDeleteCart.setVisibility(View.GONE);
+                    imageViewDeleteCart.setVisibility(View.VISIBLE);
                     imageViewCartArrow.setRotation(0f);
                 }
             }
@@ -1008,9 +1006,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                                                 fragName = FreshCheckoutMergedFragment.class.getName();
                                                             }
                                                         }  else if(appType == AppConstant.ApplicationType.GROCERY){
-                                                            fragName = FreshCartItemsFragment.class.getName();
+                                                            fragName = FreshCheckoutMergedFragment.class.getName();
                                                         } else {
-                                                            fragName = FreshCartItemsFragment.class.getName();
+                                                            fragName = FreshCheckoutMergedFragment.class.getName();
                                                         }
                                                     } else {
                                                         if(appType == AppConstant.ApplicationType.MEALS && activity.isMealAddonItemsAvailable()){
@@ -1629,10 +1627,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 activity.performBackPressed();
             }
             activity.performBackPressed();
-            int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-            if(appType != AppConstant.ApplicationType.MEALS){
-                activity.performBackPressed();
-            }
         }
     }
 

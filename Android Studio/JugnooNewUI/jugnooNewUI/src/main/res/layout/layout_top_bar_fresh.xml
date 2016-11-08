@@ -166,7 +166,7 @@
             android:textSize="@dimen/text_size_30"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20px"
+            android:layout_marginRight="10px"
             android:visibility="gone"
 
             />

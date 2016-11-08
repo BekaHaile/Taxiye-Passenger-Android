@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.squareup.picasso.Picasso;
 
@@ -31,11 +33,15 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 	private Context context;
 	private LayoutInflater mInflater;
 	private List<SubItem> subItems;
+	private String categoryName;
+	private FreshCategoryItemsAdapter.Callback callback;
 
-	public FreshCartItemsAdapter(Context context, ArrayList<SubItem> subItems) {
+	public FreshCartItemsAdapter(Context context, ArrayList<SubItem> subItems, String categoryName, FreshCategoryItemsAdapter.Callback callback) {
 		this.context = context;
 		this.subItems = subItems;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.callback = callback;
+		this.categoryName = categoryName;
 	}
 
 	public synchronized void setResults(ArrayList<SubItem> subItems) {
@@ -87,14 +93,12 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		mHolder.textViewItemName.setText(subItem.getSubItemName());
 		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
 				Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
-		mHolder.textViewItemQuantity.setText("X "+subItem.getSubItemQuantitySelected());
-		mHolder.textViewItemTotalPrice.setText(context.getString(R.string.rupees_value_format,
-				Utils.getMoneyDecimalFormat().format(subItem.getPrice() * subItem.getSubItemQuantitySelected())));
+		mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
 
 		if(position == getCount()-1){
-			mHolder.imageViewSep.setVisibility(View.GONE);
+			mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.transparent));
 		} else {
-			mHolder.imageViewSep.setVisibility(View.VISIBLE);
+			mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.stroke_light_grey_alpha));
 		}
 
 		try {
@@ -112,25 +116,71 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			e.printStackTrace();
 		}
 
+
+		mHolder.imageViewMinus.setTag(position);
+		mHolder.imageViewPlus.setTag(position);
+
+		mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					int pos = (int) v.getTag();
+					if(callback.checkForMinus(pos, subItems.get(pos))) {
+						FlurryEventLogger.event(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
+						subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
+								subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
+						callback.onMinusClicked(pos, subItems.get(pos));
+
+						notifyDataSetChanged();
+					} else{
+						callback.minusNotDone(pos, subItems.get(pos));
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		mHolder.imageViewPlus.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					int pos = (int) v.getTag();
+					if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
+						subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+					} else {
+						Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
+					}
+
+					callback.onPlusClicked(pos, subItems.get(pos));
+					FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
+					notifyDataSetChanged();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+
 	}
 
 	static class MainViewHolder extends RecyclerView.ViewHolder {
 		public int id;
 		public RelativeLayout relative;
-		private ImageView imageViewItemImage, imageViewSep;
-		public TextView textViewItemName, textViewItemPrice, textViewItemQuantity, textViewItemTotalPrice;
+		private ImageView imageViewItemImage, imageViewSep, imageViewMinus, imageViewPlus;
+		public TextView textViewItemName, textViewItemPrice, textViewQuantity;
 
 		public MainViewHolder(View itemView, Context context) {
 			super(itemView);
 			relative = (RelativeLayout) itemView.findViewById(R.id.relative);
 			imageViewItemImage = (ImageView) itemView.findViewById(R.id.imageViewItemImage);
 			imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
+			imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
+			imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
 
 			textViewItemName = (TextView) itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenMedium(context));
 			textViewItemPrice = (TextView) itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenMedium(context));
-			textViewItemQuantity = (TextView) itemView.findViewById(R.id.textViewItemQuantity); textViewItemQuantity.setTypeface(Fonts.mavenMedium(context));
-			textViewItemTotalPrice = (TextView) itemView.findViewById(R.id.textViewItemTotalPrice); textViewItemTotalPrice.setTypeface(Fonts.mavenMedium(context));
-
+			textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
 		}
 	}
 }

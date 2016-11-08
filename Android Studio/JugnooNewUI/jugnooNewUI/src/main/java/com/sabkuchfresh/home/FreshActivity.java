@@ -2175,7 +2175,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         if(appType == AppConstant.ApplicationType.MEALS) {
             getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         } else {
-            getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+            getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         }
     }
 
