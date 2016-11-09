@@ -6446,9 +6446,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 destroyHighSpeedAccuracyFusedLocationFetcher();
             }
         } catch(Exception e){
-            initialMyLocationBtn.setVisibility(View.VISIBLE);
-            customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
-            destroyHighSpeedAccuracyFusedLocationFetcher();
+            if("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
+                initialMyLocationBtn.setVisibility(View.VISIBLE);
+                customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
+                destroyHighSpeedAccuracyFusedLocationFetcher();
+            }
         }
     }
 
