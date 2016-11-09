@@ -6,5 +6,6 @@ public abstract class PromoCoupon {
 	public abstract String getTitle();
 	public abstract Double getDiscount();
 	public abstract Integer getMasterCoupon();
+	public abstract boolean equals(Object o);
 
 }

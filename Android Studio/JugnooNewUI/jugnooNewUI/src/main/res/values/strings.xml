@@ -1196,6 +1196,7 @@
 	<string name="paid_via">Paid via</string>
 	<string name="billed_amount">Billed Amount</string>
 	<string name="refund">Refund</string>
+	<string name="coupon_remove_reapply_before_checkout">This will remove your applied coupon, you have to reapply your coupon</string>
 
 
 </resources>

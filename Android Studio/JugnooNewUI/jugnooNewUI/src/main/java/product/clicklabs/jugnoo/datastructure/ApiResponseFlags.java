@@ -88,6 +88,8 @@ public enum ApiResponseFlags {
 
 	MOBIKWIK_LOGGED_IN(802),
 
+	INVALID_DELIVERY_SLOT(604),
+
 
 	;
 

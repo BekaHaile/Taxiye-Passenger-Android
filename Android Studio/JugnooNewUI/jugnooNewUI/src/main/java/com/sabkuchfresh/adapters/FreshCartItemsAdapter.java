@@ -1,5 +1,6 @@
 package com.sabkuchfresh.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,7 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -30,18 +33,21 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class FreshCartItemsAdapter extends BaseAdapter {
 
-	private Context context;
+	private Activity context;
 	private LayoutInflater mInflater;
 	private List<SubItem> subItems;
 	private String categoryName;
-	private FreshCategoryItemsAdapter.Callback callback;
+	private Callback callback;
+	private boolean checkForCouponApplied;
 
-	public FreshCartItemsAdapter(Context context, ArrayList<SubItem> subItems, String categoryName, FreshCategoryItemsAdapter.Callback callback) {
+	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, String categoryName, boolean checkForCouponApplied,
+								 Callback callback) {
 		this.context = context;
 		this.subItems = subItems;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.callback = callback;
 		this.categoryName = categoryName;
+		this.checkForCouponApplied = checkForCouponApplied;
 	}
 
 	public synchronized void setResults(ArrayList<SubItem> subItems) {
@@ -124,16 +130,27 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				try {
-					int pos = (int) v.getTag();
-					if(callback.checkForMinus(pos, subItems.get(pos))) {
-						FlurryEventLogger.event(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
-						subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
-								subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
-						callback.onMinusClicked(pos, subItems.get(pos));
+					final int pos = (int) v.getTag();
+					if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
+						DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
+								context.getString(R.string.coupon_remove_reapply_before_checkout),
+								context.getString(R.string.ok),
+								context.getString(R.string.cancel),
+								new View.OnClickListener(){
+									@Override
+									public void onClick(View v) {
+										doMinus(pos);
+										callback.removeCoupon();
+									}
+								},
+								new View.OnClickListener(){
+									@Override
+									public void onClick(View v) {
 
-						notifyDataSetChanged();
+									}
+								}, true, false);
 					} else{
-						callback.minusNotDone(pos, subItems.get(pos));
+						doMinus(pos);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -145,16 +162,28 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				try {
-					int pos = (int) v.getTag();
-					if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-						subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
-					} else {
-						Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
-					}
+					final int pos = (int) v.getTag();
+					if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
+						DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
+								context.getString(R.string.coupon_remove_reapply_before_checkout),
+								context.getString(R.string.ok),
+								context.getString(R.string.cancel),
+								new View.OnClickListener(){
+									@Override
+									public void onClick(View v) {
+										doPlus(pos);
+										callback.removeCoupon();
+									}
+								},
+								new View.OnClickListener(){
+									@Override
+									public void onClick(View v) {
 
-					callback.onPlusClicked(pos, subItems.get(pos));
-					FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-					notifyDataSetChanged();
+									}
+								}, true, false);
+					} else{
+						doPlus(pos);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -162,6 +191,31 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		});
 
 
+	}
+
+	private void doMinus(int pos){
+		if(callback.checkForMinus(pos, subItems.get(pos))) {
+			FlurryEventLogger.event(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
+			subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
+					subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
+			callback.onMinusClicked(pos, subItems.get(pos));
+
+			notifyDataSetChanged();
+		} else{
+			callback.minusNotDone(pos, subItems.get(pos));
+		}
+	}
+
+	private void doPlus(int pos){
+		if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
+			subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+		} else {
+			Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
+		}
+
+		callback.onPlusClicked(pos, subItems.get(pos));
+		FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
+		notifyDataSetChanged();
 	}
 
 	static class MainViewHolder extends RecyclerView.ViewHolder {
@@ -182,5 +236,14 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			textViewItemPrice = (TextView) itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenMedium(context));
 			textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
 		}
+	}
+
+	public interface Callback{
+		void onPlusClicked(int position, SubItem subItem);
+		void onMinusClicked(int position, SubItem subItem);
+		boolean checkForMinus(int position, SubItem subItem);
+		void minusNotDone(int position, SubItem subItem);
+		PromoCoupon getSelectedCoupon();
+		void removeCoupon();
 	}
 }

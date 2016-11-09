@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.AddOnItemsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
-import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
@@ -26,6 +25,7 @@ import com.squareup.otto.Bus;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -136,8 +136,8 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         linearLayoutCartDetails = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartDetails);
         linearLayoutCartDetails.setVisibility(View.GONE);
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART,
-                new FreshCategoryItemsAdapter.Callback() {
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, false,
+                new FreshCartItemsAdapter.Callback() {
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {
                         updateCartDataView();
@@ -155,16 +155,6 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                     }
 
                     @Override
-                    public void onDeleteClicked(int position, SubItem subItem) {
-                        updateCartDataView();
-                        if(subItem.getSubItemQuantitySelected() == 0){
-                            activity.subItemsInCart.remove(position);
-                            checkIfEmpty();
-                        }
-                        addOnItemsAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
                     public boolean checkForMinus(int position, SubItem subItem) {
                         return activity.checkForMinus(position, subItem);
                     }
@@ -173,6 +163,16 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                     public void minusNotDone(int position, SubItem subItem) {
                         activity.clearMealsCartIfNoMainMeal();
                         addOnItemsAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public PromoCoupon getSelectedCoupon() {
+                        return null;
+                    }
+
+                    @Override
+                    public void removeCoupon() {
+
                     }
                 });
         listViewCart.setAdapter(freshCartItemsAdapter);

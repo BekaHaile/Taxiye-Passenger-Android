@@ -34,7 +34,6 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
-import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -102,7 +101,7 @@ import retrofit.mime.TypedByteArray;
 
 
 public class FreshCheckoutMergedFragment extends Fragment implements FlurryEventNames, DeliverySlotsAdapter.Callback,
-        FreshCategoryItemsAdapter.Callback, PromoCouponsAdapter.Callback {
+        FreshCartItemsAdapter.Callback, PromoCouponsAdapter.Callback {
 
     private final String TAG = FreshCheckoutMergedFragment.class.getSimpleName();
     private LinearLayout linearLayoutRoot;
@@ -165,6 +164,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private double amountPayable;
     private int currentGroupId = 1;
     private boolean orderPlaced = false;
+    private boolean cartChangedRefreshCheckout = false;
 
     public FreshCheckoutMergedFragment() {
     }
@@ -196,7 +196,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_checkout_merged, container, false);
 
-
+        cartChangedRefreshCheckout = false;
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
 
@@ -260,7 +260,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         ((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewJugnooCash)).setTypeface(Fonts.mavenMedium(activity));
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, this);
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, true, this);
         listViewCart.setAdapter(freshCartItemsAdapter);
 
         recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
@@ -988,6 +988,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             fetchWalletBalance();
                                         }
                                     });
+                                } else if (ApiResponseFlags.INVALID_DELIVERY_SLOT.getOrdinal() == flag) {
+                                    DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            getCheckoutDataAPI();
+                                        }
+                                    });
                                 }
                                 else {
                                     final int validStockCount = jObj.optInt(Constants.KEY_VALID_STOCK_COUNT, -1);
@@ -1283,6 +1290,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     public void onSlotSelected(int position, Slot slot) {
         FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
         activity.setSlotSelected(slot);
+        recyclerViewDeliverySlots.scrollToPosition(position);
     }
 
 
@@ -1411,6 +1419,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         }
                                     }
                                     updateCouponsDataView();
+                                    try {
+                                        if(cartChangedRefreshCheckout){
+											setSelectedCoupon(promoCoupons.indexOf(activity.getSelectedPromoCoupon()));
+										}
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    cartChangedRefreshCheckout = false;
 
                                 } else{
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
@@ -1579,11 +1595,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
+        cartChangedRefreshCheckout = true;
         updateCartDataView();
     }
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
+        cartChangedRefreshCheckout = true;
         updateCartDataView();
         if(subItem.getSubItemQuantitySelected() == 0){
             activity.subItemsInCart.remove(position);
@@ -1591,14 +1609,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
-    @Override
-    public void onDeleteClicked(int position, SubItem subItem) {
-        updateCartDataView();
-        if(subItem.getSubItemQuantitySelected() == 0){
-            activity.subItemsInCart.remove(position);
-            checkIfEmpty();
-        }
-    }
 
     @Override
     public boolean checkForMinus(int position, SubItem subItem) {
@@ -1609,6 +1619,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     public void minusNotDone(int position, SubItem subItem) {
         activity.clearMealsCartIfNoMainMeal();
     }
+
+
 
     public void deleteCart() {
         for(SubItem subItem : activity.subItemsInCart){
@@ -1633,12 +1645,22 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     @Override
     public void onCouponSelected() {
-
+        if(cartChangedRefreshCheckout){
+            getCheckoutDataAPI();
+        }
     }
 
     @Override
     public PromoCoupon getSelectedCoupon() {
         return activity.getSelectedPromoCoupon();
+    }
+
+    @Override
+    public void removeCoupon() {
+        activity.setSelectedPromoCoupon(noSelectionCoupon);
+        setPromoAmount();
+        updateCartUI();
+        promoCouponsAdapter.notifyDataSetChanged();
     }
 
     @Override
