@@ -90,7 +90,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		PromoCoupon promoCoupon = offerList.get(position);
 
 		holder.textViewOfferName.setText(promoCoupon.getTitle());
-		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() == promoCoupon.getId()){
+		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
 		} else{
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
@@ -126,7 +126,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 				try {
 					int position = ((ViewHolder) v.getTag()).id;
 					PromoCoupon promoCoupon = offerList.get(position);
-					if (callback.getSelectedCoupon() != null && matchPromoCoupon(callback.getSelectedCoupon(), promoCoupon)){
+					if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
 						callback.setSelectedCoupon(-1);
 					} else {
 						callback.setSelectedCoupon(position);
@@ -163,25 +163,6 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		void onCouponSelected();
 		PromoCoupon getSelectedCoupon();
 		void setSelectedCoupon(int position);
-	}
-
-	public boolean matchPromoCoupon(PromoCoupon pc1, PromoCoupon pc2) {
-		if (pc1 instanceof CouponInfo && pc2 instanceof CouponInfo) {
-			CouponInfo c1 = (CouponInfo) pc1;
-			CouponInfo c2 = (CouponInfo) pc2;
-			if (c1.getId() == c2.getId() && c1.getMasterCoupon().equals(c2.getMasterCoupon()) && c1.autos.equals(c2.autos) && c1.fresh.equals(c2.fresh)
-					&& c1.meals.equals(c2.meals) && c1.grocery.equals(c2.grocery)) {
-				return true;
-			}
-		} else if (pc1 instanceof PromotionInfo && pc2 instanceof PromotionInfo) {
-			PromotionInfo c1 = (PromotionInfo) pc1;
-			PromotionInfo c2 = (PromotionInfo) pc2;
-			if (c1.getId() == c2.getId() && c1.getMasterCoupon().equals(c2.getMasterCoupon()) && c1.autos.equals(c2.autos) && c1.fresh.equals(c2.fresh)
-					&& c1.meals.equals(c2.meals) && c1.grocery.equals(c2.grocery)) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 }

@@ -403,10 +403,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         updateAddressView();
 
+        updateCartDataView();
+
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.CHECKOUT, activity.productList);
         getCheckoutDataAPI();
-
-        updateCartDataView();
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.PAYMENT, activity.productList);
         fetchWalletBalance();
