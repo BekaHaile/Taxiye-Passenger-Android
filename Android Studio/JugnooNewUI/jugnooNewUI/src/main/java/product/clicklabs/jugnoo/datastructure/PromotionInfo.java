@@ -66,7 +66,7 @@ public class PromotionInfo extends PromoCoupon{
 	@Override
 	public boolean equals(Object o) {
 		try{
-			if((((PromotionInfo)o).id.equals(this.id))){
+			if((((PromoCoupon)o).getId() == this.id)){
 				return true;
 			}
 			else{ 

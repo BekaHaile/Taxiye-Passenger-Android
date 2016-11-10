@@ -67,7 +67,7 @@ public class CouponInfo extends PromoCoupon{
 	@Override
 	public boolean equals(Object o) {
 		try{
-			if((((CouponInfo)o).id.equals(this.id))){
+			if((((PromoCoupon)o).getId() == this.id)){
 				return true;
 			}
 			else{
@@ -97,4 +97,5 @@ public class CouponInfo extends PromoCoupon{
 	public void setDiscount(Double discount) {
 		this.discount = discount;
 	}
+
 }
