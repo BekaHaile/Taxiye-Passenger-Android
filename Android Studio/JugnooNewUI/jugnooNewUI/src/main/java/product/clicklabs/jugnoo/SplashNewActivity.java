@@ -334,6 +334,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 			try{
+				Utils.generateKeyHash(SplashNewActivity.this);
 				if(getIntent().getIntExtra(KEY_LOGGED_OUT, 0) == 1){
 					String message = getIntent().getStringExtra(KEY_MESSAGE);
 					DialogPopup.alertPopup(this, "", message);
@@ -739,6 +740,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void onClick(View v) {
 					if (AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
+						signUpBy = "facebook";
 						FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
 						Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 						facebookLoginHelper.openFacebookSession();
@@ -769,6 +771,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onClick(View v) {
 					if(AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
 					FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
+						signUpBy = "google";
                         Bundle bundle = new Bundle();
                         MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN_WITH_GOOGLE, bundle);
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
