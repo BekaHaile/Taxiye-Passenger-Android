@@ -463,6 +463,15 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/bMessageDriver"
+            android:layout_width="132px"
+            android:layout_height="136px"
+            android:layout_toLeftOf="@+id/buttonCallDriver"
+            android:layout_marginTop="0px"
+            android:background="@drawable/ic_ride_call_selector"
+            android:tag="mwar" />
+
+        <Button
             android:id="@+id/buttonCallDriver"
             android:layout_width="132px"
             android:layout_height="136px"

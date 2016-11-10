@@ -105,6 +105,7 @@ import java.util.TimerTask;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database;
@@ -215,7 +216,7 @@ import retrofit.mime.TypedByteArray;
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, FirebaseEvents {
+        SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, FirebaseEvents, View.OnClickListener {
 
 
     private final String TAG = "Home Screen";
@@ -456,6 +457,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private FloatingActionButton fabFresh;
     private FloatingActionButton fabAutos;
     private View fabExtra;*/
+    private Button bMessageDriver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -752,6 +754,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         imageViewThumbsUp = (ImageView) findViewById(R.id.imageViewThumbsUp);
         textViewThumbsDown = (TextView) findViewById(R.id.textViewThumbsDown); textViewThumbsDown.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp); textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+
+        bMessageDriver = (Button) findViewById(R.id.bMessageDriver); bMessageDriver.setOnClickListener(this);
 
 
         ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback); ratingBarRSFeedback.setRating(0);
@@ -2648,6 +2652,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 relativeLayoutConfirmRequest.setVisibility(View.GONE);
+                bMessageDriver.setVisibility(View.VISIBLE);
 
                 switch (mode) {
 
@@ -3065,6 +3070,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         }
 
+                        bMessageDriver.setVisibility(View.GONE);
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -4188,6 +4194,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         }
     };
+
+    @Override
+    public void onClick(View v) {
+        startActivity(new Intent(HomeActivity.this, ChatActivity.class));
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+    }
 
 
     private class UpdateNotificationsAsync extends AsyncTask<String, String, String>{
