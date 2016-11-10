@@ -463,9 +463,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private RelativeLayout rlSelectedPickup, rlSpecialPickup;
     private TextView tvSelectedPickup, tvSpecialPicupTitle, tvSpecialPicupDesc;
     private ImageView ivSpecialPickupArrow;
-    private Button bSpecialPicupConfirmRequest;
+    private Button bSpecialPicupConfirmRequest, specialPickupLocationBtn;
     public ArrayList<NearbyPickupRegions.HoverInfo> specialPickups;
     private Spinner spin;
+    private boolean specialPickupSelected;
+    private String selectedSpecialPickup = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -771,6 +773,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         // Special Pickup views
         rlSpecialPickup = (RelativeLayout) findViewById(R.id.rlSpecialPickup);
+        specialPickupLocationBtn = (Button) findViewById(R.id.specialPickupLocationBtn);
         spin = (Spinner) findViewById(R.id.simpleSpinner);
         tvSpecialPicupTitle = (TextView) findViewById(R.id.tvSpecialPicupTitle); tvSpecialPicupTitle.setTypeface(Fonts.mavenMedium(this));
         tvSpecialPicupDesc = (TextView) findViewById(R.id.tvSpecialPicupDesc); tvSpecialPicupDesc.setTypeface(Fonts.mavenRegular(this));
@@ -790,6 +793,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
+        specialPickupLocationBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initialMyLocationBtn.performLongClick();
+            }
+        });
+
         spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -797,10 +807,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLatitude()),
                         Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLongitude()));
                 Data.autoData.setPickupLatLng(specialPicupLatLng);
+                specialPickupSelected = true;
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), MAP_ANIMATE_DURATION, null);
-                Data.autoData.setPickupAddress(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText()+", " +
-                        Data.autoData.getPickupAddress());
-                textViewInitialSearch.setText(Data.autoData.getPickupAddress());
+                selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText()+", ";
+                textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
             }
 
             @Override
@@ -1867,7 +1877,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
 							refresh = true;
 						}
-                        if(!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
+                        if(!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation() && !specialPickupSelected) {
 							if (refresh && mapTouched) {
 								callMapTouchedRefreshDrivers();
 							}
@@ -1878,6 +1888,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    specialPickupSelected = false;
 
                     try {
                         if(PassengerScreenMode.P_INITIAL != passengerScreenMode || !refresh) {
@@ -4711,6 +4722,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             return true;
         } else{
             specialPickupScreenOpened = false;
+            selectedSpecialPickup = "";
             rlSpecialPickup.setVisibility(View.GONE);
             updateTopBar();
             return false;
@@ -6592,7 +6604,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private boolean checkForInitialMyLocationButtonClick(){
-        return PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened
+        return PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupScreenOpened
                 && myLocationButtonClicked;
     }
 
@@ -6723,7 +6735,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 nameValuePairs.put("access_token", Data.userData.accessToken);
                                 nameValuePairs.put("latitude", "" + Data.autoData.getPickupLatLng().latitude);
                                 nameValuePairs.put("longitude", "" + Data.autoData.getPickupLatLng().longitude);
-                                nameValuePairs.put(KEY_PICKUP_LOCATION_ADDRESS, Data.autoData.getPickupAddress());
+                                nameValuePairs.put(KEY_PICKUP_LOCATION_ADDRESS, selectedSpecialPickup + Data.autoData.getPickupAddress());
 
                                 //30.7500, 76.7800
 //								nameValuePairs.add(new BasicNameValuePair("latitude", "30.7500"));
@@ -8142,10 +8154,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 switchPassengerScreen(passengerScreenMode);
 
                 if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
-                        shakeAnim > 0){
+                        shakeAnim > 0 && !updateSpecialPickupScreen()){
                     imageViewRideNow.performClick();
                 }
-
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
@@ -8744,7 +8755,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         specialPickupScreenOpened = true;
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
-                        map.moveCamera(CameraUpdateFactory.zoomOut());
+                        //map.moveCamera(CameraUpdateFactory.zoomOut());
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
                     } else {
                         specialPickupScreenOpened = false;
                         rlSpecialPickup.setVisibility(View.GONE);
@@ -8766,7 +8778,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         specialPickupScreenOpened = true;
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
-                        map.moveCamera(CameraUpdateFactory.zoomOut());
+                        //map.moveCamera(CameraUpdateFactory.zoomOut());
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
                     } else {
                         requestRideClick();
                         //openConfirmRequestView();
