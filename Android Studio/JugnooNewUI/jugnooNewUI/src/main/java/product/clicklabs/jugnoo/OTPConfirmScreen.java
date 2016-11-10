@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -95,6 +96,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	public static EmailRegisterData emailRegisterData;
 	public static FacebookRegisterData facebookRegisterData;
 	public static GoogleRegisterData googleRegisterData;
+	private boolean giveAMissedCall;
+	private Handler handler = new Handler();
+	private String signupBy = "", email = "", password = "";
+	private boolean onlyDigits;
 
 
 	@Override
@@ -123,12 +128,24 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 		loginDataFetched = false;
 
-		if(getIntent().hasExtra(LINKED_WALLET)){
-			linkedWallet = getIntent().getIntExtra(LINKED_WALLET, 0);
-			linkedWalletErrorMsg = getIntent().getStringExtra(LINKED_WALLET_MESSAGE);
-			if((!"".equalsIgnoreCase(linkedWalletErrorMsg)) && (linkedWalletErrorMsg != null)){
-				DialogPopup.dialogBanner(OTPConfirmScreen.this, linkedWalletErrorMsg);
-			}
+		try {
+			if(getIntent().hasExtra(LINKED_WALLET)){
+                linkedWallet = getIntent().getIntExtra(LINKED_WALLET, 0);
+                linkedWalletErrorMsg = getIntent().getStringExtra(LINKED_WALLET_MESSAGE);
+                if((!"".equalsIgnoreCase(linkedWalletErrorMsg)) && (linkedWalletErrorMsg != null)){
+                    DialogPopup.dialogBanner(OTPConfirmScreen.this, linkedWalletErrorMsg);
+                }
+                signupBy = getIntent().getStringExtra("signup_by");
+                email = getIntent().getStringExtra("email");
+                password = getIntent().getStringExtra("password");
+
+                if(email.length() > 0){
+                    onlyDigits = Utils.checkIfOnlyDigits(email);
+                }
+
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 
@@ -286,6 +303,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
+										giveAMissedCall = true;
 										Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
 												.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
 										FlurryEventLogger.event(GIVE_MISSED_CALL);
@@ -569,7 +587,43 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 		HomeActivity.checkForAccessTokenChange(this);
 
+		if(giveAMissedCall){
+			giveAMissedCall = false;
+			//buttonVerify.performClick();
+			if(signupBy.equalsIgnoreCase("email")){
+				if(onlyDigits){
+					email = "+91"+email;
+					sendLoginValues(OTPConfirmScreen.this, email, password, true);
+				} else{
+					sendLoginValues(OTPConfirmScreen.this, email, password, false);
+				}
+			} else if(signupBy.equalsIgnoreCase("facebook")){
+				sendFacebookLoginValues(OTPConfirmScreen.this);
+			} else if(signupBy.equalsIgnoreCase("google")){
+				sendGoogleLoginValues(OTPConfirmScreen.this);
+			}
+			// api call
+			handler.postDelayed(runnable ,5000);
+		}
 	}
+
+	Runnable runnable = new Runnable() {
+		@Override
+		public void run() {
+			if(signupBy.equalsIgnoreCase("email")){
+				if(onlyDigits){
+					email = "+91"+email;
+					sendLoginValues(OTPConfirmScreen.this, email, password, true);
+				} else{
+					sendLoginValues(OTPConfirmScreen.this, email, password, false);
+				}
+			} else if(signupBy.equalsIgnoreCase("facebook")){
+				sendFacebookLoginValues(OTPConfirmScreen.this);
+			} else if(signupBy.equalsIgnoreCase("google")){
+				sendGoogleLoginValues(OTPConfirmScreen.this);
+			}
+		}
+	};
 
 
     public static boolean checkIfRegisterDataNull(Activity activity){
@@ -1021,6 +1075,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				Data.locationFetcher.destroy();
 				Data.locationFetcher = null;
 			}
+			if(handler != null){
+				handler.removeCallbacks(runnable);
+			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -1140,6 +1197,328 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		} else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
 			MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.SIGN_UP_PAGE+"_"+FirebaseEvents.FREECHARGE, new Bundle());
 		}
+	}
+
+	/**
+	 * ASync for login from server
+	 */
+	public void sendLoginValues(final Activity activity, final String emailId, String password, final boolean isPhoneNumber) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			//resetFlags();
+			DialogPopup.showLoadingDialog(activity, "Trying to verify through missed call...");
+
+			HashMap<String, String> params = new HashMap<>();
+
+			if (Data.locationFetcher != null) {
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+			if (isPhoneNumber) {
+				params.put("phone_no", emailId);
+			} else {
+				params.put("email", emailId);
+			}
+			params.put("password", password);
+			params.put("device_token", MyApplication.getInstance().getDeviceToken());
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", MyApplication.getInstance().deviceName());
+			params.put("app_version", "" + MyApplication.getInstance().appVersion());
+			params.put("os_version", MyApplication.getInstance().osVersion());
+			params.put("country", MyApplication.getInstance().country());
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
+			params.put("client_id", Config.getAutosClientId());
+
+			if (Utils.isDeviceRooted()) {
+				params.put("device_rooted", "1");
+			} else {
+				params.put("device_rooted", "0");
+			}
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
+			params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
+
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
+
+			Log.i("params", "=" + params);
+
+			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
+				@Override
+				public void success(LoginResponse loginResponse, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "loginUsingEmailOrPhoneNo response = " + responseStr);
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+
+						int flag = jObj.getInt("flag");
+
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+								/*if (isPhoneNumber) {
+									enteredEmail = jObj.getString("user_email");
+								} else {
+									enteredEmail = emailId;
+								}*/
+							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+											loginResponse, LoginVia.EMAIL);
+									Database.getInstance(OTPConfirmScreen.this).insertEmail(emailId);
+									loginDataFetched = true;
+								}
+							} else {
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+							DialogPopup.dismissLoadingDialog();
+						} else {
+							DialogPopup.dismissLoadingDialog();
+						}
+
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+
+	public void sendFacebookLoginValues(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+			HashMap<String, String> params = new HashMap<>();
+
+			if (Data.locationFetcher != null) {
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+
+			params.put("user_fb_id", Data.facebookUserData.fbId);
+			params.put("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
+			params.put("fb_access_token", Data.facebookUserData.accessToken);
+			params.put("fb_mail", Data.facebookUserData.userEmail);
+			params.put("username", Data.facebookUserData.userName);
+
+			params.put("device_token", MyApplication.getInstance().getDeviceToken());
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", MyApplication.getInstance().deviceName());
+			params.put("app_version", "" + MyApplication.getInstance().appVersion());
+			params.put("os_version", MyApplication.getInstance().osVersion());
+			params.put("country", MyApplication.getInstance().country());
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
+			params.put("client_id", Config.getAutosClientId());
+
+			if (Utils.isDeviceRooted()) {
+				params.put("device_rooted", "1");
+			} else {
+				params.put("device_rooted", "0");
+			}
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
+			params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
+
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
+
+			Log.i("params", "" + params);
+
+			RestClient.getApiServices().loginUsingFacebook(params, new Callback<LoginResponse>() {
+				@Override
+				public void success(LoginResponse loginResponse, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "loginUsingFacebook response = " + responseStr);
+
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+
+						int flag = jObj.getInt("flag");
+
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+								linkedWallet = jObj.optInt("reg_wallet_type");
+							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+											loginResponse, LoginVia.FACEBOOK);
+									loginDataFetched = true;
+
+									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
+								}
+							} else {
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+							DialogPopup.dismissLoadingDialog();
+						} else {
+							DialogPopup.dismissLoadingDialog();
+						}
+
+					} catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "loginUsingFacebook error=" + error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
+	}
+
+	public void sendGoogleLoginValues(final Activity activity) {
+		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			DialogPopup.showLoadingDialog(activity, "Loading...");
+
+			HashMap<String, String> params = new HashMap<>();
+
+			if (Data.locationFetcher != null) {
+				Data.loginLatitude = Data.locationFetcher.getLatitude();
+				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			}
+
+			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
+
+			params.put("device_token", MyApplication.getInstance().getDeviceToken());
+			params.put("device_type", Data.DEVICE_TYPE);
+			params.put("device_name", MyApplication.getInstance().deviceName());
+			params.put("app_version", "" + MyApplication.getInstance().appVersion());
+			params.put("os_version", MyApplication.getInstance().osVersion());
+			params.put("country", MyApplication.getInstance().country());
+			params.put("unique_device_id", Data.uniqueDeviceId);
+			params.put("latitude", "" + Data.loginLatitude);
+			params.put("longitude", "" + Data.loginLongitude);
+			params.put("client_id", Config.getAutosClientId());
+
+			if (Utils.isDeviceRooted()) {
+				params.put("device_rooted", "1");
+			} else {
+				params.put("device_rooted", "0");
+			}
+			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
+			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			if(links != null){
+				if(!"[]".equalsIgnoreCase(links)) {
+					params.put(KEY_BRANCH_REFERRING_LINKS, links);
+				}
+			}
+			params.put(KEY_SP_LAST_OPENED_CLIENT_ID, Prefs.with(activity).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
+
+			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(this, params);
+
+			Log.i("params", "" + params);
+
+
+			RestClient.getApiServices().loginUsingGoogle(params, new Callback<LoginResponse>() {
+				@Override
+				public void success(LoginResponse loginResponse, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i(TAG, "loginUsingGoogle response = " + responseStr);
+
+					try {
+						JSONObject jObj = new JSONObject(responseStr);
+
+						int flag = jObj.getInt("flag");
+
+						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+							if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
+								String error = jObj.getString("error");
+							}
+							else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							}
+							else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+								linkedWallet = jObj.optInt("reg_wallet_type");
+
+							}
+							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+											loginResponse, LoginVia.GOOGLE);
+									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
+									loginDataFetched = true;
+
+									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.googleSignInAccount.getEmail());
+								}
+							}
+							else{
+								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							}
+							DialogPopup.dismissLoadingDialog();
+						}
+						else{
+							DialogPopup.dismissLoadingDialog();
+						}
+
+					}  catch (Exception exception) {
+						exception.printStackTrace();
+						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.dismissLoadingDialog();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e(TAG, "loginUsingGoogle error="+error.toString());
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+				}
+			});
+
+		}
+		else {
+			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+		}
+
 	}
 
 }
