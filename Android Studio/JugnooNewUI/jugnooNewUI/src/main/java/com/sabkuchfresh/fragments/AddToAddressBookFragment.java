@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -75,8 +77,13 @@ public class AddToAddressBookFragment extends Fragment {
     public String placeId = "";
 
     public boolean locationEdited = false;
+    public boolean editThisAddress;
 
 
+    LinearLayout linearLayoutType;
+    RelativeLayout relativeLayoutTypeHome, relativeLayoutTypeWork, relativeLayoutTypeOther;
+    ImageView imageViewRadioTypeHome, imageViewRadioTypeWork, imageViewRadioTypeOther;
+    TextView textViewTypeHome, textViewTypeWork, textViewTypeOther;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -178,6 +185,18 @@ public class AddToAddressBookFragment extends Fragment {
 
         buttonAddToAddressBook = (Button) rootView.findViewById(R.id.buttonAddToAddressBook); buttonAddToAddressBook.setTypeface(Fonts.mavenRegular(activity));
 
+        linearLayoutType = (LinearLayout) rootView.findViewById(R.id.linearLayoutType);
+        relativeLayoutTypeHome = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTypeHome);
+        relativeLayoutTypeWork = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTypeWork);
+        relativeLayoutTypeOther = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTypeOther);
+        imageViewRadioTypeHome = (ImageView) rootView.findViewById(R.id.imageViewRadioTypeHome);
+        imageViewRadioTypeWork = (ImageView) rootView.findViewById(R.id.imageViewRadioTypeWork);
+        imageViewRadioTypeOther = (ImageView) rootView.findViewById(R.id.imageViewRadioTypeOther);
+        textViewTypeHome = (TextView) rootView.findViewById(R.id.textViewTypeHome); textViewTypeHome.setTypeface(Fonts.mavenMedium(activity));
+        textViewTypeWork = (TextView) rootView.findViewById(R.id.textViewTypeWork); textViewTypeWork.setTypeface(Fonts.mavenMedium(activity));
+        textViewTypeOther = (TextView) rootView.findViewById(R.id.textViewTypeOther); textViewTypeOther.setTypeface(Fonts.mavenMedium(activity));
+
+
         buttonAddToAddressBook.setText(activity.getResources().getString(R.string.confirm));
 
         buttonAddToAddressBook.setOnClickListener(new View.OnClickListener() {
@@ -271,6 +290,33 @@ public class AddToAddressBookFragment extends Fragment {
             }
         });
 
+        relativeLayoutTypeHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextLabel.setVisibility(View.GONE);
+                setAddressTypeUI(activity.getString(R.string.home));
+            }
+        });
+
+        relativeLayoutTypeWork.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextLabel.setVisibility(View.GONE);
+                setAddressTypeUI(activity.getString(R.string.work));
+            }
+        });
+
+        relativeLayoutTypeOther.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!editThisAddress) {
+                    editTextLabel.setVisibility(View.VISIBLE);
+                    setAddressTypeUI("");
+                }
+            }
+        });
+
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -281,6 +327,20 @@ public class AddToAddressBookFragment extends Fragment {
 
         setDataToUI();
 
+    }
+
+    private void setAddressTypeUI(String label){
+        imageViewRadioTypeHome.setImageResource(R.drawable.ic_radio_button_normal);
+        imageViewRadioTypeWork.setImageResource(R.drawable.ic_radio_button_normal);
+        imageViewRadioTypeOther.setImageResource(R.drawable.ic_radio_button_normal);
+        if(label.equalsIgnoreCase(activity.getString(R.string.home))){
+            imageViewRadioTypeHome.setImageResource(R.drawable.ic_radio_button_selected);
+        } else if(label.equalsIgnoreCase(activity.getString(R.string.work))){
+            imageViewRadioTypeWork.setImageResource(R.drawable.ic_radio_button_selected);
+        } else {
+            imageViewRadioTypeOther.setImageResource(R.drawable.ic_radio_button_selected);
+        }
+        editTextLabel.setText(label);
     }
 
     private void setDataToUI(){
@@ -355,7 +415,26 @@ public class AddToAddressBookFragment extends Fragment {
 
         buttonAddToAddressBook.setText(editAddress ? R.string.update_address : R.string.confirm);
         relativeLayoutEdit.setVisibility(editAddress ? View.VISIBLE : View.GONE);
+        editThisAddress = editAddress;
 
+        relativeLayoutTypeHome.setVisibility(View.GONE);
+        relativeLayoutTypeWork.setVisibility(View.GONE);
+        relativeLayoutTypeOther.setVisibility(View.GONE);
+        editTextLabel.setVisibility(View.GONE);
+        if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
+            relativeLayoutTypeHome.setVisibility(View.VISIBLE);
+            label = activity.getString(R.string.home);
+        } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
+            relativeLayoutTypeWork.setVisibility(View.VISIBLE);
+            label = activity.getString(R.string.work);
+        } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION){
+            relativeLayoutTypeHome.setVisibility(View.VISIBLE);
+            relativeLayoutTypeWork.setVisibility(View.VISIBLE);
+            relativeLayoutTypeOther.setVisibility(View.VISIBLE);
+            editTextLabel.setVisibility(View.VISIBLE);
+        }
+
+        setAddressTypeUI(label);
     }
 
 
@@ -597,6 +676,13 @@ public class AddToAddressBookFragment extends Fragment {
                 deliveryAddressesFragment = freshActivity.getDeliveryAddressesFragment();
                 placeRequestCode = freshActivity.getPlaceRequestCode();
                 editThisAddress = freshActivity.isEditThisAddress();
+
+                if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.home))){
+                    placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
+                } else if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.work))){
+                    placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
+                }
+
                 if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
                     label = Constants.TYPE_HOME;
                 } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
@@ -620,6 +706,11 @@ public class AddToAddressBookFragment extends Fragment {
                 if (addPlaceActivity.isEditThisAddress() && addPlaceActivity.getSearchResult() != null) {
                     searchResultId = addPlaceActivity.getSearchResult().getId();
                     placeId = addPlaceActivity.getSearchResult().getPlaceId();
+                }
+                if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.home))){
+                    placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
+                } else if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.work))){
+                    placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
                 }
             }
 

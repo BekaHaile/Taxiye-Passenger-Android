@@ -243,8 +243,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(!isHidden() && activity.isRefreshCart()) {
-			getAllProducts(true);
+		if(!isHidden()) {
+			getAllProducts(activity.isRefreshCart());
 			activity.setRefreshCart(false);
 		}
 	}

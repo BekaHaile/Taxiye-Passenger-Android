@@ -154,8 +154,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     @Override
     public void onResume() {
         super.onResume();
-        if(!isHidden() && activity.isRefreshCart()) {
-            getAllProducts(true);
+        if(!isHidden()) {
+            getAllProducts(activity.isRefreshCart());
             activity.setRefreshCart(false);
         }
     }

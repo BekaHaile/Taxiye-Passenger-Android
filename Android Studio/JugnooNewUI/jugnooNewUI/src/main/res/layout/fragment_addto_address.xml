@@ -61,7 +61,106 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="25px"
                 android:background="@color/white"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:animateLayoutChanges="true"
+                >
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutTypeHome"
+                        android:layout_width="190px"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15px"
+                        android:background="@drawable/bg_transparent_menu_item_selector">
+                        <ImageView
+                            android:id="@+id/imageViewRadioTypeHome"
+                            android:layout_width="73px"
+                            android:layout_height="73px"
+                            android:padding="20px"
+                            android:src="@drawable/ic_radio_button_normal"
+                            android:tag="mwar"
+                            android:layout_centerVertical="true"
+                            />
+
+                        <TextView
+                            android:id="@+id/textViewTypeHome"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/imageViewRadioTypeHome"
+                            android:text="@string/home"
+                            android:maxLines="2"
+                            android:textColor="@color/text_color_selector"
+                            android:textSize="@dimen/text_size_30"
+                            />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutTypeWork"
+                        android:layout_width="190px"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="15px"
+                        android:background="@drawable/bg_transparent_menu_item_selector">
+                        <ImageView
+                            android:id="@+id/imageViewRadioTypeWork"
+                            android:layout_width="73px"
+                            android:layout_height="73px"
+                            android:padding="20px"
+                            android:src="@drawable/ic_radio_button_normal"
+                            android:tag="mwar"
+                            android:layout_centerVertical="true"
+                            />
+
+                        <TextView
+                            android:id="@+id/textViewTypeWork"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/imageViewRadioTypeWork"
+                            android:text="@string/work"
+                            android:maxLines="2"
+                            android:textColor="@color/text_color_selector"
+                            android:textSize="@dimen/text_size_30"
+                            />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutTypeOther"
+                        android:layout_width="190px"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_transparent_menu_item_selector">
+                        <ImageView
+                            android:id="@+id/imageViewRadioTypeOther"
+                            android:layout_width="73px"
+                            android:layout_height="73px"
+                            android:padding="20px"
+                            android:src="@drawable/ic_radio_button_normal"
+                            android:tag="mwar"
+                            android:layout_centerVertical="true"
+                            />
+
+                        <TextView
+                            android:id="@+id/textViewTypeOther"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/imageViewRadioTypeOther"
+                            android:text="@string/other"
+                            android:maxLines="2"
+                            android:textColor="@color/text_color_selector"
+                            android:textSize="@dimen/text_size_30"
+                            />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/editTextLabel"
@@ -75,7 +174,9 @@
                     android:textColor="@color/text_color_dark"
                     android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@null"
-                    android:textSize="30px" />
+                    android:textSize="30px"
+                    android:visibility="gone"
+                    />
 
                 <ImageView
                     android:layout_width="600px"
