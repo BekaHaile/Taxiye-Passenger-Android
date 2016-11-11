@@ -2504,34 +2504,40 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     OnClickListener mapMyLocationClick = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()){
-                poolPathZoomAtConfirm();
-                return;
-            }
-            if(passengerScreenMode != PassengerScreenMode.P_INITIAL){
-                zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
-            }else {
-                myLocationButtonClicked = true;
-                textViewInitialSearch.setText("");
-                if (myLocation != null) {
-                    try {
-                        zoomedForSearch = false;
-                        lastSearchLatLng = null;
-                        setCentrePinAccToGoogleMapPadding();
-                        zoomAfterFindADriver = true;
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
-                        mapTouched = true;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Utils.showToast(HomeActivity.this, "Waiting for your location...");
-                    reconnectLocationFetchers();
-                }
-            }
-            FlurryEventLogger.event(NAVIGATION_TO_CURRENT_LOC);
+            navigateToCurrLoc(true);
         }
     };
+
+    private void navigateToCurrLoc(boolean fromButton){
+        if(isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()){
+            poolPathZoomAtConfirm();
+            return;
+        }
+        if(passengerScreenMode != PassengerScreenMode.P_INITIAL){
+            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng);
+        }else {
+            myLocationButtonClicked = true;
+            if(fromButton) {
+                textViewInitialSearch.setText("");
+                zoomedForSearch = false;
+                lastSearchLatLng = null;
+            }
+            if (myLocation != null) {
+                try {
+                    setCentrePinAccToGoogleMapPadding();
+                    zoomAfterFindADriver = true;
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                    mapTouched = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Utils.showToast(HomeActivity.this, "Waiting for your location...");
+                reconnectLocationFetchers();
+            }
+        }
+        FlurryEventLogger.event(NAVIGATION_TO_CURRENT_LOC);
+    }
 
 
 
@@ -2762,12 +2768,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         } else{
                             if (!zoomedForSearch && map != null) {
                                 getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
+                                if(!searchedALocation){
+                                    dropAddressName = "";
+                                }
                             }
                             textViewAssigningDropLocationClick.setText("");
                             textViewFinalDropLocationClick.setText("");
-                            if(!searchedALocation){
-                                dropAddressName = "";
-                            }
                         }
                         searchedALocation = false;
 
@@ -4436,7 +4442,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     }
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
-                    initialMyLocationBtn.performClick();
+                    navigateToCurrLoc(false);
                 }
                 else{
                     MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
@@ -4448,6 +4454,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             ActivityCompat.finishAffinity(this);
         }
     }
+
+
 
     @Override
     public void onDestroy() {
