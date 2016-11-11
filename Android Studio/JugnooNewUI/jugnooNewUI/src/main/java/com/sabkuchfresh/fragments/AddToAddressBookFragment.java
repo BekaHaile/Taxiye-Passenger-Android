@@ -309,7 +309,12 @@ public class AddToAddressBookFragment extends Fragment {
             public void onClick(View v) {
                 editTextLabel.setVisibility(View.VISIBLE);
                 editTextLabel.setSelection(editTextLabel.getText().length());
-                setAddressTypeUI(lastLabel);
+                if(lastLabel.equalsIgnoreCase(activity.getString(R.string.home))
+                        || lastLabel.equalsIgnoreCase(activity.getString(R.string.work))){
+                    setAddressTypeUI("");
+                } else {
+                    setAddressTypeUI(lastLabel);
+                }
             }
         });
 
@@ -330,14 +335,22 @@ public class AddToAddressBookFragment extends Fragment {
         imageViewRadioTypeHome.setImageResource(R.drawable.ic_home);
         imageViewRadioTypeWork.setImageResource(R.drawable.ic_work);
         imageViewRadioTypeOther.setImageResource(R.drawable.ic_loc_other);
+        textViewTypeHome.setTextColor(activity.getResources().getColorStateList(R.color.text_color_selector));
+        textViewTypeWork.setTextColor(activity.getResources().getColorStateList(R.color.text_color_selector));
+        textViewTypeOther.setTextColor(activity.getResources().getColorStateList(R.color.text_color_selector));
         if(label.equalsIgnoreCase(activity.getString(R.string.home))){
             imageViewRadioTypeHome.setImageResource(R.drawable.ic_home_highlighted);
+            textViewTypeHome.setTextColor(activity.getResources().getColor(R.color.theme_color));
         } else if(label.equalsIgnoreCase(activity.getString(R.string.work))){
             imageViewRadioTypeWork.setImageResource(R.drawable.ic_work_highlighted);
+            textViewTypeWork.setTextColor(activity.getResources().getColor(R.color.theme_color));
         } else {
             imageViewRadioTypeOther.setImageResource(R.drawable.ic_loc_other_highlighted);
+            textViewTypeOther.setTextColor(activity.getResources().getColor(R.color.theme_color));
+            editTextLabel.requestFocus();
         }
         editTextLabel.setText(label);
+        editTextLabel.setSelection(editTextLabel.getText().length());
     }
 
     private void setDataToUI(){
@@ -393,19 +406,17 @@ public class AddToAddressBookFragment extends Fragment {
             });
         }
 
+        editTextLabel.setEnabled(true);
         if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
             editTextLabel.setText(getString(R.string.home));
-            editTextLabel.setEnabled(false);
             houseNumber.requestFocus();
             houseNumber.setSelection(houseNumber.getText().length());
         } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
             editTextLabel.setText(getString(R.string.work));
-            editTextLabel.setEnabled(false);
             houseNumber.requestFocus();
             houseNumber.setSelection(houseNumber.getText().length());
         } else {
             editTextLabel.setText(label);
-            editTextLabel.setEnabled(true);
             editTextLabel.requestFocus();
             editTextLabel.setSelection(editTextLabel.getText().length());
         }
