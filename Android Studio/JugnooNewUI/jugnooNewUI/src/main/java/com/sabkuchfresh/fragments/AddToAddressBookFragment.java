@@ -434,7 +434,11 @@ public class AddToAddressBookFragment extends Fragment {
         } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
             label = activity.getString(R.string.work);
         } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION){
-            editTextLabel.setVisibility(View.VISIBLE);
+            if(!editAddress) {
+                label = activity.getString(R.string.home);
+            } else {
+                editTextLabel.setVisibility(View.VISIBLE);
+            }
         }
         lastLabel = label;
         setAddressTypeUI(label);

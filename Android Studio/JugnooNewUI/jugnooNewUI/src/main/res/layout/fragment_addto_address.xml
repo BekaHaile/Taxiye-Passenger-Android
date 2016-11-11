@@ -21,7 +21,7 @@
             <RelativeLayout
                 android:id="@+id/mapScreenShot"
                 android:layout_width="match_parent"
-                android:layout_height="324px"
+                android:layout_height="300px"
                 >
 
                 <fragment
@@ -59,7 +59,7 @@
                 android:layout_below="@+id/mapScreenShot"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="25px"
+                android:layout_marginTop="20px"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:animateLayoutChanges="true"
@@ -68,8 +68,8 @@
                 <EditText
                     android:id="@+id/edt_houseFlatNo"
                     android:layout_width="match_parent"
-                    android:layout_height="90px"
-                    android:background="@null"
+                    android:layout_height="80px"
+                    android:background="@drawable/background_white_below_line"
                     android:hint="@string/house_flat_no_hint"
                     android:inputType="textFilter|textCapSentences"
                     android:paddingLeft="25px"
@@ -80,16 +80,12 @@
                     android:textSize="30px" />
 
 
-                <ImageView
-                    android:layout_width="600px"
-                    android:layout_height="2px"
-                    android:src="@color/text_color_hint" />
 
                 <EditText
                     android:id="@+id/edt_buildingStreetName"
                     android:layout_width="match_parent"
-                    android:layout_height="90px"
-                    android:background="@null"
+                    android:layout_height="80px"
+                    android:background="@drawable/background_white_below_line"
                     android:hint="@string/building_street_name_hint"
                     android:inputType="textFilter|textCapSentences"
                     android:paddingLeft="25px"
@@ -99,16 +95,11 @@
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
-                <ImageView
-                    android:layout_width="600px"
-                    android:layout_height="2px"
-                    android:src="@color/text_color_hint" />
-
                 <EditText
                     android:id="@+id/edt_area"
                     android:layout_width="530px"
-                    android:layout_height="90px"
-                    android:background="@null"
+                    android:layout_height="80px"
+                    android:background="@drawable/background_white_below_line"
                     android:hint="@string/area_hint"
                     android:inputType="textFilter|textCapSentences"
                     android:paddingLeft="25px"
@@ -118,16 +109,12 @@
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
-                <ImageView
-                    android:layout_width="600px"
-                    android:layout_height="2px"
-                    android:src="@color/text_color_hint" />
 
                 <EditText
                     android:id="@+id/edt_city"
                     android:layout_width="match_parent"
-                    android:layout_height="90px"
-                    android:background="@null"
+                    android:layout_height="80px"
+                    android:background="@drawable/background_white_below_line"
                     android:hint="@string/city_hint"
                     android:inputType="textFilter|textCapSentences"
                     android:paddingLeft="25px"
@@ -137,16 +124,12 @@
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
-                <ImageView
-                    android:layout_width="600px"
-                    android:layout_height="2px"
-                    android:src="@color/text_color_hint" />
 
                 <EditText
                     android:id="@+id/edt_pinCode"
                     android:layout_width="match_parent"
-                    android:layout_height="90px"
-                    android:background="@null"
+                    android:layout_height="80px"
+                    android:background="@drawable/background_white_below_line"
                     android:hint="@string/pin_code_hint"
                     android:paddingLeft="25px"
                     android:inputType="textFilter|textCapSentences"
@@ -156,10 +139,6 @@
                     android:textCursorDrawable="@null"
                     android:textSize="30px" />
 
-                <ImageView
-                    android:layout_width="600px"
-                    android:layout_height="2px"
-                    android:src="@color/text_color_hint" />
 
 
 
@@ -172,13 +151,14 @@
                     android:textColor="@color/theme_color"
                     android:textSize="@dimen/text_size_22"
                     android:visibility="visible"
-                    android:layout_marginTop="60px"
+                    android:layout_marginTop="40px"
                     />
 
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10px"
                     >
                     <RelativeLayout
                         android:id="@+id/relativeLayoutTypeHome"
@@ -279,7 +259,7 @@
                 <EditText
                     android:id="@+id/editTextLabel"
                     android:layout_width="match_parent"
-                    android:layout_height="90px"
+                    android:layout_height="80px"
                     android:background="@drawable/background_white_below_line"
                     android:hint="@string/label"
                     android:inputType="textFilter|textCapSentences"
@@ -300,6 +280,7 @@
                     android:text="@string/confirm"
                     android:layout_marginBottom="70px"
                     android:layout_marginTop="40px"
+                    android:layout_gravity="center_horizontal"
                     />
 
             </LinearLayout>

@@ -769,6 +769,17 @@ public class Utils {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
 	}
 
+	public static String capEachWord(String source) {
+		String result = "";
+		Log.d("Tag", "dsf");
+		String[] splitString = source.split(" ");
+		for (String target : splitString) {
+			result += Character.toUpperCase(target.charAt(0))
+					+ target.substring(1).toLowerCase() + " ";
+		}
+		return result.trim();
+	}
+
 }
 
 
