@@ -245,6 +245,10 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         return placeRequestCode;
     }
 
+    public void setPlaceRequestCode(int placeRequestCode){
+        this.placeRequestCode = placeRequestCode;
+    }
+
     public SearchResult getSearchResult(){
         return searchResult;
     }

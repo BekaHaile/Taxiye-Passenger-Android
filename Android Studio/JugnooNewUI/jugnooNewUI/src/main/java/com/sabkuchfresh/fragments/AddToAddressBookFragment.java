@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -78,9 +77,9 @@ public class AddToAddressBookFragment extends Fragment {
 
     public boolean locationEdited = false;
     public boolean editThisAddress;
+    public String lastLabel = "";
 
 
-    LinearLayout linearLayoutType;
     RelativeLayout relativeLayoutTypeHome, relativeLayoutTypeWork, relativeLayoutTypeOther;
     ImageView imageViewRadioTypeHome, imageViewRadioTypeWork, imageViewRadioTypeOther;
     TextView textViewTypeHome, textViewTypeWork, textViewTypeOther;
@@ -185,7 +184,6 @@ public class AddToAddressBookFragment extends Fragment {
 
         buttonAddToAddressBook = (Button) rootView.findViewById(R.id.buttonAddToAddressBook); buttonAddToAddressBook.setTypeface(Fonts.mavenRegular(activity));
 
-        linearLayoutType = (LinearLayout) rootView.findViewById(R.id.linearLayoutType);
         relativeLayoutTypeHome = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTypeHome);
         relativeLayoutTypeWork = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTypeWork);
         relativeLayoutTypeOther = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTypeOther);
@@ -309,10 +307,9 @@ public class AddToAddressBookFragment extends Fragment {
         relativeLayoutTypeOther.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!editThisAddress) {
-                    editTextLabel.setVisibility(View.VISIBLE);
-                    setAddressTypeUI("");
-                }
+                editTextLabel.setVisibility(View.VISIBLE);
+                editTextLabel.setSelection(editTextLabel.getText().length());
+                setAddressTypeUI(lastLabel);
             }
         });
 
@@ -330,15 +327,15 @@ public class AddToAddressBookFragment extends Fragment {
     }
 
     private void setAddressTypeUI(String label){
-        imageViewRadioTypeHome.setImageResource(R.drawable.ic_radio_button_normal);
-        imageViewRadioTypeWork.setImageResource(R.drawable.ic_radio_button_normal);
-        imageViewRadioTypeOther.setImageResource(R.drawable.ic_radio_button_normal);
+        imageViewRadioTypeHome.setImageResource(R.drawable.ic_home);
+        imageViewRadioTypeWork.setImageResource(R.drawable.ic_work);
+        imageViewRadioTypeOther.setImageResource(R.drawable.ic_loc_other);
         if(label.equalsIgnoreCase(activity.getString(R.string.home))){
-            imageViewRadioTypeHome.setImageResource(R.drawable.ic_radio_button_selected);
+            imageViewRadioTypeHome.setImageResource(R.drawable.ic_home_highlighted);
         } else if(label.equalsIgnoreCase(activity.getString(R.string.work))){
-            imageViewRadioTypeWork.setImageResource(R.drawable.ic_radio_button_selected);
+            imageViewRadioTypeWork.setImageResource(R.drawable.ic_work_highlighted);
         } else {
-            imageViewRadioTypeOther.setImageResource(R.drawable.ic_radio_button_selected);
+            imageViewRadioTypeOther.setImageResource(R.drawable.ic_loc_other_highlighted);
         }
         editTextLabel.setText(label);
     }
@@ -417,23 +414,18 @@ public class AddToAddressBookFragment extends Fragment {
         relativeLayoutEdit.setVisibility(editAddress ? View.VISIBLE : View.GONE);
         editThisAddress = editAddress;
 
-        relativeLayoutTypeHome.setVisibility(View.GONE);
-        relativeLayoutTypeWork.setVisibility(View.GONE);
-        relativeLayoutTypeOther.setVisibility(View.GONE);
+        relativeLayoutTypeHome.setVisibility(View.VISIBLE);
+        relativeLayoutTypeWork.setVisibility(View.VISIBLE);
+        relativeLayoutTypeOther.setVisibility(View.VISIBLE);
         editTextLabel.setVisibility(View.GONE);
         if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
-            relativeLayoutTypeHome.setVisibility(View.VISIBLE);
             label = activity.getString(R.string.home);
         } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
-            relativeLayoutTypeWork.setVisibility(View.VISIBLE);
             label = activity.getString(R.string.work);
         } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION){
-            relativeLayoutTypeHome.setVisibility(View.VISIBLE);
-            relativeLayoutTypeWork.setVisibility(View.VISIBLE);
-            relativeLayoutTypeOther.setVisibility(View.VISIBLE);
             editTextLabel.setVisibility(View.VISIBLE);
         }
-
+        lastLabel = label;
         setAddressTypeUI(label);
     }
 
@@ -682,6 +674,7 @@ public class AddToAddressBookFragment extends Fragment {
                 } else if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.work))){
                     placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
                 }
+                freshActivity.setPlaceRequestCode(placeRequestCode);
 
                 if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
                     label = Constants.TYPE_HOME;
@@ -712,6 +705,7 @@ public class AddToAddressBookFragment extends Fragment {
                 } else if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.work))){
                     placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
                 }
+                addPlaceActivity.setPlaceRequestCode(placeRequestCode);
             }
 
 
