@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -182,7 +181,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
         MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+BACK, bundle);
 
         finish();
-        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
