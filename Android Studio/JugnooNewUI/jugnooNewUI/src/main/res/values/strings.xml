@@ -1196,6 +1196,7 @@
 	<string name="paid_via">Paid via</string>
 	<string name="billed_amount">Billed Amount</string>
 	<string name="refund">Refund</string>
+	<string name="choose_pickup">Choose Pickup</string>
 
 
 </resources>

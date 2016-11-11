@@ -138,6 +138,9 @@
         <include layout="@layout/layout_location_error" />
 
         <!-- Confirm Request Layout -->
+        <include layout="@layout/layout_home_activity_special_pickup" />
+
+        <!-- Confirm Request Layout -->
         <include layout="@layout/layout_home_activity_confirm_request" />
 
         <!-- assigning layout -->
