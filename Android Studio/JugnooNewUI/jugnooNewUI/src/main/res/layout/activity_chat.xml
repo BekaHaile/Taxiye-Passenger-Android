@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/menu_item_selector_color">
 
     <RelativeLayout
         android:id="@+id/topBar"
@@ -22,10 +23,15 @@
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/topBar"
-        android:layout_above="@+id/rlInput"/>
+        android:layout_above="@+id/rlInput"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical"
+        android:splitMotionEvents="false"/>
+
 
     <ImageView
         android:layout_width="match_parent"

@@ -10,6 +10,7 @@ import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.retrofit.model.ChatApiService;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import retrofit.ErrorHandler;
@@ -23,11 +24,13 @@ public class RestClient {
     private static ApiService API_SERVICES = null;
     private static GoogleAPIServices GOOGLE_API_SERVICES = null;
     private static FreshApiService FRESH_API_SERVICE = null;
+    private static ChatApiService CHAT_API_SERVICE = null;
 
     static {
         setupRestClient();
         setupGoogleAPIRestClient();
         setupFreshApiRestClient();
+        setupChatApiRestClient();
     }
 
     private static OkHttpClient getOkHttpClient(){
@@ -106,7 +109,7 @@ public class RestClient {
                 .setEndpoint(Config.getServerUrl())
                 .setClient(new Ok3Client(getOkHttpClient()))
                 .setConverter(new StringConverter())
-                .setLog(fooLog)
+//                .setLog(fooLog)
                 .setLogLevel(RestAdapter.LogLevel.FULL);
 
         RestAdapter restAdapter = builder.build();
@@ -151,7 +154,7 @@ public class RestClient {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getFreshServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+//                    .setLog(fooLog)
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();
@@ -161,6 +164,29 @@ public class RestClient {
 
     public static FreshApiService getFreshApiService() {
         return FRESH_API_SERVICE;
+    }
+
+    public static void setupChatApiRestClient() {
+        if(CHAT_API_SERVICE == null) {
+            RestAdapter.Log fooLog = new RestAdapter.Log() {
+                @Override
+                public void log(String message) {
+                }
+            };
+
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getChatServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient()))
+//                    .setLog(fooLog)
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+
+            RestAdapter restAdapter = builder.build();
+            CHAT_API_SERVICE = restAdapter.create(ChatApiService.class);
+        }
+    }
+
+    public static ChatApiService getChatApiService() {
+        return CHAT_API_SERVICE;
     }
 
 }
