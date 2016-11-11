@@ -33,12 +33,18 @@
         android:background="@drawable/shadow_down"
         android:layout_below="@+id/topBar"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_up"
+        android:layout_above="@+id/rlInput"/>
+
     <RelativeLayout
         android:id="@+id/rlInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/sliding_bottom_bg_color"
+        android:background="@color/white"
         android:padding="@dimen/px_20">
 
         <EditText
@@ -46,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="80px"
             android:layout_toLeftOf="@+id/action_send"
-            android:background="@drawable/background_white_rounded_bordered"
+            android:background="@color/white"
             android:hint="Type your message here"
             android:layout_centerVertical="true"
             android:maxHeight="96px"
@@ -57,15 +63,16 @@
 
         <ImageView
             android:id="@+id/action_send"
-            android:layout_width="80px"
-            android:layout_height="80px"
+            android:layout_width="59px"
+            android:layout_height="59px"
             android:layout_marginLeft="20px"
             android:layout_marginRight="10px"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:padding="10px"
             android:tag="mwar"
             android:background="@android:color/transparent"
-            android:src="@drawable/send" />
+            android:src="@drawable/ic_send_msg" />
     </RelativeLayout>
 
 </RelativeLayout>
