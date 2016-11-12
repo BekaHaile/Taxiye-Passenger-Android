@@ -2,6 +2,8 @@ package product.clicklabs.jugnoo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -52,6 +55,12 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 	RecyclerView recyclerViewChat;
 	ChatAdapter chatAdapter;
 	ArrayList<FetchChatResponse.ChatHistory> chatResponse = new ArrayList<>();
+	private FetchChatResponse fetchChatResponse;
+	private SimpleDateFormat sdf;
+	private final String LOGIN_TYPE = "0";
+	private Handler handler = new Handler();
+	private Handler myHandler=new Handler();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,7 @@ public class ChatActivity extends Activity implements View.OnClickListener{
         relative = (RelativeLayout) findViewById(R.id.relative);
         new ASSL(this, relative, 1134, 720, false);
 
+		sdf = new SimpleDateFormat("hh:mm a");
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
@@ -71,7 +81,7 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 		recyclerViewChat = (RecyclerView) findViewById(R.id.recyclerViewChat);
 		recyclerViewChat.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
 		recyclerViewChat.setHasFixedSize(false);
-		//recyclerViewChat.setItemAnimator(new DefaultItemAnimator());
+		recyclerViewChat.setItemAnimator(new DefaultItemAnimator());
 		chatResponse = new ArrayList<>();
 		chatAdapter = new ChatAdapter(ChatActivity.this, chatResponse);
 		recyclerViewChat.setAdapter(chatAdapter);
@@ -93,7 +103,17 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 		send.setOnClickListener(this);
 
 		fetchChat(ChatActivity.this);
+
+		myHandler.postAtTime(loadDiscussion,2000);
     }
+
+	Runnable loadDiscussion=new Runnable() {
+		@Override
+		public void run() {
+			loadDiscussions();
+			myHandler.postAtTime(loadDiscussion,2000);
+		}
+	};
 
 
 	public void updateListData(String message, boolean errorOccurred) {
@@ -117,6 +137,12 @@ public class ChatActivity extends Activity implements View.OnClickListener{
         }
     }
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		handler = null;
+	}
+
 	// sends the message to server and display it
 	private void sendChat() {
 		//hideKeyboard(input);
@@ -124,9 +150,14 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 		Calendar time = Calendar.getInstance();
 		if (!(inputText.isEmpty())) {
 			// add message to list
-			//chatResponse.add(new FetchChatResponse.ChatHistory());
-			//position = chatAdapter.getItemCount() - 1;
-			//chatAdapter.notifyItemInserted(position);
+			FetchChatResponse.ChatHistory chatHistory = fetchChatResponse.new ChatHistory();
+			chatHistory.setChatHistoryId(0);
+			chatHistory.setCreatedAt(sdf.format(time.getTime()));
+			chatHistory.setIsSender(1);
+			chatHistory.setMessage(inputText);
+			chatResponse.add(chatHistory);
+			position = chatAdapter.getItemCount() - 1;
+			chatAdapter.notifyItemInserted(position);
 
 			// scroll to the last message
 			recyclerViewChat.scrollToPosition(position);
@@ -140,13 +171,39 @@ public class ChatActivity extends Activity implements View.OnClickListener{
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
+
+	private void loadDiscussions(){
+		if (!AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			DialogPopup.dialogNoInternet(ChatActivity.this,
+					Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+					new Utils.AlertCallBackWithButtonsInterface() {
+						@Override
+						public void positiveClick(View v) {
+							loadDiscussions();
+						}
+
+						@Override
+						public void neutralClick(View v) {
+						}
+
+						@Override
+						public void negativeClick(View v) {
+							performBackPressed();
+						}
+					});
+			return;
+		}
+
+		fetchChat(ChatActivity.this);
+	}
+
     private void fetchChat(final Activity activity) {
         try {
             if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-                DialogPopup.showLoadingDialog(ChatActivity.this, getResources().getString(R.string.loading));
+                //DialogPopup.showLoadingDialog(ChatActivity.this, getResources().getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put("login_type", "0");
+                params.put("login_type", LOGIN_TYPE);
                 params.put("engagement_id", Data.autoData.getcEngagementId());
 
                 RestClient.getChatApiService().fetchChat(params, new Callback<FetchChatResponse>() {
@@ -159,23 +216,34 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 							jObj = new JSONObject(jsonString);
 							int flag = jObj.getInt("flag");
 							String message = jObj.getString("message");
+							fetchChatResponse = fetchChat;
 							if (!jObj.isNull("error")) {
 								String errorMessage = jObj.getString("error");
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == fetchChat.getFlag()) {
 								chatResponse.clear();
 								chatResponse.addAll(fetchChat.getChatHistory());
 								chatAdapter.notifyDataSetChanged();
+								recyclerViewChat.scrollToPosition(chatAdapter.getItemCount() - 1);
 								//updateListData(getResources().getString(R.string.add_cash), false);
+								if(handler != null) {
+									handler.postDelayed(new Runnable() {
+										@Override
+										public void run() {
+											loadDiscussions();
+										}
+									}, 2000);
+								}
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();
 						}
-						DialogPopup.dismissLoadingDialog();
+						//DialogPopup.dismissLoadingDialog();
 					}
 
 					@Override
 					public void failure(RetrofitError error) {
-						DialogPopup.dismissLoadingDialog();
+						//DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
 					}
 				});
 
@@ -184,7 +252,7 @@ public class ChatActivity extends Activity implements View.OnClickListener{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            DialogPopup.dismissLoadingDialog();
+            //DialogPopup.dismissLoadingDialog();
         }
     }
 
@@ -194,7 +262,7 @@ public class ChatActivity extends Activity implements View.OnClickListener{
                 DialogPopup.showLoadingDialog(ChatActivity.this, getResources().getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put("login_type", "0");
+                params.put("login_type", LOGIN_TYPE);
                 params.put("engagement_id", Data.autoData.getcEngagementId());
                 params.put("message", message);
 
