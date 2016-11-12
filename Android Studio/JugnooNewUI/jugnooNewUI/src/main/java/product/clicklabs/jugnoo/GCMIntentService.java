@@ -642,6 +642,16 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						} else{
 							notificationManager(this, title, message1, playSound);
 						}
+					} else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
+						String clientId = jObj.optString(KEY_CLIENT_ID, "");
+						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+						//message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
+						String chatMessage = jObj.getJSONObject(KEY_MESSAGE).optString("chat_message", "");
+						if(!TextUtils.isEmpty(phoneNo)){
+							generateNotificationForCall(this, title, chatMessage, NOTIFICATION_ID, phoneNo, null, playSound, clientId);
+						} else{
+							notificationManager(this, title, chatMessage, playSound);
+						}
 					}
 
 					incrementPushCounter(jObj, flag);

@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.adapters.ChatAdapter;
@@ -67,51 +68,65 @@ public class ChatActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        relative = (RelativeLayout) findViewById(R.id.relative);
-        new ASSL(this, relative, 1134, 720, false);
+		try {
+			relative = (RelativeLayout) findViewById(R.id.relative);
+			new ASSL(this, relative, 1134, 720, false);
 
-		sdf = new SimpleDateFormat("hh:mm a");
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewTitle.setTypeface(Fonts.avenirNext(this));
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
-		input = (EditText) findViewById(R.id.input);
-		send = (ImageView) findViewById(R.id.action_send);
-        imageViewBack = (ImageView) findViewById(R.id.imageViewBack); imageViewBack.setOnClickListener(this);
+			sdf = new SimpleDateFormat("hh:mm a");
+			textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+			textViewTitle.setTypeface(Fonts.avenirNext(this));
+			textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
+			input = (EditText) findViewById(R.id.input);
+			send = (ImageView) findViewById(R.id.action_send);
+			imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+			imageViewBack.setOnClickListener(this);
 
-		recyclerViewChat = (RecyclerView) findViewById(R.id.recyclerViewChat);
-		recyclerViewChat.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
-		recyclerViewChat.setHasFixedSize(false);
-		recyclerViewChat.setItemAnimator(new DefaultItemAnimator());
-		chatResponse = new ArrayList<>();
-		chatAdapter = new ChatAdapter(ChatActivity.this, chatResponse);
-		recyclerViewChat.setAdapter(chatAdapter);
+			recyclerViewChat = (RecyclerView) findViewById(R.id.recyclerViewChat);
+			recyclerViewChat.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
+			recyclerViewChat.setHasFixedSize(false);
+			recyclerViewChat.setItemAnimator(new DefaultItemAnimator());
+			chatResponse = new ArrayList<>();
+			chatAdapter = new ChatAdapter(ChatActivity.this, chatResponse);
+			recyclerViewChat.setAdapter(chatAdapter);
 
+			// done action listener to send the chat
+			input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        sendChat();
+                        return true;
+                    }
+                    return false;
+                }
+            });
 
+			input.setOnClickListener(this);
+			send.setOnClickListener(this);
 
-		// done action listener to send the chat
-		input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE) {
-					sendChat();
-					return true;
-				}
-				return false;
-			}
-		});
+			fetchChat(ChatActivity.this);
 
-		input.setOnClickListener(this);
-		send.setOnClickListener(this);
+			if(Data.autoData.getAssignedDriverInfo() != null) {
+                textViewTitle.setText(Data.autoData.getAssignedDriverInfo().name);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-		fetchChat(ChatActivity.this);
-
-		myHandler.postAtTime(loadDiscussion,2000);
+		//myHandler.postAtTime(loadDiscussion, 5000);
     }
 
 	Runnable loadDiscussion=new Runnable() {
 		@Override
 		public void run() {
 			loadDiscussions();
-			myHandler.postAtTime(loadDiscussion,2000);
+			//myHandler.postAtTime(loadDiscussion, 5000);
+		}
+	};
+
+	Runnable runnable = new Runnable() {
+		@Override
+		public void run() {
+			loadDiscussions();
 		}
 	};
 
@@ -140,7 +155,16 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		handler = null;
+		try {
+			if(handler != null){
+                handler.removeCallbacks(loadDiscussion);
+            }
+			if(myHandler != null){
+                myHandler.removeCallbacks(loadDiscussion);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// sends the message to server and display it
@@ -211,7 +235,7 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 					public void success(FetchChatResponse fetchChat, Response response) {
 						try {
 							String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-							Log.e("Shared rides jsonString", "=" + jsonString);
+							//Log.e("Shared rides jsonString", "=" + jsonString);
 							JSONObject jObj;
 							jObj = new JSONObject(jsonString);
 							int flag = jObj.getInt("flag");
@@ -222,16 +246,12 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == fetchChat.getFlag()) {
 								chatResponse.clear();
 								chatResponse.addAll(fetchChat.getChatHistory());
+								Collections.reverse(chatResponse);
 								chatAdapter.notifyDataSetChanged();
 								recyclerViewChat.scrollToPosition(chatAdapter.getItemCount() - 1);
 								//updateListData(getResources().getString(R.string.add_cash), false);
-								if(handler != null) {
-									handler.postDelayed(new Runnable() {
-										@Override
-										public void run() {
-											loadDiscussions();
-										}
-									}, 2000);
+								if(handler != null && loadDiscussion != null) {
+									handler.postDelayed(loadDiscussion, 15000);
 								}
 							}
 						} catch (Exception exception) {
@@ -259,7 +279,7 @@ public class ChatActivity extends Activity implements View.OnClickListener{
     private void postChat(final Activity activity, final String message) {
         try {
             if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-                DialogPopup.showLoadingDialog(ChatActivity.this, getResources().getString(R.string.loading));
+                //DialogPopup.showLoadingDialog(ChatActivity.this, getResources().getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<String, String>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put("login_type", LOGIN_TYPE);
@@ -272,7 +292,7 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 						try {
 							DialogPopup.dismissLoadingDialog();
 							String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-							Log.e("Shared rides jsonString", "=" + jsonString);
+							//Log.e("Shared rides jsonString", "=" + jsonString);
 							JSONObject jObj;
 							jObj = new JSONObject(jsonString);
 							int flag = jObj.getInt("flag");
@@ -280,6 +300,9 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 							if (!jObj.isNull("error")) {
 								String errorMessage = jObj.getString("error");
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								if(handler != null && loadDiscussion != null) {
+									handler.removeCallbacks(loadDiscussion);
+								}
 									fetchChat(ChatActivity.this);
 							}
 						} catch (Exception exception) {
@@ -290,7 +313,7 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 
 					@Override
 					public void failure(RetrofitError error) {
-						DialogPopup.dismissLoadingDialog();
+						//DialogPopup.dismissLoadingDialog();
 					}
 				});
 
@@ -299,7 +322,7 @@ public class ChatActivity extends Activity implements View.OnClickListener{
             }
         } catch (Exception e) {
             e.printStackTrace();
-            DialogPopup.dismissLoadingDialog();
+            //DialogPopup.dismissLoadingDialog();
         }
     }
 }
