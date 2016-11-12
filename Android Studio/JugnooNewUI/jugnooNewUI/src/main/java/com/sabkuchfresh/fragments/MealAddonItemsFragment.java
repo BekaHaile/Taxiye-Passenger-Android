@@ -128,7 +128,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {
                         updateCartDataView();
-                        addOnItemsAdapter.notifyDataSetChanged();
+                        updateAddonsListCount();
                     }
 
                     @Override
@@ -138,7 +138,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                             activity.subItemsInCart.remove(position);
                             checkIfEmpty();
                         }
-                        addOnItemsAdapter.notifyDataSetChanged();
+                        updateAddonsListCount();
                     }
 
                     @Override
@@ -149,7 +149,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                     @Override
                     public void minusNotDone(int position, SubItem subItem) {
                         activity.clearMealsCartIfNoMainMeal();
-                        addOnItemsAdapter.notifyDataSetChanged();
+                        updateAddonsListCount();
                     }
 
                     @Override
