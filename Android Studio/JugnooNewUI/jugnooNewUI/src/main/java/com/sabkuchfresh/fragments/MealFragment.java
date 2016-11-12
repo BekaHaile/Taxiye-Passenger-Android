@@ -320,7 +320,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            retryDialog(DialogErrorType.SERVER_ERROR);
                         }
                         try {
                             if(finalProgressDialog != null)

@@ -1639,61 +1639,65 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     @Subscribe
     public void onSortEvent(SortSelection event) {
-        switch(event.postion){
-            case 0:
-                for (Category category : productsResponse.getCategories()) {
-                    Collections.sort(category.getSubItems(), new SubItemCompare());
-                }
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.A_Z);
-                try {
-                    mBus.post(new UpdateMainList(true));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 1:
-                for (Category category : productsResponse.getCategories()) {
-                    Collections.sort(category.getSubItems(), new Comparator<SubItem>() {
-                        @Override
-                        public int compare(SubItem p1, SubItem p2) {
-                            return p1.getPriorityId()- p2.getPriorityId();
-                        }
+        try {
+            switch(event.postion){
+				case 0:
+					for (Category category : productsResponse.getCategories()) {
+						Collections.sort(category.getSubItems(), new SubItemCompare());
+					}
+					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.A_Z);
+					try {
+						mBus.post(new UpdateMainList(true));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				case 1:
+					for (Category category : productsResponse.getCategories()) {
+						Collections.sort(category.getSubItems(), new Comparator<SubItem>() {
+							@Override
+							public int compare(SubItem p1, SubItem p2) {
+								return p1.getPriorityId()- p2.getPriorityId();
+							}
 
-                    });
-//                    Collections.sort(category.getSubItems(), new SubItemComparePriority());
-                }
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
-                try {
-                    mBus.post(new UpdateMainList(true));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 2:
-                for (Category category : productsResponse.getCategories()) {
-                    Collections.sort(category.getSubItems(), new SubItemComparePrice());
-                }
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-                try {
-                    mBus.post(new UpdateMainList(true));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 3:
-                for (Category category : productsResponse.getCategories()) {
-                    Collections.sort(category.getSubItems(), new SubItemComparePriceRev());
-                }
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-                try {
-                    mBus.post(new UpdateMainList(true));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                // should not happened
-                break;
+						});
+	//                    Collections.sort(category.getSubItems(), new SubItemComparePriority());
+					}
+					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
+					try {
+						mBus.post(new UpdateMainList(true));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				case 2:
+					for (Category category : productsResponse.getCategories()) {
+						Collections.sort(category.getSubItems(), new SubItemComparePrice());
+					}
+					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
+					try {
+						mBus.post(new UpdateMainList(true));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				case 3:
+					for (Category category : productsResponse.getCategories()) {
+						Collections.sort(category.getSubItems(), new SubItemComparePriceRev());
+					}
+					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
+					try {
+						mBus.post(new UpdateMainList(true));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				default:
+					// should not happened
+					break;
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

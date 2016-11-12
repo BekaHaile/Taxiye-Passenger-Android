@@ -399,7 +399,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                             }
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							retryDialog(DialogErrorType.SERVER_ERROR);
 						}
                         try {
                             if(finalProgressDialog != null)

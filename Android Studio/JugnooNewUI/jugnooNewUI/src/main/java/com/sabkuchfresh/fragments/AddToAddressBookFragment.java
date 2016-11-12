@@ -688,6 +688,8 @@ public class AddToAddressBookFragment extends Fragment {
                     placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
                 } else if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.work))){
                     placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
+                } else{
+                    placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
                 }
                 freshActivity.setPlaceRequestCode(placeRequestCode);
 
@@ -719,6 +721,8 @@ public class AddToAddressBookFragment extends Fragment {
                     placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
                 } else if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.work))){
                     placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
+                } else{
+                    placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
                 }
                 addPlaceActivity.setPlaceRequestCode(placeRequestCode);
             }

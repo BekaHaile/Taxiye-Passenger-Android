@@ -97,7 +97,7 @@
 
                 <EditText
                     android:id="@+id/edt_area"
-                    android:layout_width="530px"
+                    android:layout_width="match_parent"
                     android:layout_height="80px"
                     android:background="@drawable/background_white_below_line"
                     android:hint="@string/area_hint"

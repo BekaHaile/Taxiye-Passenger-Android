@@ -399,7 +399,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                             }
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							retryDialog(DialogErrorType.SERVER_ERROR);
 						}
                         try {
                             if(finalProgressDialog != null)

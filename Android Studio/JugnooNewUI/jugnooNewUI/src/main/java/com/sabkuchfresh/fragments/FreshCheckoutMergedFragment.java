@@ -1373,7 +1373,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.confirm_pay));
+                                    buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.place_order));
                                     activity.setUserCheckoutResponse(userCheckoutResponse);
                                     Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
                                     setActivityLastAddressFromResponse(userCheckoutResponse);
