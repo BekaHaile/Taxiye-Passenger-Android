@@ -48,7 +48,6 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -65,12 +64,6 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     private final String TAG = FreshCheckoutFragment.class.getSimpleName();
     private LinearLayout linearLayoutRoot;
     //
-//	private TextView textViewTotalAmountValue, textViewDeliveryChargesValue, textViewAmountPayableValue;
-//	private RelativeLayout relativeLayoutAddress;
-//	private TextView textViewAddAddress, textViewAddressValue;
-//	private ImageView imageViewEditAddress, imageViewEditSlot;
-//	private RelativeLayout relativeLayoutSlot;
-//	private TextView textViewDay, textViewSlotValue;
     private Button buttonProceedToPayment;
 
     private View rootView;
@@ -126,15 +119,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
             if (activity.getProductsResponse() != null
                     && activity.getProductsResponse().getDeliveryInfo() != null) {
                 amountPayable = activity.updateCartValuesGetTotalPrice().first;
-//                if (activity.getProductsResponse().getDeliveryInfo().getMinAmount() > totalAmount) {
-//                    deliveryCharge = String.format(activity.getResources().getString(R.string.rupees_value_format),
-//                            Utils.getMoneyDecimalFormat().format(activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges()));
-//                    isDeliveryCharger = "yes";
-//                    amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getDeliveryCharges();
-//
-//                } else {
                     isDeliveryCharger = "";
-//                }
 
                 ctotalAmount = String.format(activity.getResources().getString(R.string.rupees_value_format),
                         Utils.getMoneyDecimalFormat().format(amountPayable));
@@ -155,8 +140,6 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         slotDay.setSlotViewType(FreshCheckoutAdapter.SlotViewType.HEADER);
 
         checkout.add(slotDay);
-//        checkoutAdapter.setList(checkout);
-//        checkoutAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -167,7 +150,6 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
 
-        activity.setSlotToSelect(null);
         activity.setSlotSelected(null);
 
         mBus = (activity).getBus();
@@ -327,11 +309,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                     checkout.get(0).setCaddress(userCheckoutResponse.getCheckoutData().getLastAddress());
                                     checkout.get(0).setAddressLabel(userCheckoutResponse.getCheckoutData().getLastAddressType());
                                     setActivityLastAddressFromResponse(userCheckoutResponse);
-                                    try {
-                                        activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
-												Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
-                                    } catch (Exception e) {
-                                    }
+
                                     setCheckoutScreen();
                                     generateSlots();
 
@@ -412,9 +390,17 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
         try {
             if(userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
 				activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-			}
+			} else {
+                activity.setSelectedAddress("");
+            }
             activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
             activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+            try {
+                activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
+                        Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+            } catch (Exception e) {
+                activity.setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -448,8 +434,7 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
             slots.clear();
 
             if (activity.getSlotSelected() != null) {
-                verifySlotTiming(activity.getSlotSelected());
-                if (!activity.getSlotSelected().isEnabled()) {
+                if (activity.getSlotSelected().getIsActiveSlot() != 1) {
                     activity.setSlotSelected(null);
                 }
             }
@@ -460,46 +445,21 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                 for (Slot slot : deliverySlot.getSlots()) {
                     slot.setSlotViewType(FreshCheckoutAdapter.SlotViewType.SLOT_TIME);
                     slot.setDayName(deliverySlot.getDayName());
-                    verifySlotTiming(slot);
-                    slotsEnabled = slot.isEnabled() ? slotsEnabled + 1 : slotsEnabled;
+                    slotsEnabled = slot.getIsActiveSlot() == 1 ? slotsEnabled + 1 : slotsEnabled;
                     slots.add(slot);
-                    if (activity.getSlotSelected() == null && slot.isEnabled()) {
+                    if (activity.getSlotSelected() == null && slot.getIsActiveSlot() == 1) {
                         activity.setSlotSelected(slot);
                     }
-                    activity.setSlotToSelect(activity.getSlotSelected());
+                    activity.setSlotSelected(activity.getSlotSelected());
                 }
             }
 
-//            Slot slotDayHeader = new Slot();
-//            slotDayHeader.setSlotViewType(FreshCheckoutAdapter.SlotViewType.SLOT_STATUS);
-//            checkout.add(slotDayHeader);
-//
             checkout.addAll(slots);
-//            Slot slotLine = new Slot();
-//            slotLine.setSlotViewType(FreshCheckoutAdapter.SlotViewType.DIVIDER);
-//            checkout.add(slotLine);
 
             Slot slotDay = new Slot();
             slotDay.setSlotViewType(FreshCheckoutAdapter.SlotViewType.FEED);
             checkout.add(slotDay);
             checkoutAdapter.setList(checkout);
-//            checkoutAdapter.notifyDataSetChanged();
-        }
-    }
-
-    private void verifySlotTiming(Slot slot) {
-        if (slot != null) {
-            if (slot.getDayId() == DateOperations.getCurrentDayInt()) {
-                if (slot.getThresholdTimeSeconds() < DateOperations.getCurrentDayTimeSeconds()) {
-                    slot.setEnabled(false);
-                } else {
-                    slot.setEnabled(true);
-                }
-            } else {
-                slot.setEnabled(true);
-            }
-            slot.setEnabled(!(slot.getDayId() == DateOperations.getCurrentDayInt()
-                    && slot.getThresholdTimeSeconds() < DateOperations.getCurrentDayTimeSeconds()));
         }
     }
 
@@ -544,7 +504,6 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     @Override
     public void onSlotSelected(int position, Slot slot) {
         FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
-        activity.setSlotToSelect(slot);
         activity.setSlotSelected(slot);
     }
 

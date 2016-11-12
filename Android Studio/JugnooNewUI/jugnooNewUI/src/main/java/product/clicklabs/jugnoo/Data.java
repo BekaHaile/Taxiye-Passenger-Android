@@ -101,8 +101,7 @@ public class Data {
 
 
 	public static final String DEVICE_TYPE = "0";
-	public static String country = "", deviceName = "", osVersion = "", uniqueDeviceId = "";
-	public static int appVersion;
+	public static String uniqueDeviceId = "";
 
 
 	public static FacebookUserData facebookUserData;
@@ -144,7 +143,6 @@ public class Data {
 			DeliveryData = null;
 
 			locationFetcher = null;
-			country = ""; deviceName = ""; appVersion = 0; osVersion = "";
 			facebookUserData = null;
             previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 			
@@ -441,7 +439,5 @@ public class Data {
 	public static void setDeliveryData(DeliveryData deliveryData) {
 		DeliveryData = deliveryData;
 	}
-
-
 
 }

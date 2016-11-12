@@ -162,6 +162,8 @@
     <color name="ride_history_item_text_color">#0EB2CE</color>
     <color name="google_path_polyline_color">#0889da</color>
 
+    <color name="text_green_color">#22BD21</color>
+
 
     <color name="red_google">#CF5D3A</color>
     <color name="red_google_alpha">#99CF5D3A</color>
@@ -173,6 +175,7 @@
     <color name="rank_4">#E4E4E4</color>
     <color name="rank_5">#D7D7D7</color>
     <color name="rank_6">#CBCBCB</color>
+    <color name="order_status_green">#14c52a</color>
 
     <color name="stroke_color_light">#CDCDCD</color>
     <color name="stroke_color_dark">#858585</color>
@@ -205,6 +208,7 @@
     <color name="cart_price">#303d39</color>
 
     <color name="divider_color">#d9d9d9</color>
+    <color name="dotted_color">#9d9d9d</color>
     <color name="divider_color_dark">#acacac</color>
 
     <color name="address_stoke">#EF8F2C</color>
@@ -215,6 +219,7 @@
     <color name="text_color_red">#DE5B5B</color>
 
     <color name="stroke_light_grey_alpha">#33979797</color>
+    <color name="order_history_status_color">#1fbd2a</color>
 
 
 </resources>

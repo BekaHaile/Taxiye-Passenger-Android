@@ -10,6 +10,7 @@ import android.widget.TextView;
 import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -67,10 +68,14 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 		});
 
 
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new RideTransactionsFragment(), RideTransactionsFragment.class.getName())
-                .addToBackStack(RideTransactionsFragment.class.getName())
-                .commitAllowingStateLoss();
+		if(getIntent().hasExtra(Constants.KEY_ORDER_ID)){
+			new TransactionUtils().openOrderStatusFragment(this, relativeLayoutContainer, getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0));
+		} else {
+			getSupportFragmentManager().beginTransaction()
+					.add(relativeLayoutContainer.getId(), new RideTransactionsFragment(), RideTransactionsFragment.class.getName())
+					.addToBackStack(RideTransactionsFragment.class.getName())
+					.commitAllowingStateLoss();
+		}
 
 
 

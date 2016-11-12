@@ -1179,6 +1179,25 @@
 	<string name="changes_not_updated_exit">Your changes are not updated. Do you want to exit?</string>
 	<string name="pick">Pick</string>
 	<string name="set">Set</string>
+	<string name="payment_via">Payment Via</string>
+	<string name="add_special_notes">Add special notes to driver..</string>
+	<string name="confirm_pay">Confirm &amp; Pay</string>
+	<string name="cart_items">Cart Items</string>
+	<string name="cart_items_format">Cart Items(%s)</string>
+	<string name="payment_mode">Payment Mode</string>
+	<string name="order_status_txt">Order Status:</string>
+	<string name="order_time">Order Time:</string>
+	<string name="delivery_time">Delivery Time:</string>
+	<string name="delivery_to">Delivery To:</string>
+	<string name="payment_method">Payment Method</string>
+	<string name="no_delivery_slot">No delivery slots</string>
+	<string name="slot_is_disabled">Slot is disabled</string>
+	<string name="free">Free</string>
+	<string name="paid_via">Paid via</string>
+	<string name="billed_amount">Billed Amount</string>
+	<string name="refund">Refund</string>
+	<string name="coupon_remove_reapply_before_checkout">This will remove your applied coupon, you have to reapply your coupon</string>
+	<string name="tag_address_as">Tag address as</string>
 
 
 </resources>

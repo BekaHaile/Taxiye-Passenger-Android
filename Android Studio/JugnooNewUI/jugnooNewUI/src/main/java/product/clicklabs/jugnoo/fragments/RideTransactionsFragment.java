@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FeedbackActivity;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -135,8 +136,11 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 									|| historyData.getProductType() == ProductType.MEALS.getOrdinal()
 									|| historyData.getProductType() == ProductType.GROCERY.getOrdinal()) {
 								if (activity instanceof RideTransactionsActivity) {
-									new TransactionUtils().openOrderSummaryFragment(activity,
-											((RideTransactionsActivity) activity).getContainer(), historyData);
+										new TransactionUtils().openOrderStatusFragment(activity, ((RideTransactionsActivity) activity).getContainer(), historyData.getOrderId());
+//									else {
+//										new TransactionUtils().openOrderSummaryFragment(activity,
+//												((RideTransactionsActivity) activity).getContainer(), historyData);
+//									}
 								} else if (activity instanceof SupportActivity) {
 									new TransactionUtils().openRideIssuesFragment(activity,
 											((SupportActivity) activity).getContainer(),

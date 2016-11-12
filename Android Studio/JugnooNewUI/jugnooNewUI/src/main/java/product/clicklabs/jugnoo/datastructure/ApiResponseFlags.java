@@ -66,7 +66,7 @@ public enum ApiResponseFlags {
 
 	TRANSACTION_HISTORY(423),
 	INSUFFICIENT_BALANCE(424),
-	
+
 	PROFILE_INFORMATION(416),
 
     RIDE_PATH_INFO_SUCCESS(137),
@@ -87,6 +87,8 @@ public enum ApiResponseFlags {
 	USER_IN_DEBT(755),
 
 	MOBIKWIK_LOGGED_IN(802),
+
+	INVALID_DELIVERY_SLOT(604),
 
 
 	;

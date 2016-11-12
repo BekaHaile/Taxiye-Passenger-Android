@@ -31,16 +31,23 @@ import product.clicklabs.jugnoo.utils.Fonts;
  */
 public class PromoCouponsAdapter extends BaseAdapter {
 
+	private int layoutRID;
 	private Activity activity;
 	private ArrayList<PromoCoupon> offerList = new ArrayList<>();
 	private Callback callback;
 	private LayoutInflater mInflater;
 
-	public PromoCouponsAdapter(Activity activity, ArrayList<PromoCoupon> offerList, Callback callback) {
+	public PromoCouponsAdapter(Activity activity, int layoutRID, ArrayList<PromoCoupon> offerList, Callback callback) {
 		this.activity = activity;
+		this.layoutRID = layoutRID;
 		this.offerList = offerList;
 		this.callback = callback;
 		this.mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+
+	public void setList(ArrayList<PromoCoupon> offerList){
+		this.offerList = offerList;
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -62,10 +69,10 @@ public class PromoCouponsAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.list_item_promo_coupon, null);
+			convertView = mInflater.inflate(layoutRID, null);
 			holder = new ViewHolder(convertView, activity);
 
-			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 84));
+			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
 			ASSL.DoMagic(holder.relative);
 
 			convertView.setTag(holder);
@@ -83,7 +90,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		PromoCoupon promoCoupon = offerList.get(position);
 
 		holder.textViewOfferName.setText(promoCoupon.getTitle());
-		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() == promoCoupon.getId()){
+		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
 		} else{
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
@@ -119,7 +126,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 				try {
 					int position = ((ViewHolder) v.getTag()).id;
 					PromoCoupon promoCoupon = offerList.get(position);
-					if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() == promoCoupon.getId()) {
+					if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
 						callback.setSelectedCoupon(-1);
 					} else {
 						callback.setSelectedCoupon(position);
@@ -128,7 +135,6 @@ public class PromoCouponsAdapter extends BaseAdapter {
                     Bundle bundle = new Bundle();
                     MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+FirebaseEvents.PROMOTIONS+"_"+FirebaseEvents.COUPON_PROMOTION, bundle);
 					notifyDataSetChanged();
-					//activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPromoCouponsDialog().setContinueButton();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -18,19 +18,19 @@ public class PromotionInfo extends PromoCoupon{
 	public String endOn;
 	@SerializedName("autos")
 	@Expose
-	public Integer autos;
+	private Integer autos;
 	@SerializedName("fresh")
 	@Expose
-	public Integer fresh;
+	private Integer fresh;
 	@SerializedName("meals")
 	@Expose
-	public Integer meals;
+	private Integer meals;
 	@SerializedName("delivery")
 	@Expose
-	public Integer delivery;
+	private Integer delivery;
 	@SerializedName("grocery")
 	@Expose
-	public Integer grocery;
+	private Integer grocery;
 	@SerializedName("master_coupon")
 	@Expose
 	private Integer masterCoupon = 0;
@@ -66,12 +66,7 @@ public class PromotionInfo extends PromoCoupon{
 	@Override
 	public boolean equals(Object o) {
 		try{
-			if((((PromotionInfo)o).id.equals(this.id))){
-				return true;
-			}
-			else{ 
-				return false;
-			}
+			return matchPromoCoupon((PromoCoupon) o);
 		} catch(Exception e){
 			return false;
 		}
@@ -95,5 +90,60 @@ public class PromotionInfo extends PromoCoupon{
 
 	public void setDiscount(Double discount) {
 		this.discount = discount;
+	}
+
+	public Integer getAutos() {
+		if(autos == null){
+			return 0;
+		}
+		return autos;
+	}
+
+	public void setAutos(Integer autos) {
+		this.autos = autos;
+	}
+
+	public Integer getFresh() {
+		if(fresh == null){
+			return 0;
+		}
+		return fresh;
+	}
+
+	public void setFresh(Integer fresh) {
+		this.fresh = fresh;
+	}
+
+	public Integer getMeals() {
+		if(meals == null){
+			return 0;
+		}
+		return meals;
+	}
+
+	public void setMeals(Integer meals) {
+		this.meals = meals;
+	}
+
+	public Integer getDelivery() {
+		if(delivery == null){
+			return 0;
+		}
+		return delivery;
+	}
+
+	public void setDelivery(Integer delivery) {
+		this.delivery = delivery;
+	}
+
+	public Integer getGrocery() {
+		if(grocery == null){
+			return 0;
+		}
+		return grocery;
+	}
+
+	public void setGrocery(Integer grocery) {
+		this.grocery = grocery;
 	}
 }

@@ -4,18 +4,51 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sliding_bottom_bg_color"
+    android:background="@color/menu_item_selector_color"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewCategoryItems"
+
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fadeScrollbars="true"
-        android:scrollbars="vertical"
-        android:splitMotionEvents="false"
         android:layout_above="@+id/relativeLayoutProceed">
-    </android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <include
+                layout="@layout/layout_fresh_cart"
+                />
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20px"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4px"
+                >
+
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/listViewAddonItems"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0dp"
+                    android:splitMotionEvents="false">
+                </product.clicklabs.jugnoo.utils.NonScrollListView>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
     <ImageView
         android:id="@+id/below_shadow_down"
@@ -38,19 +71,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="@dimen/text_size_38"
-            android:textColor="@color/text_color"
             android:text="@string/skip_and_proceed"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_38"
             />
 
         <ImageView
             android:layout_width="18px"
             android:layout_height="30px"
-            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginRight="30px"
-            android:tag="mwar"
             android:src="@drawable/ic_arrow_orange_bold"
+            android:tag="mwar"
             />
 
     </RelativeLayout>

@@ -2,27 +2,33 @@ package com.sabkuchfresh.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.AddOnItemsAdapter;
+import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 
 /**
  * Created by shankar on 10/10/16.
@@ -32,9 +38,16 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
     private RelativeLayout linearLayoutRoot;
     private AddOnItemsAdapter addOnItemsAdapter;
-    private RecyclerView recyclerViewCategoryItems;
+    private NonScrollListView listViewAddonItems;
     private RelativeLayout relativeLayoutProceed;
     private TextView textViewProceed;
+
+    private RelativeLayout relativeLayoutCartTop;
+    private TextView textViewCartItems, textViewCartTotalUndiscount, textViewCartTotal;
+    private ImageView imageViewCartArrow, imageViewDeleteCart, imageViewCartSep;
+    private LinearLayout linearLayoutCartDetails, linearLayoutCartExpansion;
+    private NonScrollListView listViewCart;
+    private FreshCartItemsAdapter freshCartItemsAdapter;
 
     private Bus mBus;
 
@@ -67,10 +80,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
             e.printStackTrace();
         }
 
-        recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
-        recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewCategoryItems.setHasFixedSize(false);
+        listViewAddonItems = (NonScrollListView) rootView.findViewById(R.id.listViewAddonItems);
 
         relativeLayoutProceed = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutProceed);
         textViewProceed = (TextView) rootView.findViewById(R.id.textViewProceed); textViewProceed.setTypeface(Fonts.mavenMedium(activity));
@@ -86,16 +96,115 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         }
         updateBottomBar();
 
+
+        ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.list_item_addon_header, listViewAddonItems, false);
+        header.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 124));
+        ASSL.DoMagic(header);
+        listViewAddonItems.addHeaderView(header, null, false);
+        ((TextView)header.findViewById(R.id.textViewCompleteMeal)).setTypeface(Fonts.mavenMedium(activity));
+
         addOnItemsAdapter = new AddOnItemsAdapter(activity, mealsAddonData, this);
-        recyclerViewCategoryItems.setAdapter(addOnItemsAdapter);
+        listViewAddonItems.setAdapter(addOnItemsAdapter);
 
         relativeLayoutProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.getTransactionUtils().openCartFragment(activity, activity.getRelativeLayoutContainer());
+                activity.getTransactionUtils().openCheckoutMergedFragment(activity, activity.getRelativeLayoutContainer());
             }
         });
 
+        setSkipOnCLickListener();
+
+
+
+
+        if(activity.subItemsInCart == null) {
+            activity.subItemsInCart = new ArrayList<>();
+        }
+        updateCartItemsList();
+
+        relativeLayoutCartTop = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCartTop);
+        textViewCartItems = (TextView) rootView.findViewById(R.id.textViewCartItems); textViewCartItems.setTypeface(Fonts.mavenMedium(activity));
+        textViewCartTotalUndiscount = (TextView) rootView.findViewById(R.id.textViewCartTotalUndiscount);
+        textViewCartTotalUndiscount.setVisibility(View.GONE);
+        textViewCartTotal = (TextView) rootView.findViewById(R.id.textViewCartTotal); textViewCartTotal.setTypeface(Fonts.mavenMedium(activity));
+        imageViewCartArrow = (ImageView) rootView.findViewById(R.id.imageViewCartArrow);
+        imageViewDeleteCart = (ImageView) rootView.findViewById(R.id.imageViewDeleteCart);
+        imageViewCartSep = (ImageView) rootView.findViewById(R.id.imageViewCartSep);
+        imageViewCartSep.setVisibility(View.GONE);
+        linearLayoutCartExpansion = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartExpansion);
+        linearLayoutCartDetails = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartDetails);
+        linearLayoutCartDetails.setVisibility(View.GONE);
+        listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, false,
+                new FreshCartItemsAdapter.Callback() {
+                    @Override
+                    public void onPlusClicked(int position, SubItem subItem) {
+                        updateCartDataView();
+                        addOnItemsAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onMinusClicked(int position, SubItem subItem) {
+                        updateCartDataView();
+                        if(subItem.getSubItemQuantitySelected() == 0){
+                            activity.subItemsInCart.remove(position);
+                            checkIfEmpty();
+                        }
+                        addOnItemsAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public boolean checkForMinus(int position, SubItem subItem) {
+                        return activity.checkForMinus(position, subItem);
+                    }
+
+                    @Override
+                    public void minusNotDone(int position, SubItem subItem) {
+                        activity.clearMealsCartIfNoMainMeal();
+                        addOnItemsAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public PromoCoupon getSelectedCoupon() {
+                        return null;
+                    }
+
+                    @Override
+                    public void removeCoupon() {
+
+                    }
+                });
+        listViewCart.setAdapter(freshCartItemsAdapter);
+
+        linearLayoutCartExpansion.setVisibility(View.GONE);
+        imageViewDeleteCart.setVisibility(View.GONE);
+        imageViewCartArrow.setRotation(180f);
+
+
+        relativeLayoutCartTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(linearLayoutCartExpansion.getVisibility() == View.VISIBLE){
+                    linearLayoutCartExpansion.setVisibility(View.GONE);
+                    imageViewDeleteCart.setVisibility(View.GONE);
+                    imageViewCartArrow.setRotation(180f);
+                } else {
+                    linearLayoutCartExpansion.setVisibility(View.VISIBLE);
+                    imageViewDeleteCart.setVisibility(View.VISIBLE);
+                    imageViewCartArrow.setRotation(0f);
+                }
+            }
+        });
+
+        imageViewDeleteCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.deleteCart();
+            }
+        });
+
+        updateCartDataView();
 
         return rootView;
     }
@@ -106,10 +215,19 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         if (!hidden) {
             activity.fragmentUISetup(this);
             addOnItemsAdapter.notifyDataSetChanged();
+            setSkipOnCLickListener();
         }
     }
 
 
+    private void setSkipOnCLickListener(){
+        activity.getTopBar().textViewSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                relativeLayoutProceed.performClick();
+            }
+        });
+    }
 
     @Override
     public void onDestroy() {
@@ -138,16 +256,18 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
-        activity.updateCartValuesGetTotalPrice();
+        updateCartTopBarView(activity.updateCartValuesGetTotalPrice());
         addOnSelectedCount++;
         updateBottomBar();
+        updateCartItemsList();
     }
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
-        activity.updateCartValuesGetTotalPrice();
+        updateCartTopBarView(activity.updateCartValuesGetTotalPrice());
         addOnSelectedCount--;
         updateBottomBar();
+        updateCartItemsList();
     }
 
     private void updateBottomBar(){
@@ -161,6 +281,55 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
     @Override
     public void minusNotDone(int position, SubItem subItem) {
+
+    }
+
+    private void updateCartTopBarView(Pair<Double, Integer> pair){
+        textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
+        textViewCartTotal.setText(activity.getString(R.string.rupees_value_format_without_space,
+                Utils.getMoneyDecimalFormatWithoutFloat().format(pair.first)));
+    }
+
+    private void updateCartDataView(){
+        try {
+            updateCartTopBarView(activity.updateCartValuesGetTotalPrice());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkIfEmpty(){
+        if(activity.subItemsInCart.size() == 0){
+            activity.performBackPressed();
+        }
+    }
+
+
+    private void updateCartItemsList(){
+        activity.subItemsInCart.clear();
+        if(activity.getProductsResponse() != null
+                && activity.getProductsResponse().getCategories() != null) {
+            for (Category category : activity.getProductsResponse().getCategories()) {
+                for (SubItem subItem : category.getSubItems()) {
+                    if (subItem.getSubItemQuantitySelected() > 0) {
+                        activity.subItemsInCart.add(subItem);
+                    }
+                }
+            }
+        }
+        if(freshCartItemsAdapter != null){
+            freshCartItemsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public void deleteCart() {
+        for(SubItem subItem : activity.subItemsInCart){
+            subItem.setSubItemQuantitySelected(0);
+        }
+        updateCartDataView();
+        activity.subItemsInCart.clear();
+        freshCartItemsAdapter.notifyDataSetChanged();
+        checkIfEmpty();
 
     }
 }

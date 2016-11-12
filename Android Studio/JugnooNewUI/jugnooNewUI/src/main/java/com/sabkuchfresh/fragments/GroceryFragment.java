@@ -208,6 +208,8 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
         setSortingList();
 
+		getAllProducts(true);
+
         try {
             if(Data.getGroceryData() != null && Data.getGroceryData().pendingFeedback == 1) {
                 new Handler().postDelayed(new Runnable() {
@@ -244,7 +246,8 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 	public void onResume() {
 		super.onResume();
 		if(!isHidden()) {
-			getAllProducts(true);
+			getAllProducts(activity.isRefreshCart());
+			activity.setRefreshCart(false);
 		}
 	}
 
@@ -297,6 +300,10 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
+			if(activity.isRefreshCart()){
+				getAllProducts(true);
+			}
+			activity.setRefreshCart(false);
 		}
 	}
 
@@ -392,7 +399,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                             }
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							retryDialog(DialogErrorType.SERVER_ERROR);
 						}
                         try {
                             if(finalProgressDialog != null)

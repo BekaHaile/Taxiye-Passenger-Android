@@ -400,4 +400,13 @@ public class FABViewTest {
         }
     };
 
+    public void closeMenu(){
+        try {
+            menuLabelsRightTest.close(false);
+            menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
