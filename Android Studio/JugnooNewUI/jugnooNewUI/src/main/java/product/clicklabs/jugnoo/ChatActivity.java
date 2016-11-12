@@ -44,7 +44,7 @@ import retrofit.mime.TypedByteArray;
  * Created by ankit on 10/11/16.
  */
 
-public class ChatActivity extends Activity implements View.OnClickListener{
+public class ChatActivity extends BaseFragmentActivity implements View.OnClickListener{
 
     private RelativeLayout relative;
     private TextView textViewTitle;
@@ -130,6 +130,11 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 		}
 	};
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Data.context = ChatActivity.this;
+	}
 
 	public void updateListData(String message, boolean errorOccurred) {
 		if (errorOccurred) {
@@ -155,6 +160,7 @@ public class ChatActivity extends Activity implements View.OnClickListener{
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		Data.context = null;
 		try {
 			if(handler != null){
                 handler.removeCallbacks(loadDiscussion);

@@ -621,6 +621,18 @@ public class Utils {
         return false;
     }
 
+	public static String getActivityName(Context context){
+		String mPackageName = "";
+		ActivityManager mActivityManager =(ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+		if(Build.VERSION.SDK_INT > 20){
+			mPackageName = mActivityManager.getRunningAppProcesses().get(0).processName;
+		}
+		else{
+			mPackageName = mActivityManager.getRunningTasks(1).get(0).topActivity.getPackageName();
+		}
+		return mPackageName;
+	}
+
 	public static void checkAppsArrayInstall(Context context, ArrayList<AppPackage> appPackages) {
 		int flags = PackageManager.GET_META_DATA |
 				PackageManager.GET_SHARED_LIBRARY_FILES |
