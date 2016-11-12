@@ -21,6 +21,9 @@ public class HistoryResponse {
     @SerializedName("history_size")
     @Expose
     private Integer historySize;
+    @SerializedName("recent_orders_possible_status")
+    @Expose
+    private ArrayList<String> recentOrdersPossibleStatus = new ArrayList<>();
 
     /**
      * @return The flag
@@ -64,6 +67,13 @@ public class HistoryResponse {
         this.historySize = historySize;
     }
 
+    public ArrayList<String> getRecentOrdersPossibleStatus() {
+        return recentOrdersPossibleStatus;
+    }
+
+    public void setRecentOrdersPossibleStatus(ArrayList<String> recentOrdersPossibleStatus) {
+        this.recentOrdersPossibleStatus = recentOrdersPossibleStatus;
+    }
 
     public class Datum {
 
@@ -163,6 +173,9 @@ public class HistoryResponse {
         @SerializedName("payment_mode")
         @Expose
         private Integer paymentMode;
+        @SerializedName("order_tracking_index")
+        @Expose
+        private Integer orderTrackingIndex;
         @SerializedName("order_status_int")
         @Expose
         private Integer orderStatusInt;
@@ -304,6 +317,14 @@ public class HistoryResponse {
          */
         public void setIsCancelledRide(Integer isCancelledRide) {
             this.isCancelledRide = isCancelledRide;
+        }
+
+        public Integer getOrderTrackingIndex() {
+            return orderTrackingIndex;
+        }
+
+        public void setOrderTrackingIndex(Integer orderTrackingIndex) {
+            this.orderTrackingIndex = orderTrackingIndex;
         }
 
         /**

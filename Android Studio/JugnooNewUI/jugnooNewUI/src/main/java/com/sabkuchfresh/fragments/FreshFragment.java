@@ -208,6 +208,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
         setSortingList();
 
+		getAllProducts(true);
 
         try {
             if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
@@ -243,7 +244,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	public void onResume() {
 		super.onResume();
 		if(!isHidden()) {
-			getAllProducts(true);
+			getAllProducts(activity.isRefreshCart());
+			activity.setRefreshCart(false);
 		}
 	}
 
@@ -397,7 +399,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                             }
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							retryDialog(DialogErrorType.SERVER_ERROR);
 						}
                         try {
                             if(finalProgressDialog != null)

@@ -721,8 +721,8 @@ public class UserData {
 			for(int i = 0;i<promoCoupons.size();i++) {
 				PromoCoupon promoCoupon = promoCoupons.get(i);
 				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).autos.equals(1)) ||
-                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).autos.equals(1))) {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getAutos().equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getAutos().equals(1))) {
                         coupons.add(promoCoupon);
                     }
 				} catch (Exception e) {
@@ -736,8 +736,8 @@ public class UserData {
 			for(int i = 0;i<promoCoupons.size();i++) {
 				PromoCoupon promoCoupon = promoCoupons.get(i);
 				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).fresh.equals(1)) ||
-                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).fresh.equals(1))) {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getFresh().equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getFresh().equals(1))) {
                         coupons.add(promoCoupon);
                     }
 				} catch (Exception e) {
@@ -751,8 +751,8 @@ public class UserData {
 			for(int i = 0;i<promoCoupons.size();i++) {
 				PromoCoupon promoCoupon = promoCoupons.get(i);
 				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).meals.equals(1)) ||
-                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).meals.equals(1))) {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getMeals().equals(1)) ||
+                            (promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getMeals().equals(1))) {
                         coupons.add(promoCoupon);
                     }
 				} catch (Exception e) {
@@ -766,8 +766,8 @@ public class UserData {
 			for(int i = 0;i<promoCoupons.size();i++) {
 				PromoCoupon promoCoupon = promoCoupons.get(i);
 				try {
-					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).grocery.equals(1)) ||
-							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).grocery.equals(1))) {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getGrocery().equals(1)) ||
+							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getGrocery().equals(1))) {
 						coupons.add(promoCoupon);
 					}
 				} catch (Exception e) {

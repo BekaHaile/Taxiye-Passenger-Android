@@ -1,5 +1,6 @@
 package com.sabkuchfresh.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.squareup.picasso.Picasso;
 
@@ -18,7 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -28,14 +33,21 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class FreshCartItemsAdapter extends BaseAdapter {
 
-	private Context context;
+	private Activity context;
 	private LayoutInflater mInflater;
 	private List<SubItem> subItems;
+	private String categoryName;
+	private Callback callback;
+	private boolean checkForCouponApplied;
 
-	public FreshCartItemsAdapter(Context context, ArrayList<SubItem> subItems) {
+	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, String categoryName, boolean checkForCouponApplied,
+								 Callback callback) {
 		this.context = context;
 		this.subItems = subItems;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.callback = callback;
+		this.categoryName = categoryName;
+		this.checkForCouponApplied = checkForCouponApplied;
 	}
 
 	public synchronized void setResults(ArrayList<SubItem> subItems) {
@@ -87,14 +99,12 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		mHolder.textViewItemName.setText(subItem.getSubItemName());
 		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
 				Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
-		mHolder.textViewItemQuantity.setText("X "+subItem.getSubItemQuantitySelected());
-		mHolder.textViewItemTotalPrice.setText(context.getString(R.string.rupees_value_format,
-				Utils.getMoneyDecimalFormat().format(subItem.getPrice() * subItem.getSubItemQuantitySelected())));
+		mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
 
 		if(position == getCount()-1){
-			mHolder.imageViewSep.setVisibility(View.GONE);
+			mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.transparent));
 		} else {
-			mHolder.imageViewSep.setVisibility(View.VISIBLE);
+			mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.stroke_light_grey_alpha));
 		}
 
 		try {
@@ -112,25 +122,128 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			e.printStackTrace();
 		}
 
+
+		mHolder.imageViewMinus.setTag(position);
+		mHolder.imageViewPlus.setTag(position);
+
+		mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					final int pos = (int) v.getTag();
+					if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
+						DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
+								context.getString(R.string.coupon_remove_reapply_before_checkout),
+								context.getString(R.string.ok),
+								context.getString(R.string.cancel),
+								new View.OnClickListener(){
+									@Override
+									public void onClick(View v) {
+										doMinus(pos);
+										callback.removeCoupon();
+									}
+								},
+								new View.OnClickListener(){
+									@Override
+									public void onClick(View v) {
+
+									}
+								}, true, false);
+					} else{
+						doMinus(pos);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+		mHolder.imageViewPlus.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					final int pos = (int) v.getTag();
+					if(checkForCouponApplied && callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() > 0){
+						DialogPopup.alertPopupTwoButtonsWithListeners(context, "",
+								context.getString(R.string.coupon_remove_reapply_before_checkout),
+								context.getString(R.string.ok),
+								context.getString(R.string.cancel),
+								new View.OnClickListener(){
+									@Override
+									public void onClick(View v) {
+										doPlus(pos);
+										callback.removeCoupon();
+									}
+								},
+								new View.OnClickListener(){
+									@Override
+									public void onClick(View v) {
+
+									}
+								}, true, false);
+					} else{
+						doPlus(pos);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+
+	}
+
+	private void doMinus(int pos){
+		if(callback.checkForMinus(pos, subItems.get(pos))) {
+			FlurryEventLogger.event(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
+			subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
+					subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
+			callback.onMinusClicked(pos, subItems.get(pos));
+
+			notifyDataSetChanged();
+		} else{
+			callback.minusNotDone(pos, subItems.get(pos));
+		}
+	}
+
+	private void doPlus(int pos){
+		if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
+			subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+		} else {
+			Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
+		}
+
+		callback.onPlusClicked(pos, subItems.get(pos));
+		FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
+		notifyDataSetChanged();
 	}
 
 	static class MainViewHolder extends RecyclerView.ViewHolder {
 		public int id;
 		public RelativeLayout relative;
-		private ImageView imageViewItemImage, imageViewSep;
-		public TextView textViewItemName, textViewItemPrice, textViewItemQuantity, textViewItemTotalPrice;
+		private ImageView imageViewItemImage, imageViewSep, imageViewMinus, imageViewPlus;
+		public TextView textViewItemName, textViewItemPrice, textViewQuantity;
 
 		public MainViewHolder(View itemView, Context context) {
 			super(itemView);
 			relative = (RelativeLayout) itemView.findViewById(R.id.relative);
 			imageViewItemImage = (ImageView) itemView.findViewById(R.id.imageViewItemImage);
 			imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
+			imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
+			imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
 
 			textViewItemName = (TextView) itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenMedium(context));
 			textViewItemPrice = (TextView) itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenMedium(context));
-			textViewItemQuantity = (TextView) itemView.findViewById(R.id.textViewItemQuantity); textViewItemQuantity.setTypeface(Fonts.mavenMedium(context));
-			textViewItemTotalPrice = (TextView) itemView.findViewById(R.id.textViewItemTotalPrice); textViewItemTotalPrice.setTypeface(Fonts.mavenMedium(context));
-
+			textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
 		}
+	}
+
+	public interface Callback{
+		void onPlusClicked(int position, SubItem subItem);
+		void onMinusClicked(int position, SubItem subItem);
+		boolean checkForMinus(int position, SubItem subItem);
+		void minusNotDone(int position, SubItem subItem);
+		PromoCoupon getSelectedCoupon();
+		void removeCoupon();
 	}
 }

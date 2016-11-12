@@ -515,4 +515,5 @@ public interface Constants {
 	String SP_GROCERY_CHECKOUT_SAVE_DATA = "sp_grocery_checkout_save_data";
 
 	String KEY_VALID_STOCK_COUNT = "valid_stock_count";
+	String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
 }

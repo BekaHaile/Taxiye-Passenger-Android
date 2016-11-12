@@ -362,7 +362,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                     editTextEmail.setError(null);
                     editTextPhone.setError(null);
                     if (editTextUserName.isEnabled()) {
-                        String nameChanged = editTextUserName.getText().toString().trim().toUpperCase();
+                        String nameChanged = Utils.capEachWord(editTextUserName.getText().toString().trim());
                         String emailChanged = editTextEmail.getText().toString().trim();
                         String phoneNoChanged = editTextPhone.getText().toString().trim();
                         phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
@@ -378,7 +378,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                         } else if (!Utils.validPhoneNumber(phoneNoChanged)) {
                             editTextPhone.requestFocus();
                             editTextPhone.setError(getResources().getString(R.string.invalid_phone_error));
-                        } else if (Data.userData.userName.equalsIgnoreCase(nameChanged)
+                        } else if (Data.userData.userName.equals(nameChanged)
                                 && Data.userData.userEmail.equalsIgnoreCase(emailChanged)
                                 && Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged)) {
                             editTextUserName.requestFocus();

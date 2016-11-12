@@ -133,6 +133,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         setSortingList();
 
+        getAllProducts(true);
 
         try {
             if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
@@ -154,7 +155,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     public void onResume() {
         super.onResume();
         if(!isHidden()) {
-            getAllProducts(true);
+            getAllProducts(activity.isRefreshCart());
+            activity.setRefreshCart(false);
         }
     }
 
@@ -296,6 +298,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                 }
 
                                 mealAdapter.setList(mealsData);
+                                recyclerViewCategoryItems.smoothScrollToPosition(0);
 
                                 if(mealsData.size()>0) {
                                     noMealsView.setVisibility(View.GONE);
@@ -317,7 +320,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            retryDialog(DialogErrorType.SERVER_ERROR);
                         }
                         try {
                             if(finalProgressDialog != null)

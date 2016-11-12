@@ -73,7 +73,7 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
             if(slot.getIsActiveSlot() == 1){
                 holder.relative.setAlpha(1.0f);
             } else{
-                holder.relative.setAlpha(0.4f);
+                holder.relative.setAlpha(0.3f);
             }
             if(position == getItemCount()-1){
                 holder.imageViewSep.setVisibility(View.GONE);
@@ -123,8 +123,8 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
     }
 
     private int getItemWidth(){
-        int width = (int)(((getItemCount() > 3 ? 660f : 680f) / (getItemCount() > 3 ? 3 : getItemCount())) * ASSL.Xscale());
-        int minWidth = (int) (200f * ASSL.Xscale());
+        int width = (int)(((getItemCount() > 3 ? 620f : 680f) / (getItemCount() > 3 ? 3 : getItemCount())) * ASSL.Xscale());
+        int minWidth = (int) (160f * ASSL.Xscale());
         return width >= minWidth ? width : minWidth;
     }
 

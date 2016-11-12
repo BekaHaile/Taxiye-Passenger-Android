@@ -523,6 +523,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                     MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
                                             getCurrentPlaceLatLng(), bundle, false);
                                 }
+                            } else if(type == 3){
+                                setRefreshCart(true);
                             }
 						} else {
 							if(flag == PushFlags.DISPLAY_MESSAGE.getOrdinal()){
@@ -532,6 +534,15 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 String message = intent.getStringExtra(Constants.KEY_MESSAGE);
                                 Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
                                 openPaytmRechargeDialog();
+                            } else if(PushFlags.STATUS_CHANGED.getOrdinal() == flag){
+                                Fragment fragment = getTopFragment();
+                                if(fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()){
+                                    ((MealFragment)fragment).getAllProducts(true);
+                                } else {
+                                    Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
+                                    intent1.putExtra(Constants.KEY_FLAG, flag);
+                                    LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
+                                }
                             }
 						}
                     } catch (Exception e) {
@@ -820,6 +831,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar.below_shadow.setVisibility(View.VISIBLE);
             relativeLayoutCartNew.setVisibility(View.GONE);
             linearLayoutCheckout.setVisibility(View.VISIBLE);
+            topBar.textViewSkip.setVisibility(View.GONE);
 
 //        Utils.hideViewByScale(relativeLayoutCartRound);
 //        relativeLayoutCartRound.hide();
@@ -1100,6 +1112,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.pick_addons));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                topBar.textViewSkip.setVisibility(View.VISIBLE);
 
             }
         } catch (Exception e) {
@@ -1130,9 +1143,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         if (frag != null) {
                             ((FreshCheckoutMergedFragment)frag).deleteCart();
                         } else {
-                            frag = getFreshCartItemsFragment();
+                            frag = getMealAddonItemsFragment();
                             if(frag != null){
-                                ((FreshCartItemsFragment)frag).deleteCart();
+                                ((MealAddonItemsFragment)frag).deleteCart();
+                            } else{
+                                frag = getFreshCartItemsFragment();
+                                if(frag != null){
+                                    ((FreshCartItemsFragment)frag).deleteCart();
+                                }
                             }
                         }
 
@@ -1621,61 +1639,65 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     @Subscribe
     public void onSortEvent(SortSelection event) {
-        switch(event.postion){
-            case 0:
-                for (Category category : productsResponse.getCategories()) {
-                    Collections.sort(category.getSubItems(), new SubItemCompare());
-                }
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.A_Z);
-                try {
-                    mBus.post(new UpdateMainList(true));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 1:
-                for (Category category : productsResponse.getCategories()) {
-                    Collections.sort(category.getSubItems(), new Comparator<SubItem>() {
-                        @Override
-                        public int compare(SubItem p1, SubItem p2) {
-                            return p1.getPriorityId()- p2.getPriorityId();
-                        }
+        try {
+            switch(event.postion){
+				case 0:
+					for (Category category : productsResponse.getCategories()) {
+						Collections.sort(category.getSubItems(), new SubItemCompare());
+					}
+					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.A_Z);
+					try {
+						mBus.post(new UpdateMainList(true));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				case 1:
+					for (Category category : productsResponse.getCategories()) {
+						Collections.sort(category.getSubItems(), new Comparator<SubItem>() {
+							@Override
+							public int compare(SubItem p1, SubItem p2) {
+								return p1.getPriorityId()- p2.getPriorityId();
+							}
 
-                    });
-//                    Collections.sort(category.getSubItems(), new SubItemComparePriority());
-                }
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
-                try {
-                    mBus.post(new UpdateMainList(true));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 2:
-                for (Category category : productsResponse.getCategories()) {
-                    Collections.sort(category.getSubItems(), new SubItemComparePrice());
-                }
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-                try {
-                    mBus.post(new UpdateMainList(true));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case 3:
-                for (Category category : productsResponse.getCategories()) {
-                    Collections.sort(category.getSubItems(), new SubItemComparePriceRev());
-                }
-                FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-                try {
-                    mBus.post(new UpdateMainList(true));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            default:
-                // should not happened
-                break;
+						});
+	//                    Collections.sort(category.getSubItems(), new SubItemComparePriority());
+					}
+					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
+					try {
+						mBus.post(new UpdateMainList(true));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				case 2:
+					for (Category category : productsResponse.getCategories()) {
+						Collections.sort(category.getSubItems(), new SubItemComparePrice());
+					}
+					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
+					try {
+						mBus.post(new UpdateMainList(true));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				case 3:
+					for (Category category : productsResponse.getCategories()) {
+						Collections.sort(category.getSubItems(), new SubItemComparePriceRev());
+					}
+					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
+					try {
+						mBus.post(new UpdateMainList(true));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				default:
+					// should not happened
+					break;
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -2112,23 +2134,28 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             Fragment frag = getFreshCheckoutMergedFragment();
             if (frag != null) {
                 ((FreshCheckoutMergedFragment)frag).deleteCart();
-            } else{
-                frag = getFreshCartItemsFragment();
-                if(frag != null){
-                    ((FreshCartItemsFragment)frag).deleteCart();
+            } else {
+                frag = getMealAddonItemsFragment();
+                if (frag != null) {
+                    ((MealAddonItemsFragment) frag).deleteCart();
                 } else {
-                    if (getProductsResponse() != null && getProductsResponse().getCategories() != null) {
-                        for (Category category : getProductsResponse().getCategories()) {
-                            for (SubItem subItem : category.getSubItems()) {
-                                if (subItem.getSubItemQuantitySelected() > 0) {
-                                    subItem.setSubItemQuantitySelected(0);
+                    frag = getFreshCartItemsFragment();
+                    if (frag != null) {
+                        ((FreshCartItemsFragment) frag).deleteCart();
+                    } else {
+                        if (getProductsResponse() != null && getProductsResponse().getCategories() != null) {
+                            for (Category category : getProductsResponse().getCategories()) {
+                                for (SubItem subItem : category.getSubItems()) {
+                                    if (subItem.getSubItemQuantitySelected() > 0) {
+                                        subItem.setSubItemQuantitySelected(0);
+                                    }
                                 }
                             }
                         }
+                        updateCartValuesGetTotalPrice();
                     }
-                    updateCartValuesGetTotalPrice();
                 }
-			}
+            }
             clearMealCart();
         } catch (Exception e) {
             e.printStackTrace();
@@ -2162,7 +2189,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         if(appType == AppConstant.ApplicationType.MEALS) {
             getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         } else {
-            getTransactionUtils().openCartFragment(FreshActivity.this, relativeLayoutContainer);
+            getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         }
     }
 

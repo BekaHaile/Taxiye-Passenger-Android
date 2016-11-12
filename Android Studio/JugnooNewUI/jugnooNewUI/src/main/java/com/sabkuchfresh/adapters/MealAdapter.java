@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -53,6 +52,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems) {
         this.activity = activity;
         this.subItems = subItems;
+        this.recentOrders = new ArrayList<>();
+        this.possibleStatus = new ArrayList<>();
     }
 
     public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback) {

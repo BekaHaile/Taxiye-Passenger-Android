@@ -11,9 +11,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.retrofit.model.SubItem;
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +60,7 @@ public class OrderItemsAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		MainViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.list_item_fresh_cart_item, null);
+			convertView = mInflater.inflate(R.layout.list_item_order_item, null);
 			holder = new MainViewHolder(convertView, context);
 
 			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));

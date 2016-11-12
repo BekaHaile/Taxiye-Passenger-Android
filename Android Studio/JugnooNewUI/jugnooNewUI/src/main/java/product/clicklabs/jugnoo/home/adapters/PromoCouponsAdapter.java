@@ -90,7 +90,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		PromoCoupon promoCoupon = offerList.get(position);
 
 		holder.textViewOfferName.setText(promoCoupon.getTitle());
-		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() == promoCoupon.getId()){
+		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
 		} else{
 			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
@@ -126,7 +126,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 				try {
 					int position = ((ViewHolder) v.getTag()).id;
 					PromoCoupon promoCoupon = offerList.get(position);
-					if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().getId() == promoCoupon.getId()) {
+					if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
 						callback.setSelectedCoupon(-1);
 					} else {
 						callback.setSelectedCoupon(position);
