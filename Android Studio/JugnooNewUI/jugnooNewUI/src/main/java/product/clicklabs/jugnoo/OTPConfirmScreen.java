@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -86,13 +87,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	ScrollView scrollView;
 	LinearLayout linearLayoutMain;
-	TextView textViewScroll;
+	TextView textViewScroll, textViewSkip;
 	
 	boolean loginDataFetched = false;
 	private int linkedWallet = 0;
+	//private int userVerified = 0;
 	private String linkedWalletErrorMsg = "";
 	
-	public static boolean intentFromRegister = true;
+	public static boolean intentFromRegister = true, backFromMissedCall;
 	public static EmailRegisterData emailRegisterData;
 	public static FacebookRegisterData facebookRegisterData;
 	public static GoogleRegisterData googleRegisterData;
@@ -148,6 +150,10 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			e.printStackTrace();
 		}
 
+		/*if(getIntent().hasExtra(USER_VERIFIED)){
+			userVerified = getIntent().getIntExtra(USER_VERIFIED, 0);
+		}*/
+
 
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(OTPConfirmScreen.this, relative, 1134, 720, false);
@@ -175,7 +181,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		textViewOr = (TextView) findViewById(R.id.textViewOr); textViewOr.setTypeface(Fonts.mavenLight(this));
 		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
 		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenRegular(this));
+		textViewSkip = (TextView)findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.mavenRegular(this));
 
+		/*if(userVerified == 1){
+			textViewSkip.setVisibility(View.VISIBLE);
+		} else{
+			textViewSkip.setVisibility(View.GONE);
+		}*/
 
 		scrollView = (ScrollView) findViewById(R.id.scrollView);
 		linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -195,12 +207,21 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		});
 
+		textViewSkip.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sendFacebookLoginValues(OTPConfirmScreen.this);
+			}
+		});
+
 		relative.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				editTextOTP.setError(null);
 			}
 		});
+
+
 		
 		buttonVerify.setOnClickListener(new View.OnClickListener() {
 
@@ -210,6 +231,12 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				if (otpCode.length() > 0) {
 					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 						verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
+						/*if(userVerified == 1){
+							sendOTP(otpCode);
+						} else {
+							verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
+						}*/
+
 					} else if (SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 						verifyOtpViaGoogle(OTPConfirmScreen.this, otpCode, linkedWallet);
 					} else {
@@ -306,6 +333,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 										giveAMissedCall = true;
 										Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
 												.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+										backFromMissedCall = true;
 										FlurryEventLogger.event(GIVE_MISSED_CALL);
                                         Bundle bundle = new Bundle();
                                         MyApplication.getInstance().logEvent(FirebaseEvents.FB_ACQUISITION+"_"+FirebaseEvents.OTP_SCREEN+"_"+ FirebaseEvents.GIVE_A_MISS_CALL, bundle);
@@ -587,23 +615,27 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 		HomeActivity.checkForAccessTokenChange(this);
 
-		if(giveAMissedCall){
+		if(giveAMissedCall) {
 			giveAMissedCall = false;
 			//buttonVerify.performClick();
-			if(signupBy.equalsIgnoreCase("email")){
-				if(onlyDigits){
-					email = "+91"+email;
+			if (signupBy.equalsIgnoreCase("email")) {
+				if (onlyDigits) {
+					email = "+91" + email;
 					sendLoginValues(OTPConfirmScreen.this, email, password, true);
-				} else{
+				} else {
 					sendLoginValues(OTPConfirmScreen.this, email, password, false);
 				}
-			} else if(signupBy.equalsIgnoreCase("facebook")){
+			} else if (signupBy.equalsIgnoreCase("facebook")) {
 				sendFacebookLoginValues(OTPConfirmScreen.this);
-			} else if(signupBy.equalsIgnoreCase("google")){
+			} else if (signupBy.equalsIgnoreCase("google")) {
 				sendGoogleLoginValues(OTPConfirmScreen.this);
 			}
 			// api call
-			handler.postDelayed(runnable ,5000);
+			handler.postDelayed(runnable, 5000);
+		}
+		if(backFromMissedCall){
+			backFromMissedCall = false;
+
 		}
 	}
 
@@ -1186,6 +1218,69 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void sendOTP(final String otp) {
+		try {
+			if(AppStatus.getInstance(OTPConfirmScreen.this).isOnline(OTPConfirmScreen.this)) {
+				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
+				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+				params.put(Constants.KEY_OTP, otp);
+
+				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						Log.i(TAG, "loginWithOtp response = " + responseStr);
+						DialogPopup.dismissLoadingDialog();
+						try {
+							textViewSkip.performClick();
+						} catch (Exception e) {
+							e.printStackTrace();
+							DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
+						}
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						Log.e(TAG, "loginWithOtp error=" + error.toString());
+						DialogPopup.dismissLoadingDialog();
+						DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
+					}
+				};
+				if(linkedWallet == PaymentOption.PAYTM.getOrdinal()) {
+					RestClient.getApiServices().paytmLoginWithOtp(params, callback);
+				} else if(linkedWallet == PaymentOption.MOBIKWIK.getOrdinal()){
+					RestClient.getApiServices().mobikwikLoginWithOtp(params, callback);
+				} else if(linkedWallet == PaymentOption.FREECHARGE.getOrdinal()) {
+					RestClient.getApiServices().freeChargeLoginWithOtp(params, callback);
+				}
+			} else{
+				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+						new Utils.AlertCallBackWithButtonsInterface() {
+							@Override
+							public void positiveClick(View view) {
+								sendOTP(otp);
+							}
+
+							@Override
+							public void neutralClick(View view) {
+
+							}
+
+							@Override
+							public void negativeClick(View view) {
+
+							}
+						});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			DialogPopup.dismissLoadingDialog();
 		}
 	}
 
