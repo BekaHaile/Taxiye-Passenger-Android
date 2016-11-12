@@ -1214,5 +1214,7 @@
 	<string name="suggested_addresses">Suggested Addresses</string>
 	<string name="save_address_as">Save address as:</string>
 	<string name="address_name">Address Name</string>
+	<string name="hi_username_format">Hi %s!</string>
+	<string name="we_have_these_offerings">We have these offerings for you.\nPlease choosebla bla bla.</string>
 
 </resources>

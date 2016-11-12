@@ -501,7 +501,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 									Bundle bundle = new Bundle();
 									bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
 									MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
-											getCurrentPlaceLatLng(), bundle, false);
+											getCurrentPlaceLatLng(), bundle);
 	//                    openCart();
 	//                    addFreshFragment();
 	//                    Prefs.with(context).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
@@ -520,7 +520,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
-                                            getCurrentPlaceLatLng(), bundle, false);
+                                            getCurrentPlaceLatLng(), bundle);
                                 }
                             } else if(type == 3){
                                 setRefreshCart(true);

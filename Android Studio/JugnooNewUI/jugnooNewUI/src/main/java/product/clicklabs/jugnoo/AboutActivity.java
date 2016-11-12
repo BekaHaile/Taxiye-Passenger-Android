@@ -181,7 +181,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
         MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+BACK, bundle);
 
         finish();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
     @Override

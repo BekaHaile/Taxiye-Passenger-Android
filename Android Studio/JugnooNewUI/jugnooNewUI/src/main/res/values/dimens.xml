@@ -211,5 +211,35 @@
     <dimen name="px_36">36px</dimen>
     <dimen name="px_26">26px</dimen>
     <dimen name="px_40">40px</dimen>
+    <dimen name="px_6">
+        6px
+    </dimen>
+    <dimen name="px_500">
+        500px
+    </dimen>
+    <dimen name="px_220">
+        220px
+    </dimen>
+    <dimen name="px_200">
+        200px
+    </dimen>
+    <dimen name="px_400">
+        400px
+    </dimen>
+    <dimen name="px_480">
+        480px
+    </dimen>
+    <dimen name="px_680">
+        680px
+    </dimen>
+    <dimen name="px_760">
+        760px
+    </dimen>
+    <dimen name="px_2">
+        2px
+    </dimen>
+    <dimen name="px_60">
+        60px
+    </dimen>
 
 </resources>
