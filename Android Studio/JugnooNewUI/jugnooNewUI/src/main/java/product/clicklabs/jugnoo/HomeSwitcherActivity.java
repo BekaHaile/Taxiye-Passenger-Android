@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -28,7 +29,7 @@ public class HomeSwitcherActivity extends Activity {
     RelativeLayout relative;
 
     TextView textViewTitle, textViewHi;
-    RelativeLayout relativeLayoutRides, relativeLayoutMeals, relativeLayoutFresh, relativeLayoutGrocery;
+    CardView relativeLayoutRides, relativeLayoutMeals, relativeLayoutFresh, relativeLayoutGrocery;
     TextView textViewRides, textViewMeals, textViewFresh, textViewGrocery;
     FloatingActionMenu fabMenuIns;
 
@@ -62,10 +63,10 @@ public class HomeSwitcherActivity extends Activity {
         ((TextView)findViewById(R.id.textViewWeHave)).setTypeface(Fonts.mavenMedium(this));
         ((TextView)findViewById(R.id.textViewWeHave2)).setTypeface(Fonts.mavenMedium(this));
 
-        relativeLayoutRides = (RelativeLayout) findViewById(R.id.relativeLayoutRides);
-        relativeLayoutMeals = (RelativeLayout) findViewById(R.id.relativeLayoutMeals);
-        relativeLayoutFresh = (RelativeLayout) findViewById(R.id.relativeLayoutFresh);
-        relativeLayoutGrocery = (RelativeLayout) findViewById(R.id.relativeLayoutGrocery);
+        relativeLayoutRides = (CardView) findViewById(R.id.relativeLayoutRides);
+        relativeLayoutMeals = (CardView) findViewById(R.id.relativeLayoutMeals);
+        relativeLayoutFresh = (CardView) findViewById(R.id.relativeLayoutFresh);
+        relativeLayoutGrocery = (CardView) findViewById(R.id.relativeLayoutGrocery);
         textViewRides = (TextView) findViewById(R.id.textViewRides); textViewRides.setTypeface(Fonts.mavenMedium(this));
         textViewMeals = (TextView) findViewById(R.id.textViewMeals); textViewMeals.setTypeface(Fonts.mavenMedium(this));
         textViewFresh = (TextView) findViewById(R.id.textViewFresh); textViewFresh.setTypeface(Fonts.mavenMedium(this));
@@ -78,6 +79,7 @@ public class HomeSwitcherActivity extends Activity {
         fabMenuIns.setMenuButtonColorNormal(getResources().getColor(R.color.white));
         fabMenuIns.setMenuButtonColorPressed(getResources().getColor(R.color.grey_light));
         fabMenuIns.setMenuButtonColorRipple(getResources().getColor(R.color.grey_light_alpha));
+        fabMenuIns.setEnabled(false);
 
         relativeLayoutRides.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,28 +133,28 @@ public class HomeSwitcherActivity extends Activity {
         relativeLayoutGrocery.clearAnimation();
 
         AnimationSet asr = new AnimationSet(true);
-        Animation tr = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 560f);
+        Animation tr = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 520f);
         tr.setDuration(duration);
         tr.setFillAfter(false);
         tr.setInterpolator(new AccelerateDecelerateInterpolator());
         addScaleAlphaAnimListener(asr, tr, relativeLayoutRides);
 
         AnimationSet asf = new AnimationSet(true);
-        Animation tf = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 280f);
+        Animation tf = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 240f);
         tf.setDuration(duration);
         tf.setFillAfter(false);
         tf.setInterpolator(new AccelerateDecelerateInterpolator());
         addScaleAlphaAnimListener(asf, tf, relativeLayoutFresh);
 
         AnimationSet asm = new AnimationSet(true);
-        Animation tm = new TranslateAnimation(0, -(ASSL.Xscale() * 360f), 0, ASSL.Yscale() * 560f);
+        Animation tm = new TranslateAnimation(0, -(ASSL.Xscale() * 360f), 0, ASSL.Yscale() * 520f);
         tm.setDuration(duration);
         tm.setFillAfter(false);
         tm.setInterpolator(new AccelerateDecelerateInterpolator());
         addScaleAlphaAnimListener(asm, tm, relativeLayoutMeals);
 
         AnimationSet asg = new AnimationSet(true);
-        Animation tg = new TranslateAnimation(0, -(ASSL.Xscale() * 360f), 0, ASSL.Yscale() * 280f);
+        Animation tg = new TranslateAnimation(0, -(ASSL.Xscale() * 360f), 0, ASSL.Yscale() * 240f);
         tg.setDuration(duration);
         tg.setFillAfter(false);
         tg.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -185,7 +187,7 @@ public class HomeSwitcherActivity extends Activity {
         a.setFillAfter(false);
         a.setInterpolator(new AccelerateDecelerateInterpolator());
 
-        Animation s = new ScaleAnimation(1f, 0.5f, 1f, 0.5f, ScaleAnimation.RELATIVE_TO_SELF, 0.0f, ScaleAnimation.RELATIVE_TO_SELF, 0.0f);
+        Animation s = new ScaleAnimation(1f, 0.4f, 1f, 0.4f, ScaleAnimation.RELATIVE_TO_SELF, 0.0f, ScaleAnimation.RELATIVE_TO_SELF, 1.0f);
         s.setDuration(duration);
         s.setFillAfter(false);
         s.setInterpolator(new AccelerateDecelerateInterpolator());
