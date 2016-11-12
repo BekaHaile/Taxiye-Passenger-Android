@@ -85,16 +85,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         relativeLayoutProceed = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutProceed);
         textViewProceed = (TextView) rootView.findViewById(R.id.textViewProceed); textViewProceed.setTypeface(Fonts.mavenMedium(activity));
 
-        try {
-            mealsAddonData.clear();
-            mealsAddonData.addAll(activity.getProductsResponse().getCategories().get(1).getSubItems());
-            for(SubItem subItem : mealsAddonData){
-                addOnSelectedCount = addOnSelectedCount + subItem.getSubItemQuantitySelected();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        updateBottomBar();
+        updateAddonsListCount();
 
 
         ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.list_item_addon_header, listViewAddonItems, false);
@@ -117,10 +108,6 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
 
 
-
-        if(activity.subItemsInCart == null) {
-            activity.subItemsInCart = new ArrayList<>();
-        }
         updateCartItemsList();
 
         relativeLayoutCartTop = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCartTop);
@@ -214,8 +201,10 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
-            addOnItemsAdapter.notifyDataSetChanged();
             setSkipOnCLickListener();
+            updateCartDataView();
+            updateCartItemsList();
+            updateAddonsListCount();
         }
     }
 
@@ -306,6 +295,9 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
 
     private void updateCartItemsList(){
+        if(activity.subItemsInCart == null) {
+            activity.subItemsInCart = new ArrayList<>();
+        }
         activity.subItemsInCart.clear();
         if(activity.getProductsResponse() != null
                 && activity.getProductsResponse().getCategories() != null) {
@@ -331,5 +323,22 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         freshCartItemsAdapter.notifyDataSetChanged();
         checkIfEmpty();
 
+    }
+
+    private void updateAddonsListCount(){
+        try {
+            addOnSelectedCount = 0;
+            mealsAddonData.clear();
+            mealsAddonData.addAll(activity.getProductsResponse().getCategories().get(1).getSubItems());
+            for(SubItem subItem : mealsAddonData){
+                addOnSelectedCount = addOnSelectedCount + subItem.getSubItemQuantitySelected();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        updateBottomBar();
+        if(addOnItemsAdapter != null){
+            addOnItemsAdapter.notifyDataSetChanged();
+        }
     }
 }
