@@ -158,6 +158,12 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
     }
 
 	@Override
+	public void onBackPressed() {
+		performBackPressed();
+		//super.onBackPressed();
+	}
+
+	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		Data.context = null;
