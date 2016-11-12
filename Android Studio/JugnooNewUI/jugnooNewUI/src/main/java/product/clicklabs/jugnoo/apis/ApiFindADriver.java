@@ -174,6 +174,10 @@ public class ApiFindADriver {
 			e.printStackTrace();
 		}
 
+		if(findADriverResponse.getNearbyPickupRegions() != null){
+			Data.autoData.setNearbyPickupRegionses(findADriverResponse.getNearbyPickupRegions());
+		}
+
 		try{
 			if(Data.autoData.getRegions() == null){
 				Data.autoData.setRegions(new ArrayList<Region>());

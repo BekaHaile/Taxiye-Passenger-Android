@@ -56,6 +56,7 @@ import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
+import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -295,11 +296,13 @@ public class JSONParser implements Constants {
             String referAllTextLogin = autoData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
             String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
 
+            NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
+
             Data.autoData = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
 					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
-					rideEndGoodFeedbackText, baseFarePoolText,
-					referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin, referAllTitleLogin);
+					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
+                    , referAllTitleLogin, nearbyPickupRegionses);
 
 
             if(Data.autoData.getPromoCoupons() == null){

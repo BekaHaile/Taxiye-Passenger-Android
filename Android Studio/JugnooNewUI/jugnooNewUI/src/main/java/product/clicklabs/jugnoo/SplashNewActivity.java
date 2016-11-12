@@ -174,7 +174,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	String name = "", referralCode = "", emailId = "", phoneNo = "", password = "";
+	String name = "", referralCode = "", emailId = "", phoneNo = "", password = "", signUpBy = "";
 	public static RegisterationType registerationType = RegisterationType.EMAIL;
 	public static JSONObject multipleCaseJSON;
 
@@ -334,6 +334,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 			try{
+				Utils.generateKeyHash(SplashNewActivity.this);
 				if(getIntent().getIntExtra(KEY_LOGGED_OUT, 0) == 1){
 					String message = getIntent().getStringExtra(KEY_MESSAGE);
 					DialogPopup.alertPopup(this, "", message);
@@ -739,6 +740,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void onClick(View v) {
 					if (AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
+						signUpBy = "facebook";
 						FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
 						Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 						facebookLoginHelper.openFacebookSession();
@@ -769,6 +771,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onClick(View v) {
 					if(AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
 					FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
+						signUpBy = "google";
                         Bundle bundle = new Bundle();
                         MyApplication.getInstance().logEvent(TRANSACTION+"_"+LOGIN_PAGE+"_"+LOGIN_WITH_GOOGLE, bundle);
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
@@ -2431,6 +2434,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				public void onClick(View v) {
 					DialogPopup.dismissAlertPopup();
 					OTPConfirmScreen.intentFromRegister = false;
+					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 					if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 						OTPConfirmScreen.facebookRegisterData = new FacebookRegisterData(Data.facebookUserData.fbId,
 								Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName,
@@ -2438,18 +2442,23 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								Data.facebookUserData.userEmail,
 								Data.facebookUserData.userName,
 								phoneNoOfUnverifiedAccount, "", "", accessToken);
+						signUpBy = "facebook";
 					} else if (RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 						OTPConfirmScreen.googleRegisterData = new GoogleRegisterData(Data.googleSignInAccount.getId(),
 								Data.googleSignInAccount.getDisplayName(),
 								Data.googleSignInAccount.getEmail(),
 								"",
 								phoneNoOfUnverifiedAccount, "", "", accessToken);
+						signUpBy = "google";
 					} else {
 						OTPConfirmScreen.intentFromRegister = false;
 						OTPConfirmScreen.emailRegisterData = new EmailRegisterData("", enteredEmail, phoneNoOfUnverifiedAccount, "", "", accessToken);
+						signUpBy = "email";
 					}
 
-					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
+					intent.putExtra("signup_by", signUpBy);
+					intent.putExtra("email", editTextEmail.getText().toString().trim());
+					intent.putExtra("password", editTextPassword.getText().toString().trim());
 					intent.putExtra("show_timer", 0);
 					intent.putExtra(LINKED_WALLET, linkedWallet);
 					startActivity(intent);
@@ -2464,6 +2473,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			intent.putExtra("show_timer", 1);
 			intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
 			intent.putExtra(LINKED_WALLET, linkedWallet);
+			intent.putExtra("signup_by", signUpBy);
+			intent.putExtra("email", editTextSEmail.getText().toString().trim());
+			intent.putExtra("password", editTextSPassword.getText().toString().trim());
 			startActivity(intent);
 			finish();
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -2770,6 +2782,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up");
+									signUpBy = "email";
                                     SplashNewActivity.this.name = name;
                                     SplashNewActivity.this.emailId = emailId;
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
@@ -2894,6 +2907,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Facebook");
+									signUpBy = "facebook";
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
 
                                 } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
@@ -3005,6 +3019,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                     DialogPopup.alertPopupWithListener(activity, "", error, onClickListenerAlreadyRegistered);
                                 } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
                                     FlurryEventLogger.eventGA(ACQUISITION, "Sign up Page", "Sign up with Google");
+									signUpBy = "google";
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
 
                                 } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
