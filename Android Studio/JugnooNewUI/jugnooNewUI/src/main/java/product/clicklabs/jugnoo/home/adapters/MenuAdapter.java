@@ -14,8 +14,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -241,6 +239,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         else if(viewholder instanceof ViewHeaderHolder){
             final ViewHeaderHolder holder = (ViewHeaderHolder) viewholder;
+            holder.textViewCategories.setText(R.string.home);
+            holder.imageViewArrow.setVisibility(View.GONE);
             try {
                 holder.textViewUserName.setText(Data.userData.userName);
                 holder.textViewViewPhone.setText(Data.userData.phoneNo);
@@ -271,18 +271,30 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutCategories.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(holder.linearLayoutSubCategories.getVisibility() == View.VISIBLE){
-                        holder.linearLayoutSubCategories.setVisibility(View.GONE);
-                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_down);
-                        holder.imageViewArrow.setRotation(270);
-                        //holder.linearLayoutCategories.startAnimation(animation);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES, null);
-                    } else {
-                        holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
-                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_up);
-                        holder.imageViewArrow.setRotation(90);
-                        //holder.linearLayoutCategories.startAnimation(animation);
+                    LatLng currLatLng = new LatLng(Data.latitude, Data.longitude);
+                    if(activity instanceof HomeActivity){
+                        currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
+                    } else if(activity instanceof FreshActivity){
+                        currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
                     }
+                    MyApplication.getInstance().getAppSwitcher().switchApp(activity,
+                            Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+                            null, currLatLng, null, true, true, true);
+
+
+//                    if(holder.linearLayoutSubCategories.getVisibility() == View.VISIBLE){
+//                        holder.linearLayoutSubCategories.setVisibility(View.GONE);
+//                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_down);
+//                        holder.imageViewArrow.setRotation(270);
+//                        //holder.linearLayoutCategories.startAnimation(animation);
+//                        MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES, null);
+//                    } else {
+//                        holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
+//                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_up);
+//                        holder.imageViewArrow.setRotation(90);
+//                        //holder.linearLayoutCategories.startAnimation(animation);
+//                    }
+
                     //notifyItemChanged(0);
                 }
             });
