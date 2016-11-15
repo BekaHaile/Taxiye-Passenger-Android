@@ -168,6 +168,8 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
+import product.clicklabs.jugnoo.home.models.PokestopInfo;
+import product.clicklabs.jugnoo.home.models.PokestopTypeValue;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
@@ -468,6 +470,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private Spinner spin;
     private boolean specialPickupSelected;
     private String selectedSpecialPickup = "";
+    private ArrayList<Marker> markersSpecialPickup = new ArrayList<>();
+    private ArrayList<MarkerOptions> markerOptionsSpecialPickup = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -8774,10 +8778,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                         //map.moveCamera(CameraUpdateFactory.zoomOut());
+                        showSpecialPickupMarker(specialPickups);
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
                         spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
                     } else {
                         specialPickupScreenOpened = false;
+                        removeSpecialPickupMarkers();
                         rlSpecialPickup.setVisibility(View.GONE);
                         updateTopBar();
                         openConfirmRequestView();
@@ -8794,13 +8800,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } else {
                     if(updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()){
                         // show special pickup screen
+
                         specialPickupScreenOpened = true;
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                         //map.moveCamera(CameraUpdateFactory.zoomOut());
+                        showSpecialPickupMarker(specialPickups);
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
                         spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
+
                     } else {
+                        removeSpecialPickupMarkers();
                         requestRideClick();
                         //openConfirmRequestView();
                         slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -9026,6 +9036,42 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public FABViewTest getFabViewTest(){
         return fabViewTest;
+    }
+
+    private void showSpecialPickupMarker(ArrayList<NearbyPickupRegions.HoverInfo> specialPickups) {
+        try {
+            if(map != null) {
+                float zIndex = 0.0f;
+                for(NearbyPickupRegions.HoverInfo specialPickup : specialPickups){
+                    LatLng specialPicupLatLng = new LatLng(Double.parseDouble(specialPickup.getLatitude()),
+                            Double.parseDouble(specialPickup.getLongitude()));
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.title(specialPickup.getText());
+                    markerOptions.snippet("special_pickup");
+                    markerOptions.position(specialPicupLatLng);
+                    markerOptions.anchor(0.5f, 0.5f);
+                    markerOptions.zIndex(zIndex);
+                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                                .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.ic_poke_stop, 39f*0.9f, 40f*0.9f)));
+                    markersSpecialPickup.add(map.addMarker(markerOptions));
+                    markerOptionsSpecialPickup.add(markerOptions);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeSpecialPickupMarkers() {
+        try {
+            markerOptionsSpecialPickup.clear();
+            for(Marker marker : markersSpecialPickup){
+                marker.remove();
+            }
+            markersSpecialPickup.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
