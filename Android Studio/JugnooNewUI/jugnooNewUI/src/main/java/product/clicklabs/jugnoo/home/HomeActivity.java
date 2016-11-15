@@ -2634,6 +2634,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Data.autoData.getEndRideData().setDriverNameCarName(Data.autoData.getAssignedDriverInfo().name, Data.autoData.getAssignedDriverInfo().carNumber);
                         Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, 0f);
 
+                        if(Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
+                            bChatDriver.setVisibility(View.VISIBLE);
+                        }
+
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
                         //fabViewTest.setRelativeLayoutFABVisibility(mode);
@@ -2978,6 +2982,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
                         setFabViewAtRide(mode);
 
+                        if(Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
+                            bChatDriver.setVisibility(View.VISIBLE);
+                        }
+
                         break;
 
                     case P_DRIVER_ARRIVED:
@@ -3053,7 +3061,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
                         setFabViewAtRide(mode);
 
-
+                        if(Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
+                            bChatDriver.setVisibility(View.VISIBLE);
+                        }
 
                         break;
 
@@ -3129,7 +3139,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
 
-
+                        if(Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
+                            bChatDriver.setVisibility(View.VISIBLE);
+                        }
 
                         break;
 
