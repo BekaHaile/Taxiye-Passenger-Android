@@ -25,7 +25,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FeedbackActivity;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -134,7 +133,8 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 								}
 							} else if (historyData.getProductType() == ProductType.FRESH.getOrdinal()
 									|| historyData.getProductType() == ProductType.MEALS.getOrdinal()
-									|| historyData.getProductType() == ProductType.GROCERY.getOrdinal()) {
+									|| historyData.getProductType() == ProductType.GROCERY.getOrdinal()
+									|| historyData.getProductType() == ProductType.MENUS.getOrdinal()) {
 								if (activity instanceof RideTransactionsActivity) {
 										new TransactionUtils().openOrderStatusFragment(activity, ((RideTransactionsActivity) activity).getContainer(), historyData.getOrderId());
 //									else {

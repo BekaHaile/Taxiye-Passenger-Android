@@ -201,6 +201,8 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
                     } else if(appType == AppConstant.ApplicationType.GROCERY){
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
+                    } else if(appType == AppConstant.ApplicationType.MENUS){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
                     } else{
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_CART+"_"+FirebaseEvents.CHECKOUT+"_"+FirebaseEvents.PAY, null);
                     }
@@ -335,6 +337,17 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
                                         }
                                         if(userCheckoutResponse.getCoupons() != null){
                                             Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                        }
+                                    } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                                        if(Data.getMenusData().getPromoCoupons() == null){
+                                            Data.getMenusData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                        }
+                                        Data.getMenusData().getPromoCoupons().clear();
+                                        if(userCheckoutResponse.getPromotions() != null){
+                                            Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                        }
+                                        if(userCheckoutResponse.getCoupons() != null){
+                                            Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
                                         }
                                     } else {
                                         if(Data.getFreshData().getPromoCoupons() == null){

@@ -106,13 +106,20 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 				orderId = Data.getMealsData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
-			}else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+			} else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
                 viewType = Data.getGroceryData().getFeedbackViewType();
                 dateValue = Data.getGroceryData().getFeedbackDeliveryDate();
                 orderAmount = Data.getGroceryData().getAmount();
                 orderId = Data.getGroceryData().getOrderId();
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                viewType = Data.getMenusData().getFeedbackViewType();
+                dateValue = Data.getMenusData().getFeedbackDeliveryDate();
+                orderAmount = Data.getMenusData().getAmount();
+                orderId = Data.getMenusData().getOrderId();
+                activity.getTopBar().title.setText(getResources().getString(R.string.menus));
+                endRideGoodFeedbackText = Data.getMenusData().getRideEndGoodFeedbackText();
             } else {
 				activity.finish();
 			}
@@ -174,6 +181,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             imageviewType.setImageResource(R.drawable.feedback_fresh);
         } else if(Config.getGroceryClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.feedback_grocery);
+        } else if(Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+            imageviewType.setImageResource(R.drawable.feedback_menus);
         } else {
             imageviewType.setImageResource(R.drawable.feedback_meals);
         }
@@ -218,6 +227,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                     else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
                         MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_DOWNVOTE, new Bundle());
                     }
+                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_DOWNVOTE, new Bundle());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -252,6 +264,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 					else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
 						MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_UPVOTE, new Bundle());
 					}
+                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_UPVOTE, new Bundle());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -349,6 +364,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 Data.getMealsData().setPendingFeedback(0);
             } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
                 Data.getGroceryData().setPendingFeedback(0);
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                Data.getMenusData().setPendingFeedback(0);
             } else {
                 activity.finish();
             }
@@ -572,6 +589,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 activity.getTopBar().title.setText(getResources().getString(R.string.meals));
             } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                activity.getTopBar().title.setText(getResources().getString(R.string.menus));
             }
         }
     }

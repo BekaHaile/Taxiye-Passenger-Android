@@ -390,6 +390,8 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 Prefs.with(activity).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
             } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
                 Prefs.with(activity).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
+            } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
+                Prefs.with(activity).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
             }
             JSONObject jCart = new JSONObject();
             if (orderHistory != null && orderHistory.getOrderItems() != null) {
@@ -408,6 +410,9 @@ public class FreshOrderSummaryFragment extends BaseFragment implements FlurryEve
                 sendMessage(0);
             } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
                 Prefs.with(activity).save(Constants.SP_GROCERY_CART, jCart.toString());
+                sendMessage(2);
+            } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
+                Prefs.with(activity).save(Constants.SP_MENUS_CART, jCart.toString());
                 sendMessage(2);
             }
 

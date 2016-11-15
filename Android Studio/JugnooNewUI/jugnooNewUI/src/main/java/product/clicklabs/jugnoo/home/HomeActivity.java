@@ -3957,6 +3957,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 dataFoundNull = true;
             } else if(clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null){
                 dataFoundNull = true;
+            } else if(clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null){
+                dataFoundNull = true;
             }
             if(dataFoundNull) {
                 activity.startActivity(new Intent(activity, SplashNewActivity.class));
@@ -4816,7 +4818,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             if(Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) &&
-                        (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)) {
+                        (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
+                        && (Data.userData.getMenusEnabled() == 0)) {
                     //imageViewFabFake.setVisibility(View.GONE);
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
                 } else {
@@ -9139,6 +9142,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getGroceryClientId(), null,
+                                            getCurrentPlaceLatLng(), bundle, false);
+                                }
+                            } else if(type == 3){
+                                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                                    drawerLayout.closeDrawer(GravityCompat.START);
+                                }
+                                if (Prefs.with(HomeActivity.this).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()).equals(Config.getAutosClientId())) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+                                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getMenusClientId(), null,
                                             getCurrentPlaceLatLng(), bundle, false);
                                 }
                             }

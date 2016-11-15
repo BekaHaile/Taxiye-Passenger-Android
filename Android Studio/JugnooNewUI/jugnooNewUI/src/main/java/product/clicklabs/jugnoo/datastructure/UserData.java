@@ -55,7 +55,8 @@ public class UserData {
 	private int freeChargeEnabled;
 	private double freeChargeBalance = -1;
 
-	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, inviteFriendButton;
+	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled,
+			inviteFriendButton;
 
 	private ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
 	private int currentCity = 1;
@@ -88,7 +89,7 @@ public class UserData {
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
-					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int inviteFriendButton, String defaultClientId,
+					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
@@ -151,6 +152,7 @@ public class UserData {
 		this.mealsEnabled = mealsEnabled;
 		this.freshEnabled = freshEnabled;
 		this.groceryEnabled = groceryEnabled;
+		this.menusEnabled = menusEnabled;
 		this.deliveryEnabled = deliveryEnabled;
 
 		this.inviteFriendButton = inviteFriendButton;
@@ -710,6 +712,9 @@ public class UserData {
 			if(Data.getGroceryData() != null && Data.getGroceryData().getPromoCoupons() != null) {
 				count += Data.getGroceryData().getPromoCoupons().size();
 			}
+			if(Data.getMenusData() != null && Data.getMenusData().getPromoCoupons() != null) {
+				count += Data.getMenusData().getPromoCoupons().size();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -778,6 +783,21 @@ public class UserData {
 			if(Data.getGroceryData() != null) {
 				coupons.addAll(Data.getGroceryData().getPromoCoupons());
 			}
+		} else if(productType == ProductType.MENUS) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getMenus().equals(1)) ||
+							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getMenus().equals(1))) {
+						coupons.add(promoCoupon);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			if(Data.getMenusData() != null) {
+				coupons.addAll(Data.getMenusData().getPromoCoupons());
+			}
 		}
 
 		return coupons;
@@ -829,6 +849,14 @@ public class UserData {
 
 	public void setSearchResultsRecent(ArrayList<SearchResult> searchResultsRecent) {
 		this.searchResultsRecent = searchResultsRecent;
+	}
+
+	public int getMenusEnabled() {
+		return menusEnabled;
+	}
+
+	public void setMenusEnabled(int menusEnabled) {
+		this.menusEnabled = menusEnabled;
 	}
 
 	//	"meals_enabled": 1,

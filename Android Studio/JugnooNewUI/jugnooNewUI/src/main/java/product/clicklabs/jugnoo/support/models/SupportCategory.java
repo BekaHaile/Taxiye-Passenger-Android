@@ -28,6 +28,10 @@ public enum SupportCategory {
 	GROCERY_PENDING(15),
 	GROCERY_CANCELLED(16),
 
+	MENUS(17),
+	MENUS_PENDING(18),
+	MENUS_CANCELLED(19),
+
 	;
 
 

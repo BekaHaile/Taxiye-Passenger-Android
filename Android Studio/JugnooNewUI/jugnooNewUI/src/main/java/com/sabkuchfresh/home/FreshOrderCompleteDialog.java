@@ -61,6 +61,8 @@ public class FreshOrderCompleteDialog {
 				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_meals));
 			else if(type == AppConstant.ApplicationType.GROCERY)
 				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_grocery));
+			else if(type == AppConstant.ApplicationType.MENUS)
+				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_menus));
 
 			TextView textViewOrderId = (TextView) dialog.findViewById(R.id.textViewOrderId);
 			textViewOrderId.setTypeface(Fonts.mavenRegular(activity));

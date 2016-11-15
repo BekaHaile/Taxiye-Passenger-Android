@@ -294,6 +294,8 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         } else if(appType == AppConstant.ApplicationType.GROCERY){
                             FlurryEventLogger.event(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
                             MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
+                        } else if(appType == AppConstant.ApplicationType.MENUS){
+                            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

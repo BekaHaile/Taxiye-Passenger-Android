@@ -55,6 +55,7 @@ public class AppConstant {
         public static final int FRESH = 1;
         public static final int MEALS = 2;
         public static final int GROCERY = 3;
+        int MENUS = 4;
     }
 
     public static interface OrderType {

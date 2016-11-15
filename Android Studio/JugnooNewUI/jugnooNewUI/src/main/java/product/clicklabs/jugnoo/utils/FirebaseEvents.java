@@ -44,6 +44,7 @@ public interface FirebaseEvents {
     String OFFER_T_N_C = "offer_tnc";
     String FRESH = "fresh";
     String GROCERY = "grocery";
+    String MENUS = "menus";
     String REQUEST_RIDE_L1_AUTO = "req_ride_l1_auto";
     String REQUEST_RIDE_L1_AUTO_POOL = "req_ride_l1_auto_pool";
 
@@ -185,15 +186,18 @@ public interface FirebaseEvents {
 
     String M_CART = "m_cart";
     String G_CART = "g_cart";
+    String MENUS_CART = "menu_cart";
     String TRASH="trash";
     String BUTTON = "button";
     String MEALS = "meals";
     String M_ADD = "m_add";
     String M_SORT = "m_sort";
     String G_SORT = "g_sort";
+    String MENUS_SORT = "menu_sort";
     String A_Z = "a-z";
     String M_PAY = "m_pay";
     String G_PAY = "g_pay";
+    String MENUS_PAY = "menu_pay";
     String POPULARITY = "popularity";
     String LOW_TO_HIGH_PRICE = "low_to_high_price";
     String HIGH_TO_LOW_PRICE = "high_to_low_price";
@@ -214,8 +218,10 @@ public interface FirebaseEvents {
     String F_ADD = "f_add";
     String F_SEARCH_CART = "f_search_cart";
     String G_SEARCH_CART = "g_search_cart";
+    String MENUS_SEARCH_CART = "menu_search_cart";
     String F_SEARCH_GO = "f_search_go";
     String G_SEARCH_GO = "g_search_go";
+    String MENUS_SEARCH_GO = "menu_search_go";
     String F_CART = "f_cart";
     String F_PAY = "f_pay";
     String PLACE_ORDER = "place_order";
@@ -227,14 +233,18 @@ public interface FirebaseEvents {
     String MENU_CATEGORIES_FRESH = "menu_categories_fresh";
     String MENU_CATEGORIES_MEALS = "menu_categories_meals";
     String MENU_CATEGORIES_GROCERY = "menu_categories_grocery";
+    String MENU_CATEGORIES_MENUS = "menu_categories_menus";
 
     String MEALS_UPVOTE = "m_upvote";
     String MEALS_DOWNVOTE = "m_downvote";
     String FRESH_UPVOTE = "f_upvote";
     String FRESH_DOWNVOTE = "f_downvote";
     String GROCERY_UPVOTE = "g_upvote";
+    String MENUS_UPVOTE = "menus_upvote";
     String GROCERY_DOWNVOTE = "g_downvote";
+    String MENUS_DOWNVOTE = "menu_downvote";
 
     String G_ADD = "g_add";
+    String MENUS_ADD = "menu_add";
 
 }

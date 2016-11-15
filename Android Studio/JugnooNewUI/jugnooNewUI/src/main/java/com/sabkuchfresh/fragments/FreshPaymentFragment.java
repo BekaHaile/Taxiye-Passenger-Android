@@ -278,7 +278,9 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
 				promoCoupons = Data.userData.getCoupons(ProductType.MEALS);
 			} else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
 				promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
-			} else {
+			} else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                promoCoupons = Data.userData.getCoupons(ProductType.MENUS);
+            } else {
 				promoCoupons = Data.userData.getCoupons(ProductType.FRESH);
 			}
         } catch (Exception e) {
@@ -303,6 +305,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     productType = ProductType.MEALS;
                 } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
                     productType = ProductType.GROCERY;
+                } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                    productType = ProductType.MENUS;
                 } else {
                     productType = ProductType.FRESH;
                 }
@@ -324,6 +328,9 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     } else if(appType == AppConstant.ApplicationType.GROCERY){
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+                    } else if(appType == AppConstant.ApplicationType.MENUS){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+activity.getPaymentOption(), null);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     } else{
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
@@ -657,6 +664,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                     MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 } else if(appType == AppConstant.ApplicationType.GROCERY){
                                     MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+                                } else if(appType == AppConstant.ApplicationType.MENUS){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 } else{
                                     MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 }
@@ -671,6 +680,8 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                     MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 } else if(appType == AppConstant.ApplicationType.GROCERY){
                                     MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
+                                } else if(appType == AppConstant.ApplicationType.MENUS){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 } else{
                                     MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 }
@@ -874,7 +885,9 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                     chargeDetails.put(Events.TYPE, "Meals");
                 } else if(type == AppConstant.ApplicationType.GROCERY) {
                     chargeDetails.put(Events.TYPE, "Grocery");
-                }else {
+                } else if(type == AppConstant.ApplicationType.MENUS) {
+                    chargeDetails.put(Events.TYPE, "Menus");
+                } else {
                     chargeDetails.put(Events.TYPE, "Fresh");
                 }
                 params.put(Constants.INTERATED, "1");

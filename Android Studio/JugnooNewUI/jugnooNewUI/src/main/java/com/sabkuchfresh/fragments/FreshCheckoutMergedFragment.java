@@ -350,6 +350,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     } else if(appType == AppConstant.ApplicationType.GROCERY){
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+                    } else if(appType == AppConstant.ApplicationType.MENUS){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+activity.getPaymentOption(), null);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     } else{
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
@@ -749,6 +752,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                     MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 } else if(appType == AppConstant.ApplicationType.GROCERY){
                                     MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+                                } else if(appType == AppConstant.ApplicationType.MENUS){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 } else{
                                     MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
                                 }
@@ -763,6 +768,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                     MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 } else if(appType == AppConstant.ApplicationType.GROCERY){
                                     MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
+                                } else if(appType == AppConstant.ApplicationType.MENUS){
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 } else{
                                     MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
                                 }
@@ -897,7 +904,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     chargeDetails.put(Events.TYPE, "Meals");
                 } else if(type == AppConstant.ApplicationType.GROCERY) {
                     chargeDetails.put(Events.TYPE, "Grocery");
-                }else {
+                } else if(type == AppConstant.ApplicationType.MENUS) {
+                    chargeDetails.put(Events.TYPE, "Menus");
+                } else {
                     chargeDetails.put(Events.TYPE, "Fresh");
                 }
                 params.put(Constants.INTERATED, "1");
@@ -1013,9 +1022,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                                             } else {
                                                                 fragName = FreshCheckoutMergedFragment.class.getName();
                                                             }
-                                                        }  else if(appType == AppConstant.ApplicationType.GROCERY){
+                                                        } else if(appType == AppConstant.ApplicationType.GROCERY){
                                                             fragName = FreshCheckoutMergedFragment.class.getName();
-                                                        } else {
+                                                        } else if(appType == AppConstant.ApplicationType.MENUS){
+                                                            fragName = FreshCheckoutMergedFragment.class.getName();
+                                                        }else {
                                                             fragName = FreshCheckoutMergedFragment.class.getName();
                                                         }
                                                     } else {
@@ -1254,6 +1265,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 promoCoupons = Data.userData.getCoupons(ProductType.MEALS);
             } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
                 promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
+            } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                promoCoupons = Data.userData.getCoupons(ProductType.MENUS);
             } else {
                 promoCoupons = Data.userData.getCoupons(ProductType.FRESH);
             }
@@ -1406,6 +1419,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         }
                                         if(userCheckoutResponse.getCoupons() != null){
                                             Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                        }
+                                    } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                                        if(Data.getMenusData().getPromoCoupons() == null){
+                                            Data.getMenusData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                        }
+                                        Data.getMenusData().getPromoCoupons().clear();
+                                        if(userCheckoutResponse.getPromotions() != null){
+                                            Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                        }
+                                        if(userCheckoutResponse.getCoupons() != null){
+                                            Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
                                         }
                                     } else {
                                         if(Data.getFreshData().getPromoCoupons() == null){

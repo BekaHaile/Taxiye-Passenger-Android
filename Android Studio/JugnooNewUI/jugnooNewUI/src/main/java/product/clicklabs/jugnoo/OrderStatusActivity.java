@@ -362,7 +362,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
                                         Intent intent = new Intent(Data.LOCAL_BROADCAST);
                                         intent.putExtra("message", "Order cancelled, refresh inventory");
-                                        intent.putExtra("open_type", 3);
+                                        intent.putExtra("open_type", 10);
                                         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
 
                                         activity.onBackPressed();
@@ -738,6 +738,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 Prefs.with(activity).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
             } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
                 Prefs.with(activity).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
+            } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
+                Prefs.with(activity).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
             }
             JSONObject jCart = new JSONObject();
             if (orderHistory != null && orderHistory.getOrderItems() != null) {
@@ -757,6 +759,9 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
                 Prefs.with(activity).save(Constants.SP_GROCERY_CART, jCart.toString());
                 sendMessage(2);
+            } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
+                Prefs.with(activity).save(Constants.SP_MENUS_CART, jCart.toString());
+                sendMessage(3);
             }
 
             DialogPopup.showLoadingDialog(activity, "Please wait...");

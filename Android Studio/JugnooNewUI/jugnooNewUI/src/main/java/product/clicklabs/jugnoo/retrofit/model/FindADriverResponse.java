@@ -69,6 +69,9 @@ public class FindADriverResponse {
     @SerializedName("grocery_enabled")
     @Expose
     private Integer groceryEnabled = 0;
+    @SerializedName("menus_enabled")
+    @Expose
+    private Integer menusEnabled = 0;
     @SerializedName("integrated_jugnoo_enabled")
     @Expose
     private Integer integratedJugnooEnabled;
@@ -116,6 +119,12 @@ public class FindADriverResponse {
     @SerializedName("grocery_coupons")
     @Expose
     private List<CouponInfo> groceryCoupons = new ArrayList<>();
+    @SerializedName("menus_promotions")
+    @Expose
+    private List<PromotionInfo> menusPromotions = new ArrayList<>();
+    @SerializedName("menus_coupons")
+    @Expose
+    private List<CouponInfo> menusCoupons = new ArrayList<>();
 
     public List<CouponInfo> getDeliveryCoupons() {
         return deliveryCoupons;
@@ -400,6 +409,14 @@ public class FindADriverResponse {
         this.groceryEnabled = groceryEnabled;
     }
 
+    public Integer getMenusEnabled() {
+        return menusEnabled;
+    }
+
+    public void setMenusEnabled(Integer menusEnabled) {
+        this.menusEnabled = menusEnabled;
+    }
+
     public String getGamePredictUrl() {
         return gamePredictUrl;
     }
@@ -438,5 +455,21 @@ public class FindADriverResponse {
 
     public void setTopupCardEnabled(Integer topupCardEnabled) {
         this.topupCardEnabled = topupCardEnabled;
+    }
+
+    public List<PromotionInfo> getMenusPromotions() {
+        return menusPromotions;
+    }
+
+    public void setMenusPromotions(List<PromotionInfo> menusPromotions) {
+        this.menusPromotions = menusPromotions;
+    }
+
+    public List<CouponInfo> getMenusCoupons() {
+        return menusCoupons;
+    }
+
+    public void setMenusCoupons(List<CouponInfo> menusCoupons) {
+        this.menusCoupons = menusCoupons;
     }
 }

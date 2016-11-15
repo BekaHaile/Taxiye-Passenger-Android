@@ -245,6 +245,34 @@
 
         </LinearLayout>
 
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSubMenus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="90px"
+                android:layout_height="81px"
+                android:layout_marginLeft="110px"
+                android:tag="mwar"
+                android:src="@drawable/ic_menu_category_menus_selector"/>
+
+            <TextView
+                android:id="@+id/textViewMenus"
+                android:layout_width="match_parent"
+                android:layout_height="81px"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:text="@string/menus"
+                android:gravity="center_vertical"
+                android:textColor="@color/text_color_white_theme_selector"
+                android:textSize="@dimen/text_size_38"/>
+
+        </LinearLayout>
+
     <LinearLayout
         android:id="@+id/linearLayoutSubDelivery"
         android:layout_width="match_parent"

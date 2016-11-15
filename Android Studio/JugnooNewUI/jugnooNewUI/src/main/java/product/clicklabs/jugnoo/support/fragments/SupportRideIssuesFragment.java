@@ -177,6 +177,8 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MEALS);
 					} else if (datum.getProductType() == ProductType.GROCERY.getOrdinal()){
 						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.GROCERY);
+					} else if (datum.getProductType() == ProductType.MENUS.getOrdinal()){
+						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MENUS);
 					}
 				}
 			}
@@ -200,7 +202,8 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				int supportCategory = datum.getSupportCategory();
 				if(datum.getProductType() == ProductType.FRESH.getOrdinal()
 						|| datum.getProductType() == ProductType.MEALS.getOrdinal()
-						|| datum.getProductType() == ProductType.GROCERY.getOrdinal()){
+						|| datum.getProductType() == ProductType.GROCERY.getOrdinal()
+						|| datum.getProductType() == ProductType.MENUS.getOrdinal()){
 					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.NOT_SURE);
 				}
 				Data.isSupportRideIssueUpdated = true;
