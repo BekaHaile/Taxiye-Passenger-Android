@@ -463,7 +463,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/bMessageDriver"
+            android:id="@+id/bChatDriver"
             android:layout_width="132px"
             android:layout_height="136px"
             android:layout_toLeftOf="@+id/buttonCallDriver"

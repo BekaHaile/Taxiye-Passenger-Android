@@ -20,7 +20,7 @@ public class DriverInfo {
 	public String promoName = Data.NO_PROMO_APPLIED, cancelRideThrashHoldTime, poolRideStatusString;
 	private String eta = "10";
 	private double fareFixed;
-	private int preferredPaymentMode, isPooledRide;
+	private int preferredPaymentMode, isPooledRide, chatEnabled;
 	private double bearing;
 
 	private Schedule scheduleT20;
@@ -57,7 +57,7 @@ public class DriverInfo {
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
-					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing){
+					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -84,6 +84,7 @@ public class DriverInfo {
 		this.poolRideStatusString = poolRideStatusString;
 		this.fellowRiders = fellowRiders;
 		this.bearing = bearing;
+		this.chatEnabled = chatEnabled;
 	}
 
 	//for last ride data
@@ -220,4 +221,11 @@ public class DriverInfo {
 	}
 
 
+	public int getChatEnabled() {
+		return chatEnabled;
+	}
+
+	public void setChatEnabled(int chatEnabled) {
+		this.chatEnabled = chatEnabled;
+	}
 }

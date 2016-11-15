@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,6 +26,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.adapters.ChatAdapter;
+import product.clicklabs.jugnoo.adapters.ChatSuggestionAdapter;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchChatResponse;
@@ -53,7 +55,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 	private int position = 0;
 	private ImageView send;
 
-	RecyclerView recyclerViewChat;
+	RecyclerView recyclerViewChat, recyclerViewChatOptions;
 	ChatAdapter chatAdapter;
 	ArrayList<FetchChatResponse.ChatHistory> chatResponse = new ArrayList<>();
 	private FetchChatResponse fetchChatResponse;
@@ -61,6 +63,8 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 	private final String LOGIN_TYPE = "0";
 	private Handler handler = new Handler();
 	private Handler myHandler=new Handler();
+	ChatSuggestionAdapter chatSuggestionAdapter;
+	ArrayList<FetchChatResponse.Suggestion> chatSuggestions = new ArrayList<>();
 
 
     @Override
@@ -89,11 +93,26 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			chatAdapter = new ChatAdapter(ChatActivity.this, chatResponse);
 			recyclerViewChat.setAdapter(chatAdapter);
 
+			recyclerViewChatOptions = (RecyclerView) findViewById(R.id.recyclerViewChatOptions);
+			recyclerViewChatOptions.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+			recyclerViewChatOptions.setItemAnimator(new DefaultItemAnimator());
+			recyclerViewChatOptions.setHasFixedSize(false);
+			chatSuggestions = new ArrayList<>();
+			chatSuggestionAdapter = new ChatSuggestionAdapter(this, chatSuggestions,  new ChatSuggestionAdapter.Callback() {
+				@Override
+				public void onSuggestionClick(int position, FetchChatResponse.Suggestion suggestion) {
+					sendChat(suggestion.getSuggestion());
+				}
+			});
+			recyclerViewChatOptions.setAdapter(chatSuggestionAdapter);
+
 			// done action listener to send the chat
 			input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        sendChat();
+						if(input.getText().toString().trim().length() > 0) {
+							sendChat(input.getText().toString().trim());
+						}
                         return true;
                     }
                     return false;
@@ -108,6 +127,8 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			if(Data.autoData.getAssignedDriverInfo() != null) {
                 textViewTitle.setText(Data.autoData.getAssignedDriverInfo().name);
             }
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -151,7 +172,9 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
                 performBackPressed();
             	break;
 			case R.id.action_send:
-				sendChat();
+				if(input.getText().toString().trim().length() > 0) {
+					sendChat(input.getText().toString().trim());
+				}
 				break;
 
         }
@@ -180,9 +203,9 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 	}
 
 	// sends the message to server and display it
-	private void sendChat() {
+	private void sendChat(String inputText) {
 		//hideKeyboard(input);
-		String inputText = input.getText().toString().trim();
+		//String inputText = input.getText().toString().trim();
 		Calendar time = Calendar.getInstance();
 		if (!(inputText.isEmpty())) {
 			// add message to list
@@ -261,9 +284,11 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 								Collections.reverse(chatResponse);
 								chatAdapter.notifyDataSetChanged();
 								recyclerViewChat.scrollToPosition(chatAdapter.getItemCount() - 1);
-								//updateListData(getResources().getString(R.string.add_cash), false);
+								chatSuggestions.clear();
+								chatSuggestions.addAll(fetchChat.getSuggestions());
+								chatSuggestionAdapter.notifyDataSetChanged();
 								if(handler != null && loadDiscussion != null) {
-									handler.postDelayed(loadDiscussion, 15000);
+									handler.postDelayed(loadDiscussion, 5000);
 								}
 							}
 						} catch (Exception exception) {

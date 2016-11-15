@@ -457,7 +457,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private FloatingActionButton fabFresh;
     private FloatingActionButton fabAutos;
     private View fabExtra;*/
-    private Button bMessageDriver;
+    private Button bChatDriver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -755,7 +755,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewThumbsDown = (TextView) findViewById(R.id.textViewThumbsDown); textViewThumbsDown.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp); textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
 
-        bMessageDriver = (Button) findViewById(R.id.bMessageDriver); bMessageDriver.setOnClickListener(this);
+        bChatDriver = (Button) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
 
 
         ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback); ratingBarRSFeedback.setRating(0);
@@ -2652,7 +2652,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 relativeLayoutConfirmRequest.setVisibility(View.GONE);
-                bMessageDriver.setVisibility(View.VISIBLE);
+                bChatDriver.setVisibility(View.GONE);
 
                 switch (mode) {
 
@@ -2942,6 +2942,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         fabViewFinal.setVisibility(View.VISIBLE);
                         //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (160f*scale + 0.5f));
 
+                        if(Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
+                            bChatDriver.setVisibility(View.VISIBLE);
+                        }
 
                         if(dropLocationSearched){
                             initDropLocationSearchUI(true);
@@ -3070,7 +3073,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }
                         }
 
-                        bMessageDriver.setVisibility(View.GONE);
+
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -6184,6 +6187,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             String driverCarImage = jObj.getString("driver_car_image");
             double latitude = jObj.getDouble("current_location_latitude");
             double longitude = jObj.getDouble("current_location_longitude");
+            int chatEnabled = jObj.optInt("chat_enabled", 0);
             double pickupLatitude, pickupLongitude;
             if (jObj.has("pickup_latitude")) {
                 pickupLatitude = jObj.getDouble("pickup_latitude");
@@ -6244,7 +6248,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing));
+                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled));
 
             Database2.getInstance(this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
 
