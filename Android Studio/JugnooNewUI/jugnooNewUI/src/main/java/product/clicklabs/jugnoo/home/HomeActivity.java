@@ -4735,6 +4735,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         for (int i=0;i<spinner.getCount();i++){
             if (specialPickups.get(i).getText().equals(myString)){
                 index = i;
+                LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getLatitude()),
+                        Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getLongitude()));
+                Data.autoData.setPickupLatLng(specialPicupLatLng);
+                specialPickupSelected = true;
+                selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getText()+", ";
+                textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
+                break;
             }
         }
         return index;
@@ -8768,6 +8775,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         switchPassengerScreen(passengerScreenMode);
                         //map.moveCamera(CameraUpdateFactory.zoomOut());
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
+                        spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
                     } else {
                         specialPickupScreenOpened = false;
                         rlSpecialPickup.setVisibility(View.GONE);
@@ -8791,7 +8799,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         switchPassengerScreen(passengerScreenMode);
                         //map.moveCamera(CameraUpdateFactory.zoomOut());
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
-                        spin.setSelection(getIndex(spin, "Gate no.2"));
+                        spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
                     } else {
                         requestRideClick();
                         //openConfirmRequestView();

@@ -19,6 +19,9 @@ public class NearbyPickupRegions {
     @SerializedName("hover_info")
     @Expose
     private List<HoverInfo> hoverInfo = new ArrayList<HoverInfo>();
+    @SerializedName("default_location")
+    @Expose
+    private HoverInfo defaultLocation;
 
     /**
      *
@@ -54,6 +57,14 @@ public class NearbyPickupRegions {
      */
     public void setHoverInfo(List<HoverInfo> hoverInfo) {
         this.hoverInfo = hoverInfo;
+    }
+
+    public HoverInfo getDefaultLocation() {
+        return defaultLocation;
+    }
+
+    public void setDefaultLocation(HoverInfo defaultLocation) {
+        this.defaultLocation = defaultLocation;
     }
 
     public class HoverInfo {
