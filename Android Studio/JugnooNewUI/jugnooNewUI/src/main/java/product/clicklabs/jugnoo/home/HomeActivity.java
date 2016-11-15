@@ -464,7 +464,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private TextView tvSelectedPickup, tvSpecialPicupTitle, tvSpecialPicupDesc;
     private ImageView ivSpecialPickupArrow;
     private Button bSpecialPicupConfirmRequest, specialPickupLocationBtn;
-    public ArrayList<NearbyPickupRegions.HoverInfo> specialPickups;
+    public ArrayList<NearbyPickupRegions.HoverInfo> specialPickups = new ArrayList<>();
     private Spinner spin;
     private boolean specialPickupSelected;
     private String selectedSpecialPickup = "";
@@ -793,12 +793,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        specialPickupLocationBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initialMyLocationBtn.performLongClick();
-            }
-        });
 
         spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -1905,6 +1899,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             confirmMyLocationBtn.setOnClickListener(mapMyLocationClick);
             buttonChangeLocalityMyLocation.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
+            specialPickupLocationBtn.setOnClickListener(mapMyLocationClick);
 
 
             pokestopHelper = new PokestopHelper(this, map, assl);
@@ -4599,6 +4594,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     new ApiFindADriver.Callback() {
                         @Override
                         public void onPre() {
+                            specialPickupScreenOpened = false;
+                            selectedSpecialPickup = "";
+                            rlSpecialPickup.setVisibility(View.GONE);
+                            updateTopBar();
                             progressBarInitialSearch.setVisibility(View.VISIBLE);
                             imageViewRideNow.setEnabled(false);
                             buttonConfirmRequest.setEnabled(false);
@@ -4717,6 +4716,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private boolean updateSpecialPickupScreen(){
+        specialPickups.clear();
+        specialPickups.addAll(Data.autoData.getNearbyPickupRegionses().getHoverInfo());
         if((Data.autoData.getNearbyPickupRegionses() != null) && (Data.autoData.getNearbyPickupRegionses().getHoverInfo().size() > 0)){
 
             return true;
@@ -4727,6 +4728,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             updateTopBar();
             return false;
         }
+    }
+
+    private int getIndex(Spinner spinner, String myString){
+        int index = 0;
+        for (int i=0;i<spinner.getCount();i++){
+            if (specialPickups.get(i).getText().equals(myString)){
+                index = i;
+            }
+        }
+        return index;
     }
 
 
@@ -8780,6 +8791,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         switchPassengerScreen(passengerScreenMode);
                         //map.moveCamera(CameraUpdateFactory.zoomOut());
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
+                        spin.setSelection(getIndex(spin, "Gate no.2"));
                     } else {
                         requestRideClick();
                         //openConfirmRequestView();
