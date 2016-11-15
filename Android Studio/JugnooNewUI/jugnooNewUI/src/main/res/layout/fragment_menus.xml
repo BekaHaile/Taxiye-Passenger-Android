@@ -37,6 +37,7 @@
                 android:layout_marginTop="26px"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="4px"
+                android:id="@+id/cardViewSearch"
                 >
                 <EditText
                     android:id="@+id/editTextSearch"

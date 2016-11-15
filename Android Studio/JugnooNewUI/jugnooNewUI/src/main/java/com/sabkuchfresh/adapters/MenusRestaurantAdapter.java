@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
-import com.sabkuchfresh.retrofit.model.SubItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -71,22 +70,24 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         try {
             if (holder instanceof ViewHolder) {
                 ViewHolder mHolder = ((ViewHolder) holder);
-                final MenusResponse.Vendor vendor = vendors.get(position);
+                MenusResponse.Vendor vendor = vendors.get(position);
 
                 mHolder.textViewRestaurantName.setText(vendor.getVendorName());
                 mHolder.textViewClosed.setVisibility(vendor.getIsClosed() == 1 ? View.VISIBLE : View.GONE);
                 mHolder.textViewRestaurantCusines.setText(vendor.getCuisines().toString().replace("[", "").replace("]", "").replace(", ", " . "));
 
-
-
                 mHolder.linearRoot.setTag(position);
                 mHolder.linearRoot.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        try {
+                            int pos = (int) v.getTag();
+                            callback.onRestaurantSelected(pos, vendors.get(pos));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
-
 
                 try {
                     if (!TextUtils.isEmpty(vendor.getImage())) {
@@ -164,7 +165,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     public interface Callback {
-        void onRestaurantSelected(int position, SubItem slot);
+        void onRestaurantSelected(int position, MenusResponse.Vendor vendor);
 
     }
 

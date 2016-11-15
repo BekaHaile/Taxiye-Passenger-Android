@@ -1,6 +1,9 @@
 package com.sabkuchfresh.apis;
 
 import com.sabkuchfresh.retrofit.model.MenusResponse;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
+import com.sabkuchfresh.retrofit.model.ProductsResponse;
+import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 
 import java.util.Map;
 
@@ -19,6 +22,20 @@ public interface MenusApiService {
 	void nearbyRestaurants(@FieldMap Map<String, String> params,
 						   Callback<MenusResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/vendor_menu")
+	void vendorMenu(@FieldMap Map<String, String> params,
+						   Callback<ProductsResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/user_checkout_data")
+	void userCheckoutData(@FieldMap Map<String, String> params,
+						  Callback<UserCheckoutResponse> callback);
+
+
+	@FormUrlEncoded
+	@POST("/place_order")
+	void placeOrder(@FieldMap Map<String, String> params,
+					Callback<PlaceOrderResponse> callback);
 
 }

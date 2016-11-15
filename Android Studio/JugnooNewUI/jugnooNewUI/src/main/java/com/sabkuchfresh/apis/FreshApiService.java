@@ -28,12 +28,13 @@ public interface FreshApiService {
 	@FormUrlEncoded
 	@POST("/user_checkout_data")
 	void userCheckoutData(@FieldMap Map<String, String> params,
-                          Callback<UserCheckoutResponse> callback);
+						  Callback<UserCheckoutResponse> callback);
+
 
 	@FormUrlEncoded
 	@POST("/place_order")
 	void placeOrder(@FieldMap Map<String, String> params,
-                    Callback<PlaceOrderResponse> callback);
+					Callback<PlaceOrderResponse> callback);
 
 	@FormUrlEncoded
 	@POST("/order_history")
