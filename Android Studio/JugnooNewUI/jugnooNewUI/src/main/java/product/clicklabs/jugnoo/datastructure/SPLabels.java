@@ -14,6 +14,7 @@ public class SPLabels {
 
         SERVER_SELECTED = "serverSelected",
                 FRESH_SERVER_SELECTED = "freshServerSelected",
+                MENUS_SERVER_SELECTED = "menusServerSelected",
 
         REFERRAL_OPEN_DATE_MILLIS = "referralOpenDateMillis",
         REFERRAL_TRANSACTION_COUNT = "referralTransactionCount",

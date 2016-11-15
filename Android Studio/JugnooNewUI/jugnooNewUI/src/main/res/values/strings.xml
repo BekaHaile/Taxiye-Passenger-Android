@@ -1223,6 +1223,8 @@
 	<string name="bad_feedback">bad feedback</string>
 	<string name="great_feedback">great feedback</string>
 	<string name="menus">Menus</string>
+	<string name="search_dot">Search...</string>
+	<string name="closed">Closed</string>
 
 
 </resources>

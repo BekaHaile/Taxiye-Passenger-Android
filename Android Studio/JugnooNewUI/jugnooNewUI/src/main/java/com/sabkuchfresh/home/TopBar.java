@@ -80,7 +80,11 @@ public class TopBar implements FlurryEventNames {
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				Utils.showToast(activity, Config.getFreshServerUrlName());
+				if(Data.AppType == com.sabkuchfresh.utils.AppConstant.ApplicationType.MENUS){
+					Utils.showToast(activity, Config.getMenusServerUrlName());
+				} else{
+					Utils.showToast(activity, Config.getFreshServerUrlName());
+				}
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				return false;
 			}

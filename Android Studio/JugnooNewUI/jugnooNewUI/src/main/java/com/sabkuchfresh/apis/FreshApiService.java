@@ -1,11 +1,9 @@
 package com.sabkuchfresh.apis;
 
-import com.sabkuchfresh.retrofit.model.LoginResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.ReferralResponse;
-import com.sabkuchfresh.retrofit.model.SettleUserDebt;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 
 import java.util.Map;
@@ -21,49 +19,6 @@ import retrofit.http.POST;
  * Created by shankar on 4/7/16.
  */
 public interface FreshApiService {
-
-
-    @FormUrlEncoded
-    @POST("/v1/customer/login_using_access_token")
-    void loginUsingAccessToken(@FieldMap Map<String, String> params,
-                               Callback<LoginResponse> callback);
-
-    @FormUrlEncoded
-    @POST("/v1/customer/login_using_email_or_phone_no")
-    void loginUsingEmailOrPhoneNo(@FieldMap Map<String, String> params,
-                                  Callback<LoginResponse> callback);
-
-    @FormUrlEncoded
-    @POST("/v1/customer/register_using_email")
-    void registerUsingEmail(@FieldMap Map<String, String> params,
-                            Callback<SettleUserDebt> callback);
-
-    @FormUrlEncoded
-    @POST("/v1/customer/register_using_facebook")
-    void registerUsingFacebook(@FieldMap Map<String, String> params,
-                               Callback<SettleUserDebt> callback);
-
-    @FormUrlEncoded
-    @POST("/v1/customer/login_using_facebook")
-    void loginUsingFacebook(@FieldMap Map<String, String> params,
-                            Callback<LoginResponse> callback);
-
-    @FormUrlEncoded
-    @POST("/v1/customer/login_using_google")
-    void loginUsingGoogle(@FieldMap Map<String, String> params,
-                          Callback<LoginResponse> callback);
-
-    @FormUrlEncoded
-    @POST("/v1/customer/register_using_google")
-    void registerUsingGoogle(@FieldMap Map<String, String> params,
-                             Callback<SettleUserDebt> callback);
-
-
-    @FormUrlEncoded
-    @POST("/v1/customer/verify_otp")
-    void verifyOtp(@FieldMap Map<String, String> params,
-                   Callback<LoginResponse> callback);
-
 
 	@FormUrlEncoded
 	@POST("/get_all_products")
@@ -111,4 +66,5 @@ public interface FreshApiService {
     @POST("/validate_promo_code")
     void applyPromo(@FieldMap Map<String, String> params,
                     Callback<PlaceOrderResponse> callback);
+
 }
