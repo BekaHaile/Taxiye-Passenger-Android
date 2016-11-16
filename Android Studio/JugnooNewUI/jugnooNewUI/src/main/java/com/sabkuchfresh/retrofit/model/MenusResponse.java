@@ -120,6 +120,15 @@ public class MenusResponse {
 		@SerializedName("cuisines")
 		@Expose
 		private List<String> cuisines = new ArrayList<String>();
+		@SerializedName("price_range")
+		@Expose
+		private Integer priceRange;
+		@SerializedName("delivery_time")
+		@Expose
+		private Integer deliveryTime;
+		@SerializedName("opens_at")
+		@Expose
+		private String opensAt;
 
 		/**
 		 *
@@ -247,5 +256,28 @@ public class MenusResponse {
 			this.cuisines = cuisines;
 		}
 
+		public Integer getPriceRange() {
+			return priceRange;
+		}
+
+		public void setPriceRange(Integer priceRange) {
+			this.priceRange = priceRange;
+		}
+
+		public Integer getDeliveryTime() {
+			return deliveryTime;
+		}
+
+		public void setDeliveryTime(Integer deliveryTime) {
+			this.deliveryTime = deliveryTime;
+		}
+
+		public String getOpensAt() {
+			return opensAt;
+		}
+
+		public void setOpensAt(String opensAt) {
+			this.opensAt = opensAt;
+		}
 	}
 }

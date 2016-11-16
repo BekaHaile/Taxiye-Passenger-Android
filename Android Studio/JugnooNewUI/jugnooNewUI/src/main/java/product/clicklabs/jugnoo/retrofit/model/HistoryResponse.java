@@ -190,7 +190,7 @@ public class HistoryResponse {
         private String orderTime;
         @SerializedName("cancellable")
         @Expose
-        private Integer cancellable;
+        private Integer cancellable = 0;
         @SerializedName("can_reorder")
         @Expose
         private Integer canReorder;
@@ -234,6 +234,17 @@ public class HistoryResponse {
         @SerializedName("delivery_address_type")
         @Expose
         private String deliveryAddressType;
+
+
+        @SerializedName("vendor_id")
+        @Expose
+        private Integer vendorId;
+        @SerializedName("vendor_name")
+        @Expose
+        private String vendorName;
+        @SerializedName("vendor_address")
+        @Expose
+        private String vendorAddress;
 
         /**
          * @return The pickupAddress
@@ -725,7 +736,11 @@ public class HistoryResponse {
          * @return The cancellable
          */
         public Integer getCancellable() {
-            return cancellable;
+            if(cancellable != null){
+                return cancellable;
+            } else {
+                return 0;
+            }
         }
 
         /**
@@ -878,6 +893,30 @@ public class HistoryResponse {
         public void setDeliveryAddressType(String deliveryAddressType) {
             this.deliveryAddressType = deliveryAddressType;
         }
+
+        public Integer getVendorId() {
+            return vendorId;
+        }
+
+        public void setVendorId(Integer vendorId) {
+            this.vendorId = vendorId;
+        }
+
+        public String getVendorName() {
+            return vendorName;
+        }
+
+        public void setVendorName(String vendorName) {
+            this.vendorName = vendorName;
+        }
+
+        public String getVendorAddress() {
+            return vendorAddress;
+        }
+
+        public void setVendorAddress(String vendorAddress) {
+            this.vendorAddress = vendorAddress;
+        }
     }
 
 
@@ -990,7 +1029,11 @@ public class HistoryResponse {
         }
 
         public Double getUnitAmount() {
-            return unitAmount;
+            if(unitAmount != null){
+                return unitAmount;
+            } else {
+                return 0.0;
+            }
         }
 
         public void setUnitAmount(Double unitAmount) {

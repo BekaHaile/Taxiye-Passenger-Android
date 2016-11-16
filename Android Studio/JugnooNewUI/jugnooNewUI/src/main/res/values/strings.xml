@@ -1226,6 +1226,9 @@
 	<string name="search_dot">Search...</string>
 	<string name="closed">Closed</string>
 	<string name="location">Location</string>
+	<string name="vendor_colon">Vendor:</string>
+	<string name="mins_format">%s mins</string>
+	<string name="opens_at_format">Opens at %s</string>
 
 
 </resources>

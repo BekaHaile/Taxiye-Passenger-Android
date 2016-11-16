@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
@@ -88,6 +89,32 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                     }
                 });
+
+
+                mHolder.textViewR1.setBackgroundResource(R.drawable.circle_grey_rupee);
+                mHolder.textViewR2.setBackgroundResource(R.drawable.circle_grey_rupee);
+                mHolder.textViewR3.setBackgroundResource(R.drawable.circle_grey_rupee);
+                mHolder.textViewR1.setTextColor(activity.getResources().getColor(R.color.text_color_light_less));
+                mHolder.textViewR2.setTextColor(activity.getResources().getColor(R.color.text_color_light_less));
+                mHolder.textViewR3.setTextColor(activity.getResources().getColor(R.color.text_color_light_less));
+                switch(vendor.getPriceRange()){
+                    case 2:
+                        mHolder.textViewR3.setBackgroundResource(R.drawable.circle_green_rupee);
+                        mHolder.textViewR3.setTextColor(activity.getResources().getColor(R.color.white));
+                    case 1:
+                        mHolder.textViewR2.setBackgroundResource(R.drawable.circle_green_rupee);
+                        mHolder.textViewR2.setTextColor(activity.getResources().getColor(R.color.white));
+                    case 0:
+                        mHolder.textViewR1.setBackgroundResource(R.drawable.circle_green_rupee);
+                        mHolder.textViewR1.setTextColor(activity.getResources().getColor(R.color.white));
+                }
+
+                if(vendor.getIsClosed() == 0){
+                    mHolder.textViewAvailability.setText(activity.getString(R.string.mins_format, String.valueOf(vendor.getDeliveryTime())));
+                } else {
+                    mHolder.textViewAvailability.setText(activity.getString(R.string.opens_at_format,
+                            String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt()))));
+                }
 
                 try {
                     if (!TextUtils.isEmpty(vendor.getImage())) {

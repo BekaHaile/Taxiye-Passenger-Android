@@ -160,7 +160,7 @@ public class TransactionUtils {
 		}
 	}
 
-	public void openOrderStatusFragment(FragmentActivity activity, View container, int orderId) {
+	public void openOrderStatusFragment(FragmentActivity activity, View container, int orderId, int productType) {
 		if(!checkIfFragmentAdded(activity, OrderStatusActivity.class.getName())) {
 			FragmentManager fragmentManager = activity.getSupportFragmentManager();
 			FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -168,6 +168,8 @@ public class TransactionUtils {
 			OrderStatusActivity orderStatusActivity = new OrderStatusActivity();
 			Bundle bundle = new Bundle();
 			bundle.putInt(Constants.KEY_ORDER_ID, orderId);
+			bundle.putInt(Constants.KEY_PRODUCT_TYPE, productType);
+
 			orderStatusActivity.setArguments(bundle);
 			fragmentTransaction.add(container.getId(),
 					orderStatusActivity,

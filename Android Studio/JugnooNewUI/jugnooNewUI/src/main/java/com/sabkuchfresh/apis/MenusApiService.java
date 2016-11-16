@@ -7,6 +7,7 @@ import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 
 import java.util.Map;
 
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -37,5 +38,10 @@ public interface MenusApiService {
 	@POST("/place_order")
 	void placeOrder(@FieldMap Map<String, String> params,
 					Callback<PlaceOrderResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/order_history")
+	void orderHistory(@FieldMap Map<String, String> params,
+					  Callback<HistoryResponse> callback);
 
 }

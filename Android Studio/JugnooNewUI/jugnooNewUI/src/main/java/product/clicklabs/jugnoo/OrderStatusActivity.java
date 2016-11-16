@@ -71,7 +71,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             tvRefund, tvRefundVal;
     private ImageView ivPaymentMethodVal, ivDeliveryPlace, ivOrderCompleted;
     private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn;
-    private int orderId;
+    private int orderId, productType;
     private NonScrollListView listViewOrder;
     private OrderItemsAdapter orderItemsAdapter;
     private LinearLayout llFinalAmount, llDeliveryPlace, orderComplete, orderCancel, llRefund;
@@ -97,6 +97,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
         try {
             orderId = getArguments().getInt(Constants.KEY_ORDER_ID, 0);
+            productType = getArguments().getInt(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
             setFragTitle();
         } catch (Exception e) {
             e.printStackTrace();
@@ -274,11 +275,13 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 
                 HashMap<String, String> params = new HashMap<>();
-                params.put("access_token", Data.userData.accessToken);
-                params.put("order_id", "" + orderId);
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_ORDER_ID, "" + orderId);
+                params.put(Constants.KEY_PRODUCT_TYPE, "" + productType);
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.INTERATED, "1");
-                RestClient.getFreshApiService().orderHistory(params, new Callback<HistoryResponse>() {
+
+                Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
                     @Override
                     public void success(HistoryResponse historyResponse, Response response) {
                         String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -313,7 +316,13 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                         DialogPopup.dismissLoadingDialog();
                         //updateListData(Data.SERVER_NOT_RESOPNDING_MSG);
                     }
-                });
+                };
+
+                if(productType == ProductType.MENUS.getOrdinal()){
+                    RestClient.getMenusApiService().orderHistory(params, callback);
+                } else {
+                    RestClient.getFreshApiService().orderHistory(params, callback);
+                }
             }
             else {
                 //updateListData(Data.CHECK_INTERNET_MSG);
@@ -550,11 +559,17 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
             tvOrderTimeVal.setText(historyResponse.getData().get(0).getOrderTime());
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(historyResponse.getData().get(0).getOrderTime())));
-            if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
-                tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate()+" "+
-                        DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()).replace("AM", "").replace("PM", "") + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+
+            if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
+                tvDeliveryTime.setText(activity.getString(R.string.vendor_colon));
+                tvDeliveryTimeVal.setText(orderHistory.getVendorName()+"\n"+orderHistory.getVendorAddress());
             } else {
-                tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate());
+                if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
+                    tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate() + " " +
+                            DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()).replace("AM", "").replace("PM", "") + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+                } else {
+                    tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate());
+                }
             }
             tvDeliveryToVal.setText(historyResponse.getData().get(0).getDeliveryAddress());
             try {

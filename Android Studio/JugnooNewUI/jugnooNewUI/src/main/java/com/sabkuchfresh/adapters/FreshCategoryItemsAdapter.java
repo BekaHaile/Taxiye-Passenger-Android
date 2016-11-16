@@ -58,6 +58,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     private int listType = 0;
     private int currentGroupId;
     private String categoryName;
+    private int appType;
 
     public FreshCategoryItemsAdapter(Context context, ArrayList<SubItem> subItems, Category.CategoryBanner categoryBanners, int showCategoryBanner,
                                      OpenMode openMode, Callback callback, int listType, String categoryName, int currentGroupId) {
@@ -70,6 +71,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         this.listType = listType;
         this.categoryName = categoryName;
         this.currentGroupId = currentGroupId;
+        appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
     }
 
     public synchronized void setResults(ArrayList<SubItem> subItems){
@@ -341,7 +343,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             });
 
             try {
-                if (subItem.getSubItemImage() != null && !"".equalsIgnoreCase(subItem.getSubItemImage())) {
+                if (!TextUtils.isEmpty(subItem.getSubItemImage())) {
                     Picasso.with(context).load(subItem.getSubItemImage())
                             .placeholder(R.drawable.ic_fresh_item_placeholder)
                             .fit()
@@ -350,10 +352,15 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             .into(mHolder.imageViewItemImage);
                 } else {
                     mHolder.imageViewItemImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
+                    mHolder.imageViewItemImage.setVisibility((appType == AppConstant.ApplicationType.MENUS) ? View.GONE : View.VISIBLE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            mHolder.imageViewFoodType.setVisibility(appType == AppConstant.ApplicationType.MENUS ? View.VISIBLE : View.GONE);
+            mHolder.imageViewFoodType.setImageResource(subItem.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
+
         } else if(holder instanceof ViewTitleHolder) {
             ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
             titleholder.relative.setVisibility(View.VISIBLE);
@@ -397,7 +404,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     static class MainViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
-        private ImageView imageViewItemImage, imageViewMinus, imageViewPlus, imageViewDelete, bannerBg, imageViewMoreInfoSeprator;
+        private ImageView imageViewItemImage, imageViewFoodType, imageViewMinus, imageViewPlus, imageViewDelete, bannerBg, imageViewMoreInfoSeprator;
         public TextView textViewItemName, textViewItemUnit, textViewItemPrice, textViewQuantity, textViewItemCost, textViewItemOff, offerTag;
         public TextView unavilableView, textViewOutOfStock, textViewMoreInfo;
         public Button mAddButton;
@@ -408,6 +415,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             offerTagLayout = (LinearLayout) itemView.findViewById(R.id.offer_tag_layout);
             imageViewItemImage = (ImageView) itemView.findViewById(R.id.imageViewItemImage);
+            imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
             imageViewDelete = (ImageView) itemView.findViewById(R.id.imageViewDelete);

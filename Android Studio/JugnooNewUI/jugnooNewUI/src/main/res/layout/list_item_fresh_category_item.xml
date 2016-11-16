@@ -7,15 +7,39 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageViewItemImage"
-        android:layout_width="120px"
+    <RelativeLayout
+        android:id="@+id/relativeLayoutItemImage"
+        android:layout_width="wrap_content"
         android:layout_height="120px"
         android:layout_centerVertical="true"
         android:layout_marginLeft="30px"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_fresh_item_placeholder"
-        android:tag="mwar"/>
+        >
+
+        <ImageView
+            android:id="@+id/imageViewItemImage"
+            android:layout_width="120px"
+            android:layout_height="120px"
+            android:layout_centerVertical="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_fresh_item_placeholder"
+            android:tag="mwar"
+            android:visibility="visible"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewFoodType"
+            android:layout_width="41px"
+            android:layout_height="41px"
+            android:tag="mwar"
+            android:layout_marginTop="2px"
+            android:layout_marginLeft="2px"
+            android:src="@drawable/veg"
+
+            />
+
+    </RelativeLayout>
+
+
 
 
     <LinearLayout
@@ -58,7 +82,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="55px"
-        android:layout_toRightOf="@+id/imageViewItemImage"
+        android:layout_toRightOf="@+id/relativeLayoutItemImage"
         android:orientation="vertical">
 
         <TextView

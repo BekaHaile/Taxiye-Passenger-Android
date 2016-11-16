@@ -223,7 +223,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             menuBar = new MenuBar(this, drawerLayout);
             topBar = new TopBar(this, drawerLayout);
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
-
+            int dpAsPixels = (int) (77f*scale + 0.5f);
+            fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
 
 
             View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -319,8 +320,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 
             try {
-                float dpValue = 90f;
-
                 String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
                 if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
                     addMealFragment();
@@ -341,8 +340,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
                     lastClientId = Config.getFreshClientId();
                 }
-                int dpAsPixels = (int) (dpValue*scale + 0.5f);
-                fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+
                 Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -906,6 +904,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.title.setText(vendorOpened.getVendorName());
                 topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
             }
             else if (fragment instanceof FreshCartItemsFragment) {
 				textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));

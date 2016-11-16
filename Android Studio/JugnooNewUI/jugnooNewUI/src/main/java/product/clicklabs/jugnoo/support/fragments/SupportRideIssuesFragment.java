@@ -226,7 +226,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 					}
 					else if(activity instanceof SupportActivity && datum != null){
 						new TransactionUtils().openOrderStatusFragment(activity,
-								((SupportActivity) activity).getContainer(), datum.getOrderId());
+								((SupportActivity) activity).getContainer(), datum.getOrderId(), datum.getProductType());
 
 					}
 				}

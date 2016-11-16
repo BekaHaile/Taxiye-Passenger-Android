@@ -136,11 +136,8 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 									|| historyData.getProductType() == ProductType.GROCERY.getOrdinal()
 									|| historyData.getProductType() == ProductType.MENUS.getOrdinal()) {
 								if (activity instanceof RideTransactionsActivity) {
-										new TransactionUtils().openOrderStatusFragment(activity, ((RideTransactionsActivity) activity).getContainer(), historyData.getOrderId());
-//									else {
-//										new TransactionUtils().openOrderSummaryFragment(activity,
-//												((RideTransactionsActivity) activity).getContainer(), historyData);
-//									}
+										new TransactionUtils().openOrderStatusFragment(activity, ((RideTransactionsActivity) activity).getContainer(),
+												historyData.getOrderId(), historyData.getProductType());
 								} else if (activity instanceof SupportActivity) {
 									new TransactionUtils().openRideIssuesFragment(activity,
 											((SupportActivity) activity).getContainer(),

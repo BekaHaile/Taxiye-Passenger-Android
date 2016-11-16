@@ -87,7 +87,10 @@
                     android:gravity="right"
                     android:text="OPENS AT 11:00 AM"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_24"/>
+                    android:textSize="@dimen/text_size_24"
+                    android:layout_marginTop="5px"
+                    android:textAllCaps="true"
+                    />
 
 
             </RelativeLayout>
@@ -119,8 +122,8 @@
 
                 <TextView
                     android:id="@+id/textViewR1"
-                    android:layout_width="24px"
-                    android:layout_height="24px"
+                    android:layout_width="34px"
+                    android:layout_height="34px"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="7px"
                     android:background="@drawable/circle_green_rupee"
@@ -128,13 +131,13 @@
                     android:tag="mwar"
                     android:text="@string/rupee"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_22"
+                    android:textSize="@dimen/text_size_26"
                     />
 
                 <TextView
                     android:id="@+id/textViewR2"
-                    android:layout_width="24px"
-                    android:layout_height="24px"
+                    android:layout_width="34px"
+                    android:layout_height="34px"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="7px"
                     android:background="@drawable/circle_grey_rupee"
@@ -142,14 +145,14 @@
                     android:tag="mwar"
                     android:text="@string/rupee"
                     android:textColor="@color/text_color_light_less"
-                    android:textSize="@dimen/text_size_22"
+                    android:textSize="@dimen/text_size_26"
                     />
 
 
                 <TextView
                     android:id="@+id/textViewR3"
-                    android:layout_width="24px"
-                    android:layout_height="24px"
+                    android:layout_width="34px"
+                    android:layout_height="34px"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="7px"
                     android:background="@drawable/circle_green_rupee"
@@ -157,7 +160,7 @@
                     android:tag="mwar"
                     android:text="@string/rupee"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_22"
+                    android:textSize="@dimen/text_size_26"
                     />
 
             </LinearLayout>
