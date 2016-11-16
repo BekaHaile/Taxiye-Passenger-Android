@@ -4605,6 +4605,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             progressBarInitialSearch.setVisibility(View.VISIBLE);
                             imageViewRideNow.setEnabled(false);
                             buttonConfirmRequest.setEnabled(false);
+                            removeSpecialPickupMarkers();
                             try {
                                 promoCouponSelectedForRide = null;
                                 if (userMode == UserMode.PASSENGER) {
@@ -9052,7 +9053,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     markerOptions.anchor(0.5f, 0.5f);
                     markerOptions.zIndex(zIndex);
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.ic_poke_stop, 39f*0.9f, 40f*0.9f)));
+                                .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.circle_green, 20f, 20f)));
                     markersSpecialPickup.add(map.addMarker(markerOptions));
                     markerOptionsSpecialPickup.add(markerOptions);
                 }
