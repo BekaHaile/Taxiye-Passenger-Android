@@ -219,6 +219,7 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
+import product.clicklabs.jugnoo.widgets.MySpinner;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -467,7 +468,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ImageView ivSpecialPickupArrow;
     private Button bSpecialPicupConfirmRequest, specialPickupLocationBtn;
     public ArrayList<NearbyPickupRegions.HoverInfo> specialPickups = new ArrayList<>();
-    private Spinner spin;
+    private MySpinner spin;
     private boolean specialPickupSelected;
     private String selectedSpecialPickup = "";
     private ArrayList<Marker> markersSpecialPickup = new ArrayList<>();
@@ -778,7 +779,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         // Special Pickup views
         rlSpecialPickup = (RelativeLayout) findViewById(R.id.rlSpecialPickup);
         specialPickupLocationBtn = (Button) findViewById(R.id.specialPickupLocationBtn);
-        spin = (Spinner) findViewById(R.id.simpleSpinner);
+        spin = (MySpinner) findViewById(R.id.simpleSpinner);
         tvSpecialPicupTitle = (TextView) findViewById(R.id.tvSpecialPicupTitle); tvSpecialPicupTitle.setTypeface(Fonts.mavenMedium(this));
         tvSpecialPicupDesc = (TextView) findViewById(R.id.tvSpecialPicupDesc); tvSpecialPicupDesc.setTypeface(Fonts.mavenRegular(this));
         rlSelectedPickup = (RelativeLayout) findViewById(R.id.rlSelectedPickup);
@@ -797,14 +798,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-
-        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spin.setOnItemSelectedEvenIfUnchangedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getApplicationContext(), Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText(), Toast.LENGTH_LONG).show();
                 LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLatitude()),
                         Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLongitude()));
                 Data.autoData.setPickupLatLng(specialPicupLatLng);
+                getApiFindADriver().setRefreshLatLng(specialPicupLatLng);
                 specialPickupSelected = true;
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                 selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText()+", ";
@@ -1879,7 +1879,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							if (refresh && mapTouched) {
 								callMapTouchedRefreshDrivers();
 							}
-							if (!zoomedForSearch && map != null) {
+							if (!zoomedForSearch && map != null && !(isSpecialPickupScreenOpened() && !refresh)) {
 								getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
 							}
 						}
@@ -2852,7 +2852,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             //fabView.setRelativeLayoutFABVisibility(mode);
 
                         } else{
-                            if (!zoomedForSearch && map != null) {
+                            if (!zoomedForSearch && !specialPickupScreenOpened && map != null) {
                                 getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
                             }
                             textViewAssigningDropLocationClick.setText("");
@@ -4143,7 +4143,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if (!intentFired) {
                             if (userMode == UserMode.PASSENGER &&
                                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
-                                if (map != null && myLocation != null) {
+                                if (map != null && myLocation != null && !isSpecialPickupScreenOpened()) {
                                     initialMyLocationBtn.performClick();
                                     mapTouched = true;
                                     try {Data.autoData.setLastRefreshLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));} catch (Exception e) {}
@@ -4154,7 +4154,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 && PassengerScreenMode.P_RIDE_END != passengerScreenMode
                                 && PassengerScreenMode.P_SEARCH != passengerScreenMode
                                 && !isPoolRideAtConfirmation()
-                                && !isNormalRideWithDropAtConfirmation()) {
+                                && !isNormalRideWithDropAtConfirmation()
+                                && !isSpecialPickupScreenOpened()) {
                             callAndHandleStateRestoreAPI(false);
                         }
                         initiateTimersForStates(passengerScreenMode);
@@ -6015,6 +6016,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     MyApplication.getInstance().logEvent(TRANSACTION+"_"+FirebaseEvents.HOME_SCREEN+"_"
                             +DIFFERENT_PICKUP_LOCATION_POPUP+"_can", bundle);
                     dialog.dismiss();
+                    specialPickupScreenOpened = false;
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
                 }
             });
 
@@ -6053,6 +6057,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     myLocation.setTime(System.currentTimeMillis());
                     textMessage.setText("We could not detect your location. Are you sure you want to request an auto to pick you at this location?");
                     dialog.show();
+
                 } else {
                     boolean cached = false;
                     try {

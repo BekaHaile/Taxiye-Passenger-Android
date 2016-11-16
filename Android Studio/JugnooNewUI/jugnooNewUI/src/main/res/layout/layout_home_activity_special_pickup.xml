@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <Button
         android:id="@+id/specialPickupLocationBtn"
@@ -132,7 +132,7 @@
                     android:layout_height="96px"
                     android:layout_margin="4px">
 
-                    <Spinner
+                    <product.clicklabs.jugnoo.widgets.MySpinner
                         android:id="@+id/simpleSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="96px"

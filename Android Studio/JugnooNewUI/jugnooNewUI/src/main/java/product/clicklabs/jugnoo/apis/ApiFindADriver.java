@@ -376,6 +376,10 @@ public class ApiFindADriver {
 				|| timeDiff > MIN_TIME_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE);
 	}
 
+	public void setRefreshLatLng(LatLng refreshLatLng){
+		this.refreshLatLng = refreshLatLng;
+	}
+
 
 	public interface Callback{
 		void onPre();
