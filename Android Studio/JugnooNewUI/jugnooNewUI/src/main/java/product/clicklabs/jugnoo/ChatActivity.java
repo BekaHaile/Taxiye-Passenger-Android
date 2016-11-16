@@ -102,6 +102,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 				@Override
 				public void onSuggestionClick(int position, FetchChatResponse.Suggestion suggestion) {
 					sendChat(suggestion.getSuggestion());
+					chatSuggestions.remove(position);
 				}
 			});
 			recyclerViewChatOptions.setAdapter(chatSuggestionAdapter);
