@@ -377,7 +377,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                     if(activity.updateCart) {
                                         activity.updateCart = false;
                                         activity.openCart();
-                                        activity.relativeLayoutCart.performClick();
+                                        activity.getRelativeLayoutCartNew().performClick();
                                     }
 									if(productsResponse.getShowMessage() != null
 											&& productsResponse.getShowMessage().equals(1)) {

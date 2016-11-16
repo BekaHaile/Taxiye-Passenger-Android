@@ -544,4 +544,5 @@ public interface Constants {
 	String KEY_VENDOR_ID = "vendor_id";
 
 	String KEY_ITEM_ID = "item_id";
+	String SP_MENUS_LAST_ADDRESS_OBJ = "sp_menus_last_address_obj";
 }

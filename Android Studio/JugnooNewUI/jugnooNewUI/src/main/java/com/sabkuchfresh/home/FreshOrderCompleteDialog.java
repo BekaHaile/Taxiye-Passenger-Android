@@ -80,8 +80,14 @@ public class FreshOrderCompleteDialog {
 			final SpannableStringBuilder sb = new SpannableStringBuilder(orderId);
 			sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			textViewOrderId.append(sb);
-			textViewOrderId.append("\n");
-			textViewOrderId.append(activity.getResources().getString(R.string.will_be_delivered_by));
+			if(showDeliverySlot) {
+				textViewOrderId.append("\n");
+				textViewOrderId.append(activity.getResources().getString(R.string.will_be_delivered_by));
+			}
+			RelativeLayout relativeslot = (RelativeLayout) dialog.findViewById(R.id.relativeslot);
+			if(!showDeliverySlot){
+				relativeslot.setVisibility(View.GONE);
+			}
 
 			Button buttonOk = (Button) dialog.findViewById(R.id.buttonOk);
 			buttonOk.setTypeface(Fonts.mavenRegular(activity));

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
@@ -243,12 +244,39 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 				if (activity.updateCart) {
 					activity.updateCart = false;
 					activity.openCart();
-					activity.relativeLayoutCart.performClick();
+					activity.getRelativeLayoutCartNew().performClick();
 				}
 			}
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
+	}
+
+
+	public FreshDeliverySlotsDialog getFreshDeliverySlotsDialog() {
+
+		if (freshDeliverySlotsDialog == null) {
+			setSortingList();
+			freshDeliverySlotsDialog = new FreshDeliverySlotsDialog(activity, slots,
+					new FreshDeliverySlotsDialog.FreshDeliverySortDialogCallback() {
+						@Override
+						public void onOkClicked(int position) {
+							Data.freshSort = position;
+							activity.getBus().post(new SortSelection(position));
+						}
+					});
+		}
+		return freshDeliverySlotsDialog;
+	}
+
+	private void setSortingList() {
+		slots.clear();
+		slots.add(new SortResponseModel(0, "A-Z", false));
+		slots.add(new SortResponseModel(1, "Popularity", false));
+		slots.add(new SortResponseModel(2, "Price: Low to High", false));
+		slots.add(new SortResponseModel(3, "Price: High to Low", false));
+
+
 	}
 
 }

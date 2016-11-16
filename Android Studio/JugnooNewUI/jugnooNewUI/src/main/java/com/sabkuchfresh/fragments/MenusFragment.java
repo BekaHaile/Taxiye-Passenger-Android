@@ -10,6 +10,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +19,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import org.json.JSONObject;
 
@@ -40,13 +46,17 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -74,10 +84,24 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private ArrayList<MenusResponse.Vendor> vendors = new ArrayList<>();
 
     PushDialog pushDialog;
+    private Bus mBus;
 
     public MenusFragment() {
     }
 
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mBus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mBus.unregister(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,6 +109,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
+
+        mBus = (activity).getBus();
 
         Data.AppType = AppConstant.ApplicationType.MENUS;
         Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
@@ -134,7 +160,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         recyclerViewRestaurant.setAdapter(menusRestaurantAdapter);
 
-        getAllMenus(true);
+        setLocalityAddressFirstTime();
 
         try {
             if(Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {
@@ -178,7 +204,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     public void onResume() {
         super.onResume();
         if(!isHidden()) {
-            getAllMenus(activity.isRefreshCart());
+            getAllMenus(activity.isRefreshCart(), getSelectedLatLng());
             activity.setRefreshCart(false);
         }
     }
@@ -191,7 +217,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             menusRestaurantAdapter.notifyDataSetChanged();
             activity.resumeMethod();
             if(activity.isRefreshCart()){
-                getAllMenus(true);
+                getAllMenus(true, getSelectedLatLng());
             }
             activity.setRefreshCart(false);
         }
@@ -206,21 +232,11 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onRefresh() {
-        getAllMenus(false);
+        getAllMenus(false, getSelectedLatLng());
     }
 
-    public void getAllMenus(final boolean loader) {
+    public void getAllMenus(final boolean loader, final LatLng latLng) {
         try {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
                 ProgressDialog progressDialog = null;
@@ -229,8 +245,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+                params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
                 params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
                 params.put(Constants.INTERATED, "1");
 
@@ -276,12 +292,12 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                             e.printStackTrace();
                         }
                         swipeRefreshLayout.setRefreshing(false);
-                        retryDialog(DialogErrorType.CONNECTION_LOST);
+                        retryDialog(DialogErrorType.CONNECTION_LOST, latLng);
 
                     }
                 });
             } else {
-                retryDialog(DialogErrorType.NO_NET);
+                retryDialog(DialogErrorType.NO_NET, latLng);
                 swipeRefreshLayout.setRefreshing(false);
             }
         } catch (Exception e) {
@@ -290,7 +306,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         }
     }
 
-    private void retryDialog(DialogErrorType dialogErrorType) {
+    private void retryDialog(DialogErrorType dialogErrorType, final LatLng latLng) {
         imageViewNoMenus.setVisibility(View.VISIBLE);
 
         DialogPopup.dialogNoInternet(activity,
@@ -298,7 +314,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        getAllMenus(true);
+                        getAllMenus(true, latLng);
                     }
 
                     @Override
@@ -415,5 +431,116 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     }
 
+    @Subscribe
+    public void onAddressUpdated(AddressAdded event) {
+        try {
+            if (event.flag) {
+                setAddressAndFetchMenus();
+                saveMenusLastAddress();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setAddressAndFetchMenus(){
+        try {
+            String[] arr = activity.getSelectedAddress().split(", ");
+            String address = "";
+            if(arr.length > 1){
+				address = arr[0]+", "+arr[1];
+			} else if(arr.length > 0){
+				address = arr[0];
+			}
+            activity.getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26);
+            activity.getTopBar().textViewLocationValue.setText(address);
+            getAllMenus(true, activity.getSelectedLatLng());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void saveMenusLastAddress(){
+        try {
+            Gson gson = new Gson();
+            SearchResult searchResultLocality = new SearchResult(activity.getSelectedAddressType(), activity.getSelectedAddress(), "",
+					activity.getSelectedLatLng().latitude, activity.getSelectedLatLng().longitude);
+            searchResultLocality.setId(activity.getSelectedAddressId());
+            searchResultLocality.setIsConfirmed(1);
+            Prefs.with(activity).save(Constants.SP_MENUS_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setMenusLastAddressToActivityVariables(){
+        try {
+            Gson gson = new Gson();
+            SearchResult searchResultLocality = gson.fromJson(Prefs.with(activity)
+                    .getString(Constants.SP_MENUS_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+            if(!TextUtils.isEmpty(searchResultLocality.getAddress())){
+                activity.setSelectedAddress(searchResultLocality.getAddress());
+                activity.setSelectedLatLng(searchResultLocality.getLatLng());
+                activity.setSelectedAddressId(searchResultLocality.getId());
+                activity.setSelectedAddressType(searchResultLocality.getName());
+                setAddressAndFetchMenus();
+            } else {
+                getAddressAndFetchMenus(getSelectedLatLng());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private LatLng getSelectedLatLng(){
+        if(activity.getSelectedLatLng() != null){
+            return activity.getSelectedLatLng();
+        } else {
+            return new LatLng(Data.latitude, Data.longitude);
+        }
+    }
+
+    private void setLocalityAddressFirstTime(){
+        if(activity.getSelectedLatLng() == null || TextUtils.isEmpty(activity.getSelectedAddress())){
+            setMenusLastAddressToActivityVariables();
+        } else {
+            setAddressAndFetchMenus();
+        }
+    }
+
+
+    private void getAddressAndFetchMenus(final LatLng currentLatLng){
+        try {
+            DialogPopup.showLoadingDialog(getActivity(), "Loading...");
+            RestClient.getGoogleApiServices().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+                    "en", false, new Callback<SettleUserDebt>() {
+                        @Override
+                        public void success(SettleUserDebt settleUserDebt, Response response) {
+                            try {
+                                String resp = new String(((TypedByteArray) response.getBody()).getBytes());
+                                GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
+                                String address = gapiAddress.getSearchableAddress();
+                                activity.setSelectedAddress(address);
+                                activity.setSelectedLatLng(currentLatLng);
+                                activity.setSelectedAddressId(0);
+                                activity.setSelectedAddressType("");
+                                setAddressAndFetchMenus();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            DialogPopup.dismissLoadingDialog();
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+            DialogPopup.dismissLoadingDialog();
+        }
+
+    }
 
 }

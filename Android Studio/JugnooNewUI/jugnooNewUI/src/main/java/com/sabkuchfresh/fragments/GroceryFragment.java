@@ -378,7 +378,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                     if(activity.updateCart) {
                                         activity.updateCart = false;
                                         activity.openCart();
-                                        activity.relativeLayoutCart.performClick();
+                                        activity.getRelativeLayoutCartNew().performClick();
                                     }
 									if(productsResponse.getShowMessage() != null
 											&& productsResponse.getShowMessage().equals(1)) {

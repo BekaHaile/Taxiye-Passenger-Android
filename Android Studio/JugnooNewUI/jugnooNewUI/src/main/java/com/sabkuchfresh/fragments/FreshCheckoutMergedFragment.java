@@ -121,7 +121,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private DeliverySlotsAdapter deliverySlotsAdapter;
 
     private RelativeLayout relativeLayoutDeliveryAddress;
-    private ImageView imageViewAddressType;
+    private ImageView imageViewAddressType, imageViewDeliveryAddressForward;
     private TextView textViewAddressName, textViewAddressValue;
 
     private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutCash;
@@ -282,6 +282,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         relativeLayoutDeliveryAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDeliveryAddress);
         imageViewAddressType = (ImageView) rootView.findViewById(R.id.imageViewAddressType);
+        imageViewDeliveryAddressForward = (ImageView) rootView.findViewById(R.id.imageViewDeliveryAddressForward);
         textViewAddressName = (TextView) rootView.findViewById(R.id.textViewAddressName); textViewAddressName.setTypeface(Fonts.mavenMedium(activity));
         textViewAddressValue = (TextView) rootView.findViewById(R.id.textViewAddressValue); textViewAddressValue.setTypeface(Fonts.mavenRegular(activity));
 
@@ -328,12 +329,22 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         updateCouponsDataView();
 
 
+        relativeLayoutDeliveryAddress.setBackgroundResource(R.drawable.bg_transparent_menu_item_selector);
+        imageViewDeliveryAddressForward.setVisibility(View.VISIBLE);
+        textViewAddressName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_selector));
+        if(Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType) == AppConstant.ApplicationType.MENUS) {
+            relativeLayoutDeliveryAddress.setBackgroundResource(R.drawable.background_transparent);
+            imageViewDeliveryAddressForward.setVisibility(View.GONE);
+            textViewAddressName.setTextColor(activity.getResources().getColor(R.color.text_color));
+        }
 
         relativeLayoutDeliveryAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FlurryEventLogger.event(CHECKOUT_SCREEN, SCREEN_TRANSITION, ADDRESS_SCREEN);
-                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
+                if(Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType) != AppConstant.ApplicationType.MENUS) {
+                    FlurryEventLogger.event(CHECKOUT_SCREEN, SCREEN_TRANSITION, ADDRESS_SCREEN);
+                    activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
+                }
             }
         });
 
@@ -1539,25 +1550,28 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
         try {
-            if(userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
-                activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-            } else {
-                activity.setSelectedAddress("");
-            }
-            activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
-            activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
-            try {
-                activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
-                        Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
-            } catch (Exception e) {
-                activity.setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
-            }
+            int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+            if(type != AppConstant.ApplicationType.MENUS) {
+                if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
+                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+                } else {
+                    activity.setSelectedAddress("");
+                }
+                activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
+                activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+                try {
+                    activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
+                            Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+                } catch (Exception e) {
+                    activity.setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
+                }
 
-            if(!checkoutSaveData.isDefault()){
-                activity.setSelectedAddress(checkoutSaveData.getAddress());
-                activity.setSelectedAddressType(checkoutSaveData.getAddressType());
-                activity.setSelectedAddressId(checkoutSaveData.getAddressId());
-                activity.setSelectedLatLng(new LatLng(checkoutSaveData.getLatitude(), checkoutSaveData.getLongitude()));
+                if (!checkoutSaveData.isDefault()) {
+                    activity.setSelectedAddress(checkoutSaveData.getAddress());
+                    activity.setSelectedAddressType(checkoutSaveData.getAddressType());
+                    activity.setSelectedAddressId(checkoutSaveData.getAddressId());
+                    activity.setSelectedLatLng(new LatLng(checkoutSaveData.getLatitude(), checkoutSaveData.getLongitude()));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

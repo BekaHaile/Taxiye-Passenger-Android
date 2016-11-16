@@ -1225,6 +1225,7 @@
 	<string name="menus">Menus</string>
 	<string name="search_dot">Search...</string>
 	<string name="closed">Closed</string>
+	<string name="location">Location</string>
 
 
 </resources>
