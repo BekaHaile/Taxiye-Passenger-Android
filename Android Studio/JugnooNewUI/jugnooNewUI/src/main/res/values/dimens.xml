@@ -211,5 +211,6 @@
     <dimen name="px_36">36px</dimen>
     <dimen name="px_26">26px</dimen>
     <dimen name="px_40">40px</dimen>
+    <dimen name="text_size_52">52px</dimen>
 
 </resources>

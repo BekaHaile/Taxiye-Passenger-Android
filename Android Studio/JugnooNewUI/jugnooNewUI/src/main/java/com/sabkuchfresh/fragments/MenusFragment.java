@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -69,9 +68,8 @@ import retrofit.mime.TypedByteArray;
 public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener{
     private final String TAG = MenusFragment.class.getSimpleName();
 
-    private RelativeLayout linearLayoutRoot;
+    private RelativeLayout linearLayoutRoot, relativeLayoutNoMenus;
     private MenusRestaurantAdapter menusRestaurantAdapter;
-    private ImageView imageViewNoMenus;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
     private EditText editTextSearch;
@@ -132,6 +130,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             e.printStackTrace();
         }
 
+        relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
         editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Fonts.mavenMedium(activity));
         cardViewSearch.setVisibility(View.GONE);
@@ -141,8 +140,6 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
 
-        imageViewNoMenus = (ImageView) rootView.findViewById(R.id.imageViewNoMenus);
-        imageViewNoMenus.setVisibility(View.GONE);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -254,7 +251,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 RestClient.getMenusApiService().nearbyRestaurants(params, new Callback<MenusResponse>() {
                     @Override
                     public void success(MenusResponse menusResponse, Response response) {
-                        imageViewNoMenus.setVisibility(View.GONE);
+                        relativeLayoutNoMenus.setVisibility(View.GONE);
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
@@ -264,7 +261,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()){
                                     MenusFragment.this.menusResponse = menusResponse;
                                     menusRestaurantAdapter.setList((ArrayList<MenusResponse.Vendor>) menusResponse.getVendors());
-
+                                    relativeLayoutNoMenus.setVisibility(menusRestaurantAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -283,7 +280,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
                     @Override
                     public void failure(RetrofitError error) {
-                        imageViewNoMenus.setVisibility(View.GONE);
+                        relativeLayoutNoMenus.setVisibility(View.GONE);
                         Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
                         try {
                             if(finalProgressDialog != null)
@@ -307,8 +304,6 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     }
 
     private void retryDialog(DialogErrorType dialogErrorType, final LatLng latLng) {
-        imageViewNoMenus.setVisibility(View.VISIBLE);
-
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {

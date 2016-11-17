@@ -7,15 +7,41 @@
     android:orientation="vertical"
     android:background="@color/menu_item_selector_color">
 
-    <ImageView
+    <RelativeLayout
+        android:id="@+id/relativeLayoutNoMenus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_menus_nothing_found"
         android:visibility="gone"
-        android:id="@+id/imageViewNoMenus"
-        android:layout_width="376px"
-        android:layout_height="404px"
-        android:tag="mwar"
-        android:background="@drawable/ic_no_meals"
-        android:layout_centerInParent="true"
-        />
+        >
+
+        <TextView
+            android:id="@+id/textViewOhSnap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_52"
+            android:textColor="@color/theme_color"
+            android:text="@string/oh_snap"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="110px"
+            />
+
+        <TextView
+            android:id="@+id/textViewNothingFound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_32"
+            android:textColor="@color/text_color"
+            android:text="@string/nothing_found_near_you"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20px"
+            android:layout_below="@+id/textViewOhSnap"
+            android:gravity="center"
+
+            />
+
+
+    </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"

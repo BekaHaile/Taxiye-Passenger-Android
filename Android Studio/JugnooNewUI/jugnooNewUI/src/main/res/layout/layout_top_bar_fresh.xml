@@ -198,8 +198,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="@string/location"
-                    android:textColor="@color/text_color_selector"
+                    android:text="@string/delivery_address"
+                    android:textColor="@color/text_color_theme_alpha_selector"
                     android:textSize="@dimen/text_size_22"
                     />
 
