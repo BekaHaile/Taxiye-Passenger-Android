@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.dialogs.BannerDetailDialog;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
@@ -131,7 +132,9 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             final SubItem subItem = subItems.get(position);
 
             mHolder.textViewItemName.setText(subItem.getSubItemName());
-            mHolder.textViewItemUnit.setText(subItem.getBaseUnit());
+            if(!TextUtils.isEmpty(subItem.getBaseUnit())) {
+                mHolder.textViewItemUnit.setText(subItem.getBaseUnit());
+            }
             mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
                     Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
 
@@ -215,6 +218,15 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 mHolder.mAddButton.setVisibility(View.GONE);
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
+                mHolder.textViewOutOfStock.setVisibility(View.GONE);
+            }
+
+            if(appType == AppConstant.ApplicationType.MENUS
+                    && context instanceof FreshActivity
+                    && ((FreshActivity)context).getVendorOpened() != null
+                    && 1 == ((FreshActivity)context).getVendorOpened().getIsClosed()){
+                mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
+                mHolder.mAddButton.setVisibility(View.GONE);
                 mHolder.textViewOutOfStock.setVisibility(View.GONE);
             }
 //            if (openMode == OpenMode.CART) {
@@ -360,6 +372,22 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.imageViewFoodType.setVisibility(appType == AppConstant.ApplicationType.MENUS ? View.VISIBLE : View.GONE);
             mHolder.imageViewFoodType.setImageResource(subItem.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
+            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+            RelativeLayout.LayoutParams paramsLLC = (RelativeLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
+            if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
+                paramsFT.setMargins(0, (int)(ASSL.Yscale()*15f), 0, 0);
+                paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
+            } else {
+                paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
+                paramsLLC.setMargins((int)(ASSL.Xscale()*30f), 0, 0, 0);
+            }
+            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
+            mHolder.linearLayoutContent.setLayoutParams(paramsLLC);
+            if(TextUtils.isEmpty(subItem.getBaseUnit()) && TextUtils.isEmpty(subItem.getSubItemDesc())) {
+                mHolder.linearLayoutUnitMoreInfo.setVisibility(View.GONE);
+            } else {
+                mHolder.linearLayoutUnitMoreInfo.setVisibility(View.VISIBLE);
+            }
 
         } else if(holder instanceof ViewTitleHolder) {
             ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
@@ -402,16 +430,18 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             return subItems == null ? 0 : subItems.size();
     }
 
+
     static class MainViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
         private ImageView imageViewItemImage, imageViewFoodType, imageViewMinus, imageViewPlus, imageViewDelete, bannerBg, imageViewMoreInfoSeprator;
         public TextView textViewItemName, textViewItemUnit, textViewItemPrice, textViewQuantity, textViewItemCost, textViewItemOff, offerTag;
         public TextView unavilableView, textViewOutOfStock, textViewMoreInfo;
         public Button mAddButton;
-        public LinearLayout linearLayoutQuantitySelector, offerTagLayout;
+        public LinearLayout linearLayoutContent, linearLayoutQuantitySelector, offerTagLayout, linearLayoutUnitMoreInfo;
         public MainViewHolder(View itemView, Context context) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+            linearLayoutContent = (LinearLayout) itemView.findViewById(R.id.linearLayoutContent);
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             offerTagLayout = (LinearLayout) itemView.findViewById(R.id.offer_tag_layout);
             imageViewItemImage = (ImageView) itemView.findViewById(R.id.imageViewItemImage);
@@ -426,7 +456,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             unavilableView = (TextView) itemView.findViewById(R.id.unavilable_view); unavilableView.setTypeface(Fonts.mavenRegular(context));
 
-            textViewItemName = (TextView)itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenRegular(context));
+            textViewItemName = (TextView)itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenMedium(context));
             textViewItemUnit = (TextView)itemView.findViewById(R.id.textViewItemUnit); textViewItemUnit.setTypeface(Fonts.mavenRegular(context));
             textViewItemPrice = (TextView)itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenRegular(context));
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
@@ -434,6 +464,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             textViewItemOff = (TextView)itemView.findViewById(R.id.textViewItemOff); textViewItemOff.setTypeface(Fonts.mavenRegular(context));
             textViewOutOfStock = (TextView)itemView.findViewById(R.id.textViewOutOfStock); textViewOutOfStock.setTypeface(Fonts.mavenRegular(context));
             offerTag = (TextView)itemView.findViewById(R.id.offer_tag); offerTag.setTypeface(Fonts.mavenRegular(context));
+            linearLayoutUnitMoreInfo = (LinearLayout) itemView.findViewById(R.id.linearLayoutUnitMoreInfo);
         }
     }
 

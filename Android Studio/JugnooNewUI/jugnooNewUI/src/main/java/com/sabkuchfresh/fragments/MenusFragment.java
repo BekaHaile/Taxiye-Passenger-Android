@@ -445,14 +445,19 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     private void setAddressAndFetchMenus(){
         try {
-            String[] arr = activity.getSelectedAddress().split(", ");
+            String[] arr = null;
+            if(activity.getSelectedAddress().contains(",")){
+                arr = activity.getSelectedAddress().split(", ");
+            } else {
+                arr = activity.getSelectedAddress().split(" ");
+            }
             String address = "";
             if(arr.length > 1){
 				address = arr[0]+", "+arr[1];
 			} else if(arr.length > 0){
 				address = arr[0];
 			}
-            activity.getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26);
+            activity.getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 30f * ASSL.Xscale());
             activity.getTopBar().textViewLocationValue.setText(address);
             getAllMenus(true, activity.getSelectedLatLng());
         } catch (Exception e) {
@@ -520,12 +525,13 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                             try {
                                 String resp = new String(((TypedByteArray) response.getBody()).getBytes());
                                 GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
-                                String address = gapiAddress.getSearchableAddress();
+                                String address = gapiAddress.formattedAddress;
                                 activity.setSelectedAddress(address);
                                 activity.setSelectedLatLng(currentLatLng);
                                 activity.setSelectedAddressId(0);
                                 activity.setSelectedAddressType("");
                                 setAddressAndFetchMenus();
+                                DialogPopup.dismissLoadingDialog();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

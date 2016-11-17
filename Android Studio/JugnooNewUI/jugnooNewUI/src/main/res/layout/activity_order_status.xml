@@ -270,6 +270,17 @@
                     android:textSize="@dimen/text_size_28"
                     android:layout_marginTop="20px" />
 
+                <ImageView
+                    android:id="@+id/imageViewRestaurant"
+                    android:layout_width="33px"
+                    android:layout_height="33px"
+                    android:tag="mwar"
+                    android:src="@drawable/ic_restaurant"
+                    android:layout_toRightOf="@+id/tvDeliveryTime"
+                    android:layout_marginTop="20px"
+                    android:visibility="gone"
+                    />
+
                 <View
                     android:layout_width="1px"
                     android:layout_height="1px"

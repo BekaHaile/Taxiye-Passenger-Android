@@ -1,53 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/relativeLayoutItemImage"
-        android:layout_width="wrap_content"
-        android:layout_height="120px"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="30px"
-        >
+        android:id="@+id/relativeLayoutMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/imageViewItemImage"
-            android:layout_width="120px"
+        <RelativeLayout
+            android:id="@+id/relativeLayoutItemImage"
+            android:layout_width="wrap_content"
             android:layout_height="120px"
             android:layout_centerVertical="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_fresh_item_placeholder"
-            android:tag="mwar"
-            android:visibility="visible"
-            />
+            android:layout_marginBottom="20px"
+            android:layout_marginLeft="30px"
+            android:layout_marginTop="20px"
+            >
 
-        <ImageView
-            android:id="@+id/imageViewFoodType"
-            android:layout_width="41px"
-            android:layout_height="41px"
-            android:tag="mwar"
-            android:layout_marginTop="2px"
-            android:layout_marginLeft="2px"
-            android:src="@drawable/veg"
+            <ImageView
+                android:id="@+id/imageViewItemImage"
+                android:layout_width="120px"
+                android:layout_height="120px"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_fresh_item_placeholder"
+                android:tag="mwar"
+                android:visibility="visible"
+                />
 
-            />
+            <ImageView
+                android:id="@+id/imageViewFoodType"
+                android:layout_width="41px"
+                android:layout_height="41px"
+                android:layout_marginLeft="2px"
+                android:layout_marginTop="2px"
+                android:src="@drawable/veg"
+                android:tag="mwar"
+
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutContent"
+            android:layout_width="470px"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="30px"
+            android:layout_toRightOf="@+id/relativeLayoutItemImage"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewItemName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25px"
+                android:maxLines="2"
+                android:text="Orange"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_34"
+
+                />
+
+            <LinearLayout
+                android:id="@+id/linearLayoutUnitMoreInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                >
+
+                <TextView
+                    android:id="@+id/textViewItemUnit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20px"
+                    android:singleLine="true"
+                    android:text="500gm"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_28"/>
+
+                <ImageView
+                    android:id="@+id/imageViewMoreInfoSeprator"
+                    android:layout_width="2px"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10px"
+                    android:layout_marginTop="20px"
+                    android:src="@color/text_color_light"
+                    android:tag="mwar"/>
+
+                <TextView
+                    android:id="@+id/textViewMoreInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10px"
+                    android:layout_marginTop="20px"
+                    android:singleLine="true"
+                    android:text="More info"
+                    android:textColor="@color/theme_color"
+                    android:textSize="@dimen/text_size_28"
+                    android:visibility="visible"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25px"
+                android:layout_marginTop="10px"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textViewItemPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:maxLines="2"
+                    android:text="@string/rupee_0"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_32"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewItemCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20px"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text="@string/rupee_0"
+                    android:textColor="@color/text_color_light"
+                    android:textSize="@dimen/text_size_32"/>
+
+                <TextView
+                    android:id="@+id/textViewItemOff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20px"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:text="70% Off"
+                    android:textColor="@color/off_text"
+                    android:textSize="@dimen/text_size_32"
+
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
-
-
-
 
     <LinearLayout
         android:id="@+id/offer_tag_layout"
         android:layout_width="wrap_content"
         android:layout_height="27px"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:layout_marginBottom="2px"
         android:orientation="horizontal"
         >
@@ -76,135 +189,29 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayoutContent"
-        android:layout_width="450px"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="55px"
-        android:layout_toRightOf="@+id/relativeLayoutItemImage"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/textViewItemName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="2"
-            android:text="Orange"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
-            android:layout_marginTop="25px"
-
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textViewItemUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20px"
-            android:singleLine="true"
-            android:text="500gm"
-            android:textColor="@color/text_color_light"
-            android:textSize="@dimen/text_size_28"/>
-
-            <ImageView
-                android:id="@+id/imageViewMoreInfoSeprator"
-                android:layout_width="2px"
-                android:layout_height="match_parent"
-                android:tag="mwar"
-                android:layout_marginLeft="10px"
-                android:layout_marginTop="20px"
-                android:src="@color/text_color_light"/>
-
-            <TextView
-                android:id="@+id/textViewMoreInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20px"
-                android:layout_marginLeft="10px"
-                android:singleLine="true"
-                android:text="More info"
-                android:visibility="visible"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_28"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20px"
-            android:orientation="horizontal"
-            android:layout_marginBottom="25px">
-
-            <TextView
-                android:id="@+id/textViewItemPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:maxLines="2"
-                android:text="@string/rupee_0"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_34"
-
-
-                />
-
-            <TextView
-                android:id="@+id/textViewItemCost"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20px"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:text="@string/rupee_0"
-                android:textColor="@color/text_color_light"
-                android:textSize="@dimen/text_size_34"/>
-
-            <TextView
-                android:id="@+id/textViewItemOff"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20px"
-                android:gravity="center_vertical"
-                android:maxLines="2"
-                android:text="70% Off"
-                android:textColor="@color/off_text"
-                android:textSize="@dimen/text_size_34"
-
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/button_view"
         android:layout_width="218px"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/relativeLayoutMain"
         android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/relativeLayoutMain"
         android:animateLayoutChanges="true"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_alignTop="@+id/linearLayoutContent"
-        android:layout_alignBottom="@+id/linearLayoutContent"
         >
 
         <TextView
             android:id="@+id/textViewOutOfStock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:text="Out\nof\nStock"
-            android:visibility="gone"
             android:textColor="@color/off_text"
-            android:textSize="@dimen/text_size_34"/>
+            android:textSize="@dimen/text_size_34"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -212,11 +219,11 @@
         android:id="@+id/linearLayoutQuantitySelector"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_alignParentRight="true"
         android:layout_above="@+id/imageViewSep"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="25px"
         android:layout_marginRight="20px"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="gone">
 
@@ -235,7 +242,7 @@
             android:gravity="center"
             android:singleLine="true"
             android:text="998"
-            android:textColor="@color/text_color"
+            android:textColor="@color/theme_color"
             android:textSize="@dimen/text_size_34"/>
 
         <ImageView
@@ -252,27 +259,27 @@
         android:id="@+id/add_button"
         android:layout_width="118px"
         android:layout_height="60px"
-        android:background="@drawable/button_theme"
-        android:layout_alignParentRight="true"
         android:layout_above="@+id/imageViewSep"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="25px"
         android:layout_marginRight="20px"
+        android:background="@drawable/button_theme"
         android:text="ADD"
-        android:visibility="gone"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_32"/>
+        android:textSize="@dimen/text_size_32"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/unavilable_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="UNAVAILABLE"
-        android:textSize="@dimen/text_size_28"
-        android:textColor="@color/red"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="15px"
         android:layout_marginRight="20px"
+        android:text="UNAVAILABLE"
+        android:textColor="@color/red"
+        android:textSize="@dimen/text_size_28"
         android:visibility="gone"
         />
 
@@ -292,7 +299,7 @@
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_below="@+id/linearLayoutContent"
+        android:layout_below="@+id/relativeLayoutMain"
         android:background="@color/text_color_hint"/>
 
 </RelativeLayout>

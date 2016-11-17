@@ -73,6 +73,7 @@ public class ApiGetRideSummary {
 				params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
 			} else if(orderId != -1) {
 				params.put(Constants.KEY_ORDER_ID, String.valueOf(orderId));
+				params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType));
 			}
 			if(showRideMenu) {
 				params.put(Constants.KEY_SHOW_RIDE_MENU, "1");
@@ -110,12 +111,18 @@ public class ApiGetRideSummary {
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
+								HistoryResponse.Datum finalDatum = null;
+								if (showPanelResponse.getDatum() != null && showPanelResponse.getDatum().getProductType() != null) {
+									finalDatum = showPanelResponse.getDatum();
+								} else if(showPanelResponse.getMenusDatum() != null && showPanelResponse.getMenusDatum().getProductType() != null){
+									finalDatum = showPanelResponse.getMenusDatum();
+								}
 								int supportCategory = finalSupportCategory;
 								if(productType == ProductType.NOT_SURE) {
 									if (endRideData != null) {
 										supportCategory = getSupportCategoryForEngagementStatus(endRideData.getStatus());
-									} else if (showPanelResponse.getDatum() != null) {
-										supportCategory = showPanelResponse.getDatum().getSupportCategory();
+									} else if (finalDatum != null) {
+										supportCategory = finalDatum.getSupportCategory();
 									}
 								}
 								ArrayList<ShowPanelResponse.Item> itemsMain = null;
@@ -127,7 +134,7 @@ public class ApiGetRideSummary {
 									itemsMain = Database2.getInstance(activity).getSupportDataItems(supportCategory);
 								}
 
-								callback.onSuccess(endRideData, showPanelResponse.getDatum(), itemsMain);
+								callback.onSuccess(endRideData, finalDatum, itemsMain);
 							} else if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
 								if(callback.onActionFailed(message)){
 									retryDialog(message);

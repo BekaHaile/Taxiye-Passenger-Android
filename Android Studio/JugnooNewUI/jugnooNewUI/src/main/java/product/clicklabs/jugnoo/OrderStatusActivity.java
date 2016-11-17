@@ -14,6 +14,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +72,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             tvDelveryPlace, tvDeliveryToVal, tvSubAmount, tvSubAmountVal, tvPaymentMethod, tvPaymentMethodCash, tvDeliveryCharges,
             tvDeliveryChargesVal, tvTotalAmount, tvTotalAmountVal, tvAmountPayable, tvAmountPayableVal, tvBilledAmount, tvBilledAmountVal,
             tvRefund, tvRefundVal;
-    private ImageView ivPaymentMethodVal, ivDeliveryPlace, ivOrderCompleted;
+    private ImageView ivPaymentMethodVal, ivDeliveryPlace, ivOrderCompleted, imageViewRestaurant;
     private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn;
     private int orderId, productType;
     private NonScrollListView listViewOrder;
@@ -139,6 +142,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         orderCancel = (LinearLayout) rootView.findViewById(R.id.order_cancel);
         ivOrderCompleted = (ImageView) rootView.findViewById(R.id.ivOrderCompleted);
         rlOrderStatus = (RelativeLayout) rootView.findViewById(R.id.rlOrderStatus);
+        imageViewRestaurant = (ImageView) rootView.findViewById(R.id.imageViewRestaurant);
+        imageViewRestaurant.setVisibility(View.GONE);
 
         // Order Status
         cvOrderStatus = (CardView) rootView.findViewById(R.id.cvOrderStatus);
@@ -561,8 +566,15 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(historyResponse.getData().get(0).getOrderTime())));
 
             if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
-                tvDeliveryTime.setText(activity.getString(R.string.vendor_colon));
-                tvDeliveryTimeVal.setText(orderHistory.getVendorName()+"\n"+orderHistory.getVendorAddress());
+                tvDeliveryTime.setText(activity.getString(R.string.delivered_from_colon));
+
+                tvDeliveryTimeVal.setText("");
+                final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+                final SpannableStringBuilder sb = new SpannableStringBuilder("      "+orderHistory.getVendorName());
+                sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tvDeliveryTimeVal.append(sb);
+                tvDeliveryTimeVal.append("\n"+orderHistory.getVendorAddress());
+                imageViewRestaurant.setVisibility(View.VISIBLE);
             } else {
                 if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
                     tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate() + " " +
@@ -570,6 +582,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 } else {
                     tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate());
                 }
+                imageViewRestaurant.setVisibility(View.GONE);
             }
             tvDeliveryToVal.setText(historyResponse.getData().get(0).getDeliveryAddress());
             try {

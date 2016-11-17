@@ -1229,6 +1229,7 @@
 	<string name="vendor_colon">Vendor:</string>
 	<string name="mins_format">%s mins</string>
 	<string name="opens_at_format">Opens at %s</string>
+	<string name="delivered_from_colon">Delivered from:</string>
 
 
 </resources>
