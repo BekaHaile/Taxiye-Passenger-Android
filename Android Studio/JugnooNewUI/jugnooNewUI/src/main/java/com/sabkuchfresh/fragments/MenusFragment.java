@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.app.ProgressDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -131,6 +133,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         }
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
+        ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        ((TextView)rootView.findViewById(R.id.textViewNothingFound)).setTypeface(Fonts.mavenMedium(activity));
+        relativeLayoutNoMenus.setVisibility(View.GONE);
         cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
         editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Fonts.mavenMedium(activity));
         cardViewSearch.setVisibility(View.GONE);
@@ -261,7 +266,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()){
                                     MenusFragment.this.menusResponse = menusResponse;
                                     menusRestaurantAdapter.setList((ArrayList<MenusResponse.Vendor>) menusResponse.getVendors());
-                                    relativeLayoutNoMenus.setVisibility(menusRestaurantAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+                                    relativeLayoutNoMenus.setVisibility(menusResponse.getVendors().size() == 0 ? View.VISIBLE : View.GONE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }

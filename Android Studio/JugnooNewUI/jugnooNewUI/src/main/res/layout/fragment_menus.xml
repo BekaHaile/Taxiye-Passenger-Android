@@ -40,6 +40,17 @@
 
             />
 
+        <ImageView
+            android:id="@+id/imageViewArrow"
+            android:layout_width="73px"
+            android:layout_height="88px"
+            android:tag="mwar"
+            android:src="@drawable/ic_curved_up_arrow"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="36px"
+            android:layout_marginRight="64px"
+            />
+
 
     </RelativeLayout>
 

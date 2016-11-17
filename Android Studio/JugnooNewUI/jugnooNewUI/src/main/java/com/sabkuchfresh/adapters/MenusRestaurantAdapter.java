@@ -154,7 +154,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return vendors == null ? 0 : vendors.size() + 1;
+        return vendors == null || vendors.size() == 0 ? 0 : vendors.size() + 1;
     }
 
 
