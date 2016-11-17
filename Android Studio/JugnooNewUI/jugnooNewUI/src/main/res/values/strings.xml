@@ -1199,6 +1199,6 @@
 	<string name="coupon_remove_reapply_before_checkout">This will remove your applied coupon, you have to reapply your coupon</string>
 	<string name="tag_address_as">Tag address as</string>
 	<string name="choose_pickup">Choose Pickup</string>
-
+	<string name="chat">Chat</string>
 
 </resources>

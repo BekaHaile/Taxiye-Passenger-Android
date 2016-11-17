@@ -931,7 +931,7 @@ public class JSONParser implements Constants {
             int vehicleType = VEHICLE_AUTO;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
             String cancelRideThrashHoldTime = "", poolStatusString = "";
-            int cancellationCharges = 0, isPooledRide = 0;
+            int cancellationCharges = 0, isPooledRide = 0, chatEnabled = 0;
             long cancellationTimeOffset = 0;
             ArrayList<String> fellowRiders = new ArrayList<>();
 
@@ -994,6 +994,7 @@ public class JSONParser implements Constants {
                             pickupLatitude = jObject.getString("pickup_latitude");
                             pickupLongitude = jObject.getString("pickup_longitude");
                             pickupAddress = jObject.optString(KEY_PICKUP_LOCATION_ADDRESS, "");
+                            chatEnabled = jObject.optInt("chat_enabled", 0);
 
                             try {
                                 if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {
@@ -1110,7 +1111,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled));
 
                 Data.autoData.setFareFactor(fareFactor);
 

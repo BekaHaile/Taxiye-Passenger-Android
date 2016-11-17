@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -67,6 +68,7 @@ public class Data {
 
 	public static int freshSort = -1;
 	public static int mealSort = -1;
+	public static Activity context = null;
 	
 	
 	

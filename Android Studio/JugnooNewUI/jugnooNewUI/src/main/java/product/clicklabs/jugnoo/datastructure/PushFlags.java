@@ -31,7 +31,8 @@ public enum PushFlags {
 	SYNC_PARA(87),
 	UPDATE_POOL_RIDE_STATUS(88),
 	ORDER_DISPATCH(51),
-	STATUS_CHANGED(52)
+	STATUS_CHANGED(52),
+	CHAT_MESSAGE(53)
 	;
 
 	private int ordinal;

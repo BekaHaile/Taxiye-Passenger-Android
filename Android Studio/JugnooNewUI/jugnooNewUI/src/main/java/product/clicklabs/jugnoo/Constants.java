@@ -517,4 +517,5 @@ public interface Constants {
 
 	String KEY_VALID_STOCK_COUNT = "valid_stock_count";
 	String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
+	String KEY_CHAT_COUNT = "chat_count";
 }

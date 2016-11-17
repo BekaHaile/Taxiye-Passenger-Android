@@ -657,6 +657,28 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						intent.putExtra(KEY_CLIENT_ID, clientId);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+					} else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
+						String clientId = jObj.optString(KEY_CLIENT_ID, "");
+						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+						//message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
+						String name = Utils.getActivityName(this);
+
+
+						if(!name.equalsIgnoreCase(this.getPackageName())
+								|| Data.context == null || !(Data.context instanceof ChatActivity)){
+							String chatMessage = jObj.getJSONObject(KEY_MESSAGE).optString("chat_message", "");
+							if (!TextUtils.isEmpty(phoneNo)) {
+								generateNotificationForCall(this, title, chatMessage, NOTIFICATION_ID, phoneNo, null, playSound, clientId);
+							} else {
+								notificationManager(this, title, chatMessage, playSound);
+							}
+							Prefs.with(this).save(KEY_CHAT_COUNT , Prefs.with(this).getInt(KEY_CHAT_COUNT, 0) + 1);
+							Intent intent = new Intent(Data.LOCAL_BROADCAST);
+							intent.putExtra(Constants.KEY_FLAG, flag);
+							LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+						} else {
+							// Nothing
+						}
 					}
 
 					incrementPushCounter(jObj, flag);
