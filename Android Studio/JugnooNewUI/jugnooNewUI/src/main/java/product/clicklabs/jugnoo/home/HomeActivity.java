@@ -33,9 +33,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -917,6 +920,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onDrawerStateChanged(int newState) {
 
+            }
+        });
+
+        textViewPoolInfo1.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
+                    slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
+                            Data.userData.getCoupons(ProductType.AUTO));
+                }
             }
         });
 
@@ -8433,6 +8446,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
             }
             viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
+            showPoolInforBar();
             setFabMarginInitial(false);
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                 setGoogleMapPadding(0);
@@ -8523,7 +8537,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(false);
                 textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1());
+                relativeLayoutPoolInfoBar.setBackgroundResource(R.drawable.background_pool_info);
+                textViewPoolInfo1.setTextColor(getResources().getColor(R.color.text_color));
                 //setGoogleMapPadding(70);
+            } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
+                    (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
+                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
+                viewPoolInfoBarAnim.setVisibility(View.GONE);
+                setFabMarginInitial(false);
+
+                textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1()+" - ");
+                relativeLayoutPoolInfoBar.setBackgroundColor(getResources().getColor(R.color.text_color));
+                textViewPoolInfo1.setTextColor(getResources().getColor(R.color.white));
+
+                final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+                final SpannableStringBuilder sb = new SpannableStringBuilder("Click to see.");
+                sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textViewPoolInfo1.append(sb);
+                //setGoogleMapPadding(70);
+            } else{
+                viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
+                setFabMarginInitial(false);
             }
         } catch (Exception e) {
             e.printStackTrace();

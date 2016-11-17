@@ -264,7 +264,7 @@
                 android:gravity="center"
                 android:paddingLeft="30px"
                 android:paddingRight="30px"
-                android:singleLine="true"
+                android:maxLines="1"
                 android:text="Share the ride, Split the fare"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_26" />
