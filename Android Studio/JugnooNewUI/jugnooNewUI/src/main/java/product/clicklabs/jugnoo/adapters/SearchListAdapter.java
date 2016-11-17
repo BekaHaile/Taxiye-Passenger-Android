@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -203,7 +204,7 @@ public class SearchListAdapter extends BaseAdapter{
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
             holder.textViewSearchAddress.setTypeface(Fonts.mavenMedium(context));
 			holder.textViewAddressUsed = (TextView) convertView.findViewById(R.id.textViewAddressUsed);
-			holder.textViewAddressUsed.setTypeface(Fonts.mavenRegular(context));
+			holder.textViewAddressUsed.setTypeface(Fonts.mavenRegular(context), Typeface.ITALIC);
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
             holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);

@@ -149,7 +149,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/add_home"
                                 android:textColor="@color/text_color_light_selector"
-                                android:textSize="@dimen/text_size_28"/>
+                                android:textSize="@dimen/text_size_32"/>
 
                             <TextView
                                 android:id="@+id/textViewAddHomeValue"
@@ -159,7 +159,7 @@
                                 android:singleLine="true"
                                 android:text="test"
                                 android:textColor="@color/text_color_light"
-                                android:textSize="@dimen/text_size_24"
+                                android:textSize="@dimen/text_size_26"
                                 android:visibility="gone"
                                 />
 
@@ -170,7 +170,7 @@
                                 android:layout_marginTop="7px"
                                 android:text="@string/address_used_format"
                                 android:textColor="@color/text_color_light"
-                                android:textSize="@dimen/text_size_24"
+                                android:textSize="@dimen/text_size_22"
                                 />
                         </LinearLayout>
 
@@ -230,7 +230,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/add_work"
                                 android:textColor="@color/text_color_light_selector"
-                                android:textSize="@dimen/text_size_28"/>
+                                android:textSize="@dimen/text_size_32"/>
 
                             <TextView
                                 android:id="@+id/textViewAddWorkValue"
@@ -240,7 +240,7 @@
                                 android:singleLine="true"
                                 android:text="test"
                                 android:textColor="@color/text_color_light"
-                                android:textSize="@dimen/text_size_24"
+                                android:textSize="@dimen/text_size_26"
                                 android:visibility="gone"
                                 />
 
@@ -251,7 +251,7 @@
                                 android:layout_marginTop="7px"
                                 android:text="@string/address_used_format"
                                 android:textColor="@color/text_color_light"
-                                android:textSize="@dimen/text_size_24"
+                                android:textSize="@dimen/text_size_22"
                                 />
                         </LinearLayout>
 

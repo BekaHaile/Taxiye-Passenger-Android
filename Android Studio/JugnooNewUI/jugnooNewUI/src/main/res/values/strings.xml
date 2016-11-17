@@ -1199,8 +1199,10 @@
 	<string name="coupon_remove_reapply_before_checkout">This will remove your applied coupon, you have to reapply your coupon</string>
 	<string name="tag_address_as">Tag address as</string>
 	<string name="choose_pickup">Choose Pickup</string>
-	<string name="address_used_format">Used %s times</string>
+	<string name="address_used_format">%s times used</string>
 	<string name="enter_pickup">Enter pickup</string>
+	<string name="recent_locations">Recent locations</string>
+	<string name="saved_locations">Saved locations</string>
 
 
 </resources>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relativeLayoutRoot"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/sliding_bottom_bg_color"
-    android:splitMotionEvents="false">
+<RelativeLayout android:id="@+id/relativeLayoutRoot"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/sliding_bottom_bg_color"
+                android:splitMotionEvents="false">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,247 +15,392 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutAddHome"
+            <TextView
+                android:id="@+id/textViewSavedAddresses"
+                android:layout_width="wrap_content"
+                android:layout_height="40px"
+                android:layout_marginLeft="30px"
+                android:layout_marginTop="30px"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/saved_locations"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color_less_light"
+                android:textSize="@dimen/text_size_24"
+                android:visibility="visible"
+                />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewAddresses"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="110px"
-                android:background="@drawable/bg_white_menu_item_selector_color_selector">
+                android:layout_marginBottom="8px"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4px"
+                >
 
                 <LinearLayout
+                    android:id="@+id/linearLayoutAddresses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginTop="20px"
-                    android:layout_marginBottom="20px"
-                    android:layout_toLeftOf="@+id/imageViewEditHome"
-                    android:layout_toRightOf="@+id/imageViewAddHome"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    >
 
-                    <TextView
-                        android:id="@+id/textViewAddHome"
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutHome"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/add_home"
-                        android:textColor="@color/text_color_light_selector"
-                        android:textSize="@dimen/text_size_28" />
+                        android:background="@drawable/bg_white_menu_item_selector_color_selector"
+                        android:minHeight="110px">
 
-                    <TextView
-                        android:id="@+id/textViewAddHomeValue"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginBottom="20px"
+                            android:layout_marginLeft="20px"
+                            android:layout_marginTop="20px"
+                            android:layout_toLeftOf="@+id/imageViewEditHome"
+                            android:layout_toRightOf="@+id/imageViewHome"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textViewHome"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/home"
+                                android:textColor="@color/text_color_light_selector"
+                                android:textSize="@dimen/text_size_32"/>
+
+                            <TextView
+                                android:id="@+id/textViewHomeValue"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5px"
+                                android:text="test"
+                                android:textColor="@color/text_color_light"
+                                android:textSize="@dimen/text_size_26"
+                                android:visibility="visible"/>
+
+                            <TextView
+                                android:id="@+id/textViewAddressUsedHome"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7px"
+                                android:text="@string/address_used_format"
+                                android:textColor="@color/text_color_light"
+                                android:textSize="@dimen/text_size_22"
+                                />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imageViewHome"
+                            android:layout_width="50px"
+                            android:layout_height="50px"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="30px"
+                            android:src="@drawable/ic_home"
+                            android:tag="mwar"/>
+
+                        <ImageView
+                            android:id="@+id/imageViewEditHome"
+                            android:layout_width="60px"
+                            android:layout_height="60px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20px"
+                            android:padding="15px"
+                            android:src="@drawable/edit_icon_selector"
+                            android:tag="mwar"
+                            android:visibility="visible"/>
+
+                        <View
+                            android:id="@+id/viewHomeSep"
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="40px"
+                            android:layout_marginRight="40px"
+                            android:background="@color/stroke_color_light"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutWork"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5px"
-                        android:text="test"
-                        android:textColor="@color/text_color_light"
-                        android:textSize="@dimen/text_size_24"
-                        android:visibility="visible" />
+                        android:background="@drawable/bg_white_menu_item_selector_color_selector"
+                        android:minHeight="110px">
 
-                    <TextView
-                        android:id="@+id/textViewAddressUsedHome"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginBottom="20px"
+                            android:layout_marginLeft="20px"
+                            android:layout_marginTop="20px"
+                            android:layout_toLeftOf="@+id/imageViewEditWork"
+                            android:layout_toRightOf="@+id/imageViewWork"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textViewWork"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/work"
+                                android:textColor="@color/text_color_light_selector"
+                                android:textSize="@dimen/text_size_32"/>
+
+                            <TextView
+                                android:id="@+id/textViewWorkValue"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5px"
+                                android:text="test"
+                                android:textColor="@color/text_color_light"
+                                android:textSize="@dimen/text_size_26"
+                                android:visibility="visible"/>
+
+                            <TextView
+                                android:id="@+id/textViewAddressUsedWork"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7px"
+                                android:text="@string/address_used_format"
+                                android:textColor="@color/text_color_light"
+                                android:textSize="@dimen/text_size_22"
+                                />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imageViewWork"
+                            android:layout_width="50px"
+                            android:layout_height="50px"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="30px"
+                            android:src="@drawable/ic_work"
+                            android:tag="mwar"/>
+
+                        <ImageView
+                            android:id="@+id/imageViewEditWork"
+                            android:layout_width="60px"
+                            android:layout_height="60px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="20px"
+                            android:padding="15px"
+                            android:src="@drawable/edit_icon_selector"
+                            android:tag="mwar"
+                            android:visibility="visible"/>
+
+                        <View
+                            android:id="@+id/viewWorkSep"
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="40px"
+                            android:layout_marginRight="40px"
+                            android:background="@color/stroke_color_light"/>
+
+                    </RelativeLayout>
+
+                    <product.clicklabs.jugnoo.utils.NonScrollListView
+                        android:id="@+id/listViewSavedLocations"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="7px"
-                        android:text="@string/address_used_format"
-                        android:textColor="@color/text_color_light"
-                        android:textSize="@dimen/text_size_24"
-                        />
+                        android:background="@color/white"
+                        android:divider="@color/transparent"
+                        android:dividerHeight="0dp"
+                        android:splitMotionEvents="false"/>
+
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/imageViewAddHome"
-                    android:layout_width="50px"
-                    android:layout_height="50px"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:src="@drawable/ic_home"
-                    android:tag="mwar" />
-
-                <ImageView
-                    android:id="@+id/imageViewEditHome"
-                    android:layout_width="60px"
-                    android:layout_height="60px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20px"
-                    android:padding="15px"
-                    android:src="@drawable/edit_icon_selector"
-                    android:tag="mwar"
-                    android:visibility="visible" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginRight="40px"
-                    android:background="@color/stroke_color_light" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutAddWork"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="110px"
-                android:background="@drawable/bg_white_menu_item_selector_color_selector">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginTop="20px"
-                    android:layout_marginBottom="20px"
-                    android:layout_toLeftOf="@+id/imageViewEditWork"
-                    android:layout_toRightOf="@+id/imageViewAddWork"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textViewAddWork"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/add_work"
-                        android:textColor="@color/text_color_light_selector"
-                        android:textSize="@dimen/text_size_28" />
-
-                    <TextView
-                        android:id="@+id/textViewAddWorkValue"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5px"
-                        android:text="test"
-                        android:textColor="@color/text_color_light"
-                        android:textSize="@dimen/text_size_24"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:id="@+id/textViewAddressUsedWork"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="7px"
-                        android:text="@string/address_used_format"
-                        android:textColor="@color/text_color_light"
-                        android:textSize="@dimen/text_size_24"
-                        />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/imageViewAddWork"
-                    android:layout_width="50px"
-                    android:layout_height="50px"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:src="@drawable/ic_work"
-                    android:tag="mwar" />
-
-                <ImageView
-                    android:id="@+id/imageViewEditWork"
-                    android:layout_width="60px"
-                    android:layout_height="60px"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20px"
-                    android:padding="15px"
-                    android:src="@drawable/edit_icon_selector"
-                    android:tag="mwar"
-                    android:visibility="gone" />
-
-            </RelativeLayout>
-
-
-            <product.clicklabs.jugnoo.utils.NonScrollListView
-                android:id="@+id/listViewSavedLocations"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:divider="@color/transparent"
-                android:dividerHeight="0dp"
-                android:splitMotionEvents="false"/>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutAddNewAddress"
-                android:layout_width="match_parent"
-                android:layout_height="110px"
-                android:background="@drawable/bg_white_menu_item_selector_color_selector">
-
-                <TextView
-                    android:id="@+id/textViewAddNewAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="30px"
-                    android:layout_toRightOf="@+id/textViewAddNewAddressPlus"
-                    android:text="@string/add_new_address"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_light_selector"
-                    android:textSize="@dimen/text_size_28" />
-
-                <TextView
-                    android:id="@+id/textViewAddNewAddressPlus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="40px"
-                    android:text="+"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_light"
-                    android:textSize="46px"
-                    />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginRight="40px"
-                    android:background="@color/stroke_color_light"
-                    />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="6px"
-                android:background="@drawable/shadow_down" />
+            </android.support.v7.widget.CardView>
 
 
             <TextView
                 android:id="@+id/textViewRecentAddresses"
                 android:layout_width="wrap_content"
                 android:layout_height="40px"
+                android:layout_marginLeft="30px"
+                android:layout_marginTop="30px"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="@string/recent_addresses"
+                android:text="@string/recent_locations"
                 android:textAllCaps="true"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_22"
+                android:textColor="@color/text_color_less_light"
+                android:textSize="@dimen/text_size_24"
                 android:visibility="visible"
-                android:layout_marginTop="30px"
-                android:layout_marginLeft="30px"
                 />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/stroke_light_grey_alpha" />
 
-            <product.clicklabs.jugnoo.utils.NonScrollListView
-                android:id="@+id/listViewRecentAddresses"
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardViewRecentAddresses"
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:fadeScrollbars="true"
-                android:scrollbars="vertical"
-                android:splitMotionEvents="false"
-                android:visibility="visible"
-                android:divider="@color/transparent"
-                android:dividerHeight="0px"
-                />
+                android:layout_marginBottom="8px"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4px"
+                >
 
-            <View
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/listViewRecentAddresses"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0px"
+                    android:fadeScrollbars="true"
+                    android:scrollbars="vertical"
+                    android:splitMotionEvents="false"
+                    android:visibility="visible"
+                    />
+            </android.support.v7.widget.CardView>
+
+
+
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="@color/stroke_color_light" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8px"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:layout_marginTop="30px"
+                card_view:cardBackgroundColor="@color/white"
+                card_view:cardCornerRadius="4px"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutAddHome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_white_menu_item_selector_color_selector"
+                        android:minHeight="100px">
+
+                        <TextView
+                            android:id="@+id/textViewAddHome"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_home"
+                            android:textColor="@color/text_color_light_selector"
+                            android:textSize="@dimen/text_size_32"
+                            android:layout_centerVertical="true"
+                            android:layout_marginBottom="20px"
+                            android:layout_marginLeft="20px"
+                            android:layout_marginTop="20px"
+                            android:layout_toRightOf="@+id/imageViewAddHome"/>
+
+                        <ImageView
+                            android:id="@+id/imageViewAddHome"
+                            android:layout_width="50px"
+                            android:layout_height="50px"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="30px"
+                            android:src="@drawable/ic_home"
+                            android:tag="mwar"/>
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="40px"
+                            android:layout_marginRight="40px"
+                            android:background="@color/stroke_color_light"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutAddWork"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_white_menu_item_selector_color_selector"
+                        android:minHeight="100px">
+
+                        <TextView
+                            android:id="@+id/textViewAddWork"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/add_work"
+                            android:textColor="@color/text_color_light_selector"
+                            android:textSize="@dimen/text_size_32"
+                            android:layout_centerVertical="true"
+                            android:layout_marginBottom="20px"
+                            android:layout_marginLeft="20px"
+                            android:layout_marginTop="20px"
+                            android:layout_toRightOf="@+id/imageViewAddWork"/>
+
+                        <ImageView
+                            android:id="@+id/imageViewAddWork"
+                            android:layout_width="50px"
+                            android:layout_height="50px"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="30px"
+                            android:src="@drawable/ic_work"
+                            android:tag="mwar"/>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2px"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginLeft="40px"
+                            android:layout_marginRight="40px"
+                            android:background="@color/stroke_color_light"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutAddNewAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="100px"
+                        android:background="@drawable/bg_white_menu_item_selector_color_selector">
+
+                        <TextView
+                            android:id="@+id/textViewAddNewAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="30px"
+                            android:layout_toRightOf="@+id/textViewAddNewAddressPlus"
+                            android:text="@string/add_favorite"
+                            android:textColor="@color/text_color_light_selector"
+                            android:textSize="@dimen/text_size_32"/>
+
+                        <TextView
+                            android:id="@+id/textViewAddNewAddressPlus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="40px"
+                            android:text="+"
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_color_light"
+                            android:textSize="46px"
+                            />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 
@@ -264,6 +409,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="6px"
-        android:background="@drawable/shadow_down" />
+        android:background="@drawable/shadow_down"/>
 
 </RelativeLayout>
