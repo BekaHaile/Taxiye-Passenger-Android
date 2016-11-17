@@ -169,6 +169,8 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
+import product.clicklabs.jugnoo.home.models.PokestopInfo;
+import product.clicklabs.jugnoo.home.models.PokestopTypeValue;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
@@ -218,6 +220,7 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
+import product.clicklabs.jugnoo.widgets.MySpinner;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -465,8 +468,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private TextView tvSelectedPickup, tvSpecialPicupTitle, tvSpecialPicupDesc;
     private ImageView ivSpecialPickupArrow;
     private Button bSpecialPicupConfirmRequest, specialPickupLocationBtn;
-    public ArrayList<NearbyPickupRegions.HoverInfo> specialPickups;
-    private Spinner spin;
+    public ArrayList<NearbyPickupRegions.HoverInfo> specialPickups = new ArrayList<>();
+    private MySpinner spin;
     private boolean specialPickupSelected;
     private String selectedSpecialPickup = "";
     /*private RelativeLayout relativeLayoutFAB;
@@ -479,6 +482,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private Button bChatDriver;
     private RelativeLayout rlChatDriver;
     private TextView tvChatCount;
+    private ArrayList<Marker> markersSpecialPickup = new ArrayList<>();
+    private ArrayList<MarkerOptions> markerOptionsSpecialPickup = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -790,7 +795,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         // Special Pickup views
         rlSpecialPickup = (RelativeLayout) findViewById(R.id.rlSpecialPickup);
         specialPickupLocationBtn = (Button) findViewById(R.id.specialPickupLocationBtn);
-        spin = (Spinner) findViewById(R.id.simpleSpinner);
+        spin = (MySpinner) findViewById(R.id.simpleSpinner);
         tvSpecialPicupTitle = (TextView) findViewById(R.id.tvSpecialPicupTitle); tvSpecialPicupTitle.setTypeface(Fonts.mavenMedium(this));
         tvSpecialPicupDesc = (TextView) findViewById(R.id.tvSpecialPicupDesc); tvSpecialPicupDesc.setTypeface(Fonts.mavenRegular(this));
         rlSelectedPickup = (RelativeLayout) findViewById(R.id.rlSelectedPickup);
@@ -809,20 +814,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             }
         });
 
-        specialPickupLocationBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initialMyLocationBtn.performLongClick();
-            }
-        });
-
-        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spin.setOnItemSelectedEvenIfUnchangedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getApplicationContext(), Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText(), Toast.LENGTH_LONG).show();
                 LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLatitude()),
                         Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLongitude()));
                 Data.autoData.setPickupLatLng(specialPicupLatLng);
+                getApiFindADriver().setRefreshLatLng(specialPicupLatLng);
                 specialPickupSelected = true;
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                 selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText()+", ";
@@ -1866,7 +1864,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 							if (refresh && mapTouched) {
 								callMapTouchedRefreshDrivers();
 							}
-							if (!zoomedForSearch && map != null) {
+							if (!zoomedForSearch && map != null && !(isSpecialPickupScreenOpened() && !refresh)) {
 								getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
 							}
 						}
@@ -1890,6 +1888,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             confirmMyLocationBtn.setOnClickListener(mapMyLocationClick);
             buttonChangeLocalityMyLocation.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
+            specialPickupLocationBtn.setOnClickListener(mapMyLocationClick);
 
 
             pokestopHelper = new PokestopHelper(this, map, assl);
@@ -2846,7 +2845,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             //fabView.setRelativeLayoutFABVisibility(mode);
 
                         } else{
-                            if (!zoomedForSearch && map != null) {
+                            if (!zoomedForSearch && !specialPickupScreenOpened && map != null) {
                                 getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
                                 if(!searchedALocation){
                                     dropAddressName = "";
@@ -4162,7 +4161,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if (!intentFired) {
                             if (userMode == UserMode.PASSENGER &&
                                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
-                                if (map != null && myLocation != null) {
+                                if (map != null && myLocation != null && !isSpecialPickupScreenOpened()) {
                                     initialMyLocationBtn.performClick();
                                     mapTouched = true;
                                     try {Data.autoData.setLastRefreshLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));} catch (Exception e) {}
@@ -4173,7 +4172,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 && PassengerScreenMode.P_RIDE_END != passengerScreenMode
                                 && PassengerScreenMode.P_SEARCH != passengerScreenMode
                                 && !isPoolRideAtConfirmation()
-                                && !isNormalRideWithDropAtConfirmation()) {
+                                && !isNormalRideWithDropAtConfirmation()
+                                && !isSpecialPickupScreenOpened()) {
                             callAndHandleStateRestoreAPI(false);
                         }
                         initiateTimersForStates(passengerScreenMode);
@@ -4631,9 +4631,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     new ApiFindADriver.Callback() {
                         @Override
                         public void onPre() {
+                            specialPickupScreenOpened = false;
+                            selectedSpecialPickup = "";
+                            rlSpecialPickup.setVisibility(View.GONE);
+                            updateTopBar();
                             progressBarInitialSearch.setVisibility(View.VISIBLE);
                             imageViewRideNow.setEnabled(false);
                             buttonConfirmRequest.setEnabled(false);
+                            removeSpecialPickupMarkers();
                             try {
                                 promoCouponSelectedForRide = null;
                                 if (userMode == UserMode.PASSENGER) {
@@ -4749,6 +4754,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private boolean updateSpecialPickupScreen(){
+        specialPickups.clear();
+        specialPickups.addAll(Data.autoData.getNearbyPickupRegionses().getHoverInfo());
         if((Data.autoData.getNearbyPickupRegionses() != null) && (Data.autoData.getNearbyPickupRegionses().getHoverInfo().size() > 0)){
 
             return true;
@@ -4759,6 +4766,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             updateTopBar();
             return false;
         }
+    }
+
+    private int getIndex(Spinner spinner, String myString){
+        int index = 0;
+        for (int i=0;i<spinner.getCount();i++){
+            if (specialPickups.get(i).getText().equals(myString)){
+                index = i;
+                LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getLatitude()),
+                        Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getLongitude()));
+                Data.autoData.setPickupLatLng(specialPicupLatLng);
+                specialPickupSelected = true;
+                selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getText()+", ";
+                textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
+                break;
+            }
+        }
+        return index;
     }
 
 
@@ -6024,6 +6048,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     MyApplication.getInstance().logEvent(TRANSACTION+"_"+FirebaseEvents.HOME_SCREEN+"_"
                             +DIFFERENT_PICKUP_LOCATION_POPUP+"_can", bundle);
                     dialog.dismiss();
+                    specialPickupScreenOpened = false;
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
                 }
             });
 
@@ -6062,6 +6089,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     myLocation.setTime(System.currentTimeMillis());
                     textMessage.setText("We could not detect your location. Are you sure you want to request an auto to pick you at this location?");
                     dialog.show();
+
                 } else {
                     boolean cached = false;
                     try {
@@ -8811,9 +8839,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                         //map.moveCamera(CameraUpdateFactory.zoomOut());
+                        showSpecialPickupMarker(specialPickups);
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
+                        spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
                     } else {
                         specialPickupScreenOpened = false;
+                        removeSpecialPickupMarkers();
                         rlSpecialPickup.setVisibility(View.GONE);
                         updateTopBar();
                         openConfirmRequestView();
@@ -8830,12 +8861,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } else {
                     if(updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()){
                         // show special pickup screen
+
                         specialPickupScreenOpened = true;
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                         //map.moveCamera(CameraUpdateFactory.zoomOut());
+                        showSpecialPickupMarker(specialPickups);
                         map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
+                        spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
+
                     } else {
+                        removeSpecialPickupMarkers();
                         requestRideClick();
                         //openConfirmRequestView();
                         slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -9064,6 +9100,42 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public FABViewTest getFabViewTest(){
         return fabViewTest;
+    }
+
+    private void showSpecialPickupMarker(ArrayList<NearbyPickupRegions.HoverInfo> specialPickups) {
+        try {
+            if(map != null) {
+                float zIndex = 0.0f;
+                for(NearbyPickupRegions.HoverInfo specialPickup : specialPickups){
+                    LatLng specialPicupLatLng = new LatLng(Double.parseDouble(specialPickup.getLatitude()),
+                            Double.parseDouble(specialPickup.getLongitude()));
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.title(specialPickup.getText());
+                    markerOptions.snippet("special_pickup");
+                    markerOptions.position(specialPicupLatLng);
+                    markerOptions.anchor(0.5f, 0.5f);
+                    markerOptions.zIndex(zIndex);
+                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                                .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.circle_green, 20f, 20f)));
+                    markersSpecialPickup.add(map.addMarker(markerOptions));
+                    markerOptionsSpecialPickup.add(markerOptions);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeSpecialPickupMarkers() {
+        try {
+            markerOptionsSpecialPickup.clear();
+            for(Marker marker : markersSpecialPickup){
+                marker.remove();
+            }
+            markersSpecialPickup.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

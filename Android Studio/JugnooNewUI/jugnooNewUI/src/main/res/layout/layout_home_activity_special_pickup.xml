@@ -132,7 +132,7 @@
                     android:layout_height="96px"
                     android:layout_margin="4px">
 
-                    <Spinner
+                    <product.clicklabs.jugnoo.widgets.MySpinner
                         android:id="@+id/simpleSpinner"
                         android:layout_width="match_parent"
                         android:layout_height="96px"
@@ -148,6 +148,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/px_48"
+                        android:rotation="0"
                         android:src="@drawable/triangle_grey"
                         android:tag="mwar" />
                 </RelativeLayout>
