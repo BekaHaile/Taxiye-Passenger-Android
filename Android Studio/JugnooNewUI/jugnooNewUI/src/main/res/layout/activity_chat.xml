@@ -14,11 +14,24 @@
         <TextView
             android:id="@+id/textViewTitle"
             style="@style/title"
+            android:layout_toRightOf="@+id/imageViewBack"
+            android:layout_marginLeft="@dimen/px_30"
             android:text="@string/chat" />
 
         <ImageView
             android:id="@+id/imageViewBack"
             style="@style/back_image" />
+
+        <ImageView
+            android:id="@+id/ivCallDriver"
+            android:layout_width="126px"
+            android:layout_height="70px"
+            android:src="@drawable/ic_call_driver"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingTop="@dimen/px_20"
+            android:paddingBottom="@dimen/px_20"
+            android:layout_marginRight="@dimen/px_32"/>
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

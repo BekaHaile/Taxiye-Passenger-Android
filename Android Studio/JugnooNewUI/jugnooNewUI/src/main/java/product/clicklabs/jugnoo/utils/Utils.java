@@ -59,12 +59,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
+import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
+
+import static product.clicklabs.jugnoo.Constants.ACTIVATION;
+import static product.clicklabs.jugnoo.Constants.RETENTION;
+import static product.clicklabs.jugnoo.Constants.REVENUE;
+import static product.clicklabs.jugnoo.Constants.SLASH;
+import static product.clicklabs.jugnoo.home.HomeActivity.passengerScreenMode;
+import static product.clicklabs.jugnoo.utils.FirebaseEvents.TRANSACTION;
+import static product.clicklabs.jugnoo.utils.FlurryEventNames.CALL_TO_DRIVER_MADE_WHEN_ARRIVED;
+import static product.clicklabs.jugnoo.utils.FlurryEventNames.CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED;
 
 
 public class Utils {
@@ -779,6 +793,21 @@ public class Utils {
 
 	public static boolean hasLollipop() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+	}
+
+	public static void callDriverDuringRide(Activity activity){
+		try {
+			Utils.openCallIntent(activity, Data.autoData.getAssignedDriverInfo().phoneNumber);
+			if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
+				FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED);
+				FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "Call Driver");
+			}
+			else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
+				FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

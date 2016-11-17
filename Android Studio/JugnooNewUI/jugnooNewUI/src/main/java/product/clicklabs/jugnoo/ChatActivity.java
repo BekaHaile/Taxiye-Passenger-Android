@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -28,18 +30,38 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.adapters.ChatAdapter;
 import product.clicklabs.jugnoo.adapters.ChatSuggestionAdapter;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchChatResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+
+import static product.clicklabs.jugnoo.Constants.ACTIVATION;
+import static product.clicklabs.jugnoo.Constants.RETENTION;
+import static product.clicklabs.jugnoo.Constants.REVENUE;
+import static product.clicklabs.jugnoo.Constants.SLASH;
+import static product.clicklabs.jugnoo.home.HomeActivity.passengerScreenMode;
+import static product.clicklabs.jugnoo.utils.FirebaseEvents.ACCEPT_RIDE;
+import static product.clicklabs.jugnoo.utils.FirebaseEvents.AUTO;
+import static product.clicklabs.jugnoo.utils.FirebaseEvents.CALL_DRIVER;
+import static product.clicklabs.jugnoo.utils.FirebaseEvents.DRIVER_ARRIVED;
+import static product.clicklabs.jugnoo.utils.FirebaseEvents.POOL;
+import static product.clicklabs.jugnoo.utils.FirebaseEvents.RIDE_START;
+import static product.clicklabs.jugnoo.utils.FirebaseEvents.TRANSACTION;
+import static product.clicklabs.jugnoo.utils.FlurryEventNames.CALL_TO_DRIVER_MADE_WHEN_ARRIVED;
+import static product.clicklabs.jugnoo.utils.FlurryEventNames.CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED;
 
 
 /**
@@ -53,7 +75,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
     private ImageView imageViewBack;
 	private EditText input;
 	private int position = 0;
-	private ImageView send;
+	private ImageView send, ivCallDriver;
 
 	RecyclerView recyclerViewChat, recyclerViewChatOptions;
 	ChatAdapter chatAdapter;
@@ -84,6 +106,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			send = (ImageView) findViewById(R.id.action_send);
 			imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 			imageViewBack.setOnClickListener(this);
+			ivCallDriver = (ImageView) findViewById(R.id.ivCallDriver); ivCallDriver.setOnClickListener(this);
 
 			recyclerViewChat = (RecyclerView) findViewById(R.id.recyclerViewChat);
 			recyclerViewChat.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
@@ -106,7 +129,8 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 				}
 			});
 			recyclerViewChatOptions.setAdapter(chatSuggestionAdapter);
-
+			Prefs.with(ChatActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
+			GCMIntentService.clearNotifications(this);
 			// done action listener to send the chat
 			input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -177,9 +201,12 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 					sendChat(input.getText().toString().trim());
 				}
 				break;
-
+			case R.id.ivCallDriver:
+				Utils.callDriverDuringRide(ChatActivity.this);
+				break;
         }
     }
+
 
 	@Override
 	public void onBackPressed() {

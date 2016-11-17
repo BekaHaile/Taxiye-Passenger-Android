@@ -648,6 +648,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						//message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
 						String name = Utils.getActivityName(this);
 
+
 						if(!name.equalsIgnoreCase(this.getPackageName())
 								|| Data.context == null || !(Data.context instanceof ChatActivity)){
 							String chatMessage = jObj.getJSONObject(KEY_MESSAGE).optString("chat_message", "");
@@ -656,6 +657,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							} else {
 								notificationManager(this, title, chatMessage, playSound);
 							}
+							Prefs.with(this).save(KEY_CHAT_COUNT , Prefs.with(this).getInt(KEY_CHAT_COUNT, 0) + 1);
+							Intent intent = new Intent(Data.LOCAL_BROADCAST);
+							intent.putExtra(Constants.KEY_FLAG, flag);
+							LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 						} else {
 							// Nothing
 						}

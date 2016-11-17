@@ -458,6 +458,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private FloatingActionButton fabAutos;
     private View fabExtra;*/
     private Button bChatDriver;
+    private RelativeLayout rlChatDriver;
+    private TextView tvChatCount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -755,7 +757,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewThumbsDown = (TextView) findViewById(R.id.textViewThumbsDown); textViewThumbsDown.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp); textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
 
+        rlChatDriver = (RelativeLayout) findViewById(R.id.rlChatDriver);
         bChatDriver = (Button) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
+        tvChatCount = (TextView) findViewById(R.id.tvChatCount); tvChatCount.setTypeface(Fonts.mavenMedium(this));
+
 
 
         ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback); ratingBarRSFeedback.setRating(0);
@@ -1289,40 +1294,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
         buttonCallDriver.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                try {
-                    Utils.openCallIntent(HomeActivity.this, Data.autoData.getAssignedDriverInfo().phoneNumber);
-                    if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
-                        FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED);
-                        FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "Call Driver");
-                        Bundle bundle = new Bundle();
-                        if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+CALL_DRIVER+"_"+AUTO, bundle);
-                        } else {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+CALL_DRIVER+"_"+POOL, bundle);
-                        }
-                    }
-                    else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
-                        FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
-                        Bundle bundle = new Bundle();
-                        if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+DRIVER_ARRIVED+"_"+CALL_DRIVER+"_"+AUTO, bundle);
-                        } else {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+DRIVER_ARRIVED+"_"+CALL_DRIVER+"_"+POOL, bundle);
-                        }
-                    } else if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                        Bundle bundle = new Bundle();
-                        if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+RIDE_START+"_"+CALL_DRIVER+"_"+AUTO, bundle);
-                        } else {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+RIDE_START+"_"+CALL_DRIVER+"_"+POOL, bundle);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Utils.callDriverDuringRide(HomeActivity.this);
             }
         });
 
@@ -2634,9 +2608,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Data.autoData.getEndRideData().setDriverNameCarName(Data.autoData.getAssignedDriverInfo().name, Data.autoData.getAssignedDriverInfo().carNumber);
                         Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, 0f);
 
-                        if(Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
-                            bChatDriver.setVisibility(View.VISIBLE);
-                        }
 
                         // delete the RidePath Table from Phone Database :)
                         Database2.getInstance(HomeActivity.this).deleteRidePathTable();
@@ -2656,7 +2627,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 relativeLayoutConfirmRequest.setVisibility(View.GONE);
-                bChatDriver.setVisibility(View.GONE);
+                rlChatDriver.setVisibility(View.GONE);
 
                 switch (mode) {
 
@@ -2946,9 +2917,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         fabViewFinal.setVisibility(View.VISIBLE);
                         //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (160f*scale + 0.5f));
 
-                        if(Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
-                            bChatDriver.setVisibility(View.VISIBLE);
-                        }
 
                         if(dropLocationSearched){
                             initDropLocationSearchUI(true);
@@ -2982,9 +2950,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
                         setFabViewAtRide(mode);
 
-                        if(Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
-                            bChatDriver.setVisibility(View.VISIBLE);
-                        }
+                        showChatButton();
 
                         break;
 
@@ -3061,9 +3027,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
                         setFabViewAtRide(mode);
 
-                        if(Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
-                            bChatDriver.setVisibility(View.VISIBLE);
-                        }
+                        showChatButton();
 
                         break;
 
@@ -3139,9 +3103,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
 
-                        if(Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
-                            bChatDriver.setVisibility(View.VISIBLE);
-                        }
+                        showChatButton();
 
                         break;
 
@@ -3204,6 +3166,28 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
                 } catch (Exception e) {e.printStackTrace();}
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showChatButton() {
+        try {
+            if(passengerScreenMode != PassengerScreenMode.P_IN_RIDE && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
+                rlChatDriver.setVisibility(View.VISIBLE);
+                buttonCallDriver.setVisibility(View.GONE);
+                if(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0) > 0){
+                    tvChatCount.setVisibility(View.VISIBLE);
+                    tvChatCount.setText(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0));
+                } else{
+                    tvChatCount.setVisibility(View.GONE);
+                    Prefs.with(HomeActivity.this).save(KEY_CHAT_COUNT, 0);
+                }
+            } else{
+                rlChatDriver.setVisibility(View.GONE);
+                buttonCallDriver.setVisibility(View.VISIBLE);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4212,8 +4196,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(HomeActivity.this, ChatActivity.class));
-        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        switch (v.getId()) {
+            case R.id.bChatDriver:
+                Prefs.with(HomeActivity.this).save(KEY_CHAT_COUNT, 0);
+                tvChatCount.setVisibility(View.GONE);
+                startActivity(new Intent(HomeActivity.this, ChatActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                break;
+        }
     }
 
 
@@ -8871,6 +8861,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 String message = intent.getStringExtra(KEY_MESSAGE);
                                 Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
                                 openPaytmRechargeDialog();
+                            } else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
+                                tvChatCount.setVisibility(View.VISIBLE);
+                                tvChatCount.setText(String.valueOf(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 1)));
                             }
                         }
                     } catch (Exception e) {
