@@ -74,8 +74,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private MenusRestaurantAdapter menusRestaurantAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
+    private RelativeLayout relativeLayoutSearchFilter;
     private EditText editTextSearch;
-    private CardView cardViewSearch;
+    private CardView cardViewSearch, cardViewFilter;
 
     private View rootView;
     private FreshActivity activity;
@@ -136,9 +137,10 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         ((TextView)rootView.findViewById(R.id.textViewNothingFound)).setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
+        relativeLayoutSearchFilter = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSearchFilter);
         cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
         editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Fonts.mavenMedium(activity));
-        cardViewSearch.setVisibility(View.GONE);
+        cardViewFilter = (CardView) rootView.findViewById(R.id.cardViewFilter);
 
         recyclerViewRestaurant = (RecyclerView) rootView.findViewById(R.id.recyclerViewRestaurant);
         recyclerViewRestaurant.setLayoutManager(new LinearLayoutManager(activity));
@@ -157,6 +159,13 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
                 getVendorMenu(vendor);
+            }
+        }, editTextSearch);
+
+        cardViewFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 

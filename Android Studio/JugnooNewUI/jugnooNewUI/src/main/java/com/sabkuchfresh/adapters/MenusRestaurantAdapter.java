@@ -3,10 +3,13 @@ package com.sabkuchfresh.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -29,20 +32,59 @@ import product.clicklabs.jugnoo.utils.Fonts;
 public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private FreshActivity activity;
-    private ArrayList<MenusResponse.Vendor> vendors;
+    private ArrayList<MenusResponse.Vendor> vendors, vendorsToShow;
     private Callback callback;
+    private EditText editTextSearch;
 
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
 
-    public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors, Callback callback) {
+    public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors, Callback callback, EditText editTextSearch) {
         this.activity = activity;
         this.vendors = vendors;
+        this.vendorsToShow = new ArrayList<>();
+        this.vendorsToShow.addAll(vendors);
         this.callback = callback;
+        this.editTextSearch = editTextSearch;
+
+        this.editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                searchVendors(s.toString());
+            }
+        });
+    }
+
+    private void searchVendors(String text){
+        vendorsToShow.clear();
+        text = text.toLowerCase();
+        if(TextUtils.isEmpty(text)){
+            vendorsToShow.addAll(vendors);
+        } else {
+            for(MenusResponse.Vendor vendor : vendors){
+                if(vendor.getVendorName().toLowerCase().contains(text)
+                        || vendor.getCuisines().toString().toLowerCase().contains(text)){
+                    vendorsToShow.add(vendor);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public void setList(ArrayList<MenusResponse.Vendor> vendors) {
         this.vendors = vendors;
+        this.vendorsToShow.clear();
+        this.vendorsToShow.addAll(vendors);
         notifyDataSetChanged();
     }
 
@@ -71,7 +113,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         try {
             if (holder instanceof ViewHolder) {
                 ViewHolder mHolder = ((ViewHolder) holder);
-                MenusResponse.Vendor vendor = vendors.get(position);
+                MenusResponse.Vendor vendor = vendorsToShow.get(position);
 
                 mHolder.textViewRestaurantName.setText(vendor.getVendorName());
                 mHolder.textViewClosed.setVisibility(vendor.getIsClosed() == 1 ? View.VISIBLE : View.GONE);
@@ -83,7 +125,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     public void onClick(View v) {
                         try {
                             int pos = (int) v.getTag();
-                            callback.onRestaurantSelected(pos, vendors.get(pos));
+                            callback.onRestaurantSelected(pos, vendorsToShow.get(pos));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -145,7 +187,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
-        if(position < vendors.size()) {
+        if(position < vendorsToShow.size()) {
             return MAIN_ITEM;
         } else{
             return BLANK_ITEM;
@@ -154,7 +196,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return vendors == null || vendors.size() == 0 ? 0 : vendors.size() + 1;
+        return vendorsToShow == null || vendorsToShow.size() == 0 ? 0 : vendorsToShow.size() + 1;
     }
 
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayoutRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/menu_item_selector_color">
+    android:background="@color/menu_item_selector_color"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutNoMenus"
@@ -19,24 +19,24 @@
             android:id="@+id/textViewOhSnap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_52"
-            android:textColor="@color/theme_color"
-            android:text="@string/oh_snap"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="110px"
+            android:text="@string/oh_snap"
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/text_size_52"
             />
 
         <TextView
             android:id="@+id/textViewNothingFound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_32"
-            android:textColor="@color/text_color"
-            android:text="@string/nothing_found_near_you"
+            android:layout_below="@+id/textViewOhSnap"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20px"
-            android:layout_below="@+id/textViewOhSnap"
             android:gravity="center"
+            android:text="@string/nothing_found_near_you"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_32"
 
             />
 
@@ -44,11 +44,11 @@
             android:id="@+id/imageViewArrow"
             android:layout_width="73px"
             android:layout_height="88px"
-            android:tag="mwar"
-            android:src="@drawable/ic_curved_up_arrow"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="36px"
             android:layout_marginRight="64px"
+            android:layout_marginTop="36px"
+            android:src="@drawable/ic_curved_up_arrow"
+            android:tag="mwar"
             />
 
 
@@ -64,33 +64,72 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             >
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutSearchFilter"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/px_100"
-                android:layout_marginBottom="26px"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="24px"
                 android:layout_marginRight="24px"
                 android:layout_marginTop="26px"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px"
-                android:id="@+id/cardViewSearch"
-                >
-                <EditText
-                    android:id="@+id/editTextSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingLeft="32px"
-                    android:paddingRight="32px"
-                    android:background="@color/transparent"
-                    android:gravity="center_vertical"
-                    android:hint="@string/search_dot"
-                    android:textColor="@color/text_color"
-                    android:textColorHint="@color/text_color_hint"
-                    android:textSize="@dimen/text_size_32"
-                    />
+                android:paddingBottom="6px">
 
-            </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardViewSearch"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="540px"
+                    android:layout_height="@dimen/px_100"
+                    card_view:cardBackgroundColor="@color/white"
+                    card_view:cardCornerRadius="4px"
+                    >
+
+                    <EditText
+                        android:id="@+id/editTextSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/transparent"
+                        android:gravity="center_vertical"
+                        android:hint="@string/search_dot"
+                        android:paddingLeft="32px"
+                        android:paddingRight="32px"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textSize="@dimen/text_size_32"
+                        />
+
+                </android.support.v7.widget.CardView>
+
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardViewFilter"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="100px"
+                    android:layout_height="@dimen/px_100"
+                    android:layout_alignParentRight="true"
+                    card_view:cardBackgroundColor="@color/white"
+                    card_view:cardCornerRadius="4px"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_transparent_menu_item_selector"
+                        >
+
+                        <ImageView
+                            android:layout_width="88px"
+                            android:layout_height="88px"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_filters"
+                            android:tag="mwar"
+                            android:layout_centerInParent="true"
+                            />
+                    </RelativeLayout>
+
+                </android.support.v7.widget.CardView>
+
+
+            </RelativeLayout>
 
 
             <android.support.v7.widget.RecyclerView
@@ -104,7 +143,7 @@
 
 
         </LinearLayout>
-        
+
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
