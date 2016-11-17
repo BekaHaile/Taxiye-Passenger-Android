@@ -90,11 +90,6 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		PromoCoupon promoCoupon = offerList.get(position);
 
 		holder.textViewOfferName.setText(promoCoupon.getTitle());
-		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
-			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
-		} else{
-			holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
-		}
 
 		holder.relative.setTag(holder);
 		holder.textViewTNC.setTag(position);
@@ -147,11 +142,9 @@ public class PromoCouponsAdapter extends BaseAdapter {
 	class ViewHolder {
 		public int id;
 		public RelativeLayout relative;
-		public ImageView imageViewRadio;
 		public TextView textViewOfferName, textViewTNC;
 		public ViewHolder(View itemView, Activity activity) {
 			relative = (RelativeLayout) itemView.findViewById(R.id.relative);
-			imageViewRadio = (ImageView)itemView.findViewById(R.id.imageViewRadio);
 			textViewOfferName = (TextView) itemView.findViewById(R.id.textViewOfferName);
 			textViewOfferName.setTypeface(Fonts.mavenRegular(activity));
 			textViewTNC = (TextView)itemView.findViewById(R.id.textViewTNC);

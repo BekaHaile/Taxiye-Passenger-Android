@@ -1200,5 +1200,6 @@
 	<string name="tag_address_as">Tag address as</string>
 	<string name="choose_pickup">Choose Pickup</string>
 	<string name="chat">Chat</string>
+	<string name="available_offers">Available Offers</string>
 
 </resources>

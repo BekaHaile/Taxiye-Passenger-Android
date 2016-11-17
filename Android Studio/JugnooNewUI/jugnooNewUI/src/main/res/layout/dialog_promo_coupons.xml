@@ -29,13 +29,25 @@
 
             <ImageView
                 android:id="@+id/imageViewOffers"
-                android:layout_width="512px"
-                android:layout_height="252px"
+                android:layout_width="94px"
+                android:layout_height="63px"
                 android:tag="mwar"
                 android:layout_marginTop="22px"
+                android:layout_marginBottom="22px"
+                android:layout_marginLeft="@dimen/px_96"
                 android:src="@drawable/ic_offer_popup"
-                android:layout_centerHorizontal="true"
-                />
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/tvAvailableOffers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/available_offers"
+                android:textColor="@color/white"
+                android:textSize="@dimen/px_42"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/imageViewOffers"
+                android:layout_marginLeft="10px"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -68,7 +80,7 @@
         <ListView
             android:id="@+id/listViewPromoCoupons"
             android:layout_width="match_parent"
-            android:layout_height="300px"
+            android:layout_height="500px"
             android:splitMotionEvents="false"
             android:visibility="gone"
             android:scrollbars="vertical"
