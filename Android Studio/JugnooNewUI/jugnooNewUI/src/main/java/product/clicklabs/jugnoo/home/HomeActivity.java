@@ -135,6 +135,7 @@ import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
 import product.clicklabs.jugnoo.apis.ApiCampaignRequestCancel;
 import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
+import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
@@ -1938,6 +1939,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             openPushDialog();
 
+            getApiFetchUserAddress().hit(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -3511,7 +3513,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(placeSearchMode.getOrdinal() == PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal()){
                     bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.enter_destination));
                 } else{
-                    bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.set_pickup_location));
+                    bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.enter_pickup));
                 }
                 bundle.putInt(KEY_SEARCH_MODE, placeSearchMode.getOrdinal());
                 placeSearchListFragment.setArguments(bundle);
@@ -9163,13 +9165,40 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void removeSpecialPickupMarkers() {
         try {
             markerOptionsSpecialPickup.clear();
-            for(Marker marker : markersSpecialPickup){
+            for (Marker marker : markersSpecialPickup) {
                 marker.remove();
             }
             markersSpecialPickup.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private ApiFetchUserAddress apiFetchUserAddress;
+    private ApiFetchUserAddress getApiFetchUserAddress(){
+        if(apiFetchUserAddress == null){
+            apiFetchUserAddress = new ApiFetchUserAddress(this, new ApiFetchUserAddress.Callback() {
+                @Override
+                public void onSuccess() {
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+
+                @Override
+                public void onRetry(View view) {
+
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            });
+        }
+        return apiFetchUserAddress;
     }
 
 }

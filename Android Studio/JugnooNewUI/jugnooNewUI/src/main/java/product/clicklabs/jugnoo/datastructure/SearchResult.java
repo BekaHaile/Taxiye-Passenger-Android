@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.text.TextUtils;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -32,6 +34,9 @@ public class SearchResult {
 	@SerializedName("is_confirmed")
 	@Expose
 	private Integer isConfirmed = 0;
+	@SerializedName("freq")
+	@Expose
+	private Integer freq = 0;
 
 	private Type type = Type.SEARCHED;
 	
@@ -41,6 +46,20 @@ public class SearchResult {
 		this.placeId = placeId;
 		this.latitude = latitude;
 		this.longitude = longitude;
+
+		thirdPartyAttributions = null;
+		time = System.currentTimeMillis();
+	}
+
+	public SearchResult(String name, String address, String placeId, double latitude, double longitude, int id, int isConfirmed, int freq){
+		this.name = name;
+		this.address = address;
+		this.placeId = placeId;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.id = id;
+		this.isConfirmed = isConfirmed;
+		this.freq = freq;
 
 		thirdPartyAttributions = null;
 		time = System.currentTimeMillis();
@@ -118,7 +137,11 @@ public class SearchResult {
 	}
 
 	public Integer getId() {
-		return id;
+		if(id != null) {
+			return id;
+		} else{
+			return 0;
+		}
 	}
 
 	public void setId(Integer id) {
@@ -149,8 +172,20 @@ public class SearchResult {
 		this.isConfirmed = isConfirmed;
 	}
 
+	public Integer getFreq() {
+		return freq;
+	}
+
+	public void setFreq(Integer freq) {
+		this.freq = freq;
+	}
+
 	public enum Type{
-		SEARCHED, LAST_SAVED, HOME, WORK;
+		SEARCHED, LAST_SAVED, HOME, WORK, SAVED, RECENT;
+	}
+
+	public boolean isRecentAddress(){
+		return TextUtils.isEmpty(getName()) || getId() == 0;
 	}
 
 }

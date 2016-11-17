@@ -35,7 +35,6 @@ import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
-import com.sabkuchfresh.fragments.FreshAddressFragment;
 import com.sabkuchfresh.fragments.FreshCartItemsFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
@@ -646,10 +645,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return (FreshCheckoutFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutFragment.class.getName());
     }
 
-    public FreshAddressFragment getFreshAddressFragment() {
-        return (FreshAddressFragment) getSupportFragmentManager().findFragmentByTag(FreshAddressFragment.class.getName());
-    }
-
     public DeliveryAddressesFragment getDeliveryAddressesFragment() {
         return (DeliveryAddressesFragment) getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName());
     }
@@ -962,7 +957,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.title.setText(getResources().getString(R.string.checkout));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-			} else if (fragment instanceof FreshAddressFragment || fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
+			} else if (fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);

@@ -9,7 +9,7 @@
     >
 
     <product.clicklabs.jugnoo.utils.NonScrollListView
-        android:id="@+id/listViewDeliveryAddress"
+        android:id="@+id/listViewRecentAddresses"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="2px"

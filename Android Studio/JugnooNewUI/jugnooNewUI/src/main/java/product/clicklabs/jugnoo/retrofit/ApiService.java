@@ -6,6 +6,7 @@ import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchChatResponse;
+import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -300,9 +301,9 @@ public interface ApiService {
                              Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
-    @POST("/add_home_and_work_address")
+    @POST("/v2/add_home_and_work_address")
     void addHomeAndWorkAddress(@FieldMap Map<String, String> params,
-                    Callback<SettleUserDebt> callback);
+                    Callback<FetchUserAddressResponse> callback);
 
     @FormUrlEncoded
     @POST("/update_device_token")
@@ -503,6 +504,9 @@ public interface ApiService {
     void topupCustomerJC(@FieldMap Map<String, String> params,
                               Callback<SettleUserDebt> callback);
 
-
+    @FormUrlEncoded
+    @POST("/customer/fetch_user_address")
+    void customerFetchUserAddress(@FieldMap Map<String, String> params,
+                            Callback<FetchUserAddressResponse> callback);
 
 }

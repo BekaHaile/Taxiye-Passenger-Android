@@ -10,12 +10,15 @@
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
         android:layout_height="2px"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px"
         android:background="@color/stroke_color_light" />
     <RelativeLayout
         android:id="@+id/relativeLayoutAddHome"
         android:layout_width="match_parent"
         android:layout_height="110px"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:background="@drawable/bg_white_menu_item_selector_color_selector">
 
         <TextView
             android:id="@+id/textViewAddHome"
@@ -38,7 +41,7 @@
             android:layout_height="50px"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
+            android:layout_marginLeft="30px"
             android:src="@drawable/ic_home"
             android:tag="mwar" />
 
@@ -48,6 +51,8 @@
         android:id="@+id/imageViewSep2"
         android:layout_width="match_parent"
         android:layout_height="2px"
+        android:layout_marginLeft="40px"
+        android:layout_marginRight="40px"
         android:background="@color/stroke_color_light"
         />
 
@@ -55,7 +60,8 @@
         android:id="@+id/relativeLayoutAddWork"
         android:layout_width="match_parent"
         android:layout_height="110px"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:background="@drawable/bg_white_menu_item_selector_color_selector">
 
 
         <TextView
@@ -79,7 +85,7 @@
             android:layout_height="50px"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
+            android:layout_marginLeft="30px"
             android:src="@drawable/ic_work"
             android:tag="mwar" />
 

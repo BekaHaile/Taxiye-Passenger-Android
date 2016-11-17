@@ -364,25 +364,38 @@ public class AddToAddressBookFragment extends Fragment {
         int placeRequestCode = 0;
         String label = "";
         boolean editAddress = false;
+        SearchResult searchResultToEdit = null;
         if(activity instanceof AddPlaceActivity){
             AddPlaceActivity addPlaceActivity = ((AddPlaceActivity) activity);
             placeRequestCode = addPlaceActivity.getPlaceRequestCode();
             editAddress = addPlaceActivity.isEditThisAddress();
-            if(addPlaceActivity.getSearchResult() != null && addPlaceActivity.getSearchResult().getName() != null) {
-                label = addPlaceActivity.getSearchResult().getName();
-            }
             addPlaceActivity.getImageViewDelete().setVisibility(editAddress ? View.VISIBLE : View.GONE);
             addPlaceActivity.getTextViewTitle().setText(editAddress ? activity.getString(R.string.edit_address) : activity.getString(R.string.confirm_address));
+            searchResultToEdit = addPlaceActivity.getSearchResult();
+            if(searchResultToEdit != null) {
+                if(searchResultToEdit.getName() != null) {
+                    label = searchResultToEdit.getName();
+                }
+                if(searchResultToEdit.isRecentAddress()){
+                    addPlaceActivity.getImageViewDelete().setVisibility(View.GONE);
+                    addPlaceActivity.getTextViewTitle().setText(activity.getString(R.string.confirm_address));
+                }
+            }
 
         } else if(activity instanceof FreshActivity){
             final FreshActivity freshActivity = ((FreshActivity) activity);
             placeRequestCode = freshActivity.getPlaceRequestCode();
             editAddress = freshActivity.isEditThisAddress();
+            freshActivity.getTopBar().title.setText(editAddress ? activity.getString(R.string.edit_address) : activity.getString(R.string.confirm_address));
+            freshActivity.getTopBar().imageViewDelete.setVisibility(editAddress ? View.VISIBLE : View.GONE);
+            searchResultToEdit = freshActivity.getSearchResult();
             if(editAddress && freshActivity.getSearchResult() != null && freshActivity.getSearchResult().getName() != null) {
                 label = freshActivity.getSearchResult().getName();
             }
-            freshActivity.getTopBar().title.setText(editAddress ? activity.getString(R.string.edit_address) : activity.getString(R.string.confirm_address));
-            freshActivity.getTopBar().imageViewDelete.setVisibility(editAddress ? View.VISIBLE : View.GONE);
+            if(searchResultToEdit != null && searchResultToEdit.isRecentAddress()){
+                freshActivity.getTopBar().title.setText(activity.getString(R.string.confirm_address));
+                freshActivity.getTopBar().imageViewDelete.setVisibility(View.GONE);
+            }
             freshActivity.getTopBar().imageViewDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -421,8 +434,13 @@ public class AddToAddressBookFragment extends Fragment {
             editTextLabel.setSelection(editTextLabel.getText().length());
         }
 
-        buttonAddToAddressBook.setText(editAddress ? R.string.update_address : R.string.confirm);
-        relativeLayoutEdit.setVisibility(editAddress ? View.VISIBLE : View.GONE);
+        if(searchResultToEdit != null && searchResultToEdit.isRecentAddress()){
+            buttonAddToAddressBook.setText(R.string.confirm);
+            relativeLayoutEdit.setVisibility(View.GONE);
+        } else {
+            buttonAddToAddressBook.setText(editAddress ? R.string.update_address : R.string.confirm);
+            relativeLayoutEdit.setVisibility(editAddress ? View.VISIBLE : View.GONE);
+        }
         editThisAddress = editAddress;
 
         relativeLayoutTypeHome.setVisibility(View.VISIBLE);

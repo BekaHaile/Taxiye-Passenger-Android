@@ -72,6 +72,7 @@ public class UserData {
 	private RateAppDialogContent rateAppDialogContent;
 
 	private ArrayList<SearchResult> searchResults = new ArrayList<>();
+	private ArrayList<SearchResult> searchResultsRecent = new ArrayList<>();
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -820,6 +821,14 @@ public class UserData {
 
 	public void setTopupCardEnabled(int topupCardEnabled) {
 		this.topupCardEnabled = topupCardEnabled;
+	}
+
+	public ArrayList<SearchResult> getSearchResultsRecent() {
+		return searchResultsRecent;
+	}
+
+	public void setSearchResultsRecent(ArrayList<SearchResult> searchResultsRecent) {
+		this.searchResultsRecent = searchResultsRecent;
 	}
 
 	//	"meals_enabled": 1,

@@ -2,9 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
-    android:layout_height="110px"
+    android:layout_height="wrap_content"
     android:tag="mwar"
-    android:splitMotionEvents="false">
+    android:splitMotionEvents="false"
+                android:background="@drawable/bg_white_menu_item_selector_color_selector"
+    >
 
     <ImageView
         android:id="@+id/imageViewType"
@@ -17,10 +19,13 @@
         android:tag="mwar" />
 
     <LinearLayout
+        android:id="@+id/linearLayoutContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20px"
         android:layout_marginRight="20px"
+        android:layout_marginTop="20px"
+        android:layout_marginBottom="20px"
         android:orientation="vertical"
         android:gravity="center"
         android:splitMotionEvents="false"
@@ -34,19 +39,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Name"
-            android:singleLine="true"
             android:textColor="@color/text_color_light_selector"
-            android:textSize="@dimen/text_size_28" />
+            android:textSize="@dimen/text_size_32" />
 
         <TextView
             android:id="@+id/textViewSearchAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="7px"
-            android:singleLine="true"
             android:text=""
             android:textColor="@color/text_color_light"
-            android:textSize="@dimen/text_size_24"
+            android:textSize="@dimen/text_size_26"
+            />
+
+        <TextView
+            android:id="@+id/textViewAddressUsed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7px"
+            android:text="@string/address_used_format"
+            android:textColor="@color/text_color_light"
+            android:textSize="@dimen/text_size_22"
             />
 
     </LinearLayout>
@@ -70,7 +83,7 @@
         android:layout_marginLeft="40px"
         android:layout_marginRight="40px"
         android:background="@color/stroke_color_light"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/linearLayoutContent"
         />
 
 </RelativeLayout>
