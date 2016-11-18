@@ -106,6 +106,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	private RelativeLayout rlProgress;
 	private ProgressWheel progressBar;
 	private boolean runAfterDelay;
+	private TextView tvProgress;
 
 
 	@Override
@@ -187,7 +188,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenRegular(this));
 		textViewSkip = (TextView)findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.mavenRegular(this));
 		rlProgress = (RelativeLayout) findViewById(R.id.rlProgress);
-		((TextView) findViewById(R.id.tvProgress)).setTypeface(Fonts.mavenRegular(this));
+		TextView tvProgress = (TextView) findViewById(R.id.tvProgress); tvProgress.setTypeface(Fonts.mavenRegular(this));
 		progressBar = (ProgressWheel) findViewById(R.id.progressBar);
 
 		/*if(userVerified == 1){
@@ -699,6 +700,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			e.printStackTrace();
 		}
 		super.onPause();
+	}
+
+	private void showErrorOnMissedCallBack(){
+		if(runAfterDelay) {
+			rlProgress.setVisibility(View.VISIBLE);
+			progressBar.setVisibility(View.GONE);
+			tvProgress.setText(getResources().getString(R.string.we_could_not_verify));
+		}
 	}
 
 	/**
@@ -1310,7 +1319,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	public void sendLoginValues(final Activity activity, final String emailId, String password, final boolean isPhoneNumber) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 			//resetFlags();
-			DialogPopup.showLoadingDialog(activity, "Trying to verify through missed call...");
+			//DialogPopup.showLoadingDialog(activity, "Trying to verify through missed call...");
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -1368,10 +1377,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
 								String error = jObj.getString("error");
+								showErrorOnMissedCallBack();
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
-								DialogPopup.alertPopup(activity, "", error);
+//								DialogPopup.alertPopup(activity, "", error);
+								showErrorOnMissedCallBack();
 							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+								showErrorOnMissedCallBack();
 								/*if (isPhoneNumber) {
 									enteredEmail = jObj.getString("user_email");
 								} else {
@@ -1386,7 +1398,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									loginDataFetched = true;
 								}
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								showErrorOnMissedCallBack();
 							}
 							DialogPopup.dismissLoadingDialog();
 						} else {
@@ -1417,7 +1430,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	public void sendFacebookLoginValues(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			//DialogPopup.showLoadingDialog(activity, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -1477,11 +1490,14 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
 								String error = jObj.getString("error");
+								showErrorOnMissedCallBack();
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
-								DialogPopup.alertPopup(activity, "", error);
+//								DialogPopup.alertPopup(activity, "", error);
+								showErrorOnMissedCallBack();
 							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
 								linkedWallet = jObj.optInt("reg_wallet_type");
+								showErrorOnMissedCallBack();
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
@@ -1492,7 +1508,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
 								}
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								showErrorOnMissedCallBack();
 							}
 							DialogPopup.dismissLoadingDialog();
 						} else {
@@ -1523,7 +1540,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	public void sendGoogleLoginValues(final Activity activity) {
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			//DialogPopup.showLoadingDialog(activity, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -1579,14 +1596,16 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
 							if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag){
 								String error = jObj.getString("error");
+								showErrorOnMissedCallBack();
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
 								String error = jObj.getString("error");
-								DialogPopup.alertPopup(activity, "", error);
+//								DialogPopup.alertPopup(activity, "", error);
+								showErrorOnMissedCallBack();
 							}
 							else if(ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
 								linkedWallet = jObj.optInt("reg_wallet_type");
-
+								showErrorOnMissedCallBack();
 							}
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
@@ -1599,7 +1618,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								}
 							}
 							else{
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								showErrorOnMissedCallBack();
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
