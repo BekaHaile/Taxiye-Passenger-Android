@@ -236,15 +236,15 @@ public class HistoryResponse {
         private String deliveryAddressType;
 
 
-        @SerializedName("vendor_id")
+        @SerializedName("restaurant_id")
         @Expose
-        private Integer vendorId;
-        @SerializedName("vendor_name")
+        private Integer restaurantId;
+        @SerializedName("restaurant_name")
         @Expose
-        private String vendorName;
-        @SerializedName("vendor_address")
+        private String restaurantName;
+        @SerializedName("restaurant_address")
         @Expose
-        private String vendorAddress;
+        private String restaurantAddress;
 
         /**
          * @return The pickupAddress
@@ -894,28 +894,28 @@ public class HistoryResponse {
             this.deliveryAddressType = deliveryAddressType;
         }
 
-        public Integer getVendorId() {
-            return vendorId;
+        public Integer getRestaurantId() {
+            return restaurantId;
         }
 
-        public void setVendorId(Integer vendorId) {
-            this.vendorId = vendorId;
+        public void setRestaurantId(Integer restaurantId) {
+            this.restaurantId = restaurantId;
         }
 
-        public String getVendorName() {
-            return vendorName;
+        public String getRestaurantName() {
+            return restaurantName;
         }
 
-        public void setVendorName(String vendorName) {
-            this.vendorName = vendorName;
+        public void setRestaurantName(String restaurantName) {
+            this.restaurantName = restaurantName;
         }
 
-        public String getVendorAddress() {
-            return vendorAddress;
+        public String getRestaurantAddress() {
+            return restaurantAddress;
         }
 
-        public void setVendorAddress(String vendorAddress) {
-            this.vendorAddress = vendorAddress;
+        public void setRestaurantAddress(String restaurantAddress) {
+            this.restaurantAddress = restaurantAddress;
         }
     }
 

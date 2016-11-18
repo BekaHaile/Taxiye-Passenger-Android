@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,7 +16,6 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.SupportActivity;
 import com.sabkuchfresh.retrofit.model.OrderHistory;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
-import com.sabkuchfresh.utils.Utils;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
@@ -33,7 +31,6 @@ public class FreshOrderHistoryFragment extends Fragment implements FlurryEventNa
 	private RelativeLayout relativeLayoutRoot;
 	private RecyclerView recyclerViewRideOrderHistory;
 	private FreshOrderHistoryAdapter freshOrderHistoryAdapter;
-	private ImageView imageViewNoItems;
 
 	private OrderHistoryResponse orderHistoryResponse;
     private View mEmptyView;

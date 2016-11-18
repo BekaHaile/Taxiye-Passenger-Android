@@ -570,10 +570,10 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
                 tvDeliveryTimeVal.setText("");
                 final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-                final SpannableStringBuilder sb = new SpannableStringBuilder("      "+orderHistory.getVendorName());
+                final SpannableStringBuilder sb = new SpannableStringBuilder("      "+orderHistory.getRestaurantName());
                 sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 tvDeliveryTimeVal.append(sb);
-                tvDeliveryTimeVal.append("\n"+orderHistory.getVendorAddress());
+                tvDeliveryTimeVal.append("\n"+orderHistory.getRestaurantAddress());
                 imageViewRestaurant.setVisibility(View.VISIBLE);
             } else {
                 if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
