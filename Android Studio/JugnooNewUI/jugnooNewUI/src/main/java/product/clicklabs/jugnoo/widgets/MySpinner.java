@@ -5,6 +5,8 @@ import android.util.AttributeSet;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
+import product.clicklabs.jugnoo.R;
+
 /**
  * Created by ankit on 16/11/16.
  */

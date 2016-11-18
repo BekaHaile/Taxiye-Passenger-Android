@@ -9150,7 +9150,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     markerOptions.anchor(0.5f, 0.5f);
                     markerOptions.zIndex(zIndex);
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.circle_green, 20f, 20f)));
+                                .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.ic_special_location_pin, 37f, 37f)));
                     markersSpecialPickup.add(map.addMarker(markerOptions));
                     markerOptionsSpecialPickup.add(markerOptions);
                 }

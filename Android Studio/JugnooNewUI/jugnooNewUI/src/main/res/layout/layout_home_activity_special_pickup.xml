@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:id="@+id/rlSpecialPickup"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <Button
         android:id="@+id/specialPickupLocationBtn"
@@ -32,8 +33,9 @@
             android:layout_margin="30px"
             android:orientation="vertical"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="8px"
+            app:cardCornerRadius="2dp"
             app:cardPreventCornerOverlap="true"
+            app:cardElevation="4dp"
             app:cardUseCompatPadding="true">
 
 
@@ -67,7 +69,7 @@
                         android:layout_marginBottom="20px"
                         android:gravity="center"
                         android:padding="10px"
-                        android:text="@string/no_driver_available_message"
+                        android:text="@string/selecting_a_pickup_spot"
                         android:textColor="@color/text_color_light"
                         android:textSize="@dimen/text_size_24" />
 
@@ -77,10 +79,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginLeft="5px"
-                    android:layout_marginRight="5px"
                     android:layout_marginTop="-1dp"
-                    android:background="@color/text_color_hint" />
+                    android:background="#d7d7d7" />
 
 
                 <RelativeLayout
@@ -129,17 +129,18 @@
                 <RelativeLayout
                     android:id="@+id/rlSpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="96px"
-                    android:layout_margin="4px">
+                    android:layout_height="94px"
+                    android:background="@color/menu_item_selector_color_F7">
 
                     <product.clicklabs.jugnoo.widgets.MySpinner
                         android:id="@+id/simpleSpinner"
                         android:layout_width="match_parent"
-                        android:layout_height="96px"
+                        android:layout_height="94px"
                         android:spinnerMode="dropdown"
-                        android:background="@color/white"
                         android:tag="mwar"
+                        android:background="@color/transparent"
                         android:layout_centerHorizontal="true" />
+
 
                     <ImageView
                         android:id="@+id/ivArrow"
@@ -151,6 +152,8 @@
                         android:rotation="0"
                         android:src="@drawable/triangle_grey"
                         android:tag="mwar" />
+
+
                 </RelativeLayout>
 
 
