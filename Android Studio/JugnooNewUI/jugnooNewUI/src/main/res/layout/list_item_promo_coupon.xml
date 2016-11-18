@@ -6,28 +6,28 @@
     android:layout_height="wrap_content"
     >
 
-    <ImageView
-        android:id="@+id/imageViewRadio"
-        android:layout_width="83px"
-        android:layout_height="83px"
-        android:padding="25px"
-        android:src="@drawable/ic_radio_button_normal"
-        android:tag="mwar"
-        android:layout_centerVertical="true"
-        />
+    <RelativeLayout
+        android:id="@+id/rlContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/offer_popup_item_color"
+        android:layout_marginTop="@dimen/px_20"
+        android:layout_marginLeft="@dimen/px_24"
+        android:layout_marginRight="@dimen/px_24">
 
     <TextView
         android:id="@+id/textViewOfferName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="110px"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/textViewTNC"
         android:layout_toRightOf="@+id/imageViewRadio"
         android:text="cashback\nabc"
         android:maxLines="2"
+        android:paddingLeft="@dimen/px_26"
+        android:gravity="center_vertical"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/text_size_30"
-        />
+        android:textSize="@dimen/text_size_30"/>
 
     <TextView
         android:id="@+id/textViewTNC"
@@ -43,5 +43,7 @@
         android:text="@string/tnc"
         android:textColor="@color/text_color_light"
         android:textSize="@dimen/text_size_22"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

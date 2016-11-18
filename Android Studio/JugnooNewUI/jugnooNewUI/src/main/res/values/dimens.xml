@@ -205,5 +205,11 @@
     <dimen name="px_100">100px</dimen>
     <dimen name="px_32">32px</dimen>
     <dimen name="px_8">8px</dimen>
+    <dimen name="px_96">96px</dimen>
+    <dimen name="px_42">42px</dimen>
+    <dimen name="px_24">24px</dimen>
+    <dimen name="px_36">36px</dimen>
+    <dimen name="px_26">26px</dimen>
+    <dimen name="px_40">40px</dimen>
 
 </resources>

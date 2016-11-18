@@ -2464,7 +2464,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedWalletCoupon();
                         if(proceed) {
 
-
                             boolean callRequestRide = MyApplication.getInstance().getWalletCore()
                                     .requestWalletBalanceCheck(HomeActivity.this, Data.autoData.getPickupPaymentOption());
                             MyApplication.getInstance().getWalletCore().requestRideWalletSelectedFlurryEvent(Data.autoData.getPickupPaymentOption(), TAG);
@@ -6029,6 +6028,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 +DIFFERENT_PICKUP_LOCATION_POPUP+"_"+OK, bundle);
                         if (getFilteredDrivers() == 0) {
                             noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
+                            specialPickupScreenOpened = false;
+                            passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                            switchPassengerScreen(passengerScreenMode);
                         } else {
                             initiateRequestRide(true);
                             FlurryEventLogger.event(FINAL_CALL_RIDE);
@@ -6976,7 +6978,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                             rideRequested(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType(),
                                                                     slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType(),
                                                                     slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor(),
-                                                                    offerCode, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta());
+                                                                    offerCode, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
+                                                                    Data.userData.getCity());
 
                                                     if(!offerCode.equalsIgnoreCase("NA")) {
                                                         HashMap<String, Object> profileUpdate = new HashMap<>();
@@ -9152,7 +9155,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     markerOptions.anchor(0.5f, 0.5f);
                     markerOptions.zIndex(zIndex);
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.circle_green, 20f, 20f)));
+                                .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.ic_special_location_pin, 37f, 37f)));
                     markersSpecialPickup.add(map.addMarker(markerOptions));
                     markerOptionsSpecialPickup.add(markerOptions);
                 }
