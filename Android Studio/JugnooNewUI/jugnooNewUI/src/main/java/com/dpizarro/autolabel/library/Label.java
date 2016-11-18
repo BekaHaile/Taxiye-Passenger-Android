@@ -78,7 +78,7 @@ public class Label extends LinearLayout {
 	}
 
 	public String getText() {
-		return tvLabel.getText().toString();
+		return labelValues.getValue();
 	}
 
 	public int getSelected() {

@@ -92,6 +92,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public void applyFilter(){
+        vendorsToShow.clear();
         for(MenusResponse.Vendor vendor : vendors){
             boolean cuisineMatched = true, moMatched = false, dtMatched = false;
             for(String cuisine : activity.getCuisinesSelected()){
