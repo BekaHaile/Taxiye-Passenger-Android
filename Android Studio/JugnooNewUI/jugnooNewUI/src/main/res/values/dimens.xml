@@ -141,9 +141,9 @@
     <dimen name="text_size_18">18px</dimen>
     <dimen name="text_size_15">15px</dimen>
 
-    <dimen name="text_size_11dp">11dp</dimen>
+    <dimen name="text_size_11sp">11sp</dimen>
     <dimen name="padding_2dp">2dp</dimen>
-    <dimen name="padding_10dp">10dp</dimen>
+    <dimen name="padding_4dp">4dp</dimen>
 
 
 

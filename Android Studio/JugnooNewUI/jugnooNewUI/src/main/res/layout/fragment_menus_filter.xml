@@ -50,7 +50,7 @@
                     android:id="@+id/relativeLayoutPopularity"
                     android:layout_width="match_parent"
                     android:layout_height="100px"
-                    android:layout_marginTop="10px">
+                    android:background="@drawable/bg_transparent_menu_item_selector">
 
 
                     <TextView
@@ -61,7 +61,7 @@
                         android:layout_marginLeft="40px"
                         android:gravity="center_vertical"
                         android:text="@string/popularity"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/text_color_selector"
                         android:textSize="@dimen/text_size_32"
                         android:visibility="visible"
                         />
@@ -100,7 +100,8 @@
                 <RelativeLayout
                     android:id="@+id/relativeLayoutDistance"
                     android:layout_width="match_parent"
-                    android:layout_height="100px">
+                    android:layout_height="100px"
+                    android:background="@drawable/bg_transparent_menu_item_selector">
 
 
                     <TextView
@@ -111,7 +112,7 @@
                         android:layout_marginLeft="40px"
                         android:gravity="center_vertical"
                         android:text="@string/distance"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/text_color_selector"
                         android:textSize="@dimen/text_size_32"
                         android:visibility="visible"
                         />
@@ -150,7 +151,7 @@
                     android:id="@+id/relativeLayoutPrice"
                     android:layout_width="match_parent"
                     android:layout_height="100px"
-                    android:layout_marginBottom="10px"
+                    android:background="@drawable/bg_transparent_menu_item_selector"
                     >
 
 
@@ -162,7 +163,7 @@
                         android:layout_marginLeft="40px"
                         android:gravity="center_vertical"
                         android:text="@string/price"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/text_color_selector"
                         android:textSize="@dimen/text_size_32"
                         android:visibility="visible"
                         />
@@ -228,16 +229,10 @@
 
                 <com.dpizarro.autolabel.library.AutoLabelUI
                     android:id="@+id/cuisinesView"
-                    xmlns:autolabel="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    autolabel:icon_cross="@drawable/cross"
-                    autolabel:label_background_res="@drawable/background_white_rounded_bordered"
-                    autolabel:label_clickable="true"
-                    autolabel:label_padding="4px"
-                    autolabel:show_cross="false"
-                    autolabel:text_color="@android:color/white"
-                    autolabel:text_size="@dimen/label_title_size"/>
+                    android:layout_margin="20px"
+                    />
 
 
             </LinearLayout>

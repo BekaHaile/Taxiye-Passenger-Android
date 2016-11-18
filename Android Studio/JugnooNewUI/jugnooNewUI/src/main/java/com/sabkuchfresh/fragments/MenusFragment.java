@@ -276,6 +276,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                     MenusFragment.this.menusResponse = menusResponse;
                                     menusRestaurantAdapter.setList((ArrayList<MenusResponse.Vendor>) menusResponse.getVendors());
                                     relativeLayoutNoMenus.setVisibility(menusResponse.getVendors().size() == 0 ? View.VISIBLE : View.GONE);
+                                    relativeLayoutSearchFilter.setVisibility(relativeLayoutNoMenus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -347,12 +348,12 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
-                params.put(Constants.KEY_VENDOR_ID, String.valueOf(vendor.getVid()));
+                params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(vendor.getRestaurantId()));
                 params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
                 params.put(Constants.INTERATED, "1");
                 Log.i(TAG, "getVendorMenu params=" + params.toString());
 
-                RestClient.getMenusApiService().vendorMenu(params, new Callback<ProductsResponse>() {
+                RestClient.getMenusApiService().restaurantMenu(params, new Callback<ProductsResponse>() {
                     @Override
                     public void success(ProductsResponse productsResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

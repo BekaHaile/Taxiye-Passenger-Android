@@ -943,7 +943,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 
                 if(type == AppConstant.ApplicationType.MENUS){
-                    params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getVendorOpened().getVid()));
+                    params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
                 }
 
 
@@ -1422,7 +1422,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     params.put(Constants.STORE_ID, ""+ Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType));
                     params.put(Constants.GROUP_ID, ""+activity.getProductsResponse().getCategories().get(0).getCurrentGroupId());
                 } else if(type == AppConstant.ApplicationType.MENUS){
-                    params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getVendorOpened().getVid()));
+                    params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
                 }
                 params.put(Constants.INTERATED, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));

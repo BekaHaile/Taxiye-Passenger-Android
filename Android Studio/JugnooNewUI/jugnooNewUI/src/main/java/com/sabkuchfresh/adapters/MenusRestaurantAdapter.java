@@ -72,7 +72,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             vendorsToShow.addAll(vendors);
         } else {
             for(MenusResponse.Vendor vendor : vendors){
-                if(vendor.getVendorName().toLowerCase().contains(text)
+                if(vendor.getName().toLowerCase().contains(text)
                         || vendor.getCuisines().toString().toLowerCase().contains(text)){
                     vendorsToShow.add(vendor);
                 }
@@ -115,9 +115,22 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 ViewHolder mHolder = ((ViewHolder) holder);
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
 
-                mHolder.textViewRestaurantName.setText(vendor.getVendorName());
+                mHolder.textViewRestaurantName.setText(vendor.getName());
                 mHolder.textViewClosed.setVisibility(vendor.getIsClosed() == 1 ? View.VISIBLE : View.GONE);
-                mHolder.textViewRestaurantCusines.setText(vendor.getCuisines().toString().replace("[", "").replace("]", "").replace(", ", " . "));
+                if(vendor.getCuisines() != null && vendor.getCuisines().size() > 0){
+                    StringBuilder cuisines = new StringBuilder();
+                    int maxSize = vendor.getCuisines().size() > 3 ? 3 : vendor.getCuisines().size();
+                    for(int i=0; i<maxSize; i++){
+                        String cuisine = vendor.getCuisines().get(i);
+                        cuisines.append(cuisine);
+                        if(i < maxSize-1){
+                            cuisines.append(" . ");
+                        }
+                    }
+                    mHolder.textViewRestaurantCusines.setText(cuisines.toString());
+                } else {
+                    mHolder.textViewRestaurantCusines.setText("");
+                }
 
                 mHolder.linearRoot.setTag(position);
                 mHolder.linearRoot.setOnClickListener(new View.OnClickListener() {

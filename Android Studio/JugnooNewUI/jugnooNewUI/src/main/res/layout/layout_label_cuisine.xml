@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/llLabel"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:id="@+id/tvLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:minWidth="70dp"
+        android:minHeight="20dp"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:gravity="center"
+        android:text="@string/cuisines"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_11sp"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginLeft="2dp"
+        />
+
+    <ImageView
+        android:id="@+id/ivCross"
+        android:layout_width="@dimen/icon_cross"
+        android:layout_height="@dimen/icon_cross"
+        style="@style/CrossImageView"
+        android:visibility="gone"
+        />
+
+</LinearLayout>

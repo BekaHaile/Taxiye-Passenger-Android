@@ -24,8 +24,8 @@ public interface MenusApiService {
 						   Callback<MenusResponse> callback);
 
 	@FormUrlEncoded
-	@POST("/vendor_menu")
-	void vendorMenu(@FieldMap Map<String, String> params,
+	@POST("/restaurant_menu")
+	void restaurantMenu(@FieldMap Map<String, String> params,
 						   Callback<ProductsResponse> callback);
 
 	@FormUrlEncoded

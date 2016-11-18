@@ -92,11 +92,11 @@ public class AutoLabelUI extends AutoViewGroup implements Label.OnClickCrossList
         if (typedArray != null) {
             try {
                 mTextSize = typedArray.getDimensionPixelSize(R.styleable.LabelsView_text_size,
-                        getResources().getDimensionPixelSize(R.dimen.label_title_size));
+                        getResources().getDimensionPixelSize(R.dimen.text_size_11sp));
                 mTextColor = typedArray.getColor(R.styleable.LabelsView_text_color,
-                        getResources().getColor(android.R.color.white));
+                        getResources().getColor(R.color.text_color));
                 mBackgroundResource = typedArray.getResourceId(R.styleable.LabelsView_label_background_res,
-                        R.color.menu_item_selector_color);
+                        R.color.transparent);
                 mMaxLabels = typedArray.getInteger(R.styleable.LabelsView_max_labels,
                         AutoLabelUISettings.DEFAULT_MAX_LABELS);
                 mShowCross = typedArray.getBoolean(R.styleable.LabelsView_show_cross,
@@ -120,16 +120,14 @@ public class AutoLabelUI extends AutoViewGroup implements Label.OnClickCrossList
     /**
      * Method to add a Label if is possible.
      *
-     * @param textLabel is the text of the label added using a LIST.
      * @param position  is the position of the label.
      */
-    public boolean addLabel(String textLabel, int position) {
+    public boolean addLabel(LabelValues labelValues, int position) {
         if (!checkLabelsCompleted()) {
-            Label label = new Label(getContext(), mTextSize, mIconCross, mShowCross,
-                    mTextColor, mBackgroundResource, mLabelsClickables, mLabelPadding);
+            Label label = new Label(getContext(), mLabelPadding);
             label.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
-            label.setText(textLabel);
+            label.setText(labelValues);
             label.setTag(position);
             label.setOnClickCrossListener(this);
             label.setOnLabelClickListener(this);
@@ -150,16 +148,14 @@ public class AutoLabelUI extends AutoViewGroup implements Label.OnClickCrossList
     /**
      * Method to add a Label if is possible.
      *
-     * @param textLabel is the text of the label added.
      */
-    public boolean addLabel(String textLabel) {
+    public boolean addLabel(LabelValues labelValues) {
         if (!checkLabelsCompleted()) {
-            Label label = new Label(getContext(), mTextSize, mIconCross, mShowCross,
-                    mTextColor, mBackgroundResource, mLabelsClickables, mLabelPadding);
+            Label label = new Label(getContext(), mLabelPadding);
             label.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
-            label.setText(textLabel);
-            label.setTag(textLabel);
+            label.setText(labelValues);
+            label.setTag(labelValues.getValue());
             label.setOnClickCrossListener(this);
             label.setOnLabelClickListener(this);
 
@@ -436,9 +432,9 @@ public class AutoLabelUI extends AutoViewGroup implements Label.OnClickCrossList
             Label label = (Label) getChildAt(i);
 
             if (label.getTag() instanceof Integer) {
-                listLabelValues.add(new LabelValues((int) label.getTag(), label.getText()));
+                listLabelValues.add(new LabelValues((int) label.getTag(), label.getText(), label.getSelected()));
             } else {
-                listLabelValues.add(new LabelValues(-1, label.getText()));
+                listLabelValues.add(new LabelValues(-1, label.getText(), label.getSelected()));
             }
         }
 
@@ -483,9 +479,9 @@ public class AutoLabelUI extends AutoViewGroup implements Label.OnClickCrossList
                     LabelValues labelValues = labelsAdded.get(i);
 
                     if (labelValues.getKey() == -1) {
-                        addLabel(labelValues.getValue());
+                        addLabel(labelValues);
                     } else {
-                        addLabel(labelValues.getValue(), labelValues.getKey());
+                        addLabel(labelValues, labelValues.getKey());
                     }
                 }
             }

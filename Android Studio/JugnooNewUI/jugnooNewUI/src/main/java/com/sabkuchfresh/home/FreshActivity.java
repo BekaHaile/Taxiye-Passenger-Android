@@ -946,7 +946,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 relativeLayoutSort.setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(vendorOpened.getVendorName());
+                topBar.title.setText(vendorOpened.getName());
                 topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
@@ -1645,7 +1645,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
             } else if(type == AppConstant.ApplicationType.MENUS){
                 if(getVendorOpened() != null){
-                    jCart.put(Constants.KEY_VENDOR_ID, getVendorOpened().getVid());
+                    jCart.put(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId());
                 }
                 Prefs.with(this).save(Constants.SP_MENUS_CART, jCart.toString());
             } else{

@@ -11,11 +11,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dpizarro.autolabel.library.AutoLabelUI;
 import com.dpizarro.autolabel.library.AutoLabelUISettings;
 import com.dpizarro.autolabel.library.Label;
+import com.dpizarro.autolabel.library.LabelValues;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.otto.Bus;
 
@@ -49,6 +49,11 @@ public class MenusFilterFragment extends Fragment{
 
 	private View rootView;
 	private FreshActivity activity;
+
+
+	private SortType sortBySelected = SortType.NONE;
+	private MinOrder moSelected = MinOrder.NONE;
+	private DeliveryTime dtSelected = DeliveryTime.NONE;
 
 
     public MenusFilterFragment(){}
@@ -102,23 +107,18 @@ public class MenusFilterFragment extends Fragment{
 		cuisinesView = (AutoLabelUI) rootView.findViewById(R.id.cuisinesView);
 		AutoLabelUISettings autoLabelUISettings = new AutoLabelUISettings.Builder()
 				.withMaxLabels(500)
-				.withBackgroundResource(R.drawable.background_white_rounded_bordered)
-				.withLabelsClickables(true)
-				.withShowCross(false)
-				.withTextColor(R.color.text_color)
-				.withTextSize(R.dimen.text_size_11dp)
-				.withLabelPadding(R.dimen.padding_10dp)
+				.withLabelPadding(R.dimen.padding_2dp)
 				.build();
 
 		cuisinesView.setSettings(autoLabelUISettings);
 
-		cuisinesView.addLabel("Biriyani");
-		cuisinesView.addLabel("Biriyani");
-		cuisinesView.addLabel("Biriyani");
+		cuisinesView.addLabel(new LabelValues(0, "Biriyani", 0));
+		cuisinesView.addLabel(new LabelValues(0, "Biriyani", 0));
+		cuisinesView.addLabel(new LabelValues(0, "Biriyani", 0));
 		cuisinesView.setOnLabelClickListener(new AutoLabelUI.OnLabelClickListener() {
 			@Override
 			public void onClickLabel(Label labelClicked) {
-				Toast.makeText(getActivity(), labelClicked.getText() , Toast.LENGTH_SHORT).show();
+
 			}
 		});
 
@@ -139,6 +139,84 @@ public class MenusFilterFragment extends Fragment{
 		textViewDT60 = (TextView) rootView.findViewById(R.id.textViewDT60); textViewDT60.setTypeface(Fonts.mavenMedium(activity));
 
 
+		relativeLayoutPopularity.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sortBySelected = sortBySelected != SortType.POPULARITY ? SortType.POPULARITY : SortType.NONE;
+				updateSortTypeUI();
+			}
+		});
+
+		relativeLayoutDistance.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sortBySelected = sortBySelected != SortType.DISTANCE ? SortType.DISTANCE : SortType.NONE;
+				updateSortTypeUI();
+			}
+		});
+
+		relativeLayoutPrice.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sortBySelected = sortBySelected != SortType.PRICE ? SortType.PRICE : SortType.NONE;
+				updateSortTypeUI();
+			}
+		});
+
+
+
+
+		textViewMO150.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				moSelected = moSelected != MinOrder.MO150 ? MinOrder.MO150 : MinOrder.NONE;
+				updateMinOrderUI();
+			}
+		});
+
+		textViewMO250.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				moSelected = moSelected != MinOrder.MO250 ? MinOrder.MO250 : MinOrder.NONE;
+				updateMinOrderUI();
+			}
+		});
+
+		textViewMO500.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				moSelected = moSelected != MinOrder.MO500 ? MinOrder.MO500 : MinOrder.NONE;
+				updateMinOrderUI();
+			}
+		});
+
+
+
+
+
+		textViewDT30.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dtSelected = dtSelected != DeliveryTime.DT30 ? DeliveryTime.DT30 : DeliveryTime.NONE;
+				updateDeliveryTimeUI();
+			}
+		});
+
+		textViewDT45.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dtSelected = dtSelected != DeliveryTime.DT45 ? DeliveryTime.DT45 : DeliveryTime.NONE;
+				updateDeliveryTimeUI();
+			}
+		});
+
+		textViewDT60.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dtSelected = dtSelected != DeliveryTime.DT60 ? DeliveryTime.DT60 : DeliveryTime.NONE;
+				updateDeliveryTimeUI();
+			}
+		});
 
 
 		return rootView;
@@ -165,6 +243,107 @@ public class MenusFilterFragment extends Fragment{
 		super.onDestroy();
         ASSL.closeActivity(scrollViewRoot);
         System.gc();
+	}
+
+
+	private void updateSortTypeUI(){
+		imageViewRadioPopularity.setImageResource(R.drawable.ic_radio_button_normal);
+		imageViewRadioDistance.setImageResource(R.drawable.ic_radio_button_normal);
+		imageViewRadioPrice.setImageResource(R.drawable.ic_radio_button_normal);
+		if(sortBySelected == SortType.POPULARITY){
+			imageViewRadioPopularity.setImageResource(R.drawable.ic_radio_button_selected);
+		} else if(sortBySelected == SortType.DISTANCE){
+			imageViewRadioDistance.setImageResource(R.drawable.ic_radio_button_selected);
+		} else if(sortBySelected == SortType.PRICE){
+			imageViewRadioPrice.setImageResource(R.drawable.ic_radio_button_selected);
+		}
+	}
+
+	private void updateMinOrderUI(){
+		textViewMO150.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+		textViewMO150.setTextColor(activity.getResources().getColor(R.color.text_color));
+		textViewMO250.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+		textViewMO250.setTextColor(activity.getResources().getColor(R.color.text_color));
+		textViewMO500.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+		textViewMO500.setTextColor(activity.getResources().getColor(R.color.text_color));
+
+		if(moSelected == MinOrder.MO150){
+			textViewMO150.setBackgroundResource(R.drawable.background_theme_round);
+			textViewMO150.setTextColor(activity.getResources().getColor(R.color.white));
+		}
+		else if(moSelected == MinOrder.MO250){
+			textViewMO250.setBackgroundResource(R.drawable.background_theme_round);
+			textViewMO250.setTextColor(activity.getResources().getColor(R.color.white));
+		}
+		else if(moSelected == MinOrder.MO500){
+			textViewMO500.setBackgroundResource(R.drawable.background_theme_round);
+			textViewMO500.setTextColor(activity.getResources().getColor(R.color.white));
+		}
+	}
+
+
+	private void updateDeliveryTimeUI(){
+		textViewDT30.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+		textViewDT30.setTextColor(activity.getResources().getColor(R.color.text_color));
+		textViewDT45.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+		textViewDT45.setTextColor(activity.getResources().getColor(R.color.text_color));
+		textViewDT60.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+		textViewDT60.setTextColor(activity.getResources().getColor(R.color.text_color));
+
+		if(dtSelected == DeliveryTime.DT30){
+			textViewDT30.setBackgroundResource(R.drawable.background_theme_round);
+			textViewDT30.setTextColor(activity.getResources().getColor(R.color.white));
+		}
+		else if(dtSelected == DeliveryTime.DT45){
+			textViewDT45.setBackgroundResource(R.drawable.background_theme_round);
+			textViewDT45.setTextColor(activity.getResources().getColor(R.color.white));
+		}
+		else if(dtSelected == DeliveryTime.DT60){
+			textViewDT60.setBackgroundResource(R.drawable.background_theme_round);
+			textViewDT60.setTextColor(activity.getResources().getColor(R.color.white));
+		}
+	}
+
+
+
+
+	private enum SortType{
+		NONE(-1), POPULARITY(0), DISTANCE(1), PRICE(2);
+
+		private int ordinal;
+		SortType(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
+		}
+	}
+
+	private enum MinOrder{
+		NONE(-1), MO150(0), MO250(1), MO500(2);
+
+		private int ordinal;
+		MinOrder(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
+		}
+	}
+
+	private enum DeliveryTime{
+		NONE(-1), DT30(0), DT45(1), DT60(2);
+
+		private int ordinal;
+		DeliveryTime(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
+		}
 	}
 
 }

@@ -99,12 +99,12 @@ public class MenusResponse {
 
 	public class Vendor {
 
-		@SerializedName("vid")
+		@SerializedName("restaurant_id")
 		@Expose
-		private Integer vid;
-		@SerializedName("vendor_name")
+		private Integer restaurantId;
+		@SerializedName("name")
 		@Expose
-		private String vendorName;
+		private String name;
 		@SerializedName("image")
 		@Expose
 		private String image;
@@ -133,37 +133,37 @@ public class MenusResponse {
 		/**
 		 *
 		 * @return
-		 * The vid
+		 * The restaurantId
 		 */
-		public Integer getVid() {
-			return vid;
+		public Integer getRestaurantId() {
+			return restaurantId;
 		}
 
 		/**
 		 *
-		 * @param vid
-		 * The vid
+		 * @param restaurantId
+		 * The restaurantId
 		 */
-		public void setVid(Integer vid) {
-			this.vid = vid;
+		public void setRestaurantId(Integer restaurantId) {
+			this.restaurantId = restaurantId;
 		}
 
 		/**
 		 *
 		 * @return
-		 * The vendorName
+		 * The name
 		 */
-		public String getVendorName() {
-			return vendorName;
+		public String getName() {
+			return name;
 		}
 
 		/**
 		 *
-		 * @param vendorName
+		 * @param name
 		 * The vendor_name
 		 */
-		public void setVendorName(String vendorName) {
-			this.vendorName = vendorName;
+		public void setName(String name) {
+			this.name = name;
 		}
 
 		/**

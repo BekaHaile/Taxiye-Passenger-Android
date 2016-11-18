@@ -541,7 +541,7 @@ public interface Constants {
 	String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
 	String KEY_CHAT_COUNT = "chat_count";
 
-	String KEY_VENDOR_ID = "vendor_id";
+	String KEY_RESTAURANT_ID = "restaurant_id";
 
 	String KEY_ITEM_ID = "item_id";
 	String SP_MENUS_LAST_ADDRESS_OBJ = "sp_menus_last_address_obj";
