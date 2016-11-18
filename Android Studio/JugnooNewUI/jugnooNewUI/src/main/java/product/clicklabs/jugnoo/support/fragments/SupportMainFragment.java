@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.ParseUtils;
@@ -137,7 +138,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		cardViewRideShortInfo.setVisibility(View.GONE);
 		cardViewRecycler.setVisibility(View.GONE);
 		showPanel();
-		activity.getRideSummaryAPI(activity);
+		activity.getRideSummaryAPI(activity, ProductType.NOT_SURE);
 
 		FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT);
 
@@ -152,7 +153,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			activity.setTitle(MyApplication.getInstance().ACTIVITY_NAME_SUPPORT);
 			if(Data.isSupportRideIssueUpdated) {
 				Data.isSupportRideIssueUpdated = false;
-				activity.getRideSummaryAPI(activity);
+				activity.getRideSummaryAPI(activity, ProductType.NOT_SURE);
 			}
 		}
 	}
@@ -256,7 +257,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			showPanel();
 		}
 		if(getRideSummaryCalled != 1){
-			activity.getRideSummaryAPI(activity);
+			activity.getRideSummaryAPI(activity, ProductType.NOT_SURE);
 		}
 	}
 

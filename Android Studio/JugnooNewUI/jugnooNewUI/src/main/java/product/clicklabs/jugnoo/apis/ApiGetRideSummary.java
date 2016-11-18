@@ -73,8 +73,8 @@ public class ApiGetRideSummary {
 				params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
 			} else if(orderId != -1) {
 				params.put(Constants.KEY_ORDER_ID, String.valueOf(orderId));
-				params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType));
 			}
+			params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType));
 			if(showRideMenu) {
 				params.put(Constants.KEY_SHOW_RIDE_MENU, "1");
 			}

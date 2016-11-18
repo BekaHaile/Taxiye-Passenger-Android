@@ -45,7 +45,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 	private EndRideData endRideData;
 	private HistoryResponse.Datum datum;
 	private ArrayList<ShowPanelResponse.Item> items;
-	private int engagementId = -1, orderId = -1;
+	private int engagementId = -1, orderId = -1, productType = ProductType.NOT_SURE.getOrdinal();
 
 	@Override
 	protected void onResume() {
@@ -65,6 +65,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 			fromBadFeedback = getIntent().getExtras().getInt(Constants.INTENT_KEY_FROM_BAD, -1);
 			engagementId = getIntent().getExtras().getInt(Constants.KEY_ENGAGEMENT_ID, -1);
 			orderId = getIntent().getExtras().getInt(Constants.KEY_ORDER_ID, -1);
+			productType = getIntent().getExtras().getInt(Constants.KEY_PRODUCT_TYPE, ProductType.NOT_SURE.getOrdinal());
 		}
 
 		linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
@@ -90,7 +91,19 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 					.addToBackStack(SupportMainFragment.class.getName())
 					.commitAllowingStateLoss();
 		} else{
-			getRideSummaryAPI(this);
+			ProductType pt = ProductType.NOT_SURE;
+			if(productType == ProductType.AUTO.getOrdinal()){
+				pt = ProductType.AUTO;
+			} else if(productType == ProductType.FRESH.getOrdinal()){
+				pt = ProductType.FRESH;
+			} else if(productType == ProductType.MEALS.getOrdinal()){
+				pt = ProductType.MEALS;
+			} else if(productType == ProductType.GROCERY.getOrdinal()){
+				pt = ProductType.GROCERY;
+			} else if(productType == ProductType.MENUS.getOrdinal()){
+				pt = ProductType.MENUS;
+			}
+			getRideSummaryAPI(this, pt); //for bad feedback case (thumbs down)
 			setTitle(getResources().getString(R.string.support_ride_issues_title));
 		}
 
@@ -182,7 +195,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		super.onDestroy();
 	}
 
-	public void getRideSummaryAPI(final Activity activity) {
+	public void getRideSummaryAPI(final Activity activity, final ProductType productType) {
 		try {
 			new ApiGetRideSummary(activity, Data.userData.accessToken, engagementId, orderId, Data.autoData.getFareStructure().getFixedFare(),
 					new ApiGetRideSummary.Callback() {
@@ -216,14 +229,14 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 						@Override
 						public void onRetry(View view) {
-							getRideSummaryAPI(activity);
+							getRideSummaryAPI(activity, productType);
 						}
 
 						@Override
 						public void onNoRetry(View view) {
 
 						}
-					}).getRideSummaryAPI(EngagementStatus.ENDED.getOrdinal(), ProductType.NOT_SURE, false);
+					}).getRideSummaryAPI(EngagementStatus.ENDED.getOrdinal(), productType, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

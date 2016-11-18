@@ -1641,6 +1641,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
                     intent.putExtra(INTENT_KEY_FROM_BAD, 1);
                     intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
+                    intent.putExtra(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     //imageViewThumbsUp.clearAnimation();

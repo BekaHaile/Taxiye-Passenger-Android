@@ -38,6 +38,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
@@ -80,6 +81,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     private RateAppDialogContent rateAppDialogContent;
 
     public boolean isUpbuttonClicked = false;
+    private ProductType productType;
 
     @Nullable
     @Override
@@ -92,34 +94,45 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         try {
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
-            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getFreshClientId())) {
 				viewType = Data.getFreshData().getFeedbackViewType();
 				dateValue = Data.getFreshData().getFeedbackDeliveryDate();
 				orderAmount = Data.getFreshData().getAmount();
 				orderId = Data.getFreshData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
-			} else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+                productType = ProductType.FRESH;
+			}
+            else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getMealsClientId())){
 				viewType = Data.getMealsData().getFeedbackViewType();
 				dateValue = Data.getMealsData().getFeedbackDeliveryDate();
 				orderAmount = Data.getMealsData().getAmount();
 				orderId = Data.getMealsData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
-			} else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                productType = ProductType.MEALS;
+			}
+            else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getGroceryClientId())){
                 viewType = Data.getGroceryData().getFeedbackViewType();
                 dateValue = Data.getGroceryData().getFeedbackDeliveryDate();
                 orderAmount = Data.getGroceryData().getAmount();
                 orderId = Data.getGroceryData().getOrderId();
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
-            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                productType = ProductType.GROCERY;
+            }
+            else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getMenusClientId())){
                 viewType = Data.getMenusData().getFeedbackViewType();
                 dateValue = Data.getMenusData().getFeedbackDeliveryDate();
                 orderAmount = Data.getMenusData().getAmount();
                 orderId = Data.getMenusData().getOrderId();
                 activity.getTopBar().title.setText(getResources().getString(R.string.menus));
                 endRideGoodFeedbackText = Data.getMenusData().getRideEndGoodFeedbackText();
+                productType = ProductType.MENUS;
             } else {
 				activity.finish();
 			}
@@ -552,6 +565,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         Intent intent = new Intent(activity, SupportActivity.class);
         intent.putExtra(Constants.INTENT_KEY_FROM_BAD, 1);
         intent.putExtra(Constants.KEY_ORDER_ID, Integer.parseInt(orderId));
+        intent.putExtra(Constants.KEY_PRODUCT_TYPE, productType.getOrdinal());
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         backPressed(false);
