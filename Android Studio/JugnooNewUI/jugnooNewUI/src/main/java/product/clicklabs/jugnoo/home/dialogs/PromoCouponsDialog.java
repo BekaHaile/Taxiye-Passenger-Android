@@ -120,7 +120,7 @@ public class PromoCouponsDialog {
 
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listViewPromoCoupons.getLayoutParams();
 			params.height = promoCoupons.size() > 3 ? (int)(156f * 3f * ASSL.Yscale())
-					: (int)(84f * (float)promoCoupons.size() * ASSL.Yscale());
+					: (int)(156f * (float)promoCoupons.size() * ASSL.Yscale());
 			listViewPromoCoupons.setLayoutParams(params);
 			listViewPromoCoupons.setAdapter(promoCouponsAdapter);
 
@@ -149,7 +149,7 @@ public class PromoCouponsDialog {
 				listViewPromoCoupons.setVisibility(View.GONE);
 				relativeLayoutBottomButtons.setVisibility(View.GONE);
 				linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
-				imageViewOffers.setImageResource(R.drawable.no_current_offer);
+				imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
 			}
 
 			buttonSkip.setOnClickListener(new View.OnClickListener() {
