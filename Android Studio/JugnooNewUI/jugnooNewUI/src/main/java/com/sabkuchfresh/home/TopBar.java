@@ -42,7 +42,7 @@ public class TopBar implements FlurryEventNames {
 	public EditText editTextDeliveryAddress;
 
 	public RelativeLayout relativeLayoutLocality;
-	public TextView textViewLocationValue;
+	public TextView textViewLocationValue, textViewReset;
 
 
 
@@ -78,6 +78,7 @@ public class TopBar implements FlurryEventNames {
 		relativeLayoutLocality = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutLocality);
 		((TextView)drawerLayout.findViewById(R.id.textViewLocation)).setTypeface(Fonts.mavenRegular(activity));
 		textViewLocationValue = (TextView) drawerLayout.findViewById(R.id.textViewLocationValue); textViewLocationValue.setTypeface(Fonts.mavenMedium(activity));
+		textViewReset = (TextView) drawerLayout.findViewById(R.id.textViewReset); textViewReset.setTypeface(Fonts.mavenMedium(activity));
 
 		//Top bar events
 		topRl.setOnClickListener(topBarOnClickListener);

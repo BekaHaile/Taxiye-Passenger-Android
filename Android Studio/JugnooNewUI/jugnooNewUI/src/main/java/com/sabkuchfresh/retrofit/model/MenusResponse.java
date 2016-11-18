@@ -23,6 +23,9 @@ public class MenusResponse {
 	@SerializedName("support_contact")
 	@Expose
 	private String supportContact;
+	@SerializedName("filter")
+	@Expose
+	private Filters filters;
 
 	/**
 	 *
@@ -96,6 +99,14 @@ public class MenusResponse {
 		this.supportContact = supportContact;
 	}
 
+	public Filters getFilters() {
+		return filters;
+	}
+
+	public void setFilters(Filters filters) {
+		this.filters = filters;
+	}
+
 
 	public class Vendor {
 
@@ -129,6 +140,9 @@ public class MenusResponse {
 		@SerializedName("opens_at")
 		@Expose
 		private String opensAt;
+		@SerializedName("popularity")
+		@Expose
+		private Integer popularity;
 
 		/**
 		 *
@@ -279,5 +293,86 @@ public class MenusResponse {
 		public void setOpensAt(String opensAt) {
 			this.opensAt = opensAt;
 		}
+
+		public Integer getPopularity() {
+			return popularity;
+		}
+
+		public void setPopularity(Integer popularity) {
+			this.popularity = popularity;
+		}
 	}
+
+
+	public class Filters{
+
+		@SerializedName("price_range")
+		@Expose
+		private List<Integer> priceRange = new ArrayList<Integer>();
+		@SerializedName("delivery_time")
+		@Expose
+		private List<Integer> deliveryTime = new ArrayList<Integer>();
+		@SerializedName("minimum_order_amount")
+		@Expose
+		private List<Integer> minimumOrderAmount = new ArrayList<Integer>();
+		@SerializedName("is_closed")
+		@Expose
+		private List<Integer> isClosed = new ArrayList<Integer>();
+		@SerializedName("distance")
+		@Expose
+		private List<Integer> distance = new ArrayList<Integer>();
+		@SerializedName("cuisines")
+		@Expose
+		private List<String> cuisines = new ArrayList<String>();
+
+
+		public List<String> getCuisines() {
+			return cuisines;
+		}
+
+		public void setCuisines(List<String> cuisines) {
+			this.cuisines = cuisines;
+		}
+
+		public List<Integer> getPriceRange() {
+			return priceRange;
+		}
+
+		public void setPriceRange(List<Integer> priceRange) {
+			this.priceRange = priceRange;
+		}
+
+		public List<Integer> getDeliveryTime() {
+			return deliveryTime;
+		}
+
+		public void setDeliveryTime(List<Integer> deliveryTime) {
+			this.deliveryTime = deliveryTime;
+		}
+
+		public List<Integer> getMinimumOrderAmount() {
+			return minimumOrderAmount;
+		}
+
+		public void setMinimumOrderAmount(List<Integer> minimumOrderAmount) {
+			this.minimumOrderAmount = minimumOrderAmount;
+		}
+
+		public List<Integer> getIsClosed() {
+			return isClosed;
+		}
+
+		public void setIsClosed(List<Integer> isClosed) {
+			this.isClosed = isClosed;
+		}
+
+		public List<Integer> getDistance() {
+			return distance;
+		}
+
+		public void setDistance(List<Integer> distance) {
+			this.distance = distance;
+		}
+	}
+
 }

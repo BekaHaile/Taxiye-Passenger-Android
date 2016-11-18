@@ -1245,6 +1245,7 @@
 	<string name="min_45">45 Min</string>
 	<string name="min_60">60 Min</string>
 	<string name="filters">Filters</string>
+	<string name="reset">Reset</string>
 
 
 </resources>

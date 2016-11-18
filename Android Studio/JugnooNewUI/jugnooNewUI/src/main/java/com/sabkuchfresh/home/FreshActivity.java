@@ -806,6 +806,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             linearLayoutCheckout.setVisibility(View.VISIBLE);
             topBar.textViewSkip.setVisibility(View.GONE);
             topBar.relativeLayoutLocality.setVisibility(View.GONE);
+            topBar.textViewReset.setVisibility(View.GONE);
 
             RelativeLayout.LayoutParams titleLayoutParams = (RelativeLayout.LayoutParams) topBar.title.getLayoutParams();
             titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
@@ -971,6 +972,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
+                topBar.textViewReset.setVisibility(View.VISIBLE);
             }
             else if (fragment instanceof FreshCartItemsFragment) {
 				textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));
@@ -2367,5 +2369,52 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
             }
         });
+    }
+
+    private MenusResponse menusResponse;
+
+    public MenusResponse getMenusResponse() {
+        return menusResponse;
+    }
+
+    public void setMenusResponse(MenusResponse menusResponse) {
+        this.menusResponse = menusResponse;
+    }
+
+    private MenusFilterFragment.SortType sortBySelected = MenusFilterFragment.SortType.NONE;
+    private MenusFilterFragment.MinOrder moSelected = MenusFilterFragment.MinOrder.NONE;
+    private MenusFilterFragment.DeliveryTime dtSelected = MenusFilterFragment.DeliveryTime.NONE;
+    private ArrayList<String> cuisinesSelected = new ArrayList<>();
+
+    public MenusFilterFragment.SortType getSortBySelected() {
+        return sortBySelected;
+    }
+
+    public void setSortBySelected(MenusFilterFragment.SortType sortBySelected) {
+        this.sortBySelected = sortBySelected;
+    }
+
+    public MenusFilterFragment.MinOrder getMoSelected() {
+        return moSelected;
+    }
+
+    public void setMoSelected(MenusFilterFragment.MinOrder moSelected) {
+        this.moSelected = moSelected;
+    }
+
+    public MenusFilterFragment.DeliveryTime getDtSelected() {
+        return dtSelected;
+    }
+
+    public void setDtSelected(MenusFilterFragment.DeliveryTime dtSelected) {
+        this.dtSelected = dtSelected;
+    }
+
+    public ArrayList<String> getCuisinesSelected() {
+        return cuisinesSelected;
+    }
+
+    public void setCuisinesSelected(ArrayList<String> cuisinesSelected) {
+        this.cuisinesSelected = cuisinesSelected;
     }
 }

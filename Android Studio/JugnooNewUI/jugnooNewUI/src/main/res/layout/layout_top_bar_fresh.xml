@@ -226,8 +226,22 @@
 
 
         </RelativeLayout>
-        
 
+
+        <TextView
+            android:id="@+id/textViewReset"
+            android:layout_width="114px"
+            android:layout_height="40px"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:gravity="center"
+            android:text="@string/reset"
+            android:textColor="@color/text_color_selector"
+            android:textSize="@dimen/text_size_22"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="28px"
+            android:visibility="gone"
+            />
 
     </RelativeLayout>
 

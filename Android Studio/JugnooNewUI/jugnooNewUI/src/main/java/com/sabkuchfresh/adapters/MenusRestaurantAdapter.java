@@ -15,11 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -85,6 +88,44 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.vendors = vendors;
         this.vendorsToShow.clear();
         this.vendorsToShow.addAll(vendors);
+        notifyDataSetChanged();
+    }
+
+    public void applyFilter(){
+        for(MenusResponse.Vendor vendor : vendors){
+            boolean cuisineMatched = true, moMatched = false, dtMatched = false;
+            for(String cuisine : activity.getCuisinesSelected()){
+                if(!vendor.getCuisines().contains(cuisine)){
+                    cuisineMatched = false;
+                    break;
+                }
+            }
+            moMatched = activity.getMoSelected() == MenusFilterFragment.MinOrder.NONE
+                    || vendor.getMinimumOrderAmount() <= activity.getMoSelected().getOrdinal();
+
+            dtMatched = activity.getDtSelected() == MenusFilterFragment.DeliveryTime.NONE
+                    || vendor.getDeliveryTime() <= activity.getDtSelected().getOrdinal();
+
+            if(cuisineMatched && moMatched && dtMatched){
+                vendorsToShow.add(vendor);
+            }
+        }
+
+        Collections.sort(vendorsToShow, new Comparator<MenusResponse.Vendor>() {
+            @Override
+            public int compare(MenusResponse.Vendor lhs, MenusResponse.Vendor rhs) {
+                if(activity.getSortBySelected() != MenusFilterFragment.SortType.NONE){
+                    if(activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY){
+                        return lhs.getPopularity() - rhs.getPopularity();
+                    } else if(activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE){
+                        return -(lhs.getDistance() - rhs.getDistance());
+                    } else if(activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE){
+                        return -(lhs.getPriceRange() - rhs.getPriceRange());
+                    }
+                }
+                return 0;
+            }
+        });
         notifyDataSetChanged();
     }
 

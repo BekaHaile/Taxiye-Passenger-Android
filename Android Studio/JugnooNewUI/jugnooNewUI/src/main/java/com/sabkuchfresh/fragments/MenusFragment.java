@@ -81,7 +81,6 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private View rootView;
     private FreshActivity activity;
 
-    private MenusResponse menusResponse;
     private ArrayList<MenusResponse.Vendor> vendors = new ArrayList<>();
 
     PushDialog pushDialog;
@@ -217,6 +216,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         if(!isHidden()) {
             getAllMenus(activity.isRefreshCart(), getSelectedLatLng());
             activity.setRefreshCart(false);
+            menusRestaurantAdapter.applyFilter();
         }
     }
 
@@ -273,7 +273,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                             String message = menusResponse.getMessage();
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()){
-                                    MenusFragment.this.menusResponse = menusResponse;
+                                    activity.setMenusResponse(menusResponse);
                                     menusRestaurantAdapter.setList((ArrayList<MenusResponse.Vendor>) menusResponse.getVendors());
                                     relativeLayoutNoMenus.setVisibility(menusResponse.getVendors().size() == 0 ? View.VISIBLE : View.GONE);
                                     relativeLayoutSearchFilter.setVisibility(relativeLayoutNoMenus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);

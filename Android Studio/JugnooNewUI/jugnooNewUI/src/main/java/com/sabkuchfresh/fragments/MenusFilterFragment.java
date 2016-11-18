@@ -55,7 +55,6 @@ public class MenusFilterFragment extends Fragment{
 	private MinOrder moSelected = MinOrder.NONE;
 	private DeliveryTime dtSelected = DeliveryTime.NONE;
 
-
     public MenusFilterFragment(){}
     protected Bus mBus;
 
@@ -81,6 +80,7 @@ public class MenusFilterFragment extends Fragment{
         mBus = (activity).getBus();
 
 		activity.fragmentUISetup(this);
+		setResetClickListener();
 		scrollViewRoot = (ScrollView) rootView.findViewById(R.id.scrollViewRoot);
 		try {
 			if(scrollViewRoot != null) {
@@ -112,15 +112,17 @@ public class MenusFilterFragment extends Fragment{
 
 		cuisinesView.setSettings(autoLabelUISettings);
 
-		cuisinesView.addLabel(new LabelValues(0, "Biriyani", 0));
-		cuisinesView.addLabel(new LabelValues(0, "Biriyani", 0));
-		cuisinesView.addLabel(new LabelValues(0, "Biriyani", 0));
-		cuisinesView.setOnLabelClickListener(new AutoLabelUI.OnLabelClickListener() {
-			@Override
-			public void onClickLabel(Label labelClicked) {
+		if(activity.getMenusResponse() != null && activity.getMenusResponse().getFilters() != null
+				&& activity.getMenusResponse().getFilters().getCuisines() != null
+				&& activity.getMenusResponse().getFilters().getCuisines().size() > 0){
+			cardViewCuisines.setVisibility(View.VISIBLE);
+			textViewCuisines.setVisibility(View.VISIBLE);
+			addCuisinesLabels();
 
-			}
-		});
+		} else {
+			cardViewCuisines.setVisibility(View.GONE);
+			textViewCuisines.setVisibility(View.GONE);
+		}
 
 
 
@@ -138,11 +140,12 @@ public class MenusFilterFragment extends Fragment{
 		textViewDT45 = (TextView) rootView.findViewById(R.id.textViewDT45); textViewDT45.setTypeface(Fonts.mavenMedium(activity));
 		textViewDT60 = (TextView) rootView.findViewById(R.id.textViewDT60); textViewDT60.setTypeface(Fonts.mavenMedium(activity));
 
+		buttonApply = (Button) rootView.findViewById(R.id.buttonApply); buttonApply.setTypeface(Fonts.mavenRegular(activity));
 
 		relativeLayoutPopularity.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sortBySelected = sortBySelected != SortType.POPULARITY ? SortType.POPULARITY : SortType.NONE;
+				setSortBySelected(getSortBySelected() != SortType.POPULARITY ? SortType.POPULARITY : SortType.NONE);
 				updateSortTypeUI();
 			}
 		});
@@ -150,7 +153,7 @@ public class MenusFilterFragment extends Fragment{
 		relativeLayoutDistance.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sortBySelected = sortBySelected != SortType.DISTANCE ? SortType.DISTANCE : SortType.NONE;
+				setSortBySelected(getSortBySelected() != SortType.DISTANCE ? SortType.DISTANCE : SortType.NONE);
 				updateSortTypeUI();
 			}
 		});
@@ -158,7 +161,7 @@ public class MenusFilterFragment extends Fragment{
 		relativeLayoutPrice.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sortBySelected = sortBySelected != SortType.PRICE ? SortType.PRICE : SortType.NONE;
+				setSortBySelected(getSortBySelected() != SortType.PRICE ? SortType.PRICE : SortType.NONE);
 				updateSortTypeUI();
 			}
 		});
@@ -169,7 +172,7 @@ public class MenusFilterFragment extends Fragment{
 		textViewMO150.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				moSelected = moSelected != MinOrder.MO150 ? MinOrder.MO150 : MinOrder.NONE;
+				setMoSelected(getMoSelected() != MinOrder.MO150 ? MinOrder.MO150 : MinOrder.NONE);
 				updateMinOrderUI();
 			}
 		});
@@ -177,7 +180,7 @@ public class MenusFilterFragment extends Fragment{
 		textViewMO250.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				moSelected = moSelected != MinOrder.MO250 ? MinOrder.MO250 : MinOrder.NONE;
+				setMoSelected(getMoSelected() != MinOrder.MO250 ? MinOrder.MO250 : MinOrder.NONE);
 				updateMinOrderUI();
 			}
 		});
@@ -185,7 +188,7 @@ public class MenusFilterFragment extends Fragment{
 		textViewMO500.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				moSelected = moSelected != MinOrder.MO500 ? MinOrder.MO500 : MinOrder.NONE;
+				setMoSelected(getMoSelected() != MinOrder.MO500 ? MinOrder.MO500 : MinOrder.NONE);
 				updateMinOrderUI();
 			}
 		});
@@ -197,7 +200,7 @@ public class MenusFilterFragment extends Fragment{
 		textViewDT30.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				dtSelected = dtSelected != DeliveryTime.DT30 ? DeliveryTime.DT30 : DeliveryTime.NONE;
+				setDtSelected(getDtSelected() != DeliveryTime.DT30 ? DeliveryTime.DT30 : DeliveryTime.NONE);
 				updateDeliveryTimeUI();
 			}
 		});
@@ -205,7 +208,7 @@ public class MenusFilterFragment extends Fragment{
 		textViewDT45.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				dtSelected = dtSelected != DeliveryTime.DT45 ? DeliveryTime.DT45 : DeliveryTime.NONE;
+				setDtSelected(getDtSelected() != DeliveryTime.DT45 ? DeliveryTime.DT45 : DeliveryTime.NONE);
 				updateDeliveryTimeUI();
 			}
 		});
@@ -213,10 +216,34 @@ public class MenusFilterFragment extends Fragment{
 		textViewDT60.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				dtSelected = dtSelected != DeliveryTime.DT60 ? DeliveryTime.DT60 : DeliveryTime.NONE;
+				setDtSelected(getDtSelected() != DeliveryTime.DT60 ? DeliveryTime.DT60 : DeliveryTime.NONE);
 				updateDeliveryTimeUI();
 			}
 		});
+
+		buttonApply.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.getCuisinesSelected().clear();
+				for(Label label : cuisinesView.getLabels()){
+					if(label.getSelected() == 1){
+						activity.getCuisinesSelected().add(label.getText());
+					}
+				}
+				activity.setSortBySelected(getSortBySelected());
+				activity.setDtSelected(getDtSelected());
+				activity.setMoSelected(getMoSelected());
+				activity.performBackPressed();
+			}
+		});
+
+		setSortBySelected(activity.getSortBySelected());
+		setDtSelected(activity.getDtSelected());
+		setMoSelected(activity.getMoSelected());
+
+		updateSortTypeUI();
+		updateMinOrderUI();
+		updateDeliveryTimeUI();
 
 
 		return rootView;
@@ -234,6 +261,7 @@ public class MenusFilterFragment extends Fragment{
 		super.onHiddenChanged(hidden);
 		if(!hidden){
 			activity.fragmentUISetup(this);
+			setResetClickListener();
 		}
 	}
 
@@ -250,11 +278,11 @@ public class MenusFilterFragment extends Fragment{
 		imageViewRadioPopularity.setImageResource(R.drawable.ic_radio_button_normal);
 		imageViewRadioDistance.setImageResource(R.drawable.ic_radio_button_normal);
 		imageViewRadioPrice.setImageResource(R.drawable.ic_radio_button_normal);
-		if(sortBySelected == SortType.POPULARITY){
+		if(getSortBySelected() == SortType.POPULARITY){
 			imageViewRadioPopularity.setImageResource(R.drawable.ic_radio_button_selected);
-		} else if(sortBySelected == SortType.DISTANCE){
+		} else if(getSortBySelected() == SortType.DISTANCE){
 			imageViewRadioDistance.setImageResource(R.drawable.ic_radio_button_selected);
-		} else if(sortBySelected == SortType.PRICE){
+		} else if(getSortBySelected() == SortType.PRICE){
 			imageViewRadioPrice.setImageResource(R.drawable.ic_radio_button_selected);
 		}
 	}
@@ -267,15 +295,15 @@ public class MenusFilterFragment extends Fragment{
 		textViewMO500.setBackgroundResource(R.drawable.background_white_rounded_bordered);
 		textViewMO500.setTextColor(activity.getResources().getColor(R.color.text_color));
 
-		if(moSelected == MinOrder.MO150){
+		if(getMoSelected() == MinOrder.MO150){
 			textViewMO150.setBackgroundResource(R.drawable.background_theme_round);
 			textViewMO150.setTextColor(activity.getResources().getColor(R.color.white));
 		}
-		else if(moSelected == MinOrder.MO250){
+		else if(getMoSelected() == MinOrder.MO250){
 			textViewMO250.setBackgroundResource(R.drawable.background_theme_round);
 			textViewMO250.setTextColor(activity.getResources().getColor(R.color.white));
 		}
-		else if(moSelected == MinOrder.MO500){
+		else if(getMoSelected() == MinOrder.MO500){
 			textViewMO500.setBackgroundResource(R.drawable.background_theme_round);
 			textViewMO500.setTextColor(activity.getResources().getColor(R.color.white));
 		}
@@ -290,24 +318,46 @@ public class MenusFilterFragment extends Fragment{
 		textViewDT60.setBackgroundResource(R.drawable.background_white_rounded_bordered);
 		textViewDT60.setTextColor(activity.getResources().getColor(R.color.text_color));
 
-		if(dtSelected == DeliveryTime.DT30){
+		if(getDtSelected() == DeliveryTime.DT30){
 			textViewDT30.setBackgroundResource(R.drawable.background_theme_round);
 			textViewDT30.setTextColor(activity.getResources().getColor(R.color.white));
 		}
-		else if(dtSelected == DeliveryTime.DT45){
+		else if(getDtSelected() == DeliveryTime.DT45){
 			textViewDT45.setBackgroundResource(R.drawable.background_theme_round);
 			textViewDT45.setTextColor(activity.getResources().getColor(R.color.white));
 		}
-		else if(dtSelected == DeliveryTime.DT60){
+		else if(getDtSelected() == DeliveryTime.DT60){
 			textViewDT60.setBackgroundResource(R.drawable.background_theme_round);
 			textViewDT60.setTextColor(activity.getResources().getColor(R.color.white));
 		}
 	}
 
+	public SortType getSortBySelected() {
+		return sortBySelected;
+	}
+
+	public void setSortBySelected(SortType sortBySelected) {
+		this.sortBySelected = sortBySelected;
+	}
+
+	public MinOrder getMoSelected() {
+		return moSelected;
+	}
+
+	public void setMoSelected(MinOrder moSelected) {
+		this.moSelected = moSelected;
+	}
+
+	public DeliveryTime getDtSelected() {
+		return dtSelected;
+	}
+
+	public void setDtSelected(DeliveryTime dtSelected) {
+		this.dtSelected = dtSelected;
+	}
 
 
-
-	private enum SortType{
+	public enum SortType{
 		NONE(-1), POPULARITY(0), DISTANCE(1), PRICE(2);
 
 		private int ordinal;
@@ -320,8 +370,8 @@ public class MenusFilterFragment extends Fragment{
 		}
 	}
 
-	private enum MinOrder{
-		NONE(-1), MO150(0), MO250(1), MO500(2);
+	public enum MinOrder{
+		NONE(-1), MO150(150), MO250(250), MO500(500);
 
 		private int ordinal;
 		MinOrder(int ordinal){
@@ -333,8 +383,8 @@ public class MenusFilterFragment extends Fragment{
 		}
 	}
 
-	private enum DeliveryTime{
-		NONE(-1), DT30(0), DT45(1), DT60(2);
+	public enum DeliveryTime{
+		NONE(-1), DT30(30), DT45(45), DT60(60);
 
 		private int ordinal;
 		DeliveryTime(int ordinal){
@@ -346,4 +396,31 @@ public class MenusFilterFragment extends Fragment{
 		}
 	}
 
+
+	private void setResetClickListener(){
+		activity.getTopBar().textViewReset.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				setSortBySelected(SortType.NONE);
+				setMoSelected(MinOrder.NONE);
+				setDtSelected(DeliveryTime.NONE);
+				updateSortTypeUI();
+				updateMinOrderUI();
+				updateDeliveryTimeUI();
+				addCuisinesLabels();
+			}
+		});
+	}
+
+	private void addCuisinesLabels(){
+		cuisinesView.clear();
+		for(int i=0; i<activity.getMenusResponse().getFilters().getCuisines().size(); i++){
+			String cuisine = activity.getMenusResponse().getFilters().getCuisines().get(i);
+			if(activity.getCuisinesSelected().contains(cuisine)){
+				cuisinesView.addLabel(new LabelValues(i, cuisine, 1));
+			} else {
+				cuisinesView.addLabel(new LabelValues(i, cuisine, 0));
+			}
+		}
+	}
 }
