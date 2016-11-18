@@ -1206,7 +1206,7 @@
 	<string name="saved_locations">Saved locations</string>
 	<string name="available_offers">Available Offers</string>
 	<string name="trying_to_verify">Trying to verify through\nmissed call...</string>
-	<string name="we_could_not_verify">Sorry, we could not verify through\\nmissed call. Please try again.</string>
+	<string name="we_could_not_verify">Sorry, we could not verify through\nmissed call. Please try again.</string>
 	<string name="selecting_a_pickup_spot">Selecting a pickup spot will save you time and make it easier to find your driver.</string>
 
 </resources>

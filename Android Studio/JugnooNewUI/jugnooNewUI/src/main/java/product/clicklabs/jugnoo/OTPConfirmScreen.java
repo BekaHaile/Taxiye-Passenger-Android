@@ -188,7 +188,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenRegular(this));
 		textViewSkip = (TextView)findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.mavenRegular(this));
 		rlProgress = (RelativeLayout) findViewById(R.id.rlProgress);
-		TextView tvProgress = (TextView) findViewById(R.id.tvProgress); tvProgress.setTypeface(Fonts.mavenRegular(this));
+		tvProgress = (TextView) findViewById(R.id.tvProgress); tvProgress.setTypeface(Fonts.mavenRegular(this));
 		progressBar = (ProgressWheel) findViewById(R.id.progressBar);
 
 		/*if(userVerified == 1){
@@ -237,6 +237,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			public void onClick(View v) {
 				String otpCode = editTextOTP.getText().toString().trim();
 				if (otpCode.length() > 0) {
+					rlProgress.setVisibility(View.GONE);
 					if (SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 						verifyOtpViaFB(OTPConfirmScreen.this, otpCode, linkedWallet);
 						/*if(userVerified == 1){
@@ -276,6 +277,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			public void onClick(View v) {
 				try{
 					editTextOTP.setError(null);
+					rlProgress.setVisibility(View.GONE);
 					if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()
 							|| linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()
 							|| linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
@@ -329,6 +331,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				try {
 					editTextOTP.setError(null);
 					tweenAnimation.cancel();
+					rlProgress.setVisibility(View.GONE);
 					linearLayoutGiveAMissedCall.clearAnimation();
 					if(!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
 						DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
@@ -627,6 +630,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			giveAMissedCall = false;
 			//buttonVerify.performClick();
 			rlProgress.setVisibility(View.VISIBLE);
+			progressBar.spin();
 			if (signupBy.equalsIgnoreCase("email")) {
 				if (onlyDigits) {
 					email = "+91" + email;
@@ -1369,7 +1373,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 					Log.i(TAG, "loginUsingEmailOrPhoneNo response = " + responseStr);
 					try {
-						rlProgress.setVisibility(View.GONE);
 						JSONObject jObj = new JSONObject(responseStr);
 
 						int flag = jObj.getInt("flag");
@@ -1482,7 +1485,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					Log.i(TAG, "loginUsingFacebook response = " + responseStr);
 
 					try {
-						rlProgress.setVisibility(View.GONE);
 						JSONObject jObj = new JSONObject(responseStr);
 
 						int flag = jObj.getInt("flag");
@@ -1588,7 +1590,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					Log.i(TAG, "loginUsingGoogle response = " + responseStr);
 
 					try {
-						rlProgress.setVisibility(View.GONE);
 						JSONObject jObj = new JSONObject(responseStr);
 
 						int flag = jObj.getInt("flag");

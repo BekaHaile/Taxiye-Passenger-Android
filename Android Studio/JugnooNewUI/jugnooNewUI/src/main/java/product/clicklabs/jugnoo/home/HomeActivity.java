@@ -6131,6 +6131,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         } else {
                             if (getFilteredDrivers() == 0) {
                                 noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
+                                specialPickupScreenOpened = false;
+                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                switchPassengerScreen(passengerScreenMode);
                             } else{
                                 initiateRequestRide(true);
                             }
