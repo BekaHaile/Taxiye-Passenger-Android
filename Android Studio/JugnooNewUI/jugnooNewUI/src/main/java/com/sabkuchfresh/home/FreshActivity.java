@@ -1637,6 +1637,20 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         Prefs.with(this).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
     }
 
+    private void gaEvents(String category, String action, String label){
+        if(category.equalsIgnoreCase("")) {
+            if (getTopFragment() instanceof FreshFragment) {
+                FlurryEventLogger.event(FlurryEventNames.FRESH_FRAGMENT, action, label);
+            } else if (getTopFragment() instanceof MealFragment) {
+                FlurryEventLogger.event(FlurryEventNames.MEALS_FRAGMENT, action, label);
+            } else if (getTopFragment() instanceof GroceryFragment) {
+                FlurryEventLogger.event(FlurryEventNames.GROCERY_FRAGMENT, action, label);
+            }
+        } else{
+            FlurryEventLogger.event(category, action, label);
+        }
+    }
+
     @Subscribe
     public void onSortEvent(SortSelection event) {
         try {
@@ -1645,7 +1659,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 					for (Category category : productsResponse.getCategories()) {
 						Collections.sort(category.getSubItems(), new SubItemCompare());
 					}
-					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.A_Z);
+                    gaEvents("", FlurryEventNames.SORT, FlurryEventNames.A_Z);
 					try {
 						mBus.post(new UpdateMainList(true));
 					} catch (Exception e) {
@@ -1663,7 +1677,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 						});
 	//                    Collections.sort(category.getSubItems(), new SubItemComparePriority());
 					}
-					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
+                    gaEvents("", FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
 					try {
 						mBus.post(new UpdateMainList(true));
 					} catch (Exception e) {
@@ -1674,7 +1688,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 					for (Category category : productsResponse.getCategories()) {
 						Collections.sort(category.getSubItems(), new SubItemComparePrice());
 					}
-					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
+                    gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
 					try {
 						mBus.post(new UpdateMainList(true));
 					} catch (Exception e) {
@@ -1685,7 +1699,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 					for (Category category : productsResponse.getCategories()) {
 						Collections.sort(category.getSubItems(), new SubItemComparePriceRev());
 					}
-					FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
+                    gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
 					try {
 						mBus.post(new UpdateMainList(true));
 					} catch (Exception e) {

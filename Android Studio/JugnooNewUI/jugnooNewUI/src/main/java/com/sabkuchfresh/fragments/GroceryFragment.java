@@ -525,7 +525,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     public void onTabClicked(int position) {
         Log.d(TAG, "onTabClicked = "+position);
         tabClickFlag = true;
-        FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.TAP);
+        FlurryEventLogger.event(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.CATEGORY_CHANGE, activity.getProductsResponse().getCategories().get(position).getCategoryName());
     }
 
     @Override

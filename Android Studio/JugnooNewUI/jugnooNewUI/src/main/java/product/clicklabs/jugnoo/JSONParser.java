@@ -1438,7 +1438,7 @@ public class JSONParser implements Constants {
                 Prefs.with(context).save(SP_WALLET_AT_SIGNUP, "");
 
                 MyApplication.getInstance().getCleverTapUtils().signUp(String.valueOf(loginVia), walletSelected, referralCodeEntered,
-                        String.valueOf(Data.userData.getJugnooBalance()));
+                        String.valueOf(Data.userData.getJugnooBalance()), Data.userData.getCity());
 
             }
             JSONObject map = new JSONObject();
@@ -1467,6 +1467,7 @@ public class JSONParser implements Constants {
             profileUpdate.put(Events.REFERRAL_CODE, Data.userData.referralCode);
             profileUpdate.put(Events.JUGNOO_CASH, Data.userData.getJugnooBalance());
             profileUpdate.put(Events.IS_VERIFIED, "True");
+            profileUpdate.put(Events.REGISTERED_CITY, Data.userData.getCityReg());
 
 //            profileUpdate.put(Events.COUPONS_USED, Data.userData.);
             try {

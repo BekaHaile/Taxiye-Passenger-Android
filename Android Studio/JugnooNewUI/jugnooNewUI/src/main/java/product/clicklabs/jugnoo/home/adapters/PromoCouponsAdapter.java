@@ -94,10 +94,18 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		holder.relative.setTag(holder);
 		holder.textViewTNC.setTag(position);
 
-		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
-			holder.rlContainer.setBackgroundResource(R.drawable.background_white_theme_color_rounded_bordered);
-		} else{
-			holder.rlContainer.setBackgroundColor(activity.getResources().getColor(R.color.offer_popup_item_color));
+		if(layoutRID == R.layout.list_item_promo_coupon) {
+			if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)) {
+				holder.rlContainer.setBackgroundResource(R.drawable.background_white_theme_color_rounded_bordered);
+			} else {
+				holder.rlContainer.setBackgroundColor(activity.getResources().getColor(R.color.offer_popup_item_color));
+			}
+		} else {
+			if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)) {
+				holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
+			} else {
+				holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
+			}
 		}
 
 		holder.textViewTNC.setOnClickListener(new View.OnClickListener() {
@@ -149,6 +157,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		public int id;
 		public RelativeLayout relative, rlContainer;
 		public TextView textViewOfferName, textViewTNC;
+		public ImageView imageViewRadio;
 		public ViewHolder(View itemView, Activity activity) {
 			relative = (RelativeLayout) itemView.findViewById(R.id.relative);
 			rlContainer = (RelativeLayout) itemView.findViewById(R.id.rlContainer);
@@ -156,6 +165,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 			textViewOfferName.setTypeface(Fonts.mavenRegular(activity));
 			textViewTNC = (TextView)itemView.findViewById(R.id.textViewTNC);
 			textViewTNC.setTypeface(Fonts.mavenLight(activity));
+			imageViewRadio = (ImageView) itemView.findViewById(R.id.imageViewRadio);
 		}
 	}
 
