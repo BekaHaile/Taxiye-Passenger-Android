@@ -1232,6 +1232,19 @@
 	<string name="delivered_from_colon">Delivered from:</string>
 	<string name="oh_snap">Oh snap!</string>
 	<string name="nothing_found_near_you">Nothing found near you\ntry to search with a different location.</string>
+	<string name="sort_by">Sort by</string>
+	<string name="popularity">Popularity</string>
+	<string name="price">Price</string>
+	<string name="cuisines">Cuisines</string>
+	<string name="minimum_order">Minimum order</string>
+	<string name="less_than_150"><![CDATA[<Rs. 150]]></string>
+	<string name="less_than_250"><![CDATA[<Rs. 250]]></string>
+	<string name="less_than_500"><![CDATA[<Rs. 500]]></string>
+	<string name="delivery_time_wo_colon">Delivery time</string>
+	<string name="min_30">30 Min</string>
+	<string name="min_45">45 Min</string>
+	<string name="min_60">60 Min</string>
+	<string name="filters">Filters</string>
 
 
 </resources>

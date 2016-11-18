@@ -165,7 +165,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         cardViewFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                activity.getTransactionUtils().openMenusFilterFragment(activity, activity.getRelativeLayoutContainer());
             }
         });
 
