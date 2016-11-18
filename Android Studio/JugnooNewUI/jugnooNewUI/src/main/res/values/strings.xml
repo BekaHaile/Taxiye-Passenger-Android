@@ -1201,5 +1201,6 @@
 	<string name="choose_pickup">Choose Pickup</string>
 	<string name="chat">Chat</string>
 	<string name="available_offers">Available Offers</string>
+	<string name="trying_to_verify">Trying to verify through\nmissed call...</string>
 
 </resources>

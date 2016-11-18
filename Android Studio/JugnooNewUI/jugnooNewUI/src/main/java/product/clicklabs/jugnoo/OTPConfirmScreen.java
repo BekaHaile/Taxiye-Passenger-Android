@@ -55,6 +55,7 @@ import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -102,6 +103,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	private Handler handler = new Handler();
 	private String signupBy = "", email = "", password = "";
 	private boolean onlyDigits;
+	private RelativeLayout rlProgress;
+	private ProgressWheel progressBar;
+	private boolean runAfterDelay;
 
 
 	@Override
@@ -182,6 +186,9 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		linearLayoutGiveAMissedCall = (LinearLayout) findViewById(R.id.linearLayoutGiveAMissedCall);
 		((TextView) findViewById(R.id.textViewGiveAMissedCall)).setTypeface(Fonts.mavenRegular(this));
 		textViewSkip = (TextView)findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.mavenRegular(this));
+		rlProgress = (RelativeLayout) findViewById(R.id.rlProgress);
+		((TextView) findViewById(R.id.tvProgress)).setTypeface(Fonts.mavenRegular(this));
+		progressBar = (ProgressWheel) findViewById(R.id.progressBar);
 
 		/*if(userVerified == 1){
 			textViewSkip.setVisibility(View.VISIBLE);
@@ -618,6 +625,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		if(giveAMissedCall) {
 			giveAMissedCall = false;
 			//buttonVerify.performClick();
+			rlProgress.setVisibility(View.VISIBLE);
 			if (signupBy.equalsIgnoreCase("email")) {
 				if (onlyDigits) {
 					email = "+91" + email;
@@ -639,9 +647,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 	}
 
+
 	Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
+			runAfterDelay = true;
 			if(signupBy.equalsIgnoreCase("email")){
 				if(onlyDigits){
 					email = "+91"+email;
@@ -1350,6 +1360,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 					Log.i(TAG, "loginUsingEmailOrPhoneNo response = " + responseStr);
 					try {
+						rlProgress.setVisibility(View.GONE);
 						JSONObject jObj = new JSONObject(responseStr);
 
 						int flag = jObj.getInt("flag");
@@ -1458,6 +1469,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					Log.i(TAG, "loginUsingFacebook response = " + responseStr);
 
 					try {
+						rlProgress.setVisibility(View.GONE);
 						JSONObject jObj = new JSONObject(responseStr);
 
 						int flag = jObj.getInt("flag");
@@ -1559,6 +1571,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					Log.i(TAG, "loginUsingGoogle response = " + responseStr);
 
 					try {
+						rlProgress.setVisibility(View.GONE);
 						JSONObject jObj = new JSONObject(responseStr);
 
 						int flag = jObj.getInt("flag");

@@ -94,6 +94,12 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		holder.relative.setTag(holder);
 		holder.textViewTNC.setTag(position);
 
+		if(callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
+			holder.rlContainer.setBackgroundResource(R.drawable.background_white_theme_color_rounded_bordered);
+		} else{
+			holder.rlContainer.setBackgroundColor(activity.getResources().getColor(R.color.offer_popup_item_color));
+		}
+
 		holder.textViewTNC.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -141,10 +147,11 @@ public class PromoCouponsAdapter extends BaseAdapter {
 
 	class ViewHolder {
 		public int id;
-		public RelativeLayout relative;
+		public RelativeLayout relative, rlContainer;
 		public TextView textViewOfferName, textViewTNC;
 		public ViewHolder(View itemView, Activity activity) {
 			relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+			rlContainer = (RelativeLayout) itemView.findViewById(R.id.rlContainer);
 			textViewOfferName = (TextView) itemView.findViewById(R.id.textViewOfferName);
 			textViewOfferName.setTypeface(Fonts.mavenRegular(activity));
 			textViewTNC = (TextView)itemView.findViewById(R.id.textViewTNC);

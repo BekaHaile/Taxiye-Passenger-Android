@@ -4,7 +4,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/offer_popup_item_color">
+    >
+
+    <RelativeLayout
+        android:id="@+id/rlContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/offer_popup_item_color"
+        android:layout_marginTop="@dimen/px_20"
+        android:layout_marginLeft="@dimen/px_24"
+        android:layout_marginRight="@dimen/px_24">
 
     <TextView
         android:id="@+id/textViewOfferName"
@@ -15,12 +24,10 @@
         android:layout_toRightOf="@+id/imageViewRadio"
         android:text="cashback\nabc"
         android:maxLines="2"
+        android:paddingLeft="@dimen/px_26"
         android:gravity="center_vertical"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/text_size_30"
-        android:layout_marginTop="@dimen/px_20"
-        android:layout_marginLeft="@dimen/px_24"
-        android:layout_marginRight="@dimen/px_24"/>
+        android:textSize="@dimen/text_size_30"/>
 
     <TextView
         android:id="@+id/textViewTNC"
@@ -36,5 +43,7 @@
         android:text="@string/tnc"
         android:textColor="@color/text_color_light"
         android:textSize="@dimen/text_size_22"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>
