@@ -218,12 +218,12 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 		try {
 			noFreshsView.setVisibility(View.GONE);
 			if (!isHidden()) {
-				activity.hideBottomBar(true);
+				activity.showBottomBar(true);
 				activity.getTopBar().below_shadow.setVisibility(View.GONE);
 			} else {
 				Fragment fragment = activity.getTopFragment();
 				if (fragment != null && fragment instanceof VendorMenuFragment) {
-					activity.hideBottomBar(false);
+					activity.showBottomBar(false);
 					activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
 				}
 			}

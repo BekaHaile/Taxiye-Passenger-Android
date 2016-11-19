@@ -650,7 +650,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return topBar;
     }
 
-    public void hideBottomBar(boolean flag) {
+    public void showBottomBar(boolean flag) {
         if(flag)
             relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
         else

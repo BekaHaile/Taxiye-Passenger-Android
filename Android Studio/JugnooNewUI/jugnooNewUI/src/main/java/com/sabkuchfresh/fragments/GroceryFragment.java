@@ -338,12 +338,12 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 noFreshsView.setVisibility(View.GONE);
                                 mSwipeRefreshLayout.setVisibility(View.GONE);
                                 if(!isHidden()) {
-                                    activity.hideBottomBar(true);
+                                    activity.showBottomBar(true);
                                     activity.getTopBar().below_shadow.setVisibility(View.GONE);
                                 } else {
 									Fragment fragment = activity.getTopFragment();
 									if(fragment != null && fragment instanceof GroceryFragment) {
-										activity.hideBottomBar(false);
+										activity.showBottomBar(false);
 										activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
 									}
                                 }
@@ -394,7 +394,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 noFreshsView.setVisibility(View.VISIBLE);
                                 imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_grocery);
                                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                activity.hideBottomBar(false);
+                                activity.showBottomBar(false);
                                 mainLayout.setVisibility(View.GONE);
                             }
 						} catch (Exception exception) {
@@ -442,7 +442,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
         noFreshsView.setVisibility(View.VISIBLE);
         imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_grocery);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-        activity.hideBottomBar(false);
+        activity.showBottomBar(false);
         mainLayout.setVisibility(View.GONE);
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,

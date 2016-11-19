@@ -337,12 +337,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                 activity.getTopBar().below_shadow.setVisibility(View.GONE);
                                 mSwipeRefreshLayout.setVisibility(View.GONE);
                                 if(!isHidden()) {
-                                    activity.hideBottomBar(true);
+                                    activity.showBottomBar(true);
                                     activity.getTopBar().below_shadow.setVisibility(View.GONE);
                                 } else {
 									Fragment fragment = activity.getTopFragment();
 									if(fragment != null && fragment instanceof FreshFragment) {
-										activity.hideBottomBar(false);
+										activity.showBottomBar(false);
 										activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
 									}
                                 }
@@ -394,7 +394,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                 noFreshsView.setVisibility(View.VISIBLE);
                                 imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
                                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                activity.hideBottomBar(false);
+                                activity.showBottomBar(false);
                                 mainLayout.setVisibility(View.GONE);
                             }
 						} catch (Exception exception) {
@@ -443,7 +443,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
         activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-        activity.hideBottomBar(false);
+        activity.showBottomBar(false);
         mainLayout.setVisibility(View.GONE);
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,

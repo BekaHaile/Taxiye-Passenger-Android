@@ -417,16 +417,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if(listType == AppConstant.ListType.HOME){
-            if(recentOrders != null && recentOrders.size() > 0){
-                return subItems == null ? 0 : subItems.size() + recentOrders.size() + 1;
-            } else {
-                return subItems == null ? 0 : subItems.size() + 1;
-            }
-        }
-
-        else
+        if (listType == AppConstant.ListType.HOME) {
+            int recentOrdersSize = recentOrders == null ? 0 : recentOrders.size();
+            int subItemsSize = subItems == null ? 0 : subItems.size();
+            return ((recentOrdersSize + subItemsSize) > 0) ? (recentOrdersSize + subItemsSize + 1) : 0;
+        } else {
             return subItems == null ? 0 : subItems.size();
+        }
     }
 
 //    @Override

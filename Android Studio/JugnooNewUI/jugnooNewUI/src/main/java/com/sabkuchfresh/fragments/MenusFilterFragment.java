@@ -12,10 +12,10 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.dpizarro.autolabel.library.AutoLabelUI;
-import com.dpizarro.autolabel.library.AutoLabelUISettings;
-import com.dpizarro.autolabel.library.Label;
-import com.dpizarro.autolabel.library.LabelValues;
+import product.clicklabs.jugnoo.widgets.library.AutoLabelUI;
+import product.clicklabs.jugnoo.widgets.library.AutoLabelUISettings;
+import product.clicklabs.jugnoo.widgets.library.Label;
+import product.clicklabs.jugnoo.widgets.library.LabelValues;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.otto.Bus;
 
