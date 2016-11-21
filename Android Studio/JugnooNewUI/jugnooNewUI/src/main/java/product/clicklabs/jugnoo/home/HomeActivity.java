@@ -30,7 +30,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
@@ -55,7 +54,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -89,8 +87,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
-import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -173,8 +169,6 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
-import product.clicklabs.jugnoo.home.models.PokestopInfo;
-import product.clicklabs.jugnoo.home.models.PokestopTypeValue;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
@@ -183,7 +177,6 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
-import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -216,7 +209,6 @@ import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.MarkerAnimation;
 import product.clicklabs.jugnoo.utils.NonScrollGridView;
-import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
@@ -488,6 +480,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private TextView tvChatCount;
     private ArrayList<Marker> markersSpecialPickup = new ArrayList<>();
     private ArrayList<MarkerOptions> markerOptionsSpecialPickup = new ArrayList<>();
+    private float mapPaddingSpecialPickup = 268f, mapPaddingConfirm = 238f;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -2825,7 +2819,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         checkForFareAvailablity();
                         findADriverFinishing(false);
-                        setGoogleMapPadding(0);
 
                         linearLayoutRequestMain.setVisibility(View.VISIBLE);
                         relativeLayoutInitialSearchBar.setEnabled(true);
@@ -2836,8 +2829,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             topBar.imageViewMenu.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
                             specialPickupItemsAdapter.setResults(Data.autoData.getNearbyPickupRegionses().getHoverInfo());
+                            setGoogleMapPadding(mapPaddingSpecialPickup);
                         } else{
                             rlSpecialPickup.setVisibility(View.GONE);
+                            setGoogleMapPadding(0f);
+                            showPoolInforBar();
                         }
 
                         if(confirmedScreenOpened){
@@ -2857,6 +2853,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             updateConfirmedStateCoupon();
                             updateConfirmedStateFare();
                             //fabView.setRelativeLayoutFABVisibility(mode);
+                            setGoogleMapPadding(mapPaddingConfirm);
 
                         } else{
                             if (!zoomedForSearch && !specialPickupScreenOpened && map != null) {
@@ -8509,9 +8506,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
             showPoolInforBar();
             setFabMarginInitial(false);
-            if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-                setGoogleMapPadding(0);
-            }
         }
         slidingBottomPanel.getRequestRideOptionsFragment()
                 .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
@@ -8592,6 +8586,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void showPoolInforBar(){
         try {
+            float mapBottomPadding = 0f;
             if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
@@ -8600,6 +8595,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1());
                 relativeLayoutPoolInfoBar.setBackgroundResource(R.drawable.background_pool_info);
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.text_color));
+                mapBottomPadding = 60f;
                 //setGoogleMapPadding(70);
             } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
@@ -8615,10 +8611,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 final SpannableStringBuilder sb = new SpannableStringBuilder("Click to see.");
                 sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 textViewPoolInfo1.append(sb);
+                mapBottomPadding = 60f;
                 //setGoogleMapPadding(70);
             } else{
                 viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
                 setFabMarginInitial(false);
+            }
+            if(PassengerScreenMode.P_INITIAL == passengerScreenMode
+                    && !specialPickupScreenOpened && !confirmedScreenOpened) {
+                setGoogleMapPadding(mapBottomPadding);
             }
         } catch (Exception e) {
             e.printStackTrace();
