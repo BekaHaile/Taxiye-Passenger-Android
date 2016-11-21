@@ -76,7 +76,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 				chatViewHolder.chatTextYou.setText(chatHistory.getMessage());
 				chatViewHolder.chatTimeYou.setText(DateOperations.convertDateViaFormatOnlyTime(DateOperations.utcToLocalWithTZFallback(chatHistory.getCreatedAt())));
-				if(!"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().image)) {
+				if(Data.autoData.getAssignedDriverInfo().image != null && !"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().image)) {
 					float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 					Picasso.with(context).
 							load(Data.autoData.getAssignedDriverInfo().image)

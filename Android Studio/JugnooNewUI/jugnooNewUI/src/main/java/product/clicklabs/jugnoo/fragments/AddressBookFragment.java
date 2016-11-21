@@ -84,11 +84,11 @@ public class AddressBookFragment extends Fragment {
 		relativeLayoutHome = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutHome);
 		((TextView) rootView.findViewById(R.id.textViewHome)).setTypeface(Fonts.mavenMedium(activity));
 		textViewHomeValue = (TextView) rootView.findViewById(R.id.textViewHomeValue); textViewHomeValue.setTypeface(Fonts.mavenMedium(activity));
-		textViewAddressUsedHome = (TextView) rootView.findViewById(R.id.textViewAddressUsedHome); textViewAddressUsedHome.setTypeface(Fonts.mavenRegular(activity), Typeface.ITALIC);
+		textViewAddressUsedHome = (TextView) rootView.findViewById(R.id.textViewAddressUsedHome); textViewAddressUsedHome.setTypeface(Fonts.mavenRegular(activity));
 		relativeLayoutWork = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWork);
 		((TextView) rootView.findViewById(R.id.textViewWork)).setTypeface(Fonts.mavenMedium(activity));
 		textViewWorkValue = (TextView) rootView.findViewById(R.id.textViewWorkValue); textViewWorkValue.setTypeface(Fonts.mavenMedium(activity));
-		textViewAddressUsedWork = (TextView) rootView.findViewById(R.id.textViewAddressUsedWork); textViewAddressUsedWork.setTypeface(Fonts.mavenRegular(activity), Typeface.ITALIC);
+		textViewAddressUsedWork = (TextView) rootView.findViewById(R.id.textViewAddressUsedWork); textViewAddressUsedWork.setTypeface(Fonts.mavenRegular(activity));
 		viewHomeSep = rootView.findViewById(R.id.viewHomeSep);
 		viewWorkSep = rootView.findViewById(R.id.viewWorkSep);
 
@@ -229,8 +229,13 @@ public class AddressBookFragment extends Fragment {
 				textViewAddressUsedHome.setVisibility(View.GONE);
 				if (searchResult.getFreq() > 0) {
 					textViewAddressUsedHome.setVisibility(View.VISIBLE);
-					textViewAddressUsedHome.setText(activity.getString(R.string.address_used_format,
-							String.valueOf(searchResult.getFreq())));
+					if(searchResult.getFreq() <= 1){
+						textViewAddressUsedHome.setText(activity.getString(R.string.address_used_one_time_format,
+								String.valueOf(searchResult.getFreq())));
+					} else {
+						textViewAddressUsedHome.setText(activity.getString(R.string.address_used_multiple_time_format,
+								String.valueOf(searchResult.getFreq())));
+					}
 				}
 			} else {
 				relativeLayoutHome.setVisibility(View.GONE);
@@ -246,8 +251,13 @@ public class AddressBookFragment extends Fragment {
 				textViewAddressUsedWork.setVisibility(View.GONE);
 				if (searchResult.getFreq() > 0) {
 					textViewAddressUsedWork.setVisibility(View.VISIBLE);
-					textViewAddressUsedWork.setText(activity.getString(R.string.address_used_format,
-							String.valueOf(searchResult.getFreq())));
+					if(searchResult.getFreq() <= 1){
+						textViewAddressUsedWork.setText(activity.getString(R.string.address_used_one_time_format,
+								String.valueOf(searchResult.getFreq())));
+					} else {
+						textViewAddressUsedWork.setText(activity.getString(R.string.address_used_multiple_time_format,
+								String.valueOf(searchResult.getFreq())));
+					}
 				}
 			} else {
 				relativeLayoutWork.setVisibility(View.GONE);

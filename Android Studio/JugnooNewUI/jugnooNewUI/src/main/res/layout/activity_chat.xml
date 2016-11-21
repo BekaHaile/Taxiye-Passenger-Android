@@ -47,7 +47,7 @@
         android:layout_height="116px"
         android:layout_above="@+id/rlInput"
         android:splitMotionEvents="false"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 
     <ImageView

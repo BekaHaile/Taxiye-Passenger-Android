@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,11 +95,14 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		holder.relative.setTag(holder);
 		holder.textViewTNC.setTag(position);
 
+		holder.textViewOfferName.setTypeface(Fonts.mavenRegular(activity), Typeface.NORMAL);
 		if(layoutRID == R.layout.list_item_promo_coupon) {
 			if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)) {
 				holder.rlContainer.setBackgroundResource(R.drawable.background_white_theme_color_rounded_bordered);
+				holder.textViewOfferName.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 			} else {
 				holder.rlContainer.setBackgroundColor(activity.getResources().getColor(R.color.offer_popup_item_color));
+				holder.textViewOfferName.setTypeface(Fonts.mavenRegular(activity), Typeface.NORMAL);
 			}
 		} else {
 			if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)) {

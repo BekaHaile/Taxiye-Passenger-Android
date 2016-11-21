@@ -458,6 +458,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         return selectedCoupon;
     }
 
+    public RecyclerView getRecyclerViewVehicles() {
+        return recyclerViewVehicles;
+    }
+
     public void setSelectedCoupon(int position) {
         PromoCoupon promoCoupon;
         if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO).size()) {

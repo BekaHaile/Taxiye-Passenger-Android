@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="7px"
-            android:text="@string/address_used_format"
+            android:text="@string/address_used_multiple_time_format"
             android:textColor="@color/text_color_light"
             android:textSize="@dimen/text_size_22"
             />

@@ -124,18 +124,25 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			chatSuggestionAdapter = new ChatSuggestionAdapter(this, chatSuggestions,  new ChatSuggestionAdapter.Callback() {
 				@Override
 				public void onSuggestionClick(int position, FetchChatResponse.Suggestion suggestion) {
-					sendChat(suggestion.getSuggestion());
-					chatSuggestions.remove(position);
+					if(AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+						sendChat(suggestion.getSuggestion());
+						chatSuggestions.remove(position);
+					}
 				}
 			});
 			recyclerViewChatOptions.setAdapter(chatSuggestionAdapter);
+			if(chatSuggestions.size() > 0){
+				recyclerViewChatOptions.setVisibility(View.VISIBLE);
+			} else{
+				recyclerViewChatOptions.setVisibility(View.GONE);
+			}
 			Prefs.with(ChatActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
 			GCMIntentService.clearNotifications(this);
 			// done action listener to send the chat
 			input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-						if(input.getText().toString().trim().length() > 0) {
+						if(input.getText().toString().trim().length() > 0 && (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()))) {
 							sendChat(input.getText().toString().trim());
 						}
                         return true;
@@ -197,7 +204,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
                 performBackPressed();
             	break;
 			case R.id.action_send:
-				if(input.getText().toString().trim().length() > 0) {
+				if(input.getText().toString().trim().length() > 0 && (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()))) {
 					sendChat(input.getText().toString().trim());
 				}
 				break;
@@ -235,7 +242,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 		//hideKeyboard(input);
 		//String inputText = input.getText().toString().trim();
 		Calendar time = Calendar.getInstance();
-		if (!(inputText.isEmpty())) {
+		if (!(inputText.isEmpty()) && fetchChatResponse != null) {
 			// add message to list
 			FetchChatResponse.ChatHistory chatHistory = fetchChatResponse.new ChatHistory();
 			chatHistory.setChatHistoryId(0);
@@ -315,6 +322,11 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 								chatSuggestions.clear();
 								chatSuggestions.addAll(fetchChat.getSuggestions());
 								chatSuggestionAdapter.notifyDataSetChanged();
+								if(chatSuggestions.size() > 0){
+									recyclerViewChatOptions.setVisibility(View.VISIBLE);
+								} else{
+									recyclerViewChatOptions.setVisibility(View.GONE);
+								}
 								if(handler != null && loadDiscussion != null) {
 									handler.postDelayed(loadDiscussion, 5000);
 								}

@@ -138,10 +138,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         imageViewEditWork = (ImageView) rootView.findViewById(R.id.imageViewEditWork);
         textViewAddHome = (TextView)rootView.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
         textViewAddHomeValue = (TextView)rootView.findViewById(R.id.textViewAddHomeValue); textViewAddHomeValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewAddressUsedHome = (TextView) rootView.findViewById(R.id.textViewAddressUsedHome); textViewAddressUsedHome.setTypeface(Fonts.mavenRegular(activity), Typeface.ITALIC);
+        textViewAddressUsedHome = (TextView) rootView.findViewById(R.id.textViewAddressUsedHome); textViewAddressUsedHome.setTypeface(Fonts.mavenRegular(activity));
         textViewAddWork = (TextView)rootView.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
         textViewAddWorkValue = (TextView)rootView.findViewById(R.id.textViewAddWorkValue); textViewAddWorkValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewAddressUsedWork = (TextView) rootView.findViewById(R.id.textViewAddressUsedWork); textViewAddressUsedWork.setTypeface(Fonts.mavenRegular(activity), Typeface.ITALIC);
+        textViewAddressUsedWork = (TextView) rootView.findViewById(R.id.textViewAddressUsedWork); textViewAddressUsedWork.setTypeface(Fonts.mavenRegular(activity));
         imageViewSep = (ImageView)rootView.findViewById(R.id.imageViewSep);
         scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
         scrollViewSearch.setVisibility(View.GONE);
@@ -621,8 +621,13 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             textViewAddressUsedHome.setVisibility(View.GONE);
             if(searchResult.getFreq() > 0){
                 textViewAddressUsedHome.setVisibility(View.VISIBLE);
-                textViewAddressUsedHome.setText(activity.getString(R.string.address_used_format,
-                        String.valueOf(searchResult.getFreq())));
+                if(searchResult.getFreq() <= 1){
+                    textViewAddressUsedHome.setText(activity.getString(R.string.address_used_one_time_format,
+                            String.valueOf(searchResult.getFreq())));
+                } else{
+                    textViewAddressUsedHome.setText(activity.getString(R.string.address_used_multiple_time_format,
+                            String.valueOf(searchResult.getFreq())));
+                }
             }
             savedPlaces++;
         } else{
@@ -642,8 +647,13 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             textViewAddressUsedWork.setVisibility(View.GONE);
             if(searchResult.getFreq() > 0){
                 textViewAddressUsedWork.setVisibility(View.VISIBLE);
-                textViewAddressUsedWork.setText(activity.getString(R.string.address_used_format,
-                        String.valueOf(searchResult.getFreq())));
+                if(searchResult.getFreq() <= 1){
+                    textViewAddressUsedWork.setText(activity.getString(R.string.address_used_one_time_format,
+                            String.valueOf(searchResult.getFreq())));
+                } else {
+                    textViewAddressUsedWork.setText(activity.getString(R.string.address_used_multiple_time_format,
+                            String.valueOf(searchResult.getFreq())));
+                }
             }
             savedPlaces++;
         } else{

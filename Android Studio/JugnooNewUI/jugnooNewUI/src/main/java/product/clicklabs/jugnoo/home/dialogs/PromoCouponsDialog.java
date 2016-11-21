@@ -118,9 +118,14 @@ public class PromoCouponsDialog {
 				}
 			});
 
-			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listViewPromoCoupons.getLayoutParams();
+			/*LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listViewPromoCoupons.getLayoutParams();
 			params.height = promoCoupons.size() > 3 ? (int)(156f * 3f * ASSL.Yscale())
 					: (int)(156f * (float)promoCoupons.size() * ASSL.Yscale());
+			listViewPromoCoupons.setLayoutParams(params);*/
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listViewPromoCoupons.getLayoutParams();
+			if(promoCoupons.size() > 2){
+				params.height = (int)(520f * ASSL.Yscale());
+			}
 			listViewPromoCoupons.setLayoutParams(params);
 			listViewPromoCoupons.setAdapter(promoCouponsAdapter);
 
@@ -150,6 +155,7 @@ public class PromoCouponsDialog {
 				relativeLayoutBottomButtons.setVisibility(View.GONE);
 				linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
 				imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
+				tvAvailableOffers.setText(activity.getResources().getString(R.string.no_available_offers));
 			}
 
 			buttonSkip.setOnClickListener(new View.OnClickListener() {

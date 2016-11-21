@@ -42,7 +42,7 @@
                 android:id="@+id/tvAvailableOffers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/available_offers"
+                android:text="@string/select_an_offer"
                 android:textColor="@color/white"
                 android:textSize="@dimen/px_42"
                 android:layout_centerVertical="true"
@@ -95,9 +95,9 @@
         <ListView
             android:id="@+id/listViewPromoCoupons"
             android:layout_width="match_parent"
-            android:layout_height="500px"
+            android:layout_height="260px"
             android:splitMotionEvents="false"
-            android:visibility="gone"
+            android:visibility="visible"
             android:scrollbars="vertical"
             android:divider="@color/transparent"
             android:dividerHeight="0px"
@@ -119,7 +119,7 @@
                 android:textColor="@color/text_color_light_selector"
                 android:background="@drawable/bg_transparent_menu_item_selector_color_blr_selector"
                 android:textSize="@dimen/text_size_34"
-                android:text="@string/skip"
+                android:text="@string/cancel"
                 />
 
             <Button
@@ -129,7 +129,7 @@
                 android:textColor="@color/text_color_light_selector"
                 android:background="@drawable/bg_transparent_menu_item_selector_color_brr_selector"
                 android:textSize="@dimen/text_size_34"
-                android:text="@string/continue_text"
+                android:text="@string/ok"
                 android:layout_alignParentRight="true"
                 />
             

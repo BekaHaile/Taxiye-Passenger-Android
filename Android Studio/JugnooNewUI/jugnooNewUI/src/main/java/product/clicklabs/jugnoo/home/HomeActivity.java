@@ -2603,6 +2603,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     zoomAfterFindADriver = true;
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                     mapTouched = true;
+                    showPoolInforBar();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -8412,7 +8413,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
-        if(Data.autoData.getRegions().size() == 1) {
+        if(Data.autoData.getRegions().size() == 1 && slidingBottomPanel.getRequestRideOptionsFragment().getRecyclerViewVehicles().getVisibility() == View.GONE) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
         } else {
@@ -8599,7 +8600,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 //setGoogleMapPadding(70);
             } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
+                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) &&
+                    (Data.autoData.getRegions().size() > 1)){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(false);
 

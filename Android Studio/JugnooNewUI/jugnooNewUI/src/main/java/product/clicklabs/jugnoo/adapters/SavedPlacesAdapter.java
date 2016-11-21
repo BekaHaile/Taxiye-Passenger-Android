@@ -81,7 +81,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
             holder.textViewSearchAddress.setTypeface(Fonts.mavenMedium(context));
             holder.textViewAddressUsed = (TextView) convertView.findViewById(R.id.textViewAddressUsed);
-            holder.textViewAddressUsed.setTypeface(Fonts.mavenRegular(context), Typeface.ITALIC);
+            holder.textViewAddressUsed.setTypeface(Fonts.mavenRegular(context));
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
             holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
@@ -118,8 +118,14 @@ public class SavedPlacesAdapter extends BaseAdapter{
 
             holder.textViewAddressUsed.setVisibility(View.GONE);
             if(searchResult.getFreq() > 0) {
-                holder.textViewAddressUsed.setText(context.getString(R.string.address_used_format,
-                        String.valueOf(searchResults.get(position).getFreq())));
+                if(searchResults.get(position).getFreq() <= 1){
+                    holder.textViewAddressUsed.setText(context.getString(R.string.address_used_one_time_format,
+                            String.valueOf(searchResults.get(position).getFreq())));
+                } else{
+                    holder.textViewAddressUsed.setText(context.getString(R.string.address_used_multiple_time_format,
+                            String.valueOf(searchResults.get(position).getFreq())));
+                }
+
                 holder.textViewAddressUsed.setVisibility(View.VISIBLE);
             }
 
