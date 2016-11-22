@@ -142,9 +142,14 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-						if(input.getText().toString().trim().length() > 0 && (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()))) {
-							sendChat(input.getText().toString().trim());
+						if(AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())){
+							if(input.getText().toString().trim().length() > 0) {
+								sendChat(input.getText().toString().trim());
+							}
+						} else{
+							DialogPopup.alertPopup(ChatActivity.this, "", Data.CHECK_INTERNET_MSG);
 						}
+
                         return true;
                     }
                     return false;
@@ -204,8 +209,12 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
                 performBackPressed();
             	break;
 			case R.id.action_send:
-				if(input.getText().toString().trim().length() > 0 && (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()))) {
-					sendChat(input.getText().toString().trim());
+				if(AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+					if (input.getText().toString().trim().length() > 0) {
+						sendChat(input.getText().toString().trim());
+					}
+				} else{
+					DialogPopup.alertPopup(ChatActivity.this, "", Data.CHECK_INTERNET_MSG);
 				}
 				break;
 			case R.id.ivCallDriver:

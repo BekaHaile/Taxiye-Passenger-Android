@@ -61,6 +61,11 @@ public class DeepLinkAction {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.GROCERY.getTag());
 				}
 			}
+			else if(AppLinkIndex.CHAT_PAGE.getOrdinal() == Data.deepLinkIndex){
+				if(Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
+					menuBar.openChat();
+				}
+			}
 
 		} catch(Exception e){
 			e.printStackTrace();

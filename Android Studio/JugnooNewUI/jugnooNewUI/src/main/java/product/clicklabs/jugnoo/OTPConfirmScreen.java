@@ -264,7 +264,6 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 
 		editTextOTP.setOnEditorActionListener(new OnEditorActionListener() {
-
 			@Override
 			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
 				buttonVerify.performClick();
@@ -572,6 +571,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
+						rlProgress.setVisibility(View.GONE);
 						if(linearLayoutWaiting.getVisibility() == View.VISIBLE){
 							scrollView.smoothScrollTo(0, editTextOTP.getBottom());
 						} else {
@@ -596,6 +596,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
+					rlProgress.setVisibility(View.GONE);
 					if(linearLayoutWaiting.getVisibility() == View.VISIBLE){
 						scrollView.smoothScrollTo(0, editTextOTP.getBottom());
 					} else {

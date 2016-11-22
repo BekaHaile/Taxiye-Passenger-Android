@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	private TextView textViewSavedPlaces, textViewRecentAddresses;
 	private NonScrollListView listViewSavedLocations, listViewRecentAddresses;
 	private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
+	private CardView cvRecentAddresses;
 
 	private View rootView;
     private Activity activity;
@@ -121,6 +123,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
 		listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
 		listViewRecentAddresses = (NonScrollListView) rootView.findViewById(R.id.listViewRecentAddresses);
+		cvRecentAddresses = (CardView) rootView.findViewById(R.id.cardViewRecentAddresses);
 
 		try {
 			ArrayList<SearchResult> searchResults = new ArrayList<>();
@@ -165,6 +168,11 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				}
 			}, false, false);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+			if(Data.userData.getSearchResultsRecent().size() > 0){
+				cvRecentAddresses.setVisibility(View.VISIBLE);
+			} else{
+				cvRecentAddresses.setVisibility(View.GONE);
+			}
 
 			if(savedPlaces > 0) {
 				textViewSavedPlaces.setVisibility(View.VISIBLE);

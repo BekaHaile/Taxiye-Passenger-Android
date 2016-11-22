@@ -6,6 +6,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import product.clicklabs.jugnoo.utils.Utils;
+
 public class SearchResult {
 	@SerializedName("name")
 	@Expose
@@ -80,6 +82,9 @@ public class SearchResult {
 	}
 
 	public String getName() {
+		if(!TextUtils.isEmpty(name) && ("home".equalsIgnoreCase(name.toLowerCase()) || "work".equalsIgnoreCase(name.toLowerCase()))){
+			return Utils.firstCharCapital(name);
+		}
 		return name;
 	}
 

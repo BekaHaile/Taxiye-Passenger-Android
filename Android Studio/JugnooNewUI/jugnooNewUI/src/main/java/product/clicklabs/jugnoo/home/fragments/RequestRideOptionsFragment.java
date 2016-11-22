@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -413,19 +414,23 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     }
 
     public void updateFareStructureUI(){
-        for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
-            if (Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
-                    && Data.autoData.getRegions().get(i).getRideType().equals(getRegionSelected().getRideType())) {
-                Data.autoData.setFareStructure(Data.autoData.getRegions().get(i).getFareStructure());
-                break;
+        try {
+            for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
+                if (Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
+                        && Data.autoData.getRegions().get(i).getRideType().equals(getRegionSelected().getRideType())) {
+                    Data.autoData.setFareStructure(Data.autoData.getRegions().get(i).getFareStructure());
+                    break;
+                }
             }
+            textViewMinFareValue.setText(Data.autoData.getFareStructure().getDisplayBaseFare(activity));
+            textViewMinFareMSValue.setText(Data.autoData.getFareStructure().getDisplayBaseFare(activity));
+            textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
+            updateFareFactorUI();
+            updateBottomMultipleView(getRegionSelected().getRideType());
+            updateFareFactorUISingle();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        textViewMinFareValue.setText(Data.autoData.getFareStructure().getDisplayBaseFare(activity));
-        textViewMinFareMSValue.setText(Data.autoData.getFareStructure().getDisplayBaseFare(activity));
-        textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
-        updateFareFactorUI();
-        updateBottomMultipleView(getRegionSelected().getRideType());
-        updateFareFactorUISingle();
     }
 
     public void updateFareFactorUI(){

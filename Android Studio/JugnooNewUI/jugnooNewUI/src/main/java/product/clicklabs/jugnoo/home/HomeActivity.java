@@ -2603,7 +2603,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     zoomAfterFindADriver = true;
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                     mapTouched = true;
-                    showPoolInforBar();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -4316,12 +4315,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bChatDriver:
-                Prefs.with(HomeActivity.this).save(KEY_CHAT_COUNT, 0);
-                tvChatCount.setVisibility(View.GONE);
-                startActivity(new Intent(HomeActivity.this, ChatActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                openChatScreen();
                 break;
         }
+    }
+
+    public void openChatScreen(){
+        Prefs.with(HomeActivity.this).save(KEY_CHAT_COUNT, 0);
+        tvChatCount.setVisibility(View.GONE);
+        startActivity(new Intent(HomeActivity.this, ChatActivity.class));
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
 
@@ -4754,6 +4757,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     fabViewTest = new FABViewTest(this, fabViewIntial);
                     setJeanieVisibility();
                     setServiceAvailablityUI(Data.autoData.getFarAwayCity());
+                    showPoolInforBar();
                     if(showPoolIntro) {
 //                        showPoolIntroDialog();
                     }
@@ -6267,7 +6271,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void run() {
                 try {
-                    callMapTouchedRefreshDrivers();
+                    if(!isSpecialPickupScreenOpened()) {
+                        callMapTouchedRefreshDrivers();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -8413,7 +8419,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
-        if(Data.autoData.getRegions().size() == 1 && slidingBottomPanel.getRequestRideOptionsFragment().getRecyclerViewVehicles().getVisibility() == View.GONE) {
+        if(Data.autoData.getRegions().size() == 1) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
         } else {
@@ -8465,55 +8471,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void setRegionUI(boolean firstTime) {
-        updateImageViewRideNowIcon();
-        imageViewRideNow.startAnimation(getBounceScale());
-        showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+        try {
+            updateImageViewRideNowIcon();
+            imageViewRideNow.startAnimation(getBounceScale());
+            showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
 //        if(!firstTime && map != null){
 //            zoomToCurrentLocationWithOneDriver(map.getCameraPosition().target);
 //        }
 
-        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-            ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
-            int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-            if (!firstTime && index == 1 && Data.autoData.getDropLatLng() == null) {
-                translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
-                translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
-            }
-            if(Data.autoData.getDropLatLng() == null) {
-                textViewDestSearch.setText(getResources().getString(R.string.destination_required));
-                textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
-            }
-            showPoolInforBar();
-            try {
-                if (Prefs.with(HomeActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
-                    imageViewPokemonOnOffInitial.setAlpha(1.0f);
-                } else {
-                    imageViewPokemonOnOffInitial.setAlpha(0.3f);
+            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+                if (!firstTime && index == 1 && Data.autoData.getDropLatLng() == null) {
+                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
-            int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
-            if (!firstTime && index == 1 && Data.autoData.getDropLatLng() == null) {
-                translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
-                translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
-            }
-            if(Data.autoData.getDropLatLng() == null) {
-                textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
-                textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
-            }
-            viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
-            showPoolInforBar();
-            setFabMarginInitial(false);
-        }
-        slidingBottomPanel.getRequestRideOptionsFragment()
-                .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+                if(Data.autoData.getDropLatLng() == null) {
+                    textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+                    textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+                }
+                showPoolInforBar();
                 try {
                     if (Prefs.with(HomeActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
                         imageViewPokemonOnOffInitial.setAlpha(1.0f);
@@ -8523,8 +8500,41 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
+                int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
+                if (!firstTime && index == 1 && Data.autoData.getDropLatLng() == null) {
+                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
+                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
+                }
+                if(Data.autoData.getDropLatLng() == null) {
+                    textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                    textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+                }
+                viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
+                showPoolInforBar();
+                setFabMarginInitial(false);
             }
-        }, 500);
+            slidingBottomPanel.getRequestRideOptionsFragment()
+                    .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (Prefs.with(HomeActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
+                            imageViewPokemonOnOffInitial.setAlpha(1.0f);
+                        } else {
+                            imageViewPokemonOnOffInitial.setAlpha(0.3f);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 500);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setFabMarginInitial(boolean isSliding){
