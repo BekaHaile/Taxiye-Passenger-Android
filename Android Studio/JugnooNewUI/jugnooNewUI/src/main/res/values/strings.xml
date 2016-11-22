@@ -1246,6 +1246,7 @@
 	<string name="min_60">60 Min</string>
 	<string name="filters">Filters</string>
 	<string name="reset">Reset</string>
+	<string name="bullet">\u2022</string>
 
 
 </resources>

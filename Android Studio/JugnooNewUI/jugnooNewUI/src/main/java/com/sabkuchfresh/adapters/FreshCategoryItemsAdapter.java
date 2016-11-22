@@ -133,7 +133,10 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.textViewItemName.setText(subItem.getSubItemName());
             if(!TextUtils.isEmpty(subItem.getBaseUnit())) {
+                mHolder.textViewItemUnit.setVisibility(View.VISIBLE);
                 mHolder.textViewItemUnit.setText(subItem.getBaseUnit());
+            } else {
+                mHolder.textViewItemUnit.setVisibility(View.GONE);
             }
             mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
                     Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
@@ -237,7 +240,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             if(!subItem.getSubItemDesc().equalsIgnoreCase("")){
                 mHolder.imageViewMoreInfoSeprator.setVisibility(View.VISIBLE);
-                mHolder.textViewMoreInfo.setVisibility(View.VISIBLE);
+                mHolder.textViewMoreInfo.setVisibility(!TextUtils.isEmpty(subItem.getBaseUnit()) ? View.VISIBLE : View.GONE);
             } else{
                 mHolder.imageViewMoreInfoSeprator.setVisibility(View.GONE);
                 mHolder.textViewMoreInfo.setVisibility(View.GONE);

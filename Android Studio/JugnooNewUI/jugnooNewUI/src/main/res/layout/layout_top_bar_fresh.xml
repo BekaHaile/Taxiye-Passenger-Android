@@ -181,7 +181,7 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:visibility="gone"
+            android:visibility="visible"
             >
 
             <LinearLayout
@@ -203,14 +203,15 @@
                     android:textSize="@dimen/text_size_22"
                     />
 
-                <product.clicklabs.jugnoo.widgets.CustomTextView
+                <TextView
                     android:id="@+id/textViewLocationValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text=""
+                    android:gravity="right"
+                    android:text="abndasbnmd jhajklshdkj dasjkhdjk"
                     android:textColor="@color/text_color_selector"
                     android:textSize="@dimen/text_size_26"
+                    android:maxLines="1"
                     />
 
             </LinearLayout>

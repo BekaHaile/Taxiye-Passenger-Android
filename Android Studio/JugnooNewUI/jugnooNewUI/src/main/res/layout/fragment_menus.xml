@@ -71,14 +71,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24px"
                 android:layout_marginRight="24px"
-                android:layout_marginTop="26px"
+                android:layout_marginTop="24px"
                 android:layout_marginBottom="6px">
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/cardViewSearch"
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="540px"
-                    android:layout_height="@dimen/px_100"
+                    android:layout_width="560px"
+                    android:layout_height="84px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px"
                     >
@@ -103,8 +103,8 @@
                 <android.support.v7.widget.CardView
                     android:id="@+id/cardViewFilter"
                     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="100px"
-                    android:layout_height="@dimen/px_100"
+                    android:layout_width="84px"
+                    android:layout_height="84px"
                     android:layout_alignParentRight="true"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px"
@@ -117,8 +117,8 @@
                         >
 
                         <ImageView
-                            android:layout_width="88px"
-                            android:layout_height="88px"
+                            android:layout_width="72px"
+                            android:layout_height="72px"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_filters"
                             android:tag="mwar"

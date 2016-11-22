@@ -467,7 +467,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 			} else if(arr.length > 0){
 				address = arr[0];
 			}
-            activity.getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 30f * ASSL.Xscale());
+            activity.getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26f * ASSL.Xscale());
             activity.getTopBar().textViewLocationValue.setText(address);
             getAllMenus(true, activity.getSelectedLatLng());
         } catch (Exception e) {

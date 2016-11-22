@@ -16,6 +16,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,7 +73,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             tvDelveryPlace, tvDeliveryToVal, tvSubAmount, tvSubAmountVal, tvPaymentMethod, tvPaymentMethodCash, tvDeliveryCharges,
             tvDeliveryChargesVal, tvTotalAmount, tvTotalAmountVal, tvAmountPayable, tvAmountPayableVal, tvBilledAmount, tvBilledAmountVal,
             tvRefund, tvRefundVal;
-    private ImageView ivPaymentMethodVal, ivDeliveryPlace, ivOrderCompleted, imageViewRestaurant;
+    private ImageView ivPaymentMethodVal, ivDeliveryPlace, ivOrderCompleted, imageViewRestaurant, imageViewCallRestaurant;
     private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn;
     private int orderId, productType;
     private NonScrollListView listViewOrder;
@@ -144,6 +145,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         rlOrderStatus = (RelativeLayout) rootView.findViewById(R.id.rlOrderStatus);
         imageViewRestaurant = (ImageView) rootView.findViewById(R.id.imageViewRestaurant);
         imageViewRestaurant.setVisibility(View.GONE);
+        imageViewCallRestaurant = (ImageView) rootView.findViewById(R.id.imageViewCallRestaurant);
+        imageViewCallRestaurant.setVisibility(View.GONE);
 
         // Order Status
         cvOrderStatus = (CardView) rootView.findViewById(R.id.cvOrderStatus);
@@ -191,6 +194,15 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                             -1, -1, null, null, 0, false, 0, orderHistory);
                 } else{
                     activity.onBackPressed();
+                }
+            }
+        });
+
+        imageViewCallRestaurant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!TextUtils.isEmpty(orderHistory.getRestaurantPhoneNo())){
+                    Utils.openCallIntent(activity, orderHistory.getRestaurantPhoneNo());
                 }
             }
         });
@@ -575,6 +587,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 tvDeliveryTimeVal.append(sb);
                 tvDeliveryTimeVal.append("\n"+orderHistory.getRestaurantAddress());
                 imageViewRestaurant.setVisibility(View.VISIBLE);
+                imageViewCallRestaurant.setVisibility(TextUtils.isEmpty(orderHistory.getRestaurantPhoneNo()) ? View.GONE : View.VISIBLE);
             } else {
                 if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
                     tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate() + " " +
@@ -583,6 +596,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                     tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate());
                 }
                 imageViewRestaurant.setVisibility(View.GONE);
+                imageViewCallRestaurant.setVisibility(View.GONE);
             }
             tvDeliveryToVal.setText(historyResponse.getData().get(0).getDeliveryAddress());
             try {

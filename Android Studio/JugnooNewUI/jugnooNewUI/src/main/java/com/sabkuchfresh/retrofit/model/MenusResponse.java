@@ -137,6 +137,9 @@ public class MenusResponse {
 		@SerializedName("delivery_time")
 		@Expose
 		private Integer deliveryTime;
+		@SerializedName("min_delivery_time")
+		@Expose
+		private Integer minDeliveryTime;
 		@SerializedName("opens_at")
 		@Expose
 		private String opensAt;
@@ -300,6 +303,14 @@ public class MenusResponse {
 
 		public void setPopularity(Integer popularity) {
 			this.popularity = popularity;
+		}
+
+		public Integer getMinDeliveryTime() {
+			return minDeliveryTime;
+		}
+
+		public void setMinDeliveryTime(Integer minDeliveryTime) {
+			this.minDeliveryTime = minDeliveryTime;
 		}
 	}
 

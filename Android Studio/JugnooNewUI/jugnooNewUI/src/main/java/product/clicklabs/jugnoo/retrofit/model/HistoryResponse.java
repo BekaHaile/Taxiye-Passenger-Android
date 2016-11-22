@@ -245,6 +245,9 @@ public class HistoryResponse {
         @SerializedName("restaurant_address")
         @Expose
         private String restaurantAddress;
+        @SerializedName("restaurant_phone_no")
+        @Expose
+        private String restaurantPhoneNo;
 
         /**
          * @return The pickupAddress
@@ -916,6 +919,14 @@ public class HistoryResponse {
 
         public void setRestaurantAddress(String restaurantAddress) {
             this.restaurantAddress = restaurantAddress;
+        }
+
+        public String getRestaurantPhoneNo() {
+            return restaurantPhoneNo;
+        }
+
+        public void setRestaurantPhoneNo(String restaurantPhoneNo) {
+            this.restaurantPhoneNo = restaurantPhoneNo;
         }
     }
 

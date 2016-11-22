@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="24px"
         android:layout_marginRight="24px"
-        android:layout_marginTop="15px"
+        android:layout_marginTop="18px"
         android:orientation="vertical"
         android:paddingLeft="4px"
         android:paddingRight="4px"
@@ -32,7 +32,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="340px"
+                android:layout_height="330px"
                 android:layout_gravity="center_horizontal"
                 android:orientation="vertical"
                 android:tag="mwar">
@@ -74,20 +74,20 @@
                     android:maxLines="2"
                     android:text="Title\nabc"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
+                    android:textSize="@dimen/text_size_34"
                     />
 
 
                 <TextView
                     android:id="@+id/textViewAvailability"
-                    android:layout_width="250px"
+                    android:layout_width="300px"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20px"
                     android:gravity="right"
                     android:text="OPENS AT 11:00 AM"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_26"
+                    android:textSize="@dimen/text_size_28"
                     android:layout_marginTop="5px"
                     android:textAllCaps="true"
                     />
@@ -114,7 +114,7 @@
                     android:layout_marginRight="20px"
                     android:layout_toLeftOf="@+id/textViewAvailability"
                     android:maxLines="2"
-                    android:text="Title . Title"
+                    android:text="Title"
                     android:textColor="@color/text_color_light_less"
                     android:textSize="@dimen/text_size_24"
                     />
@@ -122,45 +122,42 @@
 
                 <TextView
                     android:id="@+id/textViewR1"
-                    android:layout_width="34px"
-                    android:layout_height="34px"
+                    android:layout_width="20px"
+                    android:layout_height="30px"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="7px"
-                    android:background="@drawable/circle_green_rupee"
                     android:gravity="center"
                     android:tag="mwar"
                     android:text="@string/rupee"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_26"
+                    android:textColor="@color/green_rupee"
+                    android:textSize="@dimen/text_size_30"
                     />
 
                 <TextView
                     android:id="@+id/textViewR2"
-                    android:layout_width="34px"
-                    android:layout_height="34px"
+                    android:layout_width="20px"
+                    android:layout_height="30px"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="7px"
-                    android:background="@drawable/circle_grey_rupee"
                     android:gravity="center"
                     android:tag="mwar"
                     android:text="@string/rupee"
                     android:textColor="@color/text_color_light_less"
-                    android:textSize="@dimen/text_size_26"
+                    android:textSize="@dimen/text_size_30"
                     />
 
 
                 <TextView
                     android:id="@+id/textViewR3"
-                    android:layout_width="34px"
-                    android:layout_height="34px"
+                    android:layout_width="20px"
+                    android:layout_height="30px"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="7px"
-                    android:background="@drawable/circle_green_rupee"
                     android:gravity="center"
                     android:tag="mwar"
                     android:text="@string/rupee"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_26"
+                    android:textColor="@color/green_rupee"
+                    android:textSize="@dimen/text_size_30"
                     />
 
             </LinearLayout>

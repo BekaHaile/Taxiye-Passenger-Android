@@ -224,5 +224,7 @@
     <color name="stroke_light_grey_alpha">#33979797</color>
     <color name="order_history_status_color">#1fbd2a</color>
 
+    <color name="green_rupee">#1fbd2a</color>
+
 
 </resources>
