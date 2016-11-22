@@ -41,11 +41,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="40px"
+                android:gravity="center_vertical"
                 android:layout_gravity="center_horizontal"
                 >
                 <ImageView
-                    android:layout_width="49px"
-                    android:layout_height="36px"
+                    android:id="@+id/ivEndRideType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:tag="mwar"
                     android:src="@drawable/ic_support_auto_big"
                     android:layout_gravity="center_vertical"

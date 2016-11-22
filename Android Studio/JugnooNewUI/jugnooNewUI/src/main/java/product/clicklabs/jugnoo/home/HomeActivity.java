@@ -343,7 +343,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private RelativeLayout changeLocalityLayout, relativeLayoutPoolInfoBar, relativeLayoutRideEndWithImage;
     private View viewPoolInfoBarAnim;
     private AnimationDrawable jugnooAnimation;
-    private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp,
+    private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, ivEndRideType,
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
     private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
 
@@ -774,6 +774,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         linearLayoutRSViewInvoice = (LinearLayout) findViewById(R.id.linearLayoutRSViewInvoice);
         ((TextView)findViewById(R.id.textViewRSInvoice)).setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         ((TextView)findViewById(R.id.textViewRSRateYourRide)).setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        ivEndRideType = (ImageView) findViewById(R.id.ivEndRideType);
         imageViewThumbsDown = (ImageView) findViewById(R.id.imageViewThumbsDown);
         imageViewThumbsUp = (ImageView) findViewById(R.id.imageViewThumbsUp);
         textViewThumbsDown = (TextView) findViewById(R.id.textViewThumbsDown); textViewThumbsDown.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
@@ -2685,6 +2686,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                        genieLayout.setVisibility(View.GONE);
                         mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
+                        if(Data.autoData.getEndRideData().getIsPooled() == 1){
+                            ivEndRideType.setImageResource(R.drawable.ic_history_pool);
+                        } else{
+                            ivEndRideType.setImageResource(R.drawable.ic_support_auto_big);
+                        }
 
                         linearLayoutRideSummary.setLayoutTransition(null);
                         scrollViewRideSummary.scrollTo(0, 0);
@@ -2736,6 +2742,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 switch (mode) {
 
                     case P_INITIAL:
+
                         fabViewTest = new FABViewTest(this, fabViewIntial);
                         GCMIntentService.clearNotifications(HomeActivity.this);
 
@@ -2760,7 +2767,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
-                        checkForMyLocationButtonVisibility();
                         changeLocalityLayout.setVisibility(View.GONE);
 
                         cancelTimerRequestRide();
@@ -2781,7 +2787,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         topBar.imageViewHelp.setVisibility(View.GONE);
                         topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
-                        if(!firstTimeZoom && !confirmedScreenOpened){
+                        if(!specialPickupScreenOpened && !firstTimeZoom && !confirmedScreenOpened){
                             if(Data.autoData.getPickupLatLng() != null){
                                 zoomToCurrentLocationWithOneDriver(Data.autoData.getPickupLatLng());
                             }
@@ -2830,7 +2836,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
                             specialPickupItemsAdapter.setResults(Data.autoData.getNearbyPickupRegionses().getHoverInfo());
                             setGoogleMapPadding(mapPaddingSpecialPickup);
+                            fabViewIntial.setVisibility(View.GONE);
+                            showSpecialPickupMarker(specialPickups);
                         } else{
+                            fabViewIntial.setVisibility(View.VISIBLE);
                             rlSpecialPickup.setVisibility(View.GONE);
                             setGoogleMapPadding(0f);
                             showPoolInforBar();
@@ -2854,8 +2863,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             updateConfirmedStateFare();
                             //fabView.setRelativeLayoutFABVisibility(mode);
                             setGoogleMapPadding(mapPaddingConfirm);
-
+                            fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
                         } else{
+                            fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                             if (!zoomedForSearch && !specialPickupScreenOpened && map != null) {
                                 getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
                                 if(!searchedALocation){
@@ -2871,7 +2881,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initAndClearInRidePath();
                         getTrackingLogHelper().uploadAllTrackLogs();
-
+                        if(confirmedScreenOpened) {
+                            fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+                        } else{
+                            fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                        }
 
                         break;
 
@@ -5076,7 +5090,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     && firstDriverInfo != null) {
                 firstLatLng = firstDriverInfo.latLng;
             }
-            if (firstLatLng != null) {
+            if (firstLatLng != null && !isSpecialPickupScreenOpened()) {
                 boolean fixedZoom = false;
                 double distance = MapUtils.distance(userLatLng, firstLatLng);
                 if (distance <= 15000) {
@@ -5118,7 +5132,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         @Override
                         public void run() {
                             try {
-                                if("".equalsIgnoreCase(Data.autoData.getFarAwayCity())) {
+                                if("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) && !isSpecialPickupScreenOpened() && !isPoolRideAtConfirmation()) {
                                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                                 }
                             } catch (Exception e) {
@@ -6683,7 +6697,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             e.printStackTrace();
                         }
                     }
-                }, 2000);
+                }, 5000);
             } else {
                 highSpeedAccuracyLF.connect();
             }
@@ -8920,7 +8934,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         switchPassengerScreen(passengerScreenMode);
                         //map.moveCamera(CameraUpdateFactory.zoomOut());
                         showSpecialPickupMarker(specialPickups);
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
                         spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
 
                     } else {

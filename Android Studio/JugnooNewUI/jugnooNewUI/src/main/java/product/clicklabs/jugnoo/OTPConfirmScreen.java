@@ -631,6 +631,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			giveAMissedCall = false;
 			//buttonVerify.performClick();
 			rlProgress.setVisibility(View.VISIBLE);
+			progressBar.setVisibility(View.VISIBLE);
+			tvProgress.setText(getResources().getString(R.string.trying_to_verify));
 			progressBar.spin();
 			if (signupBy.equalsIgnoreCase("email")) {
 				if (onlyDigits) {
@@ -709,6 +711,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 	private void showErrorOnMissedCallBack(){
 		if(runAfterDelay) {
+			runAfterDelay = false;
 			rlProgress.setVisibility(View.VISIBLE);
 			progressBar.setVisibility(View.GONE);
 			tvProgress.setText(getResources().getString(R.string.we_could_not_verify));
