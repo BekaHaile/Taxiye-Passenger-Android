@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,7 +132,13 @@ public class SavedPlacesAdapter extends BaseAdapter{
             if(searchResult.getType() == SearchResult.Type.RECENT){
                 holder.imageViewType.setImageResource(R.drawable.ic_recent_loc);
             } else {
-                holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
+                if(Constants.TYPE_HOME.equalsIgnoreCase(searchResult.getName())){
+                    holder.imageViewType.setImageResource(R.drawable.ic_home);
+                } else if(Constants.TYPE_WORK.equalsIgnoreCase(searchResult.getName())){
+                    holder.imageViewType.setImageResource(R.drawable.ic_work);
+                } else {
+                    holder.imageViewType.setImageResource(R.drawable.ic_loc_other);
+                }
             }
 
             holder.imageViewSep.setVisibility(View.VISIBLE);

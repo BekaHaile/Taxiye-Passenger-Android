@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,7 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -105,7 +103,7 @@ public class AddressBookFragment extends Fragment {
 				public void onEditClick(SearchResult searchResult) {
 					onSavedLocationEdit(searchResult);
 				}
-			}, true, false);
+			}, false, false);
 			listViewSavedLocations.setAdapter(savedPlacesAdapter);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -128,7 +126,7 @@ public class AddressBookFragment extends Fragment {
 				public void onEditClick(SearchResult searchResult) {
 					onSavedLocationEdit(searchResult);
 				}
-			}, true, false);
+			}, false, false);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -220,8 +218,8 @@ public class AddressBookFragment extends Fragment {
 
 	private void setSavedPlaces() {
 		try {
-			if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
-				String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+			String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+			if (!homeString.equalsIgnoreCase("")) {
 				SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
 				relativeLayoutHome.setVisibility(View.VISIBLE);
 				relativeLayoutAddHome.setVisibility(View.GONE);
@@ -242,8 +240,8 @@ public class AddressBookFragment extends Fragment {
 				relativeLayoutAddHome.setVisibility(View.VISIBLE);
 			}
 
-			if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
-				String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+			String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+			if (!workString.equalsIgnoreCase("")) {
 				SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
 				relativeLayoutWork.setVisibility(View.VISIBLE);
 				relativeLayoutAddWork.setVisibility(View.GONE);
@@ -288,7 +286,7 @@ public class AddressBookFragment extends Fragment {
 				textViewRecentAddresses.setVisibility(View.GONE);
 				cardViewRecentAddresses.setVisibility(View.GONE);
 			}
-		} catch (JsonSyntaxException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

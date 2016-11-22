@@ -88,6 +88,14 @@ public class SearchResult {
 		return name;
 	}
 
+	public String getNameForText() {
+		if(!TextUtils.isEmpty(name)){
+			return Utils.firstCharCapital(name);
+		} else {
+			return address;
+		}
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}

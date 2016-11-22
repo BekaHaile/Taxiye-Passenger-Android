@@ -116,7 +116,7 @@
                             android:padding="15px"
                             android:src="@drawable/edit_icon_selector"
                             android:tag="mwar"
-                            android:visibility="visible"/>
+                            android:visibility="gone"/>
 
                         <View
                             android:id="@+id/viewHomeSep"
@@ -196,7 +196,7 @@
                             android:padding="15px"
                             android:src="@drawable/edit_icon_selector"
                             android:tag="mwar"
-                            android:visibility="visible"/>
+                            android:visibility="gone"/>
 
                         <View
                             android:id="@+id/viewWorkSep"
@@ -231,7 +231,7 @@
                 android:layout_marginTop="30px"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="@string/recent_locations"
+                android:text="@string/suggested_locations"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_less_light"
                 android:textSize="@dimen/text_size_24"

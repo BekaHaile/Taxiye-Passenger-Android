@@ -308,7 +308,7 @@
                 android:layout_marginTop="30px"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="@string/recent_addresses"
+                android:text="@string/suggested_locations"
                 android:textAllCaps="true"
                 android:textColor="@color/theme_color"
                 android:textSize="@dimen/text_size_22"

@@ -36,9 +36,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 
@@ -62,24 +59,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
-import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.models.RideTypeValue;
 
 import static product.clicklabs.jugnoo.Constants.ACTIVATION;
 import static product.clicklabs.jugnoo.Constants.RETENTION;
 import static product.clicklabs.jugnoo.Constants.REVENUE;
 import static product.clicklabs.jugnoo.Constants.SLASH;
 import static product.clicklabs.jugnoo.home.HomeActivity.passengerScreenMode;
-import static product.clicklabs.jugnoo.utils.FirebaseEvents.TRANSACTION;
 import static product.clicklabs.jugnoo.utils.FlurryEventNames.CALL_TO_DRIVER_MADE_WHEN_ARRIVED;
 import static product.clicklabs.jugnoo.utils.FlurryEventNames.CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED;
 
@@ -791,7 +783,8 @@ public class Utils {
 			String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
 			builder.append(cap + " ");
 		}
-		return builder.toString();
+		String finalStr = builder.toString();
+		return finalStr.substring(0, finalStr.length()-1);
 	}
 
 	public static int dpToPx(Context context, float dp) {

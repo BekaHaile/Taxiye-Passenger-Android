@@ -2115,7 +2115,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
             }
 
-            textViewDestSearch.setText(searchResult.getName());
+            textViewDestSearch.setText(searchResult.getNameForText());
             textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
 
             dropLocationSet = true;
@@ -8180,27 +8180,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     FlurryEventLogger.event(PICKUP_LOCATION_SET);
-                    textViewInitialSearch.setText(autoCompleteSearchResult.getName());
+                    textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText());
                     zoomedForSearch = true;
                     lastSearchLatLng = null;
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                 } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
-                    textViewDestSearch.setText(autoCompleteSearchResult.getName());
-                    dropAddressName = autoCompleteSearchResult.getName();
+                    textViewDestSearch.setText(autoCompleteSearchResult.getNameForText());
+                    dropAddressName = autoCompleteSearchResult.getNameForText();
                 }
                 searchedALocation = true;
             }
         }
         else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
-            textViewAssigningDropLocationClick.setText(autoCompleteSearchResult.getName());
-            dropAddressName = autoCompleteSearchResult.getName();
+            textViewAssigningDropLocationClick.setText(autoCompleteSearchResult.getNameForText());
+            dropAddressName = autoCompleteSearchResult.getNameForText();
         }
         else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
-            textViewFinalDropLocationClick.setText(autoCompleteSearchResult.getName());
-            dropAddressName = autoCompleteSearchResult.getName();
+            textViewFinalDropLocationClick.setText(autoCompleteSearchResult.getNameForText());
+            dropAddressName = autoCompleteSearchResult.getNameForText();
         }
     }
 
@@ -8224,7 +8224,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
             if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                 if (map != null && searchResult != null) {
-                    textViewInitialSearch.setText(searchResult.getName());
+                    textViewInitialSearch.setText(searchResult.getNameForText());
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                     lastSearchLatLng = searchResult.getLatLng();
                     mapTouched = true;
@@ -8320,43 +8320,41 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void saveLastDestinations(SearchResult searchResult){
         try {
-            if(!searchResult.getName().equalsIgnoreCase("")) {
-                lastDestination.clear();
-                lastDestination.addAll(fetchLastLocations(SPLabels.LAST_DESTINATION));
-                if (lastDestination.size() == 0) {
+            lastDestination.clear();
+            lastDestination.addAll(fetchLastLocations(SPLabels.LAST_DESTINATION));
+            if (lastDestination.size() == 0) {
+                if (!addressMatchedWithSavedAddresses(searchResult.getName())) {
+                    lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getPlaceId()
+                            , searchResult.getLatLng().latitude, searchResult.getLatLng().longitude));
+                }
+            } else {
+                boolean isSame = false;
+                for (int i = 0; i < lastDestination.size(); i++) {
+                    if (searchResult.getName().equalsIgnoreCase(lastDestination.get(i).getName())
+                            && searchResult.getAddress().equalsIgnoreCase(lastDestination.get(i).getAddress())) {
+                        isSame = true;
+                        break;
+                    }
+                }
+                if (!isSame) {
                     if (!addressMatchedWithSavedAddresses(searchResult.getName())) {
                         lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getPlaceId()
                                 , searchResult.getLatLng().latitude, searchResult.getLatLng().longitude));
                     }
-                } else {
-                    boolean isSame = false;
-                    for (int i = 0; i < lastDestination.size(); i++) {
-                        if (searchResult.getName().equalsIgnoreCase(lastDestination.get(i).getName())
-                                && searchResult.getAddress().equalsIgnoreCase(lastDestination.get(i).getAddress())) {
-                            isSame = true;
-                            break;
-                        }
-                    }
-                    if (!isSame) {
-                        if (!addressMatchedWithSavedAddresses(searchResult.getName())) {
-                            lastDestination.add(0, new SearchResult(searchResult.getName(), searchResult.getAddress(), searchResult.getPlaceId()
-                                    , searchResult.getLatLng().latitude, searchResult.getLatLng().longitude));
-                        }
-                    }
-                    if (lastDestination.size() > 3) {
-                        lastDestination.remove(3);
-                    }
-                    Log.v("size of last Destination", "---> " + lastDestination.size());
                 }
-                String tempDest = new Gson().toJson(lastDestination);
-                Prefs.with(HomeActivity.this).save(SPLabels.LAST_DESTINATION, tempDest);
-
-                // Save Entered Destination for 30 min or till Ride End...
-                String strResult = new Gson().toJson(searchResult, SearchResult.class);
-                Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, strResult);
-                setEnteredDestination();
+                if (lastDestination.size() > 3) {
+                    lastDestination.remove(3);
+                }
+                Log.v("size of last Destination", "---> " + lastDestination.size());
             }
-        } catch (Resources.NotFoundException e) {
+            String tempDest = new Gson().toJson(lastDestination);
+            Prefs.with(HomeActivity.this).save(SPLabels.LAST_DESTINATION, tempDest);
+
+            // Save Entered Destination for 30 min or till Ride End...
+            String strResult = new Gson().toJson(searchResult, SearchResult.class);
+            Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, strResult);
+            setEnteredDestination();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -1,7 +1,6 @@
 package com.sabkuchfresh.fragments;
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -182,8 +181,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
                 @Override
                 public void onItemClick(SearchResult searchResult) {
-                    onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                            searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+                    if(searchResult.getIsConfirmed() == 1){
+                        onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+                                searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+                    } else {
+                        goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
+                    }
                 }
 
                 @Override
@@ -192,7 +195,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false);
                     }
                 }
-            }, true, true);
+            }, false, true);
 
             listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 

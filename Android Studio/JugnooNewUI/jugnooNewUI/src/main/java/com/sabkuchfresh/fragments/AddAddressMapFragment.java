@@ -198,6 +198,12 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
         mapTouched = false;
 
         searchAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSearchBarText);
+        searchAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
