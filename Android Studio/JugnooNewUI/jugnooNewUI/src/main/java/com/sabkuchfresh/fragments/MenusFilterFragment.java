@@ -12,10 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.widgets.library.AutoLabelUI;
-import product.clicklabs.jugnoo.widgets.library.AutoLabelUISettings;
-import product.clicklabs.jugnoo.widgets.library.Label;
-import product.clicklabs.jugnoo.widgets.library.LabelValues;
+import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.otto.Bus;
 
@@ -33,17 +30,18 @@ public class MenusFilterFragment extends Fragment{
 	private RelativeLayout relativeLayoutPopularity, relativeLayoutDistance, relativeLayoutPrice;
 	private ImageView imageViewRadioPopularity, imageViewRadioDistance, imageViewRadioPrice;
 
-	private TextView textViewCuisines;
+	private TextView textViewCuisines, textViewSelectCuisinesValue;
 	private CardView cardViewCuisines;
-	private AutoLabelUI cuisinesView;
 
 	private TextView textViewMinimumOrder;
-	private CardView cardViewDeliveryTime;
-	private TextView textViewDT30, textViewMO250, textViewMO500;
+	private CardView cardViewMinimumOrder;
+	private RelativeLayout relativeLayoutMO150, relativeLayoutMO250, relativeLayoutMO500;
+	private ImageView imageViewMO150, imageViewMO250, imageViewMO500;
 
 	private TextView textViewDeliveryTime;
-	private CardView cardViewMinimumOrder;
-	private TextView textViewMO150, textViewDT45, textViewDT60;
+	private CardView cardViewDeliveryTime;
+	private RelativeLayout relativeLayoutDT30, relativeLayoutDT45, relativeLayoutDT60;
+	private ImageView imageViewDT30, imageViewDT45, imageViewDT60;
 
 	private Button buttonApply;
 
@@ -104,21 +102,25 @@ public class MenusFilterFragment extends Fragment{
 
 		textViewCuisines = (TextView) rootView.findViewById(R.id.textViewCuisines); textViewCuisines.setTypeface(Fonts.mavenMedium(activity));
 		cardViewCuisines = (CardView) rootView.findViewById(R.id.cardViewCuisines);
-		cuisinesView = (AutoLabelUI) rootView.findViewById(R.id.cuisinesView);
-		AutoLabelUISettings autoLabelUISettings = new AutoLabelUISettings.Builder()
-				.withMaxLabels(500)
-				.withLabelPadding(R.dimen.padding_2dp)
-				.build();
-
-		cuisinesView.setSettings(autoLabelUISettings);
+		((TextView)rootView.findViewById(R.id.textViewSelectCuisines)).setTypeface(Fonts.mavenMedium(activity));
+		textViewSelectCuisinesValue = (TextView) rootView.findViewById(R.id.textViewSelectCuisinesValue); textViewSelectCuisinesValue.setTypeface(Fonts.mavenMedium(activity));
+		textViewSelectCuisinesValue.setVisibility(View.GONE);
 
 		if(activity.getMenusResponse() != null && activity.getMenusResponse().getFilters() != null
 				&& activity.getMenusResponse().getFilters().getCuisines() != null
 				&& activity.getMenusResponse().getFilters().getCuisines().size() > 0){
 			cardViewCuisines.setVisibility(View.VISIBLE);
 			textViewCuisines.setVisibility(View.VISIBLE);
-			addCuisinesLabels();
-
+			activity.getFilterCuisinesLocal().clear();
+			for(int i=0; i<activity.getMenusResponse().getFilters().getCuisines().size(); i++){
+				String cuisine = activity.getMenusResponse().getFilters().getCuisines().get(i);
+				if(activity.getCuisinesSelected().contains(cuisine)){
+					activity.getFilterCuisinesLocal().add(new FilterCuisine(cuisine, 1));
+				} else {
+					activity.getFilterCuisinesLocal().add(new FilterCuisine(cuisine, 0));
+				}
+			}
+			setFiltersText();
 		} else {
 			cardViewCuisines.setVisibility(View.GONE);
 			textViewCuisines.setVisibility(View.GONE);
@@ -129,16 +131,28 @@ public class MenusFilterFragment extends Fragment{
 
 		textViewMinimumOrder = (TextView) rootView.findViewById(R.id.textViewMinimumOrder); textViewMinimumOrder.setTypeface(Fonts.mavenMedium(activity));
 		cardViewMinimumOrder = (CardView) rootView.findViewById(R.id.cardViewMinimumOrder);
-		textViewMO150 = (TextView) rootView.findViewById(R.id.textViewMO150); textViewMO150.setTypeface(Fonts.mavenMedium(activity));
-		textViewMO250 = (TextView) rootView.findViewById(R.id.textViewMO250); textViewMO250.setTypeface(Fonts.mavenMedium(activity));
-		textViewMO500 = (TextView) rootView.findViewById(R.id.textViewMO500); textViewMO500.setTypeface(Fonts.mavenMedium(activity));
+		relativeLayoutMO150 = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMO150);
+		relativeLayoutMO250 = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMO250);
+		relativeLayoutMO500 = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMO500);
+		imageViewMO150 = (ImageView) rootView.findViewById(R.id.imageViewMO150);
+		imageViewMO250 = (ImageView) rootView.findViewById(R.id.imageViewMO250);
+		imageViewMO500 = (ImageView) rootView.findViewById(R.id.imageViewMO500);
+		((TextView) rootView.findViewById(R.id.textViewMO150)).setTypeface(Fonts.mavenMedium(activity));
+		((TextView) rootView.findViewById(R.id.textViewMO250)).setTypeface(Fonts.mavenMedium(activity));
+		((TextView) rootView.findViewById(R.id.textViewMO500)).setTypeface(Fonts.mavenMedium(activity));
 
 
 		textViewDeliveryTime = (TextView) rootView.findViewById(R.id.textViewDeliveryTime); textViewDeliveryTime.setTypeface(Fonts.mavenMedium(activity));
 		cardViewDeliveryTime = (CardView) rootView.findViewById(R.id.cardViewDeliveryTime);
-		textViewDT30 = (TextView) rootView.findViewById(R.id.textViewDT30); textViewDT30.setTypeface(Fonts.mavenMedium(activity));
-		textViewDT45 = (TextView) rootView.findViewById(R.id.textViewDT45); textViewDT45.setTypeface(Fonts.mavenMedium(activity));
-		textViewDT60 = (TextView) rootView.findViewById(R.id.textViewDT60); textViewDT60.setTypeface(Fonts.mavenMedium(activity));
+		relativeLayoutDT30 = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDT30);
+		relativeLayoutDT45 = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDT45);
+		relativeLayoutDT60 = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDT60);
+		imageViewDT30 = (ImageView) rootView.findViewById(R.id.imageViewDT30);
+		imageViewDT45 = (ImageView) rootView.findViewById(R.id.imageViewDT45);
+		imageViewDT60 = (ImageView) rootView.findViewById(R.id.imageViewDT60);
+		((TextView) rootView.findViewById(R.id.textViewDT30)).setTypeface(Fonts.mavenMedium(activity));
+		((TextView) rootView.findViewById(R.id.textViewDT45)).setTypeface(Fonts.mavenMedium(activity));
+		((TextView) rootView.findViewById(R.id.textViewDT60)).setTypeface(Fonts.mavenMedium(activity));
 
 		buttonApply = (Button) rootView.findViewById(R.id.buttonApply); buttonApply.setTypeface(Fonts.mavenRegular(activity));
 
@@ -169,7 +183,7 @@ public class MenusFilterFragment extends Fragment{
 
 
 
-		textViewMO150.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutMO150.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setMoSelected(getMoSelected() != MinOrder.MO150 ? MinOrder.MO150 : MinOrder.NONE);
@@ -177,7 +191,7 @@ public class MenusFilterFragment extends Fragment{
 			}
 		});
 
-		textViewMO250.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutMO250.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setMoSelected(getMoSelected() != MinOrder.MO250 ? MinOrder.MO250 : MinOrder.NONE);
@@ -185,7 +199,7 @@ public class MenusFilterFragment extends Fragment{
 			}
 		});
 
-		textViewMO500.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutMO500.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setMoSelected(getMoSelected() != MinOrder.MO500 ? MinOrder.MO500 : MinOrder.NONE);
@@ -197,7 +211,7 @@ public class MenusFilterFragment extends Fragment{
 
 
 
-		textViewDT30.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutDT30.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setDtSelected(getDtSelected() != DeliveryTime.DT30 ? DeliveryTime.DT30 : DeliveryTime.NONE);
@@ -205,7 +219,7 @@ public class MenusFilterFragment extends Fragment{
 			}
 		});
 
-		textViewDT45.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutDT45.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setDtSelected(getDtSelected() != DeliveryTime.DT45 ? DeliveryTime.DT45 : DeliveryTime.NONE);
@@ -213,7 +227,7 @@ public class MenusFilterFragment extends Fragment{
 			}
 		});
 
-		textViewDT60.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutDT60.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setDtSelected(getDtSelected() != DeliveryTime.DT60 ? DeliveryTime.DT60 : DeliveryTime.NONE);
@@ -225,9 +239,9 @@ public class MenusFilterFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				activity.getCuisinesSelected().clear();
-				for(Label label : cuisinesView.getLabels()){
-					if(label.getSelected() == 1){
-						activity.getCuisinesSelected().add(label.getText());
+				for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
+					if(filterCuisine.getSelected() == 1){
+						activity.getCuisinesSelected().add(filterCuisine.getName());
 					}
 				}
 				activity.setSortBySelected(getSortBySelected());
@@ -236,6 +250,14 @@ public class MenusFilterFragment extends Fragment{
 				activity.performBackPressed();
 			}
 		});
+
+		cardViewCuisines.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.getTransactionUtils().openMenusFilterCuisinesFragment(activity, activity.getRelativeLayoutContainer());
+			}
+		});
+
 
 		setSortBySelected(activity.getSortBySelected());
 		setDtSelected(activity.getDtSelected());
@@ -262,6 +284,7 @@ public class MenusFilterFragment extends Fragment{
 		if(!hidden){
 			activity.fragmentUISetup(this);
 			setResetClickListener();
+			setFiltersText();
 		}
 	}
 
@@ -288,48 +311,16 @@ public class MenusFilterFragment extends Fragment{
 	}
 
 	private void updateMinOrderUI(){
-		textViewMO150.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-		textViewMO150.setTextColor(activity.getResources().getColor(R.color.text_color));
-		textViewMO250.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-		textViewMO250.setTextColor(activity.getResources().getColor(R.color.text_color));
-		textViewMO500.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-		textViewMO500.setTextColor(activity.getResources().getColor(R.color.text_color));
-
-		if(getMoSelected() == MinOrder.MO150){
-			textViewMO150.setBackgroundResource(R.drawable.background_theme_round);
-			textViewMO150.setTextColor(activity.getResources().getColor(R.color.white));
-		}
-		else if(getMoSelected() == MinOrder.MO250){
-			textViewMO250.setBackgroundResource(R.drawable.background_theme_round);
-			textViewMO250.setTextColor(activity.getResources().getColor(R.color.white));
-		}
-		else if(getMoSelected() == MinOrder.MO500){
-			textViewMO500.setBackgroundResource(R.drawable.background_theme_round);
-			textViewMO500.setTextColor(activity.getResources().getColor(R.color.white));
-		}
+		imageViewMO150.setVisibility(getMoSelected() == MinOrder.MO150 ? View.VISIBLE : View.GONE);
+		imageViewMO250.setVisibility(getMoSelected() == MinOrder.MO250 ? View.VISIBLE : View.GONE);
+		imageViewMO500.setVisibility(getMoSelected() == MinOrder.MO500 ? View.VISIBLE : View.GONE);
 	}
 
 
 	private void updateDeliveryTimeUI(){
-		textViewDT30.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-		textViewDT30.setTextColor(activity.getResources().getColor(R.color.text_color));
-		textViewDT45.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-		textViewDT45.setTextColor(activity.getResources().getColor(R.color.text_color));
-		textViewDT60.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-		textViewDT60.setTextColor(activity.getResources().getColor(R.color.text_color));
-
-		if(getDtSelected() == DeliveryTime.DT30){
-			textViewDT30.setBackgroundResource(R.drawable.background_theme_round);
-			textViewDT30.setTextColor(activity.getResources().getColor(R.color.white));
-		}
-		else if(getDtSelected() == DeliveryTime.DT45){
-			textViewDT45.setBackgroundResource(R.drawable.background_theme_round);
-			textViewDT45.setTextColor(activity.getResources().getColor(R.color.white));
-		}
-		else if(getDtSelected() == DeliveryTime.DT60){
-			textViewDT60.setBackgroundResource(R.drawable.background_theme_round);
-			textViewDT60.setTextColor(activity.getResources().getColor(R.color.white));
-		}
+		imageViewDT30.setVisibility(getDtSelected() == DeliveryTime.DT30 ? View.VISIBLE : View.GONE);
+		imageViewDT45.setVisibility(getDtSelected() == DeliveryTime.DT45 ? View.VISIBLE : View.GONE);
+		imageViewDT60.setVisibility(getDtSelected() == DeliveryTime.DT60 ? View.VISIBLE : View.GONE);
 	}
 
 	public SortType getSortBySelected() {
@@ -404,23 +395,30 @@ public class MenusFilterFragment extends Fragment{
 				setSortBySelected(SortType.NONE);
 				setMoSelected(MinOrder.NONE);
 				setDtSelected(DeliveryTime.NONE);
+
+				for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
+					filterCuisine.setSelected(0);
+				}
+
 				updateSortTypeUI();
 				updateMinOrderUI();
 				updateDeliveryTimeUI();
-				addCuisinesLabels();
+				setFiltersText();
 			}
 		});
 	}
 
-	private void addCuisinesLabels(){
-		cuisinesView.clear();
-		for(int i=0; i<activity.getMenusResponse().getFilters().getCuisines().size(); i++){
-			String cuisine = activity.getMenusResponse().getFilters().getCuisines().get(i);
-			if(activity.getCuisinesSelected().contains(cuisine)){
-				cuisinesView.addLabel(new LabelValues(i, cuisine, 1));
-			} else {
-				cuisinesView.addLabel(new LabelValues(i, cuisine, 0));
+	private void setFiltersText(){
+		textViewSelectCuisinesValue.setText("");
+		for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
+			if(filterCuisine.getSelected() == 1){
+				textViewSelectCuisinesValue.append(filterCuisine.getName()+", ");
 			}
 		}
+		if(textViewSelectCuisinesValue.getText().length() > 2){
+			textViewSelectCuisinesValue.setText(textViewSelectCuisinesValue.getText().toString()
+					.substring(0, textViewSelectCuisinesValue.getText().length()-2));
+		}
+		textViewSelectCuisinesValue.setVisibility(textViewSelectCuisinesValue.getText().length() > 0 ? View.VISIBLE : View.GONE);
 	}
 }

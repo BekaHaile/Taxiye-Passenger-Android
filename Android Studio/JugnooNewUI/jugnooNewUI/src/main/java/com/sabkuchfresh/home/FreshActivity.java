@@ -31,6 +31,7 @@ import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
+import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
@@ -48,6 +49,7 @@ import com.sabkuchfresh.fragments.GroceryFragment;
 import com.sabkuchfresh.fragments.HomeFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MealFragment;
+import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
@@ -973,6 +975,27 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
                 topBar.textViewReset.setVisibility(View.VISIBLE);
+            }
+            else if (fragment instanceof MenusFilterCuisinesFragment) {
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.imageViewDelete.setVisibility(View.GONE);
+                textViewCheckout.setVisibility(View.GONE);
+                relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+
+                relativeLayoutCartNew.setVisibility(View.VISIBLE);
+                linearLayoutCheckout.setVisibility(View.GONE);
+                relativeLayoutSort.setVisibility(View.VISIBLE);
+
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(R.string.select_cuisines);
+                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
+                topBar.textViewReset.setVisibility(View.GONE);
             }
             else if (fragment instanceof FreshCartItemsFragment) {
 				textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));
@@ -2416,5 +2439,15 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void setCuisinesSelected(ArrayList<String> cuisinesSelected) {
         this.cuisinesSelected = cuisinesSelected;
+    }
+
+
+    private ArrayList<FilterCuisine> filterCuisinesLocal = new ArrayList<>();
+    public ArrayList<FilterCuisine> getFilterCuisinesLocal() {
+        return filterCuisinesLocal;
+    }
+
+    public void setFilterCuisinesLocal(ArrayList<FilterCuisine> filterCuisinesLocal) {
+        this.filterCuisinesLocal = filterCuisinesLocal;
     }
 }

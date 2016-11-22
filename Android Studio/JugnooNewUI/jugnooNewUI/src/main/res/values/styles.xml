@@ -204,11 +204,5 @@
         <item name="android:src">@drawable/cross</item>
     </style>
 
-    <style name="Label">
-        <item name="android:padding">@dimen/padding_label_view</item>
-        <item name="android:layout_margin">@dimen/margin_between_labels</item>
-        <item name="android:background">@color/menu_item_selector_color</item>
-    </style>
-
 
 </resources>

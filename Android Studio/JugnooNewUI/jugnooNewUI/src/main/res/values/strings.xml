@@ -1247,6 +1247,8 @@
 	<string name="filters">Filters</string>
 	<string name="reset">Reset</string>
 	<string name="bullet">\u2022</string>
+	<string name="select_cuisines">Select Cuisines</string>
+	<string name="start_typing_a_cuisine">Start typing a cuisine...</string>
 
 
 </resources>
