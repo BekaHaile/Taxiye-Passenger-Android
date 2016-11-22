@@ -239,8 +239,15 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 //            }
 
             if(!subItem.getSubItemDesc().equalsIgnoreCase("")){
-                mHolder.imageViewMoreInfoSeprator.setVisibility(View.VISIBLE);
-                mHolder.textViewMoreInfo.setVisibility(!TextUtils.isEmpty(subItem.getBaseUnit()) ? View.VISIBLE : View.GONE);
+                mHolder.imageViewMoreInfoSeprator.setVisibility(!TextUtils.isEmpty(subItem.getBaseUnit()) ? View.VISIBLE : View.GONE);
+                mHolder.textViewMoreInfo.setVisibility(View.VISIBLE);
+                if(appType == AppConstant.ApplicationType.MENUS){
+                    mHolder.textViewMoreInfo.setTextColor(context.getResources().getColor(R.color.text_color_light));
+                    mHolder.textViewMoreInfo.setText(subItem.getSubItemDesc());
+                } else {
+                    mHolder.textViewMoreInfo.setTextColor(context.getResources().getColor(R.color.theme_color));
+                    mHolder.textViewMoreInfo.setText(context.getString(R.string.more_info));
+                }
             } else{
                 mHolder.imageViewMoreInfoSeprator.setVisibility(View.GONE);
                 mHolder.textViewMoreInfo.setVisibility(View.GONE);
@@ -257,7 +264,9 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DialogPopup.alertPopupWithCancellable((Activity)context, "", subItem.getSubItemDesc());
+                    if(appType != AppConstant.ApplicationType.MENUS) {
+                        DialogPopup.alertPopupWithCancellable((Activity) context, "", subItem.getSubItemDesc());
+                    }
                 }
             });
 

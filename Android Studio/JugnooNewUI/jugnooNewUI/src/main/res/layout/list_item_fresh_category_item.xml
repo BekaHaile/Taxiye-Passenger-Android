@@ -100,8 +100,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10px"
                     android:layout_marginTop="20px"
-                    android:singleLine="true"
-                    android:text="More info"
+                    android:maxLines="2"
+                    android:text="@string/more_info"
                     android:textColor="@color/theme_color"
                     android:textSize="@dimen/text_size_28"
                     android:visibility="visible"/>

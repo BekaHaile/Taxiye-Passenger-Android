@@ -146,6 +146,10 @@ public class MenusResponse {
 		@SerializedName("popularity")
 		@Expose
 		private Integer popularity;
+		@SerializedName("applicable_payment_mode")
+		@Expose
+		private Integer applicablePaymentMode;
+
 
 		/**
 		 *
@@ -311,6 +315,14 @@ public class MenusResponse {
 
 		public void setMinDeliveryTime(Integer minDeliveryTime) {
 			this.minDeliveryTime = minDeliveryTime;
+		}
+
+		public Integer getApplicablePaymentMode() {
+			return applicablePaymentMode;
+		}
+
+		public void setApplicablePaymentMode(Integer applicablePaymentMode) {
+			this.applicablePaymentMode = applicablePaymentMode;
 		}
 	}
 

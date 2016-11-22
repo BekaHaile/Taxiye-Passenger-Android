@@ -112,6 +112,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20px"
                     android:layout_marginRight="20px"
+                    android:layout_marginTop="4px"
                     android:layout_toLeftOf="@+id/textViewAvailability"
                     android:maxLines="2"
                     android:text="Title"

@@ -2,9 +2,13 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,14 +29,53 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 
 	private FreshActivity activity;
 	private ArrayList<FilterCuisine> cuisines;
+	private ArrayList<FilterCuisine> cuisinesToShow;
+	private EditText editTextSearch;
 
-	public MenusFilterCuisinesAdapter(FreshActivity activity, ArrayList<FilterCuisine> cuisines) {
+	public MenusFilterCuisinesAdapter(FreshActivity activity, ArrayList<FilterCuisine> cuisines, EditText editText) {
 		this.activity = activity;
 		this.cuisines = cuisines;
+		this.cuisinesToShow = new ArrayList<>();
+		this.cuisinesToShow.addAll(cuisines);
+		this.editTextSearch = editText;
+
+		this.editTextSearch.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				searchVendors(s.toString());
+			}
+		});
+	}
+
+	private void searchVendors(String text){
+		cuisinesToShow.clear();
+		text = text.toLowerCase();
+		if(TextUtils.isEmpty(text)){
+			cuisinesToShow.addAll(cuisines);
+		} else {
+			for(FilterCuisine filterCuisine : cuisines){
+				if(filterCuisine.getName().toLowerCase().contains(text)){
+					cuisinesToShow.add(filterCuisine);
+				}
+			}
+		}
+		notifyDataSetChanged();
 	}
 
 	public void setList(ArrayList<FilterCuisine> cuisines) {
 		this.cuisines = cuisines;
+		this.cuisinesToShow.clear();
+		this.cuisinesToShow.addAll(cuisines);
 		notifyDataSetChanged();
 	}
 
@@ -48,8 +91,8 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 	@Override
 	public void onBindViewHolder(MenusFilterCuisinesAdapter.ViewHolder holder, int position) {
 		try {
-			holder.textViewCuisine.setText(cuisines.get(position).getName());
-			holder.imageViewCheck.setImageResource(cuisines.get(position).getSelected() == 1 ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+			holder.textViewCuisine.setText(cuisinesToShow.get(position).getName());
+			holder.imageViewCheck.setImageResource(cuisinesToShow.get(position).getSelected() == 1 ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
 			holder.imageViewSep.setVisibility(position == getItemCount()-1 ? View.GONE : View.VISIBLE);
 			holder.relative.setTag(position);
 			holder.relative.setOnClickListener(new View.OnClickListener() {
@@ -57,7 +100,7 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 				public void onClick(View v) {
 					try {
 						int pos = (int) v.getTag();
-						cuisines.get(pos).setSelected(cuisines.get(pos).getSelected() == 1 ? 0 : 1);
+						cuisinesToShow.get(pos).setSelected(cuisinesToShow.get(pos).getSelected() == 1 ? 0 : 1);
 						notifyDataSetChanged();
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -71,7 +114,7 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 
 	@Override
 	public int getItemCount() {
-		return cuisines == null ? 0 : cuisines.size();
+		return cuisinesToShow == null ? 0 : cuisinesToShow.size();
 	}
 
 	static class ViewHolder extends RecyclerView.ViewHolder {

@@ -265,6 +265,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/tvDeliveryTime"
+                    android:layout_toLeftOf="@+id/imageViewCallRestaurant"
                     android:text=""
                     android:layout_centerVertical="true"
                     android:textColor="@color/text_color"
@@ -290,7 +291,7 @@
                     android:src="@drawable/ic_call_vendor"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="15px"
-                    android:layout_marginRight="15px"
+                    android:layout_marginRight="0px"
                     android:visibility="gone"
                     />
 

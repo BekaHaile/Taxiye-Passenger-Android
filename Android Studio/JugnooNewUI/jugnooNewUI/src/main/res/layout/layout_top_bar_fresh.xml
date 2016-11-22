@@ -211,7 +211,7 @@
                     android:text="abndasbnmd jhajklshdkj dasjkhdjk"
                     android:textColor="@color/text_color_selector"
                     android:textSize="@dimen/text_size_26"
-                    android:maxLines="1"
+                    android:singleLine="true"
                     />
 
             </LinearLayout>

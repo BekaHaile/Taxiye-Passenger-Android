@@ -38,6 +38,7 @@ import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressAdded;
+import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -1299,6 +1300,21 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
         } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try {
+            int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+            if(type == AppConstant.ApplicationType.MENUS){
+				if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()){
+					relativeLayoutPaytm.setVisibility(View.GONE);
+					relativeLayoutMobikwik.setVisibility(View.GONE);
+					relativeLayoutFreeCharge.setVisibility(View.GONE);
+				} else if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()){
+					relativeLayoutCash.setVisibility(View.GONE);
+				}
+			}
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

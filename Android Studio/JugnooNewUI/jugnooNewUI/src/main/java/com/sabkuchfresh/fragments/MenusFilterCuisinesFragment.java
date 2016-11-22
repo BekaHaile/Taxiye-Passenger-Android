@@ -62,7 +62,7 @@ public class MenusFilterCuisinesFragment extends Fragment{
         recyclerViewCuisines.setHasFixedSize(false);
         buttonDone = (Button) rootView.findViewById(R.id.buttonDone); buttonDone.setTypeface(Fonts.mavenMedium(activity));
 
-        menusFilterCuisinesAdapter = new MenusFilterCuisinesAdapter(activity, activity.getFilterCuisinesLocal());
+        menusFilterCuisinesAdapter = new MenusFilterCuisinesAdapter(activity, activity.getFilterCuisinesLocal(), editTextCuisine);
         recyclerViewCuisines.setAdapter(menusFilterCuisinesAdapter);
 
         buttonDone.setOnClickListener(new View.OnClickListener() {
