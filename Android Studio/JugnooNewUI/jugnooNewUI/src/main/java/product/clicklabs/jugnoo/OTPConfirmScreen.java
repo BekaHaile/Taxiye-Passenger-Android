@@ -1403,6 +1403,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 											loginResponse, LoginVia.EMAIL);
 									Database.getInstance(OTPConfirmScreen.this).insertEmail(emailId);
 									loginDataFetched = true;
+									DialogPopup.showLoadingDialog(activity, "Loading...");
+									DialogPopup.dismissLoadingDialog();
 								}
 							} else {
 //								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -1512,6 +1514,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									loginDataFetched = true;
 
 									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
+									DialogPopup.showLoadingDialog(activity, "Loading...");
+									DialogPopup.dismissLoadingDialog();
 								}
 							} else {
 //								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -1620,6 +1624,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									loginDataFetched = true;
 
 									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.googleSignInAccount.getEmail());
+									DialogPopup.showLoadingDialog(activity, "Loading...");
+									DialogPopup.dismissLoadingDialog();
 								}
 							}
 							else{
