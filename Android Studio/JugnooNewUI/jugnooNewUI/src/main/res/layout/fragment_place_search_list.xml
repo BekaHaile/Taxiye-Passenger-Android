@@ -159,8 +159,8 @@
                 android:singleLine="true"
                 android:text="@string/saved_places"
                 android:textAllCaps="true"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_22"
+                android:textColor="@color/text_color_less_light"
+                android:textSize="@dimen/text_size_24"
                 android:visibility="visible"
                 />
 
@@ -195,10 +195,10 @@
                 android:layout_marginTop="30px"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="@string/suggested_locations"
+                android:text="@string/suggested_addresses"
                 android:textAllCaps="true"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_22"
+                android:textColor="@color/text_color_less_light"
+                android:textSize="@dimen/text_size_24"
                 android:visibility="visible"
                 />
 
