@@ -248,11 +248,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 if(isAvailable()) {
                                     Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_has_available));
                                 } else {
-                                    getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+                                    openCart(appType);
                                     MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.CHECKOUT, null);
                                 }
                             } else {
-                                getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+                                openCart(appType);
                                 if(appType == AppConstant.ApplicationType.GROCERY){
                                     MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + FirebaseEvents.CHECKOUT, null);
                                 } else if(appType == AppConstant.ApplicationType.MENUS){
@@ -2289,8 +2289,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     private void openCart(int appType){
-        if(appType == AppConstant.ApplicationType.MEALS) {
-            getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+        if(appType == AppConstant.ApplicationType.MENUS && getVendorOpened() != null) {
+            if(totalPrice >= getVendorOpened().getMinimumOrderAmount()) {
+                getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+            } else {
+                Utils.showToast(FreshActivity.this, getResources().getString(R.string.minimum_order_amount_is_format,
+                        Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
+            }
         } else {
             getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         }
