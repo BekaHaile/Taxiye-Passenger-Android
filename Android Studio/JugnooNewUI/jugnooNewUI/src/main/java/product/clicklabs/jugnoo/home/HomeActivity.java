@@ -4779,9 +4779,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private boolean updateSpecialPickupScreen(){
         specialPickups.clear();
-        specialPickups.addAll(Data.autoData.getNearbyPickupRegionses().getHoverInfo());
-        if((Data.autoData.getNearbyPickupRegionses() != null) && (Data.autoData.getNearbyPickupRegionses().getHoverInfo().size() > 0)){
-
+        if(Data.autoData.getNearbyPickupRegionses() != null
+                && Data.autoData.getNearbyPickupRegionses().getHoverInfo() != null
+                && Data.autoData.getNearbyPickupRegionses().getHoverInfo().size() > 0){
+            specialPickups.addAll(Data.autoData.getNearbyPickupRegionses().getHoverInfo());
             return true;
         } else{
             specialPickupScreenOpened = false;
