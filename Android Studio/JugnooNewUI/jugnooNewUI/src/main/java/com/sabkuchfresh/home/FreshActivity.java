@@ -954,6 +954,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
+                if(getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
+                    textViewMinOrder.setVisibility(View.VISIBLE);
+                    textViewMinOrder.setText(getString(R.string.minimum_order) + " "
+                            + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
+                }
             }
             else if (fragment instanceof MenusFilterFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);

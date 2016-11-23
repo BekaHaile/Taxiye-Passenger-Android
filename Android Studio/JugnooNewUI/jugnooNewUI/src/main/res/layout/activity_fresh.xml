@@ -36,12 +36,12 @@
             <TextView
                 android:id="@+id/textViewMinOrder"
                 android:layout_width="match_parent"
-                android:layout_height="74px"
-                android:background="@drawable/background_white_below_line"
+                android:layout_height="48px"
+                android:background="@drawable/bg_green_bordred"
                 android:gravity="center"
-                android:text="Free Delivery on Orders above 299"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_32"
+                android:text="@string/minimum_order"
+                android:textColor="@color/green_rupee"
+                android:textSize="@dimen/text_size_22"
                 android:visibility="visible" />
 
             <RelativeLayout
