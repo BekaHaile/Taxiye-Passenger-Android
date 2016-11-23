@@ -298,7 +298,11 @@ public class ApiFindADriver {
 				e.printStackTrace();
 			}
 
-			MyApplication.getInstance().getCleverTapUtils().setCoupons();
+			try {
+				MyApplication.getInstance().getCleverTapUtils().setCoupons();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 
 			if(findADriverResponse.getFareStructure() != null) {

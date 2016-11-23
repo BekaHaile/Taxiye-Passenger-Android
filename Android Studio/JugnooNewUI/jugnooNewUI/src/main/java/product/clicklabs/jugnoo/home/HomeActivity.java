@@ -1032,7 +1032,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     if(map != null) {
 						if (!rideNowClicked) {
-//							TODO warning here Data.autoData.setPickupLatLng(map.getCameraPosition().target);
+							Data.autoData.setPickupLatLng(map.getCameraPosition().target);
 							if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
 								Bundle bundle = new Bundle();
 								MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
@@ -2904,6 +2904,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                     case P_ASSIGNING:
+                        Log.e(TAG, "P_ASSIGNING");
+                        fabViewIntial.setVisibility(View.GONE);
+                        fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         findDriverJugnooAnimation.setVisibility(View.VISIBLE);
                         jugnooAnimation.start();
@@ -2993,8 +2996,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
 
-                        fabViewIntial.setVisibility(View.GONE);
-                        fabViewFinal.setVisibility(View.VISIBLE);
                         int dpAsPixels = (int) (160f*scale + 0.5f);
                         fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
                         setJeanieVisibility();
@@ -3003,6 +3004,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                     case P_REQUEST_FINAL:
+                        fabViewIntial.setVisibility(View.GONE);
+                        fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
 
@@ -3034,8 +3037,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         setAssignedDriverData(mode);
 
-                        fabViewIntial.setVisibility(View.GONE);
-                        fabViewFinal.setVisibility(View.VISIBLE);
                         //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (160f*scale + 0.5f));
 
 
@@ -3076,6 +3077,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         break;
 
                     case P_DRIVER_ARRIVED:
+                        fabViewIntial.setVisibility(View.GONE);
+                        fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
 
                         if (map != null) {
@@ -3109,8 +3112,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        fabViewIntial.setVisibility(View.GONE);
-                        fabViewFinal.setVisibility(View.VISIBLE);
                         //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (160f*scale + 0.5f));
 
                         if(dropLocationSearched){
@@ -3154,6 +3155,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                     case P_IN_RIDE:
+                        fabViewIntial.setVisibility(View.GONE);
+                        fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
                             clearMap();
@@ -3175,8 +3178,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        fabViewIntial.setVisibility(View.GONE);
-                        fabViewFinal.setVisibility(View.VISIBLE);
+
                         //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (160f*scale + 0.5f));
 
 
@@ -4759,6 +4761,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     updateImageViewRideNowIcon();
                     setupFreshUI();
                     setupInAppCampaignUI();
+                    Log.e(TAG, "findADriverFinishing");
                     fabViewTest = new FABViewTest(this, fabViewIntial);
                     setJeanieVisibility();
                     setServiceAvailablityUI(Data.autoData.getFarAwayCity());
@@ -8564,7 +8567,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, (Integer) valueAnimator.getAnimatedValue());
+                        if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                            fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, (Integer) valueAnimator.getAnimatedValue());
+                        }
                     }
                 });
                 animator.setDuration(300);
