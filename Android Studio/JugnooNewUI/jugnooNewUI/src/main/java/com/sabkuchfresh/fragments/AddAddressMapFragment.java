@@ -320,6 +320,10 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                     public void onPlaceSaved() {
                     }
 
+                    @Override
+                    public void onNotifyDataSetChanged(int count) {
+
+                    }
                 }, true);
 
         listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);

@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -322,8 +321,8 @@ public class SearchListAdapter extends BaseAdapter{
                         .getString(R.string.no_results_found), "", "", 0, 0)));
             }
         }
-
         super.notifyDataSetChanged();
+		searchListActionsHandler.onNotifyDataSetChanged(getCount());
     }
 
 	private LatLng getPivotLatLng(){
@@ -521,6 +520,7 @@ public class SearchListAdapter extends BaseAdapter{
 		void onPlaceSearchPost(SearchResult searchResult);
 		void onPlaceSearchError();
         void onPlaceSaved();
+		void onNotifyDataSetChanged(int count);
 	}
 
 

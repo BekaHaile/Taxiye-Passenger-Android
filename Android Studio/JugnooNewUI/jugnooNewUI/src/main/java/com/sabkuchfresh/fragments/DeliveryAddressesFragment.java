@@ -88,6 +88,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private SearchListAdapter searchListAdapter;
     private ScrollView scrollViewSearch;
     private NonScrollListView listViewSearch;
+    private CardView cardViewSearch;
     private EditText editTextDeliveryAddress;
     private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
 
@@ -144,6 +145,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         imageViewSep = (ImageView)rootView.findViewById(R.id.imageViewSep);
         scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
         scrollViewSearch.setVisibility(View.GONE);
+        cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
         cardViewRecentAddresses = (CardView) rootView.findViewById(R.id.cardViewRecentAddresses);
         listViewRecentAddresses = (NonScrollListView) rootView.findViewById(R.id.listViewRecentAddresses);
         cardViewSavedPlaces.setVisibility(View.GONE);
@@ -380,6 +382,14 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     public void onPlaceSaved() {
                     }
 
+                    @Override
+                    public void onNotifyDataSetChanged(int count) {
+                        if(count > 0){
+                            cardViewSearch.setVisibility(View.VISIBLE);
+                        } else {
+                            cardViewSearch.setVisibility(View.GONE);
+                        }
+                    }
                 }, showSavedPlaces);
 
         listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);

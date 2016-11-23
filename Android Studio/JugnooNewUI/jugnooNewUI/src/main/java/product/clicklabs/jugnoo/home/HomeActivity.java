@@ -8327,6 +8327,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         placeAdded = true;
     }
 
+    @Override
+    public void onNotifyDataSetChanged(int count) {
+
+    }
+
     private void saveLastDestinations(SearchResult searchResult){
         try {
             lastDestination.clear();
