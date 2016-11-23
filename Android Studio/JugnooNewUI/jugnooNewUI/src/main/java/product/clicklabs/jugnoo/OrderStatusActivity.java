@@ -367,7 +367,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                     e.printStackTrace();
                 }
 
-                RestClient.getFreshApiService().cancelOrder(params, new Callback<OrderHistoryResponse>() {
+                Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
                     @Override
                     public void success(OrderHistoryResponse orderHistoryResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -417,7 +417,13 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                         DialogPopup.dismissLoadingDialog();
                         retryDialog(DialogErrorType.CONNECTION_LOST);
                     }
-                });
+                };
+
+                if(productType == ProductType.MENUS.getOrdinal()){
+                    RestClient.getMenusApiService().cancelOrder(params, callback);
+                } else {
+                    RestClient.getFreshApiService().cancelOrder(params, callback);
+                }
             } else {
                 retryDialog(DialogErrorType.NO_NET);
             }

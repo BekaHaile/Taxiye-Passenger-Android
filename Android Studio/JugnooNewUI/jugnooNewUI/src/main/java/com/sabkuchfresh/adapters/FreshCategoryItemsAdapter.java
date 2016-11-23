@@ -301,27 +301,25 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 @Override
                 public void onClick(View v) {
                     try {
-
                         int pos = (int) v.getTag();
-//                        subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock() ?
-//                                subItems.get(pos).getSubItemQuantitySelected() + 1 : subItems.get(pos).getStock());
-                        if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-                            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
-                        } else {
-                            Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
-                        }
-                        callback.onPlusClicked(pos, subItems.get(pos));
+                        if(callback.checkForAdd(pos, subItems.get(pos))) {
+                            if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
+                                subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+                            } else {
+                                Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
+                            }
+                            callback.onPlusClicked(pos, subItems.get(pos));
+                            notifyDataSetChanged();
 
-                        notifyDataSetChanged();
-                        int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
-                        if(appType == AppConstant.ApplicationType.FRESH){
-                            FlurryEventLogger.event(FlurryEventNames.FRESH_FRAGMENT, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-                            MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
-                        } else if(appType == AppConstant.ApplicationType.GROCERY){
-                            FlurryEventLogger.event(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-                            MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
-                        } else if(appType == AppConstant.ApplicationType.MENUS){
-                            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
+                            FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
+                            int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
+                            if (appType == AppConstant.ApplicationType.FRESH) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
+                            } else if (appType == AppConstant.ApplicationType.GROCERY) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
+                            } else if (appType == AppConstant.ApplicationType.MENUS) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -501,6 +499,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public interface Callback{
+        boolean checkForAdd(int position, SubItem subItem);
         void onPlusClicked(int position, SubItem subItem);
         void onMinusClicked(int position, SubItem subItem);
         void onDeleteClicked(int position, SubItem subItem);

@@ -1517,30 +1517,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
 
-//    public void performBackPressed() {
-//        String pupUpto = "";
-//        for (int entry = 0; entry < getFragmentManager().getBackStackEntryCount(); entry++) {
-//            if (entry == 1) {
-//                pupUpto = getFragmentManager().getBackStackEntryAt(entry).getName();
-//                break;
-//            }
-//        }
-//
-//        try {
-//            getActivity().getSupportFragmentManager().popBackStack(pupUpto, getFragmentManager().POP_BACK_STACK_INCLUSIVE);
-//        } catch (Exception e) {
-//            try {
-//                getActivity().getSupportFragmentManager().popBackStack(null, getFragmentManager().POP_BACK_STACK_INCLUSIVE);
-//
-//                getActivity().getSupportFragmentManager().beginTransaction()
-//                        .add(R.id.fragLayout, new StoreListCategoryFragment(), "StoreListCategoryFragment").addToBackStack("StoreListCategoryFragment")
-//                        .commitAllowingStateLoss();
-//            } catch (Exception e1) {
-//
-//            }
-//        }
-//
-//    }
 
 
     @Override
@@ -1670,9 +1646,15 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
             } else if(type == AppConstant.ApplicationType.MENUS){
                 if(getVendorOpened() != null){
-                    jCart.put(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId());
+                    JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
+                    if(getVendorOpened().getRestaurantId().equals(jsonSavedCart.optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))){
+                        if(jCart.length() > 0) {
+                            jCart.put(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId());
+                            jCart.put(Constants.KEY_RESTAURANT_NAME, getVendorOpened().getName());
+                        }
+                        Prefs.with(this).save(Constants.SP_MENUS_CART, jCart.toString());
+                    }
                 }
-                Prefs.with(this).save(Constants.SP_MENUS_CART, jCart.toString());
             } else{
                 Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
             }
@@ -1683,11 +1665,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void updateCartFromSP() {
         try {
-            for (Category category : productsResponse.getCategories()) {
-                for (SubItem subItem : category.getSubItems()) {
-                    subItem.setSubItemQuantitySelected(0);
-                }
-            }
             JSONObject jCart;
             int type = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
             if(type == AppConstant.ApplicationType.FRESH) {
@@ -1704,6 +1681,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 boolean cartUpdated = false;
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
+                        subItem.setSubItemQuantitySelected(0);
                         try {
                             int savedQuant = jCart.optInt(String.valueOf(subItem.getSubItemId()),
                                     (int) subItem.getSubItemQuantitySelected());
@@ -2449,5 +2427,42 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void setFilterCuisinesLocal(ArrayList<FilterCuisine> filterCuisinesLocal) {
         this.filterCuisinesLocal = filterCuisinesLocal;
+    }
+
+    public boolean checkForAdd(int position, SubItem subItem) {
+        int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
+        if(appType == AppConstant.ApplicationType.MENUS){
+            try {
+                JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
+                if(getVendorOpened() != null
+						&& !getVendorOpened().getRestaurantId().equals(jsonSavedCart
+						.optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))){
+                    String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
+                    DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+                            getString(R.string.previous_vendor_cart_message_format, oldRestaurantName),
+                            getString(R.string.ok), getString(R.string.cancel),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    clearMenusCart();
+                                }
+                            },
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                }
+                            }, false, false);
+					return false;
+				} else {
+					return true;
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
+                return true;
+            }
+        } else {
+            return true;
+        }
     }
 }

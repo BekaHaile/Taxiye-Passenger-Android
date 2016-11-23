@@ -542,6 +542,7 @@ public interface Constants {
 	String KEY_CHAT_COUNT = "chat_count";
 
 	String KEY_RESTAURANT_ID = "restaurant_id";
+	String KEY_RESTAURANT_NAME = "restaurant_name";
 
 	String KEY_ITEM_ID = "item_id";
 	String SP_MENUS_LAST_ADDRESS_OBJ = "sp_menus_last_address_obj";

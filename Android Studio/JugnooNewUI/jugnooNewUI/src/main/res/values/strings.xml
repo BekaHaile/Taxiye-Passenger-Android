@@ -1250,6 +1250,7 @@
 	<string name="select_cuisines">Select Cuisines</string>
 	<string name="start_typing_a_cuisine">Start typing a cuisine...</string>
 	<string name="more_info">More info</string>
+	<string name="previous_vendor_cart_message_format">You have added some items in cart from %s.\nAre you sure you want to clear the cart?</string>
 
 
 </resources>

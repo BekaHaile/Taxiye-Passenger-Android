@@ -1,6 +1,7 @@
 package com.sabkuchfresh.apis;
 
 import com.sabkuchfresh.retrofit.model.MenusResponse;
+import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
@@ -43,5 +44,10 @@ public interface MenusApiService {
 	@POST("/order_history")
 	void orderHistory(@FieldMap Map<String, String> params,
 					  Callback<HistoryResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/cancel_order")
+	void cancelOrder(@FieldMap Map<String, String> params,
+					 Callback<OrderHistoryResponse> callback);
 
 }
