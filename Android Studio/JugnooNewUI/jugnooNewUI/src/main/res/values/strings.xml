@@ -1212,5 +1212,7 @@
 	<string name="select_an_offer">Select an Offer</string>
 	<string name="add_other_address">Add Other Address</string>
 	<string name="suggested_locations">Suggested locations</string>
+	<string name="save_address_as">Save address as:</string>
+	<string name="address_name">Address Name</string>
 
 </resources>

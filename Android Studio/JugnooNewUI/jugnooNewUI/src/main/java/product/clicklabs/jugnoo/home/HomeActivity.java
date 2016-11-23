@@ -1032,7 +1032,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     if(map != null) {
 						if (!rideNowClicked) {
-							Data.autoData.setPickupLatLng(map.getCameraPosition().target);
+//							TODO warning here Data.autoData.setPickupLatLng(map.getCameraPosition().target);
 							if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
 								Bundle bundle = new Bundle();
 								MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
@@ -2836,10 +2836,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
                             specialPickupItemsAdapter.setResults(Data.autoData.getNearbyPickupRegionses().getHoverInfo());
                             setGoogleMapPadding(mapPaddingSpecialPickup);
-                            fabViewIntial.setVisibility(View.GONE);
                             showSpecialPickupMarker(specialPickups);
                         } else{
-                            fabViewIntial.setVisibility(View.VISIBLE);
                             rlSpecialPickup.setVisibility(View.GONE);
                             setGoogleMapPadding(0f);
                             showPoolInforBar();
@@ -2863,9 +2861,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             updateConfirmedStateFare();
                             //fabView.setRelativeLayoutFABVisibility(mode);
                             setGoogleMapPadding(mapPaddingConfirm);
-                            fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
                         } else{
-                            fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                             if (!zoomedForSearch && !specialPickupScreenOpened && map != null) {
                                 getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
                                 if(!searchedALocation){
@@ -2881,11 +2877,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         initAndClearInRidePath();
                         getTrackingLogHelper().uploadAllTrackLogs();
-                        if(confirmedScreenOpened) {
-                            fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
-                        } else{
-                            fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-                        }
 
                         break;
 
