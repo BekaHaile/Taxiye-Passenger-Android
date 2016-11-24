@@ -945,6 +945,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);
+                relativeLayoutCart.setVisibility(View.GONE);
                 linearLayoutCheckout.setVisibility(View.GONE);
                 relativeLayoutSort.setVisibility(View.VISIBLE);
 

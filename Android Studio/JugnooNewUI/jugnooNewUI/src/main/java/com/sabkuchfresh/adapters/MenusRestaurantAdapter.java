@@ -2,6 +2,7 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -37,35 +38,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private FreshActivity activity;
     private ArrayList<MenusResponse.Vendor> vendors, vendorsToShow;
     private Callback callback;
-    private EditText editTextSearch;
 
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
+    private static final int SEARCH_FILTER_ITEM = 2;
 
-    public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors, Callback callback, EditText editTextSearch) {
+    public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors, Callback callback) {
         this.activity = activity;
         this.vendors = vendors;
         this.vendorsToShow = new ArrayList<>();
         this.vendorsToShow.addAll(vendors);
         this.callback = callback;
-        this.editTextSearch = editTextSearch;
-
-        this.editTextSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                searchVendors(s.toString());
-            }
-        });
     }
 
     private void searchVendors(String text){
@@ -146,6 +129,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             ASSL.DoMagic(v);
             return new ViewTitleHolder(v);
+        } else if (viewType == SEARCH_FILTER_ITEM) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_search_filter, parent, false);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+            v.setLayoutParams(layoutParams);
+
+            ASSL.DoMagic(v);
+            return new ViewHolderFilter(v, activity);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
@@ -154,6 +144,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         try {
             if (holder instanceof ViewHolder) {
+                position = vendors.size() > 0 ? position-1 : position;
                 ViewHolder mHolder = ((ViewHolder) holder);
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
 
@@ -230,6 +221,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
                 titleholder.relative.setVisibility(View.VISIBLE);
                 titleholder.relative.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
+            } else if (holder instanceof ViewHolderFilter) {
+                ViewHolderFilter holderFilter = ((ViewHolderFilter) holder);
+                holderFilter.cardViewFilter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.getTransactionUtils().openMenusFilterFragment(activity, activity.getRelativeLayoutContainer());
+                    }
+                });
+                holderFilter.editTextSearch.removeTextChangedListener(textWatcher);
+                holderFilter.editTextSearch.addTextChangedListener(textWatcher);
+                holderFilter.editTextSearch.requestFocus();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -240,16 +242,18 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
-        if(position < vendorsToShow.size()) {
+        if(position == 0 && vendors.size() > 0){
+            return SEARCH_FILTER_ITEM;
+        } else if((vendors.size() > 0 ? position-1 : position) < vendorsToShow.size()) {
             return MAIN_ITEM;
-        } else{
+        } else {
             return BLANK_ITEM;
         }
     }
 
     @Override
     public int getItemCount() {
-        return vendorsToShow == null || vendorsToShow.size() == 0 ? 0 : vendorsToShow.size() + 1;
+        return (vendorsToShow == null) ? 0 : vendorsToShow.size() + (vendors.size() > 0 ? 2 : 0);
     }
 
 
@@ -276,12 +280,22 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     static class ViewTitleHolder extends RecyclerView.ViewHolder {
-
         public RelativeLayout relative;
-
         public ViewTitleHolder(View itemView) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+        }
+    }
+
+    static class ViewHolderFilter extends RecyclerView.ViewHolder {
+        private RelativeLayout relativeLayoutSearchFilter;
+        private EditText editTextSearch;
+        private CardView cardViewFilter;
+        public ViewHolderFilter(View itemView, Context context) {
+            super(itemView);
+            relativeLayoutSearchFilter = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutSearchFilter);
+            editTextSearch = (EditText) itemView.findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Fonts.mavenMedium(context));
+            cardViewFilter = (CardView) itemView.findViewById(R.id.cardViewFilter);
         }
     }
 
@@ -290,5 +304,22 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         void onRestaurantSelected(int position, MenusResponse.Vendor vendor);
 
     }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            searchVendors(s.toString());
+        }
+    };
 
 }

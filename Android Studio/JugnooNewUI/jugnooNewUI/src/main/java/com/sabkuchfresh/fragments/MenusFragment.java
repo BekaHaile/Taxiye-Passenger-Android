@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -74,9 +72,6 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private MenusRestaurantAdapter menusRestaurantAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
-    private RelativeLayout relativeLayoutSearchFilter;
-    private EditText editTextSearch;
-    private CardView cardViewSearch, cardViewFilter;
 
     private View rootView;
     private FreshActivity activity;
@@ -136,10 +131,6 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         ((TextView)rootView.findViewById(R.id.textViewNothingFound)).setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
-        relativeLayoutSearchFilter = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSearchFilter);
-        cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
-        editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Fonts.mavenMedium(activity));
-        cardViewFilter = (CardView) rootView.findViewById(R.id.cardViewFilter);
 
         recyclerViewRestaurant = (RecyclerView) rootView.findViewById(R.id.recyclerViewRestaurant);
         recyclerViewRestaurant.setLayoutManager(new LinearLayoutManager(activity));
@@ -158,13 +149,6 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
                 getVendorMenu(vendor);
-            }
-        }, editTextSearch);
-
-        cardViewFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.getTransactionUtils().openMenusFilterFragment(activity, activity.getRelativeLayoutContainer());
             }
         });
 
@@ -276,7 +260,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                     menusRestaurantAdapter.setList((ArrayList<MenusResponse.Vendor>) menusResponse.getVendors());
                                     menusRestaurantAdapter.applyFilter();
                                     relativeLayoutNoMenus.setVisibility(menusResponse.getVendors().size() == 0 ? View.VISIBLE : View.GONE);
-                                    relativeLayoutSearchFilter.setVisibility(relativeLayoutNoMenus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+//                                    relativeLayoutSearchFilter.setVisibility(relativeLayoutNoMenus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
