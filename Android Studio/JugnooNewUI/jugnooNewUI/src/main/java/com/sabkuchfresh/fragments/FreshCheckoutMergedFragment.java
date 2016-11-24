@@ -1627,6 +1627,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
 
+            if(activity.getSlotSelected() != null) {
+                boolean slotContains = false;
+                for (DeliverySlot deliverySlot : activity.getUserCheckoutResponse().getCheckoutData().getDeliverySlots()) {
+                    if (deliverySlot.getSlots().contains(activity.getSlotSelected())) {
+                        slotContains = true;
+                        break;
+                    }
+                }
+                if (!slotContains) {
+                    activity.setSlotSelected(null);
+                }
+            }
 
             for (DeliverySlot deliverySlot : activity.getUserCheckoutResponse().getCheckoutData().getDeliverySlots()) {
                 int slotsEnabled = 0;

@@ -757,7 +757,11 @@ public class HistoryResponse {
          * @return The canReorder
          */
         public Integer getCanReorder() {
-            return canReorder;
+            if(canReorder != null){
+                return canReorder;
+            } else {
+                return 0;
+            }
         }
 
         /**

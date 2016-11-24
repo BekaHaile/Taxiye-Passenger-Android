@@ -1252,6 +1252,8 @@
 	<string name="more_info">More info</string>
 	<string name="previous_vendor_cart_message_format">You have added some items in cart from %s.\nAre you sure you want to clear the cart?</string>
 	<string name="minimum_order_amount_is_format">Minimum order amount is \u20B9%s</string>
+	<string name="request_a_ride">Request a ride</string>
+	<string name="move_to_your_location">Move to your location</string>
 
 
 </resources>
