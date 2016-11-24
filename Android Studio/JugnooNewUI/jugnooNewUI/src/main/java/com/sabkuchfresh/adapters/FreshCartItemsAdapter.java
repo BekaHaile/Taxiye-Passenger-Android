@@ -136,7 +136,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
 		RelativeLayout.LayoutParams paramsLLC = (RelativeLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
 		if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
-			paramsFT.setMargins(0, (int)(ASSL.Yscale()*15f), 0, 0);
+			paramsFT.setMargins(0, (int)(ASSL.Yscale()*25f), 0, 0);
 			paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
 		} else {
 			paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
