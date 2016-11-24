@@ -9,6 +9,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
@@ -32,6 +33,7 @@ public class HomeSwitcherActivity extends Activity {
     CardView relativeLayoutRides, relativeLayoutMeals, relativeLayoutFresh, relativeLayoutGrocery;
     TextView textViewRides, textViewMeals, textViewFresh, textViewGrocery;
     FloatingActionMenu fabMenuIns;
+    Animation bounceAnim, bounceScaleAnim;
 
     @Override
     protected void onResume() {
@@ -81,6 +83,10 @@ public class HomeSwitcherActivity extends Activity {
         fabMenuIns.setMenuButtonColorRipple(getResources().getColor(R.color.grey_light_alpha));
         fabMenuIns.setEnabled(false);
 
+        bounceAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        bounceScaleAnim = AnimationUtils.loadAnimation(this, R.anim.bounce_scale);
+        //button.startAnimation(myAnim);
+
         relativeLayoutRides.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +129,8 @@ public class HomeSwitcherActivity extends Activity {
 
 
 
-    long duration = 500;
+    long duration = 2500;
+    long bounceDuration = 200;
     boolean animStarted = false;
     private void startInnerAnim(final String clientId){
         animStarted = true;
@@ -132,38 +139,83 @@ public class HomeSwitcherActivity extends Activity {
         relativeLayoutFresh.clearAnimation();
         relativeLayoutGrocery.clearAnimation();
 
-        AnimationSet asr = new AnimationSet(true);
-        Animation tr = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 520f);
+        relativeLayoutRides.startAnimation(bounceAnim);
+        relativeLayoutFresh.startAnimation(bounceAnim);
+        relativeLayoutMeals.startAnimation(bounceAnim);
+        relativeLayoutGrocery.startAnimation(bounceAnim);
+
+        /*relativeLayoutRides.startAnimation(bounceScaleAnim);
+        relativeLayoutFresh.startAnimation(bounceScaleAnim);
+        relativeLayoutMeals.startAnimation(bounceScaleAnim);
+        relativeLayoutGrocery.startAnimation(bounceScaleAnim);*/
+
+        final AnimationSet asr = new AnimationSet(true);
+        Animation tr = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 470f);
         tr.setDuration(duration);
         tr.setFillAfter(false);
         tr.setInterpolator(new AccelerateDecelerateInterpolator());
         addScaleAlphaAnimListener(asr, tr, relativeLayoutRides);
 
-        AnimationSet asf = new AnimationSet(true);
-        Animation tf = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 240f);
+        final AnimationSet asf = new AnimationSet(true);
+        Animation tf = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 150f);
         tf.setDuration(duration);
         tf.setFillAfter(false);
         tf.setInterpolator(new AccelerateDecelerateInterpolator());
         addScaleAlphaAnimListener(asf, tf, relativeLayoutFresh);
 
-        AnimationSet asm = new AnimationSet(true);
-        Animation tm = new TranslateAnimation(0, -(ASSL.Xscale() * 360f), 0, ASSL.Yscale() * 520f);
+        final AnimationSet asm = new AnimationSet(true);
+        Animation tm = new TranslateAnimation(0, -(ASSL.Xscale() * 420f), 0, ASSL.Yscale() * 470f);
         tm.setDuration(duration);
         tm.setFillAfter(false);
         tm.setInterpolator(new AccelerateDecelerateInterpolator());
         addScaleAlphaAnimListener(asm, tm, relativeLayoutMeals);
 
-        AnimationSet asg = new AnimationSet(true);
-        Animation tg = new TranslateAnimation(0, -(ASSL.Xscale() * 360f), 0, ASSL.Yscale() * 240f);
+        final AnimationSet asg = new AnimationSet(true);
+        Animation tg = new TranslateAnimation(0, -(ASSL.Xscale() * 360f), 0, ASSL.Yscale() * 150f);
         tg.setDuration(duration);
         tg.setFillAfter(false);
         tg.setInterpolator(new AccelerateDecelerateInterpolator());
         addScaleAlphaAnimListener(asg, tg, relativeLayoutGrocery);
 
-        relativeLayoutRides.startAnimation(asr);
-        relativeLayoutMeals.startAnimation(asm);
-        relativeLayoutFresh.startAnimation(asf);
-        relativeLayoutGrocery.startAnimation(asg);
+        /*new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                relativeLayoutRides.startAnimation(asr);
+                relativeLayoutMeals.startAnimation(asm);
+                relativeLayoutFresh.startAnimation(asf);
+                relativeLayoutGrocery.startAnimation(asg);
+            }
+        }, bounceDuration);*/
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                relativeLayoutFresh.startAnimation(asf);
+            }
+        }, bounceDuration);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                relativeLayoutGrocery.startAnimation(asg);
+            }
+        }, bounceDuration+50);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                relativeLayoutRides.startAnimation(asr);
+            }
+        }, bounceDuration+100);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                relativeLayoutMeals.startAnimation(asm);
+            }
+        }, bounceDuration+150);
+
+
 
 
 
@@ -176,7 +228,7 @@ public class HomeSwitcherActivity extends Activity {
                 MyApplication.getInstance().getAppSwitcher().switchApp(HomeSwitcherActivity.this, clientId, getIntent().getData(),
                         new LatLng(latitude, longitude), bundle, false, false, true);
             }
-        }, duration);
+        }, duration+bounceDuration+150);
 
     }
 

@@ -220,9 +220,6 @@
     <dimen name="px_220">
         220px
     </dimen>
-    <dimen name="px_200">
-        200px
-    </dimen>
     <dimen name="px_400">
         400px
     </dimen>
@@ -241,11 +238,9 @@
     <dimen name="px_60">
         60px
     </dimen>
-    <dimen name="px_20">
-        20px
-    </dimen>
     <dimen name="px_15">
         15px
     </dimen>
+    <dimen name="px_200">200px</dimen>
 
 </resources>
