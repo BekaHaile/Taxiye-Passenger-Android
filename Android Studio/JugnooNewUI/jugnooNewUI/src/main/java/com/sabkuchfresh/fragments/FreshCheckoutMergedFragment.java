@@ -178,19 +178,19 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     @Override
     public void onStart() {
-        super.onStart();
         LocalBroadcastManager.getInstance(activity).registerReceiver(broadcastReceiverWalletUpdate,
                 new IntentFilter(Constants.INTENT_ACTION_WALLET_UPDATE));
         mBus.register(this);
+        super.onStart();
     }
 
     @Override
     public void onStop() {
-        super.onStop();
         mBus.unregister(this);
         if(!orderPlaced){
             activity.saveCheckoutData(false);
         }
+        super.onStop();
     }
 
 

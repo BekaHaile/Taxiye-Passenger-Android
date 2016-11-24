@@ -15,7 +15,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.TextUtils;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.UpdateMainList;
@@ -86,6 +89,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -99,12 +103,19 @@ import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * Created by shankar on 4/6/16.
@@ -400,6 +411,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             e.printStackTrace();
         }
 
+        try {
+            mBus.register(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -478,9 +495,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 									bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
 									MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
 											getCurrentPlaceLatLng(), bundle, false);
-	//                    openCart();
-	//                    addFreshFragment();
-	//                    Prefs.with(context).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
 								}
 							} else if (type == 1) {
 								intentToShareActivity();
@@ -526,7 +540,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                             } else if(PushFlags.STATUS_CHANGED.getOrdinal() == flag){
                                 Fragment fragment = getTopFragment();
                                 if(fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()){
-                                    ((MealFragment)fragment).getAllProducts(true);
+                                    ((MealFragment)fragment).getAllProducts(true, getSelectedLatLng());
                                 } else {
                                     Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                     intent1.putExtra(Constants.KEY_FLAG, flag);
@@ -551,12 +565,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         super.onResume();
         try {
         if (!HomeActivity.checkIfUserDataNull(this)) {
-            try {
-                mBus.register(this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
             menuBar.setUserData();
             topBar.setUserData();
 
@@ -853,6 +861,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.title.setText(getResources().getString(R.string.fresh));
 				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
+                topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
+                setRelativeLayoutLocalityClick();
 
 			} else if(fragment instanceof MealFragment){
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -878,6 +890,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.title.setText(getResources().getString(R.string.meals));
 				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
+                topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
+                setRelativeLayoutLocalityClick();
 			}
             else if (fragment instanceof GroceryFragment) {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -905,6 +921,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.title.setText(getResources().getString(R.string.grocery));
                 topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
+                topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
+                setRelativeLayoutLocalityClick();
 
             } else if (fragment instanceof MenusFragment) {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -1314,11 +1334,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 GroceryFragment groceryFrag = getGroceryFragment();
                 MenusFragment menusFrag = getMenusFragment();
                 if (freshFrag != null) {
-                    freshFrag.getAllProducts(true);
+                    freshFrag.getAllProducts(true, getSelectedLatLng());
                 } else if(mealsFrag != null) {
-                    mealsFrag.getAllProducts(true);
+                    mealsFrag.getAllProducts(true, getSelectedLatLng());
                 } else if(groceryFrag != null) {
-                    groceryFrag.getAllProducts(true);
+                    groceryFrag.getAllProducts(true, getSelectedLatLng());
                 } else if(menusFrag != null) {
                     menusFrag.getAllMenus(true, new LatLng(Data.latitude, Data.longitude));
                 }
@@ -1532,6 +1552,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     @Override
     protected void onDestroy() {
+        try {
+            mBus.unregister(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         System.gc();
         super.onDestroy();
@@ -1614,11 +1639,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     @Override
     protected void onPause() {
         super.onPause();
-        try {
-            mBus.unregister(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         saveCartToSP();
         Log.e(TAG, "cart saved=" + Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
 
@@ -2156,7 +2176,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     public LatLng getSelectedLatLng() {
-        return selectedLatLng;
+        if(selectedLatLng != null){
+            return selectedLatLng;
+        } else {
+            return new LatLng(Data.latitude, Data.longitude);
+        }
     }
 
     public void setSelectedLatLng(LatLng selectedLatLng) {
@@ -2476,4 +2500,154 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             return true;
         }
     }
+
+
+
+
+    public void getAddressAndFetchOfferingData(final LatLng currentLatLng, final int appType){
+        try {
+            DialogPopup.showLoadingDialog(this, "Loading...");
+            RestClient.getGoogleApiServices().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+                    "en", false, new Callback<SettleUserDebt>() {
+                        @Override
+                        public void success(SettleUserDebt settleUserDebt, Response response) {
+                            try {
+                                String resp = new String(((TypedByteArray) response.getBody()).getBytes());
+                                GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
+                                String address = gapiAddress.formattedAddress;
+                                setSelectedAddress(address);
+                                setSelectedLatLng(currentLatLng);
+                                setSelectedAddressId(0);
+                                setSelectedAddressType("");
+                                setAddressAndFetchOfferingData(appType);
+                                DialogPopup.dismissLoadingDialog();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            DialogPopup.dismissLoadingDialog();
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+            DialogPopup.dismissLoadingDialog();
+        }
+    }
+
+
+    public void setAddressAndFetchOfferingData(int appType){
+        try {
+            String address = "";
+            if(TextUtils.isEmpty(getSelectedAddressType())){
+                String[] arr = null;
+                if (getSelectedAddress().contains(",")) {
+                    arr = getSelectedAddress().split(", ");
+                } else {
+                    arr = getSelectedAddress().split(" ");
+                }
+                if (arr.length > 1) {
+                    address = arr[0] + ", " + arr[1];
+                } else if (arr.length > 0) {
+                    address = arr[0];
+                }
+            } else {
+                address = getSelectedAddressType();
+            }
+            getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26f * ASSL.Xscale());
+
+            getTopBar().textViewLocationValue.setText(address);
+            if(appType == AppConstant.ApplicationType.FRESH){
+                getFreshFragment().getAllProducts(true, getSelectedLatLng());
+            } else if(appType == AppConstant.ApplicationType.MEALS){
+                getMealFragment().getAllProducts(true, getSelectedLatLng());
+            } else if(appType == AppConstant.ApplicationType.GROCERY){
+                getGroceryFragment().getAllProducts(true, getSelectedLatLng());
+            } else if(appType == AppConstant.ApplicationType.MENUS){
+                getMenusFragment().getAllMenus(true, getSelectedLatLng());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setLocalityAddressFirstTime(int appType){
+        if(selectedLatLng == null || TextUtils.isEmpty(getSelectedAddress())){
+            setOfferingLastAddressToActivityVariables(appType);
+        } else {
+            setAddressAndFetchOfferingData(appType);
+        }
+    }
+
+
+
+    public void saveOfferingLastAddress(int appType){
+        try {
+            Gson gson = new Gson();
+            SearchResult searchResultLocality = new SearchResult(getSelectedAddressType(), getSelectedAddress(), "",
+                    getSelectedLatLng().latitude, getSelectedLatLng().longitude);
+            searchResultLocality.setId(getSelectedAddressId());
+            searchResultLocality.setIsConfirmed(1);
+            if(appType == AppConstant.ApplicationType.FRESH){
+                Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+            } else if(appType == AppConstant.ApplicationType.MEALS){
+                Prefs.with(this).save(Constants.SP_MEALS_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+            } else if(appType == AppConstant.ApplicationType.GROCERY){
+                Prefs.with(this).save(Constants.SP_GROCERY_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+            } else if(appType == AppConstant.ApplicationType.MENUS){
+                Prefs.with(this).save(Constants.SP_MENUS_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setOfferingLastAddressToActivityVariables(int appType){
+        try {
+            Gson gson = new Gson();
+            SearchResult searchResultLocality = null;
+            if(appType == AppConstant.ApplicationType.FRESH){
+                searchResultLocality = gson.fromJson(Prefs.with(this)
+                        .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+            } else if(appType == AppConstant.ApplicationType.MEALS){
+                searchResultLocality = gson.fromJson(Prefs.with(this)
+                        .getString(Constants.SP_MEALS_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+            } else if(appType == AppConstant.ApplicationType.GROCERY){
+                searchResultLocality = gson.fromJson(Prefs.with(this)
+                        .getString(Constants.SP_GROCERY_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+            } else if(appType == AppConstant.ApplicationType.MENUS){
+                searchResultLocality = gson.fromJson(Prefs.with(this)
+                        .getString(Constants.SP_MENUS_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+            }
+
+            if(searchResultLocality != null && !TextUtils.isEmpty(searchResultLocality.getAddress())){
+                setSelectedAddress(searchResultLocality.getAddress());
+                setSelectedLatLng(searchResultLocality.getLatLng());
+                setSelectedAddressId(searchResultLocality.getId());
+                setSelectedAddressType(searchResultLocality.getName());
+                setAddressAndFetchOfferingData(appType);
+            } else {
+                getAddressAndFetchOfferingData(getSelectedLatLng(), appType);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Subscribe
+    public void onAddressUpdated(AddressAdded event) {
+        try {
+            if (event.flag) {
+                setRefreshCart(true);
+                int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
+                setAddressAndFetchOfferingData(appType);
+                saveOfferingLastAddress(appType);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
