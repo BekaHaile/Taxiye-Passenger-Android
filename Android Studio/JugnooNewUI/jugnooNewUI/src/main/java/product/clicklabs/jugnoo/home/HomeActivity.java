@@ -118,6 +118,7 @@ import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
+import product.clicklabs.jugnoo.HomeSwitcherActivity;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
@@ -481,6 +482,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ArrayList<Marker> markersSpecialPickup = new ArrayList<>();
     private ArrayList<MarkerOptions> markerOptionsSpecialPickup = new ArrayList<>();
     private float mapPaddingSpecialPickup = 268f, mapPaddingConfirm = 238f;
+    public static boolean homeSwitcher;
 
 
     @Override
@@ -4165,6 +4167,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         super.onResume();
 
         try {
+
+            if(!homeSwitcher) {
+                homeSwitcher = true;
+                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this,
+                        Prefs.with(HomeActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+                        getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), true);
+            }
+
+            if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getFreshClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
+                        getCurrentPlaceLatLng(), bundle);
+            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getMealsClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getMealsClientId(), null,
+                        getCurrentPlaceLatLng(), bundle);
+            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getGroceryClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getGroceryClientId(), null,
+                        getCurrentPlaceLatLng(), bundle);
+            }
+            Prefs.with(this).save("home_switcher_client_id", "");
+
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
             if (!checkIfUserDataNull(HomeActivity.this)) {
                 setUserData();

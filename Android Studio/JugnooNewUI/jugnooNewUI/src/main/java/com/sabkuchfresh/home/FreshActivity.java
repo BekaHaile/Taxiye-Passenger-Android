@@ -560,6 +560,24 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     protected void onResume() {
         super.onResume();
         try {
+
+            if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getAutosClientId())){
+                HomeActivity.homeSwitcher = true;
+                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getAutosClientId(), null,
+                        getCurrentPlaceLatLng(), null);
+            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getMealsClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getMealsClientId(), null,
+                        getCurrentPlaceLatLng(), null);
+            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getGroceryClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
+                        getCurrentPlaceLatLng(), null);
+            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getFreshClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
+                        getCurrentPlaceLatLng(), null);
+            }
+            Prefs.with(this).save("home_switcher_client_id", "");
+
+
         if (!HomeActivity.checkIfUserDataNull(this)) {
             try {
                 mBus.register(this);

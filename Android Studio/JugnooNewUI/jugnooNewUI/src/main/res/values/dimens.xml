@@ -242,5 +242,6 @@
         15px
     </dimen>
     <dimen name="px_200">200px</dimen>
+    <dimen name="px_55">55px</dimen>
 
 </resources>

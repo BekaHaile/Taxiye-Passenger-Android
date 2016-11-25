@@ -96,7 +96,7 @@ public class AppSwitcher {
 				intent.putExtra(Constants.KEY_LONGITUDE, latLng.longitude);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
-				ActivityCompat.finishAffinity(activity);
+				//activity.finish();
 			} else {
 				ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
 					@Override

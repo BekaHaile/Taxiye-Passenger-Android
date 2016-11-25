@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
@@ -277,9 +278,19 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     } else if(activity instanceof FreshActivity){
                         currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
                     }
-                    MyApplication.getInstance().getAppSwitcher().switchApp(activity,
+                    /*MyApplication.getInstance().getAppSwitcher().switchApp(activity,
                             Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-                            null, currLatLng, null, true, true, true);
+                            null, currLatLng, null, true, true, true);*/
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyApplication.getInstance().getAppSwitcher().switchApp(activity,
+                                    Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+                                    activity.getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), true);
+                        }
+                    }, 500);
+
 
 
 //                    if(holder.linearLayoutSubCategories.getVisibility() == View.VISIBLE){

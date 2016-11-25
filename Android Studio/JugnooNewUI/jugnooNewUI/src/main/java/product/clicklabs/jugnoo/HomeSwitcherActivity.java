@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 
@@ -91,6 +92,7 @@ public class HomeSwitcherActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(!animStarted) {
+//                    relativeLayoutRides.startAnimation(bounceAnim);
                     startInnerAnim(Config.getAutosClientId());
                 }
             }
@@ -100,6 +102,7 @@ public class HomeSwitcherActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(!animStarted) {
+//                    relativeLayoutMeals.startAnimation(bounceAnim);
                     startInnerAnim(Config.getMealsClientId());
                 }
             }
@@ -109,6 +112,7 @@ public class HomeSwitcherActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(!animStarted) {
+//                    relativeLayoutFresh.startAnimation(bounceAnim);
                     startInnerAnim(Config.getFreshClientId());
                 }
             }
@@ -118,6 +122,7 @@ public class HomeSwitcherActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if(!animStarted) {
+//                    relativeLayoutGrocery.startAnimation(bounceAnim);
                     startInnerAnim(Config.getGroceryClientId());
                 }
             }
@@ -129,7 +134,7 @@ public class HomeSwitcherActivity extends Activity {
 
 
 
-    long duration = 2500;
+    long duration = 500;
     long bounceDuration = 200;
     boolean animStarted = false;
     private void startInnerAnim(final String clientId){
@@ -139,15 +144,24 @@ public class HomeSwitcherActivity extends Activity {
         relativeLayoutFresh.clearAnimation();
         relativeLayoutGrocery.clearAnimation();
 
-        relativeLayoutRides.startAnimation(bounceAnim);
+        /*relativeLayoutRides.startAnimation(bounceAnim);
         relativeLayoutFresh.startAnimation(bounceAnim);
         relativeLayoutMeals.startAnimation(bounceAnim);
-        relativeLayoutGrocery.startAnimation(bounceAnim);
+        relativeLayoutGrocery.startAnimation(bounceAnim);*/
 
         /*relativeLayoutRides.startAnimation(bounceScaleAnim);
         relativeLayoutFresh.startAnimation(bounceScaleAnim);
         relativeLayoutMeals.startAnimation(bounceScaleAnim);
         relativeLayoutGrocery.startAnimation(bounceScaleAnim);*/
+        if(clientId.equalsIgnoreCase(Config.getAutosClientId())){
+            relativeLayoutRides.startAnimation(bounceAnim);
+        } else if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
+            relativeLayoutFresh.startAnimation(bounceAnim);
+        } else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
+            relativeLayoutMeals.startAnimation(bounceAnim);
+        } else if(clientId.equalsIgnoreCase(Config.getGroceryClientId())){
+            relativeLayoutGrocery.startAnimation(bounceAnim);
+        }
 
         final AnimationSet asr = new AnimationSet(true);
         Animation tr = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 470f);
@@ -157,21 +171,21 @@ public class HomeSwitcherActivity extends Activity {
         addScaleAlphaAnimListener(asr, tr, relativeLayoutRides);
 
         final AnimationSet asf = new AnimationSet(true);
-        Animation tf = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 150f);
+        Animation tf = new TranslateAnimation(0, -(ASSL.Xscale() * 60f), 0, ASSL.Yscale() * 130f);
         tf.setDuration(duration);
         tf.setFillAfter(false);
         tf.setInterpolator(new AccelerateDecelerateInterpolator());
         addScaleAlphaAnimListener(asf, tf, relativeLayoutFresh);
 
         final AnimationSet asm = new AnimationSet(true);
-        Animation tm = new TranslateAnimation(0, -(ASSL.Xscale() * 420f), 0, ASSL.Yscale() * 470f);
+        Animation tm = new TranslateAnimation(0, -(ASSL.Xscale() * 360f), 0, ASSL.Yscale() * 470f);
         tm.setDuration(duration);
         tm.setFillAfter(false);
         tm.setInterpolator(new AccelerateDecelerateInterpolator());
         addScaleAlphaAnimListener(asm, tm, relativeLayoutMeals);
 
         final AnimationSet asg = new AnimationSet(true);
-        Animation tg = new TranslateAnimation(0, -(ASSL.Xscale() * 360f), 0, ASSL.Yscale() * 150f);
+        Animation tg = new TranslateAnimation(0, -(ASSL.Xscale() * 360f), 0, ASSL.Yscale() * 130f);
         tg.setDuration(duration);
         tg.setFillAfter(false);
         tg.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -199,21 +213,21 @@ public class HomeSwitcherActivity extends Activity {
             public void run() {
                 relativeLayoutGrocery.startAnimation(asg);
             }
-        }, bounceDuration+50);
+        }, bounceDuration+75);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 relativeLayoutRides.startAnimation(asr);
             }
-        }, bounceDuration+100);
+        }, bounceDuration+150);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 relativeLayoutMeals.startAnimation(asm);
             }
-        }, bounceDuration+150);
+        }, bounceDuration+225);
 
 
 
@@ -222,16 +236,34 @@ public class HomeSwitcherActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                Prefs.with(HomeSwitcherActivity.this).save("home_switcher_client_id", clientId);
                 double latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, LocationFetcher.getSavedLatFromSP(HomeSwitcherActivity.this));
                 double longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, LocationFetcher.getSavedLngFromSP(HomeSwitcherActivity.this));
                 Bundle bundle = getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE);
-                MyApplication.getInstance().getAppSwitcher().switchApp(HomeSwitcherActivity.this, clientId, getIntent().getData(),
-                        new LatLng(latitude, longitude), bundle, false, false, true);
+                overridePendingTransition(getInAnim(true), getOutAnim(true));
+                finish();
+//                MyApplication.getInstance().getAppSwitcher().switchApp(HomeSwitcherActivity.this, clientId, getIntent().getData(),
+//                        new LatLng(latitude, longitude), bundle, false, false, true);
             }
-        }, duration+bounceDuration+150);
+        }, duration+bounceDuration+75);
 
     }
 
+    private int getInAnim(boolean slowTransition){
+        if(slowTransition){
+            return R.anim.fade_in_slow;
+        } else{
+            return R.anim.fade_in;
+        }
+    }
+
+    private int getOutAnim(boolean slowTransition){
+        if(slowTransition){
+            return R.anim.fade_out_slow;
+        } else{
+            return R.anim.fade_out;
+        }
+    }
 
     private void addScaleAlphaAnimListener(AnimationSet asr, Animation tr, final View view){
         Animation a = new AlphaAnimation(1, 0);
