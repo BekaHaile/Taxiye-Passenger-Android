@@ -4467,39 +4467,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    private void setNearBySavedAddress(TextView textView, LatLng latLng){
-        ArrayList<SearchResult> searchResults = new ArrayList<>();
-        if (!Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
-            String homeString = Prefs.with(HomeActivity.this).getString(SPLabels.ADD_HOME, "");
-            SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-            searchResults.add(searchResult);
-        }
-        if (!Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
-            String workString = Prefs.with(HomeActivity.this).getString(SPLabels.ADD_WORK, "");
-            SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-            searchResults.add(searchResult);
-        }
-        searchResults.addAll(Data.userData.getSearchResults());
-
-        double distance = Double.MAX_VALUE;
-        SearchResult selectedNearByAddress = null;
-        for(int i=0; i<searchResults.size(); i++){
-            double fetchedDistance = MapUtils.distance(latLng, searchResults.get(i).getLatLng());
-                if ((fetchedDistance < 100) && (fetchedDistance < distance)) {
-                    distance = fetchedDistance;
-                    selectedNearByAddress = searchResults.get(i);
-                }
-        }
-
-        if(selectedNearByAddress != null){
-            Log.v("NearBy address is", "--> "+selectedNearByAddress.getName());
-            textView.setText(selectedNearByAddress.getName());
-            Data.autoData.setPickupAddress(selectedNearByAddress.getAddress());
-        }
-
-    }
-
-
     public static void checkForAccessTokenChange(Activity activity) {
         Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
         if (!"".equalsIgnoreCase(pair.first)) {
@@ -5228,7 +5195,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         textView.setHint(getResources().getString(R.string.set_pickup_location));
                                         textView.setText(address);
                                         Data.autoData.setPickupAddress(address);
-                                        setNearBySavedAddress(textView, currentLatLng);
+                                        SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng);
+                                        if(searchResult != null) {
+                                            textView.setText(searchResult.getName());
+                                            Data.autoData.setPickupAddress(searchResult.getAddress());
+                                        }
                                     } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                                             || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                                             || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
@@ -9284,5 +9255,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         return apiFetchUserAddress;
     }
+
+    private HomeUtil homeUtil = new HomeUtil();
 
 }

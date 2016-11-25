@@ -99,6 +99,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
@@ -2623,17 +2624,26 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             }
 
             if(searchResultLocality != null && !TextUtils.isEmpty(searchResultLocality.getAddress())){
-                setSelectedAddress(searchResultLocality.getAddress());
-                setSelectedLatLng(searchResultLocality.getLatLng());
-                setSelectedAddressId(searchResultLocality.getId());
-                setSelectedAddressType(searchResultLocality.getName());
-                setAddressAndFetchOfferingData(appType);
+                setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {
-                getAddressAndFetchOfferingData(getSelectedLatLng(), appType);
+                SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng());
+                if(searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())){
+                    setSearchResultToActVarsAndFetchData(searchResult, appType);
+                } else {
+                    getAddressAndFetchOfferingData(getSelectedLatLng(), appType);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setSearchResultToActVarsAndFetchData(SearchResult searchResultLocality, int appType){
+        setSelectedAddress(searchResultLocality.getAddress());
+        setSelectedLatLng(searchResultLocality.getLatLng());
+        setSelectedAddressId(searchResultLocality.getId());
+        setSelectedAddressType(searchResultLocality.getName());
+        setAddressAndFetchOfferingData(appType);
     }
 
     @Subscribe
@@ -2649,5 +2659,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             e.printStackTrace();
         }
     }
+
+    private HomeUtil homeUtil = new HomeUtil();
 
 }

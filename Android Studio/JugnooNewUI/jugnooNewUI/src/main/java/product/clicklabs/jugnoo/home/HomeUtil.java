@@ -2,10 +2,18 @@ package product.clicklabs.jugnoo.home;
 
 import android.content.Context;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
+import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
@@ -52,5 +60,38 @@ public class HomeUtil {
 			return VehicleIconSet.ORANGE_AUTO;
 		}
 	}
+
+	public SearchResult getNearBySavedAddress(Context context, LatLng latLng){
+		try {
+			ArrayList<SearchResult> searchResults = new ArrayList<>();
+			if (!Prefs.with(context).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+				String homeString = Prefs.with(context).getString(SPLabels.ADD_HOME, "");
+				SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+				searchResults.add(searchResult);
+			}
+			if (!Prefs.with(context).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+				String workString = Prefs.with(context).getString(SPLabels.ADD_WORK, "");
+				SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+				searchResults.add(searchResult);
+			}
+			searchResults.addAll(Data.userData.getSearchResults());
+
+			double distance = Double.MAX_VALUE;
+			SearchResult selectedNearByAddress = null;
+			for(int i=0; i<searchResults.size(); i++){
+				double fetchedDistance = MapUtils.distance(latLng, searchResults.get(i).getLatLng());
+				if ((fetchedDistance < 100) && (fetchedDistance < distance)) {
+					distance = fetchedDistance;
+					selectedNearByAddress = searchResults.get(i);
+				}
+			}
+
+			return selectedNearByAddress;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 
 }
