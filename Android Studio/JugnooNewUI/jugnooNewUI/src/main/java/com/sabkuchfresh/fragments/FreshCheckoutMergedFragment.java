@@ -31,7 +31,6 @@ import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
@@ -1569,29 +1568,29 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
         try {
-            int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-            if(type != AppConstant.ApplicationType.MENUS) {
-                if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
-                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-                } else {
-                    activity.setSelectedAddress("");
-                }
-                activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
-                activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
-                try {
-                    activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
-                            Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
-                } catch (Exception e) {
-                    activity.setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
-                }
-
-                if (!checkoutSaveData.isDefault()) {
-                    activity.setSelectedAddress(checkoutSaveData.getAddress());
-                    activity.setSelectedAddressType(checkoutSaveData.getAddressType());
-                    activity.setSelectedAddressId(checkoutSaveData.getAddressId());
-                    activity.setSelectedLatLng(new LatLng(checkoutSaveData.getLatitude(), checkoutSaveData.getLongitude()));
-                }
-            }
+//            int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+//            if(type != AppConstant.ApplicationType.MENUS) {
+//                if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
+//                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+//                } else {
+//                    activity.setSelectedAddress("");
+//                }
+//                activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
+//                activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+//                try {
+//                    activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
+//                            Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+//                } catch (Exception e) {
+//                    activity.setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
+//                }
+//
+//                if (!checkoutSaveData.isDefault()) {
+//                    activity.setSelectedAddress(checkoutSaveData.getAddress());
+//                    activity.setSelectedAddressType(checkoutSaveData.getAddressType());
+//                    activity.setSelectedAddressId(checkoutSaveData.getAddressId());
+//                    activity.setSelectedLatLng(new LatLng(checkoutSaveData.getLatitude(), checkoutSaveData.getLongitude()));
+//                }
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

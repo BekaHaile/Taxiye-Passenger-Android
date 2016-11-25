@@ -113,7 +113,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         recyclerViewRestaurant.setLayoutManager(new LinearLayoutManager(activity));
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
-        textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus);
+        textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus); textViewNoMenus.setTypeface(Fonts.mavenMedium(activity));
 
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
@@ -127,6 +127,11 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
                 getVendorMenu(vendor);
+            }
+
+            @Override
+            public void onNotify(int count) {
+                textViewNoMenus.setVisibility(count > 0 ? View.GONE : View.VISIBLE);
             }
         });
 
@@ -328,6 +333,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
                                     activity.setVendorOpened(vendor);
                                     activity.setProductsResponse(productsResponse);
+                                    if(Data.freshSort == -1) {
+                                        Data.freshSort = jObj.getInt(Constants.SORTED_BY);
+                                    }
                                     activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);

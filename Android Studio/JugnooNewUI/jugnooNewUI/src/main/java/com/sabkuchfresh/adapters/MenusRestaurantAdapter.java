@@ -69,6 +69,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
         }
         notifyDataSetChanged();
+		callback.onNotify(vendorsToShow.size());
     }
 
     public void setList(ArrayList<MenusResponse.Vendor> vendors) {
@@ -104,16 +105,19 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         Collections.sort(vendors, new Comparator<MenusResponse.Vendor>() {
             @Override
             public int compare(MenusResponse.Vendor lhs, MenusResponse.Vendor rhs) {
-                if(activity.getSortBySelected() != MenusFilterFragment.SortType.NONE){
+                if(activity.getSortBySelected() == MenusFilterFragment.SortType.NONE){
+                    return 0;
+                } else {
                     if(activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY){
                         return lhs.getPopularity() - rhs.getPopularity();
                     } else if(activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE){
                         return -(lhs.getDistance() - rhs.getDistance());
                     } else if(activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE){
                         return lhs.getPriceRange() - rhs.getPriceRange();
+                    } else {
+                        return 0;
                     }
                 }
-                return 0;
             }
         });
 
@@ -151,7 +155,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         try {
             if (holder instanceof ViewHolder) {
-                position = vendors.size() > 0 ? position-1 : position;
+                position = vendorsComplete.size() > 0 ? position-1 : position;
                 ViewHolder mHolder = ((ViewHolder) holder);
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
 
@@ -249,9 +253,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0 && vendors.size() > 0){
+        if(position == 0 && vendorsComplete.size() > 0){
             return SEARCH_FILTER_ITEM;
-        } else if((vendors.size() > 0 ? position-1 : position) < vendorsToShow.size()) {
+        } else if((vendorsComplete.size() > 0 ? position-1 : position) < vendorsToShow.size()) {
             return MAIN_ITEM;
         } else {
             return BLANK_ITEM;
@@ -260,7 +264,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return (vendorsToShow == null) ? 0 : vendorsToShow.size() + (vendors.size() > 0 ? 2 : 0);
+        return (vendorsToShow == null) ? 0 : vendorsToShow.size() + (vendorsComplete.size() > 0 ? 1 + (vendorsToShow.size() > 0 ? 1 : 0) : 0);
     }
 
 
@@ -309,6 +313,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public interface Callback {
         void onRestaurantSelected(int position, MenusResponse.Vendor vendor);
+		void onNotify(int count);
     }
 
     private TextWatcher textWatcher = new TextWatcher() {

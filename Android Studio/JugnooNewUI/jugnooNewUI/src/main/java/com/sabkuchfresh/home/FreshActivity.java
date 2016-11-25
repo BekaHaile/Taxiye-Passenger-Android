@@ -1314,7 +1314,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 subItem.setSubItemQuantitySelected(0);
             }
         }
-        resetAddressFields();
+//        resetAddressFields();
         splInstr = "";
         slotSelected = null;
         slotToSelect = null;
@@ -2478,6 +2478,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                     clearMenusCart();
                                     subItem.setSubItemQuantitySelected(subItem.getSubItemQuantitySelected() + 1);
                                     getVendorMenuFragment().getFreshCategoryFragmentsAdapter().notifyDataSetChanged();
+                                    updateCartValuesGetTotalPrice();
                                 }
                             },
                             new View.OnClickListener() {
