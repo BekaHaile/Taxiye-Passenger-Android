@@ -546,7 +546,4 @@ public interface Constants {
 
 	String KEY_ITEM_ID = "item_id";
 	String SP_FRESH_LAST_ADDRESS_OBJ = "sp_fresh_last_address_obj";
-	String SP_MEALS_LAST_ADDRESS_OBJ = "sp_meals_last_address_obj";
-	String SP_GROCERY_LAST_ADDRESS_OBJ = "sp_grocery_last_address_obj";
-	String SP_MENUS_LAST_ADDRESS_OBJ = "sp_menus_last_address_obj";
 }

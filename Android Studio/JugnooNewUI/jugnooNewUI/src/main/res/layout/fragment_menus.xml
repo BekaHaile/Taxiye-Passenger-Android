@@ -59,11 +59,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             >
+
+            <TextView
+                android:id="@+id/textViewNoMenus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="120px"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_34"
+                android:text="@string/no_menus_available"
+                android:gravity="center"
+                android:visibility="gone"
+                />
+
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerViewRestaurant"
                 android:layout_width="match_parent"
@@ -73,8 +86,7 @@
                 android:splitMotionEvents="false">
             </android.support.v7.widget.RecyclerView>
 
-
-        </LinearLayout>
+        </RelativeLayout>
 
 
     </android.support.v4.widget.SwipeRefreshLayout>

@@ -68,6 +68,10 @@ public class MenusFilterCuisinesFragment extends Fragment{
         buttonDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                activity.getFilterCuisinesLocal().clear();
+                for(int i=0; i<menusFilterCuisinesAdapter.getCuisines().size(); i++){
+                    activity.getFilterCuisinesLocal().add(menusFilterCuisinesAdapter.getCuisines().get(i));
+                }
                 activity.performBackPressed();
             }
         });

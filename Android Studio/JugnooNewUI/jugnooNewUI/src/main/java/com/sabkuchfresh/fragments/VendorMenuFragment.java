@@ -281,4 +281,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 	}
 
+	public FreshCategoryFragmentsAdapter getFreshCategoryFragmentsAdapter() {
+		return freshCategoryFragmentsAdapter;
+	}
 }

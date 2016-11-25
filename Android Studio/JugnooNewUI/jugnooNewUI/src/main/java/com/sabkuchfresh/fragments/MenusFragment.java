@@ -63,6 +63,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private MenusRestaurantAdapter menusRestaurantAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
+    private TextView textViewNoMenus;
 
     private View rootView;
     private FreshActivity activity;
@@ -112,6 +113,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         recyclerViewRestaurant.setLayoutManager(new LinearLayoutManager(activity));
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
+        textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus);
 
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
@@ -233,7 +235,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()){
                                     activity.setMenusResponse(menusResponse);
-                                    menusRestaurantAdapter.setList((ArrayList<MenusResponse.Vendor>) menusResponse.getVendors());
+                                    vendors = (ArrayList<MenusResponse.Vendor>) menusResponse.getVendors();
+                                    menusRestaurantAdapter.setList(vendors);
                                     menusRestaurantAdapter.applyFilter();
                                     relativeLayoutNoMenus.setVisibility(menusResponse.getVendors().size() == 0 ? View.VISIBLE : View.GONE);
 //                                    relativeLayoutSearchFilter.setVisibility(relativeLayoutNoMenus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);

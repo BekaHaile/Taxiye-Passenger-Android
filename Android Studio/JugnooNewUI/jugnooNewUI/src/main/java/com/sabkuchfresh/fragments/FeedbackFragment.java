@@ -45,6 +45,7 @@ import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -195,7 +196,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         } else if(Config.getGroceryClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.feedback_grocery);
         } else if(Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
-            imageviewType.setImageResource(R.drawable.feedback_menus);
+            imageviewType.setImageResource(R.drawable.ic_fab_menus);
         } else {
             imageviewType.setImageResource(R.drawable.feedback_meals);
         }
@@ -393,7 +394,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 params.put(Constants.INTERATED, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
-                RestClient.getFreshApiService().orderFeedback(params, new Callback<OrderHistoryResponse>() {
+                Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
                     @Override
                     public void success(final OrderHistoryResponse notificationInboxResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
@@ -449,7 +450,13 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                                     });
 
                     }
-                });
+                };
+                if(productType == ProductType.MENUS){
+                    RestClient.getMenusApiService().orderFeedback(params, callback);
+                } else {
+                    RestClient.getFreshApiService().orderFeedback(params, callback);
+                }
+
             } else {
 
                     DialogPopup.dialogNoInternet(activity,
@@ -497,7 +504,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 params.put("order_id", "" + orderId);
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.INTERATED, "1");
-                RestClient.getFreshApiService().orderHistory(params, new Callback<HistoryResponse>() {
+                Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
                     @Override
                     public void success(HistoryResponse historyResponse, Response response) {
                         String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -510,8 +517,11 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
                                     //activity.openOrderInvoice(historyResponse.getData().get(0));
-                                    activity.getTransactionUtils().openOrderSummaryFragment(activity,
-                                            activity.getRelativeLayoutContainer(), historyResponse.getData().get(0));
+                                    new TransactionUtils().openOrderStatusFragment(activity,
+                                            activity.getRelativeLayoutContainer(), historyResponse.getData().get(0).getOrderId(),
+                                            historyResponse.getData().get(0).getProductType());
+//                                    activity.getTransactionUtils().openOrderSummaryFragment(activity,
+//                                            activity.getRelativeLayoutContainer(), historyResponse.getData().get(0));
                                 } else {
                                     updateListData(message);
                                 }
@@ -529,7 +539,13 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                         DialogPopup.dismissLoadingDialog();
                         updateListData(Data.SERVER_NOT_RESOPNDING_MSG);
                     }
-                });
+                };
+
+                if(productType == ProductType.MENUS){
+                    RestClient.getMenusApiService().orderHistory(params, callback);
+                } else {
+                    RestClient.getFreshApiService().orderHistory(params, callback);
+                }
             }
             else {
                 updateListData(Data.CHECK_INTERNET_MSG);

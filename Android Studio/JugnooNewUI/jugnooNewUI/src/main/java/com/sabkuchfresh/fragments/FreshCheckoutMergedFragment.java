@@ -353,7 +353,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             @Override
             public void onClick(View v) {
                 int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                if (buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
+                if(type == AppConstant.ApplicationType.MENUS && subTotalAmount < activity.getVendorOpened().getMinimumOrderAmount()) {
+                    Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
+                            Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getVendorOpened().getMinimumOrderAmount())));
+                } else if (buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
                     getCheckoutDataAPI();
                 } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));

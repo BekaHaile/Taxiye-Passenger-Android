@@ -31,7 +31,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/transparent"
                 android:gravity="center_vertical"
-                android:hint="@string/start_typing_a_cuisine"
+                android:hint="@string/search_a_cuisine"
                 android:paddingLeft="32px"
                 android:paddingRight="12px"
                 android:textColor="@color/text_color"

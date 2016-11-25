@@ -87,6 +87,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
     public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
     public View lineStatus1, lineStatus2, lineStatus3;
     private View rootView;
+    private ImageView ivTopShadow;
 
     @Nullable
     @Override
@@ -161,6 +162,11 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         lineStatus1 = (View) rootView.findViewById(R.id.lineStatus1);
         lineStatus2 = (View) rootView.findViewById(R.id.lineStatus2);
         lineStatus3 = (View) rootView.findViewById(R.id.lineStatus3);
+        ivTopShadow = (ImageView) rootView.findViewById(R.id.ivTopShadow);
+
+        if(activity instanceof FreshActivity){
+            ivTopShadow.setVisibility(View.VISIBLE);
+        }
 
         buttonCancelOrder = (Button) rootView.findViewById(R.id.buttonCancelOrder);
         buttonCancelOrder.setTypeface(Fonts.mavenRegular(activity));

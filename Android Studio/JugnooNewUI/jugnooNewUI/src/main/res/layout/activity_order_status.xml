@@ -780,5 +780,13 @@
         </LinearLayout>
     </ScrollView>
 
+    <ImageView
+        android:id="@+id/ivTopShadow"
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        android:visibility="gone"
+        />
+
 
 </RelativeLayout>

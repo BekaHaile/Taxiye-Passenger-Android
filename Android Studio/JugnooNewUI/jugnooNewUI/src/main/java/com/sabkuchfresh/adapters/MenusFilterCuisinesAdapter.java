@@ -32,11 +32,14 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 	private ArrayList<FilterCuisine> cuisinesToShow;
 	private EditText editTextSearch;
 
-	public MenusFilterCuisinesAdapter(FreshActivity activity, ArrayList<FilterCuisine> cuisines, EditText editText) {
+	public MenusFilterCuisinesAdapter(final FreshActivity activity, ArrayList<FilterCuisine> cuisines, EditText editText) {
 		this.activity = activity;
-		this.cuisines = cuisines;
+		this.cuisines = new ArrayList<>();
+		for(FilterCuisine filterCuisine : cuisines){
+			this.cuisines.add(new FilterCuisine(filterCuisine.getName(), filterCuisine.getSelected()));
+		}
 		this.cuisinesToShow = new ArrayList<>();
-		this.cuisinesToShow.addAll(cuisines);
+		this.cuisinesToShow.addAll(this.cuisines);
 		this.editTextSearch = editText;
 
 		this.editTextSearch.addTextChangedListener(new TextWatcher() {
@@ -52,12 +55,17 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				searchVendors(s.toString());
+				editTextSearch.setError(searchVendors(s.toString()) == 0 ?
+						MenusFilterCuisinesAdapter.this.activity.getString(R.string.no_cuisine_found) : null);
 			}
 		});
 	}
 
-	private void searchVendors(String text){
+	public ArrayList<FilterCuisine> getCuisines(){
+		return cuisines;
+	}
+
+	private int searchVendors(String text){
 		cuisinesToShow.clear();
 		text = text.toLowerCase();
 		if(TextUtils.isEmpty(text)){
@@ -70,6 +78,7 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 			}
 		}
 		notifyDataSetChanged();
+		return cuisinesToShow.size();
 	}
 
 	public void setList(ArrayList<FilterCuisine> cuisines) {

@@ -19,9 +19,6 @@ public class DeliveryInfo {
 	@SerializedName("delivery_charges_before_threshold")
 	@Expose
 	private Double deliveryChargesBeforeThreshold;
-	@SerializedName("delivery_charges_after_threshold")
-	@Expose
-	private Double deliveryChargesAfterThreshold;
 	@SerializedName("minimum_order_amount")
 	@Expose
 	private Double minimumOrderAmount;
@@ -70,14 +67,6 @@ public class DeliveryInfo {
 		this.deliveryChargesBeforeThreshold = deliveryChargesBeforeThreshold;
 	}
 
-	public Double getDeliveryChargesAfterThreshold() {
-		return deliveryChargesAfterThreshold;
-	}
-
-	public void setDeliveryChargesAfterThreshold(Double deliveryChargesAfterThreshold) {
-		this.deliveryChargesAfterThreshold = deliveryChargesAfterThreshold;
-	}
-
 	public Double getMinimumOrderAmount() {
 		return minimumOrderAmount;
 	}
@@ -90,11 +79,7 @@ public class DeliveryInfo {
 	public Double getApplicableDeliveryCharges(int type, double subTotalAmount){
 		double charges = 0;
 		if(type == AppConstant.ApplicationType.MENUS){
-			if(subTotalAmount < getMinimumOrderAmount()){
-				charges = getDeliveryChargesBeforeThreshold();
-			} else {
-				charges = getDeliveryChargesAfterThreshold();
-			}
+			charges = getDeliveryChargesBeforeThreshold();
 		} else {
 			if(subTotalAmount < getMinAmount()) {
 				charges = getDeliveryCharges();

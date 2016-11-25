@@ -50,4 +50,9 @@ public interface MenusApiService {
 	void cancelOrder(@FieldMap Map<String, String> params,
 					 Callback<OrderHistoryResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/v1/customer/submit_feedback")
+	void orderFeedback(@FieldMap Map<String, String> params,
+					   Callback<OrderHistoryResponse> callback);
+
 }

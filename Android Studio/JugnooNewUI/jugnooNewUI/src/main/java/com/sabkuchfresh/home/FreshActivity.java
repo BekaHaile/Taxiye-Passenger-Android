@@ -2316,12 +2316,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     private void openCart(int appType){
         if(appType == AppConstant.ApplicationType.MENUS && getVendorOpened() != null) {
-            if(totalPrice >= getVendorOpened().getMinimumOrderAmount()) {
-                getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
-            } else {
-                Utils.showToast(FreshActivity.this, getResources().getString(R.string.minimum_order_amount_is_format,
-                        Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
-            }
+            getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         } else {
             getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         }
@@ -2465,7 +2460,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         this.filterCuisinesLocal = filterCuisinesLocal;
     }
 
-    public boolean checkForAdd(int position, SubItem subItem) {
+    public boolean checkForAdd(int position, final SubItem subItem) {
         int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
         if(appType == AppConstant.ApplicationType.MENUS){
             try {
@@ -2481,6 +2476,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 @Override
                                 public void onClick(View v) {
                                     clearMenusCart();
+                                    subItem.setSubItemQuantitySelected(subItem.getSubItemQuantitySelected() + 1);
+                                    getVendorMenuFragment().getFreshCategoryFragmentsAdapter().notifyDataSetChanged();
                                 }
                             },
                             new View.OnClickListener() {
@@ -2560,14 +2557,16 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26f * ASSL.Xscale());
 
             getTopBar().textViewLocationValue.setText(address);
-            if(appType == AppConstant.ApplicationType.FRESH){
-                getFreshFragment().getAllProducts(true, getSelectedLatLng());
-            } else if(appType == AppConstant.ApplicationType.MEALS){
-                getMealFragment().getAllProducts(true, getSelectedLatLng());
-            } else if(appType == AppConstant.ApplicationType.GROCERY){
-                getGroceryFragment().getAllProducts(true, getSelectedLatLng());
-            } else if(appType == AppConstant.ApplicationType.MENUS){
-                getMenusFragment().getAllMenus(true, getSelectedLatLng());
+            if(getFreshCheckoutMergedFragment() == null) {
+                if (appType == AppConstant.ApplicationType.FRESH) {
+                    getFreshFragment().getAllProducts(true, getSelectedLatLng());
+                } else if (appType == AppConstant.ApplicationType.MEALS) {
+                    getMealFragment().getAllProducts(true, getSelectedLatLng());
+                } else if (appType == AppConstant.ApplicationType.GROCERY) {
+                    getGroceryFragment().getAllProducts(true, getSelectedLatLng());
+                } else if (appType == AppConstant.ApplicationType.MENUS) {
+                    getMenusFragment().getAllMenus(true, getSelectedLatLng());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -2591,15 +2590,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     getSelectedLatLng().latitude, getSelectedLatLng().longitude);
             searchResultLocality.setId(getSelectedAddressId());
             searchResultLocality.setIsConfirmed(1);
-            if(appType == AppConstant.ApplicationType.FRESH){
-                Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
-            } else if(appType == AppConstant.ApplicationType.MEALS){
-                Prefs.with(this).save(Constants.SP_MEALS_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
-            } else if(appType == AppConstant.ApplicationType.GROCERY){
-                Prefs.with(this).save(Constants.SP_GROCERY_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
-            } else if(appType == AppConstant.ApplicationType.MENUS){
-                Prefs.with(this).save(Constants.SP_MENUS_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
-            }
+            Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, gson.toJson(searchResultLocality, SearchResult.class));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2608,21 +2599,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void setOfferingLastAddressToActivityVariables(int appType){
         try {
             Gson gson = new Gson();
-            SearchResult searchResultLocality = null;
-            if(appType == AppConstant.ApplicationType.FRESH){
-                searchResultLocality = gson.fromJson(Prefs.with(this)
-                        .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
-            } else if(appType == AppConstant.ApplicationType.MEALS){
-                searchResultLocality = gson.fromJson(Prefs.with(this)
-                        .getString(Constants.SP_MEALS_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
-            } else if(appType == AppConstant.ApplicationType.GROCERY){
-                searchResultLocality = gson.fromJson(Prefs.with(this)
-                        .getString(Constants.SP_GROCERY_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
-            } else if(appType == AppConstant.ApplicationType.MENUS){
-                searchResultLocality = gson.fromJson(Prefs.with(this)
-                        .getString(Constants.SP_MENUS_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
-            }
-
+            SearchResult searchResultLocality = searchResultLocality = gson.fromJson(Prefs.with(this)
+                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
             if(searchResultLocality != null && !TextUtils.isEmpty(searchResultLocality.getAddress())){
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {

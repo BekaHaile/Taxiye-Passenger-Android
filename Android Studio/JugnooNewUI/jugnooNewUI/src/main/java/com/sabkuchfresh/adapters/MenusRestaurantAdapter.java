@@ -36,8 +36,9 @@ import product.clicklabs.jugnoo.utils.Fonts;
 public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private FreshActivity activity;
-    private ArrayList<MenusResponse.Vendor> vendors, vendorsToShow;
+    private ArrayList<MenusResponse.Vendor> vendorsComplete, vendors, vendorsToShow;
     private Callback callback;
+    private String searchText;
 
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
@@ -45,10 +46,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors, Callback callback) {
         this.activity = activity;
-        this.vendors = vendors;
+        this.vendorsComplete = vendors;
+        this.vendors = new ArrayList<>();
+        this.vendors.addAll(vendors);
         this.vendorsToShow = new ArrayList<>();
         this.vendorsToShow.addAll(vendors);
         this.callback = callback;
+        searchText = "";
     }
 
     private void searchVendors(String text){
@@ -68,15 +72,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public void setList(ArrayList<MenusResponse.Vendor> vendors) {
-        this.vendors = vendors;
+        this.vendorsComplete = vendors;
+        this.vendors.clear();
+        this.vendors.addAll(vendors);
         this.vendorsToShow.clear();
         this.vendorsToShow.addAll(vendors);
-        notifyDataSetChanged();
+        applyFilter();
     }
 
     public void applyFilter(){
-        vendorsToShow.clear();
-        for(MenusResponse.Vendor vendor : vendors){
+        vendors.clear();
+        for(MenusResponse.Vendor vendor : vendorsComplete){
             boolean cuisineMatched = true, moMatched = false, dtMatched = false;
             for(String cuisine : activity.getCuisinesSelected()){
                 if(!vendor.getCuisines().contains(cuisine)){
@@ -88,14 +94,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     || vendor.getMinimumOrderAmount() <= activity.getMoSelected().getOrdinal();
 
             dtMatched = activity.getDtSelected() == MenusFilterFragment.DeliveryTime.NONE
-                    || vendor.getDeliveryTime() <= activity.getDtSelected().getOrdinal();
+                    || vendor.getMinDeliveryTime() <= activity.getDtSelected().getOrdinal();
 
             if(cuisineMatched && moMatched && dtMatched){
-                vendorsToShow.add(vendor);
+                vendors.add(vendor);
             }
         }
 
-        Collections.sort(vendorsToShow, new Comparator<MenusResponse.Vendor>() {
+        Collections.sort(vendors, new Comparator<MenusResponse.Vendor>() {
             @Override
             public int compare(MenusResponse.Vendor lhs, MenusResponse.Vendor rhs) {
                 if(activity.getSortBySelected() != MenusFilterFragment.SortType.NONE){
@@ -104,13 +110,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     } else if(activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE){
                         return -(lhs.getDistance() - rhs.getDistance());
                     } else if(activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE){
-                        return -(lhs.getPriceRange() - rhs.getPriceRange());
+                        return lhs.getPriceRange() - rhs.getPriceRange();
                     }
                 }
                 return 0;
             }
         });
-        notifyDataSetChanged();
+
+        searchVendors(searchText);
     }
 
     @Override
@@ -302,7 +309,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public interface Callback {
         void onRestaurantSelected(int position, MenusResponse.Vendor vendor);
-
     }
 
     private TextWatcher textWatcher = new TextWatcher() {
@@ -318,6 +324,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         @Override
         public void afterTextChanged(Editable s) {
+            searchText = s.toString();
             searchVendors(s.toString());
         }
     };
