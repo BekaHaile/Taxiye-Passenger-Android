@@ -30,6 +30,7 @@ import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
+import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 
 import java.util.Arrays;
@@ -56,6 +57,7 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -101,6 +103,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     public String current_city = "";
     public String current_pincode = "";
 
+    private String selectAddressTag = "";
 
     public DeliveryAddressesFragment() {
 
@@ -119,6 +122,15 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             editTextDeliveryAddress = ((FreshActivity)activity).getTopBar().editTextDeliveryAddress;
         }else if(activity instanceof AddPlaceActivity){
             editTextDeliveryAddress = ((AddPlaceActivity)activity).getEditTextDeliveryAddress();
+        }
+
+        int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+        if(appType == AppConstant.ApplicationType.FRESH) {
+            selectAddressTag = Constants.FRESH_SELECT_ADDRESS;
+        } else if(appType == AppConstant.ApplicationType.MEALS){
+            selectAddressTag = Constants.MEALS_SELECT_ADDRESS;
+        } else if(appType == AppConstant.ApplicationType.GROCERY){
+            selectAddressTag = Constants.GROCERY_SELECT_ADDRESS;
         }
 
         linearLayoutMain = (RelativeLayout) rootView.findViewById(R.id.linearLayoutMain);
@@ -162,6 +174,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.SAVED);
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                     }
@@ -186,6 +199,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.RECENT);
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                     }
@@ -228,6 +242,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.SAVED);
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_HOME, true);
                     }
@@ -258,6 +273,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     if(searchResult.getIsConfirmed() == 1){
                         onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
                                 searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+                        FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.SAVED);
                     } else {
                         goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_WORK, true);
                     }
@@ -287,6 +303,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     public void onAddressReceived(String address) {
                         if(address != null) {
                             fillAddressDetails(new LatLng(Data.latitude, Data.longitude));
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.NEW);
                         }
                     }
                 });
@@ -303,6 +320,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                     freshActivity.setSearchResult(null);
                     freshActivity.setEditThisAddress(false);
                     freshActivity.openMapAddress(createAddressBundle(""));
+                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.NEW);
                 }
                 else if(activity instanceof AddPlaceActivity) {
                     ((AddPlaceActivity)activity).openMapAddress(createAddressBundle(""));
@@ -366,6 +384,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                             scrollViewSearch.setVisibility(View.GONE);
 
                             goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false);
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, selectAddressTag, Constants.SEARCHED);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

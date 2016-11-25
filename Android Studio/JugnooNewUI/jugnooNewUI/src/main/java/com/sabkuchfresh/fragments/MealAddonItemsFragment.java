@@ -24,9 +24,11 @@ import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 
@@ -34,7 +36,7 @@ import product.clicklabs.jugnoo.utils.NonScrollListView;
  * Created by shankar on 10/10/16.
  */
 public class MealAddonItemsFragment extends Fragment implements FlurryEventNames, MealAdapter.Callback {
-    private final String TAG = MealAddonItemsFragment.class.getSimpleName();
+    private final String TAG = "Meals Addon Screen";
 
     private RelativeLayout linearLayoutRoot;
     private AddOnItemsAdapter addOnItemsAdapter;
@@ -101,6 +103,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
             @Override
             public void onClick(View v) {
                 activity.getTransactionUtils().openCheckoutMergedFragment(activity, activity.getRelativeLayoutContainer());
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.SKIP_BOTTOM);
             }
         });
 
@@ -213,7 +216,8 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         activity.getTopBar().textViewSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                relativeLayoutProceed.performClick();
+                activity.getTransactionUtils().openCheckoutMergedFragment(activity, activity.getRelativeLayoutContainer());
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.SKIP_TOP);
             }
         });
     }

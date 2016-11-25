@@ -939,6 +939,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
                     slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
                             Data.userData.getCoupons(ProductType.AUTO));
+                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.TAP_ON_OFFER_STRIP);
                 }
             }
         });

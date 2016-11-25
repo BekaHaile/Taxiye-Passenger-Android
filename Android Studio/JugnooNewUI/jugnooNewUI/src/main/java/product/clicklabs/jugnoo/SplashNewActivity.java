@@ -21,6 +21,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
@@ -98,7 +99,6 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.http.HEAD;
 import retrofit.mime.TypedByteArray;
 
 
@@ -182,6 +182,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public static RegisterationType registerationType = RegisterationType.EMAIL;
 	public static JSONObject multipleCaseJSON;
 
+	private String phoneFetchedName = "", phoneFetchedEmail = "";
 
 	@Override
 	protected void onStop() {
@@ -876,6 +877,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					String referralCode = editTextSPromo.getText().toString().trim();
 					String emailId = editTextSEmail.getText().toString().trim();
 					boolean noFbEmail = false;
+
+					if(!TextUtils.isEmpty(phoneFetchedEmail) && !phoneFetchedEmail.equalsIgnoreCase(emailId)
+							&& !TextUtils.isEmpty(phoneFetchedName) && !phoneFetchedName.equalsIgnoreCase(name)){
+						FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.NAME_EMAIL_AUTOFILLED_EDITED);
+					} else if(!TextUtils.isEmpty(phoneFetchedEmail) && phoneFetchedEmail.equalsIgnoreCase(emailId)
+							&& !TextUtils.isEmpty(phoneFetchedName) && phoneFetchedName.equalsIgnoreCase(name)){
+						FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.NAME_EMAIL_AUTOFILLED_UNEDITED);
+					}
 
 					if (RegisterationType.FACEBOOK == registerationType && emailId.equalsIgnoreCase("")) {
 						emailId = "n@n.c";
@@ -2592,6 +2601,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void fillSocialAccountInfo(RegisterationType registerationType) {
 		try {
+			phoneFetchedName = "";
+			phoneFetchedEmail = "";
 			SplashNewActivity.registerationType = registerationType;
 			if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 				editTextSName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
@@ -2608,6 +2619,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					editTextSEmail.setEnabled(true);
 				}
 				editTextSPhone.setText(fbVerifiedNumber);
+				if(!TextUtils.isEmpty(fbVerifiedNumber)){
+					FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.PHONE_AUTOFILLED_FB);
+				}
 
 			} else if (RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 				editTextSName.setText(Data.googleSignInAccount.getDisplayName());
@@ -2633,6 +2647,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						if(ownerEmail != null && (!ownerEmail.equalsIgnoreCase(""))){
 							editTextSEmail.setText(ownerEmail);
 							editTextSName.setText(Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail)));
+							FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.NAME_EMAIL_AUTOFILLED);
+							phoneFetchedName = editTextSName.getText().toString();
+							phoneFetchedEmail = editTextSEmail.getText().toString();
 						} else{
 							editTextSEmail.setText("");
 						}
@@ -2643,6 +2660,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 				String mPhoneNumber = tMgr.getLine1Number();
 				editTextSPhone.setText(mPhoneNumber);
+				if(!TextUtils.isEmpty(mPhoneNumber)){
+					FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.PHONE_AUTOFILLED);
+				}
 
 			}
 		} catch (Exception e) {
