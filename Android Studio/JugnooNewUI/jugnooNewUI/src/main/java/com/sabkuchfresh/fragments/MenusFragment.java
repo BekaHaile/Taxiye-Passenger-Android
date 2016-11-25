@@ -131,7 +131,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
             @Override
             public void onNotify(int count) {
-                textViewNoMenus.setVisibility(count > 0 ? View.GONE : View.VISIBLE);
+                textViewNoMenus.setVisibility(count > 0 || vendors.size() == 0 ? View.GONE : View.VISIBLE);
             }
         });
 

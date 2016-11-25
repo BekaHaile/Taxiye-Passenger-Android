@@ -301,7 +301,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                 mealAdapter.setList(mealsData);
                                 recyclerViewCategoryItems.smoothScrollToPosition(0);
 
-                                if(mealsData.size()>0) {
+                                if(mealsData.size()+recentOrder.size()>0) {
                                     noMealsView.setVisibility(View.GONE);
                                     mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                                     activity.showBottomBar(true);

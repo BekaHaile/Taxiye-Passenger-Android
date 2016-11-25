@@ -105,19 +105,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         Collections.sort(vendors, new Comparator<MenusResponse.Vendor>() {
             @Override
             public int compare(MenusResponse.Vendor lhs, MenusResponse.Vendor rhs) {
-                if(activity.getSortBySelected() == MenusFilterFragment.SortType.NONE){
-                    return 0;
-                } else {
-                    if(activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY){
-                        return lhs.getPopularity() - rhs.getPopularity();
-                    } else if(activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE){
-                        return -(lhs.getDistance() - rhs.getDistance());
-                    } else if(activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE){
-                        return lhs.getPriceRange() - rhs.getPriceRange();
-                    } else {
-                        return 0;
-                    }
+                int point = 0;
+                if (activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY) {
+                    point = lhs.getPopularity() - rhs.getPopularity();
+                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE) {
+                    point = -(lhs.getDistance() - rhs.getDistance());
+                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE) {
+                    point = lhs.getPriceRange() - rhs.getPriceRange();
                 }
+                return point;
             }
         });
 

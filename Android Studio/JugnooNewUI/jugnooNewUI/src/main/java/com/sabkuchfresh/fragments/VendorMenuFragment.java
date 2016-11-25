@@ -137,6 +137,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 		success(activity.getProductsResponse());
 
+		getFreshDeliverySlotsDialog();
+
 		return rootView;
 	}
 
