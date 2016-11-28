@@ -83,6 +83,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<SubItem> mealsData = new ArrayList<>();
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
+    private boolean resumed = false;
 
     public MealFragment() {
     }
@@ -155,10 +156,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     @Override
     public void onResume() {
         super.onResume();
-        if(!isHidden()) {
-            getAllProducts(activity.isRefreshCart(), activity.getSelectedLatLng());
+        if(!isHidden() && resumed) {
+            activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
             activity.setRefreshCart(false);
         }
+        resumed = true;
     }
 
     @Override

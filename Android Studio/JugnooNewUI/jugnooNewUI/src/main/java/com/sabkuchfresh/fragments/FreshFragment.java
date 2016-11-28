@@ -89,7 +89,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     private ArrayList<SubItem> freshData = new ArrayList<>();
     public FreshFragment(){}
-    private boolean loader = true;
+    private boolean loader = true, resumed = false;
     protected Bus mBus;
     PushDialog pushDialog;
 
@@ -243,10 +243,11 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(!isHidden()) {
-			getAllProducts(activity.isRefreshCart(), activity.getSelectedLatLng());
+		if(!isHidden() && resumed) {
+			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 			activity.setRefreshCart(false);
 		}
+		resumed = true;
 	}
 
 	private void showPromoFailedAtSignupDialog(){

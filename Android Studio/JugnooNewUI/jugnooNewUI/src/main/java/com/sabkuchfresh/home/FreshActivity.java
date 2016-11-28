@@ -168,15 +168,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private LocationFetcher locationFetcher;
     public float scale = 0f;
 
-    // for adding address
-//    public String current_action = "";
-//    public double current_latitude = 0.0;
-//    public double current_longitude = 0.0;
-//    public String current_street = "";
-//    public String current_route = "";
-//    public String current_area = "";
-//    public String current_city = "";
-//    public String current_pincode = "";
     public boolean locationSearchShown = false;
     public boolean canOrder = false;
 
@@ -1398,20 +1389,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
      */
     public void openFeedback() {
         getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer);
-
-//        getSupportFragmentManager().beginTransaction()
-//                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-//                .add(relativeLayoutContainer.getId(), new FeedbackFragment(),
-//                        FeedbackFragment.class.getName())
-//                .addToBackStack(FeedbackFragment.class.getName())
-//                .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-//                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-//                .commitAllowingStateLoss();
     }
 
     public void openSupport() {
         startActivity(new Intent(this, SupportActivity.class));
-//		getTransactionUtils().openSupportFragment(FreshActivity.this, relativeLayoutContainer);
     }
 
     public void openMapAddress(Bundle bundle) {
@@ -1831,119 +1812,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         Data.latitude = location.getLatitude();
         Data.longitude = location.getLongitude();
     }
-//
-//    @Override
-//    public void onitemClicked(int position) {
-//        switch (position) {
-//            case 0: {
-////                FlurryEventLogger.event(, CART_BUTTON_CLICKED);
-//                startActivity(new Intent(FreshActivity.this, AccountActivity.class));
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//                break;
-//            }
-//            case 1: {
-//                Intent intent = new Intent(FreshActivity.this, PaymentActivity.class);
-//                intent.putExtra(Constants.KEY_ADD_PAYMENT_PATH, AddPaymentPath.WALLET.getOrdinal());
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//                NudgeClient.trackEventUserId(this, FlurryEventNames.NUDGE_WALLET_CLICKED, null);
-//                break;
-//            }
-//            case 2: {
-//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.HISTORY);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//                break;
-//            }
-//            case 3: {
-//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.SUPPORT);
-//                intent.putExtra(Constants.ORDER_CONTACT, mContactNo);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//                break;
-//            }
-//            case 4: {
-//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.ABOUT);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//                break;
-//            }
-//            case 5: {
-//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.NOTIFICATION);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//                break;
-//            }
-//            case 6: {
-//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.SHARE);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//                break;
-//            }
-//            case 7: {
-//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.FEED_BACK);
-//                intent.putExtra(Constants.QUESTION, Data.userData.question);
-//                intent.putExtra(Constants.QUESTION_TYPE, ""+Data.userData.questionType);
-//                intent.putExtra(Constants.ORDER_ID, Data.userData.orderId);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//                break;
-//            }
-//            case 8: {
-//                Intent intent = new Intent(FreshActivity.this, SupportActivity.class);
-//                intent.putExtra(Constants.FRAGMENT_SELECTED, AppConstant.SupportType.PROMO);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//            }
-//            case 11:
-//                if(Prefs.with(this).getInt(Constants.APP_TYPE, 0) == AppConstant.ApplicationType.MEALS) {
-//                    FreshFragment frag = getFreshFragment();
-//                    MealFragment mealFragment = getMealFragment();
-//                    if (mealFragment != null && !mealFragment.isHidden() && frag == null)
-//                        addFreshFragment1(mealFragment, true);
-//
-//                } else {
-//                    HomeFragment homeFragment = getHomeFragment();
-//                    if (homeFragment != null && !homeFragment.isHidden()) {
-//                        addFreshFragment1(homeFragment, false);
-//                    }
-//                }
-//                drawerLayout.closeDrawer(GravityCompat.START);
-//                break;
-//            case 12:
-//                if(Prefs.with(this).getInt(Constants.APP_TYPE, 0) == AppConstant.ApplicationType.FRESH) {
-//                    FreshFragment frag = getFreshFragment();
-//                    MealFragment mealFragment = getMealFragment();
-//                    if (frag != null && !frag.isHidden() && mealFragment == null) {
-//                        addMealFragment(frag, true);
-//                    }
-//                } else {
-//                    HomeFragment homeFragment = getHomeFragment();
-//                    if (homeFragment != null && !homeFragment.isHidden()) {
-//                        addMealFragment(homeFragment, false);
-//                    }
-//                }
-//                drawerLayout.closeDrawer(GravityCompat.START);
-//                break;
-//
-//            default:
-//
-//                break;
-//        }
-//    }
 
 
     public void addFreshFragment1(Fragment fragment, boolean swipeFlag) {
 
         final FragmentManager fragmentManager =  getSupportFragmentManager();
         fragmentManager.popBackStack();
-//        fragmentManager.popBackStackImmediate(HomeFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentManager.beginTransaction().remove(fragment).commit();
         fragmentManager.executePendingTransactions();
 
@@ -1958,15 +1832,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         transaction.addToBackStack(FreshFragment.class.getName());
         transaction.commitAllowingStateLoss();
 
-//        getSupportFragmentManager().beginTransaction()
-//                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-//                .add(R.id.relativeLayoutContainer, new FreshFragment(),
-//                        FreshFragment.class.getName())
-//                .addToBackStack(FreshFragment.class.getName())
-////                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-////                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-//                .commitAllowingStateLoss();
-
     }
 
     public void addMealFragment(Fragment fragment, boolean swipeFlag) {
@@ -1974,11 +1839,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         final FragmentManager fragmentManager =  getSupportFragmentManager();
 
         fragmentManager.popBackStack();
-//        fragmentManager.popBackStackImmediate(HomeFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         fragmentManager.beginTransaction().remove(fragment).commit();
         fragmentManager.executePendingTransactions();
-        //.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-        //.setCustomAnimations(R.anim.grow_from_middle, R.anim.hold, R.anim.hold, R.anim.shrink_to_middle)
 
 
         final FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -1991,15 +1853,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         transaction.addToBackStack(MealFragment.class.getName());
         transaction.commitAllowingStateLoss();
 
-
-//        getSupportFragmentManager().beginTransaction()
-//                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-//                .replace(R.id.relativeLayoutContainer, new MealFragment(),
-//                        MealFragment.class.getName())
-//                .addToBackStack(MealFragment.class.getName())
-////                .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-////                        .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-//                .commitAllowingStateLoss();
 
     }
 
@@ -2558,14 +2411,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26f * ASSL.Xscale());
 
             getTopBar().textViewLocationValue.setText(address);
-            if(getFreshCheckoutMergedFragment() == null) {
-                if (appType == AppConstant.ApplicationType.FRESH) {
+            if(getFreshCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
+                if (appType == AppConstant.ApplicationType.FRESH && getFreshFragment() != null) {
                     getFreshFragment().getAllProducts(true, getSelectedLatLng());
-                } else if (appType == AppConstant.ApplicationType.MEALS) {
+                } else if (appType == AppConstant.ApplicationType.MEALS && getMealFragment() != null) {
                     getMealFragment().getAllProducts(true, getSelectedLatLng());
-                } else if (appType == AppConstant.ApplicationType.GROCERY) {
+                } else if (appType == AppConstant.ApplicationType.GROCERY && getGroceryFragment() != null) {
                     getGroceryFragment().getAllProducts(true, getSelectedLatLng());
-                } else if (appType == AppConstant.ApplicationType.MENUS) {
+                } else if (appType == AppConstant.ApplicationType.MENUS && getMenusFragment() != null) {
                     getMenusFragment().getAllMenus(true, getSelectedLatLng());
                 }
             }

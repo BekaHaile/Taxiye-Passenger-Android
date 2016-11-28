@@ -71,6 +71,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private ArrayList<MenusResponse.Vendor> vendors = new ArrayList<>();
 
     PushDialog pushDialog;
+    private boolean resumed = false;
 
     public MenusFragment() {
     }
@@ -180,10 +181,11 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     @Override
     public void onResume() {
         super.onResume();
-        if(!isHidden()) {
-            getAllMenus(activity.isRefreshCart(), activity.getSelectedLatLng());
+        if(!isHidden() && resumed) {
+            activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
             activity.setRefreshCart(false);
         }
+        resumed = true;
     }
 
     @Override

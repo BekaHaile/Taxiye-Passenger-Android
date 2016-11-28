@@ -88,7 +88,9 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     private ArrayList<SubItem> freshData = new ArrayList<>();
-    public GroceryFragment(){}
+	private boolean resumed = false;
+
+	public GroceryFragment(){}
     private boolean loader = true;
     protected Bus mBus;
     PushDialog pushDialog;
@@ -246,10 +248,11 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(!isHidden()) {
-			getAllProducts(activity.isRefreshCart(), activity.getSelectedLatLng());
+		if(!isHidden() && resumed) {
+			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
 			activity.setRefreshCart(false);
 		}
+		resumed = true;
 	}
 
 	private void showPromoFailedAtSignupDialog(){
