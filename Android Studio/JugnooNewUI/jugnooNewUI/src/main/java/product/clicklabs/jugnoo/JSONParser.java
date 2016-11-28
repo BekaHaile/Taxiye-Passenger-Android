@@ -629,6 +629,8 @@ public class JSONParser implements Constants {
 
         loginAnalyticEvents(context, loginVia);
 
+        Prefs.with(context).save(SP_FRESH_LAST_ADDRESS_OBJ, EMPTY_JSON_OBJECT);
+
         return resp;
     }
 

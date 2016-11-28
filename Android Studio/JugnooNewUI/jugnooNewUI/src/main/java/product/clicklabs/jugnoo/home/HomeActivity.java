@@ -481,6 +481,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ArrayList<Marker> markersSpecialPickup = new ArrayList<>();
     private ArrayList<MarkerOptions> markerOptionsSpecialPickup = new ArrayList<>();
     private float mapPaddingSpecialPickup = 268f, mapPaddingConfirm = 238f;
+    private boolean setPickupAddressZoomedOnce = false;
 
 
     @Override
@@ -5090,7 +5091,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     && firstDriverInfo != null) {
                 firstLatLng = firstDriverInfo.latLng;
             }
-            if (firstLatLng != null && !isSpecialPickupScreenOpened()) {
+            Runnable runnableZoom = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) && !isSpecialPickupScreenOpened() && !isPoolRideAtConfirmation()) {
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            Runnable runnableSetPickup = getPickupAddressZoomRunnable();
+
+            if (firstLatLng != null && !isSpecialPickupScreenOpened() && runnableSetPickup == null) {
                 boolean fixedZoom = false;
                 double distance = MapUtils.distance(userLatLng, firstLatLng);
                 if (distance <= 15000) {
@@ -5108,46 +5123,56 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder, FIX_ZOOM_DIAGONAL);
                     final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                    new Handler().postDelayed(new Runnable() {
+
+                    if(passengerScreenMode == PassengerScreenMode.P_INITIAL
+                            && !isSpecialPickupScreenOpened() && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
+                        setSearchResultToPickupCase();
+                    }
+
+                    runnableZoom = new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 if(finalFixedZoom){
                                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
-                                }
-                                else {
+                                } else {
                                     map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-                    }, 500);
+                    };
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
-                try {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                if("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) && !isSpecialPickupScreenOpened() && !isPoolRideAtConfirmation()) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, 500);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(runnableSetPickup != null){
+                    runnableZoom = runnableSetPickup;
                 }
             }
+
+            new Handler().postDelayed(runnableZoom, 500);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private Runnable getPickupAddressZoomRunnable(){
+        String resultStr = Prefs.with(this).getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
+        if(!setPickupAddressZoomedOnce && !resultStr.equalsIgnoreCase(Constants.EMPTY_JSON_OBJECT)){
+            return new Runnable() {
+                @Override
+                public void run() {
+                    if(passengerScreenMode == PassengerScreenMode.P_INITIAL
+                            && !isNormalRideWithDropAtConfirmation() && !isPoolRideAtConfirmation() && !isSpecialPickupScreenOpened()){
+                        setSearchResultToPickupCase();
+                    }
+                }
+            };
+        }
+        return null;
     }
 
 
@@ -8238,6 +8263,44 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Log.e("onPlaceSearchPre", "=");
     }
 
+    private void setSearchResultToPickupCase(){
+        try {
+            Gson gson = new Gson();
+            SearchResult searchResult = gson.fromJson(Prefs.with(this)
+                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+            if(searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())){
+                textViewInitialSearch.setText(searchResult.getNameForText());
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, new GoogleMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                        setPickupAddressZoomedOnce = true;
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+                lastSearchLatLng = searchResult.getLatLng();
+                mapTouched = true;
+                Data.autoData.setPickupAddress(searchResult.getAddress());
+
+                try {
+                    Log.e("searchResult.getThirdPartyAttributions()", "=" + searchResult.getThirdPartyAttributions());
+                    if (searchResult.getThirdPartyAttributions() == null) {
+                        relativeLayoutGoogleAttr.setVisibility(View.GONE);
+                    } else {
+                        relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
+                        textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onPlaceSearchPost(SearchResult searchResult) {
 
@@ -8245,23 +8308,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
             if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                 if (map != null && searchResult != null) {
-                    textViewInitialSearch.setText(searchResult.getNameForText());
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
-                    lastSearchLatLng = searchResult.getLatLng();
-                    mapTouched = true;
-                    Data.autoData.setPickupAddress(searchResult.getAddress());
-
                     try {
-                        Log.e("searchResult.getThirdPartyAttributions()", "=" + searchResult.getThirdPartyAttributions());
-                        if (searchResult.getThirdPartyAttributions() == null) {
-                            relativeLayoutGoogleAttr.setVisibility(View.GONE);
-                        } else {
-                            relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);
-                            textViewGoogleAttrText.setText(Html.fromHtml(searchResult.getThirdPartyAttributions().toString()));
-                        }
+                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    setSearchResultToPickupCase();
                 }
             } else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
 
