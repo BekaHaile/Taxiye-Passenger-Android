@@ -745,6 +745,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     } else {
                         textViewMinOrder.setVisibility(View.GONE);
                     }
+                } else if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
+                    if (getFreshCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
+                        textViewMinOrder.setVisibility(View.VISIBLE);
+                    } else {
+                        textViewMinOrder.setVisibility(View.GONE);
+                    }
                 }
             }
         } catch (Exception e) {
