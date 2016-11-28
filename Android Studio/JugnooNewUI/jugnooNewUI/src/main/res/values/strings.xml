@@ -1215,6 +1215,7 @@
 	<string name="save_address_as">Save address as:</string>
 	<string name="address_name">Address Name</string>
 	<string name="hi_username_format">Hi %s!</string>
-	<string name="we_have_these_offerings">We have these offerings for you.\nPlease choosebla bla bla.</string>
+	<string name="we_have_these_offerings">Following services are available at your location.\nPlease select a service:</string>
+	<string name="you_can_always_navigate">You can always navigate between various\nservices using Jugnoo Jeanie.</string>
 
 </resources>

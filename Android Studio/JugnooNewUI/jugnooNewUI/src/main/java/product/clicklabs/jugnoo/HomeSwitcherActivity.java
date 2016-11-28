@@ -225,6 +225,7 @@ public class HomeSwitcherActivity extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                fabMenuIns.setVisibility(View.VISIBLE);
                 relativeLayoutMeals.startAnimation(asm);
             }
         }, bounceDuration+225);
@@ -237,6 +238,7 @@ public class HomeSwitcherActivity extends Activity {
             @Override
             public void run() {
                 Prefs.with(HomeSwitcherActivity.this).save("home_switcher_client_id", clientId);
+
                 double latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, LocationFetcher.getSavedLatFromSP(HomeSwitcherActivity.this));
                 double longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, LocationFetcher.getSavedLngFromSP(HomeSwitcherActivity.this));
                 Bundle bundle = getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE);

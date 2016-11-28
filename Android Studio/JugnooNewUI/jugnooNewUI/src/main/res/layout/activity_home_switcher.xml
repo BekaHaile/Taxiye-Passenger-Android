@@ -1,8 +1,8 @@
-<RelativeLayout android:id="@+id/relative"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
 
     <RelativeLayout
@@ -14,7 +14,7 @@
         <TextView
             android:id="@+id/textViewTitle"
             style="@style/title"
-            android:text="@string/app_name"/>
+            android:text="@string/app_name" />
 
     </RelativeLayout>
 
@@ -35,8 +35,7 @@
             android:layout_marginTop="@dimen/px_40"
             android:text="@string/hi_username_format"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/px_40"
-            />
+            android:textSize="@dimen/px_40" />
 
 
         <TextView
@@ -49,8 +48,7 @@
             android:gravity="center"
             android:text="@string/we_have_these_offerings"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_28"
-            />
+            android:textSize="@dimen/text_size_28" />
 
         <View
             android:layout_width="@dimen/px_100"
@@ -69,9 +67,8 @@
 
             >
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/relativeLayoutRides"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="@dimen/px_220"
                 android:layout_height="@dimen/px_220"
                 android:layout_marginLeft="@dimen/px_100"
@@ -79,41 +76,38 @@
                 android:tag="mwar"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/px_60"
-                card_view:cardElevation="@dimen/px_15"
-                >
+                card_view:cardElevation="@dimen/px_15">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_transparent_menu_item_selector"
-                    >
+                    android:background="@color/transparent">
 
                     <ImageView
+                        android:id="@+id/ivAuto"
                         android:layout_width="85px"
                         android:layout_height="75px"
-                        android:src="@drawable/home_switcher_auto"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/px_55"/>
+                        android:layout_marginTop="@dimen/px_30"
+                        android:src="@drawable/home_switcher_auto" />
 
                     <TextView
                         android:id="@+id/textViewRides"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="@dimen/px_36"
+                        android:layout_marginTop="@dimen/px_20"
+                        android:layout_below="@+id/ivAuto"
                         android:text="@string/rides"
                         android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_34"
-                        />
+                        android:textSize="@dimen/text_size_34" />
                 </RelativeLayout>
 
             </android.support.v7.widget.CardView>
 
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/relativeLayoutMeals"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="@dimen/px_220"
                 android:layout_height="@dimen/px_220"
                 android:layout_marginLeft="@dimen/px_400"
@@ -121,40 +115,37 @@
                 android:tag="mwar"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/px_60"
-                card_view:cardElevation="@dimen/px_15"
-                >
+                card_view:cardElevation="@dimen/px_15">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_transparent_menu_item_selector"
-                    >
+                    android:background="@color/transparent">
 
                     <ImageView
+                        android:id="@+id/ivMeals"
                         android:layout_width="85px"
                         android:layout_height="75px"
-                        android:src="@drawable/ic_fab_meals"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/px_55"/>
+                        android:layout_marginTop="@dimen/px_30"
+                        android:src="@drawable/ic_fab_meals" />
 
                     <TextView
                         android:id="@+id/textViewMeals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="@dimen/px_36"
+                        android:layout_marginTop="@dimen/px_20"
+                        android:layout_below="@+id/ivMeals"
                         android:text="@string/meals"
                         android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_34"
-                        />
+                        android:textSize="@dimen/text_size_34" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/relativeLayoutFresh"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="@dimen/px_220"
                 android:layout_height="@dimen/px_220"
                 android:layout_marginLeft="@dimen/px_100"
@@ -162,40 +153,37 @@
                 android:tag="mwar"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/px_60"
-                card_view:cardElevation="@dimen/px_15"
-                >
+                card_view:cardElevation="@dimen/px_15">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_transparent_menu_item_selector"
-                    >
+                    android:background="@color/transparent">
 
                     <ImageView
+                        android:id="@+id/ivFresh"
                         android:layout_width="85px"
                         android:layout_height="75px"
-                        android:src="@drawable/ic_fab_fresh"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/px_55"/>
+                        android:layout_marginTop="@dimen/px_30"
+                        android:src="@drawable/ic_fab_fresh" />
 
                     <TextView
                         android:id="@+id/textViewFresh"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="@dimen/px_36"
+                        android:layout_below="@+id/ivFresh"
+                        android:layout_marginTop="@dimen/px_20"
                         android:text="@string/fresh"
                         android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_34"
-                        />
+                        android:textSize="@dimen/text_size_34" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/relativeLayoutGrocery"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="@dimen/px_220"
                 android:layout_height="@dimen/px_220"
                 android:layout_marginLeft="@dimen/px_400"
@@ -203,33 +191,31 @@
                 android:tag="mwar"
                 card_view:cardBackgroundColor="@color/white"
                 card_view:cardCornerRadius="@dimen/px_60"
-                card_view:cardElevation="@dimen/px_15"
-                >
+                card_view:cardElevation="@dimen/px_15">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_transparent_menu_item_selector"
-                    >
+                    android:background="@color/transparent">
 
                     <ImageView
+                        android:id="@+id/ivGrocery"
                         android:layout_width="85px"
                         android:layout_height="75px"
-                        android:src="@drawable/home_switcher_meals"
+                        android:layout_marginTop="@dimen/px_30"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/px_55"/>
+                        android:src="@drawable/home_switcher_meals" />
 
                     <TextView
                         android:id="@+id/textViewGrocery"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="@dimen/px_36"
                         android:text="@string/grocery"
+                        android:layout_below="@+id/ivGrocery"
+                        android:layout_marginTop="@dimen/px_20"
                         android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_34"
-                        />
+                        android:textSize="@dimen/text_size_34" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
@@ -243,20 +229,19 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/px_60"
             android:gravity="center"
-            android:text="@string/we_have_these_offerings"
+            android:text="@string/you_can_always_navigate"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_28"
-            />
+            android:textSize="@dimen/text_size_28" />
 
-        <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu
+        <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu xmlns:fab="http://schemas.android.com/apk/res-auto"
             android:id="@+id/fabMenuIns"
-            xmlns:fab="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:paddingBottom="23dp"
             android:paddingLeft="20dp"
             android:tag="DontTouchMe"
+            android:visibility="gone"
             fab:fab_colorRipple="@color/grey_light_alpha"
             fab:menu_animationDelayPerItem="25"
             fab:menu_backgroundColor="#EBeeeeee"
@@ -276,7 +261,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_6"
         android:layout_below="@+id/topBar"
-        android:background="@drawable/shadow_down"
-        />
+        android:background="@drawable/shadow_down" />
 
 </RelativeLayout>
