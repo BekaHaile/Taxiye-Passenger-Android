@@ -108,10 +108,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private RelativeLayout relativeLayoutCartTop;
     private TextView textViewCartItems, textViewCartTotalUndiscount, textViewCartTotal;
-    private ImageView imageViewCartArrow, imageViewDeleteCart, imageViewCartSep, imageViewSepD, imageViewSepDC;
+    private ImageView imageViewCartArrow, imageViewDeleteCart, imageViewCartSep, imageViewSep1, imageViewSep2,
+            imageViewSep3, imageViewSep4;
     private LinearLayout linearLayoutCartDetails, linearLayoutCartExpansion;
-    private RelativeLayout relativeLayoutDiscount, relativeLayoutDeliveryCharges, relativeLayoutJugnooCash;
-    private TextView textViewDiscountValue, textViewDeliveryChargesValue, textViewJugnooCashValue;
+    private RelativeLayout relativeLayoutDiscount, relativeLayoutDeliveryCharges,
+            relativeLayoutServiceTax, relativeLayoutVAT, relativeLayoutJugnooCash;
+    private TextView textViewDiscountValue, textViewDeliveryChargesValue,
+            textViewServiceTax, textViewServiceTaxValue, textViewVAT, textViewVATValue, textViewJugnooCashValue;
     private NonScrollListView listViewCart;
     private FreshCartItemsAdapter freshCartItemsAdapter;
 
@@ -154,15 +157,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     // for payment screen
     private double subTotalAmount = 0;
     private double promoAmount = 0;
-    private double deliveryAmount = 0;
-    private double totalAmount = 0;
-    private double jcAmount = 0;
-    private double payableAmount = 0;
-
-    private String promoCode = "";
 
     private Bus mBus;
-    private double amountPayable;
     private int currentGroupId = 1;
     private boolean orderPlaced = false;
     private boolean cartChangedRefreshCheckout = false;
@@ -174,6 +170,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
     private CheckoutSaveData checkoutSaveData;
+    private int type;
 
     @Override
     public void onStart() {
@@ -210,6 +207,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
         }
 
+        type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
         mBus = (activity).getBus();
         orderPlaced = false;
         checkoutSaveData = new CheckoutSaveData();
@@ -247,15 +245,23 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         imageViewCartArrow = (ImageView) rootView.findViewById(R.id.imageViewCartArrow);
         imageViewDeleteCart = (ImageView) rootView.findViewById(R.id.imageViewDeleteCart);
         imageViewCartSep = (ImageView) rootView.findViewById(R.id.imageViewCartSep);
-        imageViewSepD = (ImageView) rootView.findViewById(R.id.imageViewSepD);
-        imageViewSepDC = (ImageView) rootView.findViewById(R.id.imageViewSepDC);
+        imageViewSep1 = (ImageView) rootView.findViewById(R.id.imageViewSep1);
+        imageViewSep2 = (ImageView) rootView.findViewById(R.id.imageViewSep2);
+        imageViewSep3 = (ImageView) rootView.findViewById(R.id.imageViewSep3);
+        imageViewSep4 = (ImageView) rootView.findViewById(R.id.imageViewSep4);
         linearLayoutCartExpansion = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartExpansion);
         linearLayoutCartDetails = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartDetails);
         relativeLayoutDiscount = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDiscount);
         relativeLayoutDeliveryCharges = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDeliveryCharges);
+        relativeLayoutServiceTax = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutServiceTax);
+        relativeLayoutVAT = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutVAT);
         relativeLayoutJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutJugnooCash);
         textViewDiscountValue = (TextView) rootView.findViewById(R.id.textViewDiscountValue); textViewDiscountValue.setTypeface(Fonts.mavenMedium(activity));
         textViewDeliveryChargesValue = (TextView) rootView.findViewById(R.id.textViewDeliveryChargesValue); textViewDeliveryChargesValue.setTypeface(Fonts.mavenMedium(activity));
+        textViewServiceTax = (TextView) rootView.findViewById(R.id.textViewServiceTax); textViewServiceTax.setTypeface(Fonts.mavenMedium(activity));
+        textViewServiceTaxValue = (TextView) rootView.findViewById(R.id.textViewServiceTaxValue); textViewServiceTaxValue.setTypeface(Fonts.mavenMedium(activity));
+        textViewVAT = (TextView) rootView.findViewById(R.id.textViewVAT); textViewVAT.setTypeface(Fonts.mavenMedium(activity));
+        textViewVATValue = (TextView) rootView.findViewById(R.id.textViewVATValue); textViewVATValue.setTypeface(Fonts.mavenMedium(activity));
         textViewJugnooCashValue = (TextView) rootView.findViewById(R.id.textViewJugnooCashValue); textViewJugnooCashValue.setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDiscount)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenMedium(activity));
@@ -459,28 +465,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private void updateCartUI() {
 
-        int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
 
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
-
-
-        totalAmount = subTotalAmount - promoAmount + deliveryAmount;
-        payableAmount = subTotalAmount - promoAmount + deliveryAmount - jcAmount;
-        if(totalAmount < 0) {
-            totalAmount = 0;
-        }
-        if(payableAmount < 0) {
-            payableAmount = 0;
-        }
-
-        if (deliveryAmount > 0) {
-            relativeLayoutDeliveryCharges.setVisibility(View.VISIBLE);
-            double charges = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
-            String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(charges));
-            textViewDeliveryChargesValue.setText(deliveryCharge);
-        } else {
-            relativeLayoutDeliveryCharges.setVisibility(View.GONE);
-        }
 
         if (promoAmount > 0) {
             relativeLayoutDiscount.setVisibility(View.VISIBLE);
@@ -489,29 +475,72 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             relativeLayoutDiscount.setVisibility(View.GONE);
         }
 
-        if (totalAmount > 0 && jcAmount > 0) {
-            double amountFromJC = totalAmount > jcAmount ? jcAmount : totalAmount;
+        relativeLayoutDeliveryCharges.setVisibility(View.VISIBLE);
+        if (deliveryCharges() > 0) {
+            textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
+            String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(deliveryCharges()));
+            textViewDeliveryChargesValue.setText(deliveryCharge);
+        } else {
+            textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.green_rupee));
+            textViewDeliveryChargesValue.setText(R.string.free);
+        }
+
+        if (serviceTax() > 0) {
+            relativeLayoutServiceTax.setVisibility(View.VISIBLE);
+            textViewServiceTax.setText(activity.getString(R.string.service_tax)+" @ "+Utils.getMoneyDecimalFormat().format(activity.getVendorOpened().getServiceTax())+"%");
+            textViewServiceTaxValue.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(serviceTax())));
+        } else {
+            relativeLayoutServiceTax.setVisibility(View.GONE);
+        }
+
+        if (vat() > 0) {
+            relativeLayoutVAT.setVisibility(View.VISIBLE);
+            textViewVAT.setText(activity.getString(R.string.vat)+" @ "+Utils.getMoneyDecimalFormat().format(activity.getVendorOpened().getVat())+"%");
+            textViewVATValue.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(vat())));
+        } else {
+            relativeLayoutVAT.setVisibility(View.GONE);
+        }
+
+        if (totalAmount() > 0 && jcUsed() > 0) {
             relativeLayoutJugnooCash.setVisibility(View.VISIBLE);
             textViewJugnooCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-                    Utils.getMoneyDecimalFormat().format(amountFromJC)));
+                    Utils.getMoneyDecimalFormat().format(jcUsed())));
         } else {
             relativeLayoutJugnooCash.setVisibility(View.GONE);
         }
 
-        if(relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            imageViewSepD.setVisibility(View.VISIBLE);
+        if(relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
+                || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
+                || relativeLayoutVAT.getVisibility() == View.VISIBLE
+                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
+            imageViewSep1.setVisibility(View.VISIBLE);
         } else{
-            imageViewSepD.setVisibility(View.GONE);
+            imageViewSep1.setVisibility(View.GONE);
+        }
+        if(relativeLayoutServiceTax.getVisibility() == View.VISIBLE
+                || relativeLayoutVAT.getVisibility() == View.VISIBLE
+                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
+            imageViewSep2.setVisibility(View.VISIBLE);
+        } else{
+            imageViewSep2.setVisibility(View.GONE);
+        }
+        if(relativeLayoutVAT.getVisibility() == View.VISIBLE
+                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
+            imageViewSep3.setVisibility(View.VISIBLE);
+        } else{
+            imageViewSep3.setVisibility(View.GONE);
+        }
+        if(relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
+            imageViewSep4.setVisibility(View.VISIBLE);
+        } else{
+            imageViewSep4.setVisibility(View.GONE);
         }
 
-        if(relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            imageViewSepDC.setVisibility(View.VISIBLE);
-        } else{
-            imageViewSepDC.setVisibility(View.GONE);
-        }
 
         if(relativeLayoutDiscount.getVisibility() == View.VISIBLE
                 || relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
+                || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
+                || relativeLayoutVAT.getVisibility() == View.VISIBLE
                 || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
             linearLayoutCartDetails.setVisibility(View.VISIBLE);
             imageViewCartSep.setVisibility(View.GONE);
@@ -521,11 +550,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
-                Utils.getMoneyDecimalFormat().format(payableAmount)));
+                Utils.getMoneyDecimalFormat().format(payableAmount())));
         if(promoAmount > 0){
             textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
             textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormat().format(subTotalAmount + deliveryAmount)));
+                    Utils.getMoneyDecimalFormat().format(subTotalAmount + deliveryCharges())));
             textViewCartTotalUndiscount.setPaintFlags(textViewCartTotalUndiscount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else{
             textViewCartTotalUndiscount.setVisibility(View.GONE);
@@ -882,12 +911,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
                 chargeDetails.put("Payment mode", ""+activity.getPaymentOption());
-                chargeDetails.put(Events.TOTAL_AMOUNT, ""+totalAmount);
-                if(promoAmount>0) {
-                    chargeDetails.put(Events.DISCOUNT_AMOUNT, "" + promoAmount);
-                } else {
-                    chargeDetails.put(Events.DISCOUNT_AMOUNT, "" + promoAmount);
-                }
+                chargeDetails.put(Events.TOTAL_AMOUNT, ""+subTotalAmount);
+                chargeDetails.put(Events.DISCOUNT_AMOUNT, "" + promoAmount);
                 if(type != AppConstant.ApplicationType.MENUS) {
                     chargeDetails.put(Events.START_TIME, "" + String.valueOf(activity.getSlotSelected().getStartTime()));
                     chargeDetails.put(Events.END_TIME, "" + String.valueOf(activity.getSlotSelected().getEndTime()));
@@ -914,10 +939,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 params.put(Constants.KEY_DELIVERY_NOTES, String.valueOf(activity.getSpecialInst()));
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.KEY_CART, cartItems(type));
-                if(!TextUtils.isEmpty(promoCode)) {
-                    params.put(Constants.PROMO_CODE, promoCode);
-                    chargeDetails.put(Events.PROMOCODE, promoCode);
-                }
                 if(activity.getSelectedPromoCoupon() != null && activity.getSelectedPromoCoupon().getId() > -1){
                     if(activity.getSelectedPromoCoupon() instanceof CouponInfo){
                         params.put(Constants.KEY_ACCOUNT_ID, String.valueOf(activity.getSelectedPromoCoupon().getId()));
@@ -1243,20 +1264,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
-    private double getTotalJCPaid() {
-        try {
-            int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-            double totalAmount = activity.updateCartValuesGetTotalPrice().first;
-            double amountPayable = totalAmount;
-            amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, totalAmount);
-            double paid = Math.min(amountPayable, Data.userData.getJugnooBalance());
-            return paid;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
-    }
-
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -1433,7 +1440,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     }
                 }
                 params.put(Constants.KEY_CART, jCart.toString());
-                params.put(Constants.ORDER_AMOUNT, Utils.getMoneyDecimalFormat().format(amountPayable));
+                params.put(Constants.ORDER_AMOUNT, Utils.getMoneyDecimalFormat().format(subTotalAmount));
 
 
                 if(type == AppConstant.ApplicationType.MEALS) {
@@ -1807,13 +1814,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         try {
             Pair<Double, Integer> pair = activity.updateCartValuesGetTotalPrice();
             subTotalAmount = pair.first;
-            amountPayable = pair.first;
             updateCartTopBarView(pair);
-            int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-            deliveryAmount = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, totalAmount);
-            jcAmount = getTotalJCPaid();
-            totalAmount = subTotalAmount - promoAmount + deliveryAmount;
-            payableAmount = subTotalAmount - promoAmount + deliveryAmount - jcAmount;
             updateCartUI();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1825,6 +1826,49 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             return MyApplication.getInstance().getWalletCore().getDefaultPaymentOption();
         } else{
             return MyApplication.getInstance().getWalletCore().getPaymentOptionFromInt(checkoutSaveData.getPaymentMode());
+        }
+    }
+
+
+    private double totalAmount(){
+        double totalAmount = subTotalAmount - promoAmount + deliveryCharges() + serviceTax() + vat();
+        if(totalAmount < 0) {
+            totalAmount = 0;
+        }
+        return totalAmount;
+    }
+
+    private double payableAmount(){
+        double payableAmount = totalAmount() - jcUsed();
+        if(payableAmount < 0) {
+            payableAmount = 0;
+        }
+        return payableAmount;
+    }
+
+    private double jcUsed(){
+        return Math.min(totalAmount(), Data.userData.getJugnooBalance());
+    }
+
+    private double deliveryCharges(){
+        return activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+    }
+
+    private double serviceTax(){
+        if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
+                && activity.getVendorOpened().getServiceTax() != null){
+            return (subTotalAmount - promoAmount + deliveryCharges()) * (activity.getVendorOpened().getServiceTax()/100d);
+        } else {
+            return 0;
+        }
+    }
+
+    private double vat(){
+        if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
+                && activity.getVendorOpened().getVat() != null){
+            return (subTotalAmount - promoAmount + deliveryCharges() + serviceTax()) * (activity.getVendorOpened().getVat()/100d);
+        } else {
+            return 0;
         }
     }
 

@@ -149,6 +149,13 @@ public class MenusResponse {
 		@SerializedName("applicable_payment_mode")
 		@Expose
 		private Integer applicablePaymentMode;
+		@SerializedName("service_tax")
+		@Expose
+		private Double serviceTax;
+		@SerializedName("vat")
+		@Expose
+		private Double vat;
+
 
 
 		/**
@@ -323,6 +330,22 @@ public class MenusResponse {
 
 		public void setApplicablePaymentMode(Integer applicablePaymentMode) {
 			this.applicablePaymentMode = applicablePaymentMode;
+		}
+
+		public Double getServiceTax() {
+			return serviceTax;
+		}
+
+		public void setServiceTax(Double serviceTax) {
+			this.serviceTax = serviceTax;
+		}
+
+		public Double getVat() {
+			return vat;
+		}
+
+		public void setVat(Double vat) {
+			this.vat = vat;
 		}
 	}
 

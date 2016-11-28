@@ -110,6 +110,12 @@ public class ShowPanelResponse {
 		@SerializedName("19")
 		@Expose
 		private List<Item> menu19 = new ArrayList<Item>();
+		@SerializedName("20")
+		@Expose
+		private List<Item> menu20 = new ArrayList<Item>();
+		@SerializedName("21")
+		@Expose
+		private List<Item> menu21 = new ArrayList<Item>();
 
 		public List<Item> getMenu1() {
 			return menu1;
@@ -261,6 +267,22 @@ public class ShowPanelResponse {
 
 		public void setMenu19(List<Item> menu19) {
 			this.menu19 = menu19;
+		}
+
+		public List<Item> getMenu20() {
+			return menu20;
+		}
+
+		public void setMenu20(List<Item> menu20) {
+			this.menu20 = menu20;
+		}
+
+		public List<Item> getMenu21() {
+			return menu21;
+		}
+
+		public void setMenu21(List<Item> menu21) {
+			this.menu21 = menu21;
 		}
 	}
 

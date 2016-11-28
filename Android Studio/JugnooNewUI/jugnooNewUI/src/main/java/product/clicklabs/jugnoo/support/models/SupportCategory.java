@@ -32,6 +32,9 @@ public enum SupportCategory {
 	MENUS_PENDING(18),
 	MENUS_CANCELLED(19),
 
+	MENUS_ACCEPTED(20),
+	MENUS_CANCELLED_BY_RESTAURANT(21),
+
 	;
 
 

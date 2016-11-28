@@ -84,13 +84,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void applyFilter(){
         vendors.clear();
         for(MenusResponse.Vendor vendor : vendorsComplete){
-            boolean cuisineMatched = true, moMatched = false, dtMatched = false;
+            boolean cuisineMatched = false, moMatched = false, dtMatched = false;
             for(String cuisine : activity.getCuisinesSelected()){
-                if(!vendor.getCuisines().contains(cuisine)){
-                    cuisineMatched = false;
+                if(vendor.getCuisines().contains(cuisine)){
+                    cuisineMatched = true;
                     break;
                 }
             }
+            cuisineMatched = activity.getCuisinesSelected().size() > 0 ? cuisineMatched : true;
+
             moMatched = activity.getMoSelected() == MenusFilterFragment.MinOrder.NONE
                     || vendor.getMinimumOrderAmount() <= activity.getMoSelected().getOrdinal();
 

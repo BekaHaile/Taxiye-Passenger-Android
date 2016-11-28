@@ -1256,6 +1256,8 @@
 	<string name="move_to_your_location">Move to your location</string>
 	<string name="no_cuisine_found">No cuisine found</string>
 	<string name="no_menus_available">No menus available</string>
+	<string name="service_tax">Service Tax</string>
+	<string name="vat">VAT</string>
 
 
 </resources>

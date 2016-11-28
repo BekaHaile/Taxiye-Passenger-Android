@@ -125,7 +125,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 										Integer.parseInt(endRideData.engagementId),
 										endRideData.getEngagementDate(),
 										activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber(),
-										-1, "", endRideData.getSupportNumber());
+										-1, "", endRideData.getSupportNumber(), ProductType.AUTO.getOrdinal());
 
 							} else if (activity instanceof RideTransactionsActivity) {
 								new TransactionUtils().openItemInFragment(activity,
@@ -133,7 +133,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 										Integer.parseInt(endRideData.engagementId),
 										endRideData.getEngagementDate(),
 										activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber(),
-										-1, "", endRideData.getSupportNumber());
+										-1, "", endRideData.getSupportNumber(), ProductType.AUTO.getOrdinal());
 							}
 						} else if(datum != null){
 							if (activity instanceof SupportActivity) {
@@ -142,7 +142,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 										-1, "",
 										activity.getResources().getString(R.string.support_main_title), item, datum.getPhoneNo(),
 										datum.getOrderId(), DateOperations.convertDateViaFormat(DateOperations
-												.utcToLocalTZ(datum.getOrderTime())), datum.getSupportNumber());
+												.utcToLocalTZ(datum.getOrderTime())), datum.getSupportNumber(), datum.getProductType());
 
 							} else if (activity instanceof RideTransactionsActivity) {
 								new TransactionUtils().openItemInFragment(activity,
@@ -150,7 +150,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 										-1, "",
 										activity.getResources().getString(R.string.support_main_title), item, datum.getPhoneNo(),
 										datum.getOrderId(), DateOperations.convertDateViaFormat(DateOperations
-												.utcToLocalTZ(datum.getOrderTime())), datum.getSupportNumber());
+												.utcToLocalTZ(datum.getOrderTime())), datum.getSupportNumber(), datum.getProductType());
 							}
 						}
 						Bundle bundle = new Bundle();
