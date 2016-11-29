@@ -1214,5 +1214,12 @@
 	<string name="suggested_addresses">Suggested Addresses</string>
 	<string name="save_address_as">Save address as:</string>
 	<string name="address_name">Address Name</string>
+	<string name="jugnoo_offerings">Jugnoo Offerings</string>
+	<string name="side_menu">Side menu</string>
+	<string name="view_account">View Account</string>
+	<string name="my_location">My location</string>
+	<string name="chat_with_driver">chat with driver</string>
+	<string name="bad_feedback">bad feedback</string>
+	<string name="great_feedback">great feedback</string>
 
 </resources>
