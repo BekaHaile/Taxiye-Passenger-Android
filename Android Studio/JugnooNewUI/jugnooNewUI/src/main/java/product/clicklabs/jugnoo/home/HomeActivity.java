@@ -5104,6 +5104,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             };
             Runnable runnableSetPickup = getPickupAddressZoomRunnable();
+            runnableSetPickup = null;
 
             if (firstLatLng != null && !isSpecialPickupScreenOpened() && runnableSetPickup == null) {
                 boolean fixedZoom = false;
@@ -5123,11 +5124,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 try {
                     final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder, FIX_ZOOM_DIAGONAL);
                     final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-
-                    if(passengerScreenMode == PassengerScreenMode.P_INITIAL
-                            && !isSpecialPickupScreenOpened() && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
-                        setSearchResultToPickupCase();
-                    }
 
                     runnableZoom = new Runnable() {
                         @Override
@@ -5167,7 +5163,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void run() {
                     if(passengerScreenMode == PassengerScreenMode.P_INITIAL
                             && !isNormalRideWithDropAtConfirmation() && !isPoolRideAtConfirmation() && !isSpecialPickupScreenOpened()){
-                        setSearchResultToPickupCase();
+//                        setSearchResultToPickupCase();
                     }
                 }
             };
@@ -8263,11 +8259,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Log.e("onPlaceSearchPre", "=");
     }
 
-    private void setSearchResultToPickupCase(){
+    private void setSearchResultToPickupCase(SearchResult searchResult){
         try {
             Gson gson = new Gson();
-            SearchResult searchResult = gson.fromJson(Prefs.with(this)
-                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
+//            SearchResult searchResult = gson.fromJson(Prefs.with(this)
+//                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
             if(searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())){
                 textViewInitialSearch.setText(searchResult.getNameForText());
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, new GoogleMap.CancelableCallback() {
@@ -8309,11 +8305,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                 if (map != null && searchResult != null) {
                     try {
-                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
+//                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    setSearchResultToPickupCase();
+                    setSearchResultToPickupCase(searchResult);
                 }
             } else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
 
