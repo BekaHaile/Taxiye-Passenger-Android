@@ -947,7 +947,11 @@ public class HistoryResponse {
         }
 
         public Double getServiceTax() {
-            return serviceTax;
+            if(serviceTax != null){
+                return serviceTax;
+            } else {
+                return 0d;
+            }
         }
 
         public void setServiceTax(Double serviceTax) {
@@ -955,7 +959,11 @@ public class HistoryResponse {
         }
 
         public Double getValueAddedTax() {
-            return valueAddedTax;
+            if(valueAddedTax != null){
+                return valueAddedTax;
+            } else {
+                return 0d;
+            }
         }
 
         public void setValueAddedTax(Double valueAddedTax) {
@@ -963,7 +971,11 @@ public class HistoryResponse {
         }
 
         public Double getPackingCharges() {
-            return packingCharges;
+            if(packingCharges != null){
+                return packingCharges;
+            } else {
+                return 0d;
+            }
         }
 
         public void setPackingCharges(Double packingCharges) {

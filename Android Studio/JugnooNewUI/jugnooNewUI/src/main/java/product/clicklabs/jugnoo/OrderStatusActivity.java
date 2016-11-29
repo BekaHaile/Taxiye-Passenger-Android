@@ -602,8 +602,11 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         }
     }
 
-    private int getSubTotalAmount(HistoryResponse historyResponse){
-        int subTotal = Integer.parseInt(Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOriginalOrderAmount() - historyResponse.getData().get(0).getDeliveryCharges()));
+    private double getSubTotalAmount(HistoryResponse historyResponse){
+        double subTotal = 0;
+        for(HistoryResponse.OrderItem orderItem : historyResponse.getData().get(0).getOrderItems()){
+            subTotal = subTotal + orderItem.getItemAmount();
+        }
         return subTotal;
     }
 
@@ -660,7 +663,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             }
             tvDeliveryToVal.setText(historyResponse.getData().get(0).getDeliveryAddress());
             try {
-                tvSubAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Integer.toString(getSubTotalAmount(historyResponse))));
+                tvSubAmountVal.setText(activity.getString(R.string.rupees_value_format,
+                        Utils.getMoneyDecimalFormatWithoutFloat().format(getSubTotalAmount(historyResponse))));
             } catch (Exception e) {
                 e.printStackTrace();
             }

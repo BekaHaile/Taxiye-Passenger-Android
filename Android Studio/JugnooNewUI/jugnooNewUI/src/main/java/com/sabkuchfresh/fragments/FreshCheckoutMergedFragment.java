@@ -470,8 +470,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private void updateCartUI() {
-
-
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
 
         if (promoAmount > 0) {
@@ -573,7 +571,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
-                Utils.getMoneyDecimalFormat().format(payableAmount())));
+                Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
         if(promoAmount > 0){
             textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
             textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
