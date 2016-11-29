@@ -12,7 +12,6 @@ import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
@@ -108,6 +107,7 @@ public class FABViewTest {
                             ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.GONE);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
                         }
+                        Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

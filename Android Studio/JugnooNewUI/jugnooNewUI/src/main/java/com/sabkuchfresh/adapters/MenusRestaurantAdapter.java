@@ -241,6 +241,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 holderFilter.editTextSearch.removeTextChangedListener(textWatcher);
                 holderFilter.editTextSearch.addTextChangedListener(textWatcher);
                 holderFilter.editTextSearch.requestFocus();
+                holderFilter.imageViewFilterApplied.setVisibility(filterApplied() ? View.VISIBLE : View.GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -248,6 +249,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     }
 
+
+    private boolean filterApplied(){
+        return (activity.getCuisinesSelected().size() > 0
+                || activity.getMoSelected() != MenusFilterFragment.MinOrder.NONE
+                || activity.getDtSelected() != MenusFilterFragment.DeliveryTime.NONE
+                || activity.getSortBySelected() != MenusFilterFragment.SortType.NONE);
+    }
 
     @Override
     public int getItemViewType(int position) {
@@ -300,11 +308,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         private RelativeLayout relativeLayoutSearchFilter;
         private EditText editTextSearch;
         private CardView cardViewFilter;
+        private ImageView imageViewFilterApplied;
         public ViewHolderFilter(View itemView, Context context) {
             super(itemView);
             relativeLayoutSearchFilter = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutSearchFilter);
             editTextSearch = (EditText) itemView.findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Fonts.mavenMedium(context));
             cardViewFilter = (CardView) itemView.findViewById(R.id.cardViewFilter);
+            imageViewFilterApplied = (ImageView) itemView.findViewById(R.id.imageViewFilterApplied);
         }
     }
 

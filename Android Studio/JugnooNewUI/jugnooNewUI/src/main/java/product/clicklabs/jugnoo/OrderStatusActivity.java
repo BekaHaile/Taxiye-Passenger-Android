@@ -88,7 +88,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
     public View lineStatus1, lineStatus2, lineStatus3;
     private View rootView;
     private ImageView ivTopShadow;
-    private LinearLayout llExtraCharges;
+    private LinearLayout llExtraCharges, llMain;
 
     @Nullable
     @Override
@@ -108,7 +108,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        llMain = (LinearLayout) rootView.findViewById(R.id.llMain);
+        llMain.setVisibility(View.GONE);
         tvOrderStatus = (TextView) rootView.findViewById(R.id.tvOrderStatus); tvOrderStatus.setTypeface(Fonts.mavenMedium(activity));
         tvOrderStatusVal = (TextView) rootView.findViewById(R.id.tvOrderStatusVal); tvOrderStatusVal.setTypeface(Fonts.mavenMedium(activity));
         tvOrderTime = (TextView) rootView.findViewById(R.id.tvOrderTime); tvOrderTime.setTypeface(Fonts.mavenMedium(activity));
@@ -319,6 +320,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
+                                    llMain.setVisibility(View.VISIBLE);
                                     orderHistory = historyResponse.getData().get(0);
                                     subItemsOrders.clear();
                                     subItemsOrders.addAll(historyResponse.getData().get(0).getOrderItems());
@@ -326,12 +328,12 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
                                     setStatusResponse(historyResponse);
                                 } else {
-                                    //updateListData(message);
+                                    retryDialogOrderData(message, DialogErrorType.SERVER_ERROR);
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            //updateListData(Data.SERVER_ERROR_MSG);
+                            retryDialogOrderData("", DialogErrorType.SERVER_ERROR);
                         }
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -340,7 +342,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                     public void failure(RetrofitError error) {
                         Log.e("TAG", "getRecentRidesAPI error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
-                        //updateListData(Data.SERVER_NOT_RESOPNDING_MSG);
+                        retryDialogOrderData("", DialogErrorType.CONNECTION_LOST);
                     }
                 };
 
@@ -351,10 +353,47 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 }
             }
             else {
-                //updateListData(Data.CHECK_INTERNET_MSG);
+                retryDialogOrderData("", DialogErrorType.NO_NET);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void retryDialogOrderData(String message, DialogErrorType dialogErrorType) {
+        if(TextUtils.isEmpty(message)) {
+            DialogPopup.dialogNoInternet(activity,
+                    dialogErrorType,
+                    new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View view) {
+                            getOrderData(activity);
+                        }
+
+                        @Override
+                        public void neutralClick(View view) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View view) {
+                        }
+                    });
+        } else {
+            DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+                    activity.getString(R.string.retry), activity.getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getOrderData(activity);
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.onBackPressed();
+                        }
+                    }, false, false);
         }
     }
 
@@ -551,8 +590,10 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             tvDelCharges.setText(fieldText);
             if(negative) {
                 tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                tvDelChargesVal.setTextColor(activity.getResources().getColor(R.color.order_status_green));
             } else {
                 tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                tvDelChargesVal.setTextColor(activity.getResources().getColor(R.color.text_color));
             }
             llFinalAmount.addView(view);
             ASSL.DoMagic(relative);

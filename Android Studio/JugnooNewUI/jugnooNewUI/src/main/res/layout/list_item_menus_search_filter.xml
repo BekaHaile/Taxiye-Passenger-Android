@@ -60,6 +60,18 @@
                 android:src="@drawable/ic_filters"
                 android:tag="mwar"
                 />
+            <ImageView
+                android:id="@+id/imageViewFilterApplied"
+                android:layout_width="20px"
+                android:layout_height="20px"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/tick"
+                android:tag="mwar"
+                android:layout_marginRight="6px"
+                android:layout_marginTop="6px"
+                android:visibility="gone"
+                />
+
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
