@@ -974,7 +974,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
                 if(getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
-                    textViewMinOrder.setVisibility(View.VISIBLE);
+                    if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
+                        textViewMinOrder.setVisibility(View.VISIBLE);
+                    } else {
+                        textViewMinOrder.setVisibility(View.GONE);
+                    }
                     textViewMinOrder.setText(getString(R.string.minimum_order) + " "
                             + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
                 }

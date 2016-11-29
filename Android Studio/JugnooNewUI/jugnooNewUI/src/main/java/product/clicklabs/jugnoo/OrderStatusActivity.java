@@ -88,6 +88,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
     public View lineStatus1, lineStatus2, lineStatus3;
     private View rootView;
     private ImageView ivTopShadow;
+    private LinearLayout llExtraCharges;
 
     @Nullable
     @Override
@@ -148,6 +149,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         imageViewRestaurant.setVisibility(View.GONE);
         imageViewCallRestaurant = (ImageView) rootView.findViewById(R.id.imageViewCallRestaurant);
         imageViewCallRestaurant.setVisibility(View.GONE);
+        llExtraCharges = (LinearLayout) rootView.findViewById(R.id.llExtraCharges);
+        llExtraCharges.setVisibility(View.GONE);
 
         // Order Status
         cvOrderStatus = (CardView) rootView.findViewById(R.id.cvOrderStatus);
@@ -535,7 +538,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         ivStatus0.setLayoutParams(layoutParams);
     }
 
-    private void addFinalAmountView(LinearLayout llFinalAmount, String fieldText, String fieldTextVal){
+    private void addFinalAmountView(LinearLayout llFinalAmount, String fieldText, double fieldTextVal, boolean negative){
         try {
             llFinalAmount.setVisibility(View.VISIBLE);
             LayoutInflater layoutInflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -546,7 +549,11 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
             tvDelChargesVal.setTypeface(Fonts.mavenMedium(activity));
             tvDelCharges.setText(fieldText);
-            tvDelChargesVal.setText("- " + String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Float.parseFloat(fieldTextVal))));
+            if(negative) {
+                tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+            } else {
+                tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+            }
             llFinalAmount.addView(view);
             ASSL.DoMagic(relative);
         } catch (Exception e) {
@@ -654,15 +661,25 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 tvDeliveryChargesVal.setTextColor(activity.getResources().getColor(R.color.order_status_green));
                 tvDeliveryChargesVal.setText(activity.getResources().getString(R.string.free));
             }
+            if((historyResponse.getData().get(0).getPackingCharges() != null) && (historyResponse.getData().get(0).getPackingCharges() > 0)){
+                addFinalAmountView(llExtraCharges, getResources().getString(R.string.packaging_charges), historyResponse.getData().get(0).getPackingCharges(), false);
+            }
+            if((historyResponse.getData().get(0).getServiceTax() != null) && (historyResponse.getData().get(0).getServiceTax() > 0)){
+                addFinalAmountView(llExtraCharges, getResources().getString(R.string.service_tax), historyResponse.getData().get(0).getServiceTax(), false);
+            }
+            if((historyResponse.getData().get(0).getValueAddedTax() != null) && (historyResponse.getData().get(0).getValueAddedTax() > 0)){
+                addFinalAmountView(llExtraCharges, getResources().getString(R.string.vat), historyResponse.getData().get(0).getValueAddedTax(), false);
+            }
 
-            tvTotalAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf((historyResponse.getData().get(0).getOriginalOrderAmount()).intValue())));
+
+            tvTotalAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOriginalOrderAmount())));
 
             if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)){
-                addFinalAmountView(llFinalAmount, getResources().getString(R.string.discount).toString(), historyResponse.getData().get(0).getDiscount().toString());
+                addFinalAmountView(llFinalAmount, getResources().getString(R.string.discount), historyResponse.getData().get(0).getDiscount(), true);
             }
 
             if((historyResponse.getData().get(0).getJugnooDeducted() != null) && (historyResponse.getData().get(0).getJugnooDeducted() != 0)){
-                addFinalAmountView(llFinalAmount, getResources().getString(R.string.jugnoo_cash).toString(), historyResponse.getData().get(0).getJugnooDeducted().toString());
+                addFinalAmountView(llFinalAmount, getResources().getString(R.string.jugnoo_cash), historyResponse.getData().get(0).getJugnooDeducted(), true);
             }
 
             if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)

@@ -248,6 +248,15 @@ public class HistoryResponse {
         @SerializedName("restaurant_phone_no")
         @Expose
         private String restaurantPhoneNo;
+        @SerializedName("service_tax")
+        @Expose
+        private Double serviceTax;
+        @SerializedName("value_added_tax")
+        @Expose
+        private Double valueAddedTax;
+        @SerializedName("packing_charges")
+        @Expose
+        private Double packingCharges;
 
         /**
          * @return The pickupAddress
@@ -935,6 +944,30 @@ public class HistoryResponse {
 
         public void setRestaurantPhoneNo(String restaurantPhoneNo) {
             this.restaurantPhoneNo = restaurantPhoneNo;
+        }
+
+        public Double getServiceTax() {
+            return serviceTax;
+        }
+
+        public void setServiceTax(Double serviceTax) {
+            this.serviceTax = serviceTax;
+        }
+
+        public Double getValueAddedTax() {
+            return valueAddedTax;
+        }
+
+        public void setValueAddedTax(Double valueAddedTax) {
+            this.valueAddedTax = valueAddedTax;
+        }
+
+        public Double getPackingCharges() {
+            return packingCharges;
+        }
+
+        public void setPackingCharges(Double packingCharges) {
+            this.packingCharges = packingCharges;
         }
     }
 
