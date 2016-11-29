@@ -26,6 +26,7 @@ import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
+import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
 
@@ -128,6 +129,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
                 getVendorMenu(vendor);
+                Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
             }
 
             @Override

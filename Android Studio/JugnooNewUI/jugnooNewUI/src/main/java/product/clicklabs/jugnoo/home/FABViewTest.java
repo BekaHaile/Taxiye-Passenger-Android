@@ -100,6 +100,7 @@ public class FABViewTest {
                             ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
                         }
+                        Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
                         FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, "Close");
                     } else {
                         isOpened = false;
@@ -107,7 +108,6 @@ public class FABViewTest {
                             ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.GONE);
                             ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
                         }
-                        Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
