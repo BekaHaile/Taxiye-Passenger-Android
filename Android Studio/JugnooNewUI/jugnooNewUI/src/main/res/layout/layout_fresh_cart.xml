@@ -205,6 +205,51 @@
 
                         </RelativeLayout>
 
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutPackagingCharges"
+                            android:layout_width="match_parent"
+                            android:layout_height="82px">
+
+
+                            <TextView
+                                android:id="@+id/textViewPackagingCharges"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="30px"
+                                android:gravity="center_vertical"
+                                android:text="@string/packaging_charges"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/textViewPackagingChargesValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="30px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36"
+                                />
+
+                            <ImageView
+                                android:id="@+id/imageViewSep3"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginLeft="20px"
+                                android:layout_marginRight="20px"
+                                android:src="@color/stroke_color_light"
+                                />
+
+                        </RelativeLayout>
+
 
                         <RelativeLayout
                             android:id="@+id/relativeLayoutServiceTax"
@@ -240,7 +285,7 @@
                                 />
 
                             <ImageView
-                                android:id="@+id/imageViewSep3"
+                                android:id="@+id/imageViewSep4"
                                 android:layout_width="match_parent"
                                 android:layout_height="2px"
                                 android:layout_alignParentBottom="true"
@@ -285,7 +330,7 @@
                                 />
 
                             <ImageView
-                                android:id="@+id/imageViewSep4"
+                                android:id="@+id/imageViewSep5"
                                 android:layout_width="match_parent"
                                 android:layout_height="2px"
                                 android:layout_alignParentBottom="true"

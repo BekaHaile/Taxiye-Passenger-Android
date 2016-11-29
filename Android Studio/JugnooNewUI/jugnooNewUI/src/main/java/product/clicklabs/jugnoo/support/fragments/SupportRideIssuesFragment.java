@@ -161,32 +161,36 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
 
-		if (endRideData != null || datum != null) {
-			linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
-			cardViewRecycler.setVisibility(View.VISIBLE);
-			setRideData();
-			if(items == null && datum != null){
-				items = Database2.getInstance(activity).getSupportDataItems(datum.getSupportCategory());
-				if(!Prefs.with(activity).getString(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION, "-1").equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
-					linearLayoutRideShortInfo.setVisibility(View.GONE);
-					cardViewRecycler.setVisibility(View.GONE);
-					int supportCategory = datum.getSupportCategory();
-					if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
-						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.FRESH);
-					} else if (datum.getProductType() == ProductType.MEALS.getOrdinal()){
-						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MEALS);
-					} else if (datum.getProductType() == ProductType.GROCERY.getOrdinal()){
-						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.GROCERY);
-					} else if (datum.getProductType() == ProductType.MENUS.getOrdinal()){
-						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MENUS);
+		try {
+			if (endRideData != null || datum != null) {
+				linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+				cardViewRecycler.setVisibility(View.VISIBLE);
+				setRideData();
+				if(items == null && datum != null){
+					items = Database2.getInstance(activity).getSupportDataItems(datum.getSupportCategory());
+					if(!Prefs.with(activity).getString(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION, "-1").equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
+						linearLayoutRideShortInfo.setVisibility(View.GONE);
+						cardViewRecycler.setVisibility(View.GONE);
+						int supportCategory = datum.getSupportCategory();
+						if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
+							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.FRESH);
+						} else if (datum.getProductType() == ProductType.MEALS.getOrdinal()){
+							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MEALS);
+						} else if (datum.getProductType() == ProductType.GROCERY.getOrdinal()){
+							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.GROCERY);
+						} else if (datum.getProductType() == ProductType.MENUS.getOrdinal()){
+							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MENUS);
+						}
 					}
 				}
+				updateIssuesList(items);
+			} else {
+				linearLayoutRideShortInfo.setVisibility(View.GONE);
+				cardViewRecycler.setVisibility(View.GONE);
+				getRideSummaryAPI(activity, engagementId, orderId, autosStatus, false, ProductType.AUTO);
 			}
-			updateIssuesList(items);
-		} else {
-			linearLayoutRideShortInfo.setVisibility(View.GONE);
-			cardViewRecycler.setVisibility(View.GONE);
-			getRideSummaryAPI(activity, engagementId, orderId, autosStatus, false, ProductType.AUTO);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return rootView;

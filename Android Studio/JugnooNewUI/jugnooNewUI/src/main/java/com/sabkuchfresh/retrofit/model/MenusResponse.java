@@ -152,9 +152,12 @@ public class MenusResponse {
 		@SerializedName("service_tax")
 		@Expose
 		private Double serviceTax;
-		@SerializedName("vat")
+		@SerializedName("value_added_tax")
 		@Expose
-		private Double vat;
+		private Double valueAddedTax;
+		@SerializedName("packing_charges")
+		@Expose
+		private Double packingCharges;
 
 
 
@@ -340,12 +343,20 @@ public class MenusResponse {
 			this.serviceTax = serviceTax;
 		}
 
-		public Double getVat() {
-			return vat;
+		public Double getValueAddedTax() {
+			return valueAddedTax;
 		}
 
-		public void setVat(Double vat) {
-			this.vat = vat;
+		public void setValueAddedTax(Double vat) {
+			this.valueAddedTax = vat;
+		}
+
+		public Double getPackingCharges() {
+			return packingCharges;
+		}
+
+		public void setPackingCharges(Double packingCharges) {
+			this.packingCharges = packingCharges;
 		}
 	}
 

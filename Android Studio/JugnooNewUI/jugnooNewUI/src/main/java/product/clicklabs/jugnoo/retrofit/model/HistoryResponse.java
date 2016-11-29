@@ -830,7 +830,11 @@ public class HistoryResponse {
         }
 
         public Integer getSupportCategory() {
-            return supportCategory;
+            if(supportCategory != null) {
+                return supportCategory;
+            } else {
+                return 0;
+            }
         }
 
         public void setSupportCategory(Integer supportCategory) {
