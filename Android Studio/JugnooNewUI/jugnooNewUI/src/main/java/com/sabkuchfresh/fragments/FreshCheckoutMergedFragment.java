@@ -712,6 +712,19 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getPaymentOptionFromInt(
                     MyApplication.getInstance().getWalletCore().getPaymentOptionAccAvailability(activity.getPaymentOption().getOrdinal())));
 
+            try {
+                if(type == AppConstant.ApplicationType.MENUS){
+					if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()){
+						activity.setPaymentOption(PaymentOption.CASH);
+					} else if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()
+							&& activity.getPaymentOption() == PaymentOption.CASH){
+						activity.setPaymentOption(PaymentOption.PAYTM);
+					}
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             textViewPaytmValue.setText(String.format(activity.getResources()
                     .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
             textViewPaytmValue.setTextColor(Data.userData.getPaytmBalanceColor(activity));

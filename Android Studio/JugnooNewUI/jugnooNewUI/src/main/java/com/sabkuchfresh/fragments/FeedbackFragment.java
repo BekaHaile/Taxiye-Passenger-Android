@@ -582,6 +582,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void backPressed(boolean goodRating) {
+        activity.setRefreshCart(true);
         try {
             activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } catch (Exception e) {
