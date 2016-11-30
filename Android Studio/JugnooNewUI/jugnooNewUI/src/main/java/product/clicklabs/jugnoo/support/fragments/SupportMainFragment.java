@@ -138,7 +138,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		cardViewRideShortInfo.setVisibility(View.GONE);
 		cardViewRecycler.setVisibility(View.GONE);
 		showPanel();
-		activity.getRideSummaryAPI(activity, ProductType.NOT_SURE);
+		activity.getRideSummaryAPI(activity, ProductType.NOT_SURE, EngagementStatus.ENDED.getOrdinal());
 
 		FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT);
 
@@ -153,7 +153,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			activity.setTitle(MyApplication.getInstance().ACTIVITY_NAME_SUPPORT);
 			if(Data.isSupportRideIssueUpdated) {
 				Data.isSupportRideIssueUpdated = false;
-				activity.getRideSummaryAPI(activity, ProductType.NOT_SURE);
+				activity.getRideSummaryAPI(activity, ProductType.NOT_SURE, EngagementStatus.ENDED.getOrdinal());
 			}
 		}
 	}
@@ -257,7 +257,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			showPanel();
 		}
 		if(getRideSummaryCalled != 1){
-			activity.getRideSummaryAPI(activity, ProductType.NOT_SURE);
+			activity.getRideSummaryAPI(activity, ProductType.NOT_SURE, EngagementStatus.ENDED.getOrdinal());
 		}
 	}
 

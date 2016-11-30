@@ -229,7 +229,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         imageViewThumbsDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendQuery(0);
+              sendQuery(0);
                 openSupportFragment();
                 try {
                     if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
@@ -254,7 +254,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 isUpbuttonClicked = true;
-                sendQuery(1);
+              sendQuery(1);
                 if(viewType != -1){
                     if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
                         endRideWithImages(R.drawable.ride_end_image_1);
@@ -485,9 +485,6 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             e.printStackTrace();
         }
 
-//        if(rating == 1) {
-//            getRateAppDialog().thumbsUpClickedAPI();
-//        }
     }
 
     /**
@@ -516,12 +513,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
-                                    //activity.openOrderInvoice(historyResponse.getData().get(0));
                                     new TransactionUtils().openOrderStatusFragment(activity,
                                             activity.getRelativeLayoutContainer(), historyResponse.getData().get(0).getOrderId(),
                                             historyResponse.getData().get(0).getProductType());
-//                                    activity.getTransactionUtils().openOrderSummaryFragment(activity,
-//                                            activity.getRelativeLayoutContainer(), historyResponse.getData().get(0));
                                 } else {
                                     updateListData(message);
                                 }

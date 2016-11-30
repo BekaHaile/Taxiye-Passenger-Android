@@ -5,6 +5,7 @@ package product.clicklabs.jugnoo.support.models;
  */
 public enum SupportCategory {
 
+	NOT_SURE(-1),
 	MAIN_MENU(1),
 
 	RIDE_MENU(2),

@@ -74,7 +74,7 @@ public class ApiGetRideSummary {
 			} else if(orderId != -1) {
 				params.put(Constants.KEY_ORDER_ID, String.valueOf(orderId));
 			}
-			params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType));
+			params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType.getOrdinal()));
 			if(showRideMenu) {
 				params.put(Constants.KEY_SHOW_RIDE_MENU, "1");
 			}
@@ -118,7 +118,7 @@ public class ApiGetRideSummary {
 									finalDatum = showPanelResponse.getMenusDatum();
 								}
 								int supportCategory = finalSupportCategory;
-								if(productType == ProductType.NOT_SURE) {
+								if(productType == ProductType.NOT_SURE || supportCategory == SupportCategory.NOT_SURE.getOrdinal()) {
 									if (endRideData != null) {
 										supportCategory = getSupportCategoryForEngagementStatus(endRideData.getStatus());
 									} else if (finalDatum != null) {

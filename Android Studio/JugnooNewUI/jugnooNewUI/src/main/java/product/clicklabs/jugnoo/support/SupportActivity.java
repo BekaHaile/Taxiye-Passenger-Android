@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.fragments.SupportMainFragment;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
+import product.clicklabs.jugnoo.support.models.SupportCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -92,8 +93,10 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 					.commitAllowingStateLoss();
 		} else{
 			ProductType pt = ProductType.NOT_SURE;
+			int supportCategory = SupportCategory.NOT_SURE.getOrdinal();
 			if(productType == ProductType.AUTO.getOrdinal()){
 				pt = ProductType.AUTO;
+				supportCategory = EngagementStatus.ENDED.getOrdinal();
 			} else if(productType == ProductType.FRESH.getOrdinal()){
 				pt = ProductType.FRESH;
 			} else if(productType == ProductType.MEALS.getOrdinal()){
@@ -103,7 +106,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 			} else if(productType == ProductType.MENUS.getOrdinal()){
 				pt = ProductType.MENUS;
 			}
-			getRideSummaryAPI(this, pt); //for bad feedback case (thumbs down)
+			getRideSummaryAPI(this, pt, supportCategory); //for bad feedback case (thumbs down)
 			setTitle(getResources().getString(R.string.support_ride_issues_title));
 		}
 
@@ -195,7 +198,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 		super.onDestroy();
 	}
 
-	public void getRideSummaryAPI(final Activity activity, final ProductType productType) {
+	public void getRideSummaryAPI(final Activity activity, final ProductType productType, final int supportCategory) {
 		try {
 			new ApiGetRideSummary(activity, Data.userData.accessToken, engagementId, orderId, Data.autoData.getFareStructure().getFixedFare(),
 					new ApiGetRideSummary.Callback() {
@@ -229,14 +232,14 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 
 						@Override
 						public void onRetry(View view) {
-							getRideSummaryAPI(activity, productType);
+							getRideSummaryAPI(activity, productType, supportCategory);
 						}
 
 						@Override
 						public void onNoRetry(View view) {
 
 						}
-					}).getRideSummaryAPI(EngagementStatus.ENDED.getOrdinal(), productType, false);
+					}).getRideSummaryAPI(supportCategory, productType, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
