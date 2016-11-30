@@ -30,7 +30,9 @@ public enum AppLinkIndex {
 
 	AUTO_PAGE(13), // open Auto Screen
 
-	GROCERY_PAGE(14) // open Grocery Screen
+	GROCERY_PAGE(14), // open Grocery Screen
+
+	CHAT_PAGE(15)
 
 	;
 

@@ -110,7 +110,8 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 				MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
 						activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(),
 						activity.subItemsInCart.get(i).getPrice(),
-						Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+						Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
+						Data.userData.getCity());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

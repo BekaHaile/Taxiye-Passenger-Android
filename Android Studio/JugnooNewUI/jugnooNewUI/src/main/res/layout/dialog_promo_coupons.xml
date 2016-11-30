@@ -29,24 +29,47 @@
 
             <ImageView
                 android:id="@+id/imageViewOffers"
-                android:layout_width="512px"
-                android:layout_height="252px"
+                android:layout_width="94px"
+                android:layout_height="63px"
                 android:tag="mwar"
                 android:layout_marginTop="22px"
+                android:layout_marginBottom="22px"
+                android:layout_marginLeft="@dimen/px_96"
                 android:src="@drawable/ic_offer_popup"
-                android:layout_centerHorizontal="true"
-                />
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/tvAvailableOffers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_an_offer"
+                android:textColor="@color/white"
+                android:textSize="@dimen/px_42"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/imageViewOffers"
+                android:layout_marginLeft="10px"/>
         </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/linearLayoutNoCurrentOffers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="508px"
+                android:layout_height="233px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/px_42"
+                android:tag="mwar"
+                android:src="@drawable/ic_promotions_friend_refer"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="50px"
-            android:layout_marginBottom="50px"
-            android:layout_marginRight="55px"
-            android:layout_marginLeft="55px"
             android:gravity="center_horizontal"
+            android:background="@drawable/background_white_less_dark_brl"
             android:orientation="vertical">
 
             <TextView
@@ -55,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_current_offer_popup_text"
                 android:textSize="@dimen/text_size_32"
+                android:layout_marginTop="@dimen/px_30"
                 android:textColor="@color/text_color"
                 android:gravity="center"/>
 
@@ -62,20 +86,22 @@
                 android:id="@+id/buttonInviteFriends"
                 android:layout_marginTop="50px"
                 android:text="@string/invite_friends"
+                android:layout_marginBottom="@dimen/px_40"
                 style="@style/ButtonTheme"/>
+        </LinearLayout>
+
         </LinearLayout>
 
         <ListView
             android:id="@+id/listViewPromoCoupons"
             android:layout_width="match_parent"
-            android:layout_height="300px"
+            android:layout_height="260px"
             android:splitMotionEvents="false"
-            android:visibility="gone"
+            android:visibility="visible"
             android:scrollbars="vertical"
             android:divider="@color/transparent"
             android:dividerHeight="0px"
             android:fadeScrollbars="true"
-            android:layout_marginTop="30px"
             android:layout_marginBottom="30px"
             >
         </ListView>
@@ -93,7 +119,7 @@
                 android:textColor="@color/text_color_light_selector"
                 android:background="@drawable/bg_transparent_menu_item_selector_color_blr_selector"
                 android:textSize="@dimen/text_size_34"
-                android:text="@string/skip"
+                android:text="@string/cancel"
                 />
 
             <Button
@@ -103,7 +129,7 @@
                 android:textColor="@color/text_color_light_selector"
                 android:background="@drawable/bg_transparent_menu_item_selector_color_brr_selector"
                 android:textSize="@dimen/text_size_34"
-                android:text="@string/continue_text"
+                android:text="@string/ok"
                 android:layout_alignParentRight="true"
                 />
             

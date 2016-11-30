@@ -65,6 +65,15 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+
+import static product.clicklabs.jugnoo.Constants.ACTIVATION;
+import static product.clicklabs.jugnoo.Constants.RETENTION;
+import static product.clicklabs.jugnoo.Constants.REVENUE;
+import static product.clicklabs.jugnoo.Constants.SLASH;
+import static product.clicklabs.jugnoo.home.HomeActivity.passengerScreenMode;
+import static product.clicklabs.jugnoo.utils.FlurryEventNames.CALL_TO_DRIVER_MADE_WHEN_ARRIVED;
+import static product.clicklabs.jugnoo.utils.FlurryEventNames.CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED;
 
 
 public class Utils {
@@ -621,6 +630,18 @@ public class Utils {
         return false;
     }
 
+	public static String getActivityName(Context context){
+		String mPackageName = "";
+		ActivityManager mActivityManager =(ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
+		if(Build.VERSION.SDK_INT > 20){
+			mPackageName = mActivityManager.getRunningAppProcesses().get(0).processName;
+		}
+		else{
+			mPackageName = mActivityManager.getRunningTasks(1).get(0).topActivity.getPackageName();
+		}
+		return mPackageName;
+	}
+
 	public static void checkAppsArrayInstall(Context context, ArrayList<AppPackage> appPackages) {
 		int flags = PackageManager.GET_META_DATA |
 				PackageManager.GET_SHARED_LIBRARY_FILES |
@@ -755,6 +776,17 @@ public class Utils {
         dataLayer.pushEvent("closeScreen", DataLayer.mapOf("screenName", screenName));
     }
 
+	public static String firstCharCapital(String str){
+		String[] strArray = str.split(" ");
+		StringBuilder builder = new StringBuilder();
+		for (String s : strArray) {
+			String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
+			builder.append(cap + " ");
+		}
+		String finalStr = builder.toString();
+		return finalStr.substring(0, finalStr.length()-1);
+	}
+
 	public static int dpToPx(Context context, float dp) {
 		int temp = (int)dp;
 		final float scale = context.getResources().getDisplayMetrics().density;
@@ -778,6 +810,21 @@ public class Utils {
 					+ target.substring(1).toLowerCase() + " ";
 		}
 		return result.trim();
+	}
+
+	public static void callDriverDuringRide(Activity activity){
+		try {
+			Utils.openCallIntent(activity, Data.autoData.getAssignedDriverInfo().phoneNumber);
+			if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
+				FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_NOT_ARRIVED);
+				FlurryEventLogger.eventGA(REVENUE+SLASH+ ACTIVATION + SLASH + RETENTION, "Ride Start", "Call Driver");
+			}
+			else if(PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
+				FlurryEventLogger.event(CALL_TO_DRIVER_MADE_WHEN_ARRIVED);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

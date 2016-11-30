@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
@@ -54,8 +55,10 @@ import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
+import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
+import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
@@ -295,11 +298,13 @@ public class JSONParser implements Constants {
             String referAllTextLogin = autoData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
             String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
 
+            NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
+
             Data.autoData = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
 					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
-					rideEndGoodFeedbackText, baseFarePoolText,
-					referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin, referAllTitleLogin);
+					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
+                    , referAllTitleLogin, nearbyPickupRegionses);
 
 
             if(Data.autoData.getPromoCoupons() == null){
@@ -928,7 +933,7 @@ public class JSONParser implements Constants {
             int vehicleType = VEHICLE_AUTO;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
             String cancelRideThrashHoldTime = "", poolStatusString = "";
-            int cancellationCharges = 0, isPooledRide = 0;
+            int cancellationCharges = 0, isPooledRide = 0, chatEnabled = 0;
             long cancellationTimeOffset = 0;
             ArrayList<String> fellowRiders = new ArrayList<>();
 
@@ -991,6 +996,7 @@ public class JSONParser implements Constants {
                             pickupLatitude = jObject.getString("pickup_latitude");
                             pickupLongitude = jObject.getString("pickup_longitude");
                             pickupAddress = jObject.optString(KEY_PICKUP_LOCATION_ADDRESS, "");
+                            chatEnabled = jObject.optInt("chat_enabled", 0);
 
                             try {
                                 if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {
@@ -1107,7 +1113,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled));
 
                 Data.autoData.setFareFactor(fareFactor);
 
@@ -1434,7 +1440,7 @@ public class JSONParser implements Constants {
                 Prefs.with(context).save(SP_WALLET_AT_SIGNUP, "");
 
                 MyApplication.getInstance().getCleverTapUtils().signUp(String.valueOf(loginVia), walletSelected, referralCodeEntered,
-                        String.valueOf(Data.userData.getJugnooBalance()));
+                        String.valueOf(Data.userData.getJugnooBalance()), Data.userData.getCity());
 
             }
             JSONObject map = new JSONObject();
@@ -1463,6 +1469,7 @@ public class JSONParser implements Constants {
             profileUpdate.put(Events.REFERRAL_CODE, Data.userData.referralCode);
             profileUpdate.put(Events.JUGNOO_CASH, Data.userData.getJugnooBalance());
             profileUpdate.put(Events.IS_VERIFIED, "True");
+            profileUpdate.put(Events.REGISTERED_CITY, Data.userData.getCityReg());
 
 //            profileUpdate.put(Events.COUPONS_USED, Data.userData.);
             try {
@@ -1539,6 +1546,7 @@ public class JSONParser implements Constants {
             json.put(KEY_LONGITUDE, jsonObject.optDouble(KEY_LONGITUDE, 0));
             json.put(KEY_ID, jsonObject.optInt(KEY_ID, 0));
             json.put(KEY_IS_CONFIRMED, jsonObject.optInt(KEY_IS_CONFIRMED, 0));
+            json.put(KEY_FREQ, jsonObject.optInt(KEY_FREQ, 0));
             return json.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1576,6 +1584,50 @@ public class JSONParser implements Constants {
 					}
 				}
 			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void parseSavedAddressesFromNew(Context context, FetchUserAddressResponse addressResponse){
+        try {
+            if(addressResponse.getAddresses() != null) {
+                Data.userData.getSearchResults().clear();
+                Data.userData.getSearchResultsRecent().clear();
+                Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                Prefs.with(context).save(SPLabels.ADD_WORK, "");
+                boolean homeSaved = false, workSaved = false;
+                Gson gson = new Gson();
+                for (int i = 0; i < addressResponse.getAddresses().size(); i++) {
+                    FetchUserAddressResponse.Address address = addressResponse.getAddresses().get(i);
+                    SearchResult searchResult = new SearchResult(address.getType(), address.getAddr(), address.getPlaceId(),
+                            address.getLat(), address.getLng(), address.getId(), address.getIsConfirmed(), address.getFreq());
+                    if (address.getType().equalsIgnoreCase(TYPE_HOME) && !homeSaved) {
+                        if (!TextUtils.isEmpty(searchResult.getAddress())) {
+                            Prefs.with(context).save(SPLabels.ADD_HOME, gson.toJson(searchResult, SearchResult.class));
+                        } else {
+                            Prefs.with(context).save(SPLabels.ADD_HOME, "");
+                        }
+                        homeSaved = true;
+                    } else if (address.getType().equalsIgnoreCase(TYPE_WORK) && !workSaved) {
+                        if (!TextUtils.isEmpty(searchResult.getAddress())) {
+                            Prefs.with(context).save(SPLabels.ADD_WORK, gson.toJson(searchResult, SearchResult.class));
+                        } else {
+                            Prefs.with(context).save(SPLabels.ADD_WORK, "");
+                        }
+                        workSaved = true;
+                    } else if (!TextUtils.isEmpty(searchResult.getAddress())
+                            && !TextUtils.isEmpty(address.getType())
+                            && address.getId() > 0) {
+                        Data.userData.getSearchResults().add(searchResult);
+                    } else if (!TextUtils.isEmpty(searchResult.getAddress())
+                            && TextUtils.isEmpty(address.getType())) {
+                        searchResult.setType(SearchResult.Type.RECENT);
+                        Data.userData.getSearchResultsRecent().add(searchResult);
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

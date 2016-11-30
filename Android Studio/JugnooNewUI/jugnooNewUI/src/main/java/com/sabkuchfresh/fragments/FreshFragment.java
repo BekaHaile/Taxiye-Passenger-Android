@@ -524,9 +524,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
     @Override
     public void onTabClicked(int position) {
-        Log.d(TAG, "onTabClicked = "+position);
+        Log.d(TAG, "onTabClicked = "+activity.getProductsResponse().getCategories().get(position).getCategoryName());
         tabClickFlag = true;
-        FlurryEventLogger.event(FlurryEventNames.INTERACTIONS, FlurryEventNames.CATEGORY_CHANGE, FlurryEventNames.TAP);
+        FlurryEventLogger.event(FlurryEventNames.FRESH_FRAGMENT, FlurryEventNames.CATEGORY_CHANGE, activity.getProductsResponse().getCategories().get(position).getCategoryName());
     }
 
     @Override

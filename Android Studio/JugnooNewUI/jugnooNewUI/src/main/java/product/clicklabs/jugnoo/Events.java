@@ -60,6 +60,8 @@ public interface Events {
 
     String MAX_COUPON_VALUE = "max_coupon_value";
     String TIMING = "timing";
+    String CITY = "city";
+    String REGISTERED_CITY = "Registered city";
     String PROMO_CODE_USED = "PromoCodeUsed";
 
 }

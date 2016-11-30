@@ -143,6 +143,7 @@ public interface Constants {
 	String KEY_NOTIFICATION_ID = "notification_id";
 
 	String LINKED_WALLET = "linked_wallet";
+	String USER_VERIFIED = "user_verified";
 	String LINKED_WALLET_MESSAGE = "linked_wallet_message";
 
 	String SERVER_TIMEOUT = "SERVER_TIMEOUT";
@@ -337,6 +338,23 @@ public interface Constants {
 	String REFERRAL = "Referral";
 	String ISSUES = "Issues";
 	String SLASH = "/";
+	String AUTOS_SELECT_ADDRESS = "Autos Select Address";
+	String FRESH_SELECT_ADDRESS = "Fresh Select Address";
+	String MEALS_SELECT_ADDRESS = "Meals Select Address";
+	String GROCERY_SELECT_ADDRESS = "Grocery Select Address";
+	String NEW = "New";
+	String SEARCHED = "Searched";
+	String SAVED = "Saved";
+	String RECENT = "Recent";
+	String TAP_ON_OFFER_STRIP = "Tap on offer strip";
+	String NAME_EMAIL_AUTOFILLED = "Name/email autofilled";
+	String PHONE_AUTOFILLED = "Phone autofilled";
+	String PHONE_AUTOFILLED_FB = "Phone autofilled FB";
+	String NAME_EMAIL_AUTOFILLED_EDITED = "Name/email autofilled edited";
+	String NAME_EMAIL_AUTOFILLED_UNEDITED = "Name/email autofilled unedited";
+	String ORDER_STATUS = "Order status";
+	String SKIP_BOTTOM = "Skip bottom";
+	String SKIP_TOP = "Skip top";
 
 	String KEY_UPDATED_USER_NAME = "updated_user_name";
 	String KEY_UPDATED_USER_EMAIL = "updated_user_email";
@@ -506,6 +524,7 @@ public interface Constants {
 	String KEY_DELETE_FLAG = "delete_flag";
 
 	String KEY_IS_CONFIRMED = "is_confirmed";
+	String KEY_FREQ = "freq";
 
 	String KEY_TOPUP_CARD_CODE = "topup_card_code";
 	String KEY_TOPUP_CARD_ENABLED = "topup_card_enabled";
@@ -516,4 +535,5 @@ public interface Constants {
 
 	String KEY_VALID_STOCK_COUNT = "valid_stock_count";
 	String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
+	String KEY_CHAT_COUNT = "chat_count";
 }

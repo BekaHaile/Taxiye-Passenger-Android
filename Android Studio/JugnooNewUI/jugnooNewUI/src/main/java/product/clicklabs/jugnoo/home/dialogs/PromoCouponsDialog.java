@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -44,7 +45,7 @@ public class PromoCouponsDialog {
 	private PromoCouponsAdapter promoCouponsAdapter;
 	private Button buttonContinue, buttonInviteFriends;
 	private LinearLayout linearLayoutNoCurrentOffers;
-	private TextView textViewNoCurrentOffers;
+	private TextView textViewNoCurrentOffers, tvAvailableOffers;
 	private ImageView imageViewOffers;
 	private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
@@ -117,9 +118,14 @@ public class PromoCouponsDialog {
 				}
 			});
 
+			/*LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listViewPromoCoupons.getLayoutParams();
+			params.height = promoCoupons.size() > 3 ? (int)(156f * 3f * ASSL.Yscale())
+					: (int)(156f * (float)promoCoupons.size() * ASSL.Yscale());
+			listViewPromoCoupons.setLayoutParams(params);*/
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listViewPromoCoupons.getLayoutParams();
-			params.height = promoCoupons.size() > 3 ? (int)(84f * 3f * ASSL.Yscale())
-					: (int)(84f * (float)promoCoupons.size() * ASSL.Yscale());
+			if(promoCoupons.size() > 2){
+				params.height = (int)(520f * ASSL.Yscale());
+			}
 			listViewPromoCoupons.setLayoutParams(params);
 			listViewPromoCoupons.setAdapter(promoCouponsAdapter);
 
@@ -131,6 +137,7 @@ public class PromoCouponsDialog {
 			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 			linearLayoutNoCurrentOffers = (LinearLayout)dialog.findViewById(R.id.linearLayoutNoCurrentOffers);
 			textViewNoCurrentOffers = (TextView)dialog.findViewById(R.id.textViewNoCurrentOffers);textViewNoCurrentOffers.setTypeface(Fonts.mavenMedium(activity));
+			tvAvailableOffers = (TextView) dialog.findViewById(R.id.tvAvailableOffers); tvAvailableOffers.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 			buttonInviteFriends = (Button)dialog.findViewById(R.id.buttonInviteFriends);buttonInviteFriends.setTypeface(Fonts.mavenMedium(activity));
 			imageViewOffers = (ImageView)dialog.findViewById(R.id.imageViewOffers);
 
@@ -147,7 +154,8 @@ public class PromoCouponsDialog {
 				listViewPromoCoupons.setVisibility(View.GONE);
 				relativeLayoutBottomButtons.setVisibility(View.GONE);
 				linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
-				imageViewOffers.setImageResource(R.drawable.no_current_offer);
+				imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
+				tvAvailableOffers.setText(activity.getResources().getString(R.string.no_available_offers));
 			}
 
 			buttonSkip.setOnClickListener(new View.OnClickListener() {

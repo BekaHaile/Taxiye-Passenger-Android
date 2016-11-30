@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -36,6 +37,7 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private String TAG = "Meals Screen";
     private FreshActivity activity;
     private ArrayList<SubItem> subItems;
     private Callback callback;
@@ -138,6 +140,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             intent.putExtra(Constants.KEY_ORDER_ID, recentOrder.getOrderId());
                             activity.startActivity(intent);
                             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.ORDER_STATUS);
                         }
                     });
                 } catch (Exception e) {

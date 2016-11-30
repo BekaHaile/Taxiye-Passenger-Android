@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/rlSpecialPickup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:visibility="gone">
+
+    <Button
+        android:id="@+id/specialPickupLocationBtn"
+        android:layout_width="121px"
+        android:layout_height="117px"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/recyclerViewVehicles"
+        android:layout_marginRight="30px"
+        android:background="@drawable/mylocation_btn_selector"
+        android:tag="mwar"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/rlConfirmBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/specialPickupLocationBtn"
+        android:background="@drawable/white_alpha_gradient_up">
+
+
+        <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cvConfirmOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30px"
+            android:orientation="vertical"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="2dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardElevation="4dp"
+            app:cardUseCompatPadding="true">
+
+
+            <LinearLayout
+                android:id="@+id/linearLayoutConfirmOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvSpecialPicupTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10px"
+                        android:gravity="center"
+                        android:padding="10px"
+                        android:text="CHOOSE YOUR EXACT PICKUP"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34" />
+
+                    <TextView
+                        android:id="@+id/tvSpecialPicupDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20px"
+                        android:gravity="center"
+                        android:padding="10px"
+                        android:text="@string/selecting_a_pickup_spot"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="@dimen/text_size_24" />
+
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="-1dp"
+                    android:background="#d7d7d7" />
+
+
+                <RelativeLayout
+                    android:id="@+id/rlSelectedPickup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-1dp"
+                    android:visibility="gone"
+                    android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector"
+                    android:gravity="center">
+
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutCartTop"
+                        android:layout_width="match_parent"
+                        android:layout_height="96px"
+                        android:background="@drawable/bg_transparent_menu_item_selector">
+
+                        <TextView
+                            android:id="@+id/tvSelectedPickup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="30px"
+                            android:gravity="center_vertical"
+                            android:text="@string/cart_items"
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_30" />
+
+                        <ImageView
+                            android:id="@+id/ivSpecialPickupArrow"
+                            android:layout_width="19px"
+                            android:layout_height="12px"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="@dimen/px_48"
+                            android:src="@drawable/triangle_grey"
+                            android:tag="mwar" />
+                    </RelativeLayout>
+
+
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="94px"
+                    android:background="@color/menu_item_selector_color_F7">
+
+                    <product.clicklabs.jugnoo.widgets.MySpinner
+                        android:id="@+id/simpleSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="94px"
+                        android:spinnerMode="dropdown"
+                        android:tag="mwar"
+                        android:background="@color/transparent"
+                        android:layout_centerHorizontal="true" />
+
+
+                    <ImageView
+                        android:id="@+id/ivArrow"
+                        android:layout_width="19px"
+                        android:layout_height="12px"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/px_48"
+                        android:rotation="0"
+                        android:src="@drawable/triangle_grey"
+                        android:tag="mwar" />
+
+
+                </RelativeLayout>
+
+
+
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+
+        <Button
+            android:id="@+id/bSpecialPicupConfirmRequest"
+            android:layout_width="@dimen/button_big_width"
+            android:layout_height="@dimen/button_big_height"
+            android:layout_below="@+id/cvConfirmOption"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30px"
+            android:background="@drawable/background_theme_gradient_selector"
+            android:text="@string/confirm_request"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_38" />
+    </RelativeLayout>
+
+</RelativeLayout>

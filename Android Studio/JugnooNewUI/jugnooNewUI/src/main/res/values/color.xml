@@ -116,6 +116,7 @@
     <color name="grey_black_light">#3E3E3E</color>
     <color name="grey_jugnoo_line">#414141</color>
     <color name="notification_text_color">#262626</color>
+    <color name="offer_popup_item_color">#F5F5F5</color>
 
 
     <color name="blue_light">#4E75D8</color>
@@ -147,6 +148,7 @@
     <color name="theme_color_end">#FF9339</color>
     <color name="theme_color_pressed">#99F17B47</color>
     <color name="theme_color_alpha">#99FD7945</color>
+    <color name="text_color_less_light">#9d9d9d</color>
     <color name="jeanie_color">#FD9244</color>
     <color name="text_color_dark">#494958</color>
     <color name="text_color">#595968</color>

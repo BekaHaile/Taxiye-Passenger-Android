@@ -11,6 +11,8 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
@@ -39,6 +41,7 @@ public class FABViewTest {
     public FloatingActionButton fabGroceryTest;
     public View view;
     private boolean isOpened;
+    private final String GENIE_OPEN = "Genie Open";
     //public View fabExtra;
 
     public FABViewTest(Activity activity, View view) {
@@ -86,19 +89,24 @@ public class FABViewTest {
         menuLabelsRightTest.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean opened) {
-                if (opened) {
-                    setButtonsVisibilityOnOpen();
-                    isOpened = true;
-                    if(activity instanceof HomeActivity){
-                        ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
-                        ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
+                try {
+                    if (opened) {
+                        setButtonsVisibilityOnOpen();
+                        isOpened = true;
+                        if(activity instanceof HomeActivity){
+                            ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
+                            ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
+                        }
+                        FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, "Close");
+                    } else {
+                        isOpened = false;
+                        if(activity instanceof HomeActivity){
+                            ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.GONE);
+                            ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
+                        }
                     }
-                } else {
-                    isOpened = false;
-                    if(activity instanceof HomeActivity){
-                        ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.GONE);
-                        ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -360,6 +368,7 @@ public class FABViewTest {
                         @Override
                         public void run() {
                             MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.MEALS, null);
+                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.MEALS);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -370,6 +379,7 @@ public class FABViewTest {
                         @Override
                         public void run() {
                             MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.FRESH, null);
+                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.FRESH);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -380,6 +390,7 @@ public class FABViewTest {
                         @Override
                         public void run() {
                             MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.AUTO, null);
+                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.AUTO);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), finalLatLng, false);
                         }
                     }, 300);
@@ -390,6 +401,7 @@ public class FABViewTest {
                         @Override
                         public void run() {
                             MyApplication.getInstance().logEvent(FirebaseEvents.BUTTON+"_"+FirebaseEvents.GROCERY, null);
+                            FlurryEventLogger.event(Constants.INFORMATIVE, GENIE_OPEN, FirebaseEvents.GROCERY);
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getGroceryClientId(), finalLatLng, false);
                         }
                     }, 300);

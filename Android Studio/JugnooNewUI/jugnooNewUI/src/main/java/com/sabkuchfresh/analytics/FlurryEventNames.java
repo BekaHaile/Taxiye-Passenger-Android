@@ -16,7 +16,10 @@ public interface FlurryEventNames {
             ECOMMERCE_EVENTS = "Ecommerce events",
             FEEDBACK_SCREEN = "Feedback Screen",
             REFER_SCREEN = "REFERRAL SCREEN",
-            Support_SCREEN = "Support SCREEN"
+            Support_SCREEN = "Support SCREEN",
+                    FRESH_FRAGMENT = "Fresh Screen",
+            MEALS_FRAGMENT = "Meals Screen",
+            GROCERY_FRAGMENT = "Grocery Screen"
     ;
 
 

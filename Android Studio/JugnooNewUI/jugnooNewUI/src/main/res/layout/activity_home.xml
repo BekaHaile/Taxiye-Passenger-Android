@@ -70,6 +70,10 @@
                     android:id="@+id/topBarMain"
                     layout="@layout/layout_top_bar" />
 
+                <include
+                    android:id="@+id/fabViewIntial"
+                    layout="@layout/layout_home_activity_fab_test"/>
+
                 <!-- Extra view for sliding panel -->
                 <ImageView
                     android:id="@+id/imageViewExtraForSliding"
@@ -79,10 +83,6 @@
                     android:visibility="gone"
                     android:soundEffectsEnabled="false"
                     />
-
-                <include
-                    android:id="@+id/fabViewIntial"
-                    layout="@layout/layout_home_activity_fab_test"/>
 
             </RelativeLayout>
 
@@ -102,7 +102,7 @@
                     android:id="@+id/viewSlidingExtra"
                     android:layout_width="match_parent"
                     android:layout_height="125px"
-                    android:background="@color/white_translucent"
+                    android:background="#EBeeeeee"
                     android:visibility="gone"/>
 
 
@@ -136,6 +136,9 @@
 
         <!-- Location error -->
         <include layout="@layout/layout_location_error" />
+
+        <!-- Confirm Request Layout -->
+        <include layout="@layout/layout_home_activity_special_pickup" />
 
         <!-- Confirm Request Layout -->
         <include layout="@layout/layout_home_activity_confirm_request" />

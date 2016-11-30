@@ -855,6 +855,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                 chargeDetails.put(Events.START_TIME, ""+String.valueOf(activity.getSlotSelected().getStartTime()));
                 chargeDetails.put(Events.END_TIME, ""+String.valueOf(activity.getSlotSelected().getEndTime()));
+                chargeDetails.put(Events.CITY, Data.userData.getCity());
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -886,7 +887,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     }
                     params.put(Constants.KEY_MASTER_COUPON, String.valueOf(activity.getSelectedPromoCoupon().getMasterCoupon()));
                 }
-
+                chargeDetails.put(Events.COUPONS_USED, activity.getSelectedPromoCoupon());
 
 
                 int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
@@ -1532,7 +1533,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     slot.setDayName(deliverySlot.getDayName());
                     slotsEnabled = slot.getIsActiveSlot() == 1 ? slotsEnabled + 1 : slotsEnabled;
                     slots.add(slot);
-                    if (activity.getSlotSelected() == null && slot.getIsActiveSlot() == 1) {
+                    if ((activity.getSlotSelected() == null || activity.getSlotSelected().getIsActiveSlot() != 1)
+                            && slot.getIsActiveSlot() == 1) {
                         activity.setSlotSelected(slot);
                     }
                 }

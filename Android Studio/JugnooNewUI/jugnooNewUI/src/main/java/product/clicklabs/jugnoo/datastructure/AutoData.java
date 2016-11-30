@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
+import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 
 /**
  * Created by gurmail on 18/08/16.
@@ -38,6 +39,7 @@ public class AutoData {
     private ArrayList<FeedbackReason> feedbackReasons = new ArrayList<>();
     private boolean supportFeedbackSubmitted = false;
     private LatLng lastRefreshLatLng;
+    NearbyPickupRegions nearbyPickupRegionses;
 
     private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 
@@ -45,9 +47,9 @@ public class AutoData {
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
                     String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String confirmScreenFareEstimateEnable,
                     String poolDestinationPopupText1, String poolDestinationPopupText2, String poolDestinationPopupText3,
-                    int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText,
-                    int referAllStatus, String referAllText, String referAllTitle,
-                    int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin) {
+                    int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
+                    String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
+                    NearbyPickupRegions nearbyPickupRegionses) {
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -67,6 +69,7 @@ public class AutoData {
         this.referAllStatusLogin = referAllStatusLogin;
         this.referAllTextLogin = referAllTextLogin;
         this.referAllTitleLogin = referAllTitleLogin;
+        this.nearbyPickupRegionses = nearbyPickupRegionses;
     }
 
     public String getDestinationHelpText() {
@@ -395,5 +398,13 @@ public class AutoData {
 
     public void setDropAddress(String dropAddress) {
         this.dropAddress = dropAddress;
+    }
+
+    public NearbyPickupRegions getNearbyPickupRegionses() {
+        return nearbyPickupRegionses;
+    }
+
+    public void setNearbyPickupRegionses(NearbyPickupRegions nearbyPickupRegionses) {
+        this.nearbyPickupRegionses = nearbyPickupRegionses;
     }
 }

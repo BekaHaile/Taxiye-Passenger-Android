@@ -113,6 +113,7 @@ import android.widget.TextView;
 /*     */ 
 /* 180 */       tv.setTextSize(0, newTextSize);
 /*     */     }
+
 /*     */ 
 /* 185 */     ViewGroup.LayoutParams layoutParams = rootLayout.getLayoutParams();
 /*     */ 

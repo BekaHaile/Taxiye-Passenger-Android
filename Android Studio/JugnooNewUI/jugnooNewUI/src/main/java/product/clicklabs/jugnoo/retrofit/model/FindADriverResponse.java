@@ -51,6 +51,9 @@ public class FindADriverResponse {
     @SerializedName("campaigns")
     @Expose
     private Campaigns campaigns;
+    @SerializedName("nearbyPickupRegions")
+    @Expose
+    private NearbyPickupRegions nearbyPickupRegions;
     @SerializedName("city_id")
     @Expose
     private Integer cityId;
@@ -212,6 +215,14 @@ public class FindADriverResponse {
      */
     public void setCampaigns(Campaigns campaigns) {
         this.campaigns = campaigns;
+    }
+
+    public NearbyPickupRegions getNearbyPickupRegions() {
+        return nearbyPickupRegions;
+    }
+
+    public void setNearbyPickupRegions(NearbyPickupRegions nearbyPickupRegions) {
+        this.nearbyPickupRegions = nearbyPickupRegions;
     }
 
     /**

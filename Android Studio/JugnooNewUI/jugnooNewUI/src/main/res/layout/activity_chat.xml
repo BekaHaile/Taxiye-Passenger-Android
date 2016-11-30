@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/menu_item_selector_color">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="@dimen/screen_width"
+        android:layout_height="@dimen/top_bar_height"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            style="@style/title"
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/imageViewBack"
+            android:layout_marginLeft="@dimen/px_30"
+            android:layout_toLeftOf="@+id/ivCallDriver"
+            android:singleLine="true"
+            android:paddingRight="@dimen/px_10"
+            android:text="@string/chat" />
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            style="@style/back_image" />
+
+        <ImageView
+            android:id="@+id/ivCallDriver"
+            android:layout_width="126px"
+            android:layout_height="70px"
+            android:src="@drawable/ic_call_driver"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingTop="@dimen/px_20"
+            android:paddingBottom="@dimen/px_20"
+            android:visibility="visible"
+            android:layout_marginRight="@dimen/px_32"/>
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/recyclerViewChatOptions"
+        android:paddingBottom="@dimen/px_20"
+        android:layout_below="@+id/topBar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewChatOptions"
+        android:layout_width="match_parent"
+        android:layout_height="116px"
+        android:layout_above="@+id/rlInput"
+        android:splitMotionEvents="false"
+        android:visibility="gone" />
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_above="@+id/rlInput"
+        android:background="@drawable/shadow_up" />
+
+    <RelativeLayout
+        android:id="@+id/rlInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:padding="@dimen/px_20">
+
+        <EditText
+            android:id="@+id/input"
+            android:layout_width="match_parent"
+            android:layout_height="80px"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/action_send"
+            android:background="@color/white"
+            android:hint="Type your message here"
+            android:maxHeight="96px"
+            android:paddingLeft="20px"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/text_color_light"
+            android:textSize="@dimen/text_size_30" />
+
+        <ImageView
+            android:id="@+id/action_send"
+            android:layout_width="59px"
+            android:layout_height="59px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20px"
+            android:layout_marginRight="10px"
+            android:background="@android:color/transparent"
+            android:padding="10px"
+            android:src="@drawable/ic_send_msg"
+            android:tag="mwar" />
+    </RelativeLayout>
+
+</RelativeLayout>

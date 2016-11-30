@@ -66,6 +66,10 @@ public class MenuBar {
 		setupFreshUI();
 	}
 
+	public void openChat(){
+		((HomeActivity)activity).openChatScreen();
+	}
+
 	private void setActivityNames(){
 		try {
 			for(int i=0; i<Data.userData.getMenuInfoList().size(); i++){

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -21,14 +23,19 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -51,9 +58,15 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	private TextView textViewAddHome, textViewAddWork;
 	private ImageView imageViewSep, imageViewSep2;
 
-	private LinearLayout linearLayoutScrollSearch;
+	private ScrollView scrollViewSearch;
 	private NonScrollListView listViewSearch;
-	private TextView textViewScrollSearch;
+	private CardView cardViewSearch;
+
+	private ScrollView scrollViewSuggestions;
+	private TextView textViewSavedPlaces, textViewRecentAddresses;
+	private NonScrollListView listViewSavedLocations, listViewRecentAddresses;
+	private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
+	private CardView cardViewSavedPlaces, cvRecentAddresses;
 
 	private View rootView;
     private Activity activity;
@@ -88,7 +101,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_place_search_list, container, false);
 
 
@@ -103,10 +116,20 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
 		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.imageViewSearchCross); imageViewSearchCross.setVisibility(View.GONE);
 		listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
-		linearLayoutScrollSearch = (LinearLayout) rootView.findViewById(R.id.linearLayoutScrollSearch);
-		textViewScrollSearch = (TextView) rootView.findViewById(R.id.textViewScrollSearch);
+		scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
+		scrollViewSearch.setVisibility(View.GONE);
+		cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
 
 
+		scrollViewSuggestions = (ScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
+		textViewSavedPlaces = (TextView) rootView.findViewById(R.id.textViewSavedPlaces); textViewSavedPlaces.setTypeface(Fonts.mavenMedium(activity));
+		textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
+		listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
+		listViewRecentAddresses = (NonScrollListView) rootView.findViewById(R.id.listViewRecentAddresses);
+		cardViewSavedPlaces = (CardView) rootView.findViewById(R.id.cardViewSavedPlaces);
+		cvRecentAddresses = (CardView) rootView.findViewById(R.id.cardViewRecentAddresses);
+
+		updateSavedPlacesLists();
 
 		imageViewSearchGPSIcon = (ImageView) rootView.findViewById(R.id.imageViewSearchGPSIcon);
 
@@ -138,10 +161,12 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					public void onTextChange(String text) {
 						try {
 							if(text.length() > 0){
+								scrollViewSearch.setVisibility(View.VISIBLE);
 								imageViewSearchCross.setVisibility(View.VISIBLE);
 								hideSearchLayout();
 							}
 							else{
+								scrollViewSearch.setVisibility(View.GONE);
 								imageViewSearchCross.setVisibility(View.GONE);
 								showSearchLayout();
 							}
@@ -176,8 +201,10 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 					@Override
 					public void onPlaceSearchPost(SearchResult searchResult) {
+						scrollViewSearch.setVisibility(View.GONE);
 						progressBarSearch.setVisibility(View.GONE);
 						searchListActionsHandler.onPlaceSearchPost(searchResult);
+						FlurryEventLogger.eventGA(Constants.INFORMATIVE, Constants.AUTOS_SELECT_ADDRESS, Constants.SEARCHED);
 					}
 
 					@Override
@@ -190,12 +217,20 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					public void onPlaceSaved() {
 					}
 
+					@Override
+					public void onNotifyDataSetChanged(int count) {
+						if(count > 0){
+							cardViewSearch.setVisibility(View.VISIBLE);
+						} else {
+							cardViewSearch.setVisibility(View.GONE);
+						}
+					}
 				}, true);
 
 		ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.header_place_search_list, listViewSearch, false);
 		header.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
 		ASSL.DoMagic(header);
-		listViewSearch.addFooterView(header, null, false);
+		listViewSavedLocations.addFooterView(header, null, false);
 
 		linearLayoutAddFav = (LinearLayout) header.findViewById(R.id.linearLayoutAddFav);
 		relativeLayoutAddHome = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddHome);
@@ -297,6 +332,11 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 			relativeLayoutAddWork.setVisibility(View.GONE);
 			imageViewSep2.setVisibility(View.GONE);
 		}
+
+		if(savedPlacesAdapter != null && savedPlacesAdapter.getCount() == 0){
+			imageViewSep.setVisibility(View.GONE);
+		}
+
 	}
 
 	private void hideSearchLayout(){
@@ -344,6 +384,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					String strResult = data.getStringExtra("PLACE");
 					SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
 					if(searchResult != null){
+						updateSavedPlacesLists();
 						showSearchLayout();
 					} else {
 						textViewAddHome.setText("Add Home");
@@ -353,6 +394,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					String strResult = data.getStringExtra("PLACE");
 					SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
 					if(searchResult != null) {
+						updateSavedPlacesLists();
 						showSearchLayout();
 					} else{
 						textViewAddWork.setText("Add Work");
@@ -387,6 +429,87 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		public void setOrdinal(int ordinal) {
 			this.ordinal = ordinal;
+		}
+	}
+
+	private void clickOnSavedItem(SearchResult searchResult){
+		searchListActionsHandler.onPlaceClick(searchResult);
+		searchListActionsHandler.onPlaceSearchPre();
+		searchListActionsHandler.onPlaceSearchPost(searchResult);
+		Utils.hideSoftKeyboard(activity, editTextSearch);
+	}
+
+
+	private void updateSavedPlacesLists(){
+		try {
+			ArrayList<SearchResult> searchResults = new ArrayList<>();
+			int savedPlaces = 0;
+			if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+				String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+				SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+				searchResults.add(searchResult);
+				savedPlaces++;
+			}
+			if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+				String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+				SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+				searchResults.add(searchResult);
+				savedPlaces++;
+			}
+			searchResults.addAll(Data.userData.getSearchResults());
+			savedPlaces = savedPlaces + Data.userData.getSearchResults().size();
+
+			savedPlacesAdapter = new SavedPlacesAdapter(activity, searchResults, new SavedPlacesAdapter.Callback() {
+				@Override
+				public void onItemClick(SearchResult searchResult) {
+					clickOnSavedItem(searchResult);
+					FlurryEventLogger.eventGA(Constants.INFORMATIVE, Constants.AUTOS_SELECT_ADDRESS, Constants.SAVED);
+				}
+
+				@Override
+				public void onEditClick(SearchResult searchResult) {
+					clickOnSavedItem(searchResult);
+				}
+			}, false, false);
+			listViewSavedLocations.setAdapter(savedPlacesAdapter);
+			if(searchResults.size() > 0){
+				cardViewSavedPlaces.setVisibility(View.VISIBLE);
+			} else {
+				cardViewSavedPlaces.setVisibility(View.GONE);
+			}
+
+			savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
+				@Override
+				public void onItemClick(SearchResult searchResult) {
+					clickOnSavedItem(searchResult);
+					FlurryEventLogger.eventGA(Constants.INFORMATIVE, Constants.AUTOS_SELECT_ADDRESS, Constants.RECENT);
+				}
+
+				@Override
+				public void onEditClick(SearchResult searchResult) {
+					clickOnSavedItem(searchResult);
+				}
+			}, false, false);
+			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+			if(Data.userData.getSearchResultsRecent().size() > 0){
+				cvRecentAddresses.setVisibility(View.VISIBLE);
+			} else{
+				cvRecentAddresses.setVisibility(View.GONE);
+			}
+
+			if(savedPlaces > 0) {
+				textViewSavedPlaces.setVisibility(View.VISIBLE);
+			} else {
+				textViewSavedPlaces.setVisibility(View.GONE);
+			}
+
+			if (savedPlacesAdapterRecent.getCount() > 0) {
+				textViewRecentAddresses.setVisibility(View.VISIBLE);
+			} else {
+				textViewRecentAddresses.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

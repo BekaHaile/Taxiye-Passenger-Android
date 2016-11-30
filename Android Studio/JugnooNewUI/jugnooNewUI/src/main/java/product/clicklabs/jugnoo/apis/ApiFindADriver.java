@@ -174,6 +174,10 @@ public class ApiFindADriver {
 			e.printStackTrace();
 		}
 
+		if(findADriverResponse.getNearbyPickupRegions() != null){
+			Data.autoData.setNearbyPickupRegionses(findADriverResponse.getNearbyPickupRegions());
+		}
+
 		try{
 			if(Data.autoData.getRegions() == null){
 				Data.autoData.setRegions(new ArrayList<Region>());
@@ -294,7 +298,11 @@ public class ApiFindADriver {
 				e.printStackTrace();
 			}
 
-			MyApplication.getInstance().getCleverTapUtils().setCoupons();
+			try {
+				MyApplication.getInstance().getCleverTapUtils().setCoupons();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 
 			if(findADriverResponse.getFareStructure() != null) {
@@ -370,6 +378,10 @@ public class ApiFindADriver {
 		long timeDiff = System.currentTimeMillis() - refreshTime;
 		return (distance > MIN_DISTANCE_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE
 				|| timeDiff > MIN_TIME_FOR_FIND_A_DRIVER_REFRESH_ON_REQUEST_RIDE);
+	}
+
+	public void setRefreshLatLng(LatLng refreshLatLng){
+		this.refreshLatLng = refreshLatLng;
 	}
 
 

@@ -482,4 +482,9 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     @Override
     public void onPlaceSaved() {
     }
+
+    @Override
+    public void onNotifyDataSetChanged(int count) {
+
+    }
 }
