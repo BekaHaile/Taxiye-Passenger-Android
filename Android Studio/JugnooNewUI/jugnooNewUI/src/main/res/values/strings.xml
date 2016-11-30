@@ -382,6 +382,7 @@
 	<string name="nl_login_email_empty_error">Please enter email or phone number</string>
 	<string name="nl_login_empty_password_error">Please enter password</string>
 	<string name="invalid_phone_error">Please enter valid phone number</string>
+	<string name="invalid_email_error">Please enter valid email</string>
 
 	<!-- NL Signup-->
 	<string name="nl_signup">Signup</string>

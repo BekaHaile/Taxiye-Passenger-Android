@@ -653,7 +653,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     public void showBottomBar(boolean flag) {
-        if(flag)
+        if(flag && (getFeedbackFragment() == null || !getFeedbackFragment().isVisible()))
             relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
         else
             relativeLayoutCheckoutBar.setVisibility(View.GONE);
