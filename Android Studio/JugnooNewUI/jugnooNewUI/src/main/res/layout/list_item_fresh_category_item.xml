@@ -73,24 +73,26 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="visible"
+                android:layout_marginTop="10px"
                 >
 
                 <TextView
                     android:id="@+id/textViewItemUnit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20px"
                     android:singleLine="true"
                     android:text="500gm"
                     android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_28"/>
+                    android:textSize="@dimen/text_size_28"
+                    android:layout_marginRight="10px"
+
+                    />
 
                 <ImageView
                     android:id="@+id/imageViewMoreInfoSeprator"
                     android:layout_width="2px"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10px"
-                    android:layout_marginTop="20px"
+                    android:layout_marginRight="10px"
                     android:src="@color/text_color_light"
                     android:tag="mwar"/>
 
@@ -98,8 +100,6 @@
                     android:id="@+id/textViewMoreInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
-                    android:layout_marginTop="20px"
                     android:maxLines="2"
                     android:text="@string/more_info"
                     android:textColor="@color/theme_color"

@@ -603,7 +603,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
     }
 
     private double getSubTotalAmount(HistoryResponse historyResponse){
-        double subTotal = 0;
+        Double subTotal = 0d;
         for(HistoryResponse.OrderItem orderItem : historyResponse.getData().get(0).getOrderItems()){
             subTotal = subTotal + orderItem.getItemAmount();
         }
@@ -664,7 +664,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             tvDeliveryToVal.setText(historyResponse.getData().get(0).getDeliveryAddress());
             try {
                 tvSubAmountVal.setText(activity.getString(R.string.rupees_value_format,
-                        Utils.getMoneyDecimalFormatWithoutFloat().format(getSubTotalAmount(historyResponse))));
+                        Utils.getMoneyDecimalFormat().format(getSubTotalAmount(historyResponse))));
             } catch (Exception e) {
                 e.printStackTrace();
             }
