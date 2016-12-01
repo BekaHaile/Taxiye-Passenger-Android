@@ -287,7 +287,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         textViewNoDeliverySlot.setTypeface(Fonts.mavenMedium(activity));
         textViewNoDeliverySlot.setVisibility(View.GONE);
 
-        int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
         if(type == AppConstant.ApplicationType.MENUS) {
             linearLayoutDeliverySlot.setVisibility(View.GONE);
         }
@@ -363,7 +362,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                 if(type == AppConstant.ApplicationType.MENUS && subTotalAmount < activity.getVendorOpened().getMinimumOrderAmount()) {
                     Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
                             Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getVendorOpened().getMinimumOrderAmount())));
@@ -377,14 +375,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         activity.getPaymentOption().getOrdinal(), activity.getSelectedPromoCoupon())){
                     activity.setSplInstr(editTextDeliveryInstructions.getText().toString().trim());
                     placeOrder();
-                    int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                    if(appType == AppConstant.ApplicationType.MEALS){
+                    if(type == AppConstant.ApplicationType.MEALS){
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
-                    } else if(appType == AppConstant.ApplicationType.GROCERY){
+                    } else if(type == AppConstant.ApplicationType.GROCERY){
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
-                    } else if(appType == AppConstant.ApplicationType.MENUS){
+                    } else if(type == AppConstant.ApplicationType.MENUS){
                         MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+activity.getPaymentOption(), null);
                         MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
                     } else{
@@ -791,7 +788,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             final int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
             boolean goAhead = true;
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
-                if (Data.userData.getPaytmBalance() < getTotalPriceWithDeliveryCharges()) {
+                if (Data.userData.getPaytmBalance() < payableAmount()) {
                     if (Data.userData.getPaytmBalance() < 0) {
                         DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
                     } else {
@@ -801,7 +798,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
             else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
-                if (Data.userData.getMobikwikBalance() < getTotalPriceWithDeliveryCharges()) {
+                if (Data.userData.getMobikwikBalance() < payableAmount()) {
                     if (Data.userData.getMobikwikBalance() < 0) {
                         DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.mobikwik_error_select_cash));
                     } else {
@@ -811,7 +808,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
             else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
-                if (Data.userData.getFreeChargeBalance() < getTotalPriceWithDeliveryCharges()) {
+                if (Data.userData.getFreeChargeBalance() < payableAmount()) {
                     if (Data.userData.getFreeChargeBalance() < 0) {
                         DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.freecharge_error_case_select_cash));
                     } else {
@@ -1219,15 +1216,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
-                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - Math.ceil(getTotalPriceWithDeliveryCharges())));
+                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - Math.ceil(payableAmount())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, R.drawable.ic_paytm_big);
             }
             else if (paymentOption == PaymentOption.MOBIKWIK && Data.userData.getMobikwikEnabled() == 1) {
-                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - Math.ceil(getTotalPriceWithDeliveryCharges())));
+                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - Math.ceil(payableAmount())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
             }
             else if (paymentOption == PaymentOption.FREECHARGE && Data.userData.getFreeChargeEnabled() == 1) {
-                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - Math.ceil(getTotalPriceWithDeliveryCharges())));
+                String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - Math.ceil(payableAmount())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, R.drawable.ic_freecharge_big);
             }
             else {
@@ -1249,7 +1246,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         (Data.userData.getPaytmEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(getTotalPriceWithDeliveryCharges()
+                        df.format(Math.ceil(payableAmount()
                                 - Data.userData.getPaytmBalance())));
             }
             else if (paymentOption == PaymentOption.MOBIKWIK) {
@@ -1257,7 +1254,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         (Data.userData.getMobikwikEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(getTotalPriceWithDeliveryCharges()
+                        df.format(Math.ceil(payableAmount()
                                 - Data.userData.getMobikwikBalance())));
             }
             else if (paymentOption == PaymentOption.FREECHARGE) {
@@ -1265,7 +1262,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         (Data.userData.getFreeChargeEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(getTotalPriceWithDeliveryCharges()
+                        df.format(Math.ceil(payableAmount()
                                 - Data.userData.getFreeChargeBalance())));
             }
             else {
@@ -1275,26 +1272,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private double getTotalPriceWithDeliveryCharges() {
-        try {
-            int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-            double totalAmount = activity.updateCartValuesGetTotalPrice().first;
-            double amountPayable = totalAmount;
-            amountPayable = amountPayable + activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, totalAmount);
-            if(promoAmount>0) {
-                amountPayable = amountPayable - promoAmount;
-            }
-            double paid = Math.min(amountPayable, Data.userData.getJugnooBalance());
-            amountPayable = amountPayable - paid;
-            if(amountPayable<0)
-                amountPayable = 0;
-            return amountPayable;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
         }
     }
 
