@@ -109,9 +109,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             public int compare(MenusResponse.Vendor lhs, MenusResponse.Vendor rhs) {
                 int point = 0;
                 if (activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY) {
-                    point = lhs.getPopularity() - rhs.getPopularity();
+                    point = rhs.getPopularity() - lhs.getPopularity();
                 } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE) {
-                    point = -(lhs.getDistance() - rhs.getDistance());
+                    point = -(rhs.getDistance() - lhs.getDistance());
                 } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE) {
                     point = lhs.getPriceRange() - rhs.getPriceRange();
                 }
