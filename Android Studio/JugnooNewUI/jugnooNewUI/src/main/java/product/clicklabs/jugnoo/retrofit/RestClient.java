@@ -95,6 +95,7 @@ public class RestClient {
     public static void clearRestClient(){
         API_SERVICES = null;
         FRESH_API_SERVICE = null;
+        CHAT_API_SERVICE = null;
     }
 
 
@@ -177,7 +178,7 @@ public class RestClient {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getChatServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+//                    .setLog(fooLog)
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();

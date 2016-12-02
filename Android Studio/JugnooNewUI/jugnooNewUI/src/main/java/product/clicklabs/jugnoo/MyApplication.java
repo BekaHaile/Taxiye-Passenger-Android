@@ -491,6 +491,7 @@ public class MyApplication extends Application{
 
 		RestClient.setupRestClient();
 		RestClient.setupFreshApiRestClient();
+		RestClient.setupChatApiRestClient();
 	}
 
 
