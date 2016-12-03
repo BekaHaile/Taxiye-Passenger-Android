@@ -261,13 +261,13 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 		if (freshDeliverySlotsDialog == null) {
 			setSortingList();
-			slots.get(Data.freshSort).setCheck(true);
-			activity.onSortEvent(new SortSelection(Data.freshSort));
+			slots.get(activity.freshSort).setCheck(true);
+			activity.onSortEvent(new SortSelection(activity.freshSort));
 			freshDeliverySlotsDialog = new FreshDeliverySlotsDialog(activity, slots,
 					new FreshDeliverySlotsDialog.FreshDeliverySortDialogCallback() {
 						@Override
 						public void onOkClicked(int position) {
-							Data.freshSort = position;
+							activity.freshSort = position;
 							activity.getBus().post(new SortSelection(position));
 						}
 					});

@@ -610,10 +610,9 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         return subTotal;
     }
 
-    private int getBilledAmount(HistoryResponse historyResponse){
-        int billedAmount = Integer.parseInt(Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderAmount() + historyResponse.getData().get(0).getJugnooDeducted()
-                + historyResponse.getData().get(0).getDiscount()));
-        return billedAmount;
+    private double getBilledAmount(HistoryResponse historyResponse){
+        return (historyResponse.getData().get(0).getOrderAmount() + historyResponse.getData().get(0).getJugnooDeducted()
+                + historyResponse.getData().get(0).getDiscount());
     }
 
     private void setStatusResponse(HistoryResponse historyResponse) {
@@ -738,9 +737,9 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 llFinalAmount.setVisibility(View.GONE);
             }
 
-            if(getBilledAmount(historyResponse) < historyResponse.getData().get(0).getOriginalOrderAmount().intValue()){
+            if(getBilledAmount(historyResponse) < historyResponse.getData().get(0).getOriginalOrderAmount()){
                 llRefund.setVisibility(View.VISIBLE);
-                tvBilledAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(getBilledAmount(historyResponse))));
+                tvBilledAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(getBilledAmount(historyResponse))));
                 tvRefundVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderRefundAmount().intValue())));
             } else{
                 llRefund.setVisibility(View.GONE);

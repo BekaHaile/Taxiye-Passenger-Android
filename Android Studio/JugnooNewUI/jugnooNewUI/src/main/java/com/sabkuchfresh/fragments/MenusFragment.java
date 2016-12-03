@@ -337,8 +337,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
                                     activity.setVendorOpened(vendor);
                                     activity.setProductsResponse(productsResponse);
-                                    if(Data.freshSort == -1) {
-                                        Data.freshSort = jObj.getInt(Constants.SORTED_BY);
+                                    if(activity.freshSort == -1) {
+                                        activity.freshSort = jObj.getInt(Constants.SORTED_BY);
                                     }
                                     activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
                                 } else {

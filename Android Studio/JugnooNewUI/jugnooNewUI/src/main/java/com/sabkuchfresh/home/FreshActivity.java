@@ -171,6 +171,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public boolean locationSearchShown = false;
     public boolean canOrder = false;
 
+    public int freshSort = -1;
+    public int mealSort = -1;
+
     public void openNotification() {
         menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
     }

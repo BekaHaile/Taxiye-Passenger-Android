@@ -67,8 +67,6 @@ public class Data {
 
 
 
-	public static int freshSort = -1;
-	public static int mealSort = -1;
 	public static Activity context = null;
 	
 	
@@ -256,6 +254,16 @@ public class Data {
 
 			Prefs.with(context).remove(Constants.SP_FRESH_CART);
 			Prefs.with(context).remove(Constants.SP_MEAL_CART);
+			Prefs.with(context).remove(Constants.SP_GROCERY_CART);
+			Prefs.with(context).remove(Constants.SP_MENUS_CART);
+			Prefs.with(context).remove(Constants.SP_FRESH_CHECKOUT_SAVE_DATA);
+			Prefs.with(context).remove(Constants.SP_MEALS_CHECKOUT_SAVE_DATA);
+			Prefs.with(context).remove(Constants.SP_GROCERY_CHECKOUT_SAVE_DATA);
+			Prefs.with(context).remove(Constants.SP_MENUS_CHECKOUT_SAVE_DATA);
+
+			Prefs.with(context).remove(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+
+
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_address_selected));
 
 

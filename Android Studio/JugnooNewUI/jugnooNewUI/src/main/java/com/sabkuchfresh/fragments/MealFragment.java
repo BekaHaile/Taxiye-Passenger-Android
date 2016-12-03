@@ -208,7 +208,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                         public void onOkClicked(int position) {
                             //setSelectedSlotToView();
 //                            activity.sortArray(position);
-                            Data.mealSort = position;
+                            activity.mealSort = position;
                             onSortEvent(position);
 //                            mBus.post(new SortSelection(position));
                         }
@@ -281,12 +281,12 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                 activity.setProductsResponse(productsResponse);
 
                                 setSortingList();
-                                if (Data.mealSort == -1) {
+                                if (activity.mealSort == -1) {
                                     slots.get(sortedBy).setCheck(true);
-                                    Data.mealSort = sortedBy;
+                                    activity.mealSort = sortedBy;
                                 } else {
-                                    slots.get(Data.mealSort).setCheck(true);
-                                    onSortEvent(Data.mealSort);
+                                    slots.get(activity.mealSort).setCheck(true);
+                                    onSortEvent(activity.mealSort);
                                 }
 
 

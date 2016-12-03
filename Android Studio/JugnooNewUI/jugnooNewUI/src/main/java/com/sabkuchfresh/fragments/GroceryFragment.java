@@ -355,13 +355,13 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 activity.setProductsResponse(productsResponse);
                                 setSortingList();
-                                if(Data.freshSort == -1) {
+                                if(activity.freshSort == -1) {
                                     int sortedBy = jObj.getInt(Constants.SORTED_BY);
-                                    Data.freshSort = sortedBy;
+									activity.freshSort = sortedBy;
                                     slots.get(sortedBy).setCheck(true);
                                 } else {
-                                    slots.get(Data.freshSort).setCheck(true);
-                                    activity.onSortEvent(new SortSelection(Data.freshSort));
+                                    slots.get(activity.freshSort).setCheck(true);
+                                    activity.onSortEvent(new SortSelection(activity.freshSort));
                                 }
 
 								if(activity.getProductsResponse() != null
@@ -485,7 +485,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                         public void onOkClicked(int position) {
                             //setSelectedSlotToView();
 //                            activity.sortArray(position);
-                            Data.freshSort = position;
+							activity.freshSort = position;
                             activity.getBus().post(new SortSelection(position));
                         }
                     });
