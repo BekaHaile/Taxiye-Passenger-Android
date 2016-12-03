@@ -154,6 +154,11 @@ public class FreshCartItemsFragment extends Fragment implements FlurryEventNames
 					public void minusNotDone(int position, SubItem subItem) {
 						activity.clearMealsCartIfNoMainMeal();
 					}
+
+					@Override
+					public boolean checkForAdd(int position, SubItem subItem) {
+						return true;
+					}
 				}, AppConstant.ListType.OTHER, FlurryEventNames.REVIEW_CART, currentGroupId);
 
 

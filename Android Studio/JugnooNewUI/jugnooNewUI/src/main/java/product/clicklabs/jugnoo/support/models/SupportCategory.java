@@ -5,6 +5,7 @@ package product.clicklabs.jugnoo.support.models;
  */
 public enum SupportCategory {
 
+	NOT_SURE(-1),
 	MAIN_MENU(1),
 
 	RIDE_MENU(2),
@@ -27,6 +28,13 @@ public enum SupportCategory {
 	GROCERY(14),
 	GROCERY_PENDING(15),
 	GROCERY_CANCELLED(16),
+
+	MENUS(17),
+	MENUS_PENDING(18),
+	MENUS_CANCELLED(19),
+
+	MENUS_ACCEPTED(20),
+	MENUS_CANCELLED_BY_RESTAURANT(21),
 
 	;
 

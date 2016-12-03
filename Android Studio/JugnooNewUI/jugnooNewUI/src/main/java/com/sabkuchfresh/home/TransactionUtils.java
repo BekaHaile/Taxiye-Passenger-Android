@@ -17,6 +17,9 @@ import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
 import com.sabkuchfresh.fragments.FreshPaymentFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.FreshSupportFragment;
+import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
+import com.sabkuchfresh.fragments.MenusFilterFragment;
+import com.sabkuchfresh.fragments.VendorMenuFragment;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -59,6 +62,45 @@ public class TransactionUtils {
 					.add(container.getId(), new FreshCheckoutMergedFragment(),
 							FreshCheckoutMergedFragment.class.getName())
 					.addToBackStack(FreshCheckoutMergedFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openVendorMenuFragment(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, VendorMenuFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+					.add(container.getId(), new VendorMenuFragment(),
+							VendorMenuFragment.class.getName())
+					.addToBackStack(VendorMenuFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openMenusFilterFragment(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, MenusFilterFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+					.add(container.getId(), new MenusFilterFragment(),
+							MenusFilterFragment.class.getName())
+					.addToBackStack(MenusFilterFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openMenusFilterCuisinesFragment(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, MenusFilterCuisinesFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+					.add(container.getId(), new MenusFilterCuisinesFragment(),
+							MenusFilterCuisinesFragment.class.getName())
+					.addToBackStack(MenusFilterCuisinesFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();

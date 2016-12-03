@@ -155,6 +155,7 @@
     <color name="theme_green_color">#5DC647</color>
     <color name="theme_red_color">#F54646</color>
     <color name="text_color_light">#A4A4A4</color>
+    <color name="text_color_light_less">#9d9da3</color>
     <color name="white_alpha_33">#33FFFFFF</color>
     <color name="sliding_bottom_bg_color">#FAFBFC</color>
     <color name="text_color_hint">#BCBCBC</color>
@@ -222,6 +223,8 @@
 
     <color name="stroke_light_grey_alpha">#33979797</color>
     <color name="order_history_status_color">#1fbd2a</color>
+
+    <color name="green_rupee">#1fbd2a</color>
 
 
 </resources>

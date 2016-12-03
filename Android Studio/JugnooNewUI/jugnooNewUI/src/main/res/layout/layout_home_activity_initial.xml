@@ -205,12 +205,13 @@
                 android:layout_width="121px"
                 android:layout_height="117px"
                 android:layout_alignParentRight="true"
-                android:contentDescription="@string/my_location"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="30px"
                 android:background="@drawable/mylocation_btn_selector"
                 android:tag="mwar"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:contentDescription="@string/move_to_your_location"
+                />
 
 
             <ImageView
@@ -218,8 +219,8 @@
                 android:layout_width="187px"
                 android:layout_height="187px"
                 android:layout_centerHorizontal="true"
-                android:contentDescription="@string/request_ride"
                 android:src="@drawable/ic_auto_request_selector"
+                android:contentDescription="@string/request_a_ride"
                 android:tag="mwar" />
 
             <ImageView

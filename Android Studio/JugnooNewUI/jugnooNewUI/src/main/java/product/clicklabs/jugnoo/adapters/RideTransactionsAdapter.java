@@ -129,7 +129,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             } else if (orderHistory.getProductType() == ProductType.FRESH.getOrdinal()
                     || orderHistory.getProductType() == ProductType.MEALS.getOrdinal()
-                    || orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()) {
+                    || orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()
+                    || orderHistory.getProductType() == ProductType.MENUS.getOrdinal()) {
                 holder.textViewStatus.setText(R.string.status_colon);
                 holder.textViewStatusValue.setText(orderHistory.getOrderStatus());
                 try{
@@ -142,7 +143,12 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewFrom.setText(R.string.address_colon);
                 holder.textViewFromValue.setText(orderHistory.getDeliveryAddress());
                 holder.textViewDetails.setText(R.string.details_colon);
-                holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+                if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
+                    holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getOrderTime())));
+                } else {
+                    holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+                }
+
                 holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(orderHistory.getOrderAmount())));
                 if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_history_fresh);
@@ -150,6 +156,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.imageViewProductType.setImageResource(R.drawable.ic_history_meals);
                 } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_history_grocery);
+                } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()) {
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_history_menus);
                 }
                 holder.relativeLayoutTo.setVisibility(View.GONE);
             }

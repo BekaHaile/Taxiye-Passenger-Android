@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -82,6 +83,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<SubItem> mealsData = new ArrayList<>();
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
+    private boolean resumed = false;
 
     public MealFragment() {
     }
@@ -133,7 +135,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         setSortingList();
 
-        getAllProducts(true);
+        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
 
         try {
             if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
@@ -154,10 +156,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     @Override
     public void onResume() {
         super.onResume();
-        if(!isHidden()) {
-            getAllProducts(activity.isRefreshCart());
+        if(!isHidden() && resumed) {
+            activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
             activity.setRefreshCart(false);
         }
+        resumed = true;
     }
 
     @Override
@@ -168,7 +171,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
             if(activity.isRefreshCart()){
-                getAllProducts(true);
+                getAllProducts(true, activity.getSelectedLatLng());
             }
             activity.setRefreshCart(false);
         }
@@ -236,10 +239,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
     @Override
     public void onRefresh() {
-        getAllProducts(false);
+        getAllProducts(false, activity.getSelectedLatLng());
     }
 
-    public void getAllProducts(final boolean loader) {
+    public void getAllProducts(final boolean loader, LatLng latLng) {
         try {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
                 ProgressDialog progressDialog = null;
@@ -248,8 +251,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+                params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
                 params.put(Constants.STORE_ID, "" + 2);
                 params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
                 params.put(Constants.INTERATED, "1");
@@ -300,14 +303,14 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                 mealAdapter.setList(mealsData);
                                 recyclerViewCategoryItems.smoothScrollToPosition(0);
 
-                                if(mealsData.size()>0) {
+                                if(mealsData.size()+recentOrder.size()>0) {
                                     noMealsView.setVisibility(View.GONE);
                                     mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                    activity.hideBottomBar(true);
+                                    activity.showBottomBar(true);
                                 } else {
                                     noMealsView.setVisibility(View.VISIBLE);
                                     //mSwipeRefreshLayout.setVisibility(View.GONE);
-                                    activity.hideBottomBar(false);
+                                    activity.showBottomBar(false);
                                 }
 
                                 if (activity.getProductsResponse() != null
@@ -329,11 +332,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                         if(!isHidden()) {
-                            activity.hideBottomBar(true);
+                            activity.showBottomBar(true);
                         } else {
                             Fragment fragment = activity.getTopFragment();
                             if(fragment != null && fragment instanceof MealFragment) {
-                                activity.hideBottomBar(false);
+                                activity.showBottomBar(false);
                             }
                         }
                     }
@@ -365,7 +368,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
     private void retryDialog(DialogErrorType dialogErrorType) {
         noFreshsView.setVisibility(View.VISIBLE);
-        activity.hideBottomBar(false);
+        activity.showBottomBar(false);
         mealsData.clear();
         mealAdapter.setList(mealsData);
 
@@ -374,7 +377,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        getAllProducts(true);
+                        getAllProducts(true, activity.getSelectedLatLng());
                     }
 
                     @Override

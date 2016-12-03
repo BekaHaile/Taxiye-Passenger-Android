@@ -768,9 +768,9 @@ public class AddToAddressBookFragment extends Fragment {
             }
 
             if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
-                label = Constants.TYPE_HOME;
+                label = Utils.firstCharCapital(Constants.TYPE_HOME);
             } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
-                label = Constants.TYPE_WORK;
+                label = Utils.firstCharCapital(Constants.TYPE_WORK);
             } else {
                 label = editTextLabel.getText().toString().trim();
             }

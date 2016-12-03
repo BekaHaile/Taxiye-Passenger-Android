@@ -47,6 +47,7 @@ public interface Constants {
 	String SP_FRESH_CART= "fresh_cart";
 	String SP_MEAL_CART= "meal_cart";
 	String SP_GROCERY_CART= "grocery_cart";
+	String SP_MENUS_CART= "menus_cart";
 	String KEY_CATEGORY_POSITION = "category_position";
 
 
@@ -433,6 +434,7 @@ public interface Constants {
 	String KEY_FRESH = "fresh";
 	String KEY_MEALS = "meals";
 	String KEY_GROCERY = "grocery";
+	String KEY_MENUS = "menus";
 
 	String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
 	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
@@ -450,6 +452,7 @@ public interface Constants {
 	String KEY_MEALS_ENABLED = "meals_enabled";
 	String KEY_FRESH_ENABLED = "fresh_enabled";
 	String KEY_GROCERY_ENABLED = "grocery_enabled";
+	String KEY_MENUS_ENABLED = "menus_enabled";
 	String KEY_DELIVERY_ENABLED = "delivery_enabled";
 	String KEY_ORDER_HISTORY = "order_history";
 	String INTENT_KEY_FROM_BAD = "FromBad";
@@ -532,8 +535,15 @@ public interface Constants {
 	String SP_FRESH_CHECKOUT_SAVE_DATA = "sp_fresh_checkout_save_data";
 	String SP_MEALS_CHECKOUT_SAVE_DATA = "sp_meals_checkout_save_data";
 	String SP_GROCERY_CHECKOUT_SAVE_DATA = "sp_grocery_checkout_save_data";
+	String SP_MENUS_CHECKOUT_SAVE_DATA = "sp_menus_checkout_save_data";
 
 	String KEY_VALID_STOCK_COUNT = "valid_stock_count";
 	String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
 	String KEY_CHAT_COUNT = "chat_count";
+
+	String KEY_RESTAURANT_ID = "restaurant_id";
+	String KEY_RESTAURANT_NAME = "restaurant_name";
+
+	String KEY_ITEM_ID = "item_id";
+	String SP_FRESH_LAST_ADDRESS_OBJ = "sp_fresh_last_address_obj";
 }

@@ -382,6 +382,7 @@
 	<string name="nl_login_email_empty_error">Please enter email or phone number</string>
 	<string name="nl_login_empty_password_error">Please enter password</string>
 	<string name="invalid_phone_error">Please enter valid phone number</string>
+	<string name="invalid_email_error">Please enter valid email</string>
 
 	<!-- NL Signup-->
 	<string name="nl_signup">Signup</string>
@@ -889,6 +890,7 @@
 	<string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
 	<string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith Jugnoo Meals!</string>
 	<string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith Jugnoo Grocery!</string>
+	<string name="thank_you_for_placing_order_menus">Thank you for placing your order\nwith Jugnoo Menus!</string>
 	<string name="your_order_id">Your Order ID:</string>
 	<string name="will_be_delivered_by">will be delivered by</string>
 	<string name="your_cart_is_empty">Your cart is empty</string>
@@ -1221,5 +1223,43 @@
 	<string name="chat_with_driver">chat with driver</string>
 	<string name="bad_feedback">bad feedback</string>
 	<string name="great_feedback">great feedback</string>
+	<string name="menus">Menus</string>
+	<string name="search_dot">Search...</string>
+	<string name="closed">Closed</string>
+	<string name="location">Location</string>
+	<string name="vendor_colon">Vendor:</string>
+	<string name="mins_format">%s mins</string>
+	<string name="opens_at_format">Opens at %s</string>
+	<string name="delivered_from_colon">Delivered from:</string>
+	<string name="oh_snap">Oh snap!</string>
+	<string name="nothing_found_near_you">Nothing found near you\ntry to search with a different location.</string>
+	<string name="sort_by">Sort by</string>
+	<string name="popularity">Popularity</string>
+	<string name="price">Price</string>
+	<string name="cuisines">Cuisines</string>
+	<string name="minimum_order">Minimum order</string>
+	<string name="less_than_150"><![CDATA[<Rs. 150]]></string>
+	<string name="less_than_250"><![CDATA[<Rs. 250]]></string>
+	<string name="less_than_500"><![CDATA[<Rs. 500]]></string>
+	<string name="delivery_time_wo_colon">Delivery time</string>
+	<string name="min_30">30 Min</string>
+	<string name="min_45">45 Min</string>
+	<string name="min_60">60 Min</string>
+	<string name="filters">Filters</string>
+	<string name="reset">Reset</string>
+	<string name="bullet">\u2022</string>
+	<string name="select_cuisines">Select Cuisines</string>
+	<string name="search_a_cuisine">Search a cuisine</string>
+	<string name="more_info">More info</string>
+	<string name="previous_vendor_cart_message_format">You have added some items in cart from %s.\nAre you sure you want to clear the cart?</string>
+	<string name="minimum_order_amount_is_format">Minimum order amount is \u20B9%s</string>
+	<string name="request_a_ride">Request a ride</string>
+	<string name="move_to_your_location">Move to your location</string>
+	<string name="no_cuisine_found">No cuisine found</string>
+	<string name="no_menus_available">No menus available</string>
+	<string name="service_tax">Service Tax</string>
+	<string name="vat">VAT</string>
+	<string name="packaging_charges">Packaging Charges</string>
+
 
 </resources>

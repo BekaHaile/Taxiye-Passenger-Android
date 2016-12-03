@@ -188,4 +188,21 @@
     </style>
 
 
+
+    <style name="LabelTextView" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">@dimen/label_title_size</item>
+    </style>
+
+    <style name="CrossImageView">
+        <item name="android:paddingLeft">@dimen/padding_icon_cross</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:src">@drawable/cross</item>
+    </style>
+
+
 </resources>

@@ -190,7 +190,7 @@ public class HistoryResponse {
         private String orderTime;
         @SerializedName("cancellable")
         @Expose
-        private Integer cancellable;
+        private Integer cancellable = 0;
         @SerializedName("can_reorder")
         @Expose
         private Integer canReorder;
@@ -234,6 +234,29 @@ public class HistoryResponse {
         @SerializedName("delivery_address_type")
         @Expose
         private String deliveryAddressType;
+
+
+        @SerializedName("restaurant_id")
+        @Expose
+        private Integer restaurantId;
+        @SerializedName("restaurant_name")
+        @Expose
+        private String restaurantName;
+        @SerializedName("restaurant_address")
+        @Expose
+        private String restaurantAddress;
+        @SerializedName("restaurant_phone_no")
+        @Expose
+        private String restaurantPhoneNo;
+        @SerializedName("service_tax")
+        @Expose
+        private Double serviceTax;
+        @SerializedName("value_added_tax")
+        @Expose
+        private Double valueAddedTax;
+        @SerializedName("packing_charges")
+        @Expose
+        private Double packingCharges;
 
         /**
          * @return The pickupAddress
@@ -725,7 +748,11 @@ public class HistoryResponse {
          * @return The cancellable
          */
         public Integer getCancellable() {
-            return cancellable;
+            if(cancellable != null){
+                return cancellable;
+            } else {
+                return 0;
+            }
         }
 
         /**
@@ -739,7 +766,11 @@ public class HistoryResponse {
          * @return The canReorder
          */
         public Integer getCanReorder() {
-            return canReorder;
+            if(canReorder != null){
+                return canReorder;
+            } else {
+                return 0;
+            }
         }
 
         /**
@@ -808,7 +839,11 @@ public class HistoryResponse {
         }
 
         public Integer getSupportCategory() {
-            return supportCategory;
+            if(supportCategory != null) {
+                return supportCategory;
+            } else {
+                return 0;
+            }
         }
 
         public void setSupportCategory(Integer supportCategory) {
@@ -877,6 +912,74 @@ public class HistoryResponse {
 
         public void setDeliveryAddressType(String deliveryAddressType) {
             this.deliveryAddressType = deliveryAddressType;
+        }
+
+        public Integer getRestaurantId() {
+            return restaurantId;
+        }
+
+        public void setRestaurantId(Integer restaurantId) {
+            this.restaurantId = restaurantId;
+        }
+
+        public String getRestaurantName() {
+            return restaurantName;
+        }
+
+        public void setRestaurantName(String restaurantName) {
+            this.restaurantName = restaurantName;
+        }
+
+        public String getRestaurantAddress() {
+            return restaurantAddress;
+        }
+
+        public void setRestaurantAddress(String restaurantAddress) {
+            this.restaurantAddress = restaurantAddress;
+        }
+
+        public String getRestaurantPhoneNo() {
+            return restaurantPhoneNo;
+        }
+
+        public void setRestaurantPhoneNo(String restaurantPhoneNo) {
+            this.restaurantPhoneNo = restaurantPhoneNo;
+        }
+
+        public Double getServiceTax() {
+            if(serviceTax != null){
+                return serviceTax;
+            } else {
+                return 0d;
+            }
+        }
+
+        public void setServiceTax(Double serviceTax) {
+            this.serviceTax = serviceTax;
+        }
+
+        public Double getValueAddedTax() {
+            if(valueAddedTax != null){
+                return valueAddedTax;
+            } else {
+                return 0d;
+            }
+        }
+
+        public void setValueAddedTax(Double valueAddedTax) {
+            this.valueAddedTax = valueAddedTax;
+        }
+
+        public Double getPackingCharges() {
+            if(packingCharges != null){
+                return packingCharges;
+            } else {
+                return 0d;
+            }
+        }
+
+        public void setPackingCharges(Double packingCharges) {
+            this.packingCharges = packingCharges;
         }
     }
 
@@ -990,7 +1093,11 @@ public class HistoryResponse {
         }
 
         public Double getUnitAmount() {
-            return unitAmount;
+            if(unitAmount != null){
+                return unitAmount;
+            } else {
+                return 0.0;
+            }
         }
 
         public void setUnitAmount(Double unitAmount) {

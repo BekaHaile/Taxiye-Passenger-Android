@@ -22,6 +22,9 @@ public class ShowPanelResponse {
 	@SerializedName("fresh_meals_data")
 	@Expose
 	private HistoryResponse.Datum datum;
+	@SerializedName("menus_data")
+	@Expose
+	private HistoryResponse.Datum menusDatum;
 
 
 	public SupportData getSupportData() {
@@ -38,6 +41,14 @@ public class ShowPanelResponse {
 
 	public void setDatum(HistoryResponse.Datum datum) {
 		this.datum = datum;
+	}
+
+	public HistoryResponse.Datum getMenusDatum() {
+		return menusDatum;
+	}
+
+	public void setMenusDatum(HistoryResponse.Datum menusDatum) {
+		this.menusDatum = menusDatum;
 	}
 
 
@@ -90,6 +101,21 @@ public class ShowPanelResponse {
 		@SerializedName("16")
 		@Expose
 		private List<Item> menu16 = new ArrayList<Item>();
+		@SerializedName("17")
+		@Expose
+		private List<Item> menu17 = new ArrayList<Item>();
+		@SerializedName("18")
+		@Expose
+		private List<Item> menu18 = new ArrayList<Item>();
+		@SerializedName("19")
+		@Expose
+		private List<Item> menu19 = new ArrayList<Item>();
+		@SerializedName("20")
+		@Expose
+		private List<Item> menu20 = new ArrayList<Item>();
+		@SerializedName("21")
+		@Expose
+		private List<Item> menu21 = new ArrayList<Item>();
 
 		public List<Item> getMenu1() {
 			return menu1;
@@ -217,6 +243,46 @@ public class ShowPanelResponse {
 
 		public void setMenu16(List<Item> menu16) {
 			this.menu16 = menu16;
+		}
+
+		public List<Item> getMenu17() {
+			return menu17;
+		}
+
+		public void setMenu17(List<Item> menu17) {
+			this.menu17 = menu17;
+		}
+
+		public List<Item> getMenu18() {
+			return menu18;
+		}
+
+		public void setMenu18(List<Item> menu18) {
+			this.menu18 = menu18;
+		}
+
+		public List<Item> getMenu19() {
+			return menu19;
+		}
+
+		public void setMenu19(List<Item> menu19) {
+			this.menu19 = menu19;
+		}
+
+		public List<Item> getMenu20() {
+			return menu20;
+		}
+
+		public void setMenu20(List<Item> menu20) {
+			this.menu20 = menu20;
+		}
+
+		public List<Item> getMenu21() {
+			return menu21;
+		}
+
+		public void setMenu21(List<Item> menu21) {
+			this.menu21 = menu21;
 		}
 	}
 

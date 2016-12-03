@@ -375,6 +375,9 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                         } else if ("".equalsIgnoreCase(phoneNoChanged)) {
                             editTextPhone.requestFocus();
                             editTextPhone.setError(getResources().getString(R.string.phone_empty_error));
+                        } else if (!Utils.isEmailValid(emailChanged)) {
+                            editTextEmail.requestFocus();
+                            editTextEmail.setError(getResources().getString(R.string.invalid_email_error));
                         } else if (!Utils.validPhoneNumber(phoneNoChanged)) {
                             editTextPhone.requestFocus();
                             editTextPhone.setError(getResources().getString(R.string.invalid_phone_error));

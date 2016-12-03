@@ -61,9 +61,14 @@ public class DeepLinkAction {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.GROCERY.getTag());
 				}
 			}
-			else if(AppLinkIndex.CHAT_PAGE.getOrdinal() == Data.deepLinkIndex){
-				if(Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
+			else if(AppLinkIndex.CHAT_PAGE.getOrdinal() == Data.deepLinkIndex) {
+				if (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
 					menuBar.openChat();
+				}
+			}
+			else if(AppLinkIndex.MENUS_PAGE.getOrdinal() == Data.deepLinkIndex){
+				if(Data.userData.getMenusEnabled() == 1) {
+					menuBar.menuAdapter.onClickAction(MenuInfoTags.MENUS.getTag());
 				}
 			}
 

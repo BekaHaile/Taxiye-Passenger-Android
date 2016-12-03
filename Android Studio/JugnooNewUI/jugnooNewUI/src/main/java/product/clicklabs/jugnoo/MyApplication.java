@@ -480,8 +480,10 @@ public class MyApplication extends Application{
 			configModeToSet = ConfigMode.CUSTOM;
 		}
 		String freshServerUrlToSet = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
+		String menusServerUrlToSet = Prefs.with(context).getString(SPLabels.MENUS_SERVER_SELECTED, Config.getMenusDefaultServerUrl());
 
-		if(configModeToSet != Config.getConfigMode() || !Config.getFreshServerUrl().equalsIgnoreCase(freshServerUrlToSet)){
+		if(configModeToSet != Config.getConfigMode() || !Config.getFreshServerUrl().equalsIgnoreCase(freshServerUrlToSet)
+				|| !Config.getMenusServerUrl().equalsIgnoreCase(menusServerUrlToSet)){
 			RestClient.clearRestClient();
 		}
 		Config.setConfigMode(configModeToSet);
@@ -492,6 +494,7 @@ public class MyApplication extends Application{
 		RestClient.setupRestClient();
 		RestClient.setupFreshApiRestClient();
 		RestClient.setupChatApiRestClient();
+		RestClient.setupMenusApiRestClient();
 	}
 
 

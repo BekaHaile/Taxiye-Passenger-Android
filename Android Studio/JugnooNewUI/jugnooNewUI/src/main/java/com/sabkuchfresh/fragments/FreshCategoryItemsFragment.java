@@ -25,8 +25,10 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 @SuppressLint("ValidFragment")
@@ -92,7 +94,13 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
                 mSwipeRefreshLayout.setColorSchemeResources(R.color.white);
                 mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
                 mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
-                mSwipeRefreshLayout.setEnabled(true);
+
+				int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+				if(type == AppConstant.ApplicationType.MENUS) {
+					mSwipeRefreshLayout.setEnabled(false);
+				} else {
+					mSwipeRefreshLayout.setEnabled(true);
+				}
 
 				freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity,
 						(ArrayList<SubItem>) activity.getProductsResponse().getCategories().get(position).getSubItems(),
@@ -121,6 +129,11 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 
 							@Override
 							public void minusNotDone(int position, SubItem subItem) {
+							}
+
+							@Override
+							public boolean checkForAdd(int position, SubItem subItem) {
+								return activity.checkForAdd(position, subItem);
 							}
 						} ,AppConstant.ListType.HOME, FlurryEventNames.HOME_SCREEN, 1);
 				recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);

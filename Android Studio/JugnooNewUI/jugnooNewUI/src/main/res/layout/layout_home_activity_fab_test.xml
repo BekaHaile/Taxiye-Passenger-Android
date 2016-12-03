@@ -46,6 +46,21 @@
             fab:fab_label="Delivery" />
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
+            android:id="@+id/fabMenusTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_fab_menus"
+            fab:fab_size="normal"
+            android:tag="DontTouchMe"
+            fab:fab_shadowXOffset="1dp"
+            fab:fab_shadowYOffset="2dp"
+            fab:fab_shadowColor="@color/leaderboard_activity_text_color"
+            fab:fab_colorNormal="@color/white"
+            fab:fab_colorPressed="@color/grey_light"
+            fab:fab_colorRipple="@color/grey_light_alpha"
+            fab:fab_label="@string/menus" />
+
+        <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabGroceryTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

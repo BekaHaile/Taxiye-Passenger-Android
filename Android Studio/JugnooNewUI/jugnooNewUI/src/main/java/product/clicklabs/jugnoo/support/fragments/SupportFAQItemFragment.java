@@ -67,7 +67,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	private View rootView;
     private FragmentActivity activity;
 
-	private int engagementId, orderId;
+	private int engagementId, orderId, productType;
 	private String parentName, phoneNumber, rideDate, orderDate, supportNumber;
 	private ShowPanelResponse.Item item;
 
@@ -88,7 +88,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
     }
 
 	public SupportFAQItemFragment(int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber,
-								  int orderId, String orderDate, String supportNumber){
+								  int orderId, String orderDate, String supportNumber, int productType){
 		this.engagementId = engagementId;
 		this.parentName = parentName;
 		this.item = item;
@@ -97,7 +97,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		this.orderId = orderId;
 		this.orderDate = orderDate;
 		this.supportNumber = supportNumber;
-
+		this.productType = productType;
 	}
 
     @Override
@@ -286,6 +286,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			} else if(orderId != -1){
 				params.put(Constants.KEY_ORDER_ID, ""+orderId);
 				params.put(Constants.KEY_ORDER_DATE, orderDate);
+				params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType));
 			}
 
 			RestClient.getApiServices().generateSupportTicket(params, new Callback<SettleUserDebt>() {

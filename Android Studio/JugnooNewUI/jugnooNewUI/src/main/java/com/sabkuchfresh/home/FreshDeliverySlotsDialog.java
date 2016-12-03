@@ -201,6 +201,8 @@ public class FreshDeliverySlotsDialog implements FlurryEventNames {
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_SORT+"_"+slot.name, null);
                     } else if(type == AppConstant.ApplicationType.GROCERY){
 						MyApplication.getInstance().logEvent(FirebaseEvents.G_SORT+"_"+slot.name, null);
+					} else if(type == AppConstant.ApplicationType.MENUS){
+						MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_SORT+"_"+slot.name, null);
 					} else{
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_SORT+"_"+slot.name, null);
                     }

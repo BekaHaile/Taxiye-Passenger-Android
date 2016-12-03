@@ -255,4 +255,14 @@ public class Slot {
 	public void setIsActiveSlot(Integer isActiveSlot) {
 		this.isActiveSlot = isActiveSlot;
 	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof Slot){
+			return ((Slot)o).deliverySlotId.equals(deliverySlotId);
+		} else {
+			return false;
+		}
+	}
 }

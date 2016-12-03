@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -138,6 +139,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onClick(View v) {
                             Intent intent = new Intent(activity, RideTransactionsActivity.class);
                             intent.putExtra(Constants.KEY_ORDER_ID, recentOrder.getOrderId());
+                            intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
                             activity.startActivity(intent);
                             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                             FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.ORDER_STATUS);
@@ -184,9 +186,9 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 });
 
                 if (subItem.getIsVeg() == 1) {
-                    mHolder.foodType.setBackgroundResource(R.drawable.veg);
+                    mHolder.foodType.setImageResource(R.drawable.veg);
                 } else {
-                    mHolder.foodType.setBackgroundResource(R.drawable.nonveg);
+                    mHolder.foodType.setImageResource(R.drawable.nonveg);
                 }
 
                 mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
@@ -415,16 +417,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if(listType == AppConstant.ListType.HOME){
-            if(recentOrders != null && recentOrders.size() > 0){
-                return subItems == null ? 0 : subItems.size() + recentOrders.size() + 1;
-            } else {
-                return subItems == null ? 0 : subItems.size() + 1;
-            }
-        }
-
-        else
+        if (listType == AppConstant.ListType.HOME) {
+            int recentOrdersSize = recentOrders == null ? 0 : recentOrders.size();
+            int subItemsSize = subItems == null ? 0 : subItems.size();
+            return ((recentOrdersSize + subItemsSize) > 0) ? (recentOrdersSize + subItemsSize + 1) : 0;
+        } else {
             return subItems == null ? 0 : subItems.size();
+        }
     }
 
 //    @Override

@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -88,23 +89,22 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     private ArrayList<SubItem> freshData = new ArrayList<>();
     public FreshFragment(){}
-    private boolean loader = true;
+    private boolean loader = true, resumed = false;
     protected Bus mBus;
     PushDialog pushDialog;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mBus.register(this);
-    }
 
-    @Override
-    public void onStop() {
+	@Override
+	public void onStart() {
+		mBus.register(this);
+		super.onStart();
+	}
+
+	@Override
+	public void onStop() {
+		mBus.unregister(this);
 		super.onStop();
-        mBus.unregister(this);
-    }
-
-
+	}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -208,7 +208,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
         setSortingList();
 
-		getAllProducts(true);
+		activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 
         try {
             if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
@@ -243,10 +243,11 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(!isHidden()) {
-			getAllProducts(activity.isRefreshCart());
+		if(!isHidden() && resumed) {
+			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 			activity.setRefreshCart(false);
 		}
+		resumed = true;
 	}
 
 	private void showPromoFailedAtSignupDialog(){
@@ -299,13 +300,13 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
 			if(activity.isRefreshCart()){
-				getAllProducts(true);
+				getAllProducts(true, activity.getSelectedLatLng());
 			}
 			activity.setRefreshCart(false);
 		}
 	}
 
-	public void getAllProducts(final boolean loader) {
+	public void getAllProducts(final boolean loader, LatLng latLng) {
 		try {
             this.loader = loader;
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
@@ -315,8 +316,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
-				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+				params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
+				params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
                 params.put(Constants.IS_FATAFAT, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Config.getFreshClientId());
                 params.put(Constants.INTERATED, "1");
@@ -337,12 +338,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                 activity.getTopBar().below_shadow.setVisibility(View.GONE);
                                 mSwipeRefreshLayout.setVisibility(View.GONE);
                                 if(!isHidden()) {
-                                    activity.hideBottomBar(true);
+                                    activity.showBottomBar(true);
                                     activity.getTopBar().below_shadow.setVisibility(View.GONE);
                                 } else {
 									Fragment fragment = activity.getTopFragment();
 									if(fragment != null && fragment instanceof FreshFragment) {
-										activity.hideBottomBar(false);
+										activity.showBottomBar(false);
 										activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
 									}
                                 }
@@ -377,7 +378,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                     if(activity.updateCart) {
                                         activity.updateCart = false;
                                         activity.openCart();
-                                        activity.relativeLayoutCart.performClick();
+                                        activity.getRelativeLayoutCartNew().performClick();
                                     }
 									if(productsResponse.getShowMessage() != null
 											&& productsResponse.getShowMessage().equals(1)) {
@@ -394,7 +395,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                 noFreshsView.setVisibility(View.VISIBLE);
                                 imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
                                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                activity.hideBottomBar(false);
+                                activity.showBottomBar(false);
                                 mainLayout.setVisibility(View.GONE);
                             }
 						} catch (Exception exception) {
@@ -443,14 +444,14 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
         activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-        activity.hideBottomBar(false);
+        activity.showBottomBar(false);
         mainLayout.setVisibility(View.GONE);
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
 				new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
-						getAllProducts(loader);
+						getAllProducts(loader, activity.getSelectedLatLng());
 					}
 
 					@Override
@@ -518,7 +519,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     @Subscribe
     public void onSwipe(SwipeCheckout swipe) {
         if(swipe.flag == 0) {
-            getAllProducts(false);
+            getAllProducts(false, activity.getSelectedLatLng());
         }
     }
 
@@ -538,6 +539,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
     @Override
     public void onRefresh() {
-        getAllProducts(false);
+        getAllProducts(false, activity.getSelectedLatLng());
     }
+
 }

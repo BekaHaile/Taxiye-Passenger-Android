@@ -2,6 +2,7 @@ package com.sabkuchfresh.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.utils.AppConstant;
 
 /**
  * Created by shankar on 4/9/16.
@@ -14,6 +15,13 @@ public class DeliveryInfo {
 	@SerializedName("min_amount")
 	@Expose
 	private Double minAmount;
+
+	@SerializedName("delivery_charges_before_threshold")
+	@Expose
+	private Double deliveryChargesBeforeThreshold;
+	@SerializedName("minimum_order_amount")
+	@Expose
+	private Double minimumOrderAmount;
 
 	/**
 	 *
@@ -51,4 +59,32 @@ public class DeliveryInfo {
 		this.minAmount = minAmount;
 	}
 
+	public Double getDeliveryChargesBeforeThreshold() {
+		return deliveryChargesBeforeThreshold;
+	}
+
+	public void setDeliveryChargesBeforeThreshold(Double deliveryChargesBeforeThreshold) {
+		this.deliveryChargesBeforeThreshold = deliveryChargesBeforeThreshold;
+	}
+
+	public Double getMinimumOrderAmount() {
+		return minimumOrderAmount;
+	}
+
+	public void setMinimumOrderAmount(Double minimumOrderAmount) {
+		this.minimumOrderAmount = minimumOrderAmount;
+	}
+
+
+	public Double getApplicableDeliveryCharges(int type, double subTotalAmount){
+		double charges = 0;
+		if(type == AppConstant.ApplicationType.MENUS){
+			charges = getDeliveryChargesBeforeThreshold();
+		} else {
+			if(subTotalAmount < getMinAmount()) {
+				charges = getDeliveryCharges();
+			}
+		}
+		return charges;
+	}
 }

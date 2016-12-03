@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.datastructure.FreshData;
 import product.clicklabs.jugnoo.datastructure.GroceryData;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.MealsData;
+import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
@@ -210,6 +211,7 @@ public class JSONParser implements Constants {
         int freshEnabled = userData.optInt(KEY_FRESH_ENABLED, 0);
         int deliveryEnabled = userData.optInt(KEY_DELIVERY_ENABLED, 0);
         int groceryEnabled = userData.optInt(KEY_GROCERY_ENABLED, 0);
+        int menusEnabled = userData.optInt(KEY_MENUS_ENABLED, 0);
         String defaultClientId = userData.optString(KEY_DEFAULT_CLIENT_ID, Config.getAutosClientId());
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
@@ -227,7 +229,8 @@ public class JSONParser implements Constants {
                 cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
-                mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, inviteFriendButton, defaultClientId, integratedJugnooEnabled,
+                mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled,
+                inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled);
 
 
@@ -513,6 +516,79 @@ public class JSONParser implements Constants {
     }
 
 
+    public void parseMenusData(Context context, JSONObject jMenusData, LoginResponse.Menus menusData){
+        try{
+            String orderId = jMenusData.optString(KEY_FEEDBACK_ORDER_ID, "");
+            String question = jMenusData.optString(KEY_QUESTION, "");
+            int questionType = jMenusData.optInt(KEY_QUESTION_TYPE, 0);
+            int pendingFeedback = jMenusData.optInt(KEY_PENDING_FEEDBACK, 0);
+            double amount = jMenusData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
+            String feedbackDeliveryDate = jMenusData.optString(KEY_FEEDBACK_DATE, "");
+            int feedbackViewType = jMenusData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
+            int isFatafatEnabled = jMenusData.optInt(KEY_FATAFAT_ENABLED, 1);
+            String rideEndGoodFeedbackText = jMenusData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
+
+            PopupData popupData = null;
+            try {
+                if (jMenusData.has("popup_data")) {
+                    popupData = new PopupData();
+                    popupData.popup_id = jMenusData.getJSONObject("popup_data").optInt("popup_id", 0);
+                    popupData.title_text = jMenusData.getJSONObject("popup_data").optString("title_text", "");
+                    popupData.desc_text = jMenusData.getJSONObject("popup_data").optString("desc_text", "");
+                    popupData.image_url = jMenusData.getJSONObject("popup_data").optString("image_url", "");
+                    popupData.cancel_title = jMenusData.getJSONObject("popup_data").optString("cancel_title", "");
+                    popupData.ok_title = jMenusData.getJSONObject("popup_data").optString("ok_title", "OK");
+                    popupData.is_cancellable = jMenusData.getJSONObject("popup_data").optInt("is_cancellable", 1);
+                    popupData.deep_index = jMenusData.getJSONObject("popup_data").optInt("deep_index", 0);
+                    popupData.ext_url = jMenusData.getJSONObject("popup_data").optString("ext_url", "");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            ArrayList<Store> stores = new ArrayList<>();
+            Store store = null;
+            try {
+                if(jMenusData.has("stores")) {
+                    JSONArray storesArr = jMenusData.getJSONArray("stores");
+                    for(int i=0;i<storesArr.length();i++) {
+                        JSONObject jsonObject = storesArr.getJSONObject(i);
+                        store = new Store();
+                        store.setStoreId(jsonObject.optInt("store_id"));
+                        store.setTitle(jsonObject.optString("title"));
+                        store.setDescription(jsonObject.optString("description"));
+                        store.setImage(jsonObject.optString("image"));
+                        store.setTextColor(jsonObject.optString("text_color"));
+
+                        stores.add(store);
+
+                    }
+                }
+            } catch (Exception e){ e.printStackTrace(); }
+
+            Data.setMenusData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
+                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText));
+
+            try {
+                if(Data.getMenusData().getPromoCoupons() == null){
+                    Data.getMenusData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                } else{
+                    Data.getMenusData().getPromoCoupons().clear();
+                }
+                if(menusData.getPromotions() != null)
+                    Data.getMenusData().getPromoCoupons().addAll(menusData.getPromotions());
+                if(menusData.getCoupons() != null)
+                    Data.getMenusData().getPromoCoupons().addAll(menusData.getCoupons());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
     public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse,
                                             LoginVia loginVia) throws Exception {
 
@@ -524,12 +600,17 @@ public class JSONParser implements Constants {
         JSONObject jFreshObject = jObj.optJSONObject(KEY_FRESH);
         JSONObject jMealsObject = jObj.optJSONObject(KEY_MEALS);
         JSONObject jGroceryObject = jObj.optJSONObject(KEY_GROCERY);
+        JSONObject jMenusObject = jObj.optJSONObject(KEY_MENUS);
+        if(jMenusObject == null){
+            jMenusObject = new JSONObject(Constants.EMPTY_JSON_OBJECT);
+        }
 
         parseUserData(context, jUserDataObject, loginResponse.getUserData());
         parseAutoData(context, jAutosObject, loginResponse.getAutos());
         parseFreshData(context, jFreshObject, loginResponse.getFresh());
         parseMealsData(context, jMealsObject, loginResponse.getMeals());
         parseGroceryData(context, jGroceryObject, loginResponse.getGrocery());
+        parseMenusData(context, jMenusObject, loginResponse.getMenus());
         parseDeliveryData(loginResponse.getDelivery());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
@@ -547,6 +628,8 @@ public class JSONParser implements Constants {
         parseFeedbackReasonArrayList(loginResponse.getAutos());
 
         loginAnalyticEvents(context, loginVia);
+
+        Prefs.with(context).save(SP_FRESH_LAST_ADDRESS_OBJ, EMPTY_JSON_OBJECT);
 
         return resp;
     }
@@ -1528,6 +1611,9 @@ public class JSONParser implements Constants {
                 }
                 if(Data.getGroceryData() != null) {
                     Data.getGroceryData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
+                }
+                if(Data.getMenusData() != null) {
+                    Data.getMenusData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
                 }
             }
         } catch (Exception e) {

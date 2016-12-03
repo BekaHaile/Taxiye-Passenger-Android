@@ -41,6 +41,10 @@ public class TopBar implements FlurryEventNames {
 	public ImageView imageViewBack, imageViewDelete, imageViewNotification, imageViewShadow, imageViewSearchCross;//, imageViewSearch;
 	public EditText editTextDeliveryAddress;
 
+	public RelativeLayout relativeLayoutLocality;
+	public TextView textViewLocationValue, textViewReset;
+
+
 
 	public TopBar(Activity activity, DrawerLayout drawerLayout){
 		this.activity = activity;
@@ -71,6 +75,11 @@ public class TopBar implements FlurryEventNames {
 		imageViewSearchCross = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchCross);
 //		imageViewSearch = (ImageView)drawerLayout.findViewById(R.id.imageViewSearch);
 
+		relativeLayoutLocality = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutLocality);
+		((TextView)drawerLayout.findViewById(R.id.textViewLocation)).setTypeface(Fonts.mavenRegular(activity));
+		textViewLocationValue = (TextView) drawerLayout.findViewById(R.id.textViewLocationValue); textViewLocationValue.setTypeface(Fonts.mavenMedium(activity));
+		textViewReset = (TextView) drawerLayout.findViewById(R.id.textViewReset); textViewReset.setTypeface(Fonts.mavenMedium(activity));
+
 		//Top bar events
 		topRl.setOnClickListener(topBarOnClickListener);
 		imageViewMenu.setOnClickListener(topBarOnClickListener);
@@ -80,7 +89,11 @@ public class TopBar implements FlurryEventNames {
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				Utils.showToast(activity, Config.getFreshServerUrlName());
+				if(Data.AppType == com.sabkuchfresh.utils.AppConstant.ApplicationType.MENUS){
+					Utils.showToast(activity, Config.getMenusServerUrlName());
+				} else{
+					Utils.showToast(activity, Config.getFreshServerUrlName());
+				}
 				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				return false;
 			}

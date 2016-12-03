@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -87,7 +88,9 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     private ArrayList<SubItem> freshData = new ArrayList<>();
-    public GroceryFragment(){}
+	private boolean resumed = false;
+
+	public GroceryFragment(){}
     private boolean loader = true;
     protected Bus mBus;
     PushDialog pushDialog;
@@ -208,7 +211,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
         setSortingList();
 
-		getAllProducts(true);
+		activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
 
         try {
             if(Data.getGroceryData() != null && Data.getGroceryData().pendingFeedback == 1) {
@@ -245,10 +248,11 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(!isHidden()) {
-			getAllProducts(activity.isRefreshCart());
+		if(!isHidden() && resumed) {
+			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
 			activity.setRefreshCart(false);
 		}
+		resumed = true;
 	}
 
 	private void showPromoFailedAtSignupDialog(){
@@ -301,13 +305,13 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
 			if(activity.isRefreshCart()){
-				getAllProducts(true);
+				getAllProducts(true, activity.getSelectedLatLng());
 			}
 			activity.setRefreshCart(false);
 		}
 	}
 
-	public void getAllProducts(final boolean loader) {
+	public void getAllProducts(final boolean loader, LatLng latLng) {
 		try {
             this.loader = loader;
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
@@ -317,8 +321,8 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
-				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+				params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
+				params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
                 params.put(Constants.IS_FATAFAT, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Config.getGroceryClientId());
                 params.put(Constants.INTERATED, "1");
@@ -338,12 +342,12 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 noFreshsView.setVisibility(View.GONE);
                                 mSwipeRefreshLayout.setVisibility(View.GONE);
                                 if(!isHidden()) {
-                                    activity.hideBottomBar(true);
+                                    activity.showBottomBar(true);
                                     activity.getTopBar().below_shadow.setVisibility(View.GONE);
                                 } else {
 									Fragment fragment = activity.getTopFragment();
 									if(fragment != null && fragment instanceof GroceryFragment) {
-										activity.hideBottomBar(false);
+										activity.showBottomBar(false);
 										activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
 									}
                                 }
@@ -378,7 +382,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                     if(activity.updateCart) {
                                         activity.updateCart = false;
                                         activity.openCart();
-                                        activity.relativeLayoutCart.performClick();
+                                        activity.getRelativeLayoutCartNew().performClick();
                                     }
 									if(productsResponse.getShowMessage() != null
 											&& productsResponse.getShowMessage().equals(1)) {
@@ -394,7 +398,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 noFreshsView.setVisibility(View.VISIBLE);
                                 imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_grocery);
                                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                activity.hideBottomBar(false);
+                                activity.showBottomBar(false);
                                 mainLayout.setVisibility(View.GONE);
                             }
 						} catch (Exception exception) {
@@ -442,14 +446,14 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
         noFreshsView.setVisibility(View.VISIBLE);
         imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_grocery);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-        activity.hideBottomBar(false);
+        activity.showBottomBar(false);
         mainLayout.setVisibility(View.GONE);
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
 				new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
-						getAllProducts(loader);
+						getAllProducts(loader, activity.getSelectedLatLng());
 					}
 
 					@Override
@@ -517,7 +521,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     @Subscribe
     public void onSwipe(SwipeCheckout swipe) {
         if(swipe.flag == 0) {
-            getAllProducts(false);
+            getAllProducts(false, activity.getSelectedLatLng());
         }
     }
 
@@ -537,6 +541,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
     @Override
     public void onRefresh() {
-        getAllProducts(false);
+        getAllProducts(false, activity.getSelectedLatLng());
     }
 }

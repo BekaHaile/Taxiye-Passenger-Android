@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.datastructure.DeliveryData;
 import product.clicklabs.jugnoo.datastructure.FreshData;
 import product.clicklabs.jugnoo.datastructure.GroceryData;
 import product.clicklabs.jugnoo.datastructure.MealsData;
+import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
@@ -97,6 +98,7 @@ public class Data {
 	private static MealsData mealsData;
 	private static GroceryData groceryData;
 	private static DeliveryData DeliveryData;
+	private static MenusData menusData;
 
 	
 	public static LocationFetcher locationFetcher;
@@ -442,4 +444,11 @@ public class Data {
 		DeliveryData = deliveryData;
 	}
 
+	public static MenusData getMenusData() {
+		return menusData;
+	}
+
+	public static void setMenusData(MenusData menusData) {
+		Data.menusData = menusData;
+	}
 }

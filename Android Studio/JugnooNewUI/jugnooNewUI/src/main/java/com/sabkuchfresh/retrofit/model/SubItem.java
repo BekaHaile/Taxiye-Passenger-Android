@@ -368,7 +368,11 @@ public class SubItem {
      * The isVeg
      */
     public Integer getIsVeg() {
-        return isVeg;
+        if(isVeg == null){
+            return 1;
+        } else {
+            return isVeg;
+        }
     }
 
     /**

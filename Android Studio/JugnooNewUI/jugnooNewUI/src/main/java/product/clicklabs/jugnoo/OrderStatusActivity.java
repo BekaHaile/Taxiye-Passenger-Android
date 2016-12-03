@@ -14,6 +14,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,9 +73,9 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             tvDelveryPlace, tvDeliveryToVal, tvSubAmount, tvSubAmountVal, tvPaymentMethod, tvPaymentMethodCash, tvDeliveryCharges,
             tvDeliveryChargesVal, tvTotalAmount, tvTotalAmountVal, tvAmountPayable, tvAmountPayableVal, tvBilledAmount, tvBilledAmountVal,
             tvRefund, tvRefundVal;
-    private ImageView ivPaymentMethodVal, ivDeliveryPlace, ivOrderCompleted;
+    private ImageView ivPaymentMethodVal, ivDeliveryPlace, ivOrderCompleted, imageViewRestaurant, imageViewCallRestaurant;
     private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn;
-    private int orderId;
+    private int orderId, productType;
     private NonScrollListView listViewOrder;
     private OrderItemsAdapter orderItemsAdapter;
     private LinearLayout llFinalAmount, llDeliveryPlace, orderComplete, orderCancel, llRefund;
@@ -83,6 +87,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
     public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
     public View lineStatus1, lineStatus2, lineStatus3;
     private View rootView;
+    private ImageView ivTopShadow;
+    private LinearLayout llExtraCharges, llMain;
 
     @Nullable
     @Override
@@ -97,11 +103,13 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
         try {
             orderId = getArguments().getInt(Constants.KEY_ORDER_ID, 0);
+            productType = getArguments().getInt(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
             setFragTitle();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        llMain = (LinearLayout) rootView.findViewById(R.id.llMain);
+        llMain.setVisibility(View.GONE);
         tvOrderStatus = (TextView) rootView.findViewById(R.id.tvOrderStatus); tvOrderStatus.setTypeface(Fonts.mavenMedium(activity));
         tvOrderStatusVal = (TextView) rootView.findViewById(R.id.tvOrderStatusVal); tvOrderStatusVal.setTypeface(Fonts.mavenMedium(activity));
         tvOrderTime = (TextView) rootView.findViewById(R.id.tvOrderTime); tvOrderTime.setTypeface(Fonts.mavenMedium(activity));
@@ -138,6 +146,12 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         orderCancel = (LinearLayout) rootView.findViewById(R.id.order_cancel);
         ivOrderCompleted = (ImageView) rootView.findViewById(R.id.ivOrderCompleted);
         rlOrderStatus = (RelativeLayout) rootView.findViewById(R.id.rlOrderStatus);
+        imageViewRestaurant = (ImageView) rootView.findViewById(R.id.imageViewRestaurant);
+        imageViewRestaurant.setVisibility(View.GONE);
+        imageViewCallRestaurant = (ImageView) rootView.findViewById(R.id.imageViewCallRestaurant);
+        imageViewCallRestaurant.setVisibility(View.GONE);
+        llExtraCharges = (LinearLayout) rootView.findViewById(R.id.llExtraCharges);
+        llExtraCharges.setVisibility(View.GONE);
 
         // Order Status
         cvOrderStatus = (CardView) rootView.findViewById(R.id.cvOrderStatus);
@@ -152,6 +166,11 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         lineStatus1 = (View) rootView.findViewById(R.id.lineStatus1);
         lineStatus2 = (View) rootView.findViewById(R.id.lineStatus2);
         lineStatus3 = (View) rootView.findViewById(R.id.lineStatus3);
+        ivTopShadow = (ImageView) rootView.findViewById(R.id.ivTopShadow);
+
+        if(activity instanceof FreshActivity){
+            ivTopShadow.setVisibility(View.VISIBLE);
+        }
 
         buttonCancelOrder = (Button) rootView.findViewById(R.id.buttonCancelOrder);
         buttonCancelOrder.setTypeface(Fonts.mavenRegular(activity));
@@ -185,6 +204,15 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                             -1, -1, null, null, 0, false, 0, orderHistory);
                 } else{
                     activity.onBackPressed();
+                }
+            }
+        });
+
+        imageViewCallRestaurant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!TextUtils.isEmpty(orderHistory.getRestaurantPhoneNo())){
+                    Utils.openCallIntent(activity, orderHistory.getRestaurantPhoneNo());
                 }
             }
         });
@@ -274,11 +302,13 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 
                 HashMap<String, String> params = new HashMap<>();
-                params.put("access_token", Data.userData.accessToken);
-                params.put("order_id", "" + orderId);
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_ORDER_ID, "" + orderId);
+                params.put(Constants.KEY_PRODUCT_TYPE, "" + productType);
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.INTERATED, "1");
-                RestClient.getFreshApiService().orderHistory(params, new Callback<HistoryResponse>() {
+
+                Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
                     @Override
                     public void success(HistoryResponse historyResponse, Response response) {
                         String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -290,6 +320,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
+                                    llMain.setVisibility(View.VISIBLE);
                                     orderHistory = historyResponse.getData().get(0);
                                     subItemsOrders.clear();
                                     subItemsOrders.addAll(historyResponse.getData().get(0).getOrderItems());
@@ -297,12 +328,12 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
                                     setStatusResponse(historyResponse);
                                 } else {
-                                    //updateListData(message);
+                                    retryDialogOrderData(message, DialogErrorType.SERVER_ERROR);
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            //updateListData(Data.SERVER_ERROR_MSG);
+                            retryDialogOrderData("", DialogErrorType.SERVER_ERROR);
                         }
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -311,15 +342,58 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                     public void failure(RetrofitError error) {
                         Log.e("TAG", "getRecentRidesAPI error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
-                        //updateListData(Data.SERVER_NOT_RESOPNDING_MSG);
+                        retryDialogOrderData("", DialogErrorType.CONNECTION_LOST);
                     }
-                });
+                };
+
+                if(productType == ProductType.MENUS.getOrdinal()){
+                    RestClient.getMenusApiService().orderHistory(params, callback);
+                } else {
+                    RestClient.getFreshApiService().orderHistory(params, callback);
+                }
             }
             else {
-                //updateListData(Data.CHECK_INTERNET_MSG);
+                retryDialogOrderData("", DialogErrorType.NO_NET);
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void retryDialogOrderData(String message, DialogErrorType dialogErrorType) {
+        if(TextUtils.isEmpty(message)) {
+            DialogPopup.dialogNoInternet(activity,
+                    dialogErrorType,
+                    new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View view) {
+                            getOrderData(activity);
+                        }
+
+                        @Override
+                        public void neutralClick(View view) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View view) {
+                        }
+                    });
+        } else {
+            DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+                    activity.getString(R.string.retry), activity.getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getOrderData(activity);
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.onBackPressed();
+                        }
+                    }, false, false);
         }
     }
 
@@ -341,7 +415,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                     e.printStackTrace();
                 }
 
-                RestClient.getFreshApiService().cancelOrder(params, new Callback<OrderHistoryResponse>() {
+                Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
                     @Override
                     public void success(OrderHistoryResponse orderHistoryResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -362,7 +436,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
                                         Intent intent = new Intent(Data.LOCAL_BROADCAST);
                                         intent.putExtra("message", "Order cancelled, refresh inventory");
-                                        intent.putExtra("open_type", 3);
+                                        intent.putExtra("open_type", 10);
                                         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
 
                                         activity.onBackPressed();
@@ -391,7 +465,13 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                         DialogPopup.dismissLoadingDialog();
                         retryDialog(DialogErrorType.CONNECTION_LOST);
                     }
-                });
+                };
+
+                if(productType == ProductType.MENUS.getOrdinal()){
+                    RestClient.getMenusApiService().cancelOrder(params, callback);
+                } else {
+                    RestClient.getFreshApiService().cancelOrder(params, callback);
+                }
             } else {
                 retryDialog(DialogErrorType.NO_NET);
             }
@@ -497,7 +577,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         ivStatus0.setLayoutParams(layoutParams);
     }
 
-    private void addFinalAmountView(LinearLayout llFinalAmount, String fieldText, String fieldTextVal){
+    private void addFinalAmountView(LinearLayout llFinalAmount, String fieldText, double fieldTextVal, boolean negative){
         try {
             llFinalAmount.setVisibility(View.VISIBLE);
             LayoutInflater layoutInflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -508,7 +588,13 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
             tvDelChargesVal.setTypeface(Fonts.mavenMedium(activity));
             tvDelCharges.setText(fieldText);
-            tvDelChargesVal.setText("- " + String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Float.parseFloat(fieldTextVal))));
+            if(negative) {
+                tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                tvDelChargesVal.setTextColor(activity.getResources().getColor(R.color.order_status_green));
+            } else {
+                tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(fieldTextVal)));
+                tvDelChargesVal.setTextColor(activity.getResources().getColor(R.color.text_color));
+            }
             llFinalAmount.addView(view);
             ASSL.DoMagic(relative);
         } catch (Exception e) {
@@ -516,8 +602,11 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         }
     }
 
-    private int getSubTotalAmount(HistoryResponse historyResponse){
-        int subTotal = Integer.parseInt(Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOriginalOrderAmount() - historyResponse.getData().get(0).getDeliveryCharges()));
+    private double getSubTotalAmount(HistoryResponse historyResponse){
+        Double subTotal = 0d;
+        for(HistoryResponse.OrderItem orderItem : historyResponse.getData().get(0).getOrderItems()){
+            subTotal = subTotal + orderItem.getItemAmount();
+        }
         return subTotal;
     }
 
@@ -550,15 +639,32 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
             tvOrderTimeVal.setText(historyResponse.getData().get(0).getOrderTime());
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(historyResponse.getData().get(0).getOrderTime())));
-            if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
-                tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate()+" "+
-                        DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()).replace("AM", "").replace("PM", "") + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+
+            if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
+                tvDeliveryTime.setText(activity.getString(R.string.delivered_from_colon));
+
+                tvDeliveryTimeVal.setText("");
+                final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+                final SpannableStringBuilder sb = new SpannableStringBuilder("      "+orderHistory.getRestaurantName());
+                sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tvDeliveryTimeVal.append(sb);
+                tvDeliveryTimeVal.append("\n"+orderHistory.getRestaurantAddress());
+                imageViewRestaurant.setVisibility(View.VISIBLE);
+                imageViewCallRestaurant.setVisibility(TextUtils.isEmpty(orderHistory.getRestaurantPhoneNo()) ? View.GONE : View.VISIBLE);
             } else {
-                tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate());
+                if (orderHistory.getStartTime() != null && orderHistory.getEndTime() != null) {
+                    tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate() + " " +
+                            DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()).replace("AM", "").replace("PM", "") + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+                } else {
+                    tvDeliveryTimeVal.setText(historyResponse.getData().get(0).getExpectedDeliveryDate());
+                }
+                imageViewRestaurant.setVisibility(View.GONE);
+                imageViewCallRestaurant.setVisibility(View.GONE);
             }
             tvDeliveryToVal.setText(historyResponse.getData().get(0).getDeliveryAddress());
             try {
-                tvSubAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Integer.toString(getSubTotalAmount(historyResponse))));
+                tvSubAmountVal.setText(activity.getString(R.string.rupees_value_format,
+                        Utils.getMoneyDecimalFormat().format(getSubTotalAmount(historyResponse))));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -600,15 +706,25 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 tvDeliveryChargesVal.setTextColor(activity.getResources().getColor(R.color.order_status_green));
                 tvDeliveryChargesVal.setText(activity.getResources().getString(R.string.free));
             }
+            if((historyResponse.getData().get(0).getPackingCharges() != null) && (historyResponse.getData().get(0).getPackingCharges() > 0)){
+                addFinalAmountView(llExtraCharges, getResources().getString(R.string.packaging_charges), historyResponse.getData().get(0).getPackingCharges(), false);
+            }
+            if((historyResponse.getData().get(0).getServiceTax() != null) && (historyResponse.getData().get(0).getServiceTax() > 0)){
+                addFinalAmountView(llExtraCharges, getResources().getString(R.string.service_tax), historyResponse.getData().get(0).getServiceTax(), false);
+            }
+            if((historyResponse.getData().get(0).getValueAddedTax() != null) && (historyResponse.getData().get(0).getValueAddedTax() > 0)){
+                addFinalAmountView(llExtraCharges, getResources().getString(R.string.vat), historyResponse.getData().get(0).getValueAddedTax(), false);
+            }
 
-            tvTotalAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf((historyResponse.getData().get(0).getOriginalOrderAmount()).intValue())));
+
+            tvTotalAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOriginalOrderAmount())));
 
             if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)){
-                addFinalAmountView(llFinalAmount, getResources().getString(R.string.discount).toString(), historyResponse.getData().get(0).getDiscount().toString());
+                addFinalAmountView(llFinalAmount, getResources().getString(R.string.discount), historyResponse.getData().get(0).getDiscount(), true);
             }
 
             if((historyResponse.getData().get(0).getJugnooDeducted() != null) && (historyResponse.getData().get(0).getJugnooDeducted() != 0)){
-                addFinalAmountView(llFinalAmount, getResources().getString(R.string.jugnoo_cash).toString(), historyResponse.getData().get(0).getJugnooDeducted().toString());
+                addFinalAmountView(llFinalAmount, getResources().getString(R.string.jugnoo_cash), historyResponse.getData().get(0).getJugnooDeducted(), true);
             }
 
             if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)
@@ -738,6 +854,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 Prefs.with(activity).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
             } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
                 Prefs.with(activity).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
+            } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
+                Prefs.with(activity).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
             }
             JSONObject jCart = new JSONObject();
             if (orderHistory != null && orderHistory.getOrderItems() != null) {
@@ -757,6 +875,9 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
                 Prefs.with(activity).save(Constants.SP_GROCERY_CART, jCart.toString());
                 sendMessage(2);
+            } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
+                Prefs.with(activity).save(Constants.SP_MENUS_CART, jCart.toString());
+                sendMessage(3);
             }
 
             DialogPopup.showLoadingDialog(activity, "Please wait...");

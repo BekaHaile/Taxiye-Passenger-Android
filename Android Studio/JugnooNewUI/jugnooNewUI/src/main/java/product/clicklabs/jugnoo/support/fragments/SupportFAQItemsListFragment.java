@@ -38,7 +38,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 	private View rootView;
     private FragmentActivity activity;
 
-	private int engagementId, orderId;
+	private int engagementId, orderId, productType;
 	private ShowPanelResponse.Item item;
 	private String phoneNumber, rideDate, orderDate, supportNumber;
 
@@ -60,7 +60,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
     }
 
 	public SupportFAQItemsListFragment(int engagementId, String rideDate, ShowPanelResponse.Item item, String phoneNumber,
-									   int orderId, String orderDate, String supportNumber){
+									   int orderId, String orderDate, String supportNumber, int productType){
 		this.engagementId = engagementId;
 		this.item = item;
 		this.phoneNumber = phoneNumber;
@@ -68,6 +68,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 		this.orderId = orderId;
 		this.orderDate = orderDate;
 		this.supportNumber = supportNumber;
+		this.productType = productType;
 	}
 
     @Override
@@ -101,13 +102,13 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 							new TransactionUtils().openItemInFragment(activity,
 									((SupportActivity)activity).getContainer(),
 									engagementId, rideDate, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber,
-									orderId, orderDate, supportNumber);
+									orderId, orderDate, supportNumber, productType);
 
 						} else if(activity instanceof RideTransactionsActivity){
 							new TransactionUtils().openItemInFragment(activity,
 									((RideTransactionsActivity)activity).getContainer(),
 									engagementId, rideDate, SupportFAQItemsListFragment.this.item.getText(), item, phoneNumber,
-									orderId, orderDate, supportNumber);
+									orderId, orderDate, supportNumber, productType);
 						}
 						FlurryEventLogger.eventGA(Constants.ISSUES, SupportFAQItemsListFragment.this.item.getText(), item.getText());
 					}

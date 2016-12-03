@@ -38,12 +38,14 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -80,6 +82,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
     private RateAppDialogContent rateAppDialogContent;
 
     public boolean isUpbuttonClicked = false;
+    private ProductType productType;
 
     @Nullable
     @Override
@@ -92,27 +95,45 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         try {
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
-            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getFreshClientId())) {
 				viewType = Data.getFreshData().getFeedbackViewType();
 				dateValue = Data.getFreshData().getFeedbackDeliveryDate();
 				orderAmount = Data.getFreshData().getAmount();
 				orderId = Data.getFreshData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
-			} else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+                productType = ProductType.FRESH;
+			}
+            else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getMealsClientId())){
 				viewType = Data.getMealsData().getFeedbackViewType();
 				dateValue = Data.getMealsData().getFeedbackDeliveryDate();
 				orderAmount = Data.getMealsData().getAmount();
 				orderId = Data.getMealsData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
-			}else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                productType = ProductType.MEALS;
+			}
+            else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getGroceryClientId())){
                 viewType = Data.getGroceryData().getFeedbackViewType();
                 dateValue = Data.getGroceryData().getFeedbackDeliveryDate();
                 orderAmount = Data.getGroceryData().getAmount();
                 orderId = Data.getGroceryData().getOrderId();
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
+                productType = ProductType.GROCERY;
+            }
+            else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getMenusClientId())){
+                viewType = Data.getMenusData().getFeedbackViewType();
+                dateValue = Data.getMenusData().getFeedbackDeliveryDate();
+                orderAmount = Data.getMenusData().getAmount();
+                orderId = Data.getMenusData().getOrderId();
+                activity.getTopBar().title.setText(getResources().getString(R.string.menus));
+                endRideGoodFeedbackText = Data.getMenusData().getRideEndGoodFeedbackText();
+                productType = ProductType.MENUS;
             } else {
 				activity.finish();
 			}
@@ -174,6 +195,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             imageviewType.setImageResource(R.drawable.feedback_fresh);
         } else if(Config.getGroceryClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.feedback_grocery);
+        } else if(Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+            imageviewType.setImageResource(R.drawable.ic_fab_menus);
         } else {
             imageviewType.setImageResource(R.drawable.feedback_meals);
         }
@@ -206,7 +229,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         imageViewThumbsDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendQuery(0);
+              sendQuery(0);
                 openSupportFragment();
                 try {
                     if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
@@ -218,6 +241,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                     else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
                         MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_DOWNVOTE, new Bundle());
                     }
+                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_DOWNVOTE, new Bundle());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -228,7 +254,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 isUpbuttonClicked = true;
-                sendQuery(1);
+              sendQuery(1);
                 if(viewType != -1){
                     if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
                         endRideWithImages(R.drawable.ride_end_image_1);
@@ -252,6 +278,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
 					else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
 						MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_UPVOTE, new Bundle());
 					}
+                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_UPVOTE, new Bundle());
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -349,6 +378,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 Data.getMealsData().setPendingFeedback(0);
             } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
                 Data.getGroceryData().setPendingFeedback(0);
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                Data.getMenusData().setPendingFeedback(0);
             } else {
                 activity.finish();
             }
@@ -363,7 +394,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 params.put(Constants.INTERATED, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
-                RestClient.getFreshApiService().orderFeedback(params, new Callback<OrderHistoryResponse>() {
+                Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
                     @Override
                     public void success(final OrderHistoryResponse notificationInboxResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
@@ -419,7 +450,13 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                                     });
 
                     }
-                });
+                };
+                if(productType == ProductType.MENUS){
+                    RestClient.getMenusApiService().orderFeedback(params, callback);
+                } else {
+                    RestClient.getFreshApiService().orderFeedback(params, callback);
+                }
+
             } else {
 
                     DialogPopup.dialogNoInternet(activity,
@@ -448,9 +485,6 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
             e.printStackTrace();
         }
 
-//        if(rating == 1) {
-//            getRateAppDialog().thumbsUpClickedAPI();
-//        }
     }
 
     /**
@@ -467,7 +501,7 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 params.put("order_id", "" + orderId);
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.INTERATED, "1");
-                RestClient.getFreshApiService().orderHistory(params, new Callback<HistoryResponse>() {
+                Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
                     @Override
                     public void success(HistoryResponse historyResponse, Response response) {
                         String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -479,9 +513,9 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
-                                    //activity.openOrderInvoice(historyResponse.getData().get(0));
-                                    activity.getTransactionUtils().openOrderSummaryFragment(activity,
-                                            activity.getRelativeLayoutContainer(), historyResponse.getData().get(0));
+                                    new TransactionUtils().openOrderStatusFragment(activity,
+                                            activity.getRelativeLayoutContainer(), historyResponse.getData().get(0).getOrderId(),
+                                            historyResponse.getData().get(0).getProductType());
                                 } else {
                                     updateListData(message);
                                 }
@@ -499,7 +533,13 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                         DialogPopup.dismissLoadingDialog();
                         updateListData(Data.SERVER_NOT_RESOPNDING_MSG);
                     }
-                });
+                };
+
+                if(productType == ProductType.MENUS){
+                    RestClient.getMenusApiService().orderHistory(params, callback);
+                } else {
+                    RestClient.getFreshApiService().orderHistory(params, callback);
+                }
             }
             else {
                 updateListData(Data.CHECK_INTERNET_MSG);
@@ -535,12 +575,14 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
         Intent intent = new Intent(activity, SupportActivity.class);
         intent.putExtra(Constants.INTENT_KEY_FROM_BAD, 1);
         intent.putExtra(Constants.KEY_ORDER_ID, Integer.parseInt(orderId));
+        intent.putExtra(Constants.KEY_PRODUCT_TYPE, productType.getOrdinal());
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         backPressed(false);
     }
 
     private void backPressed(boolean goodRating) {
+        activity.setRefreshCart(true);
         try {
             activity.getSupportFragmentManager().popBackStack(FeedbackFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } catch (Exception e) {
@@ -572,6 +614,8 @@ public class FeedbackFragment extends BaseFragment implements View.OnClickListen
                 activity.getTopBar().title.setText(getResources().getString(R.string.meals));
             } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
+            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                activity.getTopBar().title.setText(getResources().getString(R.string.menus));
             }
         }
     }

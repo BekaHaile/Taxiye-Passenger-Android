@@ -125,7 +125,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 										Integer.parseInt(endRideData.engagementId),
 										endRideData.getEngagementDate(),
 										activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber(),
-										-1, "", endRideData.getSupportNumber());
+										-1, "", endRideData.getSupportNumber(), ProductType.AUTO.getOrdinal());
 
 							} else if (activity instanceof RideTransactionsActivity) {
 								new TransactionUtils().openItemInFragment(activity,
@@ -133,7 +133,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 										Integer.parseInt(endRideData.engagementId),
 										endRideData.getEngagementDate(),
 										activity.getResources().getString(R.string.support_main_title), item, endRideData.getPhoneNumber(),
-										-1, "", endRideData.getSupportNumber());
+										-1, "", endRideData.getSupportNumber(), ProductType.AUTO.getOrdinal());
 							}
 						} else if(datum != null){
 							if (activity instanceof SupportActivity) {
@@ -142,7 +142,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 										-1, "",
 										activity.getResources().getString(R.string.support_main_title), item, datum.getPhoneNo(),
 										datum.getOrderId(), DateOperations.convertDateViaFormat(DateOperations
-												.utcToLocalTZ(datum.getOrderTime())), datum.getSupportNumber());
+												.utcToLocalTZ(datum.getOrderTime())), datum.getSupportNumber(), datum.getProductType());
 
 							} else if (activity instanceof RideTransactionsActivity) {
 								new TransactionUtils().openItemInFragment(activity,
@@ -150,7 +150,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 										-1, "",
 										activity.getResources().getString(R.string.support_main_title), item, datum.getPhoneNo(),
 										datum.getOrderId(), DateOperations.convertDateViaFormat(DateOperations
-												.utcToLocalTZ(datum.getOrderTime())), datum.getSupportNumber());
+												.utcToLocalTZ(datum.getOrderTime())), datum.getSupportNumber(), datum.getProductType());
 							}
 						}
 						Bundle bundle = new Bundle();
@@ -161,30 +161,36 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				});
 		recyclerViewSupportFaq.setAdapter(supportFAQItemsAdapter);
 
-		if (endRideData != null || datum != null) {
-			linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
-			cardViewRecycler.setVisibility(View.VISIBLE);
-			setRideData();
-			if(items == null && datum != null){
-				items = Database2.getInstance(activity).getSupportDataItems(datum.getSupportCategory());
-				if(!Prefs.with(activity).getString(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION, "-1").equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
-					linearLayoutRideShortInfo.setVisibility(View.GONE);
-					cardViewRecycler.setVisibility(View.GONE);
-					int supportCategory = datum.getSupportCategory();
-					if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
-						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.FRESH);
-					} else if (datum.getProductType() == ProductType.MEALS.getOrdinal()){
-						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MEALS);
-					} else if (datum.getProductType() == ProductType.GROCERY.getOrdinal()){
-						getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.GROCERY);
+		try {
+			if (endRideData != null || datum != null) {
+				linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+				cardViewRecycler.setVisibility(View.VISIBLE);
+				setRideData();
+				if(items == null && datum != null){
+					items = Database2.getInstance(activity).getSupportDataItems(datum.getSupportCategory());
+					if(!Prefs.with(activity).getString(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION, "-1").equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
+						linearLayoutRideShortInfo.setVisibility(View.GONE);
+						cardViewRecycler.setVisibility(View.GONE);
+						int supportCategory = datum.getSupportCategory();
+						if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
+							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.FRESH);
+						} else if (datum.getProductType() == ProductType.MEALS.getOrdinal()){
+							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MEALS);
+						} else if (datum.getProductType() == ProductType.GROCERY.getOrdinal()){
+							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.GROCERY);
+						} else if (datum.getProductType() == ProductType.MENUS.getOrdinal()){
+							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MENUS);
+						}
 					}
 				}
+				updateIssuesList(items);
+			} else {
+				linearLayoutRideShortInfo.setVisibility(View.GONE);
+				cardViewRecycler.setVisibility(View.GONE);
+				getRideSummaryAPI(activity, engagementId, orderId, autosStatus, false, ProductType.AUTO);
 			}
-			updateIssuesList(items);
-		} else {
-			linearLayoutRideShortInfo.setVisibility(View.GONE);
-			cardViewRecycler.setVisibility(View.GONE);
-			getRideSummaryAPI(activity, engagementId, orderId, autosStatus, false, ProductType.AUTO);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		return rootView;
@@ -200,7 +206,8 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				int supportCategory = datum.getSupportCategory();
 				if(datum.getProductType() == ProductType.FRESH.getOrdinal()
 						|| datum.getProductType() == ProductType.MEALS.getOrdinal()
-						|| datum.getProductType() == ProductType.GROCERY.getOrdinal()){
+						|| datum.getProductType() == ProductType.GROCERY.getOrdinal()
+						|| datum.getProductType() == ProductType.MENUS.getOrdinal()){
 					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.NOT_SURE);
 				}
 				Data.isSupportRideIssueUpdated = true;
@@ -223,7 +230,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 					}
 					else if(activity instanceof SupportActivity && datum != null){
 						new TransactionUtils().openOrderStatusFragment(activity,
-								((SupportActivity) activity).getContainer(), datum.getOrderId());
+								((SupportActivity) activity).getContainer(), datum.getOrderId(), datum.getProductType());
 
 					}
 				}
