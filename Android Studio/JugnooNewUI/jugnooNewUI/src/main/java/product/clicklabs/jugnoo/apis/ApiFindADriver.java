@@ -63,7 +63,7 @@ public class ApiFindADriver {
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 			params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
 			params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
-			params.put("device_type", Data.DEVICE_TYPE);
+			params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 
 			if (1 == showAllDrivers) {
 				params.put("show_all", "1");
