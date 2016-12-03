@@ -105,6 +105,8 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 				pt = ProductType.GROCERY;
 			} else if(productType == ProductType.MENUS.getOrdinal()){
 				pt = ProductType.MENUS;
+			} else if(productType == ProductType.PAY.getOrdinal()){
+				pt = ProductType.PAY;
 			}
 			getRideSummaryAPI(this, pt, supportCategory); //for bad feedback case (thumbs down)
 			setTitle(getResources().getString(R.string.support_ride_issues_title));

@@ -16,6 +16,14 @@ import product.clicklabs.jugnoo.home.models.Region;
  * Created by shankar on 1/5/16.
  */
 public class LoginResponse {
+	public Pay getPay() {
+		return pay;
+	}
+
+	public void setPay(Pay pay) {
+		this.pay = pay;
+	}
+
 	public class Cancellation {
 
 		@SerializedName("message")
@@ -96,6 +104,9 @@ public class LoginResponse {
 	@SerializedName("menus")
 	@Expose
 	private Menus menus;
+	@SerializedName("pay")
+	@Expose
+	private Pay pay;
 	@SerializedName("delivery")
 	@Expose
 	private Delivery delivery;
@@ -283,7 +294,34 @@ public class LoginResponse {
 		}
 	}
 
+
+
 	public class Menus{
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+	}
+
+	public class Pay{
 		@SerializedName("promotions")
 		@Expose
 		private List<PromotionInfo> promotions = new ArrayList<>();

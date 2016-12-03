@@ -303,6 +303,11 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 										if(promCouponResponse.getMenusCoupons() != null)
 											promoCoupons.addAll(promCouponResponse.getMenusCoupons());
 
+										if(promCouponResponse.getPayPromotions() != null)
+											promoCoupons.addAll(promCouponResponse.getPayPromotions());
+										if(promCouponResponse.getPayCoupons() != null)
+											promoCoupons.addAll(promCouponResponse.getPayCoupons());
+
 										updateListData();
 									} else {
 										updateListData();

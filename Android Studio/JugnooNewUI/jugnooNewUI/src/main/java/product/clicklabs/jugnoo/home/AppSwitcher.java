@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.jugnoo.pay.PayActivity;
 import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
@@ -204,7 +205,22 @@ public class AppSwitcher {
 					new ApiUpdateClientId().updateClientId(clientId);
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				}
-			} else if (activity instanceof FreshActivity && !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))) {
+			}
+			else if (clientId.equalsIgnoreCase(Config.getPayClientId()) && !(activity instanceof PayActivity)) {
+				if (Data.getPayData() == null) {
+					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+							callback);
+				} else {
+					intent.setClass(activity, PayActivity.class);
+					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					ActivityCompat.finishAffinity(activity);
+
+					new ApiUpdateClientId().updateClientId(clientId);
+					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				}
+			}
+			else if (activity instanceof FreshActivity && !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))) {
 				if ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null)
 						|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.getMealsData() == null)
 						|| (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null)
@@ -302,6 +318,19 @@ public class AppSwitcher {
 				}
 			}
 			else if(clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null){
+				if(Data.autoData != null) {
+					intent.setClass(activity, HomeActivity.class);
+					clientId = Config.getAutosClientId();
+					if (data != null) {
+						intent.setData(data);
+					}
+				}
+				else if(Data.getFreshData() != null){
+					intent.setClass(activity, FreshActivity.class);
+					clientId = Config.getFreshClientId();
+				}
+			}
+			else if(clientId.equalsIgnoreCase(Config.getPayClientId()) && Data.getPayData() == null){
 				if(Data.autoData != null) {
 					intent.setClass(activity, HomeActivity.class);
 					clientId = Config.getAutosClientId();

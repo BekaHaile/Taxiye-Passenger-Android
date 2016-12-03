@@ -1261,5 +1261,7 @@
 	<string name="vat">VAT</string>
 	<string name="packaging_charges">Packaging Charges</string>
 
+	<string name="pay">Pay</string>
+
 
 </resources>

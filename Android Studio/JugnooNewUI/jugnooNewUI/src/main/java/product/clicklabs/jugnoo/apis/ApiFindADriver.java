@@ -297,6 +297,22 @@ public class ApiFindADriver {
 				e.printStackTrace();
 			}
 
+			try {
+				if(Data.getPayData() != null && Data.getPayData().getPromoCoupons() == null){
+					Data.getPayData().setPromoCoupons(new ArrayList<PromoCoupon>());
+				} else{
+					Data.getPayData().getPromoCoupons().clear();
+				}
+				if(findADriverResponse.getPayPromotions() != null) {
+					Data.getPayData().getPromoCoupons().addAll(findADriverResponse.getPayPromotions());
+				}
+				if(findADriverResponse.getPayCoupons() != null) {
+					Data.getPayData().getPromoCoupons().addAll(findADriverResponse.getPayCoupons());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			// for Dodo promo and coupons
 			try {
 				if(Data.getDeliveryData() != null && Data.getDeliveryData().getPromoCoupons() == null){
@@ -376,6 +392,9 @@ public class ApiFindADriver {
 			}
 			if(findADriverResponse.getMenusEnabled() != null) {
 				Data.userData.setMenusEnabled(findADriverResponse.getMenusEnabled());
+			}
+			if(findADriverResponse.getPayEnabled() != null) {
+				Data.userData.setPayEnabled(findADriverResponse.getPayEnabled());
 			}
 			if(findADriverResponse.getIntegratedJugnooEnabled() != null){
 				Data.userData.setIntegratedJugnooEnabled(findADriverResponse.getIntegratedJugnooEnabled());

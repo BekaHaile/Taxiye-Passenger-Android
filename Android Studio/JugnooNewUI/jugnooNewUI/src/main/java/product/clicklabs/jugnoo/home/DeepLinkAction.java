@@ -71,6 +71,11 @@ public class DeepLinkAction {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.MENUS.getTag());
 				}
 			}
+			else if(AppLinkIndex.PAY_PAGE.getOrdinal() == Data.deepLinkIndex){
+				if(Data.userData.getPayEnabled() == 1) {
+					menuBar.menuAdapter.onClickAction(MenuInfoTags.PAY.getTag());
+				}
+			}
 
 		} catch(Exception e){
 			e.printStackTrace();

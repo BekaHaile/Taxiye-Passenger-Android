@@ -234,6 +234,7 @@ public interface FirebaseEvents {
     String MENU_CATEGORIES_MEALS = "menu_categories_meals";
     String MENU_CATEGORIES_GROCERY = "menu_categories_grocery";
     String MENU_CATEGORIES_MENUS = "menu_categories_menus";
+    String MENU_CATEGORIES_PAY = "menu_categories_pay";
 
     String MEALS_UPVOTE = "m_upvote";
     String MEALS_DOWNVOTE = "m_downvote";
@@ -243,6 +244,8 @@ public interface FirebaseEvents {
     String MENUS_UPVOTE = "menus_upvote";
     String GROCERY_DOWNVOTE = "g_downvote";
     String MENUS_DOWNVOTE = "menu_downvote";
+    String PAY_UPVOTE = "pay_upvote";
+    String PAY_DOWNVOTE = "pay_downvote";
 
     String G_ADD = "g_add";
     String MENUS_ADD = "menu_add";

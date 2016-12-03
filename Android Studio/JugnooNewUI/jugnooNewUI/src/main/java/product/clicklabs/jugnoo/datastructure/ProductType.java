@@ -6,6 +6,7 @@ public enum ProductType {
 	MEALS(3),
 	GROCERY(4),
 	MENUS(5),
+	PAY(6),
 	NOT_SURE(-1)
 	;
 

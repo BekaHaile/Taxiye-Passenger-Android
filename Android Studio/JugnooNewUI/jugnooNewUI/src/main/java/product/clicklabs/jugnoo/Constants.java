@@ -435,6 +435,7 @@ public interface Constants {
 	String KEY_MEALS = "meals";
 	String KEY_GROCERY = "grocery";
 	String KEY_MENUS = "menus";
+	String KEY_PAY = "pay";
 
 	String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
 	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
@@ -453,6 +454,7 @@ public interface Constants {
 	String KEY_FRESH_ENABLED = "fresh_enabled";
 	String KEY_GROCERY_ENABLED = "grocery_enabled";
 	String KEY_MENUS_ENABLED = "menus_enabled";
+	String KEY_PAY_ENABLED = "pay_enabled";
 	String KEY_DELIVERY_ENABLED = "delivery_enabled";
 	String KEY_ORDER_HISTORY = "order_history";
 	String INTENT_KEY_FROM_BAD = "FromBad";
