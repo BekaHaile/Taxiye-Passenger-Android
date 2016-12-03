@@ -158,17 +158,17 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         try {
             if(Data.userData.getPromoSuccess() == 0) {
                 showPromoFailedAtSignupDialog();
-            } else if(Data.getGroceryData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
-                Data.getGroceryData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
+            } else if(Data.getMenusData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
+                Data.getMenusData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
                 showPopup();
-            } else if(Data.getGroceryData().getPopupData() != null) {
+            } else if(Data.getMenusData().getPopupData() != null) {
                 pushDialog = new PushDialog(activity, new PushDialog.Callback() {
                     @Override
                     public void onButtonClicked(int deepIndex) {
 
                     }
                 });
-                pushDialog.show(Data.getGroceryData().getPopupData());
+                pushDialog.show(Data.getMenusData().getPopupData());
             }
         } catch (Exception e) {
             e.printStackTrace();
