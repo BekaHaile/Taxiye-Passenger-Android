@@ -587,7 +587,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 					}
 					else if (PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal() == flag) {
-						if(HomeActivity.appInterruptHandler != null && Utils.isForeground(this)){
+						if(HomeActivity.appInterruptHandler != null){ //&& Utils.isForeground(this)){
 							HomeActivity.appInterruptHandler.showDialog(message1);
 						}
 						else{
@@ -661,11 +661,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						String clientId = jObj.optString(KEY_CLIENT_ID, "");
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						//message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
-						String name = Utils.getActivityName(this);
+						String name = "";//Utils.getActivityName(this);
 
 
-						if(!name.equalsIgnoreCase(this.getPackageName())
-								|| Data.context == null || !(Data.context instanceof ChatActivity)){
+						if(!name.equalsIgnoreCase(this.getPackageName()) ||
+								Data.context == null || !(Data.context instanceof ChatActivity)){
 							String chatMessage = jObj.getJSONObject(KEY_MESSAGE).optString("chat_message", "");
 							notificationManagerCustomID(this, title, chatMessage, PROMOTION_NOTIFICATION_ID, AppLinkIndex.CHAT_PAGE.getOrdinal(),
 									null, "", playSound, 0, 1, tabIndex, flag);
