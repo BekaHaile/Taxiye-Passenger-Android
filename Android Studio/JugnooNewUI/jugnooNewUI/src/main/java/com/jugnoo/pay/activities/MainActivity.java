@@ -14,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -23,28 +24,37 @@ import android.widget.TextView;
 import com.jugnoo.pay.adapters.CustomDrawerAdapter;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.CommonResponse;
+import com.jugnoo.pay.models.VerifyRegisterResponse;
+import com.jugnoo.pay.models.VerifyUserRequest;
 import com.jugnoo.pay.retrofit.RetrofitClient;
 import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.Data;
+import com.jugnoo.pay.utils.MyApplication;
 import com.jugnoo.pay.utils.Prefs;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.yesbank.AddAccount;
+import com.yesbank.Registration;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 // =======
 // >>>>>>> working on account management API. Account management option added in menu-drawer.
@@ -62,6 +72,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
+    private final int VPA_REGISTER_INTENT_REQUEST_CODE = 121;
+
     private boolean isSendingMoney = true;
     @OnClick(R.id.send_money_image)
 // <<<<<<< 741d47f103067de25b678aea943c1dfd0feb0a38
@@ -239,6 +251,10 @@ public class MainActivity extends BaseActivity {
         mDrawerList.setAdapter(drawerAdapter);
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        if(Data.getPayData().getPay().getHasVpa() == 0){
+            sendToSDKRegister(Data.getPayData().getPay());
+        }
     }
 
 
@@ -313,7 +329,7 @@ public class MainActivity extends BaseActivity {
 
                             // edited on 24-11-2016
                             // intent.putExtra(AppConstants.URL, userDetails.getFaqLink().trim());
-                            intent.putExtra(AppConstants.URL, Data.userData.getFaq_link());
+                            intent.putExtra(AppConstants.URL, Data.getPayData().getPay().getFaqLink());
 
                             startActivity(intent);
                             overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -439,28 +455,44 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        try
-        {
+        try {
             super.onActivityResult(requestCode, resultCode, data);
-            if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null) {
+            if (requestCode == VPA_REGISTER_INTENT_REQUEST_CODE
+                    && resultCode == Activity.RESULT_OK && data != null) {
                 Bundle bundle = data.getExtras();
                 String pgMeTrnRefNo = bundle.getString("pgMeTrnRefNo");
                 String yblRefId = bundle.getString("yblRefId");
                 String virtualAddress = bundle.getString("virtualAddress");
                 String status = bundle.getString("status");
                 String statusdesc = bundle.getString("statusdesc");
-                String date = bundle.getString("date");
+                String registrationDate = bundle.getString("registrationDate");
+
                 String AccountNo = bundle.getString("accountNo");
                 String ifsc = bundle.getString("ifsc");
                 String accName = bundle.getString("accName");
+
+//            System.out.println("data=== "+bundle.getString("add1"));
+                System.out.println("virtual address== " + virtualAddress + " date=== " + registrationDate + "  ybl== " + yblRefId + "  pgM== " + pgMeTrnRefNo + " status== " + status + "  dsc ==" + statusdesc + " AccountNo == " + AccountNo + " ifsc == " + ifsc + " accName == " + accName);
+
+                VerifyRegisterResponse verifyRegisterResponse = new VerifyRegisterResponse();
+                verifyRegisterResponse.setPgMeTrnRefNo(pgMeTrnRefNo);
+                verifyRegisterResponse.setYblRefId(yblRefId);
+                verifyRegisterResponse.setVirtualAddress(virtualAddress);
+                verifyRegisterResponse.setStatus(status);
+                verifyRegisterResponse.setStatusdesc(statusdesc);
+                verifyRegisterResponse.setRegistrationDate(registrationDate);
+
+                verifyRegisterResponse.setAccountNo(AccountNo);
+                verifyRegisterResponse.setIfsc(ifsc);
+                verifyRegisterResponse.setAccName(accName);
+
+                if (virtualAddress.length() > 0) {
+                    callVerifyUserApi(verifyRegisterResponse);
+                }
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -484,5 +516,88 @@ public class MainActivity extends BaseActivity {
         drawerAdapter.notifyDataSetChanged();
     }
 
+
+    private void sendToSDKRegister(LoginResponse.Pay pay){
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString("mid", pay.getMid());
+            bundle.putString("merchantKey", pay.getMkey());
+            bundle.putString("merchantTxnID", pay.getToken());
+            Log.i("sendToSDKRegister", "TOKEN IS : " + pay.getToken());
+            bundle.putString("appName", "jugnooApp");
+            Intent intent = new Intent(getApplicationContext(), Registration.class);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, VPA_REGISTER_INTENT_REQUEST_CODE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void callVerifyUserApi(VerifyRegisterResponse verifyRegisterResponse) {
+        CallProgressWheel.showLoadingDialog(this, AppConstants.PLEASE);
+        String deviceToken = Prefs.with(this).getString(SharedPreferencesName.DEVICE_TOKEN, "");
+//        String accessToken =   Prefs.with(SignUpActivity.this).getString(SharedPreferencesName.ACCESS_TOKEN,"");
+        VerifyUserRequest request = new VerifyUserRequest();
+        request.setDeviceToken(MyApplication.getInstance().getDeviceToken());
+        request.setUniqueDeviceId(CommonMethods.getUniqueDeviceId(this));
+        request.setToken(accessToken);
+        request.setVpa(verifyRegisterResponse.getVirtualAddress());
+        request.setDeviceType("0");
+        request.setPhone_no(Data.userData.phoneNo);
+        request.setMessage(verifyRegisterResponse.toString());
+
+        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
+
+        mWebApi.verifyUser(request, new Callback<CommonResponse>() {
+            @Override
+            public void success(CommonResponse tokenGeneratedResponse, Response response) {
+                CallProgressWheel.dismissLoadingDialog();
+                if (tokenGeneratedResponse != null) {
+//                    Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, tokenGeneratedResponse.getToken());
+//
+                    int flag = tokenGeneratedResponse.getFlag();
+                    if (flag == 401) {
+//						String authSecret = tokenGeneratedResponse.getUserData().getAuthKey() + Config.getClientSharedSecret();
+//						accessToken = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this).first;
+                        accessTokenLogin(MainActivity.this);
+                    }
+                    else if(flag == 403)
+                    {
+                        logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
+                    }
+                    else
+                        CommonMethods.callingBadToken(MainActivity.this, flag, tokenGeneratedResponse.getMessage());
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                try {
+                    System.out.println("SelectServiceActivity.failure2222222");
+
+                    CallProgressWheel.dismissLoadingDialog();
+
+                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+//                        SingleButtonAlert.showAlert(SelectServiceActivity.this,"No Internet Connection", "Ok");
+                        showAlertNoInternet(MainActivity.this);
+                    } else {
+                        String json = new String(((TypedByteArray) error.getResponse()
+                                .getBody()).getBytes());
+                        JSONObject jsonObject = new JSONObject(json);
+                        SingleButtonAlert.showAlert(MainActivity.this, jsonObject.getString("message"), AppConstants.OK);
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    CallProgressWheel.dismissLoadingDialog();
+                }
+
+            }
+        });
+
+
+    }
 
 }

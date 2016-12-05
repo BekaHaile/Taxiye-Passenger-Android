@@ -592,56 +592,7 @@ public class JSONParser implements Constants {
 
     public void parsePayData(Context context, JSONObject jPayData, LoginResponse.Pay payData){
         try{
-            String orderId = jPayData.optString(KEY_FEEDBACK_ORDER_ID, "");
-            String question = jPayData.optString(KEY_QUESTION, "");
-            int questionType = jPayData.optInt(KEY_QUESTION_TYPE, 0);
-            int pendingFeedback = jPayData.optInt(KEY_PENDING_FEEDBACK, 0);
-            double amount = jPayData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
-            String feedbackDeliveryDate = jPayData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jPayData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-            int isFatafatEnabled = jPayData.optInt(KEY_FATAFAT_ENABLED, 1);
-            String rideEndGoodFeedbackText = jPayData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
-
-            PopupData popupData = null;
-            try {
-                if (jPayData.has("popup_data")) {
-                    popupData = new PopupData();
-                    popupData.popup_id = jPayData.getJSONObject("popup_data").optInt("popup_id", 0);
-                    popupData.title_text = jPayData.getJSONObject("popup_data").optString("title_text", "");
-                    popupData.desc_text = jPayData.getJSONObject("popup_data").optString("desc_text", "");
-                    popupData.image_url = jPayData.getJSONObject("popup_data").optString("image_url", "");
-                    popupData.cancel_title = jPayData.getJSONObject("popup_data").optString("cancel_title", "");
-                    popupData.ok_title = jPayData.getJSONObject("popup_data").optString("ok_title", "OK");
-                    popupData.is_cancellable = jPayData.getJSONObject("popup_data").optInt("is_cancellable", 1);
-                    popupData.deep_index = jPayData.getJSONObject("popup_data").optInt("deep_index", 0);
-                    popupData.ext_url = jPayData.getJSONObject("popup_data").optString("ext_url", "");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            ArrayList<Store> stores = new ArrayList<>();
-            Store store = null;
-            try {
-                if(jPayData.has("stores")) {
-                    JSONArray storesArr = jPayData.getJSONArray("stores");
-                    for(int i=0;i<storesArr.length();i++) {
-                        JSONObject jsonObject = storesArr.getJSONObject(i);
-                        store = new Store();
-                        store.setStoreId(jsonObject.optInt("store_id"));
-                        store.setTitle(jsonObject.optString("title"));
-                        store.setDescription(jsonObject.optString("description"));
-                        store.setImage(jsonObject.optString("image"));
-                        store.setTextColor(jsonObject.optString("text_color"));
-
-                        stores.add(store);
-
-                    }
-                }
-            } catch (Exception e){ e.printStackTrace(); }
-
-            Data.setPayData(new PayData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText));
+            Data.setPayData(new PayData(payData));
 
             try {
                 if(Data.getPayData().getPromoCoupons() == null){
@@ -1693,9 +1644,6 @@ public class JSONParser implements Constants {
                 }
                 if(Data.getMenusData() != null) {
                     Data.getMenusData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
-                }
-                if(Data.getPayData() != null) {
-                    Data.getPayData().setFeedbackViewType(RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal());
                 }
             }
         } catch (Exception e) {

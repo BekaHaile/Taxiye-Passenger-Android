@@ -59,7 +59,7 @@ public class CleverTapUtils {
             MyApplication.getInstance().sendCleverTapEvent(Events.MEALS_ADDED_TO_CART, prodViewedAction);
         } else if(clientId.equalsIgnoreCase(Config.getGroceryClientId())) {
             MyApplication.getInstance().sendCleverTapEvent(Events.GROCERY_ADDED_TO_CART, prodViewedAction);
-        }  else if(clientId.equalsIgnoreCase(Config.getMenusClientId())) {
+        } else if(clientId.equalsIgnoreCase(Config.getMenusClientId())) {
             MyApplication.getInstance().sendCleverTapEvent(Events.MENUS_ADDED_TO_CART, prodViewedAction);
         } else {
             MyApplication.getInstance().sendCleverTapEvent(Events.FRESH_ADDED_TO_CART, prodViewedAction);

@@ -233,6 +233,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             }
         }
 
+        try {
+            for (int i = 0; i < activity.subItemsInCart.size(); i++) {
+                MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
+                        activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(),
+                        activity.subItemsInCart.get(i).getPrice(),
+                        Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
+                        Data.userData.getCity());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         ((TextView)rootView.findViewById(R.id.textViewDeliverySlot)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewPaymentVia)).setTypeface(Fonts.mavenMedium(activity));

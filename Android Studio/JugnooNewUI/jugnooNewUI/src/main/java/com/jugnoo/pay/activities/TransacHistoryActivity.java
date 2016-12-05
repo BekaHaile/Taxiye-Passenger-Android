@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.R;
 import com.jugnoo.pay.adapters.PendingTrnscAdapater;
 import com.jugnoo.pay.adapters.TranscRecyslerAdapter;
 import com.jugnoo.pay.models.AccessTokenRequest;
@@ -22,7 +21,6 @@ import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.Data;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 
 import org.json.JSONObject;
@@ -30,6 +28,8 @@ import org.json.JSONObject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
