@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.activities.MainActivity;
-import com.jugnoo.pay.activities.SelectContactActivity;
 
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -90,7 +89,7 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
 //                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+PLAYSTORE_RATING, bundle);
 //                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Playstore rating");
 
-                startActivity(new Intent(AboutActivity.this, SelectContactActivity.class));
+                startActivity(new Intent(AboutActivity.this, MainActivity.class));
 
             }
         });

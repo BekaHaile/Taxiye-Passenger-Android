@@ -40,7 +40,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by cl-macmini-38 on 06/06/16.
  */
-public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapater.MyViewHolder> {
+public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapater.ViewHolder> {
     List<TransacHistoryResponse.TransactionHistory> transactionHistoryList;
     private Activity activity;
     private final String REQUEST_TO = "Requested to";
@@ -54,10 +54,9 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
     private String accessToken;
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.transac_history_item, parent, false);
-        return new MyViewHolder(itemView);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.transac_history_item, parent, false);
+        return new ViewHolder(itemView);
     }
 
     public PendingTrnscAdapater(Activity activity, List<TransacHistoryResponse.TransactionHistory> transactionHistories) {
@@ -76,25 +75,22 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.nameTxt.setText(transactionHistoryList.get(position).getName());
         if (transactionHistoryList.get(position).getTxnType() == 1) {
             holder.requestedTypeTxt.setText(PAYMENT_TO);
-            //holder.payBtn.setVisibility(View.VISIBLE);
-            // holder.declinBtn.setVisibility(View.VISIBLE);
-            //holder.declinBtn.setText("Decline");
             holder.requestImage.setBackgroundResource(R.drawable.payment);
         } else if(transactionHistoryList.get(position).getTxnType() == 2) {
             holder.requestedTypeTxt.setText(REQUESTED_FROM);
             holder.declinBtn.setVisibility(View.VISIBLE);
-            holder.declinBtn.setText("Cancel");
+            holder.declinBtn.setText(R.string.cancel);
             holder.requestImage.setBackgroundResource(R.drawable.requested);
             holder.payBtn.setVisibility(View.GONE);
         } else if(transactionHistoryList.get(position).getTxnType() == 3) {
             holder.requestedTypeTxt.setText(REQUESTED_BY);
             holder.declinBtn.setVisibility(View.VISIBLE);
-            holder.declinBtn.setText("Decline");
+            holder.declinBtn.setText(R.string.decline);
             holder.requestImage.setBackgroundResource(R.drawable.requested);
             holder.payBtn.setVisibility(View.VISIBLE);
         }
@@ -161,12 +157,12 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
         return this.transactionHistoryList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView requestedTypeTxt, nameTxt, amountTxt, dateTxt, statusTxt;
         public ImageView requestImage, statusImage;
         public Button declinBtn, payBtn;
 
-        public MyViewHolder(View view) {
+        public ViewHolder(View view) {
             super(view);
             requestedTypeTxt = (TextView) view.findViewById(R.id.request_type_txt);
             nameTxt = (TextView) view.findViewById(R.id.contact_name_txt);

@@ -1394,6 +1394,13 @@
 <string name="logout_string">LOGOUT</string>
 	<string name="contact">Contact</string>
 	<string name="payment_address">Payment Address</string>
+	<string name="payment_id">Payment ID</string>
+	<string name="send_money">Send Money</string>
+	<string name="request_money">Request Money</string>
+	<string name="pending_payments">Pending Payments</string>
+	<string name="decline">Decline</string>
+	<string name="requested_by">Requested by</string>
+	<string name="dismiss">Dismiss</string>
 
 
 </resources>

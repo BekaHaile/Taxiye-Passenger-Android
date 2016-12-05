@@ -52,7 +52,8 @@ public  class CallProgressWheel {
 
             ((ProgressWheel) progressDialog.findViewById(R.id.progress_wheel)).spin();
             TextView messageText = (TextView) progressDialog.findViewById(R.id.tvProgress);
-          //  messageText.setTypeface(Data.getFont(context));
+          //  messageText.setTypeface(Data.getFon
+            // t(context));
             messageText.setText(message);
         } catch (Exception e) {
             e.printStackTrace();

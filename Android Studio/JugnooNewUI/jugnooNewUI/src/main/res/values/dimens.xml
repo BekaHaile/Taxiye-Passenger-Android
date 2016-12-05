@@ -257,5 +257,29 @@
     <dimen name="padding_label_view">10dp</dimen>
     <dimen name="margin_between_labels">3dp</dimen>
     <dimen name="padding_icon_cross">5dp</dimen>
+    <dimen name="sp_14">
+        14sp
+    </dimen>
+    <dimen name="sp_16">
+        16sp
+    </dimen>
+    <dimen name="sp_11">
+        11sp
+    </dimen>
+    <dimen name="sp_13">
+        13sp
+    </dimen>
+    <dimen name="sp_15">
+        15sp
+    </dimen>
+    <dimen name="sp_18">
+        18sp
+    </dimen>
+    <dimen name="sp_20">
+        20sp
+    </dimen>
+    <dimen name="sp_12">
+        12sp
+    </dimen>
 
 </resources>

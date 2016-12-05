@@ -1,8 +1,5 @@
 package com.jugnoo.pay.activities;
 
-// <<<<<<< 741d47f103067de25b678aea943c1dfd0feb0a38
-// import android.Manifest;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -43,22 +40,19 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
-
-// =======
-// >>>>>>> working on account management API. Account management option added in menu-drawer.
-// <<<<<<< 741d47f103067de25b678aea943c1dfd0feb0a38
-// =======
-// >>>>>>> working on account management API. Account management option added in menu-drawer.
 
 public class MainActivity extends BaseActivity {
     @Bind(R.id.toolbar)
@@ -74,103 +68,62 @@ public class MainActivity extends BaseActivity {
 
     private boolean isSendingMoney = true;
     @OnClick(R.id.send_money_image)
-// <<<<<<< 741d47f103067de25b678aea943c1dfd0feb0a38
     void sendMoneyImgClicked(){
-
-        if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
-        {
+        if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             isSendingMoney = true;
             ActivityCompat.requestPermissions(MainActivity.this, new String[] { android.Manifest.permission.READ_CONTACTS }, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
         }
-        else
-        {
+        else {
             startActivity(new Intent(MainActivity.this,SelectContactActivity.class));
             overridePendingTransition(R.anim.right_in, R.anim.right_out);
         }
     }
 
-    // added on 30-11-2016
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode)
-        {
-            case MY_PERMISSIONS_REQUEST_READ_CONTACTS:
-            {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_CONTACTS: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-
-                    if(isSendingMoney)
-                    {
+                    if(isSendingMoney) {
                         startActivity(new Intent(MainActivity.this,SelectContactActivity.class));
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     }
-                    else
-                    {
+                    else {
                         Intent intent = new Intent(MainActivity.this,SelectContactActivity.class);
                         intent.putExtra(AppConstant.REQUEST_STATUS,true);
                         startActivity(intent);
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     }
-
                 } else {
-
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-
-                    // SingleButtonAlert.showAlert(MainActivity.this, "Permissions", "Allow contact permission to proceed");
-
                     SingleButtonAlert.showAlertGps(MainActivity.this, "Please make sure you've granted the permission to read Contacts", "OK", new SingleButtonAlert.OnAlertOkClickListener() {
                         @Override
                         public void onOkButtonClicked() {
-
                         }
                     });
-
                 }
                 return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
 
 
     @OnClick(R.id.request_money_image)
-    void requestMoneyImgClicked()
-    {
-        if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
-        {
+    void requestMoneyImgClicked() {
+        if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             isSendingMoney = false;
             ActivityCompat.requestPermissions(MainActivity.this, new String[] { android.Manifest.permission.READ_CONTACTS }, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
-        }
-        else
-        {
+        } else {
             Intent intent = new Intent(MainActivity.this,SelectContactActivity.class);
             intent.putExtra(AppConstant.REQUEST_STATUS,true);
             startActivity(intent);
             overridePendingTransition(R.anim.right_in, R.anim.right_out);
         }
-
-// =======
-//    void sendMoneyImgClicked() {
-//        startActivity(new Intent(MainActivity.this, SelectContactActivity.class));
-//        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-//    }
-
-//    @OnClick(R.id.request_money_image)
-//    void requestMoneyImgClicked() {
-//        Intent intent = new Intent(MainActivity.this, SelectContactActivity.class);
-//        intent.putExtra(AppConstant.REQUEST_STATUS, true);
-//        startActivity(intent);
-//        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-//// >>>>>>> working on account management API. Account management option added in menu-drawer.
-
     }
 
     @Bind(R.id.drawer_layout)
@@ -202,11 +155,12 @@ public class MainActivity extends BaseActivity {
     private String drawerItems[] = {"Home", "Pending Transactions", "Transactions History", "FAQs", "Account Management"};
     Intent intent;
 
+    private FABViewTest fabViewTest;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try
-        {
+        try {
             setContentView(R.layout.activity_main);
             ButterKnife.bind(this);
             setSupportActionBar(mToolBar);
@@ -225,30 +179,26 @@ public class MainActivity extends BaseActivity {
             mDrawerList.setAdapter(drawerAdapter);
 
             mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        }
-        catch (Exception e)
-        {
+
+            float marginBottom = 77f;
+            float scale = getResources().getDisplayMetrics().density;
+            fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
+            int dpAsPixels = (int) (marginBottom*scale + 0.5f);
+            fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+
+            if(Prefs.with(this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
+                    Data.userData.getIntegratedJugnooEnabled() == 1) {
+                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    fabViewTest.setFABButtons();
+            } else{
+                fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+            }
+
+            mToolBar.setTitle(R.string.pay);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        setSupportActionBar(mToolBar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, mToolBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.setDrawerIndicatorEnabled(false);
-
-        toggle.syncState();
-        accessToken = Prefs.with(MainActivity.this).getString(SharedPreferencesName.ACCESS_TOKEN, "");
-        userDetails = Prefs.with(MainActivity.this).getObject(SharedPreferencesName.APP_USER, CommonResponse.class);
-        mDrawerList = (ListView) findViewById(R.id.lst_menu_items);
-        drawerAdapter = new CustomDrawerAdapter(this, android.R.layout.simple_list_item_1, drawerItems);
-        imageViewProfile = (ImageView) findViewById(R.id.profile_image);
-
-        mDrawerList.setAdapter(drawerAdapter);
-
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
         try {
             if(Data.getPayData().getPay().getHasVpa() == 0){
@@ -260,36 +210,15 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-// >>>>>>> working on account management API. Account management option added in menu-drawer.
-    }
-
-    private class DrawerItemClickListener implements
-            ListView.OnItemClickListener {
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
-//             TextView itemTxt = (TextView) view
-//                    .findViewById(R.id.item_name);
-//             itemTxt.setTextColor(getResources().getColor(R.color.signUpBtnBackground));
-//            ImageView icon = (ImageView) view.findViewById(R.id.item_left_icon);
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             drawerAdapter.setSelectedPosition(position);
-            SelectItem(position);
-
+            selectItem(position);
         }
     }
 
-    public void SelectItem(int possition) {
-
+    public void selectItem(int possition) {
         switch (possition) {
             case 0:
                 break;
@@ -328,11 +257,7 @@ public class MainActivity extends BaseActivity {
                     public void run() {
                         try {
                             intent = new Intent(MainActivity.this, WebActivity.class);
-
-                            // edited on 24-11-2016
-                            // intent.putExtra(AppConstant.URL, userDetails.getFaqLink().trim());
                             intent.putExtra(AppConstant.URL, Data.getPayData().getPay().getFaqLink());
-
                             startActivity(intent);
                             overridePendingTransition(R.anim.right_in, R.anim.right_out);
                         } catch (Exception e) {
@@ -340,62 +265,22 @@ public class MainActivity extends BaseActivity {
                         }
                     }
                 }, 200);
-
-                //CommonMethods.openUrl(MainActivity.this, userDetails.getFaqLink().trim());
-//                startActivity(new Intent(MainActivity.this, TokensActivity.class));
                 break;
             case 4:
-// <<<<<<< 741d47f103067de25b678aea943c1dfd0feb0a38
-// =======
-
-                new Handler().postDelayed(new Runnable()
-                {
+                new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void run()
-                    {
-                        try
-                        {
+                    public void run() {
+                        try {
                             accountManagement();
-                        }
-                        catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             System.out.println("exception");
                         }
                     }
                 }, 200);
-
-
-
-
-//                intent = new Intent(MainActivity.this, WebActivity.class);
-//                intent.putExtra(AppConstant.URL, userDetails.getSupport_link());
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-
-                //CommonMethods.openUrl(MainActivity.this, userDetails.getSupport_link());
-//                startActivity(new Intent(MainActivity.this, ReferUserActivity.class));
                 break;
-// >>>>>>> working on account management API. Account management option added in menu-drawer.
-
-//                try
-//                {
-//                    intent = new Intent(MainActivity.this, WebActivity.class);
-//                    intent.putExtra(AppConstant.URL, userDetails.getSupport_link());
-//                    startActivity(intent);
-//                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
-//                    //CommonMethods.openUrl(MainActivity.this, userDetails.getSupport_link());
-////                startActivity(new Intent(MainActivity.this, ReferUserActivity.class));
-//                }
-//                catch (Exception e)
-//                {
-//                    e.printStackTrace();
-//                }
-
-                // break;
         }
 
         mDrawerList.setItemChecked(possition, true);
-//        setTitle(dataList.get(possition).getItemName());
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         drawerAdapter.notifyDataSetChanged();
@@ -412,13 +297,9 @@ public class MainActivity extends BaseActivity {
             @Override
             public void success(AccountManagementResponse accountManagementResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();
-                // System.out.println("accountManagementAPI.success");
-
-                if(accountManagementResponse != null)
-                {
+                if(accountManagementResponse != null) {
                     int flag = accountManagementResponse.getFlag();
-                    if(flag == 143)
-                    {
+                    if(flag == 143) {
                         String mid = accountManagementResponse.getMid();
                         String mkey = accountManagementResponse.getMkey();
                         String merchantTxnID = accountManagementResponse.getToken();
@@ -432,23 +313,17 @@ public class MainActivity extends BaseActivity {
                         Intent intent = new Intent(getApplicationContext(), AddAccount.class);
                         intent.putExtras(bundle);
                         startActivityForResult(intent, 1);
-
                     }
-                    else
-                    {
+                    else {
                         System.out.println(flag);
-                        // CommonMethods.callingBadToken(MainActivity.this,flag,accountManagementResponse.getMessage());
                     }
-                }
-                else
-                {
+                } else {
                     System.out.println("response object is null");
                 }
             }
 
             @Override
-            public void failure(RetrofitError error)
-            {
+            public void failure(RetrofitError error) {
                 System.out.println("failure..");
             }
         });
@@ -472,7 +347,6 @@ public class MainActivity extends BaseActivity {
                 String ifsc = bundle.getString("ifsc");
                 String accName = bundle.getString("accName");
 
-//            System.out.println("data=== "+bundle.getString("add1"));
                 System.out.println("virtual address== " + virtualAddress + " date=== " + registrationDate + "  ybl== " + yblRefId + "  pgM== " + pgMeTrnRefNo + " status== " + status + "  dsc ==" + statusdesc + " AccountNo == " + AccountNo + " ifsc == " + ifsc + " accName == " + accName);
 
                 VerifyRegisterResponse verifyRegisterResponse = new VerifyRegisterResponse();
@@ -511,8 +385,6 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-
-
         drawerAdapter.setSelectedPosition(-1);
         drawerAdapter.notifyDataSetChanged();
     }
@@ -537,8 +409,6 @@ public class MainActivity extends BaseActivity {
 
     private void callVerifyUserApi(VerifyRegisterResponse verifyRegisterResponse) {
         CallProgressWheel.showLoadingDialog(this, AppConstant.PLEASE);
-        String deviceToken = Prefs.with(this).getString(SharedPreferencesName.DEVICE_TOKEN, "");
-//        String accessToken =   Prefs.with(SignUpActivity.this).getString(SharedPreferencesName.ACCESS_TOKEN,"");
         VerifyUserRequest request = new VerifyUserRequest();
         request.setDeviceToken(MyApplication.getInstance().getDeviceToken());
         request.setUniqueDeviceId(CommonMethods.getUniqueDeviceId(this));
@@ -553,46 +423,32 @@ public class MainActivity extends BaseActivity {
             public void success(CommonResponse tokenGeneratedResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();
                 if (tokenGeneratedResponse != null) {
-//                    Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, tokenGeneratedResponse.getToken());
-//
                     int flag = tokenGeneratedResponse.getFlag();
                     if (flag == 401) {
-//						String authSecret = tokenGeneratedResponse.getUserData().getAuthKey() + Config.getClientSharedSecret();
-//						accessToken = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this).first;
 //                        accessTokenLogin(MainActivity.this);
-                    }
-                    else if(flag == 403)
-                    {
+                    } else if(flag == 403) {
 //                        logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
-                    }
-                    else
+                    } else {
                         CommonMethods.callingBadToken(MainActivity.this, flag, tokenGeneratedResponse.getMessage());
+                    }
                 }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 try {
-                    System.out.println("SelectServiceActivity.failure2222222");
-
                     CallProgressWheel.dismissLoadingDialog();
-
                     if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-//                        SingleButtonAlert.showAlert(SelectServiceActivity.this,"No Internet Connection", "Ok");
                         showAlertNoInternet(MainActivity.this);
                     } else {
-                        String json = new String(((TypedByteArray) error.getResponse()
-                                .getBody()).getBytes());
+                        String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
                         SingleButtonAlert.showAlert(MainActivity.this, jsonObject.getString("message"), AppConstant.OK);
-
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                     CallProgressWheel.dismissLoadingDialog();
                 }
-
             }
         });
 
