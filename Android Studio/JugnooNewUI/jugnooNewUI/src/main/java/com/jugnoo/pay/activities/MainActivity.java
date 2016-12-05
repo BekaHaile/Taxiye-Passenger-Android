@@ -49,7 +49,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -252,8 +251,12 @@ public class MainActivity extends BaseActivity {
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-        if(Data.getPayData().getPay().getHasVpa() == 0){
-            sendToSDKRegister(Data.getPayData().getPay());
+        try {
+            if(Data.getPayData().getPay().getHasVpa() == 0){
+				sendToSDKRegister(Data.getPayData().getPay());
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -560,11 +563,11 @@ public class MainActivity extends BaseActivity {
                     if (flag == 401) {
 //						String authSecret = tokenGeneratedResponse.getUserData().getAuthKey() + Config.getClientSharedSecret();
 //						accessToken = AccessTokenGenerator.getAccessTokenPair(SplashNewActivity.this).first;
-                        accessTokenLogin(MainActivity.this);
+//                        accessTokenLogin(MainActivity.this);
                     }
                     else if(flag == 403)
                     {
-                        logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
+//                        logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
                     }
                     else
                         CommonMethods.callingBadToken(MainActivity.this, flag, tokenGeneratedResponse.getMessage());

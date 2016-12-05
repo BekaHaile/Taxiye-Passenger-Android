@@ -8,6 +8,7 @@ import android.util.Pair;
 import com.jugnoo.pay.config.Config;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class AccessTokenGenerator {
