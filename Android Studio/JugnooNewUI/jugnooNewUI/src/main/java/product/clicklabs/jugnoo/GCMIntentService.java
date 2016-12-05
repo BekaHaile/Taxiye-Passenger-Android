@@ -657,7 +657,25 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						intent.putExtra(KEY_CLIENT_ID, clientId);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-					} else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
+					}
+					else if (PushFlags.MENUS_STATUS.getOrdinal() == flag) {
+						String clientId = jObj.optString(KEY_CLIENT_ID, "");
+						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
+						if(!TextUtils.isEmpty(phoneNo)){
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, clientId);
+						} else{
+							notificationManager(this, title, message1, playSound);
+						}
+						Intent intent = new Intent(Data.LOCAL_BROADCAST);
+						intent.putExtra(Constants.KEY_FLAG, flag);
+						intent.putExtra(Constants.KEY_MESSAGE, message);
+						intent.putExtra(KEY_CLIENT_ID, clientId);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+					}
+
+
+					else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
 						String clientId = jObj.optString(KEY_CLIENT_ID, "");
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						//message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));

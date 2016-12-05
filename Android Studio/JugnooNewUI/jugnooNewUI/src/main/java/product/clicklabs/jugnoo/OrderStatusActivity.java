@@ -316,6 +316,9 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                         try {
 
                             JSONObject jObj = new JSONObject(responseStr);
+
+                            Log.v("json for order status","json for order page"+jObj);
+
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);

@@ -26,7 +26,12 @@ public class MenusResponse {
 	@SerializedName("filter")
 	@Expose
 	private Filters filters;
-
+	@SerializedName("recent_orders")
+	@Expose
+	private List<RecentOrder> recentOrders = new ArrayList<RecentOrder>();
+	@SerializedName("recent_orders_possible_status")
+	@Expose
+	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
 	/**
 	 *
 	 * @return
@@ -106,6 +111,23 @@ public class MenusResponse {
 	public void setFilters(Filters filters) {
 		this.filters = filters;
 	}
+
+	public List<RecentOrder> getRecentOrders() {
+		return recentOrders;
+	}
+
+	public void setRecentOrders(List<RecentOrder> recentOrders) {
+		this.recentOrders = recentOrders;
+	}
+
+	public List<String> getRecentOrdersPossibleStatus() {
+		return recentOrdersPossibleStatus;
+	}
+
+	public void setRecentOrdersPossibleStatus(List<String> recentOrdersPossibleStatus) {
+		this.recentOrdersPossibleStatus = recentOrdersPossibleStatus;
+	}
+
 
 
 	public class Vendor {

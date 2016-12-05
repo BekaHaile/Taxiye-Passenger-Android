@@ -31,6 +31,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -85,6 +86,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         if (viewType == STATUS_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_meals_order_status, parent, false);
 
@@ -114,19 +116,25 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //    public void setData()
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
+    {
         try {
             if (holder instanceof ViewTitleStatus) {
                 final ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
                 try {
                     final RecentOrder recentOrder = recentOrders.get(position);
-                    for(int i=0; i<statusHolder.relativeStatusBar.getChildCount(); i++){
-                        if(statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup){
+                    for(int i=0; i<statusHolder.relativeStatusBar.getChildCount(); i++)
+                    {
+                        if(statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup)
+                        {
                             ViewGroup viewGroup = (ViewGroup)(statusHolder.relativeStatusBar.getChildAt(i));
-                            for(int j=0; j<viewGroup.getChildCount(); j++){
+                            for(int j=0; j<viewGroup.getChildCount(); j++)
+                            {
                                 viewGroup.getChildAt(j).setVisibility(View.GONE);
                             }
-                        } else{
+                        }
+                        else
+                        {
                             statusHolder.relativeStatusBar.getChildAt(i).setVisibility(View.GONE);
                         }
                     }

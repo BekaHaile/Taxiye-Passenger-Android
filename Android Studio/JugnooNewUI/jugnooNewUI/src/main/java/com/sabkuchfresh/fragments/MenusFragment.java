@@ -24,6 +24,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
+import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
@@ -70,6 +71,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private FreshActivity activity;
 
     private ArrayList<MenusResponse.Vendor> vendors = new ArrayList<>();
+    private ArrayList<RecentOrder> recentOrder = new ArrayList<>();
+    private ArrayList<String> status = new ArrayList<>();
 
     PushDialog pushDialog;
     private boolean resumed = false;
@@ -125,7 +128,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         swipeRefreshLayout.setEnabled(true);
 
-        menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, new MenusRestaurantAdapter.Callback() {
+        menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors,recentOrder,status, new MenusRestaurantAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
                 getVendorMenu(vendor);
@@ -245,6 +248,13 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()){
                                     activity.setMenusResponse(menusResponse);
                                     vendors = (ArrayList<MenusResponse.Vendor>) menusResponse.getVendors();
+
+                                    recentOrder.clear();
+                                    recentOrder.addAll(menusResponse.getRecentOrders());
+                                    status.clear();
+                                    status.addAll(menusResponse.getRecentOrdersPossibleStatus());
+
+
                                     menusRestaurantAdapter.setList(vendors);
                                     menusRestaurantAdapter.applyFilter();
                                     relativeLayoutNoMenus.setVisibility(menusResponse.getVendors().size() == 0 ? View.VISIBLE : View.GONE);

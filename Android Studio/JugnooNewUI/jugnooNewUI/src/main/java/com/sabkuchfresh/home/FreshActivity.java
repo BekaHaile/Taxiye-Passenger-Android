@@ -532,11 +532,32 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 String message = intent.getStringExtra(Constants.KEY_MESSAGE);
                                 Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
                                 openPaytmRechargeDialog();
-                            } else if(PushFlags.STATUS_CHANGED.getOrdinal() == flag){
+                            }
+                            else if(PushFlags.STATUS_CHANGED.getOrdinal() == flag)
+                            {
+                                String clientId = intent.getStringExtra(Constants.KEY_CLIENT_ID);
                                 Fragment fragment = getTopFragment();
-                                if(fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()){
-                                    ((MealFragment)fragment).getAllProducts(true, getSelectedLatLng());
-                                } else {
+                                    if(fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus())
+                                    {
+                                        ((MealFragment)fragment).getAllProducts(true, getSelectedLatLng());
+                                    }
+                                    else
+                                    {
+                                        Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
+                                        intent1.putExtra(Constants.KEY_FLAG, flag);
+                                        LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
+                                    }
+                            }
+                            else if(PushFlags.MENUS_STATUS.getOrdinal() == flag)
+                            {
+                                Fragment fragment = getTopFragment();
+
+                                if(fragment instanceof MenusFragment && FreshActivity.this.hasWindowFocus())
+                                {
+                                    ((MenusFragment)fragment).getAllMenus(true, getSelectedLatLng());
+                                }
+                                else
+                                {
                                     Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                     intent1.putExtra(Constants.KEY_FLAG, flag);
                                     LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
