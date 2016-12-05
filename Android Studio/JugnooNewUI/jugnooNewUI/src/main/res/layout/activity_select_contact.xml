@@ -12,49 +12,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/other_layout_margin"
+        android:layout_margin="5dp"
         android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="5dp">
-
-            <ImageView
-                android:id="@+id/imageViewContacts"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@drawable/add_contact" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:layout_toRightOf="@+id/imageViewContacts"
-                android:paddingLeft="17dp"
-                android:text="@string/add_contact"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/text_view_size" />
-
-            <ImageView
-                android:id="@+id/imageViewRefresh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/reload_selector" />
-        </RelativeLayout>
-
 
 
         <RelativeLayout
             android:id="@+id/searchLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:layout_marginTop="10dp">
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@color/white">
 
             <EditText
                 android:id="@+id/phone_et"
@@ -83,12 +51,47 @@
 
         </RelativeLayout>
 
+        <product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_below="@+id/searchLayout"
+            android:visibility="visible"
+            app:pstsDividerColor="@color/transparent"
+            app:pstsIndicatorHeight="3dp"
+            app:pstsShouldExpand="true"
+            app:pstsUnderlineColor="@color/transparent"
+            app:pstsUnderlineHeight="0dp" />
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tabs"/>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:layout_below="@+id/tabs"
+            android:background="@drawable/shadow_down" />
+
+        <View
+            android:id="@+id/viewGreyBG"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black_translucent"
+            android:visibility="gone" />
+
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contacts_recycler"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
+            android:layout_marginTop="2dp"
             android:layout_above="@+id/btns_layout"
             android:layout_below="@+id/toolbar" />
     </LinearLayout>

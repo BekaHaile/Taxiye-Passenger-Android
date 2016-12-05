@@ -1392,8 +1392,8 @@
 <string name="pay_string">Pay</string>
 <string name="change_pswd_string">CHANGE PASSWORD</string>
 <string name="logout_string">LOGOUT</string>
-
-
+	<string name="contact">Contact</string>
+	<string name="payment_address">Payment Address</string>
 
 
 </resources>

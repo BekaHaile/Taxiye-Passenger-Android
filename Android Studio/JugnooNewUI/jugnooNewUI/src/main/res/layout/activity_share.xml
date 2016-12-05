@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="90px"
         android:layout_below="@+id/topBar"
-        android:visibility="gone"
+        android:visibility="visible"
         app:pstsDividerColor="@color/transparent"
         app:pstsIndicatorHeight="6px"
         app:pstsShouldExpand="true"

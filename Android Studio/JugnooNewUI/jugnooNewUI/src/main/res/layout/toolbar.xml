@@ -45,11 +45,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
             android:visibility="gone"
             android:src="@drawable/refresh_contacts_pay"/>
     </RelativeLayout>
 
     <ImageView
+        android:id="@+id/toolbarDivider"
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:src="@drawable/shadow_down"
