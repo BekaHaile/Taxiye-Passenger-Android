@@ -6,7 +6,7 @@
     android:layout_gravity="center"
     android:background="@android:color/transparent">
 
-    <com.jugnoo.pay.utils.ProgressWheel
+    <product.clicklabs.jugnoo.utils.ProgressWheel
         android:id="@+id/progress_wheel"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -18,7 +18,7 @@
         wheel:matProg_fillRadius="true"
         wheel:matProg_progressIndeterminate="false">
 
-    </com.jugnoo.pay.utils.ProgressWheel>
+    </product.clicklabs.jugnoo.utils.ProgressWheel>
 
     <TextView
         android:id="@+id/tvProgress"
