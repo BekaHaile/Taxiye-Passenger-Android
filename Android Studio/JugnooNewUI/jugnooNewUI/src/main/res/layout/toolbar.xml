@@ -38,6 +38,15 @@
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
             android:textSize="@dimen/toolbar_text_size"/>
+
+        <ImageView
+            android:id="@+id/ivToolbarRefreshContacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:visibility="gone"
+            android:src="@drawable/refresh_contacts_pay"/>
     </RelativeLayout>
 
     <ImageView

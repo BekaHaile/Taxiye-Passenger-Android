@@ -48,19 +48,42 @@
         </RelativeLayout>
 
 
+
+        <RelativeLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginTop="10dp">
+
             <EditText
                 android:id="@+id/phone_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:hint="@string/mobile_contact"
-                android:inputType="textCapSentences"
+                android:layout_centerVertical="true"
+                android:background="@drawable/background_search_shap"
+                android:gravity="center_vertical"
                 android:nextFocusDown="@+id/password_et"
-                android:singleLine="true"
-                android:layout_marginTop="10dp"
-                android:textColor="@color/lightBlackTxtColor"
+                android:padding="5dp"
+                android:inputType="textCapSentences"
+                android:hint="@string/mobile_contact"
+                android:maxLines="1"
+                android:textColor="@color/text_color_light"
                 android:textColorHint="@color/generalTxtColor"
-                android:textSize="@dimen/text_view_size" />
+                android:textSize="@dimen/text_view_size"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:src="@drawable/search_pay"/>
+
+        </RelativeLayout>
+
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/contacts_recycler"

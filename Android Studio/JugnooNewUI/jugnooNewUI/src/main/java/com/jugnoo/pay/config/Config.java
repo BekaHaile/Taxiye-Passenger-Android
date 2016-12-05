@@ -57,7 +57,7 @@ static public String getFlurryKey() {
             case DEV:
 
                 // BASE_URL = "http://52.87.201.40:8000";
-                BASE_URL = "https://test.jugnoo.in:8099/pay/v2";       //NEW dev
+                BASE_URL = "https://test.jugnoo.in:8099/pay/v1";       //NEW dev
                 //  BASE_URL = "http://52.91.250.144:3000";       //NEW test
                 FLURRY_KEY = "MNZJSQ9YV376F3NM39VZ";
 //                GCM_PROJECT_NUMBER = "563232976573";
@@ -66,7 +66,7 @@ static public String getFlurryKey() {
             case TEST:
 
 //                BASE_URL = "http://api.deets.clicklabs.in:1441/";
-                BASE_URL = "https://test.jugnoo.in:8099/pay/v2/";
+                BASE_URL = "https://test.jugnoo.in:8099/pay/v1/";
 
                 FLURRY_KEY = "MNZJSQ9YV376F3NM39VZ";
 //                GCM_PROJECT_NUMBER = "563232976573";

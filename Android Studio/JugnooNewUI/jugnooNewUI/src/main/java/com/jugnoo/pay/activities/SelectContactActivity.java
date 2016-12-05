@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -56,6 +57,7 @@ public class SelectContactActivity extends BaseActivity implements RecyclerViewC
     @Bind(R.id.back_btn)
     ImageButton backBtn;
 
+
     @OnClick(R.id.back_btn)
     void backBtnClicked() {
         onBackPressed();
@@ -73,6 +75,7 @@ public class SelectContactActivity extends BaseActivity implements RecyclerViewC
    private List<SelectUser> temp;
     // Cursor to load contacts list
     private Cursor phones, email;
+    private ImageView ivToolbarRefreshContacts;
 
     // Pop up
    private ContentResolver resolver;
@@ -87,6 +90,9 @@ public class SelectContactActivity extends BaseActivity implements RecyclerViewC
         toolbarTitleTxt.setText(R.string.select_contact_screen);
         mToolBar.setTitle("");
         setSupportActionBar(mToolBar);
+
+        ivToolbarRefreshContacts = (ImageView) findViewById(R.id.ivToolbarRefreshContacts); ivToolbarRefreshContacts.setVisibility(View.VISIBLE);
+
         selectContactActivityObj = this;
         accessToken = Data.userData.accessToken;          //Prefs.with(SelectContactActivity.this).getString(SharedPreferencesName.ACCESS_TOKEN, "");
         contactsRecycler = (RecyclerView) findViewById(R.id.contacts_recycler);
