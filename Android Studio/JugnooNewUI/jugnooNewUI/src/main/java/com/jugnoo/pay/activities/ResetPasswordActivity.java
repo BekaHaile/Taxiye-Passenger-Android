@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.Validator;
+import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
@@ -77,7 +77,7 @@ public class ResetPasswordActivity extends BaseActivity{
 
     private void resetPswdApi() {
         if(AppStatus.getInstance(ResetPasswordActivity.this).isOnline(ResetPasswordActivity.this)) {
-            CallProgressWheel.showLoadingDialog(ResetPasswordActivity.this, AppConstants.PLEASE);
+            CallProgressWheel.showLoadingDialog(ResetPasswordActivity.this, AppConstant.PLEASE);
             String p = editTextNewPass.getText().toString().trim();
             HashMap<String, String> params = new HashMap<>();
 
@@ -110,7 +110,7 @@ public class ResetPasswordActivity extends BaseActivity{
                             String json = new String(((TypedByteArray) error.getResponse()
                                     .getBody()).getBytes());
                             JSONObject jsonObject = new JSONObject(json);
-                            SingleButtonAlert.showAlert(ResetPasswordActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                            SingleButtonAlert.showAlert(ResetPasswordActivity.this, jsonObject.getString("message"), AppConstant.OK);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

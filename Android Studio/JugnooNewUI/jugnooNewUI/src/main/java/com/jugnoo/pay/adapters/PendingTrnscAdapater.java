@@ -18,11 +18,11 @@ import com.jugnoo.pay.models.AccessTokenRequest;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.models.TransacHistoryResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.TwoButtonAlert;
+import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
@@ -113,7 +113,7 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
                     buttonText = "Are you sure you want to cancel the request?";
                 }
 
-                TwoButtonAlert.showAlert(activity, buttonText, AppConstants.NO, AppConstants.YES,
+                TwoButtonAlert.showAlert(activity, buttonText, AppConstant.NO, AppConstant.YES,
                         new TwoButtonAlert.OnAlertOkCancelClickListener() {
                     @Override
                     public void onOkButtonClicked() {
@@ -145,9 +145,9 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
                     newData.setOrderId(String.valueOf(transactionHistoryList.get(position).getId()));
 
                     Intent intent = new Intent(activity, SendMoneyActivity.class);
-                    intent.putExtra(AppConstants.REQUEST_STATUS, false);
+                    intent.putExtra(AppConstant.REQUEST_STATUS, false);
                     Bundle bun =new Bundle();
-                    bun.putParcelable(AppConstants.CONTACT_DATA, newData);
+                    bun.putParcelable(AppConstant.CONTACT_DATA, newData);
                     intent.putExtras(bun);
                     activity.startActivity(intent);
                 }
@@ -224,7 +224,7 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
                                 .getBody()).getBytes());
 
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(activity, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(activity, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -276,7 +276,7 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
                                 .getBody()).getBytes());
 
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(activity, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(activity, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

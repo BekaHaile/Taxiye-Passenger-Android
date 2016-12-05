@@ -14,11 +14,11 @@ import android.widget.TextView;
 
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.Validator;
+import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
@@ -123,7 +123,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 
     private void callingForgotPswdApi() {
         if(AppStatus.getInstance(ForgotPasswordActivity.this).isOnline(ForgotPasswordActivity.this)) {
-            CallProgressWheel.showLoadingDialog(ForgotPasswordActivity.this, AppConstants.PLEASE);
+            CallProgressWheel.showLoadingDialog(ForgotPasswordActivity.this, AppConstant.PLEASE);
             String p = phoneET.getText().toString().trim();
             final String phone = p.replace(" ", "");
             HashMap<String, String> params = new HashMap<>();
@@ -162,7 +162,7 @@ public class ForgotPasswordActivity extends BaseActivity {
                             String json = new String(((TypedByteArray) error.getResponse()
                                     .getBody()).getBytes());
                             JSONObject jsonObject = new JSONObject(json);
-                            SingleButtonAlert.showAlert(ForgotPasswordActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                            SingleButtonAlert.showAlert(ForgotPasswordActivity.this, jsonObject.getString("message"), AppConstant.OK);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

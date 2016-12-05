@@ -32,6 +32,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.jugnoo.pay.activities.SignUpActivity;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -664,7 +665,7 @@ public class CommonMethods {
                     break;
 
                 case TOKEN_EXPIRED:AUTH_ALREADY_REGISTERED:AUTH_LOGIN_FAILURE:
-                    SingleButtonAlert.showAlertGps(ctx, msg, AppConstants.OK, new SingleButtonAlert.OnAlertOkClickListener() {
+                    SingleButtonAlert.showAlertGps(ctx, msg, AppConstant.OK, new SingleButtonAlert.OnAlertOkClickListener() {
                         @Override
                         public void onOkButtonClicked() {
                             ctx.finish();
@@ -672,7 +673,7 @@ public class CommonMethods {
                     });
                     break;
                 case AUTH_NOT_REGISTERED:
-                    TwoButtonAlert.showAlert(ctx, msg, AppConstants.CANCEL, AppConstants.REGISTER, new TwoButtonAlert.OnAlertOkCancelClickListener() {
+                    TwoButtonAlert.showAlert(ctx, msg, AppConstant.CANCEL, AppConstant.REGISTER, new TwoButtonAlert.OnAlertOkCancelClickListener() {
                         @Override
                         public void onOkButtonClicked() {
                             ctx.startActivity(new Intent(ctx, SignUpActivity.class));
@@ -686,7 +687,7 @@ public class CommonMethods {
 
                         break;
                 case AUTH_ALREADY_REGISTERED:
-                    SingleButtonAlert.showAlertGps(ctx, msg, AppConstants.OK, new SingleButtonAlert.OnAlertOkClickListener() {
+                    SingleButtonAlert.showAlertGps(ctx, msg, AppConstant.OK, new SingleButtonAlert.OnAlertOkClickListener() {
                         @Override
                         public void onOkButtonClicked() {
                             ctx.finish();
@@ -696,7 +697,7 @@ public class CommonMethods {
                     break;
 
                   default:
-                    SingleButtonAlert.showAlert(ctx, msg, AppConstants.OK);
+                    SingleButtonAlert.showAlert(ctx, msg, AppConstant.OK);
                     break;
 
             }

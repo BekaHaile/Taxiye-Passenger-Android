@@ -15,10 +15,10 @@ import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.models.SendMoneyCallback;
 import com.jugnoo.pay.models.SendMoneyRequest;
 import com.jugnoo.pay.utils.ApiResponseFlags;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SingleButtonAlert;
+import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -121,15 +121,15 @@ private SelectUser contactDetails;
             toolbarTitleTxt.setText(R.string.transc_completed_screen);
             mToolBar.setTitle("");
             setSupportActionBar(mToolBar);
-            contactDetails = (SelectUser) getIntent().getExtras().getParcelable(AppConstants.CONTACT_DATA);
-            requestObj = (SendMoneyRequest)getIntent().getSerializableExtra(AppConstants.TRANSACTION_DATA);
-            orderId = getIntent().getStringExtra(AppConstants.ORDER_ID);
-            if(getIntent().hasExtra(AppConstants.TRANSACTION_STATUS)){
-                transactionStatus = getIntent().getStringExtra(AppConstants.TRANSACTION_STATUS);
+            contactDetails = (SelectUser) getIntent().getExtras().getParcelable(AppConstant.CONTACT_DATA);
+            requestObj = (SendMoneyRequest)getIntent().getSerializableExtra(AppConstant.TRANSACTION_DATA);
+            orderId = getIntent().getStringExtra(AppConstant.ORDER_ID);
+            if(getIntent().hasExtra(AppConstant.TRANSACTION_STATUS)){
+                transactionStatus = getIntent().getStringExtra(AppConstant.TRANSACTION_STATUS);
             }
 
 
-            SendMoneyCallback callback = (SendMoneyCallback) getIntent().getExtras().getSerializable(AppConstants.SEND_TRANSACTION_DATA);
+            SendMoneyCallback callback = (SendMoneyCallback) getIntent().getExtras().getSerializable(AppConstant.SEND_TRANSACTION_DATA);
             setData();
 
             if(callback!=null) {
@@ -199,7 +199,7 @@ private SelectUser contactDetails;
 
         try
         {
-            CallProgressWheel.showLoadingDialog(TranscCompletedActivity.this, AppConstants.PLEASE);
+            CallProgressWheel.showLoadingDialog(TranscCompletedActivity.this, AppConstant.PLEASE);
             HashMap<String, String> params = new HashMap<>();
 
             params.put("order_id", orderId);
@@ -248,7 +248,7 @@ private SelectUser contactDetails;
                             String json = new String(((TypedByteArray) error.getResponse()
                                     .getBody()).getBytes());
                             JSONObject jsonObject = new JSONObject(json);
-                            SingleButtonAlert.showAlert(TranscCompletedActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                            SingleButtonAlert.showAlert(TranscCompletedActivity.this, jsonObject.getString("message"), AppConstant.OK);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

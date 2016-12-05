@@ -13,9 +13,9 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.SingleButtonAlert;
+import com.sabkuchfresh.utils.AppConstant;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,11 +50,11 @@ public class WebActivity extends BaseActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
 
-        if(getIntent().hasExtra(AppConstants.URL)){
-            url = getIntent().getStringExtra(AppConstants.URL);
+        if(getIntent().hasExtra(AppConstant.URL)){
+            url = getIntent().getStringExtra(AppConstant.URL);
         }
 
-        CallProgressWheel.showLoadingDialog(WebActivity.this, AppConstants.PLEASE);
+        CallProgressWheel.showLoadingDialog(WebActivity.this, AppConstant.PLEASE);
 
         webView = (WebView) findViewById(R.id.webView);
         webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -96,7 +96,7 @@ public class WebActivity extends BaseActivity {
             super.onReceivedError(view, errorCode, description, failingUrl);
             //imageViewProgressBar.setVisibility(View.GONE);
             CallProgressWheel.dismissLoadingDialog();
-            SingleButtonAlert.showAlertGps(WebActivity.this, description, AppConstants.OK, new SingleButtonAlert.OnAlertOkClickListener() {
+            SingleButtonAlert.showAlertGps(WebActivity.this, description, AppConstant.OK, new SingleButtonAlert.OnAlertOkClickListener() {
                 @Override
                 public void onOkButtonClicked() {
                     finish();

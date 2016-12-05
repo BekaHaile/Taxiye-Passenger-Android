@@ -18,13 +18,13 @@ import com.jugnoo.pay.models.TokenGeneratedResponse;
 import com.jugnoo.pay.models.VerifyRegisterResponse;
 import com.jugnoo.pay.models.VerifyUserRequest;
 import com.jugnoo.pay.utils.ApiResponseFlags;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.TwoButtonAlert;
 import com.jugnoo.pay.utils.Validator;
+import com.sabkuchfresh.utils.AppConstant;
 import com.yesbank.Registration;
 
 import org.json.JSONObject;
@@ -76,7 +76,7 @@ public class SignUpActivity extends BaseActivity {
         Validator validator = new Validator();
         if (validator.regValidateScreenOne(fNameET.getText().toString().trim(), fNameET, emailET.getText().toString().trim(),
                 emailET, phoneET.getText().toString().trim(), phoneET, pswdET.getText().toString().trim(), pswdET)) {
-            TwoButtonAlert.showAlert(SignUpActivity.this, getResources().getString(R.string.choose_mobile_number), AppConstants.CANCEL, AppConstants.REGISTER,
+            TwoButtonAlert.showAlert(SignUpActivity.this, getResources().getString(R.string.choose_mobile_number), AppConstant.CANCEL, AppConstant.REGISTER,
                     new TwoButtonAlert.OnAlertOkCancelClickListener() {
                 @Override
                 public void onOkButtonClicked() {
@@ -136,7 +136,7 @@ public class SignUpActivity extends BaseActivity {
 
 
     private void callRegisterApi() {
-        CallProgressWheel.showLoadingDialog(SignUpActivity.this, AppConstants.PLEASE);
+        CallProgressWheel.showLoadingDialog(SignUpActivity.this, AppConstant.PLEASE);
         GenerateTokenRequest request = new GenerateTokenRequest();
         request.setUserEmail(emailET.getText().toString());
         request.setPhone_number(phoneET.getText().toString());
@@ -181,7 +181,7 @@ public class SignUpActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(SignUpActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(SignUpActivity.this, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -223,7 +223,7 @@ public class SignUpActivity extends BaseActivity {
 
 
     private void callVerifyUserApi(VerifyRegisterResponse verifyRegisterResponse) {
-        CallProgressWheel.showLoadingDialog(SignUpActivity.this, AppConstants.PLEASE);
+        CallProgressWheel.showLoadingDialog(SignUpActivity.this, AppConstant.PLEASE);
         String deviceToken = Prefs.with(SignUpActivity.this).getString(SharedPreferencesName.DEVICE_TOKEN, "");
 //        String accessToken =   Prefs.with(SignUpActivity.this).getString(SharedPreferencesName.ACCESS_TOKEN,"");
         VerifyUserRequest request = new VerifyUserRequest();
@@ -271,7 +271,7 @@ public class SignUpActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(SignUpActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(SignUpActivity.this, jsonObject.getString("message"), AppConstant.OK);
 
                     }
 

@@ -22,13 +22,13 @@ import com.jugnoo.pay.models.SendMoneyResponse;
 import com.jugnoo.pay.models.SetMPINResponse;
 import com.jugnoo.pay.services.GCMIntentService;
 import com.jugnoo.pay.utils.ApiResponseFlags;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.TwoButtonAlert;
 import com.jugnoo.pay.utils.Validator;
+import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.yesbank.SetMpin;
@@ -93,7 +93,7 @@ public class ProfileActivity extends BaseActivity {
 
     @OnClick(R.id.logout_layout)
     void logoutBtnClicked() {
-        TwoButtonAlert.showAlert(ProfileActivity.this, "Are you sure you want to logout?", AppConstants.CANCEL, AppConstants.LOG_OUT, new TwoButtonAlert.OnAlertOkCancelClickListener() {
+        TwoButtonAlert.showAlert(ProfileActivity.this, "Are you sure you want to logout?", AppConstant.CANCEL, AppConstant.LOG_OUT, new TwoButtonAlert.OnAlertOkCancelClickListener() {
             @Override
             public void onOkButtonClicked() {
                 //callingLogOutUserApi();
@@ -281,7 +281,7 @@ public class ProfileActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -414,7 +414,7 @@ public class ProfileActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -508,7 +508,7 @@ public class ProfileActivity extends BaseActivity {
 
     // used to send the  money
     private void changeMPINApi() {
-        CallProgressWheel.showLoadingDialog(ProfileActivity.this, AppConstants.PLEASE);
+        CallProgressWheel.showLoadingDialog(ProfileActivity.this, AppConstant.PLEASE);
         HashMap<String, String> params = new HashMap<>();
         params.put("access_token",  accessToken);
 
@@ -541,7 +541,7 @@ public class ProfileActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -643,7 +643,7 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void changeMPINCallbackApi(SetMPINResponse setMPINResponse) {
-        CallProgressWheel.showLoadingDialog(ProfileActivity.this, AppConstants.PLEASE);
+        CallProgressWheel.showLoadingDialog(ProfileActivity.this, AppConstant.PLEASE);
         HashMap<String, String> params = new HashMap<>();
 
         params.put("access_token",  accessToken);
@@ -677,7 +677,7 @@ public class ProfileActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -26,11 +26,11 @@ import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.VerifyRegisterResponse;
 import com.jugnoo.pay.models.VerifyUserRequest;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.jugnoo.pay.utils.SingleButtonAlert;
+import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.yesbank.AddAccount;
@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity {
                     else
                     {
                         Intent intent = new Intent(MainActivity.this,SelectContactActivity.class);
-                        intent.putExtra(AppConstants.REQUEST_STATUS,true);
+                        intent.putExtra(AppConstant.REQUEST_STATUS,true);
                         startActivity(intent);
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     }
@@ -152,7 +152,7 @@ public class MainActivity extends BaseActivity {
         else
         {
             Intent intent = new Intent(MainActivity.this,SelectContactActivity.class);
-            intent.putExtra(AppConstants.REQUEST_STATUS,true);
+            intent.putExtra(AppConstant.REQUEST_STATUS,true);
             startActivity(intent);
             overridePendingTransition(R.anim.right_in, R.anim.right_out);
         }
@@ -166,7 +166,7 @@ public class MainActivity extends BaseActivity {
 //    @OnClick(R.id.request_money_image)
 //    void requestMoneyImgClicked() {
 //        Intent intent = new Intent(MainActivity.this, SelectContactActivity.class);
-//        intent.putExtra(AppConstants.REQUEST_STATUS, true);
+//        intent.putExtra(AppConstant.REQUEST_STATUS, true);
 //        startActivity(intent);
 //        overridePendingTransition(R.anim.right_in, R.anim.right_out);
 //// >>>>>>> working on account management API. Account management option added in menu-drawer.
@@ -299,7 +299,7 @@ public class MainActivity extends BaseActivity {
                     public void run() {
                         try {
                             intent = new Intent(MainActivity.this, TransacHistoryActivity.class);
-                            intent.putExtra(AppConstants.PENDING_TRANSACTION_STATUS, true);
+                            intent.putExtra(AppConstant.PENDING_TRANSACTION_STATUS, true);
                             startActivity(intent);
                             overridePendingTransition(R.anim.right_in, R.anim.right_out);
                         } catch (Exception e) {
@@ -330,8 +330,8 @@ public class MainActivity extends BaseActivity {
                             intent = new Intent(MainActivity.this, WebActivity.class);
 
                             // edited on 24-11-2016
-                            // intent.putExtra(AppConstants.URL, userDetails.getFaqLink().trim());
-                            intent.putExtra(AppConstants.URL, Data.getPayData().getPay().getFaqLink());
+                            // intent.putExtra(AppConstant.URL, userDetails.getFaqLink().trim());
+                            intent.putExtra(AppConstant.URL, Data.getPayData().getPay().getFaqLink());
 
                             startActivity(intent);
                             overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -368,7 +368,7 @@ public class MainActivity extends BaseActivity {
 
 
 //                intent = new Intent(MainActivity.this, WebActivity.class);
-//                intent.putExtra(AppConstants.URL, userDetails.getSupport_link());
+//                intent.putExtra(AppConstant.URL, userDetails.getSupport_link());
 //                startActivity(intent);
 //                overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
@@ -380,7 +380,7 @@ public class MainActivity extends BaseActivity {
 //                try
 //                {
 //                    intent = new Intent(MainActivity.this, WebActivity.class);
-//                    intent.putExtra(AppConstants.URL, userDetails.getSupport_link());
+//                    intent.putExtra(AppConstant.URL, userDetails.getSupport_link());
 //                    startActivity(intent);
 //                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
 //                    //CommonMethods.openUrl(MainActivity.this, userDetails.getSupport_link());
@@ -536,7 +536,7 @@ public class MainActivity extends BaseActivity {
 
 
     private void callVerifyUserApi(VerifyRegisterResponse verifyRegisterResponse) {
-        CallProgressWheel.showLoadingDialog(this, AppConstants.PLEASE);
+        CallProgressWheel.showLoadingDialog(this, AppConstant.PLEASE);
         String deviceToken = Prefs.with(this).getString(SharedPreferencesName.DEVICE_TOKEN, "");
 //        String accessToken =   Prefs.with(SignUpActivity.this).getString(SharedPreferencesName.ACCESS_TOKEN,"");
         VerifyUserRequest request = new VerifyUserRequest();
@@ -584,7 +584,7 @@ public class MainActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(MainActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(MainActivity.this, jsonObject.getString("message"), AppConstant.OK);
 
                     }
 

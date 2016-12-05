@@ -25,12 +25,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jugnoo.pay.adapters.ContactsListAdapter;
 import com.jugnoo.pay.models.SelectUser;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.RecyclerViewClickListener;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.jugnoo.pay.utils.Validator;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -96,7 +96,7 @@ public class SelectContactActivity extends BaseActivity implements RecyclerViewC
         selectContactActivityObj = this;
         accessToken = Data.userData.accessToken;          //Prefs.with(SelectContactActivity.this).getString(SharedPreferencesName.ACCESS_TOKEN, "");
         contactsRecycler = (RecyclerView) findViewById(R.id.contacts_recycler);
-       requestStatus = getIntent().getBooleanExtra(AppConstants.REQUEST_STATUS,false);
+       requestStatus = getIntent().getBooleanExtra(AppConstant.REQUEST_STATUS,false);
 
         selectUsers = new ArrayList<SelectUser>();
         resolver = this.getContentResolver();
@@ -156,9 +156,9 @@ public class SelectContactActivity extends BaseActivity implements RecyclerViewC
         num = num.replace("-", "");
         if(CommonMethods.extractNumber(num).length()>=10) {
             Intent intent = new Intent(SelectContactActivity.this, SendMoneyActivity.class);
-            intent.putExtra(AppConstants.REQUEST_STATUS, requestStatus);
+            intent.putExtra(AppConstant.REQUEST_STATUS, requestStatus);
             Bundle bun =new Bundle();
-            bun.putParcelable(AppConstants.CONTACT_DATA, data);
+            bun.putParcelable(AppConstant.CONTACT_DATA, data);
             intent.putExtras( bun);
             startActivity(intent);
             overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -172,9 +172,9 @@ public class SelectContactActivity extends BaseActivity implements RecyclerViewC
             newData.setAmount("");
             data.setOrderId("0");
             Intent intent = new Intent(SelectContactActivity.this, SendMoneyActivity.class);
-            intent.putExtra(AppConstants.REQUEST_STATUS, requestStatus);
+            intent.putExtra(AppConstant.REQUEST_STATUS, requestStatus);
             Bundle bun =new Bundle();
-            bun.putParcelable(AppConstants.CONTACT_DATA, newData);
+            bun.putParcelable(AppConstant.CONTACT_DATA, newData);
             intent.putExtras( bun);
             startActivity(intent);
             overridePendingTransition(R.anim.right_in, R.anim.right_out);

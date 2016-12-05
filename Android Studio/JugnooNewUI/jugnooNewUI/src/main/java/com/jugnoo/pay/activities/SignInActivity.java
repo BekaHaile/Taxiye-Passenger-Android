@@ -12,13 +12,13 @@ import android.widget.TextView;
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.LoginRequest;
 import com.jugnoo.pay.utils.ApiResponseFlags;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.TwoButtonAlert;
 import com.jugnoo.pay.utils.Validator;
+import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
@@ -109,7 +109,7 @@ public class SignInActivity extends BaseActivity {
 
     // used to verifying access token of user
     private void callingLoginApi() {
-        CallProgressWheel.showLoadingDialog(SignInActivity.this, AppConstants.PLEASE);
+        CallProgressWheel.showLoadingDialog(SignInActivity.this, AppConstant.PLEASE);
         LoginRequest request = new LoginRequest();
         request.setPhone_no(phoneET.getText().toString());
         request.setUnique_device_id(CommonMethods.getUniqueDeviceId(SignInActivity.this));
@@ -136,7 +136,7 @@ public class SignInActivity extends BaseActivity {
                         overridePendingTransition(0, 0);
                         finish();
                     } else if(flag == ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal()){
-                        TwoButtonAlert.showAlert(SignInActivity.this, tokenGeneratedResponse.getMessage(), AppConstants.CANCEL, AppConstants.REGISTER,
+                        TwoButtonAlert.showAlert(SignInActivity.this, tokenGeneratedResponse.getMessage(), AppConstant.CANCEL, AppConstant.REGISTER,
                                 new TwoButtonAlert.OnAlertOkCancelClickListener() {
                             @Override
                             public void onOkButtonClicked() {
@@ -168,7 +168,7 @@ public class SignInActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(SignInActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(SignInActivity.this, jsonObject.getString("message"), AppConstant.OK);
                     }
 
                 } catch (Exception e) {

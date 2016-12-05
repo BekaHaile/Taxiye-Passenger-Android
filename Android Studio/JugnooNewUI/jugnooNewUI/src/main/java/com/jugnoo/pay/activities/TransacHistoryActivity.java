@@ -16,10 +16,10 @@ import com.jugnoo.pay.adapters.PendingTrnscAdapater;
 import com.jugnoo.pay.adapters.TranscRecyslerAdapter;
 import com.jugnoo.pay.models.AccessTokenRequest;
 import com.jugnoo.pay.models.TransacHistoryResponse;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SingleButtonAlert;
+import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
@@ -69,7 +69,7 @@ public class TransacHistoryActivity extends BaseActivity {
             linearLayoutNoTxn = (LinearLayout)findViewById(R.id.linearLayoutNoTxn);
             textViewNoTxn = (TextView)findViewById(R.id.textViewNoTxn);
             imageViewNoTxn = (ImageView)findViewById(R.id.imageViewNoTxn);
-            pendingTranscStatus = getIntent().getBooleanExtra(AppConstants.PENDING_TRANSACTION_STATUS, false);
+            pendingTranscStatus = getIntent().getBooleanExtra(AppConstant.PENDING_TRANSACTION_STATUS, false);
             if(pendingTranscStatus) {
                 toolbarTitleTxt.setText(R.string.pending_trnsc_screen);
                 textViewNoTxn.setText(getResources().getString(R.string.no_pending_txn));
@@ -183,7 +183,7 @@ public class TransacHistoryActivity extends BaseActivity {
 
                         JSONObject jsonObject = new JSONObject(json);
 
-                        SingleButtonAlert.showAlert(TransacHistoryActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(TransacHistoryActivity.this, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

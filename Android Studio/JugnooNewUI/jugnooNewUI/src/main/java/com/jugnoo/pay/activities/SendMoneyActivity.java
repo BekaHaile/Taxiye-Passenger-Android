@@ -21,11 +21,11 @@ import com.jugnoo.pay.models.SendMoneyCallback;
 import com.jugnoo.pay.models.SendMoneyRequest;
 import com.jugnoo.pay.models.SendMoneyResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
-import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.Validator;
+import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.Picasso;
 import com.yesbank.PayActivity;
 import com.yesbank.TransactionStatus;
@@ -111,7 +111,7 @@ public class SendMoneyActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_money);
         ButterKnife.bind(this);
-        requestStatus = getIntent().getBooleanExtra(AppConstants.REQUEST_STATUS, false);
+        requestStatus = getIntent().getBooleanExtra(AppConstant.REQUEST_STATUS, false);
         if (requestStatus) {
             toolbarTitleTxt.setText(R.string.request_money_screen);
             buttonSend.setText(getResources().getString(R.string.request));
@@ -124,7 +124,7 @@ public class SendMoneyActivity extends BaseActivity {
         setSupportActionBar(mToolBar);
         sendMoneyActivityObj = this;
         accessToken = Data.userData.accessToken;              //Prefs.with(SendMoneyActivity.this).getString(SharedPreferencesName.ACCESS_TOKEN, "");
-        contactDetails = (SelectUser) getIntent().getExtras().getParcelable(AppConstants.CONTACT_DATA);
+        contactDetails = (SelectUser) getIntent().getExtras().getParcelable(AppConstant.CONTACT_DATA);
 
         amountET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -190,7 +190,7 @@ public class SendMoneyActivity extends BaseActivity {
 
     // used to send the  money
     private void callingSendMoneyApi() {
-        CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstants.PLEASE);
+        CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
         SendMoneyRequest request = new SendMoneyRequest();
 
         // logic to replace extra character in phone number
@@ -246,7 +246,7 @@ public class SendMoneyActivity extends BaseActivity {
                                 .getBody()).getBytes());
 
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(SendMoneyActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(SendMoneyActivity.this, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -424,12 +424,12 @@ public class SendMoneyActivity extends BaseActivity {
             request.setMessage(messageET.getText().toString());
             Intent intent = new Intent(SendMoneyActivity.this, TranscCompletedActivity.class);
             Bundle bun = new Bundle();
-            bun.putSerializable(AppConstants.SEND_TRANSACTION_DATA, sendMoneyCallback);
+            bun.putSerializable(AppConstant.SEND_TRANSACTION_DATA, sendMoneyCallback);
 
-            intent.putExtra(AppConstants.TRANSACTION_DATA, request);
-            bun.putParcelable(AppConstants.CONTACT_DATA, contactDetails);
+            intent.putExtra(AppConstant.TRANSACTION_DATA, request);
+            bun.putParcelable(AppConstant.CONTACT_DATA, contactDetails);
             intent.putExtras(bun);
-            intent.putExtra(AppConstants.ORDER_ID, orderNo);
+            intent.putExtra(AppConstant.ORDER_ID, orderNo);
             startActivity(intent);
             finish();
 //            callingSendMoneyCallbackApi(sendMoneyCallback);
@@ -460,11 +460,11 @@ public class SendMoneyActivity extends BaseActivity {
 
                 Intent intent = new Intent(SendMoneyActivity.this, TranscCompletedActivity.class);
                 Bundle bun = new Bundle();
-                intent.putExtra(AppConstants.TRANSACTION_DATA, request);
-                bun.putParcelable(AppConstants.CONTACT_DATA, contactDetails);
+                intent.putExtra(AppConstant.TRANSACTION_DATA, request);
+                bun.putParcelable(AppConstant.CONTACT_DATA, contactDetails);
                 intent.putExtras(bun);
-                intent.putExtra(AppConstants.ORDER_ID, contactDetails.getOrderId());
-                intent.putExtra(AppConstants.TRANSACTION_STATUS, "Failed");
+                intent.putExtra(AppConstant.ORDER_ID, contactDetails.getOrderId());
+                intent.putExtra(AppConstant.TRANSACTION_STATUS, "Failed");
                 startActivity(intent);
                 finish();
             }
@@ -475,7 +475,7 @@ public class SendMoneyActivity extends BaseActivity {
 
     // used to request the  money from a specific friend
     private void callingRequestMoneyApi() {
-        CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstants.PLEASE);
+        CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
         final SendMoneyRequest request = new SendMoneyRequest();
 
         // logic to replace extra character in phone number
@@ -510,19 +510,19 @@ public class SendMoneyActivity extends BaseActivity {
                     int flag = commonResponse.getFlag();
                     if (flag == ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
                         Intent intent = new Intent(SendMoneyActivity.this, TranscCompletedActivity.class);
-                        intent.putExtra(AppConstants.TRANSACTION_DATA, request);
+                        intent.putExtra(AppConstant.TRANSACTION_DATA, request);
                         Bundle bun = new Bundle();
-                        bun.putParcelable(AppConstants.CONTACT_DATA, contactDetails);
+                        bun.putParcelable(AppConstant.CONTACT_DATA, contactDetails);
                         intent.putExtras(bun);
-                        intent.putExtra(AppConstants.ORDER_ID, commonResponse.getOrder_id());
+                        intent.putExtra(AppConstant.ORDER_ID, commonResponse.getOrder_id());
                         startActivity(intent);
                         finish();
-//                        SingleButtonAlert.showAlert(SendMoneyActivity.this, "Request Submitted successfully.", AppConstants.OK);
+//                        SingleButtonAlert.showAlert(SendMoneyActivity.this, "Request Submitted successfully.", AppConstant.OK);
 
                     } else if (flag == ApiResponseFlags.NO_RECIEVER.getOrdinal()
                             || flag == ApiResponseFlags.INVALID_RECIEVER.getOrdinal()
                             || flag == ApiResponseFlags.INVALID_PHONE_NUMBER.getOrdinal()) {
-                                SingleButtonAlert.showAlert(SendMoneyActivity.this, commonResponse.getMessage(), AppConstants.OK);
+                                SingleButtonAlert.showAlert(SendMoneyActivity.this, commonResponse.getMessage(), AppConstant.OK);
                     } else if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
                         // startActivity(new Intent(SendMoneyActivity.this, SignInActivity.class));
                         startActivity(new Intent(SendMoneyActivity.this, SplashNewActivity.class));
@@ -542,7 +542,7 @@ public class SendMoneyActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(SendMoneyActivity.this, jsonObject.getString("message"), AppConstants.OK);
+                        SingleButtonAlert.showAlert(SendMoneyActivity.this, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

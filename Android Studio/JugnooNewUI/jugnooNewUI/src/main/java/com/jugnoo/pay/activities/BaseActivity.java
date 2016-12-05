@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.jugnoo.pay.utils.AppConstants;
+import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.R;
 
@@ -208,7 +208,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                boolean sentToken = sharedPreferences.getBoolean(AppConstants.SENT_TOKEN_TO_SERVER, false);
+                boolean sentToken = sharedPreferences.getBoolean(AppConstant.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
                     // textView.setText(getString(R.string.gcm_send_message));
                     Log.d("BaseA", "Main token" + sentToken);
