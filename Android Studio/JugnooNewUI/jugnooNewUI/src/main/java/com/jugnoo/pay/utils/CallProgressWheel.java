@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 
 
 /**

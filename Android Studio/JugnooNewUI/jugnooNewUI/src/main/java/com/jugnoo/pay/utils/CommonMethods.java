@@ -44,6 +44,7 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 
 /**

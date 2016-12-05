@@ -27,7 +27,6 @@ import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.Prefs;
 import com.jugnoo.pay.utils.RecyclerViewClickListener;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.jugnoo.pay.utils.Validator;
@@ -44,6 +43,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by cl-macmini-38 on 9/21/16.

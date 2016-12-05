@@ -1,8 +1,6 @@
 package com.jugnoo.pay.models;
 
 
-import com.jugnoo.pay.utils.Constants;
-
 /**
  * Created by shankar on 7/8/16.
  */

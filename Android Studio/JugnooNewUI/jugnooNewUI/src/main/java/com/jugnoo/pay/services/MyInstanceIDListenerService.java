@@ -10,8 +10,8 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.jugnoo.pay.utils.Constants;
-import com.jugnoo.pay.utils.Prefs;
+
+import product.clicklabs.jugnoo.utils.Prefs;
 
 public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
 
