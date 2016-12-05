@@ -14,12 +14,13 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.jugnoo.pay.R;
-import com.jugnoo.pay.activities.SplashNewActivity;
 
 import org.json.JSONObject;
 
 import java.util.Map;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 
 public class GCMIntentService extends FirebaseMessagingService {
 

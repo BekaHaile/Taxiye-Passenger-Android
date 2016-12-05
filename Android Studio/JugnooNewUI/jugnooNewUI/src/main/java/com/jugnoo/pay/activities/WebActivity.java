@@ -13,7 +13,6 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.jugnoo.pay.R;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.SingleButtonAlert;
@@ -21,6 +20,7 @@ import com.jugnoo.pay.utils.SingleButtonAlert;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.R;
 
 
 /**

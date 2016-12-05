@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafbfc"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"></include>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/status_layout"
+                android:layout_width="match_parent"
+                android:layout_height="144dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/booking_completed_color"
+                android:paddingBottom="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                android:paddingTop="20dp">
+
+                <TextView
+                    android:id="@+id/trnsc_status_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="@string/requested_successfully"
+                    android:textColor="@color/whiteTxtColor"
+                    android:textSize="@dimen/nav_text_view_size" />
+
+                <TextView
+                    android:id="@+id/date_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/trnsc_status_txt"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:alpha="0.8"
+                    android:gravity="center"
+                    android:text="@string/transaction_pending_string"
+                    android:textColor="@color/whiteTxtColor"
+                    android:textSize="@dimen/small_text_view_size" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/info_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="left"
+                    android:text="@string/info_string"
+                    android:visibility="gone"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/small_text_view_size" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:visibility="gone"
+                    android:background="@color/progress_secondary" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/transaction_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+
+                    android:gravity="left"
+                    android:text="@string/transc_id_string"
+                    android:textColor="@color/lightBlackTxtColor"
+                    android:textSize="@dimen/text_view_size" />
+
+                    <TextView
+                        android:id="@+id/transaction_id_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginRight="10dp"
+                        android:text="@string/transc_id_string"
+                        android:textColor="@color/services_name_txt_color"
+                        android:textSize="@dimen/nav_text_view_size" />
+
+                </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/amount_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:text="50"
+                        android:textColor="@color/services_name_txt_color"
+                        android:textSize="@dimen/nav_text_view_size" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/progress_secondary" />
+
+                <TextView
+                    android:id="@+id/paid_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="left"
+                    android:text="@string/paid_string"
+                    android:textColor="@color/lightBlackTxtColor"
+                    android:textSize="@dimen/text_view_size" />
+
+                <include
+                    layout="@layout/contact_recycler_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"></include>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/progress_secondary" />
+
+                <TextView
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="left"
+                    android:text="@string/message"
+                    android:textColor="@color/lightBlackTxtColor"
+                    android:textSize="@dimen/text_view_size" />
+
+                <TextView
+                    android:id="@+id/message_txt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@color/services_name_txt_color"
+                    android:textSize="@dimen/text_view_size" />
+
+                <Button
+                    android:id="@+id/ok_btn"
+                    android:layout_width="@dimen/btn_width"
+                    android:layout_height="@dimen/btn_height"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/layout_orange_button"
+                    android:text="@string/ok_string"
+                    android:textAllCaps="false"
+                    android:textColor="@color/whiteTxtColor"
+                    android:textSize="@dimen/btn_text_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

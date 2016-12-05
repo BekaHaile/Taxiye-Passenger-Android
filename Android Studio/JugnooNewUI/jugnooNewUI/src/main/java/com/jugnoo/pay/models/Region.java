@@ -2,8 +2,9 @@ package com.jugnoo.pay.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.jugnoo.pay.datastructure.FareStructure;
 import com.jugnoo.pay.utils.Constants;
+
+import product.clicklabs.jugnoo.datastructure.FareStructure;
 
 
 /**

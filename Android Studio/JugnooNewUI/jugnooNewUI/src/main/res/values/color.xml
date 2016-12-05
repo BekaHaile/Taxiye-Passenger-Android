@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#ff8162</color>
+    <color name="colorPrimaryDark">#f8b542</color>
+    <color name="colorAccent">#595968</color>
+
+
+    // app background color
+    <color name="appBackgroundColor">#ffffff</color>
+    <color name="layoutBackColor">#322940</color>
+    <color name="whiteTxtColor">#ffffff</color>
+    <color name="lightBlackTxtColor">#595968</color>
+    <color name="generalTxtColor">#bcbcbc</color>
+    <color name="hintColor">#595968</color>
+    <color name="drawerColor">#2a1231</color>
+
+    // for country spinner
+    <color name="pf_grey">#262626</color>
+    <color name="pf_grey_light">#999999</color>
+    <color name="pf_white">#ffffff</color>
+
+    // services name txt colors
+    <color name="services_name_txt_color">#4a4a4a</color>
+    <color name="services_item_bckgrnd_color">#f0f0f0</color>
+    <color name="document_layout_bordor_color">#9b9b9b</color>
+
+    // seekbar colors
+    <color name="progress_primary">#b61ec4</color>
+    <color name="progress_secondary">#dfdfdf</color>
+
+
+    // booking screen colors
+    <color name="past_booking_color">#de5b5b</color>
+    <color name="upcoming_booking_color">#2fcb11</color>
+    <color name="booking_yellow_color">#ffaf00</color>
+    <color name="booking_green_color">#a5d54e</color>
+
+    <color name="booking_pending_color">#7975bf</color>
+    <color name="booking_failed_color">#ce4141</color>
+    <color name="booking_completed_color">#a5d54e</color>
+
+
     <color name="white_less_dark">#F1F1F1</color>
     <color name="white_dark">#CFCFCF</color>
     <color name="white_dark1">#EFEFEF</color>

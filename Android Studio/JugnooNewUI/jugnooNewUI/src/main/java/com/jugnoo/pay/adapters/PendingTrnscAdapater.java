@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jugnoo.pay.R;
+import product.clicklabs.jugnoo.R;
 import com.jugnoo.pay.activities.SendMoneyActivity;
 import com.jugnoo.pay.activities.TransacHistoryActivity;
 import com.jugnoo.pay.models.AccessTokenRequest;

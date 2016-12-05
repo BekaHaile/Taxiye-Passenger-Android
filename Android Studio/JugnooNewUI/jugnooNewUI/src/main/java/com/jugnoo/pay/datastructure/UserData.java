@@ -2,7 +2,6 @@ package com.jugnoo.pay.datastructure;
 
 import android.content.Context;
 
-import com.jugnoo.pay.R;
 import com.jugnoo.pay.models.JeanieIntroDialogContent;
 import com.jugnoo.pay.models.MenuInfo;
 import com.jugnoo.pay.models.PromoCoupon;
@@ -13,6 +12,11 @@ import com.jugnoo.pay.utils.Utils;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.EmergencyContact;
+import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
+import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 
 
 public class UserData {

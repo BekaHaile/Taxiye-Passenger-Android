@@ -2,8 +2,9 @@ package com.jugnoo.pay.config;
 
 import android.content.Context;
 
-import com.jugnoo.pay.datastructure.SPLabels;
 import com.jugnoo.pay.utils.Prefs;
+
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 
 /**
  * Created by cl-macmini-38 on 18/05/16.

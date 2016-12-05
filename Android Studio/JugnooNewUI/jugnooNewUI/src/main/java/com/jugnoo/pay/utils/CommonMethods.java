@@ -32,7 +32,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.jugnoo.pay.activities.SignUpActivity;
-import com.jugnoo.pay.activities.SplashNewActivity;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -43,6 +42,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+
+import product.clicklabs.jugnoo.SplashNewActivity;
 
 
 /**

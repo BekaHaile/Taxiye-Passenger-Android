@@ -4,13 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
-import com.jugnoo.pay.R;
 import com.jugnoo.pay.config.Config;
-import com.jugnoo.pay.datastructure.EmergencyContact;
-import com.jugnoo.pay.datastructure.LoginVia;
-import com.jugnoo.pay.datastructure.PreviousAccountInfo;
-import com.jugnoo.pay.datastructure.ReferralMessages;
-import com.jugnoo.pay.datastructure.SPLabels;
 import com.jugnoo.pay.datastructure.UserData;
 import com.jugnoo.pay.models.LoginResponse;
 import com.jugnoo.pay.models.MenuInfo;
@@ -21,6 +15,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.EmergencyContact;
+import product.clicklabs.jugnoo.datastructure.LoginVia;
+import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.datastructure.ReferralMessages;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 
 public class JSONParser implements Constants {
 

@@ -16,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jugnoo.pay.R;
 import com.jugnoo.pay.config.Config;
 import com.jugnoo.pay.models.AccessTokenRequest;
 import com.jugnoo.pay.models.CommonResponse;
@@ -41,6 +40,7 @@ import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.TwoButtonAlert;
 import com.jugnoo.pay.utils.Validator;
+import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.yesbank.SetMpin;
 
@@ -51,7 +51,8 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import picasso.CircleTransform;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

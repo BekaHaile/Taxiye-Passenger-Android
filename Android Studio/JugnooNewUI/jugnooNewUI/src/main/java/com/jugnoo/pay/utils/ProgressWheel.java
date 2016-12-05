@@ -14,7 +14,7 @@ import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.jugnoo.pay.R;
+import product.clicklabs.jugnoo.R;
 
 
 /**

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appBackgroundColor"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/other_layout_margin"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/imageViewContacts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:background="@drawable/add_contact" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:layout_toRightOf="@+id/imageViewContacts"
+                android:paddingLeft="17dp"
+                android:text="@string/add_contact"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/text_view_size" />
+
+            <ImageView
+                android:id="@+id/imageViewRefresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/reload_selector" />
+        </RelativeLayout>
+
+
+            <EditText
+                android:id="@+id/phone_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:hint="@string/mobile_contact"
+                android:inputType="textCapSentences"
+                android:nextFocusDown="@+id/password_et"
+                android:singleLine="true"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/lightBlackTxtColor"
+                android:textColorHint="@color/generalTxtColor"
+                android:textSize="@dimen/text_view_size" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/contacts_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_above="@+id/btns_layout"
+            android:layout_below="@+id/toolbar" />
+    </LinearLayout>
+</LinearLayout>

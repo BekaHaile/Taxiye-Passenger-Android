@@ -8,7 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.jugnoo.pay.PayActivity;
+import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
@@ -206,12 +206,12 @@ public class AppSwitcher {
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				}
 			}
-			else if (clientId.equalsIgnoreCase(Config.getPayClientId()) && !(activity instanceof PayActivity)) {
+			else if (clientId.equalsIgnoreCase(Config.getPayClientId()) && !(activity instanceof MainActivity)) {
 				if (Data.getPayData() == null) {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 							callback);
 				} else {
-					intent.setClass(activity, PayActivity.class);
+					intent.setClass(activity, MainActivity.class);
 					activity.startActivity(intent);
 					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 					ActivityCompat.finishAffinity(activity);

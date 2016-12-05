@@ -1264,4 +1264,136 @@
 	<string name="pay">Pay</string>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<string name="gcm_key">AIzaSyBj3fpsuedq8_w3euc_UxxXjeL4fxU5IRg</string>
+	// gcm sender id or project number
+	<!--<string name="google_project_id">360497338494</string>-->
+<string name="google_project_id">277283237448</string>
+
+	<!--<string name="google_server_client_id">277283237448-9utarplql7eoisp84e7pj9cf0naha2tm.apps.googleusercontent.com</string>-->
+
+<string name="navigation_drawer_open">Open navigation drawer</string>
+<string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+<string name="session_expired_string">Session expired!</string>
+
+	//Screens Titles
+<string name="otp_screen">One time password</string>
+	<!--<string name="home_screen">Home</string>-->
+<string name="select_contact_screen">Select Contact</string>
+<string name="send_money_screen">Send Money</string>
+<string name="request_money_screen">Request Money</string>
+<string name="requested_successfully">Requested Successfully</string>
+<string name="forgot_password_screen">Forgot password</string>
+<string name="reset_password_screen">Reset password</string>
+<string name="transc_completed_screen">Transaction Completed</string>
+<string name="pending_trnsc_screen">Pending Transactions</string>
+<string name="profile_screen">Profile</string>
+<string name="trnsc_history_screen">Transaction History</string>
+<string name="add_card_screen">Add card</string>
+<string name="payment_screen">Payment</string>
+<string name="change_password_screen">Change Password</string>
+	<!--<string name="my_booking_screen">My bookings</string>-->
+<string name="booking_creation_screen">Booking creation</string>
+<string name="feedback_screen">Feedback</string>
+<string name="help_screen">SHINRAI</string>
+<string name="contact_screen">Contact Us</string>
+	<!--<string name="token_screen">Tokens</string>-->
+	<!--<string name="refer_screen">Refer and earn</string>-->
+<string name="no_pending_txn">No pending transactions\ncurrently</string>
+<string name="no_txn_currently">No transactions currently</string>
+
+
+
+	// signup
+<string name="sign_up_string">Sign up</string>
+<string name="sign_in_string">Sign in</string>
+<string name="full_name_string">Full name</string>
+<string name="mobile_string">Mobile Number</string>
+<string name="email_string">Email ID</string>
+<string name="regular_charges_string">*Regular SMS charges will apply</string>
+<string name="password_string">Password</string>
+<string name="confirm_password_string">Confirm password</string>
+<string name="verify_code_string">Enter verification code</string>
+<string name="signup_note_string">It seems that your Mobile has Dual-SIMs. Please make sure that your Mobile No. registered with your bank is your primary sim.</string>
+
+<string name="before_terms_string">By Signing up you agree to our <u>Terms of Use</u></string>
+<string name="terms_string"> Terms of Use/</string>
+<string name="conditions_string"> Private Policy </string>
+<string name="continue_string">Continue</string>
+<string name="facebook_string">Sign up using</string>
+<string name="dont_have_string">Don\'t have an account? </string>
+<string name="rupees_symbol">\u20B9</string>
+
+
+	// Home page strings
+<string name="send_money_string">SEND MONEY</string>
+<string name="request_money_string">Request Money</string>
+<string name="request">Request</string>
+<string name="requested_to">Requested to</string>
+
+	// otp strings
+<string name="otp_string">Enter the OTP sent on your mobile xxxxxxx333</string>
+<string name="proceed_string">Proceed</string>
+
+	//forgot password screen
+<string name="forgot_string">Forgot your password?</string>
+<string name="new_password_string">New Password</string>
+<string name="old_password_string">Password</string>
+<string name="new_confirm_password_string">Retype Password</string>
+<string name="reset_string">Reset password</string>
+<string name="forgot_note_string">Enter your email id or phone number below to receive your password reset instructions</string>
+<string name="enter_one_time_password_string">Please enter the one time password\nsent on your mobile.</string>
+
+
+<string name="cancellation_policy_string"><u>Cancellation policy</u>.</string>
+<string name="choose_mobile_number">Please make sure your mobile number registered with your bank is in your primary sim slot.</string>
+
+
+	// app policies url
+
+<string name="terms_url_string">http://54.149.71.85/shinrai-webpages/terms.html</string>
+<string name="privacy_url_string">http://54.149.71.85/shinrai-webpages/privacy_policy.html</string>
+<string name="pricing_url_string">http://54.149.71.85/shinrai-webpages/pricing_policy.html</string>
+<string name="cancellation_url_string">http://54.149.71.85/shinrai-webpages/cancellation_policy.html</string>
+<string name="website_url_string">http://shinrai.com</string>
+<string name="help_note_string">Shinrai is based on trust, for any suggestions of problems that really matter and where we could do a difference, please send an e-mail at <u>weareshinrai@gmail.com.</u> Thanks for your trust, help and understanding! Lets rock it.</string>
+
+
+
+	// select contact strings
+<string name="add_contact">CONTACTS</string>
+<string name="mobile_contact">Type a name or a mobile number</string>
+<string name="amount_string">Enter amount</string>
+<string name="message_string">Add a message (optional)</string>
+<string name="message">Message</string>
+<string name="send_string">Send Money</string>
+<string name="transaction_pending_string">Transaction pending</string>
+<string name="transaction_failed_string">Transaction failed</string>
+<string name="info_string">INFO</string>
+<string name="transc_id_string">Transaction ID</string>
+<string name="paid_string">Paid to</string>
+<string name="ok_string">OK</string>
+<string name="cancel_string">Cancel</string>
+<string name="decline_string">Decline</string>
+<string name="pay_string">Pay</string>
+<string name="change_pswd_string">CHANGE PASSWORD</string>
+<string name="logout_string">LOGOUT</string>
+
+
+
+
 </resources>

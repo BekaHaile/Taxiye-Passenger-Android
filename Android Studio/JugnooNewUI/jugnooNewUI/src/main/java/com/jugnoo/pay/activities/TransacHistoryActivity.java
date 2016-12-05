@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jugnoo.pay.R;
+import product.clicklabs.jugnoo.R;
 import com.jugnoo.pay.adapters.PendingTrnscAdapater;
 import com.jugnoo.pay.adapters.TranscRecyslerAdapter;
 import com.jugnoo.pay.models.AccessTokenRequest;

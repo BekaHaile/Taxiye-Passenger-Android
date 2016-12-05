@@ -6,7 +6,6 @@ package com.jugnoo.pay.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -21,11 +20,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.jugnoo.pay.R;
 import com.jugnoo.pay.adapters.CustomDrawerAdapter;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.CommonResponse;
@@ -38,6 +32,7 @@ import com.jugnoo.pay.utils.Data;
 import com.jugnoo.pay.utils.Prefs;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.jugnoo.pay.utils.SingleButtonAlert;
+import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.yesbank.AddAccount;
 
@@ -46,7 +41,7 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import picasso.CircleTransform;
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -60,11 +55,6 @@ import retrofit.client.Response;
 public class MainActivity extends BaseActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolBar;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @OnClick(R.id.back_btn)
     void backBtnClicked() {
@@ -249,45 +239,19 @@ public class MainActivity extends BaseActivity {
         mDrawerList.setAdapter(drawerAdapter);
 
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Main Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
 // >>>>>>> working on account management API. Account management option added in menu-drawer.
     }
 
@@ -348,7 +312,7 @@ public class MainActivity extends BaseActivity {
                             intent = new Intent(MainActivity.this, WebActivity.class);
 
                             // edited on 24-11-2016
-                            // intent.putExtra(AppConstants.URL, userDetails.getFaq_link().trim());
+                            // intent.putExtra(AppConstants.URL, userDetails.getFaqLink().trim());
                             intent.putExtra(AppConstants.URL, Data.userData.getFaq_link());
 
                             startActivity(intent);
@@ -359,7 +323,7 @@ public class MainActivity extends BaseActivity {
                     }
                 }, 200);
 
-                //CommonMethods.openUrl(MainActivity.this, userDetails.getFaq_link().trim());
+                //CommonMethods.openUrl(MainActivity.this, userDetails.getFaqLink().trim());
 //                startActivity(new Intent(MainActivity.this, TokensActivity.class));
                 break;
             case 4:

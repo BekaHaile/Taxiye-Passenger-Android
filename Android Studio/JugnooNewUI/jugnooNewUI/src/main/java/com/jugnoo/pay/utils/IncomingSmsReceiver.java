@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
-import com.jugnoo.pay.activities.OTPConfirmScreen;
-import com.jugnoo.pay.activities.PhoneNoOTPConfirmScreen;
+import product.clicklabs.jugnoo.OTPConfirmScreen;
+import product.clicklabs.jugnoo.PhoneNoOTPConfirmScreen;
 
 
 /**

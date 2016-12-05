@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafbfc"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/other_layout_margin"
+        android:orientation="vertical">
+
+        <include layout="@layout/contact_recycler_item"></include>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@color/appBackgroundColor"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="20dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                android:background="@drawable/icon_rupee" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/rupees_symbol"
+                android:textSize="22sp"
+                android:textColor="@color/lightBlackTxtColor"/>
+
+            <EditText
+                android:id="@+id/amount_et"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="@string/amount_string"
+                android:inputType="number"
+                android:nextFocusDown="@+id/message_et"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textColor="@color/lightBlackTxtColor"
+                android:textColorHint="@color/generalTxtColor"
+                android:textSize="@dimen/medium_text_view_size" />
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/message_et"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/grey_border"
+            android:gravity="top"
+            android:hint="@string/message_string"
+            android:padding="5dp"
+            android:singleLine="false"
+            android:textColor="#888888"
+            android:textColorHint="#888888"
+            android:textSize="@dimen/text_view_size" />
+
+        <Button
+            android:id="@+id/send_btn"
+            android:layout_width="@dimen/btn_width"
+            android:layout_height="@dimen/btn_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/layout_orange_button"
+            android:text="@string/send_string"
+            android:textAllCaps="false"
+            android:textColor="@color/whiteTxtColor"
+            android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

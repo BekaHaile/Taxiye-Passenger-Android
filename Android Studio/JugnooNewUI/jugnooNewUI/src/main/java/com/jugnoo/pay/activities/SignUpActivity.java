@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jugnoo.pay.R;
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.GenerateTokenRequest;
 import com.jugnoo.pay.models.TokenGeneratedResponse;
@@ -37,6 +36,7 @@ import org.json.JSONObject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

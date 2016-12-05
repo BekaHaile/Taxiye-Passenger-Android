@@ -5,11 +5,12 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.jugnoo.pay.datastructure.PreviousAccountInfo;
-import com.jugnoo.pay.datastructure.SPLabels;
 import com.jugnoo.pay.datastructure.UserData;
 
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.datastructure.SPLabels;
 
 /**
  * Created by ankit on 21/10/16.

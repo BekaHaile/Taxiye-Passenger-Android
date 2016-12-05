@@ -36,9 +36,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jugnoo.pay.R;
-import com.jugnoo.pay.activities.SplashNewActivity;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -58,6 +55,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 
 
 public class Utils {

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jugnoo.pay.R;
+import product.clicklabs.jugnoo.R;
 import com.jugnoo.pay.models.TransacHistoryResponse;
 import com.jugnoo.pay.utils.CommonMethods;
 

@@ -3,7 +3,7 @@ package com.jugnoo.pay.models;
 import android.content.Context;
 import android.graphics.drawable.StateListDrawable;
 
-import com.jugnoo.pay.R;
+import product.clicklabs.jugnoo.R;
 
 
 /**

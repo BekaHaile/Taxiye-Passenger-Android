@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jugnoo.pay.R;
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SelectUser;
@@ -33,6 +32,7 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.R;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

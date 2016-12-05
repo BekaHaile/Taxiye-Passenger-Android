@@ -24,9 +24,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.jugnoo.pay.R;
-import com.jugnoo.pay.services.RegistrationIntentService;
 import com.jugnoo.pay.utils.AppConstants;
+
+import product.clicklabs.jugnoo.R;
 
 
 /**
@@ -221,11 +221,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         };
 
-        if (checkPlayServices()) {
-            Intent intent = new Intent(this, RegistrationIntentService.class);
-            Log.d("Main", "check google play");
-            startService(intent);
-        }
 
     }
 

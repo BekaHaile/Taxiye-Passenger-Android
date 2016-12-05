@@ -20,10 +20,11 @@ public class PayData {
 	private int feedbackViewType;
 	private int isFatafatEnabled;
 
+	private String faqLink;
 
 	public PayData(String question, String orderId, int questionType, int pendingFeedback,
 				   ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate,
-				   int feedbackViewType, int isFatafatEnabled, String rideEndGoodFeedbackText) {
+				   int feedbackViewType, int isFatafatEnabled, String rideEndGoodFeedbackText, String faqLink) {
 		this.question = question;
 		this.orderId = orderId;
 		this.questionType = questionType;
@@ -35,6 +36,8 @@ public class PayData {
 		this.feedbackViewType = feedbackViewType;
 		this.isFatafatEnabled = isFatafatEnabled;
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+
+		this.faqLink = faqLink;
 	}
 
 	public String getQuestion() {
@@ -131,5 +134,13 @@ public class PayData {
 
 	public void setRideEndGoodFeedbackText(String rideEndGoodFeedbackText) {
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+	}
+
+	public String getFaqLink() {
+		return faqLink;
+	}
+
+	public void setFaqLink(String faqLink) {
+		this.faqLink = faqLink;
 	}
 }

@@ -2,10 +2,11 @@ package com.jugnoo.pay.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.jugnoo.pay.datastructure.FareStructure;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import product.clicklabs.jugnoo.retrofit.model.FareStructure;
 
 
 /**

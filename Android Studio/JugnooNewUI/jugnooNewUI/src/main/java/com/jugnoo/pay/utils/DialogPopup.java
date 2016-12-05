@@ -25,8 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jugnoo.pay.R;
-import com.jugnoo.pay.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+
+import product.clicklabs.jugnoo.R;
 
 
 public class DialogPopup {

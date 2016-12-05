@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.jugnoo.pay.R;
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by cl-macmini-38 on 31/05/16.

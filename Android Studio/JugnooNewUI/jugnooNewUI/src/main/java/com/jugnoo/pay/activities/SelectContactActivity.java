@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.jugnoo.pay.R;
 import com.jugnoo.pay.adapters.ContactsListAdapter;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.utils.AppConstants;
@@ -44,6 +43,7 @@ import java.util.TreeSet;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.R;
 
 /**
  * Created by cl-macmini-38 on 9/21/16.
