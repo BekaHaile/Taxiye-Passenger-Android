@@ -16,8 +16,6 @@ import com.jugnoo.pay.adapters.PendingTrnscAdapater;
 import com.jugnoo.pay.adapters.TranscRecyslerAdapter;
 import com.jugnoo.pay.models.AccessTokenRequest;
 import com.jugnoo.pay.models.TransacHistoryResponse;
-import com.jugnoo.pay.retrofit.RetrofitClient;
-import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
@@ -30,6 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -116,7 +115,6 @@ public class TransacHistoryActivity extends BaseActivity {
     private void callingAllTranscHistoryApi()
     {
         CallProgressWheel.showLoadingDialog(TransacHistoryActivity.this, "Please wait..");
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
         AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
         accessTokenRequest.setAccess_token(accessToken);
         if(pendingTranscStatus)
@@ -124,7 +122,7 @@ public class TransacHistoryActivity extends BaseActivity {
         else
             accessTokenRequest.setIs_pending(0);
 
-        mWebApi.getTranscHistory(accessTokenRequest,new Callback<TransacHistoryResponse>() {
+        RestClient.getPayApiService().getTranscHistory(accessTokenRequest,new Callback<TransacHistoryResponse>() {
             @Override
             public void success(TransacHistoryResponse transacHistoryResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();

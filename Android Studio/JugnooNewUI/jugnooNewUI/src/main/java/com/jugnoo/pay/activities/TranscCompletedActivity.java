@@ -14,8 +14,6 @@ import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.models.SendMoneyCallback;
 import com.jugnoo.pay.models.SendMoneyRequest;
-import com.jugnoo.pay.retrofit.RetrofitClient;
-import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
@@ -33,6 +31,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -208,8 +207,7 @@ private SelectUser contactDetails;
             if(message != null) {
                 params.put("message", message.toString());
             }
-            WebApi mWebApi = RetrofitClient.createService(WebApi.class);
-            mWebApi.sendMoneyCallback(params, new Callback<CommonResponse>() {
+            RestClient.getPayApiService().sendMoneyCallback(params, new Callback<CommonResponse>() {
                 @Override
                 public void success(CommonResponse commonResponse, Response response) {
                     System.out.println("SendMoneyActivity.success22222222");

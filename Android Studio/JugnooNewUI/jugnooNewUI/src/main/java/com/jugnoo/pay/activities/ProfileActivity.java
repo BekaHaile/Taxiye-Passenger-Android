@@ -16,15 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jugnoo.pay.config.Config;
 import com.jugnoo.pay.models.AccessTokenRequest;
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.SendMoneyResponse;
 import com.jugnoo.pay.models.SetMPINResponse;
-import com.jugnoo.pay.models.SettleUserDebt;
-import com.jugnoo.pay.retrofit.RestClient;
-import com.jugnoo.pay.retrofit.RetrofitClient;
-import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.services.GCMIntentService;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.AppConstants;
@@ -45,10 +40,16 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -244,11 +245,10 @@ public class ProfileActivity extends BaseActivity {
     // to sign out user from app
     private void callingLogOutUserApi() {
         CallProgressWheel.showLoadingDialog(ProfileActivity.this, "Please wait..");
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
         AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
         accessTokenRequest.setAccess_token(accessToken);
 
-        mWebApi.logout(accessTokenRequest, new Callback<CommonResponse>() {
+        RestClient.getPayApiService().logout(accessTokenRequest, new Callback<CommonResponse>() {
             @Override
             public void success(CommonResponse commonResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();
@@ -366,7 +366,6 @@ public class ProfileActivity extends BaseActivity {
     // to update user profile
     private void callUpdateProfileApi(final boolean changePswd) {
         CallProgressWheel.showLoadingDialog(ProfileActivity.this, "Please wait..");
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
         AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
         accessTokenRequest.setAccess_token(accessToken);
         if (changePswd) {
@@ -376,7 +375,7 @@ public class ProfileActivity extends BaseActivity {
             accessTokenRequest.setUpdated_user_email(emailET.getText().toString());
             accessTokenRequest.setUpdated_user_name(fNameET.getText().toString());
         }
-        mWebApi.updateProfile(accessTokenRequest, new Callback<CommonResponse>() {
+        RestClient.getPayApiService().updateProfile(accessTokenRequest, new Callback<CommonResponse>() {
             @Override
             public void success(CommonResponse commonResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();
@@ -513,8 +512,7 @@ public class ProfileActivity extends BaseActivity {
         HashMap<String, String> params = new HashMap<>();
         params.put("access_token",  accessToken);
 
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
-        mWebApi.setMPIN(params, new Callback<SendMoneyResponse>() {
+        RestClient.getPayApiService().setMPIN(params, new Callback<SendMoneyResponse>() {
             @Override
             public void success(SendMoneyResponse sendMoneyResponse, Response response) {
                 System.out.println("SendMoneyActivity.success22222222");
@@ -651,8 +649,7 @@ public class ProfileActivity extends BaseActivity {
         params.put("access_token",  accessToken);
         params.put("message", setMPINResponse.toString());
 
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
-        mWebApi.setMPINCallback(params, new Callback<CommonResponse>() {
+        RestClient.getPayApiService().setMPINCallback(params, new Callback<CommonResponse>() {
             @Override
             public void success(CommonResponse commonResponse, Response response) {
                 System.out.println("Change MPIN Callback.success22222222");

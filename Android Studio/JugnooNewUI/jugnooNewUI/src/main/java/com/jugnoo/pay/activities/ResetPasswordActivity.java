@@ -9,8 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.models.CommonResponse;
-import com.jugnoo.pay.retrofit.RetrofitClient;
-import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
@@ -26,6 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -79,14 +78,13 @@ public class ResetPasswordActivity extends BaseActivity{
     private void resetPswdApi() {
         if(AppStatus.getInstance(ResetPasswordActivity.this).isOnline(ResetPasswordActivity.this)) {
             CallProgressWheel.showLoadingDialog(ResetPasswordActivity.this, AppConstants.PLEASE);
-            WebApi mWebApi = RetrofitClient.createService(WebApi.class);
             String p = editTextNewPass.getText().toString().trim();
             HashMap<String, String> params = new HashMap<>();
 
             params.put("otp", editTextOTP.getText().toString());
             params.put("password", p);
 
-            mWebApi.resetPassword(params, new Callback<CommonResponse>() {
+            RestClient.getPayApiService().resetPassword(params, new Callback<CommonResponse>() {
                 @Override
                 public void success(CommonResponse commonResponse, Response response) {
                     CallProgressWheel.dismissLoadingDialog();

@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.LoginRequest;
-import com.jugnoo.pay.retrofit.RetrofitClient;
-import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
@@ -29,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -120,10 +119,8 @@ public class SignInActivity extends BaseActivity {
         request.setDevice_token(MyApplication.getInstance().getDeviceToken());
         request.setDeviceType("0");
 
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
 
-
-        mWebApi.loginUser(request, new Callback<CommonResponse>() {
+        RestClient.getPayApiService().loginUser(request, new Callback<CommonResponse>() {
             @Override
             public void success(CommonResponse tokenGeneratedResponse, Response response) {
                 System.out.println("SignInActivity.success22222222");

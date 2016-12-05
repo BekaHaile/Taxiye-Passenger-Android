@@ -17,8 +17,6 @@ import com.jugnoo.pay.models.GenerateTokenRequest;
 import com.jugnoo.pay.models.TokenGeneratedResponse;
 import com.jugnoo.pay.models.VerifyRegisterResponse;
 import com.jugnoo.pay.models.VerifyUserRequest;
-import com.jugnoo.pay.retrofit.RetrofitClient;
-import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
@@ -36,6 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -147,9 +146,8 @@ public class SignUpActivity extends BaseActivity {
         request.setDeviceToken(MyApplication.getInstance().getDeviceToken());
         request.setDeviceType("0");
 
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
 
-        mWebApi.generateToken(request, new Callback<TokenGeneratedResponse>() {
+        RestClient.getPayApiService().generateToken(request, new Callback<TokenGeneratedResponse>() {
             @Override
             public void success(TokenGeneratedResponse tokenGeneratedResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();
@@ -242,9 +240,7 @@ public class SignUpActivity extends BaseActivity {
         request.setDeviceType("0");
         request.setMessage(verifyRegisterResponse.toString());
 
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
-
-        mWebApi.verifyUser(request, new Callback<CommonResponse>() {
+        RestClient.getPayApiService().verifyUser(request, new Callback<CommonResponse>() {
             @Override
             public void success(CommonResponse tokenGeneratedResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();

@@ -13,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.models.CommonResponse;
-import com.jugnoo.pay.retrofit.RetrofitClient;
-import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
@@ -30,6 +28,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -125,14 +124,13 @@ public class ForgotPasswordActivity extends BaseActivity {
     private void callingForgotPswdApi() {
         if(AppStatus.getInstance(ForgotPasswordActivity.this).isOnline(ForgotPasswordActivity.this)) {
             CallProgressWheel.showLoadingDialog(ForgotPasswordActivity.this, AppConstants.PLEASE);
-            WebApi mWebApi = RetrofitClient.createService(WebApi.class);
             String p = phoneET.getText().toString().trim();
             final String phone = p.replace(" ", "");
             HashMap<String, String> params = new HashMap<>();
 
             params.put("phone_no", p);
 
-            mWebApi.forgotPassword(params, new Callback<CommonResponse>() {
+            RestClient.getPayApiService().forgotPassword(params, new Callback<CommonResponse>() {
                 @Override
                 public void success(CommonResponse commonResponse, Response response) {
                     CallProgressWheel.dismissLoadingDialog();

@@ -26,8 +26,6 @@ import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.VerifyRegisterResponse;
 import com.jugnoo.pay.models.VerifyUserRequest;
-import com.jugnoo.pay.retrofit.RetrofitClient;
-import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
@@ -48,6 +46,7 @@ import butterknife.OnClick;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -405,12 +404,11 @@ public class MainActivity extends BaseActivity {
 
     private void accountManagement(){
         CallProgressWheel.showLoadingDialog(MainActivity.this, "Please wait..");
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
         HashMap<String, String> params = new HashMap<>();
 
         params.put("access_token",  Data.userData.accessToken);
 
-        mWebApi.accountManagement(params, new Callback<AccountManagementResponse>() {
+        RestClient.getPayApiService().accountManagement(params, new Callback<AccountManagementResponse>() {
             @Override
             public void success(AccountManagementResponse accountManagementResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();
@@ -550,9 +548,7 @@ public class MainActivity extends BaseActivity {
         request.setPhone_no(Data.userData.phoneNo);
         request.setMessage(verifyRegisterResponse.toString());
 
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
-
-        mWebApi.verifyUser(request, new Callback<CommonResponse>() {
+        RestClient.getPayApiService().verifyUser(request, new Callback<CommonResponse>() {
             @Override
             public void success(CommonResponse tokenGeneratedResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();

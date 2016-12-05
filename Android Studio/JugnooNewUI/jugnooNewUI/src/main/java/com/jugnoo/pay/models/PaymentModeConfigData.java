@@ -1,6 +1,8 @@
 package com.jugnoo.pay.models;
 
 
+import product.clicklabs.jugnoo.Constants;
+
 /**
  * Created by shankar on 7/8/16.
  */

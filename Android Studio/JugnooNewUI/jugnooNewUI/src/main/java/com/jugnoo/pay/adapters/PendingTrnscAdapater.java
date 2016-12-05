@@ -17,8 +17,6 @@ import com.jugnoo.pay.activities.TransacHistoryActivity;
 import com.jugnoo.pay.models.AccessTokenRequest;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.models.TransacHistoryResponse;
-import com.jugnoo.pay.retrofit.RetrofitClient;
-import com.jugnoo.pay.retrofit.WebApi;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.AppConstants;
 import com.jugnoo.pay.utils.CallProgressWheel;
@@ -32,6 +30,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -189,12 +188,11 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
     // to cancel a particular transaction
     private void cancelTranscApi(int orderId, final int pos) {
         CallProgressWheel.showLoadingDialog(activity, "Please wait..");
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
         AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
         accessTokenRequest.setAccess_token(accessToken);
         accessTokenRequest.setOrder_id(orderId);
 
-        mWebApi.cancelTransc(accessTokenRequest, new Callback<TransacHistoryResponse>() {
+        RestClient.getPayApiService().cancelTransc(accessTokenRequest, new Callback<TransacHistoryResponse>() {
             @Override
             public void success(TransacHistoryResponse transacHistoryResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();
@@ -242,12 +240,11 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
     // to decline a particular transaction
     private void declineTranscApi(int orderId, final int pos) {
         CallProgressWheel.showLoadingDialog(activity, "Please wait..");
-        WebApi mWebApi = RetrofitClient.createService(WebApi.class);
         AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
         accessTokenRequest.setAccess_token(accessToken);
         accessTokenRequest.setOrder_id(orderId);
 
-        mWebApi.declineTransc(accessTokenRequest, new Callback<TransacHistoryResponse>() {
+        RestClient.getPayApiService().declineTransc(accessTokenRequest, new Callback<TransacHistoryResponse>() {
             @Override
             public void success(TransacHistoryResponse transacHistoryResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();

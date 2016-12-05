@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.retrofit;
 
 import com.jakewharton.retrofit.Ok3Client;
+import com.jugnoo.pay.retrofit.WebApi;
 import com.sabkuchfresh.apis.FreshApiService;
 import com.sabkuchfresh.apis.MenusApiService;
 
@@ -27,6 +28,7 @@ public class RestClient {
     private static FreshApiService FRESH_API_SERVICE = null;
     private static ChatApiService CHAT_API_SERVICE = null;
     private static MenusApiService MENUS_API_SERVICE = null;
+    private static WebApi PAY_API_SERVICE = null;
 
     static {
         setupRestClient();
@@ -34,6 +36,7 @@ public class RestClient {
         setupFreshApiRestClient();
         setupChatApiRestClient();
         setupMenusApiRestClient();
+        setupPayApiRestClient();
     }
 
     private static OkHttpClient getOkHttpClient(){
@@ -95,11 +98,20 @@ public class RestClient {
         return API_SERVICES;
     }
 
-    public static void clearRestClient(){
+    public static void clearRestClients(){
         API_SERVICES = null;
         FRESH_API_SERVICE = null;
         CHAT_API_SERVICE = null;
         MENUS_API_SERVICE = null;
+        PAY_API_SERVICE = null;
+    }
+
+    public static void setupAllClients(){
+        setupRestClient();
+        setupFreshApiRestClient();
+        setupChatApiRestClient();
+        setupMenusApiRestClient();
+        setupPayApiRestClient();
     }
 
 
@@ -171,6 +183,8 @@ public class RestClient {
         return FRESH_API_SERVICE;
     }
 
+
+
     public static void setupChatApiRestClient() {
         if(CHAT_API_SERVICE == null) {
             RestAdapter.Log fooLog = new RestAdapter.Log() {
@@ -188,6 +202,12 @@ public class RestClient {
             CHAT_API_SERVICE = restAdapter.create(ChatApiService.class);
         }
     }
+
+    public static ChatApiService getChatApiService() {
+        return CHAT_API_SERVICE;
+    }
+
+
 
     public static void setupMenusApiRestClient() {
         if(MENUS_API_SERVICE == null) {
@@ -207,13 +227,33 @@ public class RestClient {
         }
     }
 
-
-    public static ChatApiService getChatApiService() {
-        return CHAT_API_SERVICE;
-    }
-
     public static MenusApiService getMenusApiService() {
         return MENUS_API_SERVICE;
+    }
+
+
+
+
+    public static void setupPayApiRestClient() {
+        if(PAY_API_SERVICE == null) {
+            RestAdapter.Log fooLog = new RestAdapter.Log() {
+                @Override
+                public void log(String message) {
+                }
+            };
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getPayServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient()))
+                    .setLog(fooLog)
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+
+            RestAdapter restAdapter = builder.build();
+            PAY_API_SERVICE = restAdapter.create(WebApi.class);
+        }
+    }
+
+    public static WebApi getPayApiService() {
+        return PAY_API_SERVICE;
     }
 
 }
