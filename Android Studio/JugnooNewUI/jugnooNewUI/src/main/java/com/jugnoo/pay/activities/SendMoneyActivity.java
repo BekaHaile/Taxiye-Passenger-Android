@@ -8,10 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.models.CommonResponse;
@@ -42,6 +43,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.Fonts;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -57,8 +59,6 @@ public class SendMoneyActivity extends BaseActivity {
     TextView toolbarTitleTxt;
     @Bind(R.id.back_btn)
     ImageButton backBtn;
-    @Bind(R.id.send_btn)
-    Button buttonSend;
 
     @OnClick(R.id.back_btn)
     void backBtnClicked() {
@@ -80,7 +80,14 @@ public class SendMoneyActivity extends BaseActivity {
     EditText amountET;
     public static SendMoneyActivity sendMoneyActivityObj;
 
-    @OnClick(R.id.send_btn)
+    private LinearLayout linearLayoutContact;
+    private ImageView imageViewBank;
+    private TextView textViewAccountNumber, textViewBankName;
+    private EditText editTextLocation;
+    private RelativeLayout relativeLayoutSendMoney;
+    private TextView textViewSendMoney;
+
+    @OnClick(R.id.relativeLayoutSendMoney)
     void sendBtnClicked() {
         if (amountET.getText().toString().length() > 0) {
             int amount = Integer.parseInt(amountET.getText().toString());
@@ -112,13 +119,16 @@ public class SendMoneyActivity extends BaseActivity {
         setContentView(R.layout.activity_send_money);
         ButterKnife.bind(this);
         requestStatus = getIntent().getBooleanExtra(AppConstant.REQUEST_STATUS, false);
+
+        relativeLayoutSendMoney = (RelativeLayout) findViewById(R.id.relativeLayoutSendMoney);
+        textViewSendMoney = (TextView) findViewById(R.id.textViewSendMoney); textViewSendMoney.setTypeface(Fonts.mavenMedium(this));
         if (requestStatus) {
             toolbarTitleTxt.setText(R.string.request_money_screen);
-            buttonSend.setText(getResources().getString(R.string.request));
+            textViewSendMoney.setText(getResources().getString(R.string.request));
         }
         else {
             toolbarTitleTxt.setText(R.string.send_money_screen);
-            buttonSend.setText(getResources().getString(R.string.send_string));
+            textViewSendMoney.setText(getResources().getString(R.string.send_string));
         }
         mToolBar.setTitle("");
         setSupportActionBar(mToolBar);
@@ -135,11 +145,11 @@ public class SendMoneyActivity extends BaseActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(s.length() <= 0){
-                    buttonSend.setAlpha(0.5f);
-                    buttonSend.setEnabled(false);
+                    relativeLayoutSendMoney.setAlpha(0.5f);
+                    relativeLayoutSendMoney.setEnabled(false);
                 } else{
-                    buttonSend.setAlpha(1.0f);
-                    buttonSend.setEnabled(true);
+                    relativeLayoutSendMoney.setAlpha(1.0f);
+                    relativeLayoutSendMoney.setEnabled(true);
                 }
             }
 
@@ -150,6 +160,13 @@ public class SendMoneyActivity extends BaseActivity {
         });
 
         setData();
+
+        ((TextView)findViewById(R.id.textViewDebitFrom)).setTypeface(Fonts.mavenMedium(this));
+        linearLayoutContact = (LinearLayout) findViewById(R.id.linearLayoutContact);
+        imageViewBank = (ImageView) findViewById(R.id.imageViewBank);
+        textViewAccountNumber = (TextView) findViewById(R.id.textViewAccountNumber); textViewAccountNumber.setTypeface(Fonts.mavenMedium(this));
+        textViewBankName = (TextView) findViewById(R.id.textViewBankName); textViewBankName.setTypeface(Fonts.mavenRegular(this));
+        editTextLocation = (EditText) findViewById(R.id.editTextLocation); editTextLocation.setTypeface(Fonts.mavenRegular(this));
 
     }
 

@@ -281,5 +281,8 @@
     <dimen name="sp_12">
         12sp
     </dimen>
+    <dimen name="sp_17">
+        17sp
+    </dimen>
 
 </resources>

@@ -1410,6 +1410,8 @@
 	<string name="add_payment_add_desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
 	<string name="enter_name">Enter Name</string>
 	<string name="enter_payment_address">Enter Payment Address</string>
+	<string name="add_a_location">Add a location (optional)</string>
+	<string name="debit_from">Debit from</string>
 
 
 </resources>
