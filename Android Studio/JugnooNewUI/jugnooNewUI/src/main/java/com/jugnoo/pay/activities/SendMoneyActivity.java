@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.Validator;
 import com.sabkuchfresh.utils.AppConstant;
+import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.yesbank.PayActivity;
 import com.yesbank.TransactionStatus;
@@ -80,7 +82,7 @@ public class SendMoneyActivity extends BaseActivity {
     EditText amountET;
     public static SendMoneyActivity sendMoneyActivityObj;
 
-    private LinearLayout linearLayoutContact;
+    private LinearLayout linearLayoutContact, linearLayoutDebitFrom;
     private ImageView imageViewBank;
     private TextView textViewAccountNumber, textViewBankName;
     private EditText editTextLocation;
@@ -120,15 +122,29 @@ public class SendMoneyActivity extends BaseActivity {
         ButterKnife.bind(this);
         requestStatus = getIntent().getBooleanExtra(AppConstant.REQUEST_STATUS, false);
 
+        ((TextView)findViewById(R.id.textViewDebitFrom)).setTypeface(Fonts.mavenMedium(this));
+        linearLayoutContact = (LinearLayout) findViewById(R.id.linearLayoutContact);
+        linearLayoutDebitFrom = (LinearLayout) findViewById(R.id.linearLayoutDebitFrom);
+        imageViewBank = (ImageView) findViewById(R.id.imageViewBank);
+        textViewAccountNumber = (TextView) findViewById(R.id.textViewAccountNumber); textViewAccountNumber.setTypeface(Fonts.mavenMedium(this));
+        textViewBankName = (TextView) findViewById(R.id.textViewBankName); textViewBankName.setTypeface(Fonts.mavenRegular(this));
+        editTextLocation = (EditText) findViewById(R.id.editTextLocation); editTextLocation.setTypeface(Fonts.mavenRegular(this));
+        messageET.setTypeface(Fonts.mavenRegular(this));
+        amountET.setTypeface(Fonts.mavenRegular(this));
+        contactNameTxt.setTypeface(Fonts.mavenMedium(this));
+        contactMobileTxt.setTypeface(Fonts.mavenRegular(this));
+
         relativeLayoutSendMoney = (RelativeLayout) findViewById(R.id.relativeLayoutSendMoney);
         textViewSendMoney = (TextView) findViewById(R.id.textViewSendMoney); textViewSendMoney.setTypeface(Fonts.mavenMedium(this));
         if (requestStatus) {
-            toolbarTitleTxt.setText(R.string.request_money_screen);
-            textViewSendMoney.setText(getResources().getString(R.string.request));
+            toolbarTitleTxt.setText(R.string.request_money);
+            textViewSendMoney.setText(getResources().getString(R.string.request_money));
+            linearLayoutDebitFrom.setVisibility(View.GONE);
         }
         else {
-            toolbarTitleTxt.setText(R.string.send_money_screen);
-            textViewSendMoney.setText(getResources().getString(R.string.send_string));
+            toolbarTitleTxt.setText(R.string.send_money);
+            textViewSendMoney.setText(getResources().getString(R.string.send_money));
+            linearLayoutDebitFrom.setVisibility(View.VISIBLE);
         }
         mToolBar.setTitle("");
         setSupportActionBar(mToolBar);
@@ -161,12 +177,14 @@ public class SendMoneyActivity extends BaseActivity {
 
         setData();
 
-        ((TextView)findViewById(R.id.textViewDebitFrom)).setTypeface(Fonts.mavenMedium(this));
-        linearLayoutContact = (LinearLayout) findViewById(R.id.linearLayoutContact);
-        imageViewBank = (ImageView) findViewById(R.id.imageViewBank);
-        textViewAccountNumber = (TextView) findViewById(R.id.textViewAccountNumber); textViewAccountNumber.setTypeface(Fonts.mavenMedium(this));
-        textViewBankName = (TextView) findViewById(R.id.textViewBankName); textViewBankName.setTypeface(Fonts.mavenRegular(this));
-        editTextLocation = (EditText) findViewById(R.id.editTextLocation); editTextLocation.setTypeface(Fonts.mavenRegular(this));
+
+
+        linearLayoutContact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
     }
 
@@ -189,7 +207,7 @@ public class SendMoneyActivity extends BaseActivity {
         try {
             if (contactDetails.getThumb() != null) {
                 //contactImage.setImageBitmap(contactDetails.getThumb());
-                Picasso.with(SendMoneyActivity.this).load(contactDetails.getThumb()).into(contactImage);
+                Picasso.with(SendMoneyActivity.this).load(contactDetails.getThumb()).transform(new CircleTransform()).into(contactImage);
             } else {
                 contactImage.setImageResource(R.drawable.icon_user);
             }

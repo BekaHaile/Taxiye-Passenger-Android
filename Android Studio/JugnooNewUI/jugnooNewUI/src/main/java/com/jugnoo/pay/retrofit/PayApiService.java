@@ -3,6 +3,7 @@ package com.jugnoo.pay.retrofit;
 import com.jugnoo.pay.models.AccessTokenRequest;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.CommonResponse;
+import com.jugnoo.pay.models.FetchPayDataResponse;
 import com.jugnoo.pay.models.GenerateTokenRequest;
 import com.jugnoo.pay.models.LoginRequest;
 import com.jugnoo.pay.models.SendMoneyRequest;
@@ -22,7 +23,7 @@ import retrofit.http.POST;
 /**
  * Created by cl-macmini-38 on 18/05/16.
  */
-public interface WebApi {
+public interface PayApiService {
 
     // generate token
 
@@ -44,7 +45,7 @@ public interface WebApi {
 
     // register user
     @POST("/verify_and_register")
-    void verifyUser(@Body() VerifyUserRequest request, Callback<CommonResponse> callback);
+    void verifyUser(@Body() VerifyUserRequest request, Callback<FetchPayDataResponse> callback);
 
 
     @POST("/login_using_access_token")
@@ -105,6 +106,6 @@ public interface WebApi {
     @FormUrlEncoded
     @POST("/fetch_pay_data")
     void fetchPayData(@FieldMap Map<String, String> params,
-                      Callback<AccountManagementResponse> callback);
+                      Callback<FetchPayDataResponse> callback);
 
 }

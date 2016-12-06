@@ -81,12 +81,12 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
 
         TransacHistoryResponse.TransactionHistory transactionHistory = transactionHistoryList.get(position);
         holder.textViewName.setText(transactionHistory.getName());
-        if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
+        if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
             holder.textViewRequestStatus.setText(R.string.requested_by);
             holder.buttonPayNow.setText(R.string.pay_now);
             holder.buttonDismiss.setText(R.string.dismiss);
         }
-        else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
+        else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
             holder.textViewRequestStatus.setText(R.string.requested_from);
             holder.buttonPayNow.setText(R.string.remind);
             holder.buttonDismiss.setText(R.string.cancel);
@@ -112,9 +112,9 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
 							new TwoButtonAlert.OnAlertOkCancelClickListener() {
 						@Override
 						public void onOkButtonClicked() {
-							if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
+							if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
 								cancelTranscApi(transactionHistory.getId(), pos);
-							} else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
+							} else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
 								declineTranscApi(transactionHistory.getId(), pos);
 							}
 						}

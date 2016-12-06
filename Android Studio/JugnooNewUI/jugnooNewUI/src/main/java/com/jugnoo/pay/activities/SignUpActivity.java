@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jugnoo.pay.models.CommonResponse;
+import com.jugnoo.pay.models.FetchPayDataResponse;
 import com.jugnoo.pay.models.GenerateTokenRequest;
 import com.jugnoo.pay.models.TokenGeneratedResponse;
 import com.jugnoo.pay.models.VerifyRegisterResponse;
@@ -240,16 +240,16 @@ public class SignUpActivity extends BaseActivity {
         request.setDeviceType("0");
         request.setMessage(verifyRegisterResponse.toString());
 
-        RestClient.getPayApiService().verifyUser(request, new Callback<CommonResponse>() {
+        RestClient.getPayApiService().verifyUser(request, new Callback<FetchPayDataResponse>() {
             @Override
-            public void success(CommonResponse tokenGeneratedResponse, Response response) {
+            public void success(FetchPayDataResponse tokenGeneratedResponse, Response response) {
                 CallProgressWheel.dismissLoadingDialog();
                 if (tokenGeneratedResponse != null) {
 //                    Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, tokenGeneratedResponse.getToken());
 //
                     int flag = tokenGeneratedResponse.getFlag();
                     if (flag == 401) {
-                        Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, tokenGeneratedResponse.getAccessToken());
+                        Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, "");
                         Prefs.with(SignUpActivity.this).save(SharedPreferencesName.APP_USER, tokenGeneratedResponse);
                         startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                     } else

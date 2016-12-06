@@ -25,6 +25,7 @@ import com.jugnoo.pay.adapters.CustomDrawerAdapter;
 import com.jugnoo.pay.adapters.PendingTrnscAdapater;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.CommonResponse;
+import com.jugnoo.pay.models.FetchPayDataResponse;
 import com.jugnoo.pay.models.TransacHistoryResponse;
 import com.jugnoo.pay.models.VerifyRegisterResponse;
 import com.jugnoo.pay.models.VerifyUserRequest;
@@ -48,7 +49,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -218,6 +218,7 @@ public class MainActivity extends BaseActivity {
             recyclerViewPendingPayments.setItemAnimator(new DefaultItemAnimator());
             recyclerViewPendingPayments.setHasFixedSize(false);
             pendingTrnscAdapater = new PendingTrnscAdapater(this, transactionHistories);
+            recyclerViewPendingPayments.setAdapter(pendingTrnscAdapater);
 
             ((TextView) findViewById(R.id.textViewPaymentId)).setTypeface(Fonts.mavenMedium(this));
             textViewPaymentIdValue = (TextView) findViewById(R.id.textViewPaymentIdValue); textViewPaymentIdValue.setTypeface(Fonts.mavenMedium(this));
@@ -233,7 +234,6 @@ public class MainActivity extends BaseActivity {
         try {
             if(Data.getPayData().getPay().getHasVpa() == 0){
 				sendToSDKRegister(Data.getPayData().getPay());
-                fetchPayData();
 			} else {
                 fetchPayData();
             }
@@ -456,18 +456,19 @@ public class MainActivity extends BaseActivity {
             request.setPhone_no(Data.userData.phoneNo);
             request.setMessage(verifyRegisterResponse.toString());
 
-            RestClient.getPayApiService().verifyUser(request, new Callback<CommonResponse>() {
+            RestClient.getPayApiService().verifyUser(request, new Callback<FetchPayDataResponse>() {
                 @Override
-                public void success(CommonResponse tokenGeneratedResponse, Response response) {
+                public void success(FetchPayDataResponse fetchPayDataResponse, Response response) {
                     CallProgressWheel.dismissLoadingDialog();
-                    if (tokenGeneratedResponse != null) {
-                        int flag = tokenGeneratedResponse.getFlag();
+                    if (fetchPayDataResponse != null) {
+                        int flag = fetchPayDataResponse.getFlag();
                         if (flag == 401) {
-//                        accessTokenLogin(MainActivity.this);
+                            updateTransactions(fetchPayDataResponse);
                         } else if (flag == 403) {
 //                        logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
+
                         } else {
-                            CommonMethods.callingBadToken(MainActivity.this, flag, tokenGeneratedResponse.getMessage());
+                            CommonMethods.callingBadToken(MainActivity.this, flag, fetchPayDataResponse.getMessage());
                         }
                     }
                 }
@@ -507,19 +508,15 @@ public class MainActivity extends BaseActivity {
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
                 params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 
-                RestClient.getPayApiService().fetchPayData(params, new Callback<AccountManagementResponse>() {
+                RestClient.getPayApiService().fetchPayData(params, new Callback<FetchPayDataResponse>() {
                     @Override
-                    public void success(AccountManagementResponse accountManagementResponse, Response response) {
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    public void success(FetchPayDataResponse fetchPayDataResponse, Response response) {
                         CallProgressWheel.dismissLoadingDialog();
                         try{
-                            JSONObject jObj = new JSONObject(responseStr);
-                            int flag = jObj.optInt("", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-                            String message = JSONParser.getServerMessage(jObj);
-                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-
+                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == fetchPayDataResponse.getFlag()){
+                                updateTransactions(fetchPayDataResponse);
                             } else {
-                                DialogPopup.alertPopup(MainActivity.this, "", message);
+                                DialogPopup.alertPopup(MainActivity.this, "", fetchPayDataResponse.getMessage());
                             }
                         } catch (Exception e){
                             e.printStackTrace();
@@ -541,6 +538,13 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+    }
+
+    private void updateTransactions(FetchPayDataResponse fetchPayDataResponse){
+        textViewPaymentIdValue.setText(fetchPayDataResponse.getVpa());
+        transactionHistories.clear();
+        transactionHistories.addAll(fetchPayDataResponse.getTransaction());
+        pendingTrnscAdapater.notifyDataSetChanged();
     }
 
     private void retryDialogFetchPayData(DialogErrorType dialogErrorType){
