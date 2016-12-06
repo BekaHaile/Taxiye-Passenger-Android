@@ -1,0 +1,109 @@
+package com.jugnoo.pay.activities;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Fonts;
+
+/**
+ * Created by ankit on 06/12/16.
+ */
+
+public class AddPaymentAddressActivity extends BaseActivity {
+
+    private Toolbar mToolBar;
+    private TextView toolbarTitleTxt, tvTitle, tvDesc;
+    private ImageButton ibBack;
+    private ImageView ivTBDivider, ivContacts;
+    private final int RQS_PICK_CONTACT = 1;
+    private EditText etName, etPaymentAddress;
+    private Button bAddPaymentAddress;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_payment_address);
+
+        mToolBar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarTitleTxt = (TextView) findViewById(R.id.toolbar_title);
+        ibBack = (ImageButton) findViewById(R.id.back_btn);
+        ibBack.setImageResource(R.drawable.ic_close_pay);
+        ivTBDivider = (ImageView) findViewById(R.id.toolbarDivider);
+        ivTBDivider.setVisibility(View.GONE);
+        toolbarTitleTxt.setText(R.string.add_payment_address);
+        mToolBar.setTitle("");
+        setSupportActionBar(mToolBar);
+        ivContacts = (ImageView) findViewById(R.id.ivContacts);
+        etName = (EditText) findViewById(R.id.etName); etName.setTypeface(Fonts.mavenRegular(this));
+        etPaymentAddress = (EditText) findViewById(R.id.etPaymentAddress); etPaymentAddress.setTypeface(Fonts.mavenRegular(this));
+        bAddPaymentAddress = (Button) findViewById(R.id.bAddPaymentAddress); bAddPaymentAddress.setTypeface(Fonts.avenirNext(this));
+        tvTitle = (TextView) findViewById(R.id.tvTitle); tvTitle.setTypeface(Fonts.mavenRegular(this));
+        tvDesc = (TextView) findViewById(R.id.tvDesc); tvDesc.setTypeface(Fonts.mavenRegular(this));
+
+        ibBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        ivContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                //intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+                startActivityForResult(intent, RQS_PICK_CONTACT);
+            }
+        });
+
+        bAddPaymentAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case (RQS_PICK_CONTACT) :
+                if (resultCode == Activity.RESULT_OK) {
+
+                    Uri contactData = data.getData();
+                    Cursor c =  managedQuery(contactData, null, null, null, null);
+                    if (c.moveToFirst()) {
+                        String id =c.getString(c.getColumnIndexOrThrow(ContactsContract.Contacts._ID));
+                        String hasPhone =c.getString(c.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
+                        if (hasPhone.equalsIgnoreCase("1")) {
+                            Cursor phones = getContentResolver().query(
+                                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,
+                                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = "+ id,
+                                    null, null);
+                            phones.moveToFirst();
+                            //cNumber = phones.getString(phones.getColumnIndex("data1"));
+                            //System.out.println("number is:"+cNumber);
+                        }
+                        String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                        etName.setText(name);
+
+                    }
+                }
+                break;
+        }
+    }
+}
+

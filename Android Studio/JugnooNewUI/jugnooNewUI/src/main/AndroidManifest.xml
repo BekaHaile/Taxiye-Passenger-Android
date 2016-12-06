@@ -499,6 +499,11 @@
                   android:windowSoftInputMode="stateAlwaysHidden"
                   android:theme="@style/TransparentTheme"
             ></activity>
+        <activity android:name="com.jugnoo.pay.activities.AddPaymentAddressActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/TransparentTheme"
+            />
 
     </application>
 

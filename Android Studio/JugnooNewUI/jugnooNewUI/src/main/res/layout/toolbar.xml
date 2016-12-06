@@ -49,6 +49,18 @@
             android:padding="5dp"
             android:visibility="gone"
             android:src="@drawable/refresh_contacts_pay"/>
+
+        <ImageView
+            android:id="@+id/ivToolbarAddVPA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
+            android:visibility="gone"
+            android:src="@drawable/add_vpa"/>
+
     </RelativeLayout>
 
     <ImageView
@@ -58,6 +70,8 @@
         android:src="@drawable/shadow_down"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"/>
+
+
     </RelativeLayout>
 </android.support.v7.widget.Toolbar>
 

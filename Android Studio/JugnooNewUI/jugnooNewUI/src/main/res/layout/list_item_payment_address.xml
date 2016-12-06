@@ -5,12 +5,11 @@
     android:background="@color/white"
     android:orientation="horizontal">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:orientation="horizontal">
+        android:paddingBottom="10dp">
 
     <ImageView
         android:id="@+id/contact_image"
@@ -22,6 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@+id/contact_image"
+        android:layout_toLeftOf="@+id/ivDelete"
         android:orientation="vertical">
 
         <TextView
@@ -43,6 +44,15 @@
             android:textColor="@color/lightBlackTxtColor"
             android:textSize="@dimen/small_text_view_size" />
     </LinearLayout>
-    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_delete_pay"
+            android:layout_alignParentRight="true"
+            android:padding="5dp"
+            android:layout_marginRight="10dp"/>
+    </RelativeLayout>
 
 </LinearLayout>

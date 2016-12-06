@@ -1,5 +1,6 @@
 package com.jugnoo.pay.fragments;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -54,6 +55,7 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
     private ArrayList<SelectUser> selectUsers;
     private ContactsListAdapter adapter;
     private Cursor phones;
+    private ContentResolver resolver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,6 +66,10 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         contactsRecycler.setLayoutManager(mLayoutManager);
         contactsRecycler.setItemAnimator(new DefaultItemAnimator());
+
+        selectUsers = new ArrayList<SelectUser>();
+        resolver = getActivity().getContentResolver();
+
 
         if((Prefs.with(getActivity()).getString(SharedPreferencesName.USER_CONTACTS, "") != null)
                 && (!Prefs.with(getActivity()).getString(SharedPreferencesName.USER_CONTACTS, "").equalsIgnoreCase(""))){
@@ -165,6 +171,8 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            selectUsers.clear();
+            Prefs.with(getActivity()).save(SharedPreferencesName.USER_CONTACTS, "");
             CallProgressWheel.showLoadingDialog(getActivity(), "Please wait..");
         }
 

@@ -24,7 +24,7 @@ import java.util.Locale;
 /**
  * Created by cl-macmini-38 on 06/06/16.
  */
-public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapter.MyViewHolder> {
+public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAdapter.MyViewHolder> {
     List<SelectUser> selectUsersList;
     public  int selectedPosition;
     private Activity activity;
@@ -33,11 +33,11 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.contact_recycler_item, parent, false);
+                .inflate(R.layout.list_item_payment_address, parent, false);
         return new MyViewHolder(itemView);
     }
 
-    public ContactsListAdapter(Activity activity, List<SelectUser> selectUsers, RecyclerViewClickListener clickListener)
+    public PaymentAddressAdapter(Activity activity, List<SelectUser> selectUsers, RecyclerViewClickListener clickListener)
     {
         this.selectUsersList = selectUsers;
         this.activity = activity;
@@ -49,9 +49,9 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
-        holder.contactNameTxt.setText(selectUsersList.get(position).getName());
-        String num = selectUsersList.get(position).getPhone().replace(" ","").trim();
-        holder.mobileTxt.setText(num+"  Mobile");
+//        holder.contactNameTxt.setText(selectUsersList.get(position).getName());
+//        String num = selectUsersList.get(position).getPhone().replace(" ","").trim();
+//        holder.mobileTxt.setText(num+"  Mobile");
 
         // Set image if exists
         try {
@@ -67,8 +67,9 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                         .into(holder.contactImage);
             }
         } catch (Exception e) {
-            // Add default picture
-            holder.contactImage.setImageResource(R.drawable.icon_user);
+            Picasso.with(activity).load(R.drawable.icon_user)
+                    .transform(new CircleTransform())
+                    .into(holder.contactImage);
             e.printStackTrace();
         }
     }
@@ -111,7 +112,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     @Override
     public int getItemCount() {
 
-        return this.selectUsersList.size();
+        return 10;
 
     }
 

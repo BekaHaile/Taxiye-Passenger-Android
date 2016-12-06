@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
 	<string name="no_more_than">Can\'t order more than %d units</string>
 
-	<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live
+	<!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-	 <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string>&lt;!&ndash; General&ndash;&gt;-->
+	 <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -1405,6 +1405,11 @@
 	<string name="remind">Remind</string>
 	<string name="decline_request_message">Are you sure you want to decline the request?</string>
 	<string name="cancel_request_message">Are you sure you want to cancel the request?</string>
+	<string name="add_payment_address">Add Payment Address</string>
+	<string name="add_payment_add_title">Lorem ipsum dolor</string>
+	<string name="add_payment_add_desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+	<string name="enter_name">Enter Name</string>
+	<string name="enter_payment_address">Enter Payment Address</string>
 
 
 </resources>

@@ -85,7 +85,7 @@ public class SelectContactActivity extends BaseActivity {
     private PagerSlidingTabStrip tabs;
     private ViewPager viewPager;
     private SendMoneyPagerAdapter sendMoneyPagerAdapter;
-    private ImageView toolbarDivider;
+    private ImageView toolbarDivider, ivToolbarAddVPA;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,6 +97,7 @@ public class SelectContactActivity extends BaseActivity {
         setSupportActionBar(mToolBar);
 
         ivToolbarRefreshContacts = (ImageView) findViewById(R.id.ivToolbarRefreshContacts); ivToolbarRefreshContacts.setVisibility(View.VISIBLE);
+        ivToolbarAddVPA = (ImageView) findViewById(R.id.ivToolbarAddVPA); ivToolbarAddVPA.setVisibility(View.GONE);
         toolbarDivider = (ImageView) findViewById(R.id.toolbarDivider); toolbarDivider.setVisibility(View.GONE);
 
         selectContactActivityObj = this;
@@ -110,6 +111,29 @@ public class SelectContactActivity extends BaseActivity {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         sendMoneyPagerAdapter = new SendMoneyPagerAdapter(this, getSupportFragmentManager());
         viewPager.setAdapter(sendMoneyPagerAdapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 0){
+                    ivToolbarRefreshContacts.setVisibility(View.VISIBLE);
+                    ivToolbarAddVPA.setVisibility(View.GONE);
+                } else{
+                    ivToolbarAddVPA.setVisibility(View.VISIBLE);
+                    ivToolbarRefreshContacts.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setTextSize((int) (ASSL.Xscale() * 32f));
@@ -130,6 +154,10 @@ public class SelectContactActivity extends BaseActivity {
 
     public ImageView getIvToolbarRefreshContacts() {
         return ivToolbarRefreshContacts;
+    }
+
+    public ImageView getIvToolbarAddVPA() {
+        return ivToolbarAddVPA;
     }
 
     @Override
