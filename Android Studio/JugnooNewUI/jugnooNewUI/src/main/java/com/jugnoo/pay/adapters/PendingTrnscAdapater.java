@@ -2,6 +2,7 @@ package com.jugnoo.pay.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -26,11 +27,12 @@ import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.Fonts;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -41,7 +43,7 @@ import retrofit.mime.TypedByteArray;
  * Created by cl-macmini-38 on 06/06/16.
  */
 public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapater.ViewHolder> {
-    List<TransacHistoryResponse.TransactionHistory> transactionHistoryList;
+    ArrayList<TransacHistoryResponse.TransactionHistory> transactionHistoryList;
     private Activity activity;
     private final String REQUEST_TO = "Requested to";
     private final String PAYMENT_TO = "Payment to";
@@ -55,11 +57,11 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.transac_history_item, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_pending_payment, parent, false);
         return new ViewHolder(itemView);
     }
 
-    public PendingTrnscAdapater(Activity activity, List<TransacHistoryResponse.TransactionHistory> transactionHistories) {
+    public PendingTrnscAdapater(Activity activity, ArrayList<TransacHistoryResponse.TransactionHistory> transactionHistories) {
         this.transactionHistoryList = transactionHistories;
         this.activity = activity;
         accessToken =  Data.userData.accessToken;      //Prefs.with(activity).getString(SharedPreferencesName.ACCESS_TOKEN, "");
@@ -75,77 +77,81 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
 
-        holder.nameTxt.setText(transactionHistoryList.get(position).getName());
-        if (transactionHistoryList.get(position).getTxnType() == 1) {
-            holder.requestedTypeTxt.setText(PAYMENT_TO);
-            holder.requestImage.setBackgroundResource(R.drawable.payment);
-        } else if(transactionHistoryList.get(position).getTxnType() == 2) {
-            holder.requestedTypeTxt.setText(REQUESTED_FROM);
-            holder.declinBtn.setVisibility(View.VISIBLE);
-            holder.declinBtn.setText(R.string.cancel);
-            holder.requestImage.setBackgroundResource(R.drawable.requested);
-            holder.payBtn.setVisibility(View.GONE);
-        } else if(transactionHistoryList.get(position).getTxnType() == 3) {
-            holder.requestedTypeTxt.setText(REQUESTED_BY);
-            holder.declinBtn.setVisibility(View.VISIBLE);
-            holder.declinBtn.setText(R.string.decline);
-            holder.requestImage.setBackgroundResource(R.drawable.requested);
-            holder.payBtn.setVisibility(View.VISIBLE);
+        TransacHistoryResponse.TransactionHistory transactionHistory = transactionHistoryList.get(position);
+        holder.textViewName.setText(transactionHistory.getName());
+        if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
+            holder.textViewRequestStatus.setText(R.string.requested_by);
+            holder.buttonPayNow.setText(R.string.pay_now);
+            holder.buttonDismiss.setText(R.string.dismiss);
         }
+        else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
+            holder.textViewRequestStatus.setText(R.string.requested_from);
+            holder.buttonPayNow.setText(R.string.remind);
+            holder.buttonDismiss.setText(R.string.cancel);
+        }
+        holder.textViewPaymentValue.setText(activity.getString(R.string.rupees_value_format, String.valueOf(transactionHistory.getAmount())));
 
-        holder.dateTxt.setText(CommonMethods.getDateFromUTC(transactionHistoryList.get(position).getDate()));
-        holder.amountTxt.setText("Rs. " + transactionHistoryList.get(position).getAmount());
+        holder.buttonPayNow.setTag(position);
+        holder.buttonDismiss.setTag(position);
 
-
-        holder.declinBtn.setOnClickListener(new View.OnClickListener() {
+        holder.buttonDismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String buttonText = "Are you sure you want to cancel the request?";
-                if(holder.declinBtn.getText().toString().equalsIgnoreCase("Decline")){
-                    buttonText = "Are you sure you want to decline the request?";
-                } else{
-                    buttonText = "Are you sure you want to cancel the request?";
+                try {
+                    final int pos = (int) view.getTag();
+                    final TransacHistoryResponse.TransactionHistory transactionHistory = transactionHistoryList.get(pos);
+                    String buttonText;
+                    if(transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()){
+						buttonText = activity.getString(R.string.decline_request_message);
+					} else{
+						buttonText = activity.getString(R.string.cancel_request_message);
+					}
+                    TwoButtonAlert.showAlert(activity, buttonText, AppConstant.NO, AppConstant.YES,
+							new TwoButtonAlert.OnAlertOkCancelClickListener() {
+						@Override
+						public void onOkButtonClicked() {
+							if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
+								cancelTranscApi(transactionHistory.getId(), pos);
+							} else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
+								declineTranscApi(transactionHistory.getId(), pos);
+							}
+						}
+
+						@Override
+						public void onCancelButtonClicked() {
+
+						}
+					});
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                TwoButtonAlert.showAlert(activity, buttonText, AppConstant.NO, AppConstant.YES,
-                        new TwoButtonAlert.OnAlertOkCancelClickListener() {
-                    @Override
-                    public void onOkButtonClicked() {
-                        if (transactionHistoryList.get(position).getTxnType() == 2) {
-                            cancelTranscApi(transactionHistoryList.get(position).getId(), position);
-                        } else if (transactionHistoryList.get(position).getTxnType() == 3) {
-                            declineTranscApi(transactionHistoryList.get(position).getId(), position);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelButtonClicked() {
-
-                    }
-                });
             }
         });
 
-        holder.payBtn.setOnClickListener(new View.OnClickListener() {
+        holder.buttonPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (transactionHistoryList.get(position).getRequesterPhoneNo() != null
-                        &&(!transactionHistoryList.get(position).getRequesterPhoneNo().equalsIgnoreCase(""))) {
-                    //declineTranscApi(transactionHistoryList.get(position).getId(), position);
-                    SelectUser newData = new SelectUser();
-                    newData.setName("");
-                    newData.setPhone(transactionHistoryList.get(position).getRequesterPhoneNo());
-                    newData.setAmount(String.valueOf(transactionHistoryList.get(position).getAmount()));
-                    newData.setOrderId(String.valueOf(transactionHistoryList.get(position).getId()));
+                try {
+                    final int pos = (int) v.getTag();
+                    final TransacHistoryResponse.TransactionHistory transactionHistory = transactionHistoryList.get(pos);
+                    if (transactionHistory.getRequesterPhoneNo() != null && !transactionHistory.getRequesterPhoneNo().equalsIgnoreCase("")) {
+						SelectUser newData = new SelectUser();
+						newData.setName("");
+						newData.setPhone(transactionHistory.getRequesterPhoneNo());
+						newData.setAmount(String.valueOf(transactionHistory.getAmount()));
+						newData.setOrderId(String.valueOf(transactionHistory.getId()));
 
-                    Intent intent = new Intent(activity, SendMoneyActivity.class);
-                    intent.putExtra(AppConstant.REQUEST_STATUS, false);
-                    Bundle bun =new Bundle();
-                    bun.putParcelable(AppConstant.CONTACT_DATA, newData);
-                    intent.putExtras(bun);
-                    activity.startActivity(intent);
+						Intent intent = new Intent(activity, SendMoneyActivity.class);
+						intent.putExtra(AppConstant.REQUEST_STATUS, false);
+						Bundle bun =new Bundle();
+						bun.putParcelable(AppConstant.CONTACT_DATA, newData);
+						intent.putExtras(bun);
+						activity.startActivity(intent);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -158,25 +164,20 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView requestedTypeTxt, nameTxt, amountTxt, dateTxt, statusTxt;
-        public ImageView requestImage, statusImage;
-        public Button declinBtn, payBtn;
+        public TextView textViewNameInitial, textViewRequestStatus, textViewName, textViewMessage, textViewPaymentValue;
+        public ImageView imageViewSep;
+        public Button buttonDismiss, buttonPayNow;
 
         public ViewHolder(View view) {
             super(view);
-            requestedTypeTxt = (TextView) view.findViewById(R.id.request_type_txt);
-            nameTxt = (TextView) view.findViewById(R.id.contact_name_txt);
-            amountTxt = (TextView) view.findViewById(R.id.amount_txt);
-            dateTxt = (TextView) view.findViewById(R.id.date_txt);
-            statusTxt = (TextView) view.findViewById(R.id.status_txt);
-
-            requestImage = (ImageView) view.findViewById(R.id.request_type_img);
-            statusImage = (ImageView) view.findViewById(R.id.status_img);
-
-            statusTxt.setVisibility(View.GONE);
-            statusImage.setVisibility(View.GONE);
-            declinBtn = (Button) view.findViewById(R.id.decline_btn);
-            payBtn = (Button) view.findViewById(R.id.pay_btn);
+            textViewNameInitial = (TextView) view.findViewById(R.id.textViewNameInitial); textViewNameInitial.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+            textViewRequestStatus = (TextView) view.findViewById(R.id.textViewRequestStatus); textViewRequestStatus.setTypeface(Fonts.mavenRegular(activity));
+            textViewName = (TextView) view.findViewById(R.id.textViewName); textViewName.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+            textViewMessage = (TextView) view.findViewById(R.id.textViewMessage); textViewMessage.setTypeface(Fonts.mavenRegular(activity));
+            textViewPaymentValue = (TextView) view.findViewById(R.id.textViewPaymentValue); textViewPaymentValue.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+            imageViewSep = (ImageView) view.findViewById(R.id.imageViewSep);
+            buttonDismiss = (Button) view.findViewById(R.id.buttonDismiss); buttonDismiss.setTypeface(Fonts.mavenRegular(activity));
+            buttonPayNow = (Button) view.findViewById(R.id.buttonPayNow); buttonPayNow.setTypeface(Fonts.mavenRegular(activity));
         }
     }
 

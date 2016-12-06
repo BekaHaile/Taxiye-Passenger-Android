@@ -169,4 +169,21 @@ public class TransacHistoryResponse {
             this.requester_phone_no = requester_phone_no;
         }
     }
+
+    public enum Type{
+        REQUEST_BY_SENT(1),
+        REQUEST_BY_PENDING(2),
+        REQUESTED_FROM_PENDING(3),
+        REQUESTED_FROM_RECEIVED(4)
+        ;
+
+        private int ordinal;
+        Type(int ordinal){
+           this.ordinal = ordinal;
+        }
+
+        public int getOrdinal() {
+            return ordinal;
+        }
+    }
 }

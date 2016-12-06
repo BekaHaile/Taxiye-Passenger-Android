@@ -23,6 +23,8 @@ import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -138,7 +140,7 @@ public class TransacHistoryActivity extends BaseActivity {
                             if(transacHistoryResponse.getTransactionHistory().size() > 0) {
                                 linearLayoutNoTxn.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
-                                PendingTrnscAdapater adapter = new PendingTrnscAdapater(TransacHistoryActivity.this, transacHistoryResponse.getTransactionHistory());
+                                PendingTrnscAdapater adapter = new PendingTrnscAdapater(TransacHistoryActivity.this, (ArrayList<TransacHistoryResponse.TransactionHistory>) transacHistoryResponse.getTransactionHistory());
                                 recyclerView.setAdapter(adapter);
                             } else{
                                 linearLayoutNoTxn.setVisibility(View.VISIBLE);
@@ -171,18 +173,14 @@ public class TransacHistoryActivity extends BaseActivity {
                 System.out.println("transacHistoryResponse.failure");
                 try {
 
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK))
-                    {
+                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
 //                        SingleButtonAlert.showAlert(HomeActivity.this,"No Internet Connection", "Ok");
                         showAlertNoInternet(TransacHistoryActivity.this);
                     }
                     else {
-
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
-
                         JSONObject jsonObject = new JSONObject(json);
-
                         SingleButtonAlert.showAlert(TransacHistoryActivity.this, jsonObject.getString("message"), AppConstant.OK);
                     }
                 } catch (Exception e) {

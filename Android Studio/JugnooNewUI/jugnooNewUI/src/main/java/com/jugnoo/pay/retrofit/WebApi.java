@@ -101,4 +101,10 @@ public interface WebApi {
     @POST("/account_mgmt")
     void accountManagement(@FieldMap Map<String, String> param, Callback<AccountManagementResponse> callback);
 
+
+    @FormUrlEncoded
+    @POST("/fetch_pay_data")
+    void fetchPayData(@FieldMap Map<String, String> params,
+                      Callback<AccountManagementResponse> callback);
+
 }

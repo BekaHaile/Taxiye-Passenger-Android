@@ -1401,6 +1401,10 @@
 	<string name="decline">Decline</string>
 	<string name="requested_by">Requested by</string>
 	<string name="dismiss">Dismiss</string>
+	<string name="requested_from">Requested from</string>
+	<string name="remind">Remind</string>
+	<string name="decline_request_message">Are you sure you want to decline the request?</string>
+	<string name="cancel_request_message">Are you sure you want to cancel the request?</string>
 
 
 </resources>

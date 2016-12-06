@@ -10,6 +10,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -19,8 +22,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jugnoo.pay.adapters.CustomDrawerAdapter;
+import com.jugnoo.pay.adapters.PendingTrnscAdapater;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.CommonResponse;
+import com.jugnoo.pay.models.TransacHistoryResponse;
 import com.jugnoo.pay.models.VerifyRegisterResponse;
 import com.jugnoo.pay.models.VerifyUserRequest;
 import com.jugnoo.pay.utils.CallProgressWheel;
@@ -35,6 +40,7 @@ import com.yesbank.Registration;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -42,13 +48,21 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -67,7 +81,7 @@ public class MainActivity extends BaseActivity {
     private final int VPA_REGISTER_INTENT_REQUEST_CODE = 121;
 
     private boolean isSendingMoney = true;
-    @OnClick(R.id.send_money_image)
+    @OnClick(R.id.linearLayoutSendMoney)
     void sendMoneyImgClicked(){
         if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             isSendingMoney = true;
@@ -113,7 +127,7 @@ public class MainActivity extends BaseActivity {
 
 
 
-    @OnClick(R.id.request_money_image)
+    @OnClick(R.id.linearLayoutRequestMoney)
     void requestMoneyImgClicked() {
         if(ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             isSendingMoney = false;
@@ -151,11 +165,15 @@ public class MainActivity extends BaseActivity {
     private ImageView imageViewProfile;
     private CustomDrawerAdapter drawerAdapter;
     private CommonResponse userDetails;
-    private String accessToken;
     private String drawerItems[] = {"Home", "Pending Transactions", "Transactions History", "FAQs", "Account Management"};
     Intent intent;
 
+    private RecyclerView recyclerViewPendingPayments;
+    private PendingTrnscAdapater pendingTrnscAdapater;
+    private ArrayList<TransacHistoryResponse.TransactionHistory> transactionHistories;
+
     private FABViewTest fabViewTest;
+    private TextView textViewPaymentIdValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +188,6 @@ public class MainActivity extends BaseActivity {
             toggle.setDrawerIndicatorEnabled(false);
 
             toggle.syncState();
-            accessToken = Prefs.with(MainActivity.this).getString(SharedPreferencesName.ACCESS_TOKEN, "");
             userDetails = Prefs.with(MainActivity.this).getObject(SharedPreferencesName.APP_USER, CommonResponse.class);
             mDrawerList = (ListView) findViewById(R.id.lst_menu_items);
             drawerAdapter = new CustomDrawerAdapter(this, android.R.layout.simple_list_item_1, drawerItems);
@@ -194,7 +211,20 @@ public class MainActivity extends BaseActivity {
                 fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
             }
 
-            mToolBar.setTitle(R.string.pay);
+
+            transactionHistories = new ArrayList<>();
+            recyclerViewPendingPayments = (RecyclerView) findViewById(R.id.recyclerViewPendingPayments);
+            recyclerViewPendingPayments.setLayoutManager(new LinearLayoutManager(this));
+            recyclerViewPendingPayments.setItemAnimator(new DefaultItemAnimator());
+            recyclerViewPendingPayments.setHasFixedSize(false);
+            pendingTrnscAdapater = new PendingTrnscAdapater(this, transactionHistories);
+
+            ((TextView) findViewById(R.id.textViewPaymentId)).setTypeface(Fonts.mavenMedium(this));
+            textViewPaymentIdValue = (TextView) findViewById(R.id.textViewPaymentIdValue); textViewPaymentIdValue.setTypeface(Fonts.mavenMedium(this));
+            ((TextView) findViewById(R.id.textViewSendMoney)).setTypeface(Fonts.mavenMedium(this));
+            ((TextView) findViewById(R.id.textViewRequestMoney)).setTypeface(Fonts.mavenMedium(this));
+            ((TextView) findViewById(R.id.textViewPendingPayments)).setTypeface(Fonts.mavenMedium(this));
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -203,7 +233,10 @@ public class MainActivity extends BaseActivity {
         try {
             if(Data.getPayData().getPay().getHasVpa() == 0){
 				sendToSDKRegister(Data.getPayData().getPay());
-			}
+                fetchPayData();
+			} else {
+                fetchPayData();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -408,51 +441,126 @@ public class MainActivity extends BaseActivity {
 
 
     private void callVerifyUserApi(VerifyRegisterResponse verifyRegisterResponse) {
-        CallProgressWheel.showLoadingDialog(this, AppConstant.PLEASE);
-        VerifyUserRequest request = new VerifyUserRequest();
-        request.setDeviceToken(MyApplication.getInstance().getDeviceToken());
-        request.setUniqueDeviceId(CommonMethods.getUniqueDeviceId(this));
-        request.setToken(accessToken);
-        request.setVpa(verifyRegisterResponse.getVirtualAddress());
-        request.setDeviceType("0");
-        request.setPhone_no(Data.userData.phoneNo);
-        request.setMessage(verifyRegisterResponse.toString());
+        if(AppStatus.getInstance(this).isOnline(this)) {
+            CallProgressWheel.showLoadingDialog(this, AppConstant.PLEASE);
+            VerifyUserRequest request = new VerifyUserRequest();
+            request.setDeviceToken(MyApplication.getInstance().getDeviceToken());
+            request.setUniqueDeviceId(CommonMethods.getUniqueDeviceId(this));
+            request.setToken(Data.getPayData().getPay().getToken());
+            request.setVpa(verifyRegisterResponse.getVirtualAddress());
+            request.setDeviceType(Data.DEVICE_TYPE);
+            request.setAccess_token(Data.userData.accessToken);
+            request.setAutos_user_id(Data.userData.getUserId());
+            request.setUserEmail(Data.userData.userEmail);
+            request.setUser_name(Data.userData.userName);
+            request.setPhone_no(Data.userData.phoneNo);
+            request.setMessage(verifyRegisterResponse.toString());
 
-        RestClient.getPayApiService().verifyUser(request, new Callback<CommonResponse>() {
-            @Override
-            public void success(CommonResponse tokenGeneratedResponse, Response response) {
-                CallProgressWheel.dismissLoadingDialog();
-                if (tokenGeneratedResponse != null) {
-                    int flag = tokenGeneratedResponse.getFlag();
-                    if (flag == 401) {
+            RestClient.getPayApiService().verifyUser(request, new Callback<CommonResponse>() {
+                @Override
+                public void success(CommonResponse tokenGeneratedResponse, Response response) {
+                    CallProgressWheel.dismissLoadingDialog();
+                    if (tokenGeneratedResponse != null) {
+                        int flag = tokenGeneratedResponse.getFlag();
+                        if (flag == 401) {
 //                        accessTokenLogin(MainActivity.this);
-                    } else if(flag == 403) {
+                        } else if (flag == 403) {
 //                        logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
-                    } else {
-                        CommonMethods.callingBadToken(MainActivity.this, flag, tokenGeneratedResponse.getMessage());
+                        } else {
+                            CommonMethods.callingBadToken(MainActivity.this, flag, tokenGeneratedResponse.getMessage());
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                try {
-                    CallProgressWheel.dismissLoadingDialog();
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                        showAlertNoInternet(MainActivity.this);
-                    } else {
-                        String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
-                        JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(MainActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                @Override
+                public void failure(RetrofitError error) {
+                    try {
+                        CallProgressWheel.dismissLoadingDialog();
+                        if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
+                            showAlertNoInternet(MainActivity.this);
+                        } else {
+                            String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
+                            JSONObject jsonObject = new JSONObject(json);
+                            SingleButtonAlert.showAlert(MainActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        CallProgressWheel.dismissLoadingDialog();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    CallProgressWheel.dismissLoadingDialog();
                 }
+            });
+        } else {
+            DialogPopup.alertPopup(this, "", getString(R.string.no_net_text));
+        }
+
+
+    }
+
+
+
+    public void fetchPayData() {
+        try {
+            if (AppStatus.getInstance(this).isOnline(this)) {
+                CallProgressWheel.showLoadingDialog(this, "Loading...");
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
+                params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
+
+                RestClient.getPayApiService().fetchPayData(params, new Callback<AccountManagementResponse>() {
+                    @Override
+                    public void success(AccountManagementResponse accountManagementResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        CallProgressWheel.dismissLoadingDialog();
+                        try{
+                            JSONObject jObj = new JSONObject(responseStr);
+                            int flag = jObj.optInt("", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+                            String message = JSONParser.getServerMessage(jObj);
+                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+
+                            } else {
+                                DialogPopup.alertPopup(MainActivity.this, "", message);
+                            }
+                        } catch (Exception e){
+                            e.printStackTrace();
+                            retryDialogFetchPayData(DialogErrorType.SERVER_ERROR);
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        retryDialogFetchPayData(DialogErrorType.CONNECTION_LOST);
+                    }
+                });
+            } else {
+                retryDialogFetchPayData(DialogErrorType.NO_NET);
             }
-        });
+        } catch (Exception e) {
+            DialogPopup.dismissLoadingDialog();
+            e.printStackTrace();
+        }
 
+    }
 
+    private void retryDialogFetchPayData(DialogErrorType dialogErrorType){
+        DialogPopup.dialogNoInternet(this,
+                dialogErrorType,
+                new Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        fetchPayData();
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                });
     }
 
 }

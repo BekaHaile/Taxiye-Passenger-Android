@@ -415,6 +415,9 @@ public class LoginResponse {
 		}
 
 		public Integer getHasVpa() {
+			if(hasVpa == null){
+				return 0;
+			}
 			return hasVpa;
 		}
 

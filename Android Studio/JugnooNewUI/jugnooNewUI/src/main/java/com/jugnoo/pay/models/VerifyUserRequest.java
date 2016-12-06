@@ -15,6 +15,8 @@ public class VerifyUserRequest {
     private String vpa;
     private String device_type;
     private String message;
+    private String autos_user_id;
+    private String access_token;
 
     public String getMessage() {
         return message;
@@ -161,5 +163,21 @@ public class VerifyUserRequest {
 
     public void setDeviceType(String device_type) {
         this.device_type = device_type;
+    }
+
+    public String getAutos_user_id() {
+        return autos_user_id;
+    }
+
+    public void setAutos_user_id(String autos_user_id) {
+        this.autos_user_id = autos_user_id;
+    }
+
+    public String getAccess_token() {
+        return access_token;
+    }
+
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
     }
 }
