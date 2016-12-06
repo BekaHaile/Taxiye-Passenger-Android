@@ -172,8 +172,8 @@ public class TransacHistoryResponse {
 
     public enum Type{
         REQUEST_BY_SENT(1),
-        REQUEST_BY_PENDING(2),
-        REQUESTED_FROM_PENDING(3),
+        REQUESTED_FROM_PENDING(2), // cancel, remind
+        REQUEST_BY_PENDING(3), // decline, send money
         REQUESTED_FROM_RECEIVED(4)
         ;
 
