@@ -548,4 +548,5 @@ public interface Constants {
 
 	String KEY_ITEM_ID = "item_id";
 	String SP_FRESH_LAST_ADDRESS_OBJ = "sp_fresh_last_address_obj";
+	String KEY_VPA = "vpa";
 }

@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +27,10 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jugnoo.pay.adapters.ContactsListAdapter;
+import com.jugnoo.pay.adapters.PaymentAddressAdapter;
 import com.jugnoo.pay.adapters.SendMoneyPagerAdapter;
+import com.jugnoo.pay.fragments.ContactsFragment;
+import com.jugnoo.pay.fragments.PaymentFragment;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
@@ -79,7 +83,6 @@ public class SelectContactActivity extends BaseActivity {
 
     // Pop up
    private ContentResolver resolver;
-    private ContactsListAdapter adapter;
     public boolean requestStatus=false;
     public static SelectContactActivity selectContactActivityObj;
     private PagerSlidingTabStrip tabs;
@@ -92,7 +95,7 @@ public class SelectContactActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_contact);
         ButterKnife.bind(this);
-        toolbarTitleTxt.setText(R.string.select_contact_screen);
+        toolbarTitleTxt.setText(R.string.select_contact_screen); toolbarTitleTxt.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
         mToolBar.setTitle("");
         setSupportActionBar(mToolBar);
 
@@ -140,6 +143,30 @@ public class SelectContactActivity extends BaseActivity {
         tabs.setTextColorResource(R.color.text_color, R.color.text_color_light);
         tabs.setTypeface(Fonts.mavenMedium(this), Typeface.NORMAL);
         tabs.setViewPager(viewPager);
+
+        searchET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + viewPager.getCurrentItem());
+                if (page != null) {
+                    if(page instanceof ContactsFragment){
+                        ((ContactsFragment)page).getAdapter().filter(editable.toString());
+                    } else if(page instanceof PaymentFragment){
+                        ((PaymentFragment)page).getPaymentAddressAdapter().filter(editable.toString());
+                    }
+                }
+            }
+        });
 
 
     }

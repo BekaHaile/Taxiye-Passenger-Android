@@ -85,22 +85,7 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
             loadContact.execute();
         }
 
-        ((SelectContactActivity)getActivity()).getSearchET().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                adapter.filter(((SelectContactActivity)getActivity()).getSearchET().getText().toString());
-            }
-        });
 
         ((SelectContactActivity)getActivity()).getIvToolbarRefreshContacts().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +95,10 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
         });
 
         return rootView;
+    }
+
+    public ContactsListAdapter getAdapter() {
+        return adapter;
     }
 
     private void fetchUserContacts(){

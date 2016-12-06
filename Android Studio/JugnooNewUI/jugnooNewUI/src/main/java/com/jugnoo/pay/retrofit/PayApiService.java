@@ -4,6 +4,7 @@ import com.jugnoo.pay.models.AccessTokenRequest;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.FetchPayDataResponse;
+import com.jugnoo.pay.models.FetchPaymentAddressResponse;
 import com.jugnoo.pay.models.GenerateTokenRequest;
 import com.jugnoo.pay.models.LoginRequest;
 import com.jugnoo.pay.models.SendMoneyRequest;
@@ -107,5 +108,20 @@ public interface PayApiService {
     @POST("/fetch_pay_data")
     void fetchPayData(@FieldMap Map<String, String> params,
                       Callback<FetchPayDataResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/add_vpa")
+    void addPaymentAddress(@FieldMap Map<String, String> params,
+                      Callback<AccountManagementResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/delete_vpa")
+    void deletePaymentAddress(@FieldMap Map<String, String> params,
+                           Callback<AccountManagementResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/fetch_vpa")
+    void fetchPaymentAddress(@FieldMap Map<String, String> params,
+                              Callback<FetchPaymentAddressResponse> callback);
 
 }

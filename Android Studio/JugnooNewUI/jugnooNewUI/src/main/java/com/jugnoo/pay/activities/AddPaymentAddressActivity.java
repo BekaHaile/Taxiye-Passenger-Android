@@ -3,6 +3,7 @@ package com.jugnoo.pay.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -14,8 +15,29 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jugnoo.pay.models.AccountManagementResponse;
+import com.jugnoo.pay.utils.CallProgressWheel;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * Created by ankit on 06/12/16.
@@ -37,7 +59,7 @@ public class AddPaymentAddressActivity extends BaseActivity {
         setContentView(R.layout.activity_add_payment_address);
 
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
-        toolbarTitleTxt = (TextView) findViewById(R.id.toolbar_title);
+        toolbarTitleTxt = (TextView) findViewById(R.id.toolbar_title); toolbarTitleTxt.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
         ibBack = (ImageButton) findViewById(R.id.back_btn);
         ibBack.setImageResource(R.drawable.ic_close_pay);
         ivTBDivider = (ImageView) findViewById(R.id.toolbarDivider);
@@ -71,7 +93,9 @@ public class AddPaymentAddressActivity extends BaseActivity {
         bAddPaymentAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(etName.getText().length() > 0 && etPaymentAddress.getText().length() > 0){
+                    apiAddPaymentAddress();
+                }
             }
         });
     }
@@ -104,6 +128,71 @@ public class AddPaymentAddressActivity extends BaseActivity {
                 }
                 break;
         }
+    }
+
+    public void apiAddPaymentAddress() {
+        try {
+            if (AppStatus.getInstance(this).isOnline(this)) {
+                CallProgressWheel.showLoadingDialog(this, "Loading...");
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_USER_NAME, etName.getText().toString());
+                params.put(Constants.KEY_VPA, etPaymentAddress.getText().toString());
+
+                RestClient.getPayApiService().addPaymentAddress(params, new Callback<AccountManagementResponse>() {
+                    @Override
+                    public void success(AccountManagementResponse accountManagementResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        CallProgressWheel.dismissLoadingDialog();
+                        try{
+                            JSONObject jObj = new JSONObject(responseStr);
+                            int flag = jObj.optInt("flag", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+                            String message = JSONParser.getServerMessage(jObj);
+                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                onBackPressed();
+                            } else {
+                                DialogPopup.alertPopup(AddPaymentAddressActivity.this, "", message);
+                            }
+                        } catch (Exception e){
+                            e.printStackTrace();
+                            retryDialogFetchPayData(DialogErrorType.SERVER_ERROR);
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        retryDialogFetchPayData(DialogErrorType.CONNECTION_LOST);
+                    }
+                });
+            } else {
+                retryDialogFetchPayData(DialogErrorType.NO_NET);
+            }
+        } catch (Exception e) {
+            DialogPopup.dismissLoadingDialog();
+            e.printStackTrace();
+        }
+
+    }
+
+    private void retryDialogFetchPayData(DialogErrorType dialogErrorType){
+        DialogPopup.dialogNoInternet(this,
+                dialogErrorType,
+                new Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        apiAddPaymentAddress();
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                });
     }
 }
 

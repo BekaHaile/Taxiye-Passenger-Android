@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Fonts;
 
+import com.jugnoo.pay.models.FetchPaymentAddressResponse;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.RecyclerViewClickListener;
@@ -25,11 +27,11 @@ import java.util.Locale;
  * Created by cl-macmini-38 on 06/06/16.
  */
 public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAdapter.MyViewHolder> {
-    List<SelectUser> selectUsersList;
+    public ArrayList<FetchPaymentAddressResponse.VpaList> selectUsersList;
     public  int selectedPosition;
     private Activity activity;
-    private ArrayList<SelectUser> arraylist;
-    private RecyclerViewClickListener clickListener;
+    private ArrayList<FetchPaymentAddressResponse.VpaList> arraylist;
+    private Callback clickListener;
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -37,41 +39,45 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
         return new MyViewHolder(itemView);
     }
 
-    public PaymentAddressAdapter(Activity activity, List<SelectUser> selectUsers, RecyclerViewClickListener clickListener)
+    public PaymentAddressAdapter(Activity activity, ArrayList<FetchPaymentAddressResponse.VpaList> selectUsers, Callback clickListener)
     {
         this.selectUsersList = selectUsers;
         this.activity = activity;
-        this.arraylist = new ArrayList<SelectUser>();
-        this.arraylist.addAll(selectUsers);
+        this.arraylist = selectUsers;
         this.clickListener = clickListener;
     }
+
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
-//        holder.contactNameTxt.setText(selectUsersList.get(position).getName());
-//        String num = selectUsersList.get(position).getPhone().replace(" ","").trim();
-//        holder.mobileTxt.setText(num+"  Mobile");
+        holder.contactNameTxt.setText(selectUsersList.get(position).getName());
+        holder.mobileTxt.setText(selectUsersList.get(position).getVpa());
 
-        // Set image if exists
         try {
-
-            if (selectUsersList.get(position).getThumb() != null) {
-                Picasso.with(activity).load(selectUsersList.get(position).getThumb())
-                        .transform(new CircleTransform())
-                        .into(holder.contactImage);
-
-            } else {
                 Picasso.with(activity).load(R.drawable.icon_user)
                         .transform(new CircleTransform())
                         .into(holder.contactImage);
-            }
         } catch (Exception e) {
             Picasso.with(activity).load(R.drawable.icon_user)
                     .transform(new CircleTransform())
                     .into(holder.contactImage);
             e.printStackTrace();
         }
+
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickListener.recyclerViewListClicked(position);
+            }
+        });
+
+        holder.ivDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickListener.onDelete(selectUsersList.get(position).getVpa());
+            }
+        });
     }
 
     // Filter Class
@@ -81,7 +87,7 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
         if (charText.length() == 0) {
             selectUsersList.addAll(arraylist);
         } else {
-            for (SelectUser wp : arraylist) {
+            for (FetchPaymentAddressResponse.VpaList wp : arraylist) {
                 if (wp.getName().toLowerCase(Locale.getDefault())
                         .contains(charText)) {
                     selectUsersList.add(wp);
@@ -89,7 +95,7 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
 
             }
 
-            if(selectUsersList.size()==0)
+            /*if(selectUsersList.size()==0)
             {
                     SelectUser selectUser = new SelectUser();
                     charText = charText.replace(" ", "");
@@ -103,7 +109,7 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
                     selectUser.setName("Unknown");
                     selectUsersList.add(selectUser);
 
-            }
+            }*/
         }
         notifyDataSetChanged();
     }
@@ -111,28 +117,28 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
 
     @Override
     public int getItemCount() {
-
-        return 10;
-
+        return selectUsersList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder{
+        public LinearLayout container;
         public TextView contactNameTxt,mobileTxt;
-         public ImageView contactImage;
-          public MyViewHolder(View view) {
+        public ImageView contactImage, ivDelete;
+        public MyViewHolder(View view) {
             super(view);
+              container = (LinearLayout) view.findViewById(R.id.container);
               contactNameTxt = (TextView) view.findViewById(R.id.contact_name_txt); contactNameTxt.setTypeface(Fonts.mavenRegular(activity));
               mobileTxt = (TextView) view.findViewById(R.id.mobile_txt); mobileTxt.setTypeface(Fonts.mavenRegular(activity));
               contactImage = (ImageView) view.findViewById(R.id.contact_image);
-
-
-            view.setOnClickListener(this);
+              ivDelete = (ImageView) view.findViewById(R.id.ivDelete);
         }
 
-        @Override
-        public void onClick(View view) {
-            clickListener.recyclerViewListClicked(view,getAdapterPosition());
-        }
+    }
+
+    public interface Callback
+    {
+        void recyclerViewListClicked(int position);
+        void onDelete(String vpa);
     }
 
 
