@@ -97,13 +97,18 @@ public class OrderItemsAdapter extends BaseAdapter {
 
 		mHolder.imageViewItemImage.setVisibility(View.GONE);
 
+		if(subItem.getItemCancelled()==0)
+		{
+			mHolder.textViewItemCancelled.setVisibility(View.GONE);
+		}
+		else mHolder.textViewItemCancelled.setVisibility(View.VISIBLE);
 	}
 
 	static class MainViewHolder extends RecyclerView.ViewHolder {
 		public int id;
 		public RelativeLayout relative;
 		private ImageView imageViewItemImage, imageViewSep;
-		public TextView textViewItemName, textViewItemPrice, textViewItemQuantity, textViewItemTotalPrice;
+		public TextView textViewItemName, textViewItemPrice, textViewItemQuantity, textViewItemTotalPrice ,textViewItemCancelled;
 
 		public MainViewHolder(View itemView, Context context) {
 			super(itemView);
@@ -115,6 +120,7 @@ public class OrderItemsAdapter extends BaseAdapter {
 			textViewItemPrice = (TextView) itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenMedium(context));
 			textViewItemQuantity = (TextView) itemView.findViewById(R.id.textViewItemQuantity); textViewItemQuantity.setTypeface(Fonts.mavenMedium(context));
 			textViewItemTotalPrice = (TextView) itemView.findViewById(R.id.textViewItemTotalPrice); textViewItemTotalPrice.setTypeface(Fonts.mavenMedium(context));
+			textViewItemCancelled = (TextView) itemView.findViewById(R.id.textViewItemCancelled); textViewItemCancelled.setTypeface(Fonts.mavenMedium(context));
 
 			RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewSep.getLayoutParams();
 			layoutParams.setMargins(55, 0, 34, 0);

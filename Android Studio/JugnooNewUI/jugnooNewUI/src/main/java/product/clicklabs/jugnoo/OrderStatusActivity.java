@@ -316,9 +316,6 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                         try {
 
                             JSONObject jObj = new JSONObject(responseStr);
-
-                            Log.v("json for order status","json for order page"+jObj);
-
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);
@@ -664,12 +661,14 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 imageViewCallRestaurant.setVisibility(View.GONE);
             }
             tvDeliveryToVal.setText(historyResponse.getData().get(0).getDeliveryAddress());
+
             try {
-                tvSubAmountVal.setText(activity.getString(R.string.rupees_value_format,
-                        Utils.getMoneyDecimalFormat().format(getSubTotalAmount(historyResponse))));
+                tvSubAmountVal.setText(activity.getString(R.string.rupees_value_format,Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderItemAmountSum())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+
             tvOrderStatusVal.setTextColor(Color.parseColor(historyResponse.getData().get(0).getOrderStatusColor()));
 
             if(!historyResponse.getData().get(0).getDeliveryAddressType().equalsIgnoreCase("")){
@@ -729,25 +728,49 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.jugnoo_cash), historyResponse.getData().get(0).getJugnooDeducted(), true);
             }
 
+/*
             if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)
                     || (historyResponse.getData().get(0).getJugnooDeducted() != null) && (historyResponse.getData().get(0).getJugnooDeducted() != 0)){
                 rlAmountPayable.setVisibility(View.VISIBLE);
-                tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format)
-                        , String.valueOf(historyResponse.getData().get(0).getOriginalOrderAmount().intValue() - historyResponse.getData().get(0).getJugnooDeducted().intValue()
+                tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOriginalOrderAmount().intValue() - historyResponse.getData().get(0).getJugnooDeducted().intValue()
                                 - historyResponse.getData().get(0).getDiscount().intValue() - historyResponse.getData().get(0).getWalletDeducted().intValue())));
             } else{
                 rlAmountPayable.setVisibility(View.GONE);
                 llFinalAmount.setVisibility(View.GONE);
             }
+*/
 
-            if(getBilledAmount(historyResponse) < historyResponse.getData().get(0).getOriginalOrderAmount()){
+
+            if((historyResponse.getData().get(0).getJugnooDeducted()>0))
+            {
+                rlAmountPayable.setVisibility(View.VISIBLE);
+                tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderPaybleAmount())));
+            } else{
+                rlAmountPayable.setVisibility(View.GONE);
+                llFinalAmount.setVisibility(View.GONE);
+            }
+
+
+        /*    if(getBilledAmount(historyResponse) < historyResponse.getData().get(0).getOriginalOrderAmount()){
                 llRefund.setVisibility(View.VISIBLE);
                 tvBilledAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(getBilledAmount(historyResponse))));
                 tvRefundVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderRefundAmount().intValue())));
             } else{
                 llRefund.setVisibility(View.GONE);
-            }
+            }*/
 
+            if(historyResponse.getData().get(0).getOrderRefundAmount()>0)
+            {
+                Log.v("refund value","refund value "+historyResponse.getData().get(0).getOrderRefundAmount());
+
+                llRefund.setVisibility(View.VISIBLE);
+                tvBilledAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderBillableAmount())));
+                tvRefundVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderRefundAmount().intValue())));
+            }
+            else
+            {
+                llRefund.setVisibility(View.GONE);
+            }
 
             if (orderHistory.getCancellable() == 1) {
                 orderCancel.setVisibility(View.VISIBLE);
@@ -912,7 +935,13 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 public void run() {
                     try {
                         int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
-                        if(PushFlags.STATUS_CHANGED.getOrdinal() == flag){
+                        if(PushFlags.STATUS_CHANGED.getOrdinal() == flag)
+                        {
+                            getOrderData(activity);
+                        }
+                        else if(PushFlags.MENUS_STATUS.getOrdinal() == flag)
+                        {
+                            Log.v("menus status ","menus status tracking");
                             getOrderData(activity);
                         }
                     } catch (Exception e) {

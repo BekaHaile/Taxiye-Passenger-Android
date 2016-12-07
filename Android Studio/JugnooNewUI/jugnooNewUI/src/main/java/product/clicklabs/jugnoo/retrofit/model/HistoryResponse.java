@@ -131,12 +131,30 @@ public class HistoryResponse {
         @SerializedName("store_id")
         @Expose
         private Integer storeId;
+
+
         @SerializedName("original_order_amount")
         @Expose
         private Double originalOrderAmount;
+
+        @SerializedName("order_item_amount_sum")
+        @Expose
+        private Double orderItemAmountSum;
+
         @SerializedName("order_amount")
         @Expose
         private Double orderAmount;
+
+        @SerializedName("order_billable_amount")
+        @Expose
+        private Double orderBillableAmount;
+
+        @SerializedName("order_payble_amount")
+        @Expose
+        private Double orderPaybleAmount;
+
+
+
         @SerializedName("jugnoo_deducted")
         @Expose
         private Double jugnooDeducted;
@@ -234,7 +252,6 @@ public class HistoryResponse {
         @SerializedName("delivery_address_type")
         @Expose
         private String deliveryAddressType;
-
 
         @SerializedName("restaurant_id")
         @Expose
@@ -462,6 +479,32 @@ public class HistoryResponse {
 
         public void setOriginalOrderAmount(Double originalOrderAmount) {
             this.originalOrderAmount = originalOrderAmount;
+        }
+
+        public Double getOrderBillableAmount() {
+            return orderBillableAmount;
+        }
+
+        public void setOrderBillableAmount(Double orderBillableAmount) {
+            this.orderBillableAmount = orderBillableAmount;
+        }
+
+
+        public Double getOrderPaybleAmount() {
+            return orderPaybleAmount;
+        }
+
+        public void setOrderPaybleAmount(Double orderPaybleAmount) {
+            this.orderPaybleAmount = orderPaybleAmount;
+        }
+
+
+        public Double getOrderItemAmountSum() {
+            return orderItemAmountSum;
+        }
+
+        public void setOrderItemAmountSum(Double orderItemAmountSum) {
+            this.orderItemAmountSum = orderItemAmountSum;
         }
 
         /**
@@ -914,6 +957,25 @@ public class HistoryResponse {
             this.deliveryAddressType = deliveryAddressType;
         }
 
+
+      /*  public int getSubAmountValue() {
+            return subAmountValue;
+        }
+
+        public void setSubAmountValue(int subAmountValue) {
+            this.subAmountValue = subAmountValue;
+        }
+
+
+        public String getTotalAmountValue() {
+            return totalAmountValue;
+        }
+
+        public void setTotalAmountValue(String totalAmountValue) {
+            this.totalAmountValue = totalAmountValue;
+        }*/
+
+
         public Integer getRestaurantId() {
             return restaurantId;
         }
@@ -1007,7 +1069,9 @@ public class HistoryResponse {
         @SerializedName("unit_amount")
         @Expose
         private Double unitAmount;
-
+        @SerializedName("item_cancelled")
+        @Expose
+        private Double itemCancelled;
         /**
          * @return The subItemId
          */
@@ -1090,6 +1154,18 @@ public class HistoryResponse {
          */
         public void setUnit(String unit) {
             this.unit = unit;
+        }
+
+
+        public Double getItemCancelled() {
+            return itemCancelled;
+        }
+
+        /**
+         * @param itemCancelled The item_amount
+         */
+        public void setItemCancelled(Double itemCancelled) {
+            this.itemCancelled = itemCancelled;
         }
 
         public Double getUnitAmount() {

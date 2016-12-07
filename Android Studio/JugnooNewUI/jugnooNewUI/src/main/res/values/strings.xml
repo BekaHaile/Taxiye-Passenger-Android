@@ -895,6 +895,8 @@
 	<string name="will_be_delivered_by">will be delivered by</string>
 	<string name="your_cart_is_empty">Your cart is empty</string>
 	<string name="search_items">Search Items</string>
+	<string name="item_cancelled">Cancelled</string>
+
 
 	<string name="refer_a_driver">Refer a Driver</string>
 	<string name="came_across_auto_driver">Riding with a driver\nnot aware of jugnoo yet?</string>
