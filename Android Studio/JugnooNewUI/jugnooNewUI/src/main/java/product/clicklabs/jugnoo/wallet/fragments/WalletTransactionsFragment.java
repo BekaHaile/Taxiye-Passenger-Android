@@ -258,6 +258,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 										int paytm = jTransactionI.optInt(Constants.KEY_PAYTM, 0);
 										int mobikwik = jTransactionI.optInt(Constants.KEY_MOBIKWIK, 0);
 										int freecharge = jTransactionI.optInt(Constants.KEY_FREECHARGE, 0);
+										int pay = jTransactionI.optInt(Constants.KEY_JUGNOO_PAY, 0);
 
 										transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
 												jTransactionI.getInt("txn_type"),
@@ -265,7 +266,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 												jTransactionI.getString("txn_date"),
 												jTransactionI.getString("txn_text"),
 												jTransactionI.getDouble("amount"),
-												paytm, mobikwik, freecharge));
+												jTransactionI.optString("pay_type", ""),
+												paytm, mobikwik, freecharge, pay));
 									}
 
 									if (Data.userData != null) {

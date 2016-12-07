@@ -83,6 +83,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
             holder.textViewTransactionMode.setVisibility(View.GONE);
+            holder.tvStatusPay.setVisibility(View.GONE);
             if(transactionInfo.paytm == 1){
                 holder.textViewTransactionMode.setVisibility(View.VISIBLE);
                 holder.textViewTransactionMode.setText(context.getResources().getString(R.string.paytm_colon));
@@ -92,6 +93,14 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             } else if(transactionInfo.getFreecharge() == 1){
                 holder.textViewTransactionMode.setVisibility(View.VISIBLE);
                 holder.textViewTransactionMode.setText(context.getResources().getString(R.string.freecharge_colon));
+            } else if(transactionInfo.getPay() == 1){
+                holder.textViewTransactionMode.setVisibility(View.VISIBLE);
+                holder.textViewTransactionMode.setText(context.getResources().getString(R.string.pay_colon));
+            }
+
+            if(!transactionInfo.getPayType().equalsIgnoreCase("")){
+                holder.tvStatusPay.setVisibility(View.VISIBLE);
+                holder.tvStatusPay.setText(transactionInfo.getPayType());
             }
         }
         else if(viewholder instanceof ViewFooterHolder){
@@ -142,7 +151,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewTransactionDate, textViewTransactionAmount, textViewTransactionTime,
-                textViewTransactionType, textViewTransactionMode;
+                textViewTransactionType, textViewTransactionMode, tvStatusPay;
         public LinearLayout relative;
         public ViewHolder(View convertView, Context context) {
             super(convertView);
@@ -151,6 +160,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); textViewTransactionTime.setTypeface(Fonts.mavenRegular(context));
             textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); textViewTransactionType.setTypeface(Fonts.mavenRegular(context));
             textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); textViewTransactionMode.setTypeface(Fonts.mavenRegular(context));
+            tvStatusPay = (TextView) convertView.findViewById(R.id.tvStatusPay); tvStatusPay.setTypeface(Fonts.mavenMedium(context));
             relative = (LinearLayout) convertView.findViewById(R.id.relative);
         }
     }

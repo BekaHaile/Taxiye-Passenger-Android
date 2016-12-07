@@ -9,18 +9,22 @@ public class TransactionInfo {
 	public int paytm;
 	private int mobikwik;
 	private int freecharge;
+	private int pay;
+	private String payType;
 	
 	public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText,
-						   double amount, int paytm, int mobikwik, int freecharge){
+						   double amount,String payType, int paytm, int mobikwik, int freecharge, int pay){
 		this.transactionId = transactionId;
 		this.transactionType = transactionType;
 		this.time = time;
 		this.date = date;
 		this.transactionText = transactionText;
 		this.amount = amount;
+		this.payType = payType;
 		this.paytm = paytm;
 		this.mobikwik = mobikwik;
 		this.freecharge = freecharge;
+		this.pay = pay;
 	}
 	
 	@Override
@@ -43,5 +47,13 @@ public class TransactionInfo {
 
 	public int getFreecharge() {
 		return freecharge;
+	}
+
+	public int getPay() {
+		return pay;
+	}
+
+	public String getPayType() {
+		return payType;
 	}
 }
