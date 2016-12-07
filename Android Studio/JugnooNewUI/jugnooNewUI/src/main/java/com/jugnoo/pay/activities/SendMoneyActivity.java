@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -205,6 +206,7 @@ public class SendMoneyActivity extends BaseActivity {
             amountET.setText(contactDetails.getAmount());
             amountET.setEnabled(false);
             amountET.setTextColor(getResources().getColor(R.color.green_rupee));
+            messageET.setVisibility(TextUtils.isEmpty(contactDetails.getMessage()) ? View.GONE : View.VISIBLE);
             messageET.setText(contactDetails.getMessage());
             messageET.setEnabled(false);
         } else{

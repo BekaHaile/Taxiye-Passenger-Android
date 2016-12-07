@@ -284,5 +284,8 @@
     <dimen name="sp_17">
         17sp
     </dimen>
+    <dimen name="sp_19">
+        19sp
+    </dimen>
 
 </resources>

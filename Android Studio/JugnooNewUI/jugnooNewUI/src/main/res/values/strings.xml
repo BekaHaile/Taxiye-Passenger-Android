@@ -1413,6 +1413,10 @@
 	<string name="add_a_location">Add a location (optional)</string>
 	<string name="debit_from">Debit from</string>
 	<string name="no_pending_payments">No pending payments</string>
+	<string name="transaction_status">Transaction status</string>
+	<string name="transaction_time">Transaction time</string>
+	<string name="bank_ref_id">Bank Ref ID:</string>
+	<string name="ncpi_transaction_id">NCPI Transaction ID:</string>
 
 
 </resources>
