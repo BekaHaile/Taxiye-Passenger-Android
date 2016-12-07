@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +28,17 @@ import com.sabkuchfresh.utils.AppConstant;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -75,15 +83,19 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
 
         TransacHistoryResponse.TransactionHistory transactionHistory = transactionHistoryList.get(position);
         holder.textViewName.setText(transactionHistory.getName());
+        holder.textViewNameInitial.setText(getInitials(transactionHistory.getName()));
         if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
             holder.textViewRequestStatus.setText(R.string.requested_by);
             holder.buttonPayNow.setText(R.string.pay_now);
             holder.buttonDismiss.setText(R.string.decline);
+            holder.buttonPayNow.setBackgroundResource(R.drawable.button_theme);
         }
         else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
             holder.textViewRequestStatus.setText(R.string.requested_from);
             holder.buttonPayNow.setText(R.string.remind);
             holder.buttonDismiss.setText(R.string.cancel);
+            holder.buttonPayNow.setBackgroundResource((transactionHistory.getIs_remind_active() == 1) ? R.drawable.button_theme : R.drawable.button_grey);
+            holder.buttonPayNow.setEnabled(transactionHistory.getIs_remind_active() == 1);
         }
         holder.textViewPaymentValue.setText(activity.getString(R.string.rupees_value_format, String.valueOf(transactionHistory.getAmount())));
 
@@ -149,7 +161,7 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
                         }
                     }
                     else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()){
-                        //TODO Remind api
+                        apiRemindUser(transactionHistory.getId(), pos);
                     }
 
                 } catch (Exception e) {
@@ -284,6 +296,82 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
             }
         });
 
+    }
+
+
+    public void apiRemindUser(final int orderId, final int pos) {
+        try {
+            if (AppStatus.getInstance(activity).isOnline(activity)) {
+                CallProgressWheel.showLoadingDialog(activity, "Loading...");
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
+                params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
+                params.put(Constants.KEY_ID, String.valueOf(orderId));
+
+                RestClient.getPayApiService().remindUser(params, new Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        try{
+                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == settleUserDebt.getFlag()){
+                                transactionHistoryList.get(pos).setIs_remind_active(0);
+                                notifyDataSetChanged();
+                            } else {
+                                DialogPopup.alertPopup(activity, "", settleUserDebt.getMessage());
+                            }
+                        } catch (Exception e){
+                            e.printStackTrace();
+                            retryDialogRemindUser(DialogErrorType.SERVER_ERROR, orderId, pos);
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        retryDialogRemindUser(DialogErrorType.CONNECTION_LOST, orderId, pos);
+                    }
+                });
+            } else {
+                retryDialogRemindUser(DialogErrorType.NO_NET, orderId, pos);
+            }
+        } catch (Exception e) {
+            DialogPopup.dismissLoadingDialog();
+            e.printStackTrace();
+        }
+
+    }
+
+    private void retryDialogRemindUser(DialogErrorType dialogErrorType, final int orderId, final int pos){
+        DialogPopup.dialogNoInternet(activity,
+                dialogErrorType,
+                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        apiRemindUser(orderId, pos);
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                });
+    }
+
+    private String getInitials(String name){
+        if(!TextUtils.isEmpty(name)){
+            String[] arr = name.split(" ");
+            if(arr.length > 1){
+                return arr[0].substring(0, 1) + arr[1].substring(0, 1);
+            } else if(arr.length == 1){
+                return arr[0].substring(0, 1);
+            }
+        }
+        return "";
     }
 
 }

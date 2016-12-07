@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -16,13 +15,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.jugnoo.pay.adapters.CustomDrawerAdapter;
 import com.jugnoo.pay.adapters.PendingTrnscAdapater;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.CommonResponse;
@@ -35,8 +30,6 @@ import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.sabkuchfresh.utils.AppConstant;
-import com.squareup.picasso.CircleTransform;
-import com.squareup.picasso.Picasso;
 import com.yesbank.AddAccount;
 import com.yesbank.Registration;
 
@@ -56,6 +49,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.FABViewTest;
+import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -144,29 +138,17 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.drawer_layout)
     DrawerLayout drawer;
 
-    @OnClick(R.id.profile_layout)
     void profileLayoutClicked() {
         startActivity(new Intent(MainActivity.this, ProfileActivity.class));
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
-    @OnClick(R.id.textViewAbout)
     void textViewAboutClicked() {
         CommonMethods.openUrl(MainActivity.this, userDetails.getSupport_link());
     }
 
-    @Bind(R.id.name_char)
-    TextView nameChar;
-    @Bind(R.id.name_txt)
-    TextView nameTxt;
-    @Bind(R.id.phone_txt)
-    TextView phnTxt;
 
-    private ListView mDrawerList;
-    private ImageView imageViewProfile;
-    private CustomDrawerAdapter drawerAdapter;
     private CommonResponse userDetails;
-    private String drawerItems[] = {"Home", "Pending Transactions", "Transactions History", "FAQs", "Account Management"};
     Intent intent;
 
     private RecyclerView recyclerViewPendingPayments;
@@ -176,6 +158,9 @@ public class MainActivity extends BaseActivity {
     private FABViewTest fabViewTest;
     private TextView textViewPaymentIdValue;
     private RelativeLayout relativeLayoutNoPayments;
+    private String vpa = "";
+    private MenuBar menuBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,13 +176,8 @@ public class MainActivity extends BaseActivity {
 
             toggle.syncState();
             userDetails = Prefs.with(MainActivity.this).getObject(SharedPreferencesName.APP_USER, CommonResponse.class);
-            mDrawerList = (ListView) findViewById(R.id.lst_menu_items);
-            drawerAdapter = new CustomDrawerAdapter(this, android.R.layout.simple_list_item_1, drawerItems);
-            imageViewProfile = (ImageView)findViewById(R.id.profile_image);
 
-            mDrawerList.setAdapter(drawerAdapter);
-
-            mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+            menuBar = new MenuBar(this, drawer);
 
             float marginBottom = 77f;
             float scale = getResources().getDisplayMetrics().density;
@@ -232,7 +212,16 @@ public class MainActivity extends BaseActivity {
             relativeLayoutNoPayments.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    fetchPayData();
+                    apiFetchPayData();
+                }
+            });
+
+            textViewPaymentIdValue.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(vpa.equalsIgnoreCase(Constants.KEY_ERROR)){
+                        sendToSDKRegister(Data.getPayData().getPay());
+                    }
                 }
             });
 
@@ -249,90 +238,13 @@ public class MainActivity extends BaseActivity {
             if(Data.getPayData().getPay().getHasVpa() == 0){
                 sendToSDKRegister(Data.getPayData().getPay());
             } else {
-                fetchPayData();
+                apiFetchPayData();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            drawerAdapter.setSelectedPosition(position);
-            selectItem(position);
-        }
-    }
-
-    public void selectItem(int possition) {
-        switch (possition) {
-            case 0:
-                break;
-            case 1:
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            intent = new Intent(MainActivity.this, TransacHistoryActivity.class);
-                            intent.putExtra(AppConstant.PENDING_TRANSACTION_STATUS, true);
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, 200);
-
-                break;
-            case 2:
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            startActivity(new Intent(MainActivity.this, TransacHistoryActivity.class));
-                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, 200);
-                break;
-            case 3:
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            intent = new Intent(MainActivity.this, WebActivity.class);
-                            intent.putExtra(AppConstant.URL, Data.getPayData().getPay().getFaqLink());
-                            startActivity(intent);
-                            overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, 200);
-                break;
-            case 4:
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            accountManagement();
-                        } catch (Exception e) {
-                            System.out.println("exception");
-                        }
-                    }
-                }, 200);
-                break;
-        }
-
-        mDrawerList.setItemChecked(possition, true);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        drawerAdapter.notifyDataSetChanged();
-        mDrawerList.invalidateViews();
-    }
 
     private void accountManagement(){
         CallProgressWheel.showLoadingDialog(MainActivity.this, "Please wait..");
@@ -410,6 +322,9 @@ public class MainActivity extends BaseActivity {
 
                 if (virtualAddress.length() > 0) {
                     callVerifyUserApi(verifyRegisterResponse);
+                } else {
+                    Utils.setTextUnderline(textViewPaymentIdValue, getString(R.string.generate_vpa));
+                    vpa = Constants.KEY_ERROR;
                 }
             }
         } catch (Exception e) {
@@ -421,19 +336,10 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         try {
-            nameTxt.setText(Data.userData.userName);
-            phnTxt.setText(Data.userData.phoneNo);
-            nameChar.setText(Data.userData.userName.substring(0, 1).toUpperCase());
-            if (!"".equalsIgnoreCase(Data.userData.userImage)) {
-                Picasso.with(MainActivity.this).load(Data.userData.userImage).transform(new CircleTransform())
-                        .into(imageViewProfile);
-            }
+            menuBar.setUserData();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        drawerAdapter.setSelectedPosition(-1);
-        drawerAdapter.notifyDataSetChanged();
     }
 
 
@@ -508,12 +414,11 @@ public class MainActivity extends BaseActivity {
             DialogPopup.alertPopup(this, "", getString(R.string.no_net_text));
         }
 
-
     }
 
 
 
-    public void fetchPayData() {
+    public void apiFetchPayData() {
         try {
             if (AppStatus.getInstance(this).isOnline(this)) {
                 CallProgressWheel.showLoadingDialog(this, "Loading...");
@@ -555,7 +460,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void updateTransactions(FetchPayDataResponse fetchPayDataResponse){
-        textViewPaymentIdValue.setText(fetchPayDataResponse.getVpa());
+        vpa = fetchPayDataResponse.getVpa();
+        Utils.setTextUnderline(textViewPaymentIdValue, fetchPayDataResponse.getVpa());
         transactionHistories.clear();
         transactionHistories.addAll(fetchPayDataResponse.getTransaction());
         pendingTrnscAdapater.notifyDataSetChanged();
@@ -568,7 +474,7 @@ public class MainActivity extends BaseActivity {
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        fetchPayData();
+                        apiFetchPayData();
                     }
 
                     @Override

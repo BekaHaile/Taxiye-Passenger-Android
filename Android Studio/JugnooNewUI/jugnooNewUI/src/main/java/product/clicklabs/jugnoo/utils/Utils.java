@@ -25,6 +25,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -824,6 +828,14 @@ public class Utils {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	public static void setTextUnderline(TextView textView, String text){
+		if(!TextUtils.isEmpty(text)) {
+			SpannableString content = new SpannableString(text);
+			content.setSpan(new UnderlineSpan(), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			textView.setText(content);
 		}
 	}
 

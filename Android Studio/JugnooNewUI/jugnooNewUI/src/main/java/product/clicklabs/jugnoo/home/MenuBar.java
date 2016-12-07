@@ -8,11 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.jugnoo.pay.activities.MainActivity;
+
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
+import product.clicklabs.jugnoo.utils.ASSL;
 
 /**
  * Created by shankar on 4/8/16.
@@ -41,7 +44,9 @@ public class MenuBar {
 
 	private void initComponents(){
 		menuLayout = (LinearLayout) drawerLayout.findViewById(R.id.menuLayout);
-
+		if(activity instanceof MainActivity){
+			new ASSL(activity, menuLayout, 1134, 720, false);
+		}
 		recyclerViewMenu = (RecyclerView) drawerLayout.findViewById(R.id.recyclerViewMenu);
 		recyclerViewMenu.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewMenu.setItemAnimator(new DefaultItemAnimator());

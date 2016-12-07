@@ -39,7 +39,7 @@
                 android:layout_below="@+id/textViewPaymentId"
                 android:layout_marginBottom="16dp"
                 android:layout_marginLeft="20dp"
-                android:text="sh@pnb.net"
+                android:text=""
                 android:textColor="@color/theme_color"
                 android:textSize="@dimen/sp_16"
                 />

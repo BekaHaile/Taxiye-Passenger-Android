@@ -15,6 +15,7 @@ import com.jugnoo.pay.models.VerifyUserRequest;
 
 import java.util.Map;
 
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.FieldMap;
@@ -123,5 +124,10 @@ public interface PayApiService {
     @POST("/fetch_vpa")
     void fetchPaymentAddress(@FieldMap Map<String, String> params,
                               Callback<FetchPaymentAddressResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/remind_user")
+    void remindUser(@FieldMap Map<String, String> params,
+                      Callback<SettleUserDebt> callback);
 
 }

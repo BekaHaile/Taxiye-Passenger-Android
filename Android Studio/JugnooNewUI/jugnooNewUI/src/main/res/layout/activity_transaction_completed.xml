@@ -163,7 +163,7 @@
                     android:minHeight="40dp">
 
                     <TextView
-                        android:id="@+id/tvNcpiTransId"
+                        android:id="@+id/tvNpciTransId"
                         android:layout_width="140dp"
                         android:layout_height="27dp"
                         android:gravity="bottom"
@@ -173,12 +173,12 @@
                         android:textSize="@dimen/sp_12" />
 
                     <TextView
-                        android:id="@+id/tvNcpiTransIdVal"
+                        android:id="@+id/tvNpciTransIdVal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginTop="10dp"
-                        android:layout_toRightOf="@+id/tvNcpiTransId"
+                        android:layout_toRightOf="@+id/tvNpciTransId"
                         android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_14" />

@@ -73,6 +73,7 @@ public class TransacHistoryResponse {
         private Integer id;
         private String requester_phone_no;
         private String message;
+        private Integer is_remind_active;
 
         public Integer getId() {
             return id;
@@ -176,6 +177,17 @@ public class TransacHistoryResponse {
 
         public void setMessage(String message) {
             this.message = message;
+        }
+
+        public Integer getIs_remind_active() {
+            if(is_remind_active == null){
+                return 0;
+            }
+            return is_remind_active;
+        }
+
+        public void setIs_remind_active(Integer is_remind_active) {
+            this.is_remind_active = is_remind_active;
         }
     }
 

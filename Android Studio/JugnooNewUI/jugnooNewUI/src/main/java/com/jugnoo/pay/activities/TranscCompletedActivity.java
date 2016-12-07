@@ -104,7 +104,7 @@ private SelectUser contactDetails;
     private String orderId;
     String transactionStatus = "";
 
-    private TextView tvTransStatusVal, tvTransStatusValMessage, tvTransTimeVal, tvBankRefIdVal,
+    private TextView tvTransStatusVal, tvTransStatusValMessage, tvTransTimeVal, tvBankRefIdVal, tvNpciTransIdVal,
             textViewAccountNumber, textViewBankName, textViewDebitValue;
     private ImageView ivTransCompleted, imageViewBank, imageViewCall;
     private CardView cardViewDebitFrom;
@@ -131,6 +131,7 @@ private SelectUser contactDetails;
             tvTransStatusValMessage.setVisibility(View.GONE);
             tvTransTimeVal = (TextView) findViewById(R.id.tvTransTimeVal); tvTransTimeVal.setTypeface(Fonts.mavenMedium(this));
             tvBankRefIdVal = (TextView) findViewById(R.id.tvBankRefIdVal); tvBankRefIdVal.setTypeface(Fonts.mavenMedium(this));
+            tvNpciTransIdVal = (TextView) findViewById(R.id.tvNpciTransIdVal); tvNpciTransIdVal.setTypeface(Fonts.mavenMedium(this));
             textViewAccountNumber = (TextView) findViewById(R.id.textViewAccountNumber); textViewAccountNumber.setTypeface(Fonts.mavenMedium(this));
             textViewBankName = (TextView) findViewById(R.id.textViewBankName); textViewBankName.setTypeface(Fonts.mavenMedium(this));
             textViewDebitValue = (TextView) findViewById(R.id.textViewDebitValue); textViewDebitValue.setTypeface(Fonts.mavenMedium(this));
