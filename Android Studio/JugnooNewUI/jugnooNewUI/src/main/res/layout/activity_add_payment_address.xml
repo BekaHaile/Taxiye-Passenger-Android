@@ -93,7 +93,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:inputType="textEmailAddress"
-            android:background="@drawable/layout_orange_button"
+            android:background="@drawable/button_theme"
             android:text="@string/add_payment_address"
             android:textAllCaps="false"
             android:textColor="@color/whiteTxtColor"
