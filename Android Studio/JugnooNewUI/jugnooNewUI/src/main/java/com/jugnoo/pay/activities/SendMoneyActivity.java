@@ -64,7 +64,6 @@ public class SendMoneyActivity extends BaseActivity {
 
     @OnClick(R.id.back_btn)
     void backBtnClicked() {
-        onBackPressed();
         startActivity(new Intent(SendMoneyActivity.this,SelectContactActivity.class));
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
         finish();
@@ -187,8 +186,7 @@ public class SendMoneyActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if(requestStatus || !requestStatusConfirmation) {
-                    startActivity(new Intent(SendMoneyActivity.this, SelectContactActivity.class));
-                    overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                    backBtnClicked();
                 }
             }
         });
@@ -236,6 +234,10 @@ public class SendMoneyActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        backBtnClicked();
+    }
 
     // used to send the  money
     private void callingSendMoneyApi() {

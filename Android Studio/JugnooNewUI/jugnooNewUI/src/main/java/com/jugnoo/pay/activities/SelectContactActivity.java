@@ -1,60 +1,37 @@
 package com.jugnoo.pay.activities;
 
 import android.content.ContentResolver;
-import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.jugnoo.pay.adapters.ContactsListAdapter;
-import com.jugnoo.pay.adapters.PaymentAddressAdapter;
 import com.jugnoo.pay.adapters.SendMoneyPagerAdapter;
 import com.jugnoo.pay.fragments.ContactsFragment;
 import com.jugnoo.pay.fragments.PaymentFragment;
 import com.jugnoo.pay.models.SelectUser;
-import com.jugnoo.pay.utils.CallProgressWheel;
-import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.RecyclerViewClickListener;
-import com.jugnoo.pay.utils.SharedPreferencesName;
-import com.jugnoo.pay.utils.Validator;
 import com.sabkuchfresh.utils.AppConstant;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.promotion.adapters.PromotionsFragmentAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 
 /**
@@ -144,6 +121,7 @@ public class SelectContactActivity extends BaseActivity {
         tabs.setTypeface(Fonts.mavenMedium(this), Typeface.NORMAL);
         tabs.setViewPager(viewPager);
 
+        searchET.setTypeface(Fonts.mavenRegular(this));
         searchET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

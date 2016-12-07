@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#fafbfc"
+    android:background="@color/sliding_bottom_bg_color"
     android:orientation="vertical">
 
     <include
@@ -85,7 +85,7 @@
                         android:layout_height="1dp"
                         android:layout_below="@+id/relativeLayoutStatus"
                         android:layout_marginTop="10dp"
-                        android:background="@color/apply_btn_pressed"/>
+                        android:background="@color/stroke_light_grey_alpha"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -111,22 +111,27 @@
                         android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_14" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/stroke_light_grey_alpha"
+                        android:layout_alignParentBottom="true"
+                        />
                 </RelativeLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/apply_btn_pressed" />
+
 
                 <RelativeLayout
+                    android:id="@+id/rvBankRefId"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="40dp">
 
                     <TextView
                         android:id="@+id/tvBankRefId"
                         android:layout_width="85dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_centerVertical="true"
                         android:text="@string/bank_ref_id"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color_light"
@@ -137,7 +142,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginTop="10dp"
                         android:layout_toRightOf="@+id/tvBankRefId"
                         android:text=""
                         android:textColor="@color/text_color"
@@ -145,19 +149,17 @@
 
 
                     <View
-                        android:layout_width="1px"
-                        android:layout_height="1px"
-                        android:layout_below="@+id/tvBankRefIdVal"
-                        android:layout_marginTop="10dp" />
-
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/stroke_light_grey_alpha"
+                        android:layout_alignParentBottom="true"
+                        />
                 </RelativeLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/apply_btn_pressed" />
+
 
                 <RelativeLayout
+                    android:id="@+id/rvNpciTransId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="40dp">
@@ -371,7 +373,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     card_view:cardBackgroundColor="@color/white"
-                    card_view:cardCornerRadius="@dimen/button_corner_radius">
+                    card_view:cardCornerRadius="@dimen/button_corner_radius"
+                    android:id="@+id/cardViewMessage"
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"

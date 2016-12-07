@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.models.CommonResponse;
@@ -107,7 +108,8 @@ private SelectUser contactDetails;
     private TextView tvTransStatusVal, tvTransStatusValMessage, tvTransTimeVal, tvBankRefIdVal, tvNpciTransIdVal,
             textViewAccountNumber, textViewBankName, textViewDebitValue;
     private ImageView ivTransCompleted, imageViewBank, imageViewCall;
-    private CardView cardViewDebitFrom;
+    private CardView cardViewDebitFrom, cardViewMessage;
+    private RelativeLayout rvBankRefId, rvNpciTransId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,6 +140,7 @@ private SelectUser contactDetails;
             ivTransCompleted = (ImageView) findViewById(R.id.ivTransCompleted);
             imageViewBank = (ImageView) findViewById(R.id.imageViewBank);
             cardViewDebitFrom = (CardView) findViewById(R.id.cardViewDebitFrom);
+            cardViewMessage = (CardView) findViewById(R.id.cardViewMessage);
             buttonOk.setTypeface(Fonts.mavenRegular(this));
             mobileTxt.setTypeface(Fonts.mavenRegular(this));
             contactNameTxt.setTypeface(Fonts.mavenMedium(this));
@@ -145,6 +148,13 @@ private SelectUser contactDetails;
             msgTxt.setTypeface(Fonts.mavenRegular(this));
             textViewPaid.setTypeface(Fonts.mavenRegular(this));
             imageViewCall = (ImageView) findViewById(R.id.imageViewCall);
+            ((TextView)findViewById(R.id.tvTransStatus)).setTypeface(Fonts.mavenRegular(this));
+            ((TextView)findViewById(R.id.tvTransTime)).setTypeface(Fonts.mavenRegular(this));
+            ((TextView)findViewById(R.id.tvBankRefId)).setTypeface(Fonts.mavenRegular(this));
+            ((TextView)findViewById(R.id.tvNpciTransId)).setTypeface(Fonts.mavenRegular(this));
+            ((TextView)findViewById(R.id.textViewDebitFrom)).setTypeface(Fonts.mavenRegular(this));
+            rvNpciTransId = (RelativeLayout) findViewById(R.id.rvNpciTransId);
+            rvBankRefId = (RelativeLayout) findViewById(R.id.rvBankRefId);
 
             SendMoneyCallback callback = (SendMoneyCallback) getIntent().getExtras().getSerializable(AppConstant.SEND_TRANSACTION_DATA);
             setData();
@@ -161,10 +171,16 @@ private SelectUser contactDetails;
                 // for Request
                 toolbarTitleTxt.setText("Jugnoo Pay");
                 textViewPaid.setText(getResources().getString(R.string.requested_to));
+                rvBankRefId.setVisibility(View.GONE);
+                rvNpciTransId.setVisibility(View.GONE);
+                cardViewDebitFrom.setVisibility(View.GONE);
+                tvTransStatusValMessage.setVisibility(View.GONE);
+                tvTransStatusVal.setText(getString(R.string.successful));
+                tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
+                ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -184,8 +200,7 @@ private SelectUser contactDetails;
             textViewMessage.setVisibility(View.VISIBLE);
             msgTxt.setText(requestObj.getMessage());
         } else{
-            msgTxt.setVisibility(View.GONE);
-            textViewMessage.setVisibility(View.GONE);
+            cardViewMessage.setVisibility(View.GONE);
         }
         mobileTxt.setText(contactDetails.getPhone());
         contactNameTxt.setText(contactDetails.getName());

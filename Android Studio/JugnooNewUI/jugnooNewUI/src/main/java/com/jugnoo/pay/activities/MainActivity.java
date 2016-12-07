@@ -337,6 +337,13 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         try {
             menuBar.setUserData();
+            try {
+                if(Data.getPayData().getPay().getHasVpa() == 1){
+					apiFetchPayData();
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
