@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#fafbfc"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fafbfc"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/toolbar"
@@ -23,8 +23,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="14dp"
                 android:layout_marginRight="14dp"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/status_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/transaction_id_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/trnsc_status_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/rlOrderStatus"
@@ -42,7 +57,7 @@
                         android:text="@string/transaction_status"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color_light"
-                        android:textSize="@dimen/sp_12"/>
+                        android:textSize="@dimen/sp_12" />
 
                     <TextView
                         android:id="@+id/tvOrderStatusVal"
@@ -53,7 +68,7 @@
                         android:text=""
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/sp_14"/>
+                        android:textSize="@dimen/sp_14" />
 
                     <ImageView
                         android:id="@+id/ivOrderCompleted"
@@ -64,13 +79,13 @@
                         android:layout_toRightOf="@+id/tvOrderStatusVal"
                         android:src="@drawable/ic_tick_copy"
                         android:tag="mwar"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_alignParentBottom="true"
-                        android:background="@color/apply_btn_pressed"/>
+                        android:background="@color/apply_btn_pressed" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -85,7 +100,7 @@
                         android:text="@string/transaction_time"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color_light"
-                        android:textSize="@dimen/sp_12"/>
+                        android:textSize="@dimen/sp_12" />
 
                     <TextView
                         android:id="@+id/tvOrderTimeVal"
@@ -95,13 +110,13 @@
                         android:layout_toRightOf="@+id/tvOrderTime"
                         android:text=""
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/sp_14"/>
+                        android:textSize="@dimen/sp_14" />
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/apply_btn_pressed"/>
+                    android:background="@color/apply_btn_pressed" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -115,8 +130,7 @@
                         android:text="@string/bank_ref_id"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color_light"
-                        android:textSize="@dimen/sp_12"
-                        />
+                        android:textSize="@dimen/sp_12" />
 
                     <TextView
                         android:id="@+id/tvBankRefIdVal"
@@ -127,22 +141,21 @@
                         android:layout_toRightOf="@+id/tvBankRefId"
                         android:text=""
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/sp_14"/>
+                        android:textSize="@dimen/sp_14" />
 
 
                     <View
                         android:layout_width="1px"
                         android:layout_height="1px"
                         android:layout_below="@+id/tvBankRefIdVal"
-                        android:layout_marginTop="10dp"
-                        />
+                        android:layout_marginTop="10dp" />
 
                 </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/apply_btn_pressed"/>
+                    android:background="@color/apply_btn_pressed" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -157,7 +170,7 @@
                         android:text="@string/ncpi_transaction_id"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color_light"
-                        android:textSize="@dimen/sp_12"/>
+                        android:textSize="@dimen/sp_12" />
 
                     <TextView
                         android:id="@+id/tvNcpiTransIdVal"
@@ -168,7 +181,7 @@
                         android:layout_toRightOf="@+id/tvNcpiTransId"
                         android:text=""
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/sp_14"/>
+                        android:textSize="@dimen/sp_14" />
 
                 </RelativeLayout>
 
@@ -180,19 +193,16 @@
                 android:layout_margin="15dp"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     card_view:cardBackgroundColor="@color/white"
-                    card_view:cardCornerRadius="@dimen/button_corner_radius"
-                    >
+                    card_view:cardCornerRadius="@dimen/button_corner_radius">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        >
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/paid_txt"
@@ -205,8 +215,7 @@
                             android:text="@string/paid_string"
                             android:textAllCaps="true"
                             android:textColor="@color/text_color_light"
-                            android:textSize="@dimen/sp_12"
-                            />
+                            android:textSize="@dimen/sp_12" />
 
                         <View
                             android:layout_width="match_parent"
@@ -214,23 +223,21 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginTop="8dp"
-                            android:background="@color/progress_secondary"/>
+                            android:background="@color/progress_secondary" />
 
                         <LinearLayout
                             android:id="@+id/linearLayoutContact"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
                             android:layout_gravity="center_horizontal"
-                            android:orientation="horizontal"
-                            >
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:id="@+id/contact_image"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
                                 android:layout_gravity="center_vertical"
-                                android:layout_marginLeft="10dp"
-                                />
+                                android:layout_marginLeft="10dp" />
 
                             <LinearLayout
                                 android:layout_width="220dp"
@@ -246,8 +253,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="Name"
                                     android:textColor="@color/text_color"
-                                    android:textSize="@dimen/sp_17"
-                                    />
+                                    android:textSize="@dimen/sp_17" />
 
                                 <TextView
                                     android:id="@+id/mobile_txt"
@@ -256,16 +262,14 @@
                                     android:layout_marginTop="2dp"
                                     android:text="Mobile"
                                     android:textColor="@color/text_color_light"
-                                    android:textSize="@dimen/sp_13"
-                                    />
+                                    android:textSize="@dimen/sp_13" />
                             </LinearLayout>
 
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:src="@drawable/ic_call_owner"
-                                />
+                                android:src="@drawable/ic_call_owner" />
 
                         </LinearLayout>
 
@@ -273,21 +277,18 @@
 
                 </android.support.v7.widget.CardView>
 
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     card_view:cardBackgroundColor="@color/white"
-                    card_view:cardCornerRadius="@dimen/button_corner_radius"
-                    >
+                    card_view:cardCornerRadius="@dimen/button_corner_radius">
 
                     <LinearLayout
                         android:id="@+id/linearLayoutDebitFrom"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        >
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/textViewDebitFrom"
@@ -298,8 +299,7 @@
                             android:text="@string/debit_from"
                             android:textAllCaps="true"
                             android:textColor="@color/text_color_light"
-                            android:textSize="@dimen/sp_12"
-                            />
+                            android:textSize="@dimen/sp_12" />
 
                         <View
                             android:layout_width="match_parent"
@@ -307,21 +307,19 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginTop="8dp"
-                            android:background="@color/progress_secondary"/>
+                            android:background="@color/progress_secondary" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:layout_gravity="center_horizontal"
-                            >
+                            android:layout_gravity="center_horizontal">
 
                             <ImageView
                                 android:id="@+id/imageViewBank"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
                                 android:layout_centerVertical="true"
-                                android:layout_marginLeft="10dp"
-                                />
+                                android:layout_marginLeft="10dp" />
 
                             <LinearLayout
                                 android:layout_width="180dp"
@@ -330,8 +328,7 @@
                                 android:layout_marginLeft="9dp"
                                 android:layout_marginRight="4dp"
                                 android:layout_toRightOf="@+id/imageViewBank"
-                                android:orientation="vertical"
-                                >
+                                android:orientation="vertical">
 
                                 <TextView
                                     android:id="@+id/textViewAccountNumber"
@@ -339,8 +336,7 @@
                                     android:layout_height="wrap_content"
                                     android:text="AccNo"
                                     android:textColor="@color/text_color"
-                                    android:textSize="@dimen/sp_17"
-                                    />
+                                    android:textSize="@dimen/sp_17" />
 
                                 <TextView
                                     android:id="@+id/textViewBankName"
@@ -349,8 +345,7 @@
                                     android:layout_marginTop="2dp"
                                     android:text="Bank"
                                     android:textColor="@color/text_color_light"
-                                    android:textSize="@dimen/sp_13"
-                                    />
+                                    android:textSize="@dimen/sp_13" />
                             </LinearLayout>
 
                             <TextView
@@ -362,28 +357,24 @@
                                 android:layout_marginRight="10dp"
                                 android:text="@string/rupee_0"
                                 android:textColor="@color/green_rupee"
-                                android:textSize="@dimen/sp_19"
-                                />
+                                android:textSize="@dimen/sp_19" />
 
                         </RelativeLayout>
 
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
-                <android.support.v7.widget.CardView
-                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     card_view:cardBackgroundColor="@color/white"
-                    card_view:cardCornerRadius="@dimen/button_corner_radius"
-                    >
+                    card_view:cardCornerRadius="@dimen/button_corner_radius">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        >
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/message"
@@ -393,10 +384,9 @@
                             android:layout_marginTop="10dp"
                             android:gravity="left"
                             android:text="@string/message"
-                            android:textColor="@color/text_color_light"
-                            android:textSize="@dimen/sp_12"
                             android:textAllCaps="true"
-                            />
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/sp_12" />
 
                         <View
                             android:layout_width="match_parent"
@@ -404,7 +394,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginTop="8dp"
-                            android:background="@color/progress_secondary"/>
+                            android:background="@color/progress_secondary" />
 
                         <TextView
                             android:id="@+id/message_txt"
@@ -412,7 +402,7 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="10dp"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/sp_15"/>
+                            android:textSize="@dimen/sp_15" />
                     </LinearLayout>
 
                 </android.support.v7.widget.CardView>
@@ -430,7 +420,7 @@
                     android:textAllCaps="false"
                     android:textColor="@color/whiteTxtColor"
                     android:textSize="@dimen/btn_text_size"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

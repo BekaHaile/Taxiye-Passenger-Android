@@ -34,17 +34,9 @@
         android:layout_marginTop="30dp"
         android:text="@string/add_payment_add_title"
         android:textSize="15sp"
+        android:gravity="center"
         android:textColor="@color/text_color"/>
 
-        <TextView
-            android:id="@+id/tvDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/add_payment_add_desc"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:textColor="@color/text_color_hint"/>
         
         <RelativeLayout
             android:layout_width="match_parent"

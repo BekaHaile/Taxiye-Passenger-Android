@@ -46,7 +46,7 @@ import retrofit.mime.TypedByteArray;
 public class AddPaymentAddressActivity extends BaseActivity {
 
     private Toolbar mToolBar;
-    private TextView toolbarTitleTxt, tvTitle, tvDesc;
+    private TextView toolbarTitleTxt, tvTitle;
     private ImageButton ibBack;
     private ImageView ivTBDivider, ivContacts;
     private final int RQS_PICK_CONTACT = 1;
@@ -72,7 +72,6 @@ public class AddPaymentAddressActivity extends BaseActivity {
         etPaymentAddress = (EditText) findViewById(R.id.etPaymentAddress); etPaymentAddress.setTypeface(Fonts.mavenRegular(this));
         bAddPaymentAddress = (Button) findViewById(R.id.bAddPaymentAddress); bAddPaymentAddress.setTypeface(Fonts.avenirNext(this));
         tvTitle = (TextView) findViewById(R.id.tvTitle); tvTitle.setTypeface(Fonts.mavenRegular(this));
-        tvDesc = (TextView) findViewById(R.id.tvDesc); tvDesc.setTypeface(Fonts.mavenRegular(this));
 
         ibBack.setOnClickListener(new View.OnClickListener() {
             @Override

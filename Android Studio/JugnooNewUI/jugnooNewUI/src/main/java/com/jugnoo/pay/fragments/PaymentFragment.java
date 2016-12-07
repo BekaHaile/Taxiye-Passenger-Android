@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jugnoo.pay.activities.AddPaymentAddressActivity;
 import com.jugnoo.pay.activities.SelectContactActivity;
@@ -43,6 +44,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -59,6 +61,7 @@ public class PaymentFragment extends Fragment {
     private RecyclerView rvPaymentAddress;
     private LinearLayout llPlaceHolder;
     private PaymentAddressAdapter paymentAddressAdapter;
+    private TextView tvTitle;
     private ArrayList<FetchPaymentAddressResponse.VpaList> fetchList = new ArrayList<>();
 
     @Nullable
@@ -68,6 +71,7 @@ public class PaymentFragment extends Fragment {
 
         rvPaymentAddress = (RecyclerView) rootView.findViewById(R.id.rvPaymentAddress);
         llPlaceHolder = (LinearLayout) rootView.findViewById(R.id.llPlaceHolder);
+        tvTitle = (TextView) rootView.findViewById(R.id.tvTitle); tvTitle.setTypeface(Fonts.mavenRegular(getActivity()));
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         rvPaymentAddress.setLayoutManager(mLayoutManager);
@@ -135,7 +139,9 @@ public class PaymentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        (((SelectContactActivity)getActivity()).getSearchET()).setText("");
+        if((((SelectContactActivity)getActivity()).getSearchET() != null)) {
+            (((SelectContactActivity) getActivity()).getSearchET()).setText("");
+        }
         apiFetchPaymentAddress();
     }
 
