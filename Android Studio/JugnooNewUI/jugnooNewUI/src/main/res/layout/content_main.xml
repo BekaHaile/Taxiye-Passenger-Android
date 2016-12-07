@@ -179,7 +179,34 @@
                     card_view:cardCornerRadius="@dimen/button_corner_radius"
                     >
 
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutNoPayments"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        >
+                        <ImageView
+                            android:id="@+id/imageViewNoPayments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/pay_home_placeholder"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="60dp"
+                            />
 
+                        <TextView
+                            android:id="@+id/textViewNoPayments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/no_pending_payments"
+                            android:textColor="@color/text_color_dark"
+                            android:textSize="@dimen/sp_14"
+                            android:layout_marginTop="10dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_below="@+id/imageViewNoPayments"
+                            />
+
+                    </RelativeLayout>
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyclerViewPendingPayments"
                         android:layout_width="match_parent"

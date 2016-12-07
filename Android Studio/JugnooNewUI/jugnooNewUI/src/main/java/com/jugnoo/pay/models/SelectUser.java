@@ -77,15 +77,26 @@ public class SelectUser implements Parcelable{
         this.orderId = orderId;
     }
 
+    String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public SelectUser(){}
     public SelectUser(Parcel in) {
-        String[] data = new String[5];
+        String[] data = new String[6];
         in.readStringArray(data);
         this.name = data[0];
         this.phone = data[1];
         this.amount = data[2];
         this.orderId = data[3];
         this.thumb = data[4];
+        this.message = data[5];
     }
 
     @Override
@@ -95,7 +106,7 @@ public class SelectUser implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeStringArray(new String[] { this.name ,this.phone, this.amount, this.orderId, this.thumb});
+        parcel.writeStringArray(new String[] { this.name ,this.phone, this.amount, this.orderId, this.thumb, this.message });
          // Serialize bitmap as Parcelable:
        // parcel.writeParcelable(this.thumb,i);
     }

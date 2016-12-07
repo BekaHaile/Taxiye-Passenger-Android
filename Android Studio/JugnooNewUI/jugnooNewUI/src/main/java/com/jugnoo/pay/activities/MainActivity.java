@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.adapters.CustomDrawerAdapter;
@@ -174,6 +175,7 @@ public class MainActivity extends BaseActivity {
 
     private FABViewTest fabViewTest;
     private TextView textViewPaymentIdValue;
+    private RelativeLayout relativeLayoutNoPayments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,16 +227,28 @@ public class MainActivity extends BaseActivity {
             ((TextView) findViewById(R.id.textViewSendMoney)).setTypeface(Fonts.mavenMedium(this));
             ((TextView) findViewById(R.id.textViewRequestMoney)).setTypeface(Fonts.mavenMedium(this));
             ((TextView) findViewById(R.id.textViewPendingPayments)).setTypeface(Fonts.mavenMedium(this));
+            ((TextView) findViewById(R.id.textViewNoPayments)).setTypeface(Fonts.mavenMedium(this));
+            relativeLayoutNoPayments = (RelativeLayout) findViewById(R.id.relativeLayoutNoPayments);
+            relativeLayoutNoPayments.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fetchPayData();
+                }
+            });
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        firstTimeApi();
+    }
+
+    private void firstTimeApi(){
         try {
             if(Data.getPayData().getPay().getHasVpa() == 0){
-				sendToSDKRegister(Data.getPayData().getPay());
-			} else {
+                sendToSDKRegister(Data.getPayData().getPay());
+            } else {
                 fetchPayData();
             }
         } catch (Exception e) {
@@ -545,6 +559,7 @@ public class MainActivity extends BaseActivity {
         transactionHistories.clear();
         transactionHistories.addAll(fetchPayDataResponse.getTransaction());
         pendingTrnscAdapater.notifyDataSetChanged();
+        relativeLayoutNoPayments.setVisibility((transactionHistories.size() > 0) ? View.GONE : View.VISIBLE);
     }
 
     private void retryDialogFetchPayData(DialogErrorType dialogErrorType){

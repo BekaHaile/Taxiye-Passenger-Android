@@ -114,8 +114,7 @@ private SelectUser contactDetails;
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try
-        {
+        try {
             setContentView(R.layout.activity_transaction_completed);
             ButterKnife.bind(this);
             toolbarTitleTxt.setText(R.string.transc_completed_screen);

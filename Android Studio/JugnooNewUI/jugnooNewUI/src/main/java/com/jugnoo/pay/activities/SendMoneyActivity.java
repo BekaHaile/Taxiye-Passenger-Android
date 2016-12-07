@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.models.CommonResponse;
@@ -83,10 +82,10 @@ public class SendMoneyActivity extends BaseActivity {
     public static SendMoneyActivity sendMoneyActivityObj;
 
     private LinearLayout linearLayoutContact, linearLayoutDebitFrom;
-    private ImageView imageViewBank;
+    private ImageView imageViewBank, imageViewSendMoney;
     private TextView textViewAccountNumber, textViewBankName;
     private EditText editTextLocation;
-    private RelativeLayout relativeLayoutSendMoney;
+    private LinearLayout relativeLayoutSendMoney;
     private TextView textViewSendMoney;
 
     @OnClick(R.id.relativeLayoutSendMoney)
@@ -112,7 +111,7 @@ public class SendMoneyActivity extends BaseActivity {
     }
 
     private SelectUser contactDetails;
-    private boolean requestStatus = false;
+    private boolean requestStatus = false, requestStatusConfirmation = false;
     private String accessToken;
 
     @Override
@@ -121,6 +120,7 @@ public class SendMoneyActivity extends BaseActivity {
         setContentView(R.layout.activity_send_money);
         ButterKnife.bind(this);
         requestStatus = getIntent().getBooleanExtra(AppConstant.REQUEST_STATUS, false);
+        requestStatusConfirmation = getIntent().getBooleanExtra(AppConstant.REQUEST_STATUS_CONFIRMATION, false);
 
         ((TextView)findViewById(R.id.textViewDebitFrom)).setTypeface(Fonts.mavenMedium(this));
         linearLayoutContact = (LinearLayout) findViewById(R.id.linearLayoutContact);
@@ -129,22 +129,25 @@ public class SendMoneyActivity extends BaseActivity {
         textViewAccountNumber = (TextView) findViewById(R.id.textViewAccountNumber); textViewAccountNumber.setTypeface(Fonts.mavenMedium(this));
         textViewBankName = (TextView) findViewById(R.id.textViewBankName); textViewBankName.setTypeface(Fonts.mavenRegular(this));
         editTextLocation = (EditText) findViewById(R.id.editTextLocation); editTextLocation.setTypeface(Fonts.mavenRegular(this));
+        imageViewSendMoney = (ImageView) findViewById(R.id.imageViewSendMoney);
         messageET.setTypeface(Fonts.mavenRegular(this));
         amountET.setTypeface(Fonts.mavenRegular(this));
         contactNameTxt.setTypeface(Fonts.mavenMedium(this));
         contactMobileTxt.setTypeface(Fonts.mavenRegular(this));
 
-        relativeLayoutSendMoney = (RelativeLayout) findViewById(R.id.relativeLayoutSendMoney);
+        relativeLayoutSendMoney = (LinearLayout) findViewById(R.id.relativeLayoutSendMoney);
         textViewSendMoney = (TextView) findViewById(R.id.textViewSendMoney); textViewSendMoney.setTypeface(Fonts.mavenMedium(this));
         if (requestStatus) {
             toolbarTitleTxt.setText(R.string.request_money);
             textViewSendMoney.setText(getResources().getString(R.string.request_money));
             linearLayoutDebitFrom.setVisibility(View.GONE);
+            imageViewSendMoney.setImageResource(R.drawable.ic_request_money_white);
         }
         else {
-            toolbarTitleTxt.setText(R.string.send_money);
+            toolbarTitleTxt.setText(requestStatusConfirmation ? R.string.confirmation : R.string.send_money);
             textViewSendMoney.setText(getResources().getString(R.string.send_money));
             linearLayoutDebitFrom.setVisibility(View.VISIBLE);
+            imageViewSendMoney.setImageResource(R.drawable.ic_send_money_white);
         }
         mToolBar.setTitle("");
         setSupportActionBar(mToolBar);
@@ -182,7 +185,10 @@ public class SendMoneyActivity extends BaseActivity {
         linearLayoutContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                if(requestStatus || !requestStatusConfirmation) {
+                    startActivity(new Intent(SendMoneyActivity.this, SelectContactActivity.class));
+                    overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                }
             }
         });
 
@@ -198,9 +204,15 @@ public class SendMoneyActivity extends BaseActivity {
         if((contactDetails.getAmount() != null) && (!contactDetails.getAmount().equalsIgnoreCase(""))){
             amountET.setText(contactDetails.getAmount());
             amountET.setEnabled(false);
+            amountET.setTextColor(getResources().getColor(R.color.green_rupee));
+            messageET.setText(contactDetails.getMessage());
+            messageET.setEnabled(false);
         } else{
             amountET.setText("");
             amountET.setEnabled(true);
+            amountET.setTextColor(getResources().getColor(R.color.text_color));
+            messageET.setText("");
+            messageET.setEnabled(true);
         }
 
         // Set image if exists

@@ -205,7 +205,9 @@
                     android:padding="10dp"
                     android:textColor="@color/text_color"
                     android:textColorHint="@color/text_color_light"
-                    android:textSize="@dimen/sp_15"/>
+                    android:textSize="@dimen/sp_15"
+                    android:visibility="gone"
+                    />
 
                 <EditText
                     android:id="@+id/message_et"
@@ -222,19 +224,23 @@
                     android:textColorHint="@color/text_color_light"
                     android:textSize="@dimen/sp_15"/>
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/relativeLayoutSendMoney"
                     android:layout_width="215dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/button_theme"
+                    android:orientation="horizontal"
+                    android:gravity="center"
                     >
 
                     <ImageView
+                        android:id="@+id/imageViewSendMoney"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:src="@drawable/ic_send_money_white"
                         />
 
                     <TextView
@@ -246,9 +252,10 @@
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/sp_16"
                         android:textStyle="bold"
+                        android:layout_marginLeft="10dp"
                         />
 
-                </RelativeLayout>
+                </LinearLayout>
 
             </LinearLayout>
 

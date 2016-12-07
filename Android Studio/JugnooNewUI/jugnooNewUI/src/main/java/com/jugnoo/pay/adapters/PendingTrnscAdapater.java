@@ -68,11 +68,6 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
 
     private void notifyAdapter(){
         notifyDataSetChanged();
-//        if(transactionHistoryList.size() < 1){
-//            ((TransacHistoryActivity)activity).getLinearLayoutNoTxn().setVisibility(View.VISIBLE);
-//        } else {
-//            ((TransacHistoryActivity)activity).getLinearLayoutNoTxn().setVisibility(View.GONE);
-//        }
     }
 
     @Override
@@ -83,7 +78,7 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
         if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
             holder.textViewRequestStatus.setText(R.string.requested_by);
             holder.buttonPayNow.setText(R.string.pay_now);
-            holder.buttonDismiss.setText(R.string.dismiss);
+            holder.buttonDismiss.setText(R.string.decline);
         }
         else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
             holder.textViewRequestStatus.setText(R.string.requested_from);
@@ -101,22 +96,22 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
                 try {
                     final int pos = (int) view.getTag();
                     final TransacHistoryResponse.TransactionHistory transactionHistory = transactionHistoryList.get(pos);
-                    String buttonText;
+                    String buttonText = "";
                     if(transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()){
 						buttonText = activity.getString(R.string.decline_request_message);
-					} else{
+					} else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()){
 						buttonText = activity.getString(R.string.cancel_request_message);
 					}
                     TwoButtonAlert.showAlert(activity, buttonText, AppConstant.NO, AppConstant.YES,
 							new TwoButtonAlert.OnAlertOkCancelClickListener() {
 						@Override
 						public void onOkButtonClicked() {
-							if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
-								cancelTranscApi(transactionHistory.getId(), pos);
-							} else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
+							if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
 								declineTranscApi(transactionHistory.getId(), pos);
-							}
-						}
+							} else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
+                                cancelTranscApi(transactionHistory.getId(), pos);
+                            }
+                        }
 
 						@Override
 						public void onCancelButtonClicked() {
@@ -135,20 +130,28 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
                 try {
                     final int pos = (int) v.getTag();
                     final TransacHistoryResponse.TransactionHistory transactionHistory = transactionHistoryList.get(pos);
-                    if (transactionHistory.getRequesterPhoneNo() != null && !transactionHistory.getRequesterPhoneNo().equalsIgnoreCase("")) {
-						SelectUser newData = new SelectUser();
-						newData.setName("");
-						newData.setPhone(transactionHistory.getRequesterPhoneNo());
-						newData.setAmount(String.valueOf(transactionHistory.getAmount()));
-						newData.setOrderId(String.valueOf(transactionHistory.getId()));
+                    if(transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()){
+                        if (transactionHistory.getRequesterPhoneNo() != null && !transactionHistory.getRequesterPhoneNo().equalsIgnoreCase("")) {
+                            SelectUser newData = new SelectUser();
+                            newData.setName(transactionHistory.getName());
+                            newData.setPhone(transactionHistory.getRequesterPhoneNo());
+                            newData.setAmount(String.valueOf(transactionHistory.getAmount()));
+                            newData.setOrderId(String.valueOf(transactionHistory.getId()));
+                            newData.setMessage(String.valueOf(transactionHistory.getMessage()));
 
-						Intent intent = new Intent(activity, SendMoneyActivity.class);
-						intent.putExtra(AppConstant.REQUEST_STATUS, false);
-						Bundle bun =new Bundle();
-						bun.putParcelable(AppConstant.CONTACT_DATA, newData);
-						intent.putExtras(bun);
-						activity.startActivity(intent);
-					}
+                            Intent intent = new Intent(activity, SendMoneyActivity.class);
+                            intent.putExtra(AppConstant.REQUEST_STATUS, false);
+                            intent.putExtra(AppConstant.REQUEST_STATUS_CONFIRMATION, true);
+                            Bundle bun = new Bundle();
+                            bun.putParcelable(AppConstant.CONTACT_DATA, newData);
+                            intent.putExtras(bun);
+                            activity.startActivity(intent);
+                        }
+                    }
+                    else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()){
+                        //TODO Remind api
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

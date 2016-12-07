@@ -592,20 +592,22 @@ public class JSONParser implements Constants {
 
     public void parsePayData(Context context, JSONObject jPayData, LoginResponse.Pay payData){
         try{
-            Data.setPayData(new PayData(payData));
+            if(payData != null) {
+                Data.setPayData(new PayData(payData));
 
-            try {
-                if(Data.getPayData().getPromoCoupons() == null){
-                    Data.getPayData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                } else{
-                    Data.getPayData().getPromoCoupons().clear();
+                try {
+                    if (Data.getPayData().getPromoCoupons() == null) {
+                        Data.getPayData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                    } else {
+                        Data.getPayData().getPromoCoupons().clear();
+                    }
+                    if (payData.getPromotions() != null)
+                        Data.getPayData().getPromoCoupons().addAll(payData.getPromotions());
+                    if (payData.getCoupons() != null)
+                        Data.getPayData().getPromoCoupons().addAll(payData.getCoupons());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if(payData.getPromotions() != null)
-                    Data.getPayData().getPromoCoupons().addAll(payData.getPromotions());
-                if(payData.getCoupons() != null)
-                    Data.getPayData().getPromoCoupons().addAll(payData.getCoupons());
-            } catch (Exception e) {
-                e.printStackTrace();
             }
 
         } catch (Exception e){
@@ -626,13 +628,7 @@ public class JSONParser implements Constants {
         JSONObject jMealsObject = jObj.optJSONObject(KEY_MEALS);
         JSONObject jGroceryObject = jObj.optJSONObject(KEY_GROCERY);
         JSONObject jMenusObject = jObj.optJSONObject(KEY_MENUS);
-        if(jMenusObject == null){
-            jMenusObject = new JSONObject(Constants.EMPTY_JSON_OBJECT);
-        }
         JSONObject jPayObject = jObj.optJSONObject(KEY_PAY);
-        if(jPayObject == null){
-            jPayObject = new JSONObject(Constants.EMPTY_JSON_OBJECT);
-        }
 
         parseUserData(context, jUserDataObject, loginResponse.getUserData());
         parseAutoData(context, jAutosObject, loginResponse.getAutos());

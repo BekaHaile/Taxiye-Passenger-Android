@@ -72,6 +72,7 @@ public class TransacHistoryResponse {
         private Integer txn_type;
         private Integer id;
         private String requester_phone_no;
+        private String message;
 
         public Integer getId() {
             return id;
@@ -167,6 +168,14 @@ public class TransacHistoryResponse {
 
         public void setRequesterPhoneNo(String requester_phone_no) {
             this.requester_phone_no = requester_phone_no;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
         }
     }
 

@@ -45,6 +45,7 @@ public class AppConstant {
     public static String SENT_TOKEN_TO_SERVER = "SendTokenToServer";
     public static String CONTACT_DATA = "contact_data";
     public static String REQUEST_STATUS = "request_status";
+    public static String REQUEST_STATUS_CONFIRMATION = "request_status_confirmation";
     public static String TRANSACTION_DATA = "transc_data";
     public static String SEND_TRANSACTION_DATA = "send_transc_data";
     public static String PENDING_TRANSACTION_STATUS= "pending_transc_status";

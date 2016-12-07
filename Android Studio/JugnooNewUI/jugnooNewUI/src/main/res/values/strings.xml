@@ -1412,6 +1412,7 @@
 	<string name="enter_payment_address">Enter Payment Address</string>
 	<string name="add_a_location">Add a location (optional)</string>
 	<string name="debit_from">Debit from</string>
+	<string name="no_pending_payments">No pending payments</string>
 
 
 </resources>
