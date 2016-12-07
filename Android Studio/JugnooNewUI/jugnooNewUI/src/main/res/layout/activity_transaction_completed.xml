@@ -26,66 +26,66 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:id="@+id/status_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/transaction_id_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/trnsc_status_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rlOrderStatus"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginTop="10dp"
                     android:visibility="visible">
 
-                    <TextView
-                        android:id="@+id/tvOrderStatus"
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:text="@string/transaction_status"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_color_light"
-                        android:textSize="@dimen/sp_12" />
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/tvOrderStatusVal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/tvOrderStatus"
-                        android:text=""
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/sp_14" />
+                        <TextView
+                            android:id="@+id/tvTransStatus"
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="@string/transaction_status"
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_color_light"
+                            android:textSize="@dimen/sp_12"/>
 
-                    <ImageView
-                        android:id="@+id/ivOrderCompleted"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="5dp"
-                        android:layout_toRightOf="@+id/tvOrderStatusVal"
-                        android:src="@drawable/ic_tick_copy"
-                        android:tag="mwar"
-                        android:visibility="gone" />
+                        <TextView
+                            android:id="@+id/tvTransStatusVal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_toRightOf="@+id/tvTransStatus"
+                            android:text=""
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/sp_14"/>
+
+                        <ImageView
+                            android:id="@+id/ivTransCompleted"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_toRightOf="@+id/tvTransStatusVal"
+                            android:src="@drawable/ic_tick_copy"
+                            android:visibility="visible"/>
+
+                        <TextView
+                            android:id="@+id/tvTransStatusValMessage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvTransStatusVal"
+                            android:text=""
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/sp_12"
+                            android:visibility="visible"/>
+                    </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="@color/apply_btn_pressed" />
+                        android:layout_below="@+id/relativeLayoutStatus"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/apply_btn_pressed"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -93,7 +93,7 @@
                     android:layout_height="40dp">
 
                     <TextView
-                        android:id="@+id/tvOrderTime"
+                        android:id="@+id/tvTransTime"
                         android:layout_width="125dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -103,11 +103,11 @@
                         android:textSize="@dimen/sp_12" />
 
                     <TextView
-                        android:id="@+id/tvOrderTimeVal"
+                        android:id="@+id/tvTransTimeVal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/tvOrderTime"
+                        android:layout_toRightOf="@+id/tvTransTime"
                         android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_14" />
@@ -167,7 +167,7 @@
                         android:layout_width="140dp"
                         android:layout_height="27dp"
                         android:gravity="bottom"
-                        android:text="@string/ncpi_transaction_id"
+                        android:text="@string/npci_transaction_id"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color_light"
                         android:textSize="@dimen/sp_12" />
@@ -266,6 +266,7 @@
                             </LinearLayout>
 
                             <ImageView
+                                android:id="@+id/imageViewCall"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
@@ -277,7 +278,9 @@
 
                 </android.support.v7.widget.CardView>
 
-                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardViewDebitFrom"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
@@ -285,7 +288,6 @@
                     card_view:cardCornerRadius="@dimen/button_corner_radius">
 
                     <LinearLayout
-                        android:id="@+id/linearLayoutDebitFrom"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">

@@ -2,11 +2,12 @@ package com.jugnoo.pay.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.models.CommonResponse;
@@ -19,6 +20,8 @@ import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.Utils;
+import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -32,6 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.Fonts;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -53,25 +57,13 @@ public class TranscCompletedActivity extends BaseActivity {
         onBackPressed();
     }
 
-    @Bind(R.id.date_txt)
-    TextView dateTxt;
-
     @Bind(R.id.paid_txt)
     TextView textViewPaid;
 
-    @Bind(R.id.amount_txt)
-    TextView amountTxt;
-    @Bind(R.id.transaction_id_txt)
-    TextView trnscIdTxt;
-    @Bind(R.id.trnsc_status_txt)
-    TextView trnscStatusTxt;
     @Bind(R.id.message_txt)
     TextView msgTxt;
     @Bind(R.id.message)
     TextView textViewMessage;
-
-    @Bind(R.id.status_layout)
-    RelativeLayout statusLayout;
 
     @Bind(R.id.contact_name_txt)
     TextView contactNameTxt;
@@ -79,6 +71,8 @@ public class TranscCompletedActivity extends BaseActivity {
     TextView mobileTxt;
     @Bind(R.id.contact_image)
     ImageView contactImg;
+    @Bind(R.id.ok_btn)
+    Button buttonOk;
 
     @OnClick(R.id.ok_btn)
     void okBtnClicked()
@@ -110,6 +104,11 @@ private SelectUser contactDetails;
     private String orderId;
     String transactionStatus = "";
 
+    private TextView tvTransStatusVal, tvTransStatusValMessage, tvTransTimeVal, tvBankRefIdVal, tvNcpiTransIdVal,
+            textViewAccountNumber, textViewBankName, textViewDebitValue;
+    private ImageView ivTransCompleted, imageViewBank, imageViewCall;
+    private CardView cardViewDebitFrom;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -127,6 +126,25 @@ private SelectUser contactDetails;
                 transactionStatus = getIntent().getStringExtra(AppConstant.TRANSACTION_STATUS);
             }
 
+            tvTransStatusVal = (TextView) findViewById(R.id.tvTransStatusVal); tvTransStatusVal.setTypeface(Fonts.mavenMedium(this));
+            tvTransStatusValMessage = (TextView) findViewById(R.id.tvTransStatusValMessage); tvTransStatusValMessage.setTypeface(Fonts.mavenRegular(this));
+            tvTransStatusValMessage.setVisibility(View.GONE);
+            tvTransTimeVal = (TextView) findViewById(R.id.tvTransTimeVal); tvTransTimeVal.setTypeface(Fonts.mavenMedium(this));
+            tvBankRefIdVal = (TextView) findViewById(R.id.tvBankRefIdVal); tvBankRefIdVal.setTypeface(Fonts.mavenMedium(this));
+            tvNcpiTransIdVal = (TextView) findViewById(R.id.tvNpciTransIdVal); tvNcpiTransIdVal.setTypeface(Fonts.mavenMedium(this));
+            textViewAccountNumber = (TextView) findViewById(R.id.textViewAccountNumber); textViewAccountNumber.setTypeface(Fonts.mavenMedium(this));
+            textViewBankName = (TextView) findViewById(R.id.textViewBankName); textViewBankName.setTypeface(Fonts.mavenMedium(this));
+            textViewDebitValue = (TextView) findViewById(R.id.textViewDebitValue); textViewDebitValue.setTypeface(Fonts.mavenMedium(this));
+            ivTransCompleted = (ImageView) findViewById(R.id.ivTransCompleted);
+            imageViewBank = (ImageView) findViewById(R.id.imageViewBank);
+            cardViewDebitFrom = (CardView) findViewById(R.id.cardViewDebitFrom);
+            buttonOk.setTypeface(Fonts.mavenRegular(this));
+            mobileTxt.setTypeface(Fonts.mavenRegular(this));
+            contactNameTxt.setTypeface(Fonts.mavenMedium(this));
+            textViewMessage.setTypeface(Fonts.mavenMedium(this));
+            msgTxt.setTypeface(Fonts.mavenRegular(this));
+            textViewPaid.setTypeface(Fonts.mavenRegular(this));
+            imageViewCall = (ImageView) findViewById(R.id.imageViewCall);
 
             SendMoneyCallback callback = (SendMoneyCallback) getIntent().getExtras().getSerializable(AppConstant.SEND_TRANSACTION_DATA);
             setData();
@@ -136,8 +154,8 @@ private SelectUser contactDetails;
                 callingSendMoneyCallbackApi(callback.getMessage(), "", callback.getAccess_token());
                 textViewPaid.setText(getResources().getString(R.string.paid_string));
             } else if(transactionStatus.equalsIgnoreCase("Failed")){
-                trnscStatusTxt.setText(getResources().getString(R.string.transaction_failed_string));
-                statusLayout.setBackgroundColor(getResources().getColor(R.color.booking_failed_color));
+                tvTransStatusVal.setText(getString(R.string.failed));
+                tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
                 callingSendMoneyCallbackApi(null, requestObj.getOrderId(), requestObj.getAccess_token());
             } else{
                 // for Request
@@ -158,9 +176,9 @@ private SelectUser contactDetails;
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         String formattedDate = df.format(c.getTime());
 
-        dateTxt.setText(formattedDate);
-        amountTxt.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), requestObj.getAmount()));
-        trnscIdTxt.setText(orderId);
+        tvTransTimeVal.setText(formattedDate);
+        textViewDebitValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), requestObj.getAmount()));
+        toolbarTitleTxt.setText(getResources().getString(R.string.transaction_id_number_format, orderId));
         if((requestObj != null) && !requestObj.getMessage().equalsIgnoreCase("")) {
             msgTxt.setVisibility(View.VISIBLE);
             textViewMessage.setVisibility(View.VISIBLE);
@@ -169,23 +187,21 @@ private SelectUser contactDetails;
             msgTxt.setVisibility(View.GONE);
             textViewMessage.setVisibility(View.GONE);
         }
-        mobileTxt.setText(contactDetails.getPhone()+" Mobile");
+        mobileTxt.setText(contactDetails.getPhone());
         contactNameTxt.setText(contactDetails.getName());
-        // Set image if exists
+        imageViewCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.openCallIntent(TranscCompletedActivity.this, contactDetails.getPhone());
+            }
+        });
         try {
-
             if (contactDetails.getThumb() != null) {
-                //contactImg.setImageBitmap(contactDetails.getThumb());
-                Picasso.with(TranscCompletedActivity.this).load(contactDetails.getThumb()).into(contactImg);
+                Picasso.with(TranscCompletedActivity.this).load(contactDetails.getThumb()).transform(new CircleTransform()).into(contactImg);
             } else {
                 contactImg.setImageResource(R.drawable.icon_user);
             }
-            // Seting round image
-//            Bitmap bm = BitmapFactory.decodeResource(holder.contactImage.getResources(), R.drawable.icon_logo); // Load default image
-//            roundedImage = new RoundImage(bm);
-//            v.imageView.setImageDrawable(roundedImage);
         } catch (Exception e) {
-            // Add default picture
             contactImg.setImageResource(R.drawable.icon_user);
             e.printStackTrace();
         }
@@ -216,17 +232,28 @@ private SelectUser contactDetails;
 //
                         int flag = commonResponse.getFlag();
                         if(flag == ApiResponseFlags.TXN_COMPLETED.getOrdinal()) {
-                            trnscStatusTxt.setText(commonResponse.getMessage());
-                            statusLayout.setBackgroundColor(getResources().getColor(R.color.booking_completed_color));
+                            tvTransStatusValMessage.setVisibility(View.GONE);
+                            tvTransStatusValMessage.setText(commonResponse.getMessage());
+                            tvTransStatusVal.setText(getString(R.string.successful));
+                            tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
+                            ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
                         }
                         else if(flag == ApiResponseFlags.TXN_FAILED.getOrdinal()) {
-                            trnscStatusTxt.setText(commonResponse.getMessage());
-                            statusLayout.setBackgroundColor(getResources().getColor(R.color.booking_failed_color));
+                            tvTransStatusValMessage.setVisibility(View.VISIBLE);
+                            tvTransStatusValMessage.setTextColor(getResources().getColor(R.color.red_status));
+                            tvTransStatusValMessage.setText(commonResponse.getMessage());
+                            tvTransStatusVal.setText(getString(R.string.failed));
+                            tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
+                            ivTransCompleted.setImageResource(R.drawable.ic_failed);
                         }
                         else {
                             CommonMethods.callingBadToken(TranscCompletedActivity.this,flag,commonResponse.getMessage());
-                            trnscStatusTxt.setText(commonResponse.getMessage());
-                            statusLayout.setBackgroundColor(getResources().getColor(R.color.booking_failed_color));
+                            tvTransStatusValMessage.setVisibility(View.VISIBLE);
+                            tvTransStatusValMessage.setTextColor(getResources().getColor(R.color.red_status));
+                            tvTransStatusValMessage.setText(commonResponse.getMessage());
+                            tvTransStatusVal.setText(getString(R.string.failed));
+                            tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
+                            ivTransCompleted.setImageResource(R.drawable.ic_failed);
 
                             // below methods can be used INSTEAD of .getColor method above
                             // getResources().getColor(R.color.booking_failed_color, null);

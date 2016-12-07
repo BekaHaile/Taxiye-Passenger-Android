@@ -1416,9 +1416,11 @@
 	<string name="transaction_status">Transaction status</string>
 	<string name="transaction_time">Transaction time</string>
 	<string name="bank_ref_id">Bank Ref ID:</string>
-	<string name="ncpi_transaction_id">NCPI Transaction ID:</string>
+	<string name="npci_transaction_id">NPCI Transaction ID:</string>
 	<string name="no_payment_address_added">No Payment Address Contacts added.</string>
->>>>>>> Stashed changes
+	<string name="failed">Failed</string>
+	<string name="transaction_id_number_format">Transaction ID #%s</string>
+	<string name="successful">Successful</string>
 
 
 </resources>
