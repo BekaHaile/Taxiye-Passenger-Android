@@ -100,6 +100,7 @@ public class PaymentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        (((SelectContactActivity)getActivity()).getSearchET()).setText("");
         apiFetchPaymentAddress();
     }
 
@@ -118,7 +119,7 @@ public class PaymentFragment extends Fragment {
                             if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == fetchPaymentAddressResponse.getFlag()){
                                 fetchList.clear();
                                 fetchList.addAll(fetchPaymentAddressResponse.getVpaList());
-                                paymentAddressAdapter.notifyDataSetChanged();
+                                paymentAddressAdapter.setList(fetchList);
                             } else {
                                 DialogPopup.alertPopup(getActivity(), "", fetchPaymentAddressResponse.getMessage());
                             }

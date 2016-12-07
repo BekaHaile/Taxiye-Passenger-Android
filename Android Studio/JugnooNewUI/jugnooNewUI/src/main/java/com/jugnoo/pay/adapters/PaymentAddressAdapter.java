@@ -27,7 +27,7 @@ import java.util.Locale;
  * Created by cl-macmini-38 on 06/06/16.
  */
 public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAdapter.MyViewHolder> {
-    public ArrayList<FetchPaymentAddressResponse.VpaList> selectUsersList;
+    public ArrayList<FetchPaymentAddressResponse.VpaList> savedUsersList;
     public  int selectedPosition;
     private Activity activity;
     private ArrayList<FetchPaymentAddressResponse.VpaList> arraylist;
@@ -39,20 +39,27 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
         return new MyViewHolder(itemView);
     }
 
-    public PaymentAddressAdapter(Activity activity, ArrayList<FetchPaymentAddressResponse.VpaList> selectUsers, Callback clickListener)
+    public PaymentAddressAdapter(Activity activity, ArrayList<FetchPaymentAddressResponse.VpaList> savedUsersList, Callback clickListener)
     {
-        this.selectUsersList = selectUsers;
+        this.savedUsersList = savedUsersList;
         this.activity = activity;
-        this.arraylist = selectUsers;
+        this.arraylist = new ArrayList<>();
+        this.arraylist.addAll(savedUsersList);
         this.clickListener = clickListener;
     }
 
 
+    public void setList(ArrayList<FetchPaymentAddressResponse.VpaList> savedUsersList){
+        arraylist.clear();
+        arraylist.addAll(savedUsersList);
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
-        holder.contactNameTxt.setText(selectUsersList.get(position).getName());
-        holder.mobileTxt.setText(selectUsersList.get(position).getVpa());
+        holder.contactNameTxt.setText(savedUsersList.get(position).getName());
+        holder.mobileTxt.setText(savedUsersList.get(position).getVpa());
 
         try {
                 Picasso.with(activity).load(R.drawable.icon_user)
@@ -75,7 +82,7 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickListener.onDelete(selectUsersList.get(position).getVpa());
+                clickListener.onDelete(savedUsersList.get(position).getVpa());
             }
         });
     }
@@ -83,14 +90,14 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
     // Filter Class
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
-        selectUsersList.clear();
+        savedUsersList.clear();
         if (charText.length() == 0) {
-            selectUsersList.addAll(arraylist);
+            savedUsersList.addAll(arraylist);
         } else {
             for (FetchPaymentAddressResponse.VpaList wp : arraylist) {
                 if (wp.getName().toLowerCase(Locale.getDefault())
                         .contains(charText)) {
-                    selectUsersList.add(wp);
+                    savedUsersList.add(wp);
                 }
 
             }
@@ -117,7 +124,7 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
 
     @Override
     public int getItemCount() {
-        return selectUsersList.size();
+        return savedUsersList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
