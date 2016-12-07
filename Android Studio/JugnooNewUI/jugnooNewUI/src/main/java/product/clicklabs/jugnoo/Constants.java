@@ -550,4 +550,7 @@ public interface Constants {
 	String SP_FRESH_LAST_ADDRESS_OBJ = "sp_fresh_last_address_obj";
 	String KEY_VPA = "vpa";
 	String KEY_JUGNOO_PAY = "pay";
+	String KEY_FETCH_TRANSACTION_SUMMARY = "fetch_transaction_history";
+
+	String KEY_TXN_TYPE = "txn_type";
 }

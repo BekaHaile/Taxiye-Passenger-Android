@@ -16,6 +16,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.jugnoo.pay.models.TransacHistoryResponse;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -267,7 +269,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 												jTransactionI.getString("txn_text"),
 												jTransactionI.getDouble("amount"),
 												jTransactionI.optString("pay_type", ""),
-												paytm, mobikwik, freecharge, pay));
+												paytm, mobikwik, freecharge, pay, jTransactionI.optInt(Constants.KEY_TXN_TYPE, TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal())));
 									}
 
 									if (Data.userData != null) {

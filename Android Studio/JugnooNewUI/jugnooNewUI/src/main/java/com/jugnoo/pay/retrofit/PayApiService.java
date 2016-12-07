@@ -130,4 +130,9 @@ public interface PayApiService {
     void remindUser(@FieldMap Map<String, String> params,
                       Callback<SettleUserDebt> callback);
 
+
+    @FormUrlEncoded
+    @POST("/get_transaction_summary")
+    void getTransactionSummary(@FieldMap Map<String, String> params,
+                    Callback<SettleUserDebt> callback);
 }

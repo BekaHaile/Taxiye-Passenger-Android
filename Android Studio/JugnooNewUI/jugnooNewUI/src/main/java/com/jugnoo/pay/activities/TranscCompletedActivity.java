@@ -16,6 +16,7 @@ import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.models.SendMoneyCallback;
 import com.jugnoo.pay.models.SendMoneyRequest;
+import com.jugnoo.pay.models.TransacHistoryResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
@@ -34,8 +35,15 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -167,7 +175,12 @@ private SelectUser contactDetails;
                 tvTransStatusVal.setText(getString(R.string.failed));
                 tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
                 callingSendMoneyCallbackApi(null, requestObj.getOrderId(), requestObj.getAccess_token());
-            } else{
+            }
+            else if(getIntent().getIntExtra(Constants.KEY_FETCH_TRANSACTION_SUMMARY, 0) == 1){
+                apiGetTransactionSummary(getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0),
+                        getIntent().getIntExtra(Constants.KEY_TXN_TYPE, TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()));
+            }
+            else{
                 // for Request
                 toolbarTitleTxt.setText("Jugnoo Pay");
                 textViewPaid.setText(getResources().getString(R.string.requested_to));
@@ -303,6 +316,70 @@ private SelectUser contactDetails;
         {
             e.printStackTrace();
         }
+    }
+
+
+    public void apiGetTransactionSummary(final int orderId, final int txnType) {
+        try {
+            if (AppStatus.getInstance(this).isOnline(this)) {
+                CallProgressWheel.showLoadingDialog(this, "Loading...");
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
+                params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
+                params.put(Constants.KEY_ID, String.valueOf(orderId));
+                params.put(Constants.KEY_TXN_TYPE, String.valueOf(txnType));
+
+                RestClient.getPayApiService().getTransactionSummary(params, new Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        try{
+                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == settleUserDebt.getFlag()){
+
+                            } else {
+                                DialogPopup.alertPopup(TranscCompletedActivity.this, "", settleUserDebt.getMessage());
+                            }
+                        } catch (Exception e){
+                            e.printStackTrace();
+                            retryDialogGetTransactionSummary(DialogErrorType.SERVER_ERROR, orderId, txnType);
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        retryDialogGetTransactionSummary(DialogErrorType.CONNECTION_LOST, orderId, txnType);
+                    }
+                });
+            } else {
+                retryDialogGetTransactionSummary(DialogErrorType.NO_NET, orderId, txnType);
+            }
+        } catch (Exception e) {
+            DialogPopup.dismissLoadingDialog();
+            e.printStackTrace();
+        }
+
+    }
+
+    private void retryDialogGetTransactionSummary(DialogErrorType dialogErrorType, final int orderId, final int txnType){
+        DialogPopup.dialogNoInternet(this,
+                dialogErrorType,
+                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        apiGetTransactionSummary(orderId, txnType);
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                });
     }
 
 }

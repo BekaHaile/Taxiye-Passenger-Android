@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo.wallet.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +11,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.jugnoo.pay.activities.TranscCompletedActivity;
+
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.wallet.models.TransactionType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.TransactionInfo;
+import product.clicklabs.jugnoo.wallet.models.TransactionType;
 
 
 public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -102,6 +107,23 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
                 holder.tvStatusPay.setVisibility(View.VISIBLE);
                 holder.tvStatusPay.setText(transactionInfo.getPayType());
             }
+
+            holder.relative.setTag(position);
+            holder.relative.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = (int) v.getTag();
+                    TransactionInfo transactionInfo1 = transactionInfoList.get(pos);
+                    if(transactionInfo1.getPay() == 1) {
+                        Intent intent = new Intent(context, TranscCompletedActivity.class);
+                        intent.putExtra(Constants.KEY_FETCH_TRANSACTION_SUMMARY, 1);
+                        intent.putExtra(Constants.KEY_ORDER_ID, transactionInfoList.get(pos).transactionId);
+                        intent.putExtra(Constants.KEY_TXN_TYPE, transactionInfoList.get(pos).getPayTxnType());
+                        context.startActivity(intent);
+                        ((Activity)context).finish();
+                    }
+                }
+            });
         }
         else if(viewholder instanceof ViewFooterHolder){
             ViewFooterHolder holder = (ViewFooterHolder) viewholder;

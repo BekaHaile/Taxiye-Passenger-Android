@@ -279,7 +279,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
                 android:layout_toRightOf="@+id/imageViewWalletTransactionsIcon"
-                android:text="View Wallet Transactions"
+                android:text="Payment Transactions"
                 android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/text_size_32" />
 
