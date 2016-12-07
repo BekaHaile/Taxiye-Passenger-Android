@@ -12,16 +12,21 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.jugnoo.pay.activities.AddPaymentAddressActivity;
 import com.jugnoo.pay.activities.SelectContactActivity;
+import com.jugnoo.pay.activities.SendMoneyActivity;
 import com.jugnoo.pay.adapters.ContactsListAdapter;
 import com.jugnoo.pay.adapters.PaymentAddressAdapter;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.FetchPaymentAddressResponse;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.utils.CallProgressWheel;
+import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.RecyclerViewClickListener;
+import com.jugnoo.pay.utils.Validator;
+import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
@@ -52,6 +57,7 @@ public class PaymentFragment extends Fragment {
 
     private View rootView;
     private RecyclerView rvPaymentAddress;
+    private LinearLayout llPlaceHolder;
     private PaymentAddressAdapter paymentAddressAdapter;
     private ArrayList<FetchPaymentAddressResponse.VpaList> fetchList = new ArrayList<>();
 
@@ -61,6 +67,7 @@ public class PaymentFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_payment_address, container, false);
 
         rvPaymentAddress = (RecyclerView) rootView.findViewById(R.id.rvPaymentAddress);
+        llPlaceHolder = (LinearLayout) rootView.findViewById(R.id.llPlaceHolder);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         rvPaymentAddress.setLayoutManager(mLayoutManager);
@@ -69,7 +76,35 @@ public class PaymentFragment extends Fragment {
         paymentAddressAdapter = new PaymentAddressAdapter(getActivity(), fetchList, new PaymentAddressAdapter.Callback() {
             @Override
             public void recyclerViewListClicked(int position) {
-
+                SelectUser data = new SelectUser();
+                data.setName(fetchList.get(position).getName());
+                data.setPhone(fetchList.get(position).getVpa());
+                data.setThumb("");
+                data.setAmount("");
+                data.setOrderId("0");
+                if(new Validator().validateEmail(fetchList.get(position).getVpa()))
+                {
+                    SelectUser newData = new SelectUser();
+                    newData.setName(fetchList.get(position).getName());
+                    newData.setPhone(fetchList.get(position).getVpa());
+                    newData.setThumb("");
+                    newData.setAmount("");
+                    newData.setOrderId("0");
+                    Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
+                    intent.putExtra(AppConstant.REQUEST_STATUS, ((SelectContactActivity)getActivity()).isRequestStatus());
+                    Bundle bun =new Bundle();
+                    bun.putParcelable(AppConstant.CONTACT_DATA, newData);
+                    intent.putExtras( bun);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                    getActivity().finish();
+                }
+                else
+                {
+                    ((SelectContactActivity)getActivity()).getSearchET().requestFocus();
+                    ((SelectContactActivity)getActivity()).getSearchET().setHovered(true);
+                    ((SelectContactActivity)getActivity()).getSearchET().setError("Please fill alteast 10 Digits mobile number.");
+                }
             }
 
             @Override
@@ -119,6 +154,11 @@ public class PaymentFragment extends Fragment {
                             if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == fetchPaymentAddressResponse.getFlag()){
                                 fetchList.clear();
                                 fetchList.addAll(fetchPaymentAddressResponse.getVpaList());
+                                if(fetchList.size() > 0){
+                                    llPlaceHolder.setVisibility(View.GONE);
+                                } else{
+                                    llPlaceHolder.setVisibility(View.VISIBLE);
+                                }
                                 paymentAddressAdapter.setList(fetchList);
                             } else {
                                 DialogPopup.alertPopup(getActivity(), "", fetchPaymentAddressResponse.getMessage());
