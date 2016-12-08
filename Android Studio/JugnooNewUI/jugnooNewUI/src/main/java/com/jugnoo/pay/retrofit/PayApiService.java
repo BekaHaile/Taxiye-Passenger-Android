@@ -11,6 +11,7 @@ import com.jugnoo.pay.models.SendMoneyRequest;
 import com.jugnoo.pay.models.SendMoneyResponse;
 import com.jugnoo.pay.models.TokenGeneratedResponse;
 import com.jugnoo.pay.models.TransacHistoryResponse;
+import com.jugnoo.pay.models.TransactionSummaryResponse;
 import com.jugnoo.pay.models.VerifyUserRequest;
 
 import java.util.Map;
@@ -134,5 +135,10 @@ public interface PayApiService {
     @FormUrlEncoded
     @POST("/get_transaction_summary")
     void getTransactionSummary(@FieldMap Map<String, String> params,
-                    Callback<SettleUserDebt> callback);
+                    Callback<TransactionSummaryResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/get_transaction_history")
+    void getTransactionHistory(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
 }

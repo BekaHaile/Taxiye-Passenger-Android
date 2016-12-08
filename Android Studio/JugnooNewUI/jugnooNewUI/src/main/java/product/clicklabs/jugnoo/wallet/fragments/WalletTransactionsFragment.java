@@ -72,21 +72,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
     private PaymentActivity paymentActivity;
 	private ImageView imageViewJugnooAnimation;
 	private AnimationDrawable jugnooAnimation;
+	private int pay = 0;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-//        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(paymentActivity, Config.getFlurryKey());
-//        FlurryAgent.onEvent("WalletTransactions started");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-//        FlurryAgent.onEndSession(paymentActivity);
-    }
-	
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -97,6 +84,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_wallet_transactions, container, false);
 
+		pay = getArguments().getInt(Constants.KEY_PAY, 0);
+
         paymentActivity = (PaymentActivity) getActivity();
 
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
@@ -104,6 +93,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
+		textViewTitle.setText(pay == 1 ? R.string.payment_transactions : R.string.wallet_transactions);
 
 		recyclerViewWalletTransactions = (RecyclerView) rootView.findViewById(R.id.recyclerViewWalletTransactions);
 		recyclerViewWalletTransactions.setLayoutManager(new LinearLayoutManager(paymentActivity));
@@ -233,7 +223,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 				params.put("is_access_token_new", "1");
 				params.put("start_from", "" + transactionInfoList.size());
 
-				RestClient.getApiServices().getTransactionHistory(params, new Callback<SettleUserDebt>() {
+				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -263,7 +253,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 										if(pay == 1){
 											transactionInfoList.add(new TransactionInfo(jTransactionI.optInt("id", 0),
 													jTransactionI.optInt("txn_type", 0),
-													DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(jTransactionI.optString("logged_on"))),
+													DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(jTransactionI.optString("date"))),
 													"", "", jTransactionI.optDouble("amount"),
 													paytm, mobikwik, freecharge, pay, jTransactionI.optInt("status", 0),
 													jTransactionI.optString("name", "")));
@@ -306,7 +296,13 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 						jugnooAnimation.stop();
 						updateListData("Some error occurred", true);
 					}
-				});
+				};
+
+				if(pay == 1){
+					RestClient.getPayApiService().getTransactionHistory(params, callback);
+				} else {
+					RestClient.getApiServices().getTransactionHistory(params, callback);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

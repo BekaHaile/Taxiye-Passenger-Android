@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -12,12 +13,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.models.SendMoneyCallback;
 import com.jugnoo.pay.models.SendMoneyRequest;
 import com.jugnoo.pay.models.TransacHistoryResponse;
+import com.jugnoo.pay.models.TransactionSummaryResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.sabkuchfresh.utils.AppConstant;
@@ -36,11 +39,11 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.wallet.models.TransactionInfo;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -109,7 +112,7 @@ public class TranscCompletedActivity extends BaseActivity {
     String transactionStatus = "";
 
     private TextView tvTransStatusVal, tvTransStatusValMessage, tvTransTimeVal, tvBankRefIdVal, tvNpciTransIdVal,
-            textViewAccountNumber, textViewBankName, textViewDebitValue;
+            textViewAccountNumber, textViewBankName, textViewDebitValue, textViewDebitFrom;
     private ImageView ivTransCompleted, imageViewBank, imageViewCall;
     private CardView cardViewDebitFrom, cardViewMessage;
     private RelativeLayout rvBankRefId, rvNpciTransId;
@@ -157,7 +160,7 @@ public class TranscCompletedActivity extends BaseActivity {
             ((TextView)findViewById(R.id.tvTransTime)).setTypeface(Fonts.mavenRegular(this));
             ((TextView)findViewById(R.id.tvBankRefId)).setTypeface(Fonts.mavenRegular(this));
             ((TextView)findViewById(R.id.tvNpciTransId)).setTypeface(Fonts.mavenRegular(this));
-            ((TextView)findViewById(R.id.textViewDebitFrom)).setTypeface(Fonts.mavenRegular(this));
+            textViewDebitFrom = (TextView)findViewById(R.id.textViewDebitFrom); textViewDebitFrom.setTypeface(Fonts.mavenRegular(this));
             rvNpciTransId = (RelativeLayout) findViewById(R.id.rvNpciTransId);
             rvBankRefId = (RelativeLayout) findViewById(R.id.rvBankRefId);
 
@@ -182,8 +185,15 @@ public class TranscCompletedActivity extends BaseActivity {
                 callingSendMoneyCallbackApi(null, requestObj.getOrderId(), requestObj.getAccess_token());
             }
             else if(getIntent().getIntExtra(Constants.KEY_FETCH_TRANSACTION_SUMMARY, 0) == 1){
-                apiGetTransactionSummary(getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0),
-                        getIntent().getIntExtra(Constants.KEY_TXN_TYPE, TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()));
+                try {
+                    Gson gson = new Gson();
+                    TransactionInfo transactionInfo = gson.fromJson(getIntent().getStringExtra(Constants.KEY_TXN_OBJECT), TransactionInfo.class);
+                    apiGetTransactionSummary(getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0),
+							getIntent().getIntExtra(Constants.KEY_TXN_TYPE, TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()),
+                            transactionInfo);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             else{
                 // for Request
@@ -313,7 +323,7 @@ public class TranscCompletedActivity extends BaseActivity {
     }
 
 
-    public void apiGetTransactionSummary(final int orderId, final int txnType) {
+    public void apiGetTransactionSummary(final int orderId, final int txnType, final TransactionInfo transactionInfo) {
         try {
             if (AppStatus.getInstance(this).isOnline(this)) {
                 CallProgressWheel.showLoadingDialog(this, "Loading...");
@@ -321,37 +331,69 @@ public class TranscCompletedActivity extends BaseActivity {
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
                 params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
-                params.put(Constants.KEY_ID, String.valueOf(orderId));
+                params.put(Constants.KEY_TXN_ID, String.valueOf(orderId));
                 params.put(Constants.KEY_TXN_TYPE, String.valueOf(txnType));
 
-                RestClient.getPayApiService().getTransactionSummary(params, new Callback<SettleUserDebt>() {
+                RestClient.getPayApiService().getTransactionSummary(params, new Callback<TransactionSummaryResponse>() {
                     @Override
-                    public void success(SettleUserDebt settleUserDebt, Response response) {
+                    public void success(TransactionSummaryResponse summaryResponse, Response response) {
                         CallProgressWheel.dismissLoadingDialog();
                         try{
-                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == settleUserDebt.getFlag()){
+                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == summaryResponse.getFlag()){
+                                TransactionSummaryResponse.TxnDetail txnDetail = summaryResponse.getTxnDetails().get(0);
                                 scrollView.setVisibility(View.VISIBLE);
-                                textViewPaid.setText("");
-                                tvTransTimeVal.setText("");
-                                textViewDebitValue.setText("");
-                                toolbarTitleTxt.setText("");
-                                msgTxt.setText("");
-                                mobileTxt.setText("");
-                                contactNameTxt.setText("");
+                                tvTransTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(txnDetail.getDate())));
+                                textViewDebitValue.setText(getString(R.string.rupees_value_format,
+                                        Utils.getMoneyDecimalFormat().format(txnDetail.getAmount())));
+                                toolbarTitleTxt.setText(getString(R.string.transaction_id_format, String.valueOf(orderId)));
+                                tvBankRefIdVal.setText(txnDetail.getBankRefId());
+                                tvNpciTransIdVal.setText(txnDetail.getNpciTxnId());
+                                tvTransStatusVal.setText(txnDetail.getStatus());
+
+                                textViewPaid.setText(txnDetail.getTxnString());
                                 contactImg.setImageResource(R.drawable.icon_user);
-                                tvTransStatusValMessage.setVisibility(View.GONE);
-                                tvTransStatusValMessage.setText("");
-                                tvTransStatusVal.setText(getString(R.string.successful));
-                                tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
-                                ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
+                                mobileTxt.setVisibility(View.GONE);
+                                imageViewCall.setVisibility(View.GONE);
+                                if(TextUtils.isEmpty(txnDetail.getName())){
+                                    if(!TextUtils.isEmpty(txnDetail.getPhoneNo())){
+                                        contactNameTxt.setText(txnDetail.getPhoneNo());
+                                    } else if(!TextUtils.isEmpty(txnDetail.getVpa())){
+                                        contactNameTxt.setText(txnDetail.getVpa());
+                                    }
+                                } else {
+                                    contactNameTxt.setText(txnDetail.getName());
+                                    if(!TextUtils.isEmpty(txnDetail.getPhoneNo())){
+                                        mobileTxt.setText(txnDetail.getPhoneNo());
+                                        imageViewCall.setVisibility(View.VISIBLE);
+                                    } else if(!TextUtils.isEmpty(txnDetail.getVpa())){
+                                        mobileTxt.setText(txnDetail.getVpa());
+                                    }
+                                }
+
+                                msgTxt.setText(txnDetail.getMessage());
+                                cardViewMessage.setVisibility(TextUtils.isEmpty(txnDetail.getMessage()) ? View.GONE : View.VISIBLE);
+                                if(transactionInfo.getStatus() == 1){
+                                    tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
+                                    ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
+                                    if(transactionInfo.transactionType == 1 || transactionInfo.transactionType == 3){
+                                        textViewDebitFrom.setText(R.string.debit_from);
+                                    } else if(transactionInfo.transactionType == 2 || transactionInfo.transactionType == 4){
+                                        textViewDebitFrom.setText(R.string.credit_to);
+                                    }
+                                } else {
+                                    tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
+                                    ivTransCompleted.setImageResource(R.drawable.ic_failed);
+                                    cardViewDebitFrom.setVisibility(View.GONE);
+                                }
+
                             } else {
-                                DialogPopup.alertPopupTwoButtonsWithListeners(TranscCompletedActivity.this, "", settleUserDebt.getMessage(),
+                                DialogPopup.alertPopupTwoButtonsWithListeners(TranscCompletedActivity.this, "", summaryResponse.getMessage(),
                                         getString(R.string.retry),
                                         getString(R.string.cancel),
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                apiGetTransactionSummary(orderId, txnType);
+                                                apiGetTransactionSummary(orderId, txnType, transactionInfo);
                                             }
                                         },
                                         new View.OnClickListener() {
@@ -364,31 +406,32 @@ public class TranscCompletedActivity extends BaseActivity {
                             }
                         } catch (Exception e){
                             e.printStackTrace();
-                            retryDialogGetTransactionSummary(DialogErrorType.SERVER_ERROR, orderId, txnType);
+                            retryDialogGetTransactionSummary(DialogErrorType.SERVER_ERROR, orderId, txnType, transactionInfo);
                         }
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         CallProgressWheel.dismissLoadingDialog();
-                        retryDialogGetTransactionSummary(DialogErrorType.CONNECTION_LOST, orderId, txnType);
+                        retryDialogGetTransactionSummary(DialogErrorType.CONNECTION_LOST, orderId, txnType, transactionInfo);
                     }
                 });
             } else {
-                retryDialogGetTransactionSummary(DialogErrorType.NO_NET, orderId, txnType);
+                retryDialogGetTransactionSummary(DialogErrorType.NO_NET, orderId, txnType, transactionInfo);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void retryDialogGetTransactionSummary(DialogErrorType dialogErrorType, final int orderId, final int txnType){
+    private void retryDialogGetTransactionSummary(DialogErrorType dialogErrorType, final int orderId, final int txnType,
+                                                  final TransactionInfo transactionInfo){
         DialogPopup.dialogNoInternet(this,
                 dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        apiGetTransactionSummary(orderId, txnType);
+                        apiGetTransactionSummary(orderId, txnType, transactionInfo);
                     }
 
                     @Override

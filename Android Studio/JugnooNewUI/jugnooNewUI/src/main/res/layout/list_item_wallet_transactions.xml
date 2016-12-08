@@ -54,7 +54,7 @@
                     android:layout_marginRight="43px"
                     android:text="Rs. 100"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_32" />
+                    android:textSize="@dimen/text_size_38" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -71,7 +71,7 @@
                     android:layout_marginLeft="46px"
                     android:text="12:00 PM"
                     android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_28" />
+                    android:textSize="@dimen/text_size_22" />
 
 
                 <TextView
@@ -83,7 +83,7 @@
                     android:layout_toLeftOf="@+id/textViewTransactionType"
                     android:text="@string/mobikwik_colon"
                     android:textColor="@color/blue_light"
-                    android:textSize="@dimen/text_size_28"
+                    android:textSize="@dimen/text_size_26"
                     android:visibility="gone" />
 
                 <TextView
@@ -95,7 +95,7 @@
                     android:layout_marginRight="43px"
                     android:text="Cash Added"
                     android:textColor="@color/text_color_light"
-                    android:textSize="@dimen/text_size_28" />
+                    android:textSize="@dimen/text_size_26" />
             </RelativeLayout>
         </LinearLayout>
 

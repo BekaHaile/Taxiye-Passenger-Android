@@ -1,16 +1,45 @@
 package product.clicklabs.jugnoo.wallet.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class TransactionInfo {
-	
-	public int transactionId, transactionType;
-	public String time, date;
+
+	@SerializedName("transactionId")
+	@Expose
+	public int transactionId;
+	@SerializedName("transactionType")
+	@Expose
+	public int transactionType;
+	@SerializedName("time")
+	@Expose
+	public String time;
+	@SerializedName("date")
+	@Expose
+	public String date;
+	@SerializedName("transactionText")
+	@Expose
 	public String transactionText;
+	@SerializedName("amount")
+	@Expose
 	public double amount;
+	@SerializedName("paytm")
+	@Expose
 	public int paytm;
+	@SerializedName("mobikwik")
+	@Expose
 	private int mobikwik;
+	@SerializedName("freecharge")
+	@Expose
 	private int freecharge;
+	@SerializedName("pay")
+	@Expose
 	private int pay;
+	@SerializedName("status")
+	@Expose
 	private int status;
+	@SerializedName("name")
+	@Expose
 	private String name;
 	
 	public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText,

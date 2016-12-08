@@ -163,7 +163,7 @@
                     android:id="@+id/rvNpciTransId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="40dp">
+                    >
 
                     <TextView
                         android:id="@+id/tvNpciTransId"
@@ -180,9 +180,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginTop="10dp"
-                        android:layout_toRightOf="@+id/tvNpciTransId"
-                        android:text=""
+                        android:layout_marginTop="2dp"
+                        android:layout_below="@+id/tvNpciTransId"
+                        android:text="TEST"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_14" />
 

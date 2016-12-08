@@ -553,4 +553,6 @@ public interface Constants {
 	String KEY_FETCH_TRANSACTION_SUMMARY = "fetch_transaction_history";
 
 	String KEY_TXN_TYPE = "txn_type";
+	String KEY_TXN_ID = "txn_id";
+	String KEY_TXN_OBJECT = "txn_object";
 }

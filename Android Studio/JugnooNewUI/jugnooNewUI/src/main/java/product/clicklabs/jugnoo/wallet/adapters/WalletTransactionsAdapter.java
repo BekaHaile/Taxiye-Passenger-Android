@@ -1,9 +1,10 @@
 package product.clicklabs.jugnoo.wallet.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jugnoo.pay.activities.TranscCompletedActivity;
+import com.jugnoo.pay.utils.HomeUtils;
 
 import java.util.ArrayList;
 
@@ -32,6 +35,8 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
     private ArrayList<TransactionInfo> transactionInfoList;
     private int totalTransactions;
     private Callback callback;
+    private HomeUtils homeUtils = new HomeUtils();
+    private Gson gson;
 
     public WalletTransactionsAdapter(Context context, ArrayList<TransactionInfo> transactionInfoList,
                                      int totalTransactions, Callback callback) {
@@ -39,6 +44,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         this.transactionInfoList = transactionInfoList;
         this.totalTransactions = totalTransactions;
         this.callback = callback;
+        this.gson = new Gson();
     }
 
     public void notifyList(int totalTransactions){
@@ -84,7 +90,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
 
                 if(TransactionType.CREDIT.getOrdinal() == transactionInfo.transactionType){
                     holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.green_transaction_type));
-                } else{
+                } else {
                     holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.grey_dark));
                 }
 
@@ -107,37 +113,18 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
                         Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
                 holder.textViewTransactionTime.setText(transactionInfo.time);
 
-                int statusInt = transactionInfo.getStatus();
-                if (statusInt == 1) {
-                    if(transactionInfo.transactionType == 4){
-                        holder.textViewTransactionType.setText(R.string.received);
-                    }else {
-                        holder.textViewTransactionType.setText(R.string.completed);
-                    }
-                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.green_rupee));
-                } else if (statusInt == 3) {
-                    holder.textViewTransactionType.setText(R.string.cancelled);
-                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.red_status));
-                } else if (statusInt == 4) {
-                    holder.textViewTransactionType.setText(R.string.declined);
-                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.red_status));
-                } else if (statusInt == 2) {
-                    holder.textViewTransactionType.setText(R.string.failed);
-                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.red_status));
+                Pair<Integer, Integer> pair = homeUtils.getTransactionTypeStringColor(transactionInfo);
+                if(pair.first != -1 && pair.second != -1){
+                    holder.textViewTransactionType.setText(pair.first);
+                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(pair.second));
                 }
-
 
                 holder.textViewTransactionMode.setVisibility(View.VISIBLE);
                 holder.textViewTransactionMode.setText(context.getResources().getString(R.string.pay_colon));
                 holder.tvStatusPay.setVisibility(View.VISIBLE);
-                if (transactionInfo.transactionType == 1) {
-                    holder.tvStatusPay.setText(R.string.paid_to);
-                } else if (transactionInfo.transactionType == 2) {
-                    holder.tvStatusPay.setText(R.string.requested_from);
-                } else if (transactionInfo.transactionType == 3) {
-                    holder.tvStatusPay.setText(R.string.requested_by);
-                } else if (transactionInfo.transactionType == 4) {
-                    holder.tvStatusPay.setText(R.string.paid_by);
+                int statusText = homeUtils.getPayStatusString(transactionInfo);
+                if(statusText != -1){
+                    holder.tvStatusPay.setText(statusText);
                 }
             }
 
@@ -152,8 +139,8 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
                         intent.putExtra(Constants.KEY_FETCH_TRANSACTION_SUMMARY, 1);
                         intent.putExtra(Constants.KEY_ORDER_ID, transactionInfoList.get(pos).transactionId);
                         intent.putExtra(Constants.KEY_TXN_TYPE, transactionInfoList.get(pos).transactionType);
+                        intent.putExtra(Constants.KEY_TXN_OBJECT, gson.toJson(transactionInfoList.get(pos), TransactionInfo.class));
                         context.startActivity(intent);
-                        ((Activity)context).finish();
                     }
                 }
             });
@@ -211,10 +198,10 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         public ViewHolder(View convertView, Context context) {
             super(convertView);
             textViewTransactionDate = (TextView) convertView.findViewById(R.id.textViewTransactionDate); textViewTransactionDate.setTypeface(Fonts.mavenRegular(context));
-            textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); textViewTransactionAmount.setTypeface(Fonts.mavenRegular(context));
-            textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); textViewTransactionTime.setTypeface(Fonts.mavenRegular(context));
-            textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); textViewTransactionType.setTypeface(Fonts.mavenRegular(context));
-            textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); textViewTransactionMode.setTypeface(Fonts.mavenRegular(context));
+            textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); textViewTransactionAmount.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
+            textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); textViewTransactionTime.setTypeface(Fonts.mavenMedium(context));
+            textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); textViewTransactionType.setTypeface(Fonts.mavenMedium(context));
+            textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); textViewTransactionMode.setTypeface(Fonts.mavenMedium(context));
             tvStatusPay = (TextView) convertView.findViewById(R.id.tvStatusPay); tvStatusPay.setTypeface(Fonts.mavenMedium(context));
             relative = (LinearLayout) convertView.findViewById(R.id.relative);
         }
