@@ -15,9 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
-import com.jugnoo.pay.models.TransacHistoryResponse;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -36,6 +33,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -43,8 +41,8 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
-import product.clicklabs.jugnoo.wallet.models.TransactionInfo;
 import product.clicklabs.jugnoo.wallet.adapters.WalletTransactionsAdapter;
+import product.clicklabs.jugnoo.wallet.models.TransactionInfo;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -262,14 +260,22 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 										int freecharge = jTransactionI.optInt(Constants.KEY_FREECHARGE, 0);
 										int pay = jTransactionI.optInt(Constants.KEY_JUGNOO_PAY, 0);
 
-										transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
-												jTransactionI.getInt("txn_type"),
-												jTransactionI.getString("txn_time"),
-												jTransactionI.getString("txn_date"),
-												jTransactionI.getString("txn_text"),
-												jTransactionI.getDouble("amount"),
-												jTransactionI.optString("pay_type", ""),
-												paytm, mobikwik, freecharge, pay, jTransactionI.optInt(Constants.KEY_TXN_TYPE, TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal())));
+										if(pay == 1){
+											transactionInfoList.add(new TransactionInfo(jTransactionI.optInt("id", 0),
+													jTransactionI.optInt("txn_type", 0),
+													DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(jTransactionI.optString("logged_on"))),
+													"", "", jTransactionI.optDouble("amount"),
+													paytm, mobikwik, freecharge, pay, jTransactionI.optInt("status", 0),
+													jTransactionI.optString("name", "")));
+										} else {
+											transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
+													jTransactionI.getInt("txn_type"),
+													jTransactionI.getString("txn_time"),
+													jTransactionI.getString("txn_date"),
+													jTransactionI.getString("txn_text"),
+													jTransactionI.getDouble("amount"),
+													paytm, mobikwik, freecharge, pay, 0, ""));
+										}
 									}
 
 									if (Data.userData != null) {

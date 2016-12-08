@@ -9,23 +9,24 @@ public class TransactionInfo {
 	public int paytm;
 	private int mobikwik;
 	private int freecharge;
-	private int pay, payTxnType;
-	private String payType;
+	private int pay;
+	private int status;
+	private String name;
 	
 	public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText,
-						   double amount,String payType, int paytm, int mobikwik, int freecharge, int pay, int payTxnType){
+						   double amount, int paytm, int mobikwik, int freecharge, int pay, int status, String name){
 		this.transactionId = transactionId;
 		this.transactionType = transactionType;
 		this.time = time;
 		this.date = date;
 		this.transactionText = transactionText;
 		this.amount = amount;
-		this.payType = payType;
 		this.paytm = paytm;
 		this.mobikwik = mobikwik;
 		this.freecharge = freecharge;
 		this.pay = pay;
-		this.payTxnType = payTxnType;
+		this.status = status;
+		this.name = name;
 	}
 	
 	@Override
@@ -54,15 +55,19 @@ public class TransactionInfo {
 		return pay;
 	}
 
-	public String getPayType() {
-		return payType;
+	public int getStatus() {
+		return status;
 	}
 
-	public int getPayTxnType() {
-		return payTxnType;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
-	public void setPayTxnType(int payTxnType) {
-		this.payTxnType = payTxnType;
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

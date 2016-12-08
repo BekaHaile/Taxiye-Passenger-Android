@@ -74,38 +74,71 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             ViewHolder holder = (ViewHolder) viewholder;
             TransactionInfo transactionInfo = transactionInfoList.get(position);
 
-            holder.textViewTransactionDate.setText(transactionInfo.date);
-            holder.textViewTransactionAmount.setText(String.format(context.getResources()
-                            .getString(R.string.rupees_value_format_without_space),
-                    Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
-            holder.textViewTransactionTime.setText(transactionInfo.time);
-            holder.textViewTransactionType.setText(transactionInfo.transactionText);
+            if(transactionInfo.getPay() == 0){
+                holder.textViewTransactionDate.setText(transactionInfo.date);
+                holder.textViewTransactionAmount.setText(String.format(context.getResources()
+                                .getString(R.string.rupees_value_format_without_space),
+                        Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
+                holder.textViewTransactionTime.setText(transactionInfo.time);
+                holder.textViewTransactionType.setText(transactionInfo.transactionText);
 
-            if(TransactionType.CREDIT.getOrdinal() == transactionInfo.transactionType){
-                holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.green_transaction_type));
-            } else{
-                holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.grey_dark));
+                if(TransactionType.CREDIT.getOrdinal() == transactionInfo.transactionType){
+                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.green_transaction_type));
+                } else{
+                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.grey_dark));
+                }
+
+                holder.textViewTransactionMode.setVisibility(View.GONE);
+                holder.tvStatusPay.setVisibility(View.GONE);
+                if(transactionInfo.paytm == 1){
+                    holder.textViewTransactionMode.setVisibility(View.VISIBLE);
+                    holder.textViewTransactionMode.setText(context.getResources().getString(R.string.paytm_colon));
+                } else if(transactionInfo.getMobikwik() == 1){
+                    holder.textViewTransactionMode.setVisibility(View.VISIBLE);
+                    holder.textViewTransactionMode.setText(context.getResources().getString(R.string.mobikwik_colon));
+                } else if(transactionInfo.getFreecharge() == 1){
+                    holder.textViewTransactionMode.setVisibility(View.VISIBLE);
+                    holder.textViewTransactionMode.setText(context.getResources().getString(R.string.freecharge_colon));
+                }
             }
+            else if(transactionInfo.getPay() == 1){
+                holder.textViewTransactionDate.setText(transactionInfo.getName());
+                holder.textViewTransactionAmount.setText(context.getResources().getString(R.string.rupees_value_format_without_space,
+                        Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
+                holder.textViewTransactionTime.setText(transactionInfo.time);
 
-            holder.textViewTransactionMode.setVisibility(View.GONE);
-            holder.tvStatusPay.setVisibility(View.GONE);
-            if(transactionInfo.paytm == 1){
-                holder.textViewTransactionMode.setVisibility(View.VISIBLE);
-                holder.textViewTransactionMode.setText(context.getResources().getString(R.string.paytm_colon));
-            } else if(transactionInfo.getMobikwik() == 1){
-                holder.textViewTransactionMode.setVisibility(View.VISIBLE);
-                holder.textViewTransactionMode.setText(context.getResources().getString(R.string.mobikwik_colon));
-            } else if(transactionInfo.getFreecharge() == 1){
-                holder.textViewTransactionMode.setVisibility(View.VISIBLE);
-                holder.textViewTransactionMode.setText(context.getResources().getString(R.string.freecharge_colon));
-            } else if(transactionInfo.getPay() == 1){
+                int statusInt = transactionInfo.getStatus();
+                if (statusInt == 1) {
+                    if(transactionInfo.transactionType == 4){
+                        holder.textViewTransactionType.setText(R.string.received);
+                    }else {
+                        holder.textViewTransactionType.setText(R.string.completed);
+                    }
+                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.green_rupee));
+                } else if (statusInt == 3) {
+                    holder.textViewTransactionType.setText(R.string.cancelled);
+                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.red_status));
+                } else if (statusInt == 4) {
+                    holder.textViewTransactionType.setText(R.string.declined);
+                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.red_status));
+                } else if (statusInt == 2) {
+                    holder.textViewTransactionType.setText(R.string.failed);
+                    holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.red_status));
+                }
+
+
                 holder.textViewTransactionMode.setVisibility(View.VISIBLE);
                 holder.textViewTransactionMode.setText(context.getResources().getString(R.string.pay_colon));
-            }
-
-            if(!transactionInfo.getPayType().equalsIgnoreCase("")){
                 holder.tvStatusPay.setVisibility(View.VISIBLE);
-                holder.tvStatusPay.setText(transactionInfo.getPayType());
+                if (transactionInfo.transactionType == 1) {
+                    holder.tvStatusPay.setText(R.string.paid_to);
+                } else if (transactionInfo.transactionType == 2) {
+                    holder.tvStatusPay.setText(R.string.requested_from);
+                } else if (transactionInfo.transactionType == 3) {
+                    holder.tvStatusPay.setText(R.string.requested_by);
+                } else if (transactionInfo.transactionType == 4) {
+                    holder.tvStatusPay.setText(R.string.paid_by);
+                }
             }
 
             holder.relative.setTag(position);
@@ -118,7 +151,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
                         Intent intent = new Intent(context, TranscCompletedActivity.class);
                         intent.putExtra(Constants.KEY_FETCH_TRANSACTION_SUMMARY, 1);
                         intent.putExtra(Constants.KEY_ORDER_ID, transactionInfoList.get(pos).transactionId);
-                        intent.putExtra(Constants.KEY_TXN_TYPE, transactionInfoList.get(pos).getPayTxnType());
+                        intent.putExtra(Constants.KEY_TXN_TYPE, transactionInfoList.get(pos).transactionType);
                         context.startActivity(intent);
                         ((Activity)context).finish();
                     }

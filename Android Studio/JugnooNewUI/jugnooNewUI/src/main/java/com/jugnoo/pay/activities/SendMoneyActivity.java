@@ -26,7 +26,6 @@ import com.jugnoo.pay.models.SendMoneyResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.Validator;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.CircleTransform;
@@ -34,21 +33,19 @@ import com.squareup.picasso.Picasso;
 import com.yesbank.PayActivity;
 import com.yesbank.TransactionStatus;
 
-import org.json.JSONObject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 /**
  * Created by cl-macmini-38 on 9/21/16.
@@ -248,62 +245,72 @@ public class SendMoneyActivity extends BaseActivity {
     }
 
     private void callingSendMoneyApi() {
-        CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
-        SendMoneyRequest request = new SendMoneyRequest();
+        try {
+            if (AppStatus.getInstance(this).isOnline(this)) {
+				CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
+				SendMoneyRequest request = new SendMoneyRequest();
 
-        if(Utils.isPhoneValid(contactDetails.getPhone())){
-            request.setPhone_no(Utils.removeExtraCharsPhoneNumber(contactDetails.getPhone()));
-        } else if(Utils.isVPAValid(contactDetails.getPhone())){
-            request.setVpa(contactDetails.getPhone());
+				if (Utils.isPhoneValid(contactDetails.getPhone())) {
+					request.setPhone_no(Utils.removeExtraCharsPhoneNumber(contactDetails.getPhone()));
+				} else if (Utils.isVPAValid(contactDetails.getPhone())) {
+					request.setVpa(contactDetails.getPhone());
+				}
+
+				request.setAccess_token(accessToken);
+				request.setAmount(amountET.getText().toString());
+				request.setMessage(messageET.getText().toString());
+				request.setOrderId(contactDetails.getOrderId());
+
+
+				RestClient.getPayApiService().sendMoney(request, new Callback<SendMoneyResponse>() {
+					@Override
+					public void success(SendMoneyResponse sendMoneyResponse, Response response) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        try {
+                            int flag = sendMoneyResponse.getFlag();
+                            if (flag == ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
+                                contactDetails.setOrderId(String.valueOf(sendMoneyResponse.getTxnDetails().getOrderId()));
+								callBankTransactionApi(sendMoneyResponse.getTxnDetails());
+							} else {
+								CommonMethods.callingBadToken(SendMoneyActivity.this, flag, sendMoneyResponse.getMessage());
+                                retryDialogSendMoneyApi(sendMoneyResponse.getMessage());
+							}
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            retryDialogSendMoneyApi(Data.SERVER_ERROR_MSG);
+                        }
+                    }
+
+					@Override
+					public void failure(RetrofitError error) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        retryDialogSendMoneyApi(Data.SERVER_NOT_RESOPNDING_MSG);
+					}
+				});
+			} else {
+				retryDialogSendMoneyApi(Data.CHECK_INTERNET_MSG);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        request.setAccess_token(accessToken);
-        request.setAmount(amountET.getText().toString());
-        request.setMessage(messageET.getText().toString());
-        request.setOrderId(contactDetails.getOrderId());
-
-
-        RestClient.getPayApiService().sendMoney(request, new Callback<SendMoneyResponse>() {
-            @Override
-            public void success(SendMoneyResponse sendMoneyResponse, Response response) {
-                System.out.println("SendMoneyActivity.success22222222");
-                CallProgressWheel.dismissLoadingDialog();
-                if (sendMoneyResponse != null) {
-//                    Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, tokenGeneratedResponse.getToken());
-//
-                    int flag = sendMoneyResponse.getFlag();
-                    if (flag == ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
-                        callBankTransactionApi(sendMoneyResponse.getTxnDetails());
-                        contactDetails.setOrderId(String.valueOf(sendMoneyResponse.getTxnDetails().getOrderId()));
-                        //callBankTransactionStatusApi(sendMoneyResponse.getTxnDetails());
-                    } else {
-                        CommonMethods.callingBadToken(SendMoneyActivity.this, flag, sendMoneyResponse.getMessage());
+    private void retryDialogSendMoneyApi(String message){
+        DialogPopup.alertPopupTwoButtonsWithListeners(SendMoneyActivity.this, "", message,
+                getString(R.string.retry),
+                getString(R.string.cancel),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callingSendMoneyApi();
+                    }
+                },
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                     }
                 }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                try {
-                    System.out.println("SendMoneyActivity.failure2222222");
-                    CallProgressWheel.dismissLoadingDialog();
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                        showAlertNoInternet(SendMoneyActivity.this);
-                    } else {
-                        String json = new String(((TypedByteArray) error.getResponse()
-                                .getBody()).getBytes());
-
-                        JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(SendMoneyActivity.this, jsonObject.getString("message"), AppConstant.OK);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    CallProgressWheel.dismissLoadingDialog();
-                }
-            }
-        });
-
-
+                , false, false);
     }
 
 
@@ -521,69 +528,79 @@ public class SendMoneyActivity extends BaseActivity {
 
 
     private void callingRequestMoneyApi() {
-        CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
-        final SendMoneyRequest request = new SendMoneyRequest();
+        try {
+            if (AppStatus.getInstance(this).isOnline(this)) {
+				CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
+				final SendMoneyRequest request = new SendMoneyRequest();
 
-        if(Utils.isPhoneValid(contactDetails.getPhone())){
-            request.setPhone_no(Utils.removeExtraCharsPhoneNumber(contactDetails.getPhone()));
-        } else if(Utils.isVPAValid(contactDetails.getPhone())){
-            request.setVpa(contactDetails.getPhone());
+				if (Utils.isPhoneValid(contactDetails.getPhone())) {
+					request.setPhone_no(Utils.removeExtraCharsPhoneNumber(contactDetails.getPhone()));
+				} else if (Utils.isVPAValid(contactDetails.getPhone())) {
+					request.setVpa(contactDetails.getPhone());
+				}
+
+				request.setAccess_token(accessToken);
+				request.setAmount(amountET.getText().toString());
+				request.setMessage(messageET.getText().toString());
+
+
+				RestClient.getPayApiService().requestMoney(request, new Callback<CommonResponse>() {
+					@Override
+					public void success(CommonResponse commonResponse, Response response) {
+						CallProgressWheel.dismissLoadingDialog();
+						try {
+							int flag = commonResponse.getFlag();
+							if (flag == ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
+								Intent intent = new Intent(SendMoneyActivity.this, TranscCompletedActivity.class);
+								intent.putExtra(AppConstant.TRANSACTION_DATA, request);
+								Bundle bun = new Bundle();
+								bun.putParcelable(AppConstant.CONTACT_DATA, contactDetails);
+								intent.putExtras(bun);
+								intent.putExtra(AppConstant.ORDER_ID, commonResponse.getOrder_id());
+								startActivity(intent);
+								finish();
+							} else if (flag == ApiResponseFlags.NO_RECIEVER.getOrdinal()
+									|| flag == ApiResponseFlags.INVALID_RECIEVER.getOrdinal()
+									|| flag == ApiResponseFlags.INVALID_PHONE_NUMBER.getOrdinal()) {
+								retryDialogRequestMoneyApi(commonResponse.getMessage());
+							} else{
+								retryDialogRequestMoneyApi(commonResponse.getMessage());
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							retryDialogRequestMoneyApi(Data.SERVER_ERROR_MSG);
+						}
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						CallProgressWheel.dismissLoadingDialog();
+						retryDialogRequestMoneyApi(Data.SERVER_NOT_RESOPNDING_MSG);
+					}
+				});
+			} else {
+				retryDialogRequestMoneyApi(Data.CHECK_INTERNET_MSG);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        request.setAccess_token(accessToken);
-        request.setAmount(amountET.getText().toString());
-        request.setMessage(messageET.getText().toString());
-
-
-        RestClient.getPayApiService().requestMoney(request, new Callback<CommonResponse>() {
-            @Override
-            public void success(CommonResponse commonResponse, Response response) {
-                CallProgressWheel.dismissLoadingDialog();
-                if (commonResponse != null) {
-//                    Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, tokenGeneratedResponse.getToken());
-//
-                    int flag = commonResponse.getFlag();
-                    if (flag == ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
-                        Intent intent = new Intent(SendMoneyActivity.this, TranscCompletedActivity.class);
-                        intent.putExtra(AppConstant.TRANSACTION_DATA, request);
-                        Bundle bun = new Bundle();
-                        bun.putParcelable(AppConstant.CONTACT_DATA, contactDetails);
-                        intent.putExtras(bun);
-                        intent.putExtra(AppConstant.ORDER_ID, commonResponse.getOrder_id());
-                        startActivity(intent);
-                        finish();
-//                        SingleButtonAlert.showAlert(SendMoneyActivity.this, "Request Submitted successfully.", AppConstant.OK);
-
-                    } else if (flag == ApiResponseFlags.NO_RECIEVER.getOrdinal()
-                            || flag == ApiResponseFlags.INVALID_RECIEVER.getOrdinal()
-                            || flag == ApiResponseFlags.INVALID_PHONE_NUMBER.getOrdinal()) {
-                                SingleButtonAlert.showAlert(SendMoneyActivity.this, commonResponse.getMessage(), AppConstant.OK);
-                    } else if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
-                        // startActivity(new Intent(SendMoneyActivity.this, SignInActivity.class));
-                        startActivity(new Intent(SendMoneyActivity.this, SplashNewActivity.class));
-                        finish();
+    private void retryDialogRequestMoneyApi(String message){
+        DialogPopup.alertPopupTwoButtonsWithListeners(SendMoneyActivity.this, "", message,
+                getString(R.string.retry),
+                getString(R.string.cancel),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        callingRequestMoneyApi();
+                    }
+                },
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                     }
                 }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                try {
-                    System.out.println("SendMoneyActivity.failure2222222");
-                    CallProgressWheel.dismissLoadingDialog();
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                        showAlertNoInternet(SendMoneyActivity.this);
-                    } else {
-                        String json = new String(((TypedByteArray) error.getResponse()
-                                .getBody()).getBytes());
-                        JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(SendMoneyActivity.this, jsonObject.getString("message"), AppConstant.OK);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    CallProgressWheel.dismissLoadingDialog();
-                }
-            }
-        });
+                , false, false);
     }
 }

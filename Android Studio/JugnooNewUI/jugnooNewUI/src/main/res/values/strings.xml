@@ -1369,6 +1369,12 @@
     <string name="pay_colon">Pay:</string>
     <string name="vpa_not_valid">VPA not valid</string>
     <string name="fields_invalid">Entererd fields are invalid</string>
+    <string name="received">Received</string>
+    <string name="completed">Completed</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="declined">Declined</string>
+    <string name="paid_to">Paid to</string>
+    <string name="paid_by">Paid by</string>
 
 
 </resources>
