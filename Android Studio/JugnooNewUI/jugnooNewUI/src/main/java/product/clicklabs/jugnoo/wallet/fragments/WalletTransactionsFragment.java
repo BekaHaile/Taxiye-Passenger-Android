@@ -235,20 +235,29 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 								if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									updateListData(error, true);
-								} else if (ApiResponseFlags.TRANSACTION_HISTORY.getOrdinal() == flag) {
+								} else if (ApiResponseFlags.TRANSACTION_HISTORY.getOrdinal() == flag
+										|| ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 
-									jugnooBalance = jObj.getDouble("balance");
-									totalTransactions = jObj.getInt("num_txns");
-									pageSize = jObj.getInt("page_size");
+									JSONArray jTransactions = new JSONArray();
+									if(pay == 0) {
+										jugnooBalance = jObj.getDouble("balance");
+										totalTransactions = jObj.getInt("num_txns");
+										pageSize = jObj.getInt("page_size");
+										jTransactions = jObj.getJSONArray("transactions");
+									} else {
+										jTransactions = jObj.getJSONArray("transaction_history");
+										jugnooBalance = jObj.optDouble("balance", -1);
+										totalTransactions = jObj.optInt("num_txns", jTransactions.length());
+										pageSize = jObj.optInt("page_size", jTransactions.length());
+									}
 
-									JSONArray jTransactions = jObj.getJSONArray("transactions");
 									for (int i = 0; i < jTransactions.length(); i++) {
 										JSONObject jTransactionI = jTransactions.getJSONObject(i);
 
 										int paytm = jTransactionI.optInt(Constants.KEY_PAYTM, 0);
 										int mobikwik = jTransactionI.optInt(Constants.KEY_MOBIKWIK, 0);
 										int freecharge = jTransactionI.optInt(Constants.KEY_FREECHARGE, 0);
-										int pay = jTransactionI.optInt(Constants.KEY_JUGNOO_PAY, 0);
+										int pay = jTransactionI.optInt(Constants.KEY_JUGNOO_PAY, WalletTransactionsFragment.this.pay);
 
 										if(pay == 1){
 											transactionInfoList.add(new TransactionInfo(jTransactionI.optInt("id", 0),
@@ -268,7 +277,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 										}
 									}
 
-									if (Data.userData != null) {
+									if (Data.userData != null && jugnooBalance > -1) {
 										Data.userData.setJugnooBalance(jugnooBalance);
 									}
 									paymentActivity.updateWalletFragment();
