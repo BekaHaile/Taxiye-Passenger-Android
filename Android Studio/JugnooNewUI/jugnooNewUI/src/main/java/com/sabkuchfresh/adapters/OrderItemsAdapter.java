@@ -97,11 +97,12 @@ public class OrderItemsAdapter extends BaseAdapter {
 
 		mHolder.imageViewItemImage.setVisibility(View.GONE);
 
-		if(subItem.getItemCancelled()==0)
-		{
+		if(subItem.getItemCancelled()==0) {
 			mHolder.textViewItemCancelled.setVisibility(View.GONE);
 		}
-		else mHolder.textViewItemCancelled.setVisibility(View.VISIBLE);
+		else {
+			mHolder.textViewItemCancelled.setVisibility(View.VISIBLE);
+		}
 	}
 
 	static class MainViewHolder extends RecyclerView.ViewHolder {

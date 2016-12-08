@@ -227,7 +227,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             if(appType == AppConstant.ApplicationType.MENUS
                     && context instanceof FreshActivity
                     && ((FreshActivity)context).getVendorOpened() != null
-                    && 1 == ((FreshActivity)context).getVendorOpened().getIsClosed()){
+                    && (1 == ((FreshActivity)context).getVendorOpened().getIsClosed() || 0 == ((FreshActivity)context).getVendorOpened().getIsAvailable())){
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
                 mHolder.mAddButton.setVisibility(View.GONE);
                 mHolder.textViewOutOfStock.setVisibility(View.GONE);

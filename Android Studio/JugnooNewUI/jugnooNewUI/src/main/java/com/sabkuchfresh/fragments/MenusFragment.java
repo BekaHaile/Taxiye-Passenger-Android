@@ -118,7 +118,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         recyclerViewRestaurant.setLayoutManager(new LinearLayoutManager(activity));
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
-        textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus); textViewNoMenus.setTypeface(Fonts.mavenMedium(activity));
+        /*textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus); textViewNoMenus.setTypeface(Fonts.mavenMedium(activity));*/
 
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
@@ -137,7 +137,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
             @Override
             public void onNotify(int count) {
-                textViewNoMenus.setVisibility(count > 0 || vendors.size() == 0 ? View.GONE : View.VISIBLE);
+      /*          textViewNoMenus.setVisibility(count > 0 || vendors.size() == 0 ? View.GONE : View.VISIBLE);*/
             }
         });
 

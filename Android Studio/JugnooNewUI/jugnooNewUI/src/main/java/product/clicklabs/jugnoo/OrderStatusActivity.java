@@ -744,7 +744,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             if((historyResponse.getData().get(0).getJugnooDeducted()>0))
             {
                 rlAmountPayable.setVisibility(View.VISIBLE);
-                tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderPaybleAmount())));
+                tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderAmount())));
             } else{
                 rlAmountPayable.setVisibility(View.GONE);
                 llFinalAmount.setVisibility(View.GONE);
@@ -764,7 +764,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 Log.v("refund value","refund value "+historyResponse.getData().get(0).getOrderRefundAmount());
 
                 llRefund.setVisibility(View.VISIBLE);
-                tvBilledAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderBillableAmount())));
+                tvBilledAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderBillableAmount())));
                 tvRefundVal.setText(String.format(getResources().getString(R.string.rupees_value_format), String.valueOf(historyResponse.getData().get(0).getOrderRefundAmount().intValue())));
             }
             else

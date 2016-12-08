@@ -1071,7 +1071,7 @@ public class HistoryResponse {
         private Double unitAmount;
         @SerializedName("item_cancelled")
         @Expose
-        private Double itemCancelled;
+        private Integer itemCancelled;
         /**
          * @return The subItemId
          */
@@ -1157,14 +1157,17 @@ public class HistoryResponse {
         }
 
 
-        public Double getItemCancelled() {
+        public Integer getItemCancelled() {
+            if(itemCancelled == null){
+                return 0;
+            }
             return itemCancelled;
         }
 
         /**
          * @param itemCancelled The item_amount
          */
-        public void setItemCancelled(Double itemCancelled) {
+        public void setItemCancelled(Integer itemCancelled) {
             this.itemCancelled = itemCancelled;
         }
 

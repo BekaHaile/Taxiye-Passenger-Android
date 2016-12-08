@@ -147,6 +147,11 @@ public class MenusResponse {
 		@SerializedName("is_closed")
 		@Expose
 		private Integer isClosed;
+
+		@SerializedName("is_available")
+		@Expose
+		private Integer isAvailable;
+
 		@SerializedName("distance")
 		@Expose
 		private Integer distance;
@@ -271,6 +276,20 @@ public class MenusResponse {
 		 */
 		public void setIsClosed(Integer isClosed) {
 			this.isClosed = isClosed;
+		}
+
+
+		public Integer getIsAvailable() {
+			return isAvailable;
+		}
+
+		/**
+		 *
+		 * @param isAvailable
+		 * The is_closed
+		 */
+		public void setIsAvailable(Integer isAvailable) {
+			this.isAvailable = isAvailable;
 		}
 
 		/**
