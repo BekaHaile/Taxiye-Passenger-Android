@@ -12,15 +12,18 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
+import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
+import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.adapters.GridViewAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
@@ -28,13 +31,15 @@ import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 
 public class HomeSwitcherActivity extends Activity {
 
-    RelativeLayout relative;
+    RelativeLayout relative,relativeLayoutHomeData;
 
     TextView textViewTitle, textViewHi;
-    CardView relativeLayoutRides, relativeLayoutMeals, relativeLayoutFresh, relativeLayoutGrocery;
-    TextView textViewRides, textViewMeals, textViewFresh, textViewGrocery;
+    CardView relativeLayoutRides, relativeLayoutMeals, relativeLayoutFresh, relativeLayoutGrocery, relativeLayoutDelivery, relativeLayoutPay;
+    TextView textViewRides, textViewMeals, textViewFresh, textViewGrocery, textViewDelivery, textViewPay;
     FloatingActionMenu fabMenuIns;
     Animation bounceAnim, bounceScaleAnim;
+    GridView gridView;
+    ArrayList<String> gridViewData;
 
     @Override
     protected void onResume() {
@@ -56,28 +61,43 @@ public class HomeSwitcherActivity extends Activity {
         textViewTitle.setText(getString(R.string.app_name));
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
-        textViewHi = (TextView) findViewById(R.id.textViewHi); textViewHi.setTypeface(Fonts.mavenMedium(this));
+        textViewHi = (TextView) findViewById(R.id.textViewHi);
+        textViewHi.setTypeface(Fonts.mavenMedium(this));
         try {
             textViewHi.setText(getString(R.string.hi_username_format, Data.userData.userName));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        ((TextView)findViewById(R.id.textViewWeHave)).setTypeface(Fonts.mavenMedium(this));
-        ((TextView)findViewById(R.id.textViewWeHave2)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView) findViewById(R.id.textViewWeHave)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView) findViewById(R.id.textViewWeHave2)).setTypeface(Fonts.mavenMedium(this));
 
-        relativeLayoutRides = (CardView) findViewById(R.id.relativeLayoutRides);
+        relativeLayoutHomeData = (RelativeLayout) findViewById(R.id.relativeLayoutHomeData);
+        /*relativeLayoutRides = (CardView) findViewById(R.id.relativeLayoutRides);
         relativeLayoutMeals = (CardView) findViewById(R.id.relativeLayoutMeals);
         relativeLayoutFresh = (CardView) findViewById(R.id.relativeLayoutFresh);
         relativeLayoutGrocery = (CardView) findViewById(R.id.relativeLayoutGrocery);
-        textViewRides = (TextView) findViewById(R.id.textViewRides); textViewRides.setTypeface(Fonts.mavenMedium(this));
-        textViewMeals = (TextView) findViewById(R.id.textViewMeals); textViewMeals.setTypeface(Fonts.mavenMedium(this));
-        textViewFresh = (TextView) findViewById(R.id.textViewFresh); textViewFresh.setTypeface(Fonts.mavenMedium(this));
-        textViewGrocery = (TextView) findViewById(R.id.textViewGrocery); textViewGrocery.setTypeface(Fonts.mavenMedium(this));
+        relativeLayoutDelivery = (CardView) findViewById(R.id.relativeLayoutDelivery);
+        relativeLayoutPay = (CardView) findViewById(R.id.relativeLayoutPay);*/
+        gridView = (GridView) findViewById(R.id.gridview);
+        gridViewData = new ArrayList<>();
+
+
+/*        textViewRides = (TextView) findViewById(R.id.textViewRides);
+
+        textViewRides.setTypeface(Fonts.mavenMedium(this));
+        textViewMeals = (TextView) findViewById(R.id.textViewMeals);
+        textViewMeals.setTypeface(Fonts.mavenMedium(this));
+        textViewFresh = (TextView) findViewById(R.id.textViewFresh);
+        textViewFresh.setTypeface(Fonts.mavenMedium(this));
+        textViewGrocery = (TextView) findViewById(R.id.textViewGrocery);
+        textViewGrocery.setTypeface(Fonts.mavenMedium(this));
+        textViewDelivery = (TextView) findViewById(R.id.textViewDelivery); *//*textViewDelivery.setTypeface(Fonts.mavenMedium(this));*//*
+        textViewPay = (TextView) findViewById(R.id.textViewPay); textViewPay.setTypeface(Fonts.mavenMedium(this));*/
 
         fabMenuIns = (FloatingActionMenu) findViewById(R.id.fabMenuIns);
         float scale = getResources().getDisplayMetrics().density;
-        int dpAsPixels = (int) (90f*scale + 0.5f);
+        int dpAsPixels = (int) (90f * scale + 0.5f);
         fabMenuIns.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
         fabMenuIns.setMenuButtonColorNormal(getResources().getColor(R.color.white));
         fabMenuIns.setMenuButtonColorPressed(getResources().getColor(R.color.grey_light));
@@ -87,6 +107,91 @@ public class HomeSwitcherActivity extends Activity {
         bounceAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
         bounceScaleAnim = AnimationUtils.loadAnimation(this, R.anim.bounce_scale);
         //button.startAnimation(myAnim);
+
+
+        try {
+            gridViewData.add(Config.getAutosClientId());
+            if ((Data.userData.getFreshEnabled() == 1)) {
+                gridViewData.add(Config.getFreshClientId());
+            }
+            if ((Data.userData.getMealsEnabled() == 1)) {
+                gridViewData.add(Config.getMealsClientId());
+            }
+            if ((Data.userData.getGroceryEnabled() == 1)) {
+                gridViewData.add(Config.getGroceryClientId());
+            }
+            if ((Data.userData.getDeliveryEnabled() == 1)) {
+                gridViewData.add(Config.getDeliveryClientId());
+            }
+            /*
+            if ((Data.userData.getPayNowEnabled == 1))
+            {
+                gridViewData.add(Data.userData.getPAyNowEnabled,Config.getPayNowClientId());
+            }
+            */
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Log.v("length of data","length of data"+gridViewData.size());
+        GridViewAdapter gridViewAdapter = new GridViewAdapter(this, gridViewData);
+        gridView.setAdapter(gridViewAdapter);
+
+
+       /* try {
+               if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
+                    && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0) && (Data.userData.getDeliveryEnabled() == 0)
+                      *//* && ((Data.userData.getPayNowEnabled() == 0))*//* )
+               {
+                relativeLayoutHomeData.setVisibility(View.GONE);
+                }
+                else
+                {
+                    relativeLayoutHomeData.setVisibility(View.VISIBLE);
+                    if (Data.userData.getFreshEnabled() != 1)
+                    {
+                        relativeLayoutFresh.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        relativeLayoutFresh.setVisibility(View.VISIBLE);
+                    }
+                    if (Data.userData.getMealsEnabled() != 1)
+                    {
+                        relativeLayoutMeals.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        relativeLayoutMeals.setVisibility(View.VISIBLE);
+                    }
+                    if(Data.userData.getGroceryEnabled() != 1)
+                    {
+                        relativeLayoutGrocery.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        relativeLayoutGrocery.setVisibility(View.VISIBLE);
+                    }
+                    if (Data.userData.getDeliveryEnabled() != 1)
+                    {
+                        relativeLayoutDelivery.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        relativeLayoutDelivery.setVisibility(View.VISIBLE);
+                    }
+                }
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+
 
         relativeLayoutRides.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +233,26 @@ public class HomeSwitcherActivity extends Activity {
             }
         });
 
+        relativeLayoutDelivery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!animStarted) {
+//                    relativeLayoutGrocery.startAnimation(bounceAnim);
+                    startInnerAnim(Config.getDeliveryClientId());
+                }
+            }
+        });
+
+
+        *//*relativeLayoutPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!animStarted) {
+//                    relativeLayoutGrocery.startAnimation(bounceAnim);
+                    startInnerAnim(Config.getPayClientId());
+                }
+            }
+        });*//*
 
     }
 
@@ -143,16 +268,18 @@ public class HomeSwitcherActivity extends Activity {
         relativeLayoutMeals.clearAnimation();
         relativeLayoutFresh.clearAnimation();
         relativeLayoutGrocery.clearAnimation();
+        relativeLayoutDelivery.clearAnimation();
+        relativeLayoutPay.clearAnimation();
 
-        /*relativeLayoutRides.startAnimation(bounceAnim);
+        *//*relativeLayoutRides.startAnimation(bounceAnim);
         relativeLayoutFresh.startAnimation(bounceAnim);
         relativeLayoutMeals.startAnimation(bounceAnim);
-        relativeLayoutGrocery.startAnimation(bounceAnim);*/
+        relativeLayoutGrocery.startAnimation(bounceAnim);*//*
 
-        /*relativeLayoutRides.startAnimation(bounceScaleAnim);
+        *//*relativeLayoutRides.startAnimation(bounceScaleAnim);
         relativeLayoutFresh.startAnimation(bounceScaleAnim);
         relativeLayoutMeals.startAnimation(bounceScaleAnim);
-        relativeLayoutGrocery.startAnimation(bounceScaleAnim);*/
+        relativeLayoutGrocery.startAnimation(bounceScaleAnim);*//*
         if(clientId.equalsIgnoreCase(Config.getAutosClientId())){
             relativeLayoutRides.startAnimation(bounceAnim);
         } else if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
@@ -191,7 +318,7 @@ public class HomeSwitcherActivity extends Activity {
         tg.setInterpolator(new AccelerateDecelerateInterpolator());
         addScaleAlphaAnimListener(asg, tg, relativeLayoutGrocery);
 
-        /*new Handler().postDelayed(new Runnable() {
+        *//*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 relativeLayoutRides.startAnimation(asr);
@@ -199,7 +326,7 @@ public class HomeSwitcherActivity extends Activity {
                 relativeLayoutFresh.startAnimation(asf);
                 relativeLayoutGrocery.startAnimation(asg);
             }
-        }, bounceDuration);*/
+        }, bounceDuration);*//*
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -297,8 +424,8 @@ public class HomeSwitcherActivity extends Activity {
 
             }
         });
+    */
     }
-
     public void performBackPressed() {
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);

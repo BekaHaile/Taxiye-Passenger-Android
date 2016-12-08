@@ -52,173 +52,264 @@
 
         <View
             android:layout_width="@dimen/px_100"
+            android:id="@+id/view"
             android:layout_height="@dimen/px_2"
             android:layout_below="@+id/textViewWeHave"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/px_10"
             android:background="@color/stroke_color_light"
-
             />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:splitMotionEvents="false"
+            android:layout_below="@id/view"
+            android:layout_above="@+id/textViewWeHave2"
+            android:id="@+id/relativeLayoutHomeData">
+            <GridView
+                android:id="@+id/gridview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnWidth="50dp"
+                android:numColumns="2"
+                android:horizontalSpacing="10px"
+                android:stretchMode="columnWidth"
+                android:gravity="center" />
+            <!--  <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                  android:id="@+id/relativeLayoutRides"
+                  android:layout_width="@dimen/px_220"
+                  android:layout_height="@dimen/px_220"
+                  android:layout_marginLeft="@dimen/px_100"
+                  android:layout_marginTop="@dimen/px_200"
+                  android:tag="mwar"
+                  card_view:cardBackgroundColor="@color/white"
+                  card_view:cardCornerRadius="@dimen/px_60"
+                  card_view:cardElevation="@dimen/px_15"
+                  >
 
-            >
+                  <RelativeLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@color/transparent">
 
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/relativeLayoutRides"
-                android:layout_width="@dimen/px_220"
-                android:layout_height="@dimen/px_220"
-                android:layout_marginLeft="@dimen/px_100"
-                android:layout_marginTop="@dimen/px_200"
-                android:tag="mwar"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/px_60"
-                card_view:cardElevation="@dimen/px_15">
+                      <ImageView
+                          android:id="@+id/ivAuto"
+                          android:layout_width="85px"
+                          android:layout_height="75px"
+                          android:layout_centerHorizontal="true"
+                          android:layout_marginTop="@dimen/px_30"
+                          android:src="@drawable/home_switcher_auto" />
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/transparent">
+                      <TextView
+                          android:id="@+id/textViewRides"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerHorizontal="true"
+                          android:layout_marginTop="@dimen/px_20"
+                          android:layout_below="@+id/ivAuto"
+                          android:text="@string/rides"
+                          android:textColor="@color/text_color_selector"
+                          android:textSize="@dimen/text_size_34" />
+                  </RelativeLayout>
 
-                    <ImageView
-                        android:id="@+id/ivAuto"
-                        android:layout_width="85px"
-                        android:layout_height="75px"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/px_30"
-                        android:src="@drawable/home_switcher_auto" />
-
-                    <TextView
-                        android:id="@+id/textViewRides"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/px_20"
-                        android:layout_below="@+id/ivAuto"
-                        android:text="@string/rides"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_34" />
-                </RelativeLayout>
-
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/relativeLayoutMeals"
-                android:layout_width="@dimen/px_220"
-                android:layout_height="@dimen/px_220"
-                android:layout_marginLeft="@dimen/px_400"
-                android:layout_marginTop="@dimen/px_200"
-                android:tag="mwar"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/px_60"
-                card_view:cardElevation="@dimen/px_15">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/transparent">
-
-                    <ImageView
-                        android:id="@+id/ivMeals"
-                        android:layout_width="85px"
-                        android:layout_height="75px"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/px_30"
-                        android:src="@drawable/ic_fab_meals" />
-
-                    <TextView
-                        android:id="@+id/textViewMeals"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/px_20"
-                        android:layout_below="@+id/ivMeals"
-                        android:text="@string/meals"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_34" />
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
+              </android.support.v7.widget.CardView>
 
 
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/relativeLayoutFresh"
-                android:layout_width="@dimen/px_220"
-                android:layout_height="@dimen/px_220"
-                android:layout_marginLeft="@dimen/px_100"
-                android:layout_marginTop="@dimen/px_480"
-                android:tag="mwar"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/px_60"
-                card_view:cardElevation="@dimen/px_15">
+              <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                  android:id="@+id/relativeLayoutMeals"
+                  android:layout_width="@dimen/px_220"
+                  android:layout_height="@dimen/px_220"
+                  android:layout_marginLeft="@dimen/px_400"
+                  android:layout_marginTop="@dimen/px_200"
+                  android:tag="mwar"
+                  card_view:cardBackgroundColor="@color/white"
+                  card_view:cardCornerRadius="@dimen/px_60"
+                  card_view:cardElevation="@dimen/px_15"
+                  android:visibility="gone">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/transparent">
+                  <RelativeLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@color/transparent">
 
-                    <ImageView
-                        android:id="@+id/ivFresh"
-                        android:layout_width="85px"
-                        android:layout_height="75px"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="@dimen/px_30"
-                        android:src="@drawable/ic_fab_fresh" />
+                      <ImageView
+                          android:id="@+id/ivMeals"
+                          android:layout_width="85px"
+                          android:layout_height="75px"
+                          android:layout_centerHorizontal="true"
+                          android:layout_marginTop="@dimen/px_30"
+                          android:src="@drawable/ic_fab_meals" />
 
-                    <TextView
-                        android:id="@+id/textViewFresh"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_below="@+id/ivFresh"
-                        android:layout_marginTop="@dimen/px_20"
-                        android:text="@string/fresh"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_34" />
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
+                      <TextView
+                          android:id="@+id/textViewMeals"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerHorizontal="true"
+                          android:layout_marginTop="@dimen/px_20"
+                          android:layout_below="@+id/ivMeals"
+                          android:text="@string/meals"
+                          android:textColor="@color/text_color_selector"
+                          android:textSize="@dimen/text_size_34" />
+                  </RelativeLayout>
+              </android.support.v7.widget.CardView>
 
 
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/relativeLayoutGrocery"
-                android:layout_width="@dimen/px_220"
-                android:layout_height="@dimen/px_220"
-                android:layout_marginLeft="@dimen/px_400"
-                android:layout_marginTop="@dimen/px_480"
-                android:tag="mwar"
-                card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="@dimen/px_60"
-                card_view:cardElevation="@dimen/px_15">
+              <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                  android:id="@+id/relativeLayoutFresh"
+                  android:layout_width="@dimen/px_220"
+                  android:layout_height="@dimen/px_220"
+                  android:layout_marginLeft="@dimen/px_100"
+                  android:layout_marginTop="@dimen/px_480"
+                  android:tag="mwar"
+                  card_view:cardBackgroundColor="@color/white"
+                  card_view:cardCornerRadius="@dimen/px_60"
+                  card_view:cardElevation="@dimen/px_15"
+                  android:visibility="gone">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/transparent">
+                  <RelativeLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@color/transparent">
 
-                    <ImageView
-                        android:id="@+id/ivGrocery"
-                        android:layout_width="85px"
-                        android:layout_height="75px"
-                        android:layout_marginTop="@dimen/px_30"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/home_switcher_meals" />
+                      <ImageView
+                          android:id="@+id/ivFresh"
+                          android:layout_width="85px"
+                          android:layout_height="75px"
+                          android:layout_centerHorizontal="true"
+                          android:layout_marginTop="@dimen/px_30"
+                          android:src="@drawable/ic_fab_fresh" />
 
-                    <TextView
-                        android:id="@+id/textViewGrocery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:text="@string/grocery"
-                        android:layout_below="@+id/ivGrocery"
-                        android:layout_marginTop="@dimen/px_20"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_34" />
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
+                      <TextView
+                          android:id="@+id/textViewFresh"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerHorizontal="true"
+                          android:layout_below="@+id/ivFresh"
+                          android:layout_marginTop="@dimen/px_20"
+                          android:text="@string/fresh"
+                          android:textColor="@color/text_color_selector"
+                          android:textSize="@dimen/text_size_34" />
+                  </RelativeLayout>
+              </android.support.v7.widget.CardView>
 
+
+              <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                  android:id="@+id/relativeLayoutGrocery"
+                  android:layout_width="@dimen/px_220"
+                  android:layout_height="@dimen/px_220"
+                  android:layout_marginLeft="@dimen/px_400"
+                  android:layout_marginTop="@dimen/px_480"
+                  android:tag="mwar"
+                  card_view:cardBackgroundColor="@color/white"
+                  card_view:cardCornerRadius="@dimen/px_60"
+                  card_view:cardElevation="@dimen/px_15"
+                  android:visibility="gone">
+
+                  <RelativeLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@color/transparent">
+
+                      <ImageView
+                          android:id="@+id/ivGrocery"
+                          android:layout_width="85px"
+                          android:layout_height="75px"
+                          android:layout_marginTop="@dimen/px_30"
+                          android:layout_centerHorizontal="true"
+                          android:src="@drawable/home_switcher_meals" />
+
+                      <TextView
+                          android:id="@+id/textViewGrocery"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerHorizontal="true"
+                          android:text="@string/grocery"
+                          android:layout_below="@+id/ivGrocery"
+                          android:layout_marginTop="@dimen/px_20"
+                          android:textColor="@color/text_color_selector"
+                          android:textSize="@dimen/text_size_34" />
+                  </RelativeLayout>
+              </android.support.v7.widget.CardView>
+
+
+              <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                  android:id="@+id/relativeLayoutDelivery"
+                  android:layout_width="@dimen/px_220"
+                  android:layout_height="@dimen/px_220"
+                  android:layout_marginLeft="@dimen/px_100"
+                  android:layout_marginTop="@dimen/px_480"
+                  android:tag="mwar"
+                  card_view:cardBackgroundColor="@color/white"
+                  card_view:cardCornerRadius="@dimen/px_60"
+                  card_view:cardElevation="@dimen/px_15"
+                  android:visibility="gone">
+
+                  <RelativeLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@color/transparent">
+
+                      <ImageView
+                          android:id="@+id/ivDelivery"
+                          android:layout_width="85px"
+                          android:layout_height="75px"
+                          android:layout_centerHorizontal="true"
+                          android:layout_marginTop="@dimen/px_30"
+                          android:src="@drawable/ic_fab_delivery" />
+
+                      <TextView
+                          android:id="@+id/textDelievery"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerHorizontal="true"
+                          android:layout_below="@+id/ivDelivery"
+                          android:layout_marginTop="@dimen/px_20"
+                          android:text="@string/delivery"
+                          android:textColor="@color/text_color_selector"
+                          android:textSize="@dimen/text_size_34" />
+                  </RelativeLayout>
+              </android.support.v7.widget.CardView>
+
+
+              <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                  android:id="@+id/relativeLayoutPay"
+                  android:layout_width="@dimen/px_220"
+                  android:layout_height="@dimen/px_220"
+                  android:layout_marginLeft="@dimen/px_400"
+                  android:layout_marginTop="@dimen/px_480"
+                  android:tag="mwar"
+                  card_view:cardBackgroundColor="@color/white"
+                  card_view:cardCornerRadius="@dimen/px_60"
+                  card_view:cardElevation="@dimen/px_15"
+                  android:visibility="gone">
+
+                  <RelativeLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@color/transparent">
+
+                      <ImageView
+                          android:id="@+id/ivPay"
+                          android:layout_width="85px"
+                          android:layout_height="75px"
+                          android:layout_marginTop="@dimen/px_30"
+                          android:layout_centerHorizontal="true"
+                          android:src="@drawable/ic_fab_delivery" />
+
+                      <TextView
+                          android:id="@+id/textViewPay"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_centerHorizontal="true"
+                          android:text="@string/pay_now"
+                          android:layout_below="@+id/ivPay"
+                          android:layout_marginTop="@dimen/px_20"
+                          android:textColor="@color/text_color_selector"
+                          android:textSize="@dimen/text_size_34" />
+                  </RelativeLayout>
+              </android.support.v7.widget.CardView>
+  -->
         </RelativeLayout>
 
         <TextView
