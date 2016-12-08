@@ -33,8 +33,6 @@ import com.sabkuchfresh.utils.AppConstant;
 import com.yesbank.AddAccount;
 import com.yesbank.Registration;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -61,7 +59,6 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 public class MainActivity extends BaseActivity {
     @Bind(R.id.toolbar)
@@ -367,7 +364,7 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    private void callVerifyUserApi(VerifyRegisterResponse verifyRegisterResponse) {
+    private void callVerifyUserApi(final VerifyRegisterResponse verifyRegisterResponse) {
         if(AppStatus.getInstance(this).isOnline(this)) {
             CallProgressWheel.showLoadingDialog(this, AppConstant.PLEASE);
             VerifyUserRequest request = new VerifyUserRequest();
@@ -387,38 +384,30 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void success(FetchPayDataResponse fetchPayDataResponse, Response response) {
                     CallProgressWheel.dismissLoadingDialog();
-                    if (fetchPayDataResponse != null) {
+                    try {
                         int flag = fetchPayDataResponse.getFlag();
                         if (flag == 401) {
                             updateTransactions(fetchPayDataResponse);
                         } else if (flag == 403) {
-//                        logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
+//                            logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
 
                         } else {
-                            CommonMethods.callingBadToken(MainActivity.this, flag, fetchPayDataResponse.getMessage());
+                            retryDialogVerifyUser(DialogErrorType.SERVER_ERROR, verifyRegisterResponse);
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        retryDialogVerifyUser(DialogErrorType.SERVER_ERROR, verifyRegisterResponse);
                     }
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
-                    try {
-                        CallProgressWheel.dismissLoadingDialog();
-                        if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                            showAlertNoInternet(MainActivity.this);
-                        } else {
-                            String json = new String(((TypedByteArray) error.getResponse().getBody()).getBytes());
-                            JSONObject jsonObject = new JSONObject(json);
-                            SingleButtonAlert.showAlert(MainActivity.this, jsonObject.getString("message"), AppConstant.OK);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        CallProgressWheel.dismissLoadingDialog();
-                    }
+                    CallProgressWheel.dismissLoadingDialog();
+                    retryDialogVerifyUser(DialogErrorType.CONNECTION_LOST, verifyRegisterResponse);
                 }
             });
         } else {
-            DialogPopup.alertPopup(this, "", getString(R.string.no_net_text));
+            retryDialogVerifyUser(DialogErrorType.NO_NET, verifyRegisterResponse);
         }
 
     }
@@ -470,7 +459,12 @@ public class MainActivity extends BaseActivity {
         vpa = fetchPayDataResponse.getVpa();
         Utils.setTextUnderline(textViewPaymentIdValue, fetchPayDataResponse.getVpa());
         transactionHistories.clear();
-        transactionHistories.addAll(fetchPayDataResponse.getTransaction());
+        for(TransacHistoryResponse.TransactionHistory transactionHistory : fetchPayDataResponse.getTransaction()){
+            if(transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()
+                    || transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()){
+                transactionHistories.add(transactionHistory);
+            }
+        }
         pendingTrnscAdapater.notifyDataSetChanged();
         relativeLayoutNoPayments.setVisibility((transactionHistories.size() > 0) ? View.GONE : View.VISIBLE);
     }
@@ -482,6 +476,27 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void positiveClick(View view) {
                         apiFetchPayData();
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                });
+    }
+
+
+    private void retryDialogVerifyUser(DialogErrorType dialogErrorType, final VerifyRegisterResponse verifyRegisterResponse){
+        DialogPopup.dialogNoInternet(this,
+                dialogErrorType,
+                new Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        callVerifyUserApi(verifyRegisterResponse);
                     }
 
                     @Override

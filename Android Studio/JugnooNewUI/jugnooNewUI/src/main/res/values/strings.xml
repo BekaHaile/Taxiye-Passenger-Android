@@ -1367,6 +1367,8 @@
 	<string name="successful">Successful</string>
 	<string name="generate_vpa">Generate VPA</string>
     <string name="pay_colon">Pay:</string>
+    <string name="vpa_not_valid">VPA not valid</string>
+    <string name="fields_invalid">Entererd fields are invalid</string>
 
 
 </resources>

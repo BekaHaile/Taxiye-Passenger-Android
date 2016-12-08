@@ -26,7 +26,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -92,8 +91,12 @@ public class AddPaymentAddressActivity extends BaseActivity {
         bAddPaymentAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(etName.getText().length() > 0 && etPaymentAddress.getText().length() > 0){
+                String name = etPaymentAddress.getText().toString().trim();
+                String vpa = etPaymentAddress.getText().toString().trim();
+                if(name.length() > 0 && vpa.length() > 0 && Utils.isVPAValid(vpa)){
                     apiAddPaymentAddress();
+                } else {
+                    Utils.showToast(AddPaymentAddressActivity.this, getString(R.string.fields_invalid));
                 }
             }
         });

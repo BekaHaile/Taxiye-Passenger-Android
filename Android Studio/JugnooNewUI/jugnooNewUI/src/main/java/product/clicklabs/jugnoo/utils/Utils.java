@@ -839,6 +839,14 @@ public class Utils {
 		}
 	}
 
+	public static boolean isVPAValid(String vpa){
+		try {
+			return vpa.indexOf('@') > 0 && vpa.indexOf('@') < vpa.length()-1;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 }
 
 

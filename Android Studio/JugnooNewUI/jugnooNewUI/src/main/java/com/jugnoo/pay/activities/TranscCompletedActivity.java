@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jugnoo.pay.models.CommonResponse;
@@ -19,17 +20,11 @@ import com.jugnoo.pay.models.SendMoneyRequest;
 import com.jugnoo.pay.models.TransacHistoryResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.CallProgressWheel;
-import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -43,12 +38,12 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 /**
  * Created by cl-macmini-38 on 9/22/16.
@@ -108,7 +103,7 @@ public class TranscCompletedActivity extends BaseActivity {
     }
 
 
-private SelectUser contactDetails;
+    private SelectUser contactDetails;
     private SendMoneyRequest requestObj;
     private String orderId;
     String transactionStatus = "";
@@ -118,6 +113,7 @@ private SelectUser contactDetails;
     private ImageView ivTransCompleted, imageViewBank, imageViewCall;
     private CardView cardViewDebitFrom, cardViewMessage;
     private RelativeLayout rvBankRefId, rvNpciTransId;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,6 +132,7 @@ private SelectUser contactDetails;
                 transactionStatus = getIntent().getStringExtra(AppConstant.TRANSACTION_STATUS);
             }
 
+            scrollView = (ScrollView) findViewById(R.id.scrollView);
             tvTransStatusVal = (TextView) findViewById(R.id.tvTransStatusVal); tvTransStatusVal.setTypeface(Fonts.mavenMedium(this));
             tvTransStatusValMessage = (TextView) findViewById(R.id.tvTransStatusValMessage); tvTransStatusValMessage.setTypeface(Fonts.mavenRegular(this));
             tvTransStatusValMessage.setVisibility(View.GONE);
@@ -164,9 +161,17 @@ private SelectUser contactDetails;
             rvNpciTransId = (RelativeLayout) findViewById(R.id.rvNpciTransId);
             rvBankRefId = (RelativeLayout) findViewById(R.id.rvBankRefId);
 
+            imageViewCall.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Utils.openCallIntent(TranscCompletedActivity.this, mobileTxt.getText().toString());
+                }
+            });
+
             SendMoneyCallback callback = (SendMoneyCallback) getIntent().getExtras().getSerializable(AppConstant.SEND_TRANSACTION_DATA);
             setData();
 
+            scrollView.setVisibility(View.GONE);
             if(callback!=null) {
                 // for send
                 callingSendMoneyCallbackApi(callback.getMessage(), "", callback.getAccess_token());
@@ -182,6 +187,7 @@ private SelectUser contactDetails;
             }
             else{
                 // for Request
+                scrollView.setVisibility(View.VISIBLE);
                 toolbarTitleTxt.setText("Jugnoo Pay");
                 textViewPaid.setText(getResources().getString(R.string.requested_to));
                 rvBankRefId.setVisibility(View.GONE);
@@ -196,126 +202,114 @@ private SelectUser contactDetails;
         catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
-    private void setData()
-    {
-        Calendar c = Calendar.getInstance();
-        System.out.println("Current time => " + c.getTime());
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-        String formattedDate = df.format(c.getTime());
-
-        tvTransTimeVal.setText(formattedDate);
-        textViewDebitValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), requestObj.getAmount()));
-        toolbarTitleTxt.setText(getResources().getString(R.string.transaction_id_number_format, orderId));
-        if((requestObj != null) && !requestObj.getMessage().equalsIgnoreCase("")) {
-            msgTxt.setVisibility(View.VISIBLE);
-            textViewMessage.setVisibility(View.VISIBLE);
-            msgTxt.setText(requestObj.getMessage());
-        } else{
-            cardViewMessage.setVisibility(View.GONE);
-        }
-        mobileTxt.setText(contactDetails.getPhone());
-        contactNameTxt.setText(contactDetails.getName());
-        imageViewCall.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Utils.openCallIntent(TranscCompletedActivity.this, contactDetails.getPhone());
-            }
-        });
+    private void setData() {
         try {
-            if (contactDetails.getThumb() != null) {
-                Picasso.with(TranscCompletedActivity.this).load(contactDetails.getThumb()).transform(new CircleTransform()).into(contactImg);
-            } else {
-                contactImg.setImageResource(R.drawable.icon_user);
-            }
+            tvTransTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.getCurrentTime()));
+            textViewDebitValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), requestObj.getAmount()));
+            toolbarTitleTxt.setText(getResources().getString(R.string.transaction_id_number_format, orderId));
+            if((requestObj != null) && !requestObj.getMessage().equalsIgnoreCase("")) {
+				msgTxt.setText(requestObj.getMessage());
+			} else{
+				cardViewMessage.setVisibility(View.GONE);
+			}
+            mobileTxt.setText(contactDetails.getPhone());
+            contactNameTxt.setText(contactDetails.getName());
+            try {
+				if (contactDetails.getThumb() != null) {
+					Picasso.with(TranscCompletedActivity.this).load(contactDetails.getThumb()).transform(new CircleTransform()).into(contactImg);
+				} else {
+					contactImg.setImageResource(R.drawable.icon_user);
+				}
+			} catch (Exception e) {
+				contactImg.setImageResource(R.drawable.icon_user);
+				e.printStackTrace();
+			}
         } catch (Exception e) {
-            contactImg.setImageResource(R.drawable.icon_user);
             e.printStackTrace();
         }
-
     }
 
 
     // used to send the  money
-    private void callingSendMoneyCallbackApi(MessageRequest message, String orderId, String accessToken) {
+    private void callingSendMoneyCallbackApi(final MessageRequest message, final String orderId, final String accessToken) {
+        try {
+            if (AppStatus.getInstance(this).isOnline(this)) {
+                CallProgressWheel.showLoadingDialog(TranscCompletedActivity.this, AppConstant.PLEASE);
+                HashMap<String, String> params = new HashMap<>();
 
-        try
-        {
-            CallProgressWheel.showLoadingDialog(TranscCompletedActivity.this, AppConstant.PLEASE);
-            HashMap<String, String> params = new HashMap<>();
+                params.put("order_id", orderId);
+                params.put("access_token", accessToken);
+                if (message != null) {
+                    params.put("message", message.toString());
+                }
+                RestClient.getPayApiService().sendMoneyCallback(params, new Callback<CommonResponse>() {
+                    @Override
+                    public void success(CommonResponse commonResponse, Response response) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        try {
+                            int flag = commonResponse.getFlag();
+                            if (flag == ApiResponseFlags.TXN_COMPLETED.getOrdinal()) {
+                                scrollView.setVisibility(View.VISIBLE);
+								tvTransStatusValMessage.setVisibility(View.GONE);
+								tvTransStatusValMessage.setText(commonResponse.getMessage());
+								tvTransStatusVal.setText(getString(R.string.successful));
+								tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
+								ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
+							}
+                            else if (flag == ApiResponseFlags.TXN_FAILED.getOrdinal()) {
+                                scrollView.setVisibility(View.VISIBLE);
+								tvTransStatusValMessage.setVisibility(View.VISIBLE);
+								tvTransStatusValMessage.setTextColor(getResources().getColor(R.color.red_status));
+								tvTransStatusValMessage.setText(commonResponse.getMessage());
+								tvTransStatusVal.setText(getString(R.string.failed));
+								tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
+								ivTransCompleted.setImageResource(R.drawable.ic_failed);
+							}
+                            else {
+                                retryDialogSendMoneyCallbackApi(DialogErrorType.SERVER_ERROR, message, orderId, accessToken);
+							}
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            retryDialogSendMoneyCallbackApi(DialogErrorType.SERVER_ERROR, message, orderId, accessToken);
+                        }
+                    }
 
-            params.put("order_id", orderId);
-            params.put("access_token",  accessToken);
-            if(message != null) {
-                params.put("message", message.toString());
+                    @Override
+                    public void failure(RetrofitError error) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        retryDialogSendMoneyCallbackApi(DialogErrorType.CONNECTION_LOST, message, orderId, accessToken);
+                    }
+                });
+            } else {
+                retryDialogSendMoneyCallbackApi(DialogErrorType.NO_NET, message, orderId, accessToken);
             }
-            RestClient.getPayApiService().sendMoneyCallback(params, new Callback<CommonResponse>() {
-                @Override
-                public void success(CommonResponse commonResponse, Response response) {
-                    System.out.println("SendMoneyActivity.success22222222");
-                    CallProgressWheel.dismissLoadingDialog();
-                    if (commonResponse != null) {
-//                    Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, tokenGeneratedResponse.getToken());
-//
-                        int flag = commonResponse.getFlag();
-                        if(flag == ApiResponseFlags.TXN_COMPLETED.getOrdinal()) {
-                            tvTransStatusValMessage.setVisibility(View.GONE);
-                            tvTransStatusValMessage.setText(commonResponse.getMessage());
-                            tvTransStatusVal.setText(getString(R.string.successful));
-                            tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
-                            ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
-                        }
-                        else if(flag == ApiResponseFlags.TXN_FAILED.getOrdinal()) {
-                            tvTransStatusValMessage.setVisibility(View.VISIBLE);
-                            tvTransStatusValMessage.setTextColor(getResources().getColor(R.color.red_status));
-                            tvTransStatusValMessage.setText(commonResponse.getMessage());
-                            tvTransStatusVal.setText(getString(R.string.failed));
-                            tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
-                            ivTransCompleted.setImageResource(R.drawable.ic_failed);
-                        }
-                        else {
-                            CommonMethods.callingBadToken(TranscCompletedActivity.this,flag,commonResponse.getMessage());
-                            tvTransStatusValMessage.setVisibility(View.VISIBLE);
-                            tvTransStatusValMessage.setTextColor(getResources().getColor(R.color.red_status));
-                            tvTransStatusValMessage.setText(commonResponse.getMessage());
-                            tvTransStatusVal.setText(getString(R.string.failed));
-                            tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
-                            ivTransCompleted.setImageResource(R.drawable.ic_failed);
-
-                            // below methods can be used INSTEAD of .getColor method above
-                            // getResources().getColor(R.color.booking_failed_color, null);
-                            // ContextCompat.getColor(TranscCompletedActivity.this, R.color.booking_failed_color);
-                        }
-
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    try {
-                        System.out.println("SendMoneyActivity.failure2222222");
-                        CallProgressWheel.dismissLoadingDialog();
-                        if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                            showAlertNoInternet(TranscCompletedActivity.this);
-                        } else {
-                            String json = new String(((TypedByteArray) error.getResponse()
-                                    .getBody()).getBytes());
-                            JSONObject jsonObject = new JSONObject(json);
-                            SingleButtonAlert.showAlert(TranscCompletedActivity.this, jsonObject.getString("message"), AppConstant.OK);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        CallProgressWheel.dismissLoadingDialog();
-                    }
-
-                }
-            });
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void retryDialogSendMoneyCallbackApi(DialogErrorType dialogErrorType, final MessageRequest message, final String orderId, final String accessToken){
+        DialogPopup.dialogNoInternet(this,
+                dialogErrorType,
+                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        callingSendMoneyCallbackApi(message, orderId, accessToken);
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                });
     }
 
 
@@ -336,9 +330,37 @@ private SelectUser contactDetails;
                         CallProgressWheel.dismissLoadingDialog();
                         try{
                             if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == settleUserDebt.getFlag()){
-
+                                scrollView.setVisibility(View.VISIBLE);
+                                textViewPaid.setText("");
+                                tvTransTimeVal.setText("");
+                                textViewDebitValue.setText("");
+                                toolbarTitleTxt.setText("");
+                                msgTxt.setText("");
+                                mobileTxt.setText("");
+                                contactNameTxt.setText("");
+                                contactImg.setImageResource(R.drawable.icon_user);
+                                tvTransStatusValMessage.setVisibility(View.GONE);
+                                tvTransStatusValMessage.setText("");
+                                tvTransStatusVal.setText(getString(R.string.successful));
+                                tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
+                                ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
                             } else {
-                                DialogPopup.alertPopup(TranscCompletedActivity.this, "", settleUserDebt.getMessage());
+                                DialogPopup.alertPopupTwoButtonsWithListeners(TranscCompletedActivity.this, "", settleUserDebt.getMessage(),
+                                        getString(R.string.retry),
+                                        getString(R.string.cancel),
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                apiGetTransactionSummary(orderId, txnType);
+                                            }
+                                        },
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                okBtnClicked();
+                                            }
+                                        }
+                                        , false, false);
                             }
                         } catch (Exception e){
                             e.printStackTrace();
@@ -356,10 +378,8 @@ private SelectUser contactDetails;
                 retryDialogGetTransactionSummary(DialogErrorType.NO_NET, orderId, txnType);
             }
         } catch (Exception e) {
-            DialogPopup.dismissLoadingDialog();
             e.printStackTrace();
         }
-
     }
 
     private void retryDialogGetTransactionSummary(DialogErrorType dialogErrorType, final int orderId, final int txnType){

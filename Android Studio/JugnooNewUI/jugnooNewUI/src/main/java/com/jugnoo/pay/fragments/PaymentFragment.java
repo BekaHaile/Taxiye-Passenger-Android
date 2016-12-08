@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,22 +16,17 @@ import android.widget.TextView;
 import com.jugnoo.pay.activities.AddPaymentAddressActivity;
 import com.jugnoo.pay.activities.SelectContactActivity;
 import com.jugnoo.pay.activities.SendMoneyActivity;
-import com.jugnoo.pay.adapters.ContactsListAdapter;
 import com.jugnoo.pay.adapters.PaymentAddressAdapter;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.FetchPaymentAddressResponse;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.utils.CallProgressWheel;
-import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.RecyclerViewClickListener;
-import com.jugnoo.pay.utils.Validator;
 import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -86,8 +79,7 @@ public class PaymentFragment extends Fragment {
                 data.setThumb("");
                 data.setAmount("");
                 data.setOrderId("0");
-                if(new Validator().validateEmail(fetchList.get(position).getVpa()))
-                {
+                if(Utils.isVPAValid(fetchList.get(position).getVpa())) {
                     SelectUser newData = new SelectUser();
                     newData.setName(fetchList.get(position).getName());
                     newData.setPhone(fetchList.get(position).getVpa());
@@ -103,11 +95,10 @@ public class PaymentFragment extends Fragment {
                     getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     getActivity().finish();
                 }
-                else
-                {
+                else {
                     ((SelectContactActivity)getActivity()).getSearchET().requestFocus();
                     ((SelectContactActivity)getActivity()).getSearchET().setHovered(true);
-                    ((SelectContactActivity)getActivity()).getSearchET().setError("Please fill alteast 10 Digits mobile number.");
+                    ((SelectContactActivity)getActivity()).getSearchET().setError(getString(R.string.vpa_not_valid));
                 }
             }
 
@@ -139,8 +130,12 @@ public class PaymentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if((((SelectContactActivity)getActivity()).getSearchET() != null)) {
-            (((SelectContactActivity) getActivity()).getSearchET()).setText("");
+        try {
+            if((((SelectContactActivity)getActivity()).getSearchET() != null)) {
+				(((SelectContactActivity) getActivity()).getSearchET()).setText("");
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         apiFetchPaymentAddress();
     }
