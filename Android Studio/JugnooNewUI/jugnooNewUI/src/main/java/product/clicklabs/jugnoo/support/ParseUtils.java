@@ -35,6 +35,15 @@ public class ParseUtils {
 		Database2.getInstance(context).insertUpdateSupportData(19, showPanelResponse.getSupportData().getMenu19());
 		Database2.getInstance(context).insertUpdateSupportData(20, showPanelResponse.getSupportData().getMenu20());
 		Database2.getInstance(context).insertUpdateSupportData(21, showPanelResponse.getSupportData().getMenu21());
+		Database2.getInstance(context).insertUpdateSupportData(22, showPanelResponse.getSupportData().getMenu22());
+		Database2.getInstance(context).insertUpdateSupportData(23, showPanelResponse.getSupportData().getMenu23());
+		Database2.getInstance(context).insertUpdateSupportData(24, showPanelResponse.getSupportData().getMenu24());
+		Database2.getInstance(context).insertUpdateSupportData(25, showPanelResponse.getSupportData().getMenu25());
+		Database2.getInstance(context).insertUpdateSupportData(26, showPanelResponse.getSupportData().getMenu26());
+		Database2.getInstance(context).insertUpdateSupportData(27, showPanelResponse.getSupportData().getMenu27());
+		Database2.getInstance(context).insertUpdateSupportData(28, showPanelResponse.getSupportData().getMenu28());
+		Database2.getInstance(context).insertUpdateSupportData(29, showPanelResponse.getSupportData().getMenu29());
+		Database2.getInstance(context).insertUpdateSupportData(30, showPanelResponse.getSupportData().getMenu30());
 
 		switch(supportCategory){
 			case 1:
@@ -99,6 +108,33 @@ public class ParseUtils {
 				break;
 			case 21:
 				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu21();
+				break;
+			case 22:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu22();
+				break;
+			case 23:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu23();
+				break;
+			case 24:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu24();
+				break;
+			case 25:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu25();
+				break;
+			case 26:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu26();
+				break;
+			case 27:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu27();
+				break;
+			case 28:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu28();
+				break;
+			case 29:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu29();
+				break;
+			case 30:
+				itemsMain = (ArrayList<ShowPanelResponse.Item>) showPanelResponse.getSupportData().getMenu30();
 				break;
 		}
 		return itemsMain;

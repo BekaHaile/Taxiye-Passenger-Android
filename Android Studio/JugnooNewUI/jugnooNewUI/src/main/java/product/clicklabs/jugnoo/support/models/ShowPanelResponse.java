@@ -116,6 +116,33 @@ public class ShowPanelResponse {
 		@SerializedName("21")
 		@Expose
 		private List<Item> menu21 = new ArrayList<Item>();
+		@SerializedName("22")
+		@Expose
+		private List<Item> menu22 = new ArrayList<Item>();
+		@SerializedName("23")
+		@Expose
+		private List<Item> menu23 = new ArrayList<Item>();
+		@SerializedName("24")
+		@Expose
+		private List<Item> menu24 = new ArrayList<Item>();
+		@SerializedName("25")
+		@Expose
+		private List<Item> menu25 = new ArrayList<Item>();
+		@SerializedName("26")
+		@Expose
+		private List<Item> menu26 = new ArrayList<Item>();
+		@SerializedName("27")
+		@Expose
+		private List<Item> menu27 = new ArrayList<Item>();
+		@SerializedName("28")
+		@Expose
+		private List<Item> menu28 = new ArrayList<Item>();
+		@SerializedName("29")
+		@Expose
+		private List<Item> menu29 = new ArrayList<Item>();
+		@SerializedName("30")
+		@Expose
+		private List<Item> menu30 = new ArrayList<Item>();
 
 		public List<Item> getMenu1() {
 			return menu1;
@@ -283,6 +310,78 @@ public class ShowPanelResponse {
 
 		public void setMenu21(List<Item> menu21) {
 			this.menu21 = menu21;
+		}
+
+		public List<Item> getMenu22() {
+			return menu22;
+		}
+
+		public void setMenu22(List<Item> menu22) {
+			this.menu22 = menu22;
+		}
+
+		public List<Item> getMenu23() {
+			return menu23;
+		}
+
+		public void setMenu23(List<Item> menu23) {
+			this.menu23 = menu23;
+		}
+
+		public List<Item> getMenu24() {
+			return menu24;
+		}
+
+		public void setMenu24(List<Item> menu24) {
+			this.menu24 = menu24;
+		}
+
+		public List<Item> getMenu25() {
+			return menu25;
+		}
+
+		public void setMenu25(List<Item> menu25) {
+			this.menu25 = menu25;
+		}
+
+		public List<Item> getMenu26() {
+			return menu26;
+		}
+
+		public void setMenu26(List<Item> menu26) {
+			this.menu26 = menu26;
+		}
+
+		public List<Item> getMenu27() {
+			return menu27;
+		}
+
+		public void setMenu27(List<Item> menu27) {
+			this.menu27 = menu27;
+		}
+
+		public List<Item> getMenu28() {
+			return menu28;
+		}
+
+		public void setMenu28(List<Item> menu28) {
+			this.menu28 = menu28;
+		}
+
+		public List<Item> getMenu29() {
+			return menu29;
+		}
+
+		public void setMenu29(List<Item> menu29) {
+			this.menu29 = menu29;
+		}
+
+		public List<Item> getMenu30() {
+			return menu30;
+		}
+
+		public void setMenu30(List<Item> menu30) {
+			this.menu30 = menu30;
 		}
 	}
 

@@ -1,22 +1,16 @@
 package com.jugnoo.pay.fragments;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +37,7 @@ import java.util.TreeSet;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by ankit on 05/12/16.
@@ -142,11 +137,8 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
             getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
             getActivity().finish();
         }
-        else
-        {
-            ((SelectContactActivity)getActivity()).getSearchET().requestFocus();
-            ((SelectContactActivity)getActivity()).getSearchET().setHovered(true);
-            ((SelectContactActivity)getActivity()).getSearchET().setError("Please fill alteast 10 Digits mobile number.");
+        else {
+            Utils.showToast(getActivity(), getString(R.string.invalid_phone_error));
         }
     }
 

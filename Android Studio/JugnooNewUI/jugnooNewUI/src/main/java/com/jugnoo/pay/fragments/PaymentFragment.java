@@ -88,17 +88,15 @@ public class PaymentFragment extends Fragment {
                     newData.setOrderId("0");
                     Intent intent = new Intent(getActivity(), SendMoneyActivity.class);
                     intent.putExtra(AppConstant.REQUEST_STATUS, ((SelectContactActivity)getActivity()).isRequestStatus());
-                    Bundle bun =new Bundle();
+                    Bundle bun = new Bundle();
                     bun.putParcelable(AppConstant.CONTACT_DATA, newData);
-                    intent.putExtras( bun);
+                    intent.putExtras(bun);
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     getActivity().finish();
                 }
                 else {
-                    ((SelectContactActivity)getActivity()).getSearchET().requestFocus();
-                    ((SelectContactActivity)getActivity()).getSearchET().setHovered(true);
-                    ((SelectContactActivity)getActivity()).getSearchET().setError(getString(R.string.vpa_not_valid));
+                    Utils.showToast(getActivity(), getString(R.string.vpa_not_valid));
                 }
             }
 

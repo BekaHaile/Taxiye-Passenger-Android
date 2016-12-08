@@ -3,6 +3,7 @@ package com.jugnoo.pay.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -35,9 +36,6 @@ import com.yesbank.TransactionStatus;
 
 import org.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,6 +44,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -64,9 +63,13 @@ public class SendMoneyActivity extends BaseActivity {
 
     @OnClick(R.id.back_btn)
     void backBtnClicked() {
-        startActivity(new Intent(SendMoneyActivity.this,SelectContactActivity.class));
-        overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        if(!requestStatusConfirmation) {
+            Intent intent = new Intent(this, SelectContactActivity.class);
+            intent.putExtra(AppConstant.REQUEST_STATUS, requestStatus);
+            startActivity(intent);
+        }
         finish();
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
     @Bind(R.id.contact_name_txt)
@@ -95,8 +98,9 @@ public class SendMoneyActivity extends BaseActivity {
             if(amount > 0 && amount <= 100000) {
                 if (requestStatus) {
                     callingRequestMoneyApi();
-                } else
+                } else {
                     callingSendMoneyApi();
+                }
             } else{
                 amountET.requestFocus();
                 amountET.setHovered(true);
@@ -191,6 +195,17 @@ public class SendMoneyActivity extends BaseActivity {
             }
         });
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Utils.showSoftKeyboard(SendMoneyActivity.this, amountET);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 200);
+
     }
 
     void setData() {
@@ -207,7 +222,7 @@ public class SendMoneyActivity extends BaseActivity {
             messageET.setVisibility(TextUtils.isEmpty(contactDetails.getMessage()) ? View.GONE : View.VISIBLE);
             messageET.setText(contactDetails.getMessage());
             messageET.setEnabled(false);
-        } else{
+        } else {
             amountET.setText("");
             amountET.setEnabled(true);
             amountET.setTextColor(getResources().getColor(R.color.text_color));
@@ -215,20 +230,13 @@ public class SendMoneyActivity extends BaseActivity {
             messageET.setEnabled(true);
         }
 
-        // Set image if exists
         try {
             if (contactDetails.getThumb() != null) {
-                //contactImage.setImageBitmap(contactDetails.getThumb());
                 Picasso.with(SendMoneyActivity.this).load(contactDetails.getThumb()).transform(new CircleTransform()).into(contactImage);
             } else {
                 contactImage.setImageResource(R.drawable.icon_user);
             }
-            // Seting round image
-//            Bitmap bm = BitmapFactory.decodeResource(holder.contactImage.getResources(), R.drawable.icon_logo); // Load default image
-//            roundedImage = new RoundImage(bm);
-//            v.imageView.setImageDrawable(roundedImage);
         } catch (Exception e) {
-            // Add default picture
             contactImage.setImageResource(R.drawable.icon_user);
             e.printStackTrace();
         }
@@ -239,26 +247,15 @@ public class SendMoneyActivity extends BaseActivity {
         backBtnClicked();
     }
 
-    // used to send the  money
     private void callingSendMoneyApi() {
         CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
         SendMoneyRequest request = new SendMoneyRequest();
 
-        // logic to replace extra character in phone number
-        String PhoneNumber = contactDetails.getPhone();
-        char[] number = PhoneNumber.toCharArray();
-        Character[] arrayNumerics = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-        List<Character> listNumerics = Arrays.asList(arrayNumerics);
-        for (int i=0; i<number.length; i++)
-        {
-            if(number[i] != '+' || !listNumerics.contains(number[i]))
-            {
-                PhoneNumber.replace(number[i], ' ');
-            }
+        if(Utils.isPhoneValid(contactDetails.getPhone())){
+            request.setPhone_no(Utils.removeExtraCharsPhoneNumber(contactDetails.getPhone()));
+        } else if(Utils.isVPAValid(contactDetails.getPhone())){
+            request.setVpa(contactDetails.getPhone());
         }
-
-        // request.setPhone_no(contactDetails.getPhone());
-        request.setPhone_no(PhoneNumber);
 
         request.setAccess_token(accessToken);
         request.setAmount(amountET.getText().toString());
@@ -519,31 +516,19 @@ public class SendMoneyActivity extends BaseActivity {
                 startActivity(intent);
                 finish();
             }
-            //Bundle bundle = data.getExtras();
         }
     }
 
 
-    // used to request the  money from a specific friend
     private void callingRequestMoneyApi() {
         CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
         final SendMoneyRequest request = new SendMoneyRequest();
 
-        // logic to replace extra character in phone number
-        String PhoneNumber = contactDetails.getPhone();
-        char[] number = PhoneNumber.toCharArray();
-        Character[] arrayNumerics = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-        List<Character> listNumerics = Arrays.asList(arrayNumerics);
-        for (int i=0; i<number.length; i++)
-        {
-            if(number[i] != '+' || !listNumerics.contains(number[i]))
-            {
-                PhoneNumber.replace(number[i], ' ');
-            }
+        if(Utils.isPhoneValid(contactDetails.getPhone())){
+            request.setPhone_no(Utils.removeExtraCharsPhoneNumber(contactDetails.getPhone()));
+        } else if(Utils.isVPAValid(contactDetails.getPhone())){
+            request.setVpa(contactDetails.getPhone());
         }
-
-        // request.setPhone_no(contactDetails.getPhone());
-        request.setPhone_no(PhoneNumber);
 
         request.setAccess_token(accessToken);
         request.setAmount(amountET.getText().toString());
@@ -553,7 +538,6 @@ public class SendMoneyActivity extends BaseActivity {
         RestClient.getPayApiService().requestMoney(request, new Callback<CommonResponse>() {
             @Override
             public void success(CommonResponse commonResponse, Response response) {
-                System.out.println("SendMoneyActivity.success22222222");
                 CallProgressWheel.dismissLoadingDialog();
                 if (commonResponse != null) {
 //                    Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, tokenGeneratedResponse.getToken());

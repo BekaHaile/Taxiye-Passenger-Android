@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by cl-macmini-38 on 9/21/16.
  */
 public class SendMoneyRequest implements Serializable {
- private String  access_token,amount,phone_no,message, order_id;
+ private String  access_token,amount,phone_no,message, order_id, vpa;
 
     public String getAccess_token() {
         return access_token;
@@ -46,5 +46,13 @@ public class SendMoneyRequest implements Serializable {
 
     public void setOrderId(String order_id) {
         this.order_id = order_id;
+    }
+
+    public String getVpa() {
+        return vpa;
+    }
+
+    public void setVpa(String vpa) {
+        this.vpa = vpa;
     }
 }
