@@ -278,7 +278,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
                 android:layout_toRightOf="@+id/imageViewPayTransactionsIcon"
-                android:text="@string/payment_transactions"
+                android:text="@string/pay_transactions"
                 android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/text_size_32" />
 

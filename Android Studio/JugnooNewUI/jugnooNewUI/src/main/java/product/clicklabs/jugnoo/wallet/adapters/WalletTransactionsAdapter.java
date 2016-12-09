@@ -119,7 +119,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
                     holder.textViewTransactionType.setTextColor(context.getResources().getColor(pair.second));
                 }
 
-                holder.textViewTransactionMode.setVisibility(View.VISIBLE);
+                holder.textViewTransactionMode.setVisibility(View.GONE);
                 holder.textViewTransactionMode.setText(context.getResources().getString(R.string.pay_colon));
                 holder.tvStatusPay.setVisibility(View.VISIBLE);
                 int statusText = homeUtils.getPayStatusString(transactionInfo);
@@ -135,12 +135,14 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
                     int pos = (int) v.getTag();
                     TransactionInfo transactionInfo1 = transactionInfoList.get(pos);
                     if(transactionInfo1.getPay() == 1) {
-                        Intent intent = new Intent(context, TranscCompletedActivity.class);
-                        intent.putExtra(Constants.KEY_FETCH_TRANSACTION_SUMMARY, 1);
-                        intent.putExtra(Constants.KEY_ORDER_ID, transactionInfoList.get(pos).transactionId);
-                        intent.putExtra(Constants.KEY_TXN_TYPE, transactionInfoList.get(pos).transactionType);
-                        intent.putExtra(Constants.KEY_TXN_OBJECT, gson.toJson(transactionInfoList.get(pos), TransactionInfo.class));
-                        context.startActivity(intent);
+                        if(transactionInfo1.getStatus() != 3 && transactionInfo1.getStatus() != 4) {
+                            Intent intent = new Intent(context, TranscCompletedActivity.class);
+                            intent.putExtra(Constants.KEY_FETCH_TRANSACTION_SUMMARY, 1);
+                            intent.putExtra(Constants.KEY_ORDER_ID, String.valueOf(transactionInfo1.transactionId));
+                            intent.putExtra(Constants.KEY_TXN_TYPE, transactionInfo1.transactionType);
+                            intent.putExtra(Constants.KEY_TXN_OBJECT, gson.toJson(transactionInfo1, TransactionInfo.class));
+                            context.startActivity(intent);
+                        }
                     }
                 }
             });

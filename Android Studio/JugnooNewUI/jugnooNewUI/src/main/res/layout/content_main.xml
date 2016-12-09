@@ -53,6 +53,7 @@
                 android:layout_marginRight="10dp"
                 android:padding="10dp"
                 android:src="@drawable/ic_share_payment_id"
+                android:visibility="gone"
                 />
 
         </RelativeLayout>

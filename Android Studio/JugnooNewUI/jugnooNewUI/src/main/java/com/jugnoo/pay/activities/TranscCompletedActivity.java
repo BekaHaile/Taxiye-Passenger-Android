@@ -193,7 +193,8 @@ public class TranscCompletedActivity extends BaseActivity {
                 try {
                     Gson gson = new Gson();
                     TransactionInfo transactionInfo = gson.fromJson(getIntent().getStringExtra(Constants.KEY_TXN_OBJECT), TransactionInfo.class);
-                    apiGetTransactionSummary(getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0),
+                    orderId = getIntent().getStringExtra(Constants.KEY_ORDER_ID);
+                    apiGetTransactionSummary(Integer.parseInt(orderId),
 							getIntent().getIntExtra(Constants.KEY_TXN_TYPE, TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()),
                             transactionInfo);
                 } catch (Exception e) {

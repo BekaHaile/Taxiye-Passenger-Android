@@ -401,6 +401,7 @@ public class MainActivity extends BaseActivity {
                         int flag = fetchPayDataResponse.getFlag();
                         if (flag == 401) {
                             updateTransactions(fetchPayDataResponse);
+                            Data.getPayData().getPay().setHasVpa(1);
                         } else if (flag == 403) {
 //                            logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
 
