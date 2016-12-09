@@ -343,6 +343,7 @@ public interface Constants {
 	String FRESH_SELECT_ADDRESS = "Fresh Select Address";
 	String MEALS_SELECT_ADDRESS = "Meals Select Address";
 	String GROCERY_SELECT_ADDRESS = "Grocery Select Address";
+	String MENUS_SELECT_ADDRESS = "Menus Select Address";
 	String NEW = "New";
 	String SEARCHED = "Searched";
 	String SAVED = "Saved";

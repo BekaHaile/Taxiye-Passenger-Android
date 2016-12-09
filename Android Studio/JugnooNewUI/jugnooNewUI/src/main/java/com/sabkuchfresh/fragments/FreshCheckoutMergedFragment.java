@@ -1014,7 +1014,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = JSONParser.getServerMessage(jObj);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt(Constants.KEY_FLAG);
+                                final int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     orderPlaced = true;
                                     activity.saveCheckoutData(true);
@@ -1141,7 +1141,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             }
                                         });
                                     } else {
-                                        DialogPopup.alertPopup(activity, "", message);
+                                        final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
+                                        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Log.v("redirect value","redirect value"+redirect);
+                                                if(redirect == 0) {
+                                                    activity.setRefreshCart(true);
+                                                    activity.performBackPressed();
+                                                    activity.setRefreshCart(true);
+                                                    activity.performBackPressed();
+                                                   // activity.performBackPressed();
+                                                }/*activity.performBackPressed();*/
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -1348,7 +1361,22 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
                 promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
             } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
-                promoCoupons = Data.userData.getCoupons(ProductType.MENUS);
+                promoCoupons.clear();
+                ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(ProductType.MENUS);
+                if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal())
+                {
+                    for(PromoCoupon promoCoupon : promoCouponsList)
+                    {
+                        if(MyApplication.getInstance().getWalletCore().couponOfWhichWallet(promoCoupon) == PaymentOption.CASH.getOrdinal())
+                        {
+                            promoCoupons.add(promoCoupon);
+                        }
+                    }
+                }
+                else
+                {
+                    promoCoupons.addAll(promoCouponsList);
+                }
             } else {
                 promoCoupons = Data.userData.getCoupons(ProductType.FRESH);
             }

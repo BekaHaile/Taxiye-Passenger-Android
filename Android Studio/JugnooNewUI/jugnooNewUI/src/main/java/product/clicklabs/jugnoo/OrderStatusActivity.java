@@ -707,6 +707,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 tvDeliveryChargesVal.setTextColor(activity.getResources().getColor(R.color.order_status_green));
                 tvDeliveryChargesVal.setText(activity.getResources().getString(R.string.free));
             }
+            llExtraCharges.removeAllViews();
             if((historyResponse.getData().get(0).getPackingCharges() != null) && (historyResponse.getData().get(0).getPackingCharges() > 0)){
                 addFinalAmountView(llExtraCharges, getResources().getString(R.string.packaging_charges), historyResponse.getData().get(0).getPackingCharges(), false);
             }
@@ -719,12 +720,12 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
 
             tvTotalAmountVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOriginalOrderAmount())));
-
+            llFinalAmount.removeAllViews();
             if((historyResponse.getData().get(0).getDiscount() != null) && (historyResponse.getData().get(0).getDiscount() != 0)){
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.discount), historyResponse.getData().get(0).getDiscount(), true);
             }
 
-            if((historyResponse.getData().get(0).getJugnooDeducted() != null) && (historyResponse.getData().get(0).getJugnooDeducted() != 0)){
+             if((historyResponse.getData().get(0).getJugnooDeducted() != null) && (historyResponse.getData().get(0).getJugnooDeducted() != 0)){
                 addFinalAmountView(llFinalAmount, getResources().getString(R.string.jugnoo_cash), historyResponse.getData().get(0).getJugnooDeducted(), true);
             }
 

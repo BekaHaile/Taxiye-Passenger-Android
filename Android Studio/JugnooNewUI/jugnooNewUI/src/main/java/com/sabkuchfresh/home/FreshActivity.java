@@ -830,6 +830,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     public void fragmentUISetup(Fragment fragment) {
         try {
+            int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
             textViewMinOrder.setVisibility(View.GONE);
 
             topBar.title.setTypeface(Fonts.avenirNext(this));
@@ -1195,7 +1196,22 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				relativeLayoutSort.setVisibility(View.GONE);
                 relativeLayoutCart.setVisibility(View.VISIBLE);
 
-				topBar.title.setVisibility(View.VISIBLE);
+                try {
+                    if(appType == AppConstant.ApplicationType.MENUS && getVendorMenuFragment() != null
+                            && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
+                        if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
+                            textViewMinOrder.setVisibility(View.VISIBLE);
+                        } else {
+                            textViewMinOrder.setVisibility(View.GONE);
+                        }
+                        textViewMinOrder.setText(getString(R.string.minimum_order) + " "
+                                + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                topBar.title.setVisibility(View.VISIBLE);
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
 			} else if (fragment instanceof HomeFragment) {

@@ -131,7 +131,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             selectAddressTag = Constants.MEALS_SELECT_ADDRESS;
         } else if(appType == AppConstant.ApplicationType.GROCERY){
             selectAddressTag = Constants.GROCERY_SELECT_ADDRESS;
+        } else if(appType == AppConstant.ApplicationType.MENUS){
+            selectAddressTag = Constants.MENUS_SELECT_ADDRESS;
         }
+
 
         linearLayoutMain = (RelativeLayout) rootView.findViewById(R.id.linearLayoutMain);
 

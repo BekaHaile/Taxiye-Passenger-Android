@@ -153,6 +153,7 @@ public class ApiAddHomeWorkAddress {
 											Data.userData.getSearchResults().remove(searchResult);
 										} else {
 											int index = Data.userData.getSearchResults().indexOf(searchResult);
+											Log.v("index value","index value"+index);
 											if(index != -1){
 												Data.userData.getSearchResults().set(index, searchResult);
 											} else{
