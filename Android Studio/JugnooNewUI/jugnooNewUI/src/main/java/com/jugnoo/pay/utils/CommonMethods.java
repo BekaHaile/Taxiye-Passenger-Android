@@ -27,12 +27,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.jugnoo.pay.activities.SignUpActivity;
-import com.sabkuchfresh.utils.AppConstant;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -44,7 +44,9 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 
@@ -665,31 +667,33 @@ public class CommonMethods {
                     break;
 
                 case TOKEN_EXPIRED:AUTH_ALREADY_REGISTERED:AUTH_LOGIN_FAILURE:
-                    SingleButtonAlert.showAlertGps(ctx, msg, AppConstant.OK, new SingleButtonAlert.OnAlertOkClickListener() {
+                    DialogPopup.alertPopupWithListener(ctx, "", msg, new View.OnClickListener() {
                         @Override
-                        public void onOkButtonClicked() {
+                        public void onClick(View v) {
                             ctx.finish();
                         }
                     });
                     break;
                 case AUTH_NOT_REGISTERED:
-                    TwoButtonAlert.showAlert(ctx, msg, AppConstant.CANCEL, AppConstant.REGISTER, new TwoButtonAlert.OnAlertOkCancelClickListener() {
-                        @Override
-                        public void onOkButtonClicked() {
-                            ctx.startActivity(new Intent(ctx, SignUpActivity.class));
-                        }
+                    DialogPopup.alertPopupTwoButtonsWithListeners(ctx, "", msg,
+                            ctx.getString(R.string.register),
+                            ctx.getString(R.string.cancel),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ctx.startActivity(new Intent(ctx, SignUpActivity.class));
+                                }
+                            }, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                        @Override
-                        public void onCancelButtonClicked() {
-
-                        }
-                    });
-
+                                }
+                            }, true, false);
                         break;
                 case AUTH_ALREADY_REGISTERED:
-                    SingleButtonAlert.showAlertGps(ctx, msg, AppConstant.OK, new SingleButtonAlert.OnAlertOkClickListener() {
+                    DialogPopup.alertPopupWithListener(ctx, "", msg, new View.OnClickListener() {
                         @Override
-                        public void onOkButtonClicked() {
+                        public void onClick(View v) {
                             ctx.finish();
                         }
                     });
@@ -697,7 +701,7 @@ public class CommonMethods {
                     break;
 
                   default:
-                    SingleButtonAlert.showAlert(ctx, msg, AppConstant.OK);
+                    DialogPopup.alertPopup(ctx, "", msg);
                     break;
 
             }
@@ -734,7 +738,7 @@ public class CommonMethods {
         StringBuilder sb = new StringBuilder();
         boolean found = false;
         for(char c : str.toCharArray()){
-            if(Character.isDigit(c)){
+            if(Character.isDigit(c) || c == '+'){
                 sb.append(c);
                 found = true;
             } else if(found){

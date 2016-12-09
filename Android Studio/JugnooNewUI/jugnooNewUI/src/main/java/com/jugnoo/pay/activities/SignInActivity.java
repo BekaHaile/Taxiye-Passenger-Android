@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -15,8 +16,6 @@ import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SharedPreferencesName;
-import com.jugnoo.pay.utils.SingleButtonAlert;
-import com.jugnoo.pay.utils.TwoButtonAlert;
 import com.jugnoo.pay.utils.Validator;
 import com.sabkuchfresh.utils.AppConstant;
 
@@ -28,6 +27,7 @@ import butterknife.OnClick;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -136,20 +136,22 @@ public class SignInActivity extends BaseActivity {
                         overridePendingTransition(0, 0);
                         finish();
                     } else if(flag == ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal()){
-                        TwoButtonAlert.showAlert(SignInActivity.this, tokenGeneratedResponse.getMessage(), AppConstant.CANCEL, AppConstant.REGISTER,
-                                new TwoButtonAlert.OnAlertOkCancelClickListener() {
-                            @Override
-                            public void onOkButtonClicked() {
-                                startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
-                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                finish();
-                            }
+                        DialogPopup.alertPopupTwoButtonsWithListeners(SignInActivity.this, "", tokenGeneratedResponse.getMessage(),
+                                getString(R.string.register),
+                                getString(R.string.cancel),
+                                new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startActivity(new Intent(SignInActivity.this, SignUpActivity.class));
+                                        overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                        finish();
+                                    }
+                                }, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
 
-                            @Override
-                            public void onCancelButtonClicked() {
-
-                            }
-                        });
+                                    }
+                                }, true, false);
                     }  else{
                         pswdET.getText().clear();
                         CommonMethods.callingBadToken(SignInActivity.this,flag,tokenGeneratedResponse.getMessage());
@@ -168,7 +170,7 @@ public class SignInActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(SignInActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                        DialogPopup.alertPopup(SignInActivity.this, "", jsonObject.getString("message"));
                     }
 
                 } catch (Exception e) {

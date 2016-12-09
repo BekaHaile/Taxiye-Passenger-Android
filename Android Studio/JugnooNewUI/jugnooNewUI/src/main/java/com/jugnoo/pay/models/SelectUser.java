@@ -3,10 +3,19 @@ package com.jugnoo.pay.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by cl-macmini-38 on 9/21/16.
  */
 public class SelectUser implements Parcelable{
+    @SerializedName("statusMessage")
+    @Expose
+    private String statusMessage;
+    @SerializedName("date")
+    @Expose
+    private String date;
     String name;
 
     public String getThumb() {
@@ -120,4 +129,20 @@ public class SelectUser implements Parcelable{
             return new SelectUser[size];
         }
     };
+
+    public String getStatusMessage() {
+        return statusMessage;
+    }
+
+    public void setStatusMessage(String statusMessage) {
+        this.statusMessage = statusMessage;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

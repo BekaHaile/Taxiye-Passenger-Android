@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,8 +22,6 @@ import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SharedPreferencesName;
-import com.jugnoo.pay.utils.SingleButtonAlert;
-import com.jugnoo.pay.utils.TwoButtonAlert;
 import com.jugnoo.pay.utils.Validator;
 import com.sabkuchfresh.utils.AppConstant;
 import com.yesbank.Registration;
@@ -35,6 +34,7 @@ import butterknife.OnClick;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -76,20 +76,21 @@ public class SignUpActivity extends BaseActivity {
         Validator validator = new Validator();
         if (validator.regValidateScreenOne(fNameET.getText().toString().trim(), fNameET, emailET.getText().toString().trim(),
                 emailET, phoneET.getText().toString().trim(), phoneET, pswdET.getText().toString().trim(), pswdET)) {
-            TwoButtonAlert.showAlert(SignUpActivity.this, getResources().getString(R.string.choose_mobile_number), AppConstant.CANCEL, AppConstant.REGISTER,
-                    new TwoButtonAlert.OnAlertOkCancelClickListener() {
-                @Override
-                public void onOkButtonClicked() {
-                    callRegisterApi();
-                }
+            DialogPopup.alertPopupTwoButtonsWithListeners(SignUpActivity.this, "", getString(R.string.choose_mobile_number),
+                    getString(R.string.register),
+                    getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            callRegisterApi();
+                        }
+                    }, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-                @Override
-                public void onCancelButtonClicked() {
-
-                }
-            });
+                        }
+                    }, true, false);
         }
-
     }
 
     @Bind(R.id.first_name_et)
@@ -181,7 +182,7 @@ public class SignUpActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(SignUpActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                        DialogPopup.alertPopup(SignUpActivity.this, "", jsonObject.getString("message"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -271,7 +272,7 @@ public class SignUpActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(SignUpActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                        DialogPopup.alertPopup(SignUpActivity.this, "", jsonObject.getString("message"));
 
                     }
 

@@ -208,10 +208,16 @@ public class TranscCompletedActivity extends BaseActivity {
                 rvBankRefId.setVisibility(View.GONE);
                 rvNpciTransId.setVisibility(View.GONE);
                 cardViewDebitFrom.setVisibility(View.GONE);
-                tvTransStatusValMessage.setVisibility(View.GONE);
                 tvTransStatusVal.setText(getString(R.string.successful));
                 tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
                 ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
+                tvTransStatusValMessage.setText(contactDetails.getStatusMessage());
+                tvTransStatusValMessage.setVisibility(TextUtils.isEmpty(contactDetails.getStatusMessage()) ? View.GONE : View.VISIBLE);
+                tvTransStatusValMessage.setTextColor(getResources().getColor(R.color.green_rupee));
+                tvAmountVal.setText(getString(R.string.rupees_value_format,
+                        Utils.getMoneyDecimalFormat().format(Double.parseDouble(contactDetails.getAmount()))));
+                toolbarTitleTxt.setText(getResources().getString(R.string.transaction_id_number_format, contactDetails.getOrderId()));
+                tvTransTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(contactDetails.getDate())));
             }
             cardViewDebitFrom.setVisibility(View.GONE);
 
@@ -348,6 +354,7 @@ public class TranscCompletedActivity extends BaseActivity {
                 cardViewDebitFrom.setVisibility(View.GONE);
                 tvTransStatusValMessage.setVisibility(TextUtils.isEmpty(txnDetail.getStatusMessage()) ? View.GONE : View.VISIBLE);
                 tvTransStatusValMessage.setText(txnDetail.getStatusMessage());
+                tvTransStatusValMessage.setTextColor(getResources().getColor(R.color.red_status));
             }
 
             tvTransTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(txnDetail.getDate())));

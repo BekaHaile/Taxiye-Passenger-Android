@@ -25,8 +25,6 @@ import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SharedPreferencesName;
-import com.jugnoo.pay.utils.SingleButtonAlert;
-import com.jugnoo.pay.utils.TwoButtonAlert;
 import com.jugnoo.pay.utils.Validator;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.CircleTransform;
@@ -93,18 +91,20 @@ public class ProfileActivity extends BaseActivity {
 
     @OnClick(R.id.logout_layout)
     void logoutBtnClicked() {
-        TwoButtonAlert.showAlert(ProfileActivity.this, "Are you sure you want to logout?", AppConstant.CANCEL, AppConstant.LOG_OUT, new TwoButtonAlert.OnAlertOkCancelClickListener() {
-            @Override
-            public void onOkButtonClicked() {
-                //callingLogOutUserApi();
-                logoutAsync(ProfileActivity.this);
-            }
+        DialogPopup.alertPopupTwoButtonsWithListeners(this, "", "Are you sure you want to logout?",
+                getString(R.string.logout),
+                getString(R.string.cancel),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        logoutAsync(ProfileActivity.this);
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-            @Override
-            public void onCancelButtonClicked() {
-
-            }
-        });
+                    }
+                }, true, false);
     }
 
     @OnClick(R.id.textViewChangeMPIN)
@@ -155,18 +155,20 @@ public class ProfileActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), "Please fill your email id", Toast.LENGTH_LONG).show();
 //            return;
             } else {
-                TwoButtonAlert.showAlert(ProfileActivity.this, "Do you want to save changes?", "Cancel", "Save", new TwoButtonAlert.OnAlertOkCancelClickListener() {
-                    @Override
-                    public void onOkButtonClicked() {
-                        //callUpdateProfileApi(false);
-                        updateUserProfileAPI(false);
-                    }
+                DialogPopup.alertPopupTwoButtonsWithListeners(this, "", "Do you want to save changes?",
+                        getString(R.string.save),
+                        getString(R.string.cancel),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                updateUserProfileAPI(false);
+                            }
+                        }, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
-                    @Override
-                    public void onCancelButtonClicked() {
-
-                    }
-                });
+                            }
+                        }, true, false);
             }
 
 
@@ -222,18 +224,20 @@ public class ProfileActivity extends BaseActivity {
                     Validator validator = new Validator();
                     if (validator.validateNotSamePassword(oldPswdET.getText().toString(), oldPswdET, newPswdET.getText().toString(), newPswdET)) {
                         if (validator.validateSamePassword(newPswdET.getText().toString(), newPswdET, confirmPswdET.getText().toString(), confirmPswdET)) {
-                            TwoButtonAlert.showAlert(ProfileActivity.this, "Do you want to save Changes?", "Cancel", "Save", new TwoButtonAlert.OnAlertOkCancelClickListener() {
-                                @Override
-                                public void onOkButtonClicked() {
-                                    //callUpdateProfileApi(true);
-                                    updateUserProfileAPI(true);
-                                }
+                            DialogPopup.alertPopupTwoButtonsWithListeners(ProfileActivity.this, "", "Do you want to save Changes?",
+                                    getString(R.string.save),
+                                    getString(R.string.cancel),
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            updateUserProfileAPI(true);
+                                        }
+                                    }, new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
 
-                                @Override
-                                public void onCancelButtonClicked() {
-
-                                }
-                            });
+                                        }
+                                    }, true, false);
                         }
                     }
                 }
@@ -281,7 +285,7 @@ public class ProfileActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                        DialogPopup.alertPopup(ProfileActivity.this, "", jsonObject.getString("message"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -414,7 +418,7 @@ public class ProfileActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                        DialogPopup.alertPopup(ProfileActivity.this, "", jsonObject.getString("message"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -541,7 +545,7 @@ public class ProfileActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                        DialogPopup.alertPopup(ProfileActivity.this, "", jsonObject.getString("message"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -677,7 +681,7 @@ public class ProfileActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(ProfileActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                        DialogPopup.alertPopup(ProfileActivity.this, "", jsonObject.getString("message"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

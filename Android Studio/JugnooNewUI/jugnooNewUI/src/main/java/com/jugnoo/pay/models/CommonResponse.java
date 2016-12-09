@@ -1,5 +1,8 @@
 package com.jugnoo.pay.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class CommonResponse implements Serializable{
@@ -9,6 +12,9 @@ public class CommonResponse implements Serializable{
     private String message;
     private String order_id,faq_link,support_link;
     private UserDetails user_details;
+    @SerializedName("date")
+    @Expose
+    private String date;
 
     public UserDetails getUser_details() {
         return user_details;
@@ -64,6 +70,14 @@ public class CommonResponse implements Serializable{
 
     public void setFlag(Integer flag) {
         this.flag = flag;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public class UserDetails{

@@ -18,7 +18,6 @@ import com.jugnoo.pay.models.AccessTokenRequest;
 import com.jugnoo.pay.models.TransacHistoryResponse;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
@@ -31,6 +30,7 @@ import butterknife.OnClick;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -140,7 +140,14 @@ public class TransacHistoryActivity extends BaseActivity {
                             if(transacHistoryResponse.getTransactionHistory().size() > 0) {
                                 linearLayoutNoTxn.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
-                                PendingTrnscAdapater adapter = new PendingTrnscAdapater(TransacHistoryActivity.this, (ArrayList<TransacHistoryResponse.TransactionHistory>) transacHistoryResponse.getTransactionHistory());
+                                PendingTrnscAdapater adapter = new PendingTrnscAdapater(TransacHistoryActivity.this,
+                                        (ArrayList<TransacHistoryResponse.TransactionHistory>) transacHistoryResponse.getTransactionHistory(),
+                                        new PendingTrnscAdapater.EventHandler() {
+                                            @Override
+                                            public void refreshTransactions() {
+
+                                            }
+                                        });
                                 recyclerView.setAdapter(adapter);
                             } else{
                                 linearLayoutNoTxn.setVisibility(View.VISIBLE);
@@ -181,7 +188,7 @@ public class TransacHistoryActivity extends BaseActivity {
                         String json = new String(((TypedByteArray) error.getResponse()
                                 .getBody()).getBytes());
                         JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(TransacHistoryActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                        DialogPopup.alertPopup(TransacHistoryActivity.this, "", jsonObject.getString("message"));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

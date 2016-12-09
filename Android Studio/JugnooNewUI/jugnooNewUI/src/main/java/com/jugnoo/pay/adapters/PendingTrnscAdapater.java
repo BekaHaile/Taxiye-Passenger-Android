@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,12 +19,7 @@ import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.models.TransacHistoryResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.CallProgressWheel;
-import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.SingleButtonAlert;
-import com.jugnoo.pay.utils.TwoButtonAlert;
 import com.sabkuchfresh.utils.AppConstant;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +37,6 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 
 /**
@@ -61,6 +54,7 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
     private final String DECLINED = "Declined";
     private final String CANCELLED = "Cancelled";
     private String accessToken;
+    private EventHandler eventHandler;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -68,10 +62,12 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
         return new ViewHolder(itemView);
     }
 
-    public PendingTrnscAdapater(Activity activity, ArrayList<TransacHistoryResponse.TransactionHistory> transactionHistories) {
+    public PendingTrnscAdapater(Activity activity, ArrayList<TransacHistoryResponse.TransactionHistory> transactionHistories,
+                                EventHandler eventHandler) {
         this.transactionHistoryList = transactionHistories;
         this.activity = activity;
         accessToken =  Data.userData.accessToken;      //Prefs.with(activity).getString(SharedPreferencesName.ACCESS_TOKEN, "");
+        this.eventHandler = eventHandler;
     }
 
     private void notifyAdapter(){
@@ -114,22 +110,25 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
 					} else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()){
 						buttonText = activity.getString(R.string.cancel_request_message);
 					}
-                    TwoButtonAlert.showAlert(activity, buttonText, AppConstant.NO, AppConstant.YES,
-							new TwoButtonAlert.OnAlertOkCancelClickListener() {
-						@Override
-						public void onOkButtonClicked() {
-							if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
-								declineTranscApi(transactionHistory.getId(), pos);
-							} else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
-                                cancelTranscApi(transactionHistory.getId(), pos);
-                            }
-                        }
+                    DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", buttonText,
+                            activity.getString(R.string.ok),
+                            activity.getString(R.string.cancel),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUEST_BY_PENDING.getOrdinal()) {
+                                        declineTranscApi(transactionHistory.getId(), pos);
+                                    } else if (transactionHistory.getTxnType() == TransacHistoryResponse.Type.REQUESTED_FROM_PENDING.getOrdinal()) {
+                                        cancelTranscApi(transactionHistory.getId(), pos);
+                                    }
+                                }
+                            },
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-						@Override
-						public void onCancelButtonClicked() {
-
-						}
-					});
+                                }
+                            }, false, false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -198,51 +197,38 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
 
     // to cancel a particular transaction
     private void cancelTranscApi(int orderId, final int pos) {
-        CallProgressWheel.showLoadingDialog(activity, "Please wait..");
-        AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
-        accessTokenRequest.setAccess_token(accessToken);
-        accessTokenRequest.setOrder_id(orderId);
+        if (AppStatus.getInstance(activity).isOnline(activity)) {
+            CallProgressWheel.showLoadingDialog(activity, "Please wait..");
+            AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
+            accessTokenRequest.setAccess_token(accessToken);
+            accessTokenRequest.setOrder_id(orderId);
 
-        RestClient.getPayApiService().cancelTransc(accessTokenRequest, new Callback<TransacHistoryResponse>() {
-            @Override
-            public void success(TransacHistoryResponse transacHistoryResponse, Response response) {
-                CallProgressWheel.dismissLoadingDialog();
-                System.out.println("transacHistoryResponse.success");
-                if (transacHistoryResponse != null) {
-//                    Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, tokenGeneratedResponse.getToken());
-//
-                    int flag = transacHistoryResponse.getFlag();
-                    if (flag == ApiResponseFlags.TXN_CANCELLED.getOrdinal()) {
-                        TransacHistoryResponse.TransactionHistory obj = transactionHistoryList.get(pos);
-                        transactionHistoryList.remove(obj);
-                        notifyAdapter();
-                    } else {
-                        CommonMethods.callingBadToken((AppCompatActivity) activity, flag, transacHistoryResponse.getMessage());
+            RestClient.getPayApiService().cancelTransc(accessTokenRequest, new Callback<TransacHistoryResponse>() {
+                @Override
+                public void success(TransacHistoryResponse transacHistoryResponse, Response response) {
+                    CallProgressWheel.dismissLoadingDialog();
+                    try {
+                        int flag = transacHistoryResponse.getFlag();
+                        if (flag == ApiResponseFlags.TXN_CANCELLED.getOrdinal()) {
+                            eventHandler.refreshTransactions();
+                        } else {
+                            DialogPopup.alertPopup(activity, "", transacHistoryResponse.getMessage());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                     }
                 }
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                CallProgressWheel.dismissLoadingDialog();
-                System.out.println("transacHistoryResponse.failure");
-                try {
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                        SingleButtonAlert.showAlert(activity, "No Internet Connection", "Ok");
-//                        activity.showAlertNoInternet(activity);
-                    } else {
-                        String json = new String(((TypedByteArray) error.getResponse()
-                                .getBody()).getBytes());
-
-                        JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(activity, jsonObject.getString("message"), AppConstant.OK);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                @Override
+                public void failure(RetrofitError error) {
+                    CallProgressWheel.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                 }
-
-            }
-        });
+            });
+        } else {
+            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+        }
 
     }
 
@@ -250,51 +236,38 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
 
     // to decline a particular transaction
     private void declineTranscApi(int orderId, final int pos) {
-        CallProgressWheel.showLoadingDialog(activity, "Please wait..");
-        AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
-        accessTokenRequest.setAccess_token(accessToken);
-        accessTokenRequest.setOrder_id(orderId);
+        if (AppStatus.getInstance(activity).isOnline(activity)) {
+            CallProgressWheel.showLoadingDialog(activity, "Please wait..");
+            AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
+            accessTokenRequest.setAccess_token(accessToken);
+            accessTokenRequest.setOrder_id(orderId);
 
-        RestClient.getPayApiService().declineTransc(accessTokenRequest, new Callback<TransacHistoryResponse>() {
-            @Override
-            public void success(TransacHistoryResponse transacHistoryResponse, Response response) {
-                CallProgressWheel.dismissLoadingDialog();
-                System.out.println("decline request");
-                if (transacHistoryResponse != null) {
-//                    Prefs.with(SignUpActivity.this).save(SharedPreferencesName.ACCESS_TOKEN, tokenGeneratedResponse.getToken());
-//
-                    int flag = transacHistoryResponse.getFlag();
-                    if (flag == ApiResponseFlags.TXN_DECLINED.getOrdinal()) {
-                        TransacHistoryResponse.TransactionHistory obj = transactionHistoryList.get(pos);
-                        transactionHistoryList.remove(obj);
-                        notifyAdapter();
-                    } else {
-                        CommonMethods.callingBadToken((AppCompatActivity) activity, flag, transacHistoryResponse.getMessage());
+            RestClient.getPayApiService().declineTransc(accessTokenRequest, new Callback<TransacHistoryResponse>() {
+                @Override
+                public void success(TransacHistoryResponse transacHistoryResponse, Response response) {
+                    CallProgressWheel.dismissLoadingDialog();
+                    try {
+                        int flag = transacHistoryResponse.getFlag();
+                        if (flag == ApiResponseFlags.TXN_DECLINED.getOrdinal()) {
+                            eventHandler.refreshTransactions();
+                        } else {
+                            DialogPopup.alertPopup(activity, "", transacHistoryResponse.getMessage());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                     }
                 }
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                CallProgressWheel.dismissLoadingDialog();
-                System.out.println("transacHistoryResponse.failure");
-                try {
-                    if (error.getKind().equals(RetrofitError.Kind.NETWORK)) {
-                        SingleButtonAlert.showAlert(activity, "No Internet Connection", "Ok");
-//                        activity.showAlertNoInternet(activity);
-                    } else {
-                        String json = new String(((TypedByteArray) error.getResponse()
-                                .getBody()).getBytes());
-
-                        JSONObject jsonObject = new JSONObject(json);
-                        SingleButtonAlert.showAlert(activity, jsonObject.getString("message"), AppConstant.OK);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                @Override
+                public void failure(RetrofitError error) {
+                    CallProgressWheel.dismissLoadingDialog();
+                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
                 }
-
-            }
-        });
+            });
+        } else {
+            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+        }
 
     }
 
@@ -372,6 +345,10 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
             }
         }
         return "";
+    }
+
+    public interface EventHandler{
+        void refreshTransactions();
     }
 
 }

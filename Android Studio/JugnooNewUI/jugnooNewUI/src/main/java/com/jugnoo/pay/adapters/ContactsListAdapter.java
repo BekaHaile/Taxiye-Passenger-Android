@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.Fonts;
-
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.RecyclerViewClickListener;
@@ -20,6 +17,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by cl-macmini-38 on 06/06/16.
@@ -81,26 +81,23 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
             selectUsersList.addAll(arraylist);
         } else {
             for (SelectUser wp : arraylist) {
-                if (wp.getName().toLowerCase(Locale.getDefault())
-                        .contains(charText)) {
+                if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText)
+                        || wp.getPhone().toLowerCase(Locale.getDefault()).contains(charText)) {
                     selectUsersList.add(wp);
                 }
 
             }
 
-            if(selectUsersList.size()==0)
-            {
-                    SelectUser selectUser = new SelectUser();
-                    charText = charText.replace(" ", "");
-                    selectUser.setPhone(CommonMethods.extractNumber(charText));
-                    if(selectUser.getPhone().length()==0)
-                    {
-                        selectUser.setPhone(charText);
-                        selectUser.setName("VPA Address");
-                    }
-                    else
+            if (selectUsersList.size() == 0) {
+                SelectUser selectUser = new SelectUser();
+                charText = charText.replace(" ", "");
+                selectUser.setPhone(CommonMethods.extractNumber(charText));
+                if (selectUser.getPhone().length() == 0) {
+                    selectUser.setPhone(charText);
+                    selectUser.setName("VPA Address");
+                } else
                     selectUser.setName("Unknown");
-                    selectUsersList.add(selectUser);
+                selectUsersList.add(selectUser);
 
             }
         }
@@ -123,8 +120,6 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
               contactNameTxt = (TextView) view.findViewById(R.id.contact_name_txt); contactNameTxt.setTypeface(Fonts.mavenRegular(activity));
               mobileTxt = (TextView) view.findViewById(R.id.mobile_txt); mobileTxt.setTypeface(Fonts.mavenRegular(activity));
               contactImage = (ImageView) view.findViewById(R.id.contact_image);
-
-
             view.setOnClickListener(this);
         }
 

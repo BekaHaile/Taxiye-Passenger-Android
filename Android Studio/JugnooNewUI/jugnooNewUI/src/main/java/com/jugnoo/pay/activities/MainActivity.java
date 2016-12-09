@@ -30,7 +30,6 @@ import com.jugnoo.pay.models.VerifyUserRequest;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.SharedPreferencesName;
-import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.sabkuchfresh.utils.AppConstant;
 import com.yesbank.AddAccount;
 import com.yesbank.Registration;
@@ -108,11 +107,7 @@ public class MainActivity extends BaseActivity {
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    SingleButtonAlert.showAlertGps(MainActivity.this, "Please make sure you've granted the permission to read Contacts", "OK", new SingleButtonAlert.OnAlertOkClickListener() {
-                        @Override
-                        public void onOkButtonClicked() {
-                        }
-                    });
+                    DialogPopup.alertPopup(this, "", "Please make sure you've granted the permission to read Contacts");
                 }
                 return;
             }
@@ -208,7 +203,13 @@ public class MainActivity extends BaseActivity {
             recyclerViewPendingPayments.setLayoutManager(new LinearLayoutManager(this));
             recyclerViewPendingPayments.setItemAnimator(new DefaultItemAnimator());
             recyclerViewPendingPayments.setHasFixedSize(false);
-            pendingTrnscAdapater = new PendingTrnscAdapater(this, transactionHistories);
+            pendingTrnscAdapater = new PendingTrnscAdapater(this, transactionHistories,
+                    new PendingTrnscAdapater.EventHandler() {
+                @Override
+                public void refreshTransactions() {
+                    apiFetchPayData();
+                }
+            });
             recyclerViewPendingPayments.setAdapter(pendingTrnscAdapater);
 
             ((TextView) findViewById(R.id.textViewPaymentId)).setTypeface(Fonts.mavenMedium(this));

@@ -25,7 +25,6 @@ import com.jugnoo.pay.models.SendMoneyRequest;
 import com.jugnoo.pay.models.SendMoneyResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.CallProgressWheel;
-import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.Validator;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.CircleTransform;
@@ -46,6 +45,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * Created by cl-macmini-38 on 9/21/16.
@@ -276,7 +276,6 @@ public class SendMoneyActivity extends BaseActivity {
                                 contactDetails.setOrderId(String.valueOf(sendMoneyResponse.getTxnDetails().getOrderId()));
 								callBankTransactionApi(sendMoneyResponse.getTxnDetails());
 							} else {
-								CommonMethods.callingBadToken(SendMoneyActivity.this, flag, sendMoneyResponse.getMessage());
                                 retryDialogSendMoneyApi(sendMoneyResponse.getMessage());
 							}
                         } catch (Exception e) {
@@ -542,7 +541,8 @@ public class SendMoneyActivity extends BaseActivity {
 				} else if (Utils.isVPAValid(contactDetails.getPhone())) {
 					request.setVpa(contactDetails.getPhone());
 				}
-
+                contactDetails.setAmount(amountET.getText().toString());
+                contactDetails.setMessage(messageET.getText().toString());
 				request.setAccess_token(accessToken);
 				request.setAmount(amountET.getText().toString());
 				request.setMessage(messageET.getText().toString());
@@ -551,10 +551,14 @@ public class SendMoneyActivity extends BaseActivity {
 				RestClient.getPayApiService().requestMoney(request, new Callback<CommonResponse>() {
 					@Override
 					public void success(CommonResponse commonResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						CallProgressWheel.dismissLoadingDialog();
 						try {
 							int flag = commonResponse.getFlag();
 							if (flag == ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
+                                contactDetails.setStatusMessage(commonResponse.getMessage());
+                                contactDetails.setOrderId(commonResponse.getOrder_id());
+                                contactDetails.setDate(commonResponse.getDate());
 								Intent intent = new Intent(SendMoneyActivity.this, TranscCompletedActivity.class);
 								intent.putExtra(AppConstant.TRANSACTION_DATA, request);
 								Bundle bun = new Bundle();

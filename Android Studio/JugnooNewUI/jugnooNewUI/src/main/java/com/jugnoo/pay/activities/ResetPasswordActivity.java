@@ -12,7 +12,6 @@ import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.utils.ApiResponseFlags;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.jugnoo.pay.utils.Validator;
 import com.sabkuchfresh.utils.AppConstant;
 
@@ -26,6 +25,7 @@ import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -110,7 +110,7 @@ public class ResetPasswordActivity extends BaseActivity{
                             String json = new String(((TypedByteArray) error.getResponse()
                                     .getBody()).getBytes());
                             JSONObject jsonObject = new JSONObject(json);
-                            SingleButtonAlert.showAlert(ResetPasswordActivity.this, jsonObject.getString("message"), AppConstant.OK);
+                            DialogPopup.alertPopup(ResetPasswordActivity.this, "", jsonObject.getString("message"));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

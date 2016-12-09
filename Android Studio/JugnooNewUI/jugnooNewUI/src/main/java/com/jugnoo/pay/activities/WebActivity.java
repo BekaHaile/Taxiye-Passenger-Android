@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -14,13 +15,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.jugnoo.pay.utils.CallProgressWheel;
-import com.jugnoo.pay.utils.SingleButtonAlert;
 import com.sabkuchfresh.utils.AppConstant;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 
 
 /**
@@ -96,10 +97,10 @@ public class WebActivity extends BaseActivity {
             super.onReceivedError(view, errorCode, description, failingUrl);
             //imageViewProgressBar.setVisibility(View.GONE);
             CallProgressWheel.dismissLoadingDialog();
-            SingleButtonAlert.showAlertGps(WebActivity.this, description, AppConstant.OK, new SingleButtonAlert.OnAlertOkClickListener() {
+            DialogPopup.alertPopupWithListener(WebActivity.this, "", description, new View.OnClickListener() {
                 @Override
-                public void onOkButtonClicked() {
-                    finish();
+                public void onClick(View v) {
+                    WebActivity.this.finish();
                 }
             });
         }
