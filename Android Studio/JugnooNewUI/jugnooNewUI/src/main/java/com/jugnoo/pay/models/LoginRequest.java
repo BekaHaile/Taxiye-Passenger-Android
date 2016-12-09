@@ -1,11 +1,12 @@
 package com.jugnoo.pay.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by cl-macmini-38 on 9/21/16.
  */
 public class LoginRequest {
-   private String phone_no;
-
     public String getPhone_no() {
         return phone_no;
     }
@@ -62,10 +63,25 @@ public class LoginRequest {
         this.device_type = device_type;
     }
 
+    @SerializedName("phone_no")
+    @Expose
+    private String phone_no;
+    @SerializedName("password")
+    @Expose
     private String  password;
+    @SerializedName("latitude")
+    @Expose
     private String  latitude;
+    @SerializedName("longitude")
+    @Expose
     private String  longitude;
+    @SerializedName("unique_device_id")
+    @Expose
     private String unique_device_id;
+    @SerializedName("device_token")
+    @Expose
     private String device_token;
+    @SerializedName("device_type")
+    @Expose
     private String device_type;
 }

@@ -8,25 +8,20 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.jugnoo.pay.fragments.ContactsFragment;
 import com.jugnoo.pay.fragments.PaymentFragment;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.promotion.fragments.PromotionsFragment;
-import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
-import product.clicklabs.jugnoo.promotion.fragments.ReferralsFragment;
 
 /**
  * Created by Ankit on 12/29/15.
  */
 public class SendMoneyPagerAdapter extends FragmentPagerAdapter{
-//		implements PagerSlidingTabStrip.CustomTabProvider {
 
 	private Context context;
-//	private LayoutInflater inflater;
+	private boolean requestStatus;
 
-	public SendMoneyPagerAdapter(Context context, FragmentManager fm) {
+	public SendMoneyPagerAdapter(Context context, FragmentManager fm, boolean requestStatus) {
 		super(fm);
 		this.context = context;
-//		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.requestStatus = requestStatus;
 	}
 
 	@Override
@@ -43,7 +38,11 @@ public class SendMoneyPagerAdapter extends FragmentPagerAdapter{
 
 	@Override
 	public int getCount() {
-		return 2;
+		if(requestStatus){
+			return 1;
+		} else {
+			return 2;
+		}
 	}
 
 	@Override

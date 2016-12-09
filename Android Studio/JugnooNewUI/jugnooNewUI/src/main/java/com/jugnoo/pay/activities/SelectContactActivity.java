@@ -1,7 +1,5 @@
 package com.jugnoo.pay.activities;
 
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,16 +17,11 @@ import android.widget.TextView;
 import com.jugnoo.pay.adapters.SendMoneyPagerAdapter;
 import com.jugnoo.pay.fragments.ContactsFragment;
 import com.jugnoo.pay.fragments.PaymentFragment;
-import com.jugnoo.pay.models.SelectUser;
 import com.sabkuchfresh.utils.AppConstant;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -50,16 +43,8 @@ public class SelectContactActivity extends BaseActivity {
     }
     @Bind(R.id.phone_et)
     public EditText searchET;
-    private String accessToken;
-//    / ArrayList
-   private ArrayList<SelectUser> selectUsers;
-   private List<SelectUser> temp;
-    // Cursor to load contacts list
-    private Cursor phones, email;
     private ImageView ivToolbarRefreshContacts;
 
-    // Pop up
-   private ContentResolver resolver;
     public boolean requestStatus=false;
     public static SelectContactActivity selectContactActivityObj;
     private PagerSlidingTabStrip tabs;
@@ -81,15 +66,11 @@ public class SelectContactActivity extends BaseActivity {
         toolbarDivider = (ImageView) findViewById(R.id.toolbarDivider); toolbarDivider.setVisibility(View.GONE);
 
         selectContactActivityObj = this;
-        accessToken = Data.userData.accessToken;          //Prefs.with(SelectContactActivity.this).getString(SharedPreferencesName.ACCESS_TOKEN, "");
        requestStatus = getIntent().getBooleanExtra(AppConstant.REQUEST_STATUS,false);
-
-        selectUsers = new ArrayList<SelectUser>();
-        resolver = this.getContentResolver();
 
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        sendMoneyPagerAdapter = new SendMoneyPagerAdapter(this, getSupportFragmentManager());
+        sendMoneyPagerAdapter = new SendMoneyPagerAdapter(this, getSupportFragmentManager(), requestStatus);
         viewPager.setAdapter(sendMoneyPagerAdapter);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -120,6 +101,7 @@ public class SelectContactActivity extends BaseActivity {
         tabs.setTextColorResource(R.color.text_color, R.color.text_color_light);
         tabs.setTypeface(Fonts.mavenMedium(this), Typeface.NORMAL);
         tabs.setViewPager(viewPager);
+        tabs.setVisibility(requestStatus ? View.GONE : View.VISIBLE);
 
         searchET.setTypeface(Fonts.mavenRegular(this));
         searchET.addTextChangedListener(new TextWatcher() {
@@ -168,10 +150,6 @@ public class SelectContactActivity extends BaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if(phones != null && !phones.isClosed()){
-            phones.close();
-        }
-
     }
 
 }

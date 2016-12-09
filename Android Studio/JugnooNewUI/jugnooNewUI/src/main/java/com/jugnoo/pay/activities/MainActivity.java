@@ -15,6 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -157,6 +159,9 @@ public class MainActivity extends BaseActivity {
     private RelativeLayout relativeLayoutNoPayments;
     private String vpa = "";
     private MenuBar menuBar;
+    private ImageButton imageButtonBack;
+    private TextView textViewToolbarTitle;
+    private ImageView toolbarDivider;
 
 
     @Override
@@ -175,6 +180,13 @@ public class MainActivity extends BaseActivity {
             userDetails = Prefs.with(MainActivity.this).getObject(SharedPreferencesName.APP_USER, CommonResponse.class);
 
             menuBar = new MenuBar(this, drawer);
+            imageButtonBack = (ImageButton) findViewById(R.id.back_btn);
+            imageButtonBack.setImageResource(R.drawable.icon_menu);
+            textViewToolbarTitle = (TextView) findViewById(R.id.toolbar_title); textViewToolbarTitle.setTypeface(Fonts.avenirNext(this));
+            textViewToolbarTitle.setText(R.string.pay);
+            toolbarDivider = (ImageView) findViewById(R.id.toolbarDivider);
+            toolbarDivider.setVisibility(View.GONE);
+
 
             float marginBottom = 77f;
             float scale = getResources().getDisplayMetrics().density;
@@ -422,6 +434,7 @@ public class MainActivity extends BaseActivity {
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
                 params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
+                params.put(Constants.KEY_DEVICE_TOKEN, MyApplication.getInstance().getDeviceToken());
 
                 RestClient.getPayApiService().fetchPayData(params, new Callback<FetchPayDataResponse>() {
                     @Override

@@ -11,50 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
+        <include
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_marginLeft="-10dp"
-            android:background="@color/appBackgroundColor"
-            android:fitsSystemWindows="true">
-
-            <RelativeLayout
-                android:id="@+id/main_layout"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent">
-
-                <ImageButton
-                    android:id="@+id/back_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@android:color/transparent"
-                    android:padding="15dp"
-                    android:src="@drawable/icon_menu" />
-
-                <TextView
-                    android:id="@+id/toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center"
-                    android:text="@string/pay"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/toolbar_text_size"></TextView>
-
-
-            </RelativeLayout>
-        </android.support.v7.widget.Toolbar>
-
+            layout="@layout/toolbar"/>
     </android.support.design.widget.AppBarLayout>
-
-
 
     <include layout="@layout/content_main"/>
 

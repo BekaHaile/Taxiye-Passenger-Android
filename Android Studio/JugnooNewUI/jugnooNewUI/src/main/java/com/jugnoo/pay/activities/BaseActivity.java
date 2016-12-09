@@ -27,6 +27,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeActivity;
 
 
 /**
@@ -46,6 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         appCompatActivity = this;
         broadCastReceiverSetup();
     }
+
 
 
 
@@ -88,7 +90,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
 //        CommonMethods.clearNotifications(this);
         Log.d("OnResumeBase", "no");
-
+        if(!HomeActivity.checkIfUserDataNull(this)){
+            HomeActivity.checkForAccessTokenChange(this);
+        }
 //        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
 //                new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
 

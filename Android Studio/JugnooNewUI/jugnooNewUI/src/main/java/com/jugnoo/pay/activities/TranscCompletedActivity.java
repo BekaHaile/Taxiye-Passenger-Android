@@ -1,5 +1,6 @@
 package com.jugnoo.pay.activities;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
@@ -14,10 +15,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.models.SendMoneyCallback;
+import com.jugnoo.pay.models.SendMoneyCallbackResponse;
 import com.jugnoo.pay.models.SendMoneyRequest;
 import com.jugnoo.pay.models.TransacHistoryResponse;
 import com.jugnoo.pay.models.TransactionSummaryResponse;
@@ -47,6 +48,7 @@ import product.clicklabs.jugnoo.wallet.models.TransactionInfo;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * Created by cl-macmini-38 on 9/22/16.
@@ -111,7 +113,7 @@ public class TranscCompletedActivity extends BaseActivity {
     private String orderId;
     String transactionStatus = "";
 
-    private TextView tvTransStatusVal, tvTransStatusValMessage, tvTransTimeVal, tvBankRefIdVal, tvNpciTransIdVal,
+    private TextView tvTransStatusVal, tvTransStatusValMessage, tvTransTimeVal, tvBankRefIdVal, tvNpciTransIdVal, tvAmountVal,
             textViewAccountNumber, textViewBankName, textViewDebitValue, textViewDebitFrom;
     private ImageView ivTransCompleted, imageViewBank, imageViewCall;
     private CardView cardViewDebitFrom, cardViewMessage;
@@ -126,6 +128,7 @@ public class TranscCompletedActivity extends BaseActivity {
             setContentView(R.layout.activity_transaction_completed);
             ButterKnife.bind(this);
             toolbarTitleTxt.setText(R.string.transc_completed_screen);
+            toolbarTitleTxt.setTypeface(Fonts.avenirNext(this));
             mToolBar.setTitle("");
             setSupportActionBar(mToolBar);
             contactDetails = (SelectUser) getIntent().getExtras().getParcelable(AppConstant.CONTACT_DATA);
@@ -142,6 +145,7 @@ public class TranscCompletedActivity extends BaseActivity {
             tvTransTimeVal = (TextView) findViewById(R.id.tvTransTimeVal); tvTransTimeVal.setTypeface(Fonts.mavenMedium(this));
             tvBankRefIdVal = (TextView) findViewById(R.id.tvBankRefIdVal); tvBankRefIdVal.setTypeface(Fonts.mavenMedium(this));
             tvNpciTransIdVal = (TextView) findViewById(R.id.tvNpciTransIdVal); tvNpciTransIdVal.setTypeface(Fonts.mavenMedium(this));
+            tvAmountVal = (TextView) findViewById(R.id.tvAmountVal); tvAmountVal.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
             textViewAccountNumber = (TextView) findViewById(R.id.textViewAccountNumber); textViewAccountNumber.setTypeface(Fonts.mavenMedium(this));
             textViewBankName = (TextView) findViewById(R.id.textViewBankName); textViewBankName.setTypeface(Fonts.mavenMedium(this));
             textViewDebitValue = (TextView) findViewById(R.id.textViewDebitValue); textViewDebitValue.setTypeface(Fonts.mavenMedium(this));
@@ -160,6 +164,7 @@ public class TranscCompletedActivity extends BaseActivity {
             ((TextView)findViewById(R.id.tvTransTime)).setTypeface(Fonts.mavenRegular(this));
             ((TextView)findViewById(R.id.tvBankRefId)).setTypeface(Fonts.mavenRegular(this));
             ((TextView)findViewById(R.id.tvNpciTransId)).setTypeface(Fonts.mavenRegular(this));
+            ((TextView)findViewById(R.id.tvAmount)).setTypeface(Fonts.mavenRegular(this));
             textViewDebitFrom = (TextView)findViewById(R.id.textViewDebitFrom); textViewDebitFrom.setTypeface(Fonts.mavenRegular(this));
             rvNpciTransId = (RelativeLayout) findViewById(R.id.rvNpciTransId);
             rvBankRefId = (RelativeLayout) findViewById(R.id.rvBankRefId);
@@ -208,6 +213,8 @@ public class TranscCompletedActivity extends BaseActivity {
                 tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
                 ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
             }
+            cardViewDebitFrom.setVisibility(View.GONE);
+
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -255,28 +262,32 @@ public class TranscCompletedActivity extends BaseActivity {
                 if (message != null) {
                     params.put("message", message.toString());
                 }
-                RestClient.getPayApiService().sendMoneyCallback(params, new Callback<CommonResponse>() {
+                RestClient.getPayApiService().sendMoneyCallback(params, new Callback<SendMoneyCallbackResponse>() {
                     @Override
-                    public void success(CommonResponse commonResponse, Response response) {
+                    public void success(SendMoneyCallbackResponse commonResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         CallProgressWheel.dismissLoadingDialog();
                         try {
                             int flag = commonResponse.getFlag();
                             if (flag == ApiResponseFlags.TXN_COMPLETED.getOrdinal()) {
-                                scrollView.setVisibility(View.VISIBLE);
-								tvTransStatusValMessage.setVisibility(View.GONE);
-								tvTransStatusValMessage.setText(commonResponse.getMessage());
-								tvTransStatusVal.setText(getString(R.string.successful));
-								tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
-								ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
+                                TransactionSummaryResponse.TxnDetail txnDetail = new TransactionSummaryResponse()
+                                        .new TxnDetail(Double.parseDouble(requestObj.getAmount()), commonResponse.getDate(),
+                                        getString(R.string.successful),
+                                        contactDetails.getName(), contactDetails.getPhone(), contactDetails.getPhone(),
+                                        getString(R.string.payment_to),
+                                        commonResponse.getNpciTxnId(), commonResponse.getBankRefId(),
+                                        commonResponse.getTxnMessage(), commonResponse.getMessage());
+                                updateUI(txnDetail, true, true, false);
 							}
                             else if (flag == ApiResponseFlags.TXN_FAILED.getOrdinal()) {
-                                scrollView.setVisibility(View.VISIBLE);
-								tvTransStatusValMessage.setVisibility(View.VISIBLE);
-								tvTransStatusValMessage.setTextColor(getResources().getColor(R.color.red_status));
-								tvTransStatusValMessage.setText(commonResponse.getMessage());
-								tvTransStatusVal.setText(getString(R.string.failed));
-								tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
-								ivTransCompleted.setImageResource(R.drawable.ic_failed);
+                                TransactionSummaryResponse.TxnDetail txnDetail = new TransactionSummaryResponse()
+                                        .new TxnDetail(Double.parseDouble(requestObj.getAmount()), commonResponse.getDate(),
+                                        getString(R.string.failed),
+                                        contactDetails.getName(), contactDetails.getPhone(), contactDetails.getPhone(),
+                                        getString(R.string.payment_to),
+                                        commonResponse.getNpciTxnId(), commonResponse.getBankRefId(),
+                                        commonResponse.getTxnMessage(), commonResponse.getMessage());
+                                updateUI(txnDetail, false, true, false);
 							}
                             else {
                                 retryDialogSendMoneyCallbackApi(DialogErrorType.SERVER_ERROR, message, orderId, accessToken);
@@ -322,6 +333,67 @@ public class TranscCompletedActivity extends BaseActivity {
                 });
     }
 
+    private void updateUI(TransactionSummaryResponse.TxnDetail txnDetail, boolean success, boolean debit, boolean credit){
+        try {
+            scrollView.setVisibility(View.VISIBLE);
+            toolbarTitleTxt.setText(getString(R.string.transaction_id_number_format, String.valueOf(orderId)));
+            tvTransStatusVal.setText(txnDetail.getStatus());
+            if(success){  //transactionInfo.getStatus() == 1
+                tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
+                ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
+                tvTransStatusValMessage.setVisibility(View.GONE);
+            } else {
+                tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
+                ivTransCompleted.setImageResource(R.drawable.ic_failed);
+                cardViewDebitFrom.setVisibility(View.GONE);
+                tvTransStatusValMessage.setVisibility(TextUtils.isEmpty(txnDetail.getStatusMessage()) ? View.GONE : View.VISIBLE);
+                tvTransStatusValMessage.setText(txnDetail.getStatusMessage());
+            }
+
+            tvTransTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(txnDetail.getDate())));
+            rvBankRefId.setVisibility(TextUtils.isEmpty(txnDetail.getBankRefId()) ? View.GONE : View.VISIBLE);
+            rvNpciTransId.setVisibility(TextUtils.isEmpty(txnDetail.getNpciTxnId()) ? View.GONE : View.VISIBLE);
+            tvBankRefIdVal.setText(txnDetail.getBankRefId());
+            tvNpciTransIdVal.setText(txnDetail.getNpciTxnId());
+            tvAmountVal.setText(getString(R.string.rupees_value_format,
+                    Utils.getMoneyDecimalFormat().format(txnDetail.getAmount())));
+            textViewDebitValue.setText(getString(R.string.rupees_value_format,
+					Utils.getMoneyDecimalFormat().format(txnDetail.getAmount())));
+
+
+            textViewPaid.setText(txnDetail.getTxnString());
+            contactImg.setImageResource(R.drawable.icon_user);
+            mobileTxt.setVisibility(View.GONE);
+            imageViewCall.setVisibility(View.GONE);
+            if(TextUtils.isEmpty(txnDetail.getName())){
+				if(!TextUtils.isEmpty(txnDetail.getPhoneNo()) && Utils.isPhoneValid(txnDetail.getPhoneNo())){
+					contactNameTxt.setText(txnDetail.getPhoneNo());
+                    imageViewCall.setVisibility(View.VISIBLE);
+				} else if(!TextUtils.isEmpty(txnDetail.getVpa())){
+					contactNameTxt.setText(txnDetail.getVpa());
+				}
+			} else {
+				contactNameTxt.setText(txnDetail.getName());
+				if(!TextUtils.isEmpty(txnDetail.getPhoneNo()) && Utils.isPhoneValid(txnDetail.getPhoneNo())){
+					mobileTxt.setText(txnDetail.getPhoneNo());
+					imageViewCall.setVisibility(View.VISIBLE);
+				} else if(!TextUtils.isEmpty(txnDetail.getVpa())){
+					mobileTxt.setText(txnDetail.getVpa());
+				}
+			}
+
+            msgTxt.setText(txnDetail.getMessage());
+            cardViewMessage.setVisibility(TextUtils.isEmpty(txnDetail.getMessage()) ? View.GONE : View.VISIBLE);
+
+            if(debit){ //(transactionInfo.transactionType == 1 || transactionInfo.transactionType == 3)
+                textViewDebitFrom.setText(R.string.debit_from);
+            } else if(credit){ //(transactionInfo.transactionType == 2 || transactionInfo.transactionType == 4)
+                textViewDebitFrom.setText(R.string.credit_to);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public void apiGetTransactionSummary(final int orderId, final int txnType, final TransactionInfo transactionInfo) {
         try {
@@ -341,51 +413,9 @@ public class TranscCompletedActivity extends BaseActivity {
                         try{
                             if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == summaryResponse.getFlag()){
                                 TransactionSummaryResponse.TxnDetail txnDetail = summaryResponse.getTxnDetails().get(0);
-                                scrollView.setVisibility(View.VISIBLE);
-                                tvTransTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(txnDetail.getDate())));
-                                textViewDebitValue.setText(getString(R.string.rupees_value_format,
-                                        Utils.getMoneyDecimalFormat().format(txnDetail.getAmount())));
-                                toolbarTitleTxt.setText(getString(R.string.transaction_id_format, String.valueOf(orderId)));
-                                tvBankRefIdVal.setText(txnDetail.getBankRefId());
-                                tvNpciTransIdVal.setText(txnDetail.getNpciTxnId());
-                                tvTransStatusVal.setText(txnDetail.getStatus());
-
-                                textViewPaid.setText(txnDetail.getTxnString());
-                                contactImg.setImageResource(R.drawable.icon_user);
-                                mobileTxt.setVisibility(View.GONE);
-                                imageViewCall.setVisibility(View.GONE);
-                                if(TextUtils.isEmpty(txnDetail.getName())){
-                                    if(!TextUtils.isEmpty(txnDetail.getPhoneNo())){
-                                        contactNameTxt.setText(txnDetail.getPhoneNo());
-                                    } else if(!TextUtils.isEmpty(txnDetail.getVpa())){
-                                        contactNameTxt.setText(txnDetail.getVpa());
-                                    }
-                                } else {
-                                    contactNameTxt.setText(txnDetail.getName());
-                                    if(!TextUtils.isEmpty(txnDetail.getPhoneNo())){
-                                        mobileTxt.setText(txnDetail.getPhoneNo());
-                                        imageViewCall.setVisibility(View.VISIBLE);
-                                    } else if(!TextUtils.isEmpty(txnDetail.getVpa())){
-                                        mobileTxt.setText(txnDetail.getVpa());
-                                    }
-                                }
-
-                                msgTxt.setText(txnDetail.getMessage());
-                                cardViewMessage.setVisibility(TextUtils.isEmpty(txnDetail.getMessage()) ? View.GONE : View.VISIBLE);
-                                if(transactionInfo.getStatus() == 1){
-                                    tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
-                                    ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
-                                    if(transactionInfo.transactionType == 1 || transactionInfo.transactionType == 3){
-                                        textViewDebitFrom.setText(R.string.debit_from);
-                                    } else if(transactionInfo.transactionType == 2 || transactionInfo.transactionType == 4){
-                                        textViewDebitFrom.setText(R.string.credit_to);
-                                    }
-                                } else {
-                                    tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
-                                    ivTransCompleted.setImageResource(R.drawable.ic_failed);
-                                    cardViewDebitFrom.setVisibility(View.GONE);
-                                }
-
+                                updateUI(txnDetail, (transactionInfo.getStatus() == 1),
+                                        (transactionInfo.transactionType == 1 || transactionInfo.transactionType == 3),
+                                        (transactionInfo.transactionType == 2 || transactionInfo.transactionType == 4));
                             } else {
                                 DialogPopup.alertPopupTwoButtonsWithListeners(TranscCompletedActivity.this, "", summaryResponse.getMessage(),
                                         getString(R.string.retry),

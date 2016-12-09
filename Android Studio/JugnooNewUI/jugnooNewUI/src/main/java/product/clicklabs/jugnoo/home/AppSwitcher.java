@@ -209,7 +209,38 @@ public class AppSwitcher {
 			else if (clientId.equalsIgnoreCase(Config.getPayClientId()) && !(activity instanceof MainActivity)) {
 				if (Data.getPayData() == null) {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-							callback);
+							new ApiLoginUsingAccessToken.Callback() {
+								@Override
+								public void noNet() {
+									DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
+								}
+
+								@Override
+								public void success(String clientId) {
+									if (!intentSentAfterDataCheck(activity, clientId, data, bundle, clearActivityStack)) {
+										intent.setClass(activity, MainActivity.class);
+										intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+										activity.startActivity(intent);
+										activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+										ActivityCompat.finishAffinity(activity);
+									}
+								}
+
+								@Override
+								public void failure() {
+
+								}
+
+								@Override
+								public void onRetry(View view) {
+									switchApp(activity, clientId, data, latLng, bundle, clearActivityStack);
+								}
+
+								@Override
+								public void onNoRetry(View view) {
+
+								}
+							});
 				} else {
 					intent.setClass(activity, MainActivity.class);
 					activity.startActivity(intent);

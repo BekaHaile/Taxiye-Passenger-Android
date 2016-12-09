@@ -101,13 +101,12 @@ public class SendMoneyActivity extends BaseActivity {
             } else{
                 amountET.requestFocus();
                 amountET.setHovered(true);
-                amountET.setError("Amount should be Rs. 1 to 1,00,000");
+                amountET.setError(getString(R.string.amount_range_error));
             }
         } else {
             amountET.requestFocus();
             amountET.setHovered(true);
-            amountET.setError("Please fill your amount");
-
+            amountET.setError(getString(R.string.fill_your_amount));
         }
     }
 
@@ -138,6 +137,7 @@ public class SendMoneyActivity extends BaseActivity {
 
         relativeLayoutSendMoney = (LinearLayout) findViewById(R.id.relativeLayoutSendMoney);
         textViewSendMoney = (TextView) findViewById(R.id.textViewSendMoney); textViewSendMoney.setTypeface(Fonts.mavenMedium(this));
+        toolbarTitleTxt.setTypeface(Fonts.avenirNext(this));
         if (requestStatus) {
             toolbarTitleTxt.setText(R.string.request_money);
             textViewSendMoney.setText(getResources().getString(R.string.request_money));
@@ -150,6 +150,8 @@ public class SendMoneyActivity extends BaseActivity {
             linearLayoutDebitFrom.setVisibility(View.VISIBLE);
             imageViewSendMoney.setImageResource(R.drawable.ic_send_money_white);
         }
+        linearLayoutDebitFrom.setVisibility(View.GONE);
+
         mToolBar.setTitle("");
         setSupportActionBar(mToolBar);
         sendMoneyActivityObj = this;
@@ -252,8 +254,10 @@ public class SendMoneyActivity extends BaseActivity {
 
 				if (Utils.isPhoneValid(contactDetails.getPhone())) {
 					request.setPhone_no(Utils.removeExtraCharsPhoneNumber(contactDetails.getPhone()));
+                    request.setHas_vpa(0);
 				} else if (Utils.isVPAValid(contactDetails.getPhone())) {
 					request.setVpa(contactDetails.getPhone());
+                    request.setHas_vpa(1);
 				}
 
 				request.setAccess_token(accessToken);

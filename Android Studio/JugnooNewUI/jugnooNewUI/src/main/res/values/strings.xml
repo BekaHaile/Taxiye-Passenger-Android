@@ -1380,6 +1380,8 @@
     <string name="credit_to">Credit to</string>
     <string name="wallet_transactions">Wallet Transactions</string>
     <string name="payment_transactions">Payment Transactions</string>
+    <string name="amount_range_error">Amount should be Rs. 1 to 1,00,000</string>
+    <string name="fill_your_amount">Please fill your amount</string>
 
 
 </resources>

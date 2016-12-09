@@ -27,7 +27,7 @@
         fab:menu_animationDelayPerItem="25"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
-        fab:menu_backgroundColor="#d9dce2"
+        fab:menu_backgroundColor="@color/fab_bg"
         fab:menu_labels_position="right">
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton

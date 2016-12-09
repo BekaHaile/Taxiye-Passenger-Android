@@ -7,6 +7,7 @@ import com.jugnoo.pay.models.FetchPayDataResponse;
 import com.jugnoo.pay.models.FetchPaymentAddressResponse;
 import com.jugnoo.pay.models.GenerateTokenRequest;
 import com.jugnoo.pay.models.LoginRequest;
+import com.jugnoo.pay.models.SendMoneyCallbackResponse;
 import com.jugnoo.pay.models.SendMoneyRequest;
 import com.jugnoo.pay.models.SendMoneyResponse;
 import com.jugnoo.pay.models.TokenGeneratedResponse;
@@ -61,7 +62,7 @@ public interface PayApiService {
     // api to send details after getting response from bank api
     @FormUrlEncoded
     @POST("/send_money_callback")
-    void sendMoneyCallback(@FieldMap Map<String, String> params, Callback<CommonResponse> callback);
+    void sendMoneyCallback(@FieldMap Map<String, String> params, Callback<SendMoneyCallbackResponse> callback);
 
     @FormUrlEncoded
     @POST("/set_mpin")

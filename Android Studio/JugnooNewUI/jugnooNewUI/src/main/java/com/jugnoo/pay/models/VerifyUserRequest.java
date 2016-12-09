@@ -1,21 +1,54 @@
 package com.jugnoo.pay.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by cl-macmini-38 on 9/20/16.
  */
 public class VerifyUserRequest {
 
+    @SerializedName("user_email")
+    @Expose
     private String user_email;
+    @SerializedName("device_token")
+    @Expose
     private String device_token;
+    @SerializedName("unique_device_id")
+    @Expose
     private String unique_device_id;
+    @SerializedName("password")
+    @Expose
     private String password;
+    @SerializedName("user_name")
+    @Expose
     private String user_name;
+    @SerializedName("latitude")
+    @Expose
     private String latitude="0";
-    private String longitude="0",phone_no,token;
+    @SerializedName("longitude")
+    @Expose
+    private String longitude="0";
+    @SerializedName("phone_no")
+    @Expose
+    private String phone_no;
+    @SerializedName("token")
+    @Expose
+    private String token;
+    @SerializedName("vpa")
+    @Expose
     private String vpa;
+    @SerializedName("device_type")
+    @Expose
     private String device_type;
+    @SerializedName("message")
+    @Expose
     private String message;
+    @SerializedName("autos_user_id")
+    @Expose
     private String autos_user_id;
+    @SerializedName("access_token")
+    @Expose
     private String access_token;
 
     public String getMessage() {

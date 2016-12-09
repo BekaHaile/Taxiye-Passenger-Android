@@ -101,6 +101,21 @@ public class TransactionSummaryResponse {
 		@Expose
 		private String message;
 
+		public TxnDetail(Double amount, String date, String status, String name, String phoneNo, String vpa,
+						 String txnString, String npciTxnId, String bankRefId, String statusMessage, String message) {
+			this.amount = amount;
+			this.date = date;
+			this.status = status;
+			this.name = name;
+			this.phoneNo = phoneNo;
+			this.vpa = vpa;
+			this.txnString = txnString;
+			this.npciTxnId = npciTxnId;
+			this.bankRefId = bankRefId;
+			this.statusMessage = statusMessage;
+			this.message = message;
+		}
+
 		/**
 		 *
 		 * @return

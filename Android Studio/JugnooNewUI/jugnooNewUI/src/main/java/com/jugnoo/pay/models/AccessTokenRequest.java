@@ -1,17 +1,42 @@
 package com.jugnoo.pay.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by cl-macmini-38 on 9/21/16.
  */
 public class AccessTokenRequest {
-  private String  access_token;
+    @SerializedName("access_token")
+    @Expose
+    private String  access_token;
+    @SerializedName("device_token")
+    @Expose
     private String device_token;
+    @SerializedName("is_pending")
+    @Expose
     private int is_pending;
+    @SerializedName("order_id")
+    @Expose
     private int order_id;
-
+    @SerializedName("updated_user_name")
+    @Expose
     private String updated_user_name;
+    @SerializedName("updated_user_email")
+    @Expose
     private String updated_user_email;
+    @SerializedName("old_password")
+    @Expose
     private String old_password;
+    @SerializedName("new_password")
+    @Expose
+    private String new_password;
+    @SerializedName("device_type")
+    @Expose
+    private String device_type;
+    @SerializedName("unique_device_id")
+    @Expose
+    private String unique_device_id;
 
     public String getUpdated_user_name() {
         return updated_user_name;
@@ -44,8 +69,6 @@ public class AccessTokenRequest {
     public void setNew_password(String new_password) {
         this.new_password = new_password;
     }
-
-    private String new_password;
 
     public int getOrder_id() {
         return order_id;
@@ -95,6 +118,4 @@ public class AccessTokenRequest {
         this.unique_device_id = unique_device_id;
     }
 
-    private String device_type;
-    private String unique_device_id;
 }

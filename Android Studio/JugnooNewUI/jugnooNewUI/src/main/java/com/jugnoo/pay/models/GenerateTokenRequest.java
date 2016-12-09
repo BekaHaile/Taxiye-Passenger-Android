@@ -1,13 +1,29 @@
 package com.jugnoo.pay.models;
 
-public class GenerateTokenRequest {
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
+public class GenerateTokenRequest {
+    @SerializedName("user_email")
+    @Expose
     private String user_email;
+    @SerializedName("device_token")
+    @Expose
     private String device_token;
+    @SerializedName("unique_device_id")
+    @Expose
     private String unique_device_id;
+    @SerializedName("latitude")
+    @Expose
     private String latitude;
+    @SerializedName("longitude")
+    @Expose
     private String longitude;
+    @SerializedName("phone_number")
+    @Expose
     private String phone_number;
+    @SerializedName("device_type")
+    @Expose
     private String device_type;
 
     public String getPhone_number() {
