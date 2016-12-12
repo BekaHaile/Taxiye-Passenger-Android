@@ -778,6 +778,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
             }
+            updateCartDataView();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1890,7 +1891,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private double jcUsed(){
-        return Math.min(totalAmount(), Data.userData.getJugnooBalance());
+        if(type == AppConstant.ApplicationType.MENUS && activity.getPaymentOption() == PaymentOption.CASH){
+            return 0d;
+        } else {
+            return Math.min(totalAmount(), Data.userData.getJugnooBalance());
+        }
     }
 
     private double deliveryCharges(){

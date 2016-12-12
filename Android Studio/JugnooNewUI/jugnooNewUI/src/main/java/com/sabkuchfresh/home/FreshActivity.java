@@ -2019,7 +2019,15 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         if(!addressDeleted) {
                             setSelectedAddressId(searchResult.getId());
                         } else{
-                            performBackPressed();
+                            int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                            setSelectedAddress("");
+                            setSelectedLatLng(null);
+                            setSelectedAddressId(0);
+                            setSelectedAddressType("");
+
+                            setRefreshCart(true);
+                            saveOfferingLastAddress(appType);
+                            setLocalityAddressFirstTime(Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -2503,7 +2511,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void setOfferingLastAddressToActivityVariables(int appType){
         try {
             Gson gson = new Gson();
-            SearchResult searchResultLocality = searchResultLocality = gson.fromJson(Prefs.with(this)
+            SearchResult searchResultLocality = gson.fromJson(Prefs.with(this)
                     .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
             if(searchResultLocality != null && !TextUtils.isEmpty(searchResultLocality.getAddress())){
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);

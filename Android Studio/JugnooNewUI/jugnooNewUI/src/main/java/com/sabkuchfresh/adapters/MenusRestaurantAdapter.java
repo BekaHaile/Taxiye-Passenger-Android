@@ -134,22 +134,18 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 if(lhs.getIsClosed()==0 && rhs.getIsClosed()!=0)
                 {
                     point = -(rhs.getIsClosed() - lhs.getIsClosed());
-                    Log.v("sorting ","sorting done 1"+point);
                 }
                else if(lhs.getIsClosed()!=0 && rhs.getIsClosed()==0)
                 {
                     point = -(rhs.getIsClosed() - lhs.getIsClosed());
-                    Log.v("sorting ","sorting done 2"+point);
                 }
                else if(lhs.getIsAvailable()==0 && rhs.getIsAvailable()!=0)
                 {
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
-                    Log.v("sorting ","sorting done 3"+point);
                 }
                 else if(lhs.getIsAvailable()!=0 && rhs.getIsAvailable()==0)
                 {
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
-                    Log.v("sorting ","sorting done 4"+point);
                 }
 
 
