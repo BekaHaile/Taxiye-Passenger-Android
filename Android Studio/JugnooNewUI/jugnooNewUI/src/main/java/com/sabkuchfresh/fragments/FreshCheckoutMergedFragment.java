@@ -990,8 +990,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     }
                     params.put(Constants.KEY_MASTER_COUPON, String.valueOf(activity.getSelectedPromoCoupon().getMasterCoupon()));
                 }
-                chargeDetails.put(Events.COUPONS_USED, activity.getSelectedPromoCoupon());
-
+                try {
+                    chargeDetails.put(Events.COUPONS_USED, activity.getSelectedPromoCoupon().getTitle());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
 
                 if(type == AppConstant.ApplicationType.MEALS) {

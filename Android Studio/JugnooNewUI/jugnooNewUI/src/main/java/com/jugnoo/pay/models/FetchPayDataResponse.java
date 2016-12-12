@@ -25,6 +25,9 @@ public class FetchPayDataResponse {
 	@SerializedName("transaction")
 	@Expose
 	private List<TransacHistoryResponse.TransactionHistory> transaction = new ArrayList<TransacHistoryResponse.TransactionHistory>();
+	@SerializedName("share_button_text")
+	@Expose
+	private String shareButtonText;
 
 	public Integer getFlag() {
 		return flag;
@@ -56,5 +59,13 @@ public class FetchPayDataResponse {
 
 	public void setTransaction(List<TransacHistoryResponse.TransactionHistory> transaction) {
 		this.transaction = transaction;
+	}
+
+	public String getShareButtonText() {
+		return shareButtonText;
+	}
+
+	public void setShareButtonText(String shareButtonText) {
+		this.shareButtonText = shareButtonText;
 	}
 }

@@ -1,5 +1,8 @@
 package com.jugnoo.pay.models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 /**
@@ -13,6 +16,9 @@ public class AccountManagementResponse implements Serializable
     private String mkey;
     private String token;
     private String vpa;
+    @SerializedName("message")
+    @Expose
+    private String message;
 
     public Integer getFlag() {
         return flag;
@@ -52,5 +58,13 @@ public class AccountManagementResponse implements Serializable
 
     public void setVpa(String vpa) {
         this.vpa = vpa;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

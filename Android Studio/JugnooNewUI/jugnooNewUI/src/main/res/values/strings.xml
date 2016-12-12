@@ -1320,7 +1320,7 @@
 
 	// select contact strings
 <string name="add_contact">CONTACTS</string>
-<string name="mobile_contact">Type a name or a mobile number</string>
+<string name="mobile_contact">Type a name or mobile number</string>
 <string name="amount_string">Enter amount</string>
 <string name="message_string">Add a message (optional)</string>
 <string name="message">Message</string>
@@ -1384,6 +1384,9 @@
     <string name="pay_transactions">Pay Transactions</string>
     <string name="change_mpin">Change MPIN</string>
     <string name="reset_account">Reset Account</string>
+    <string name="reset_pay_account">Reset Pay Account</string>
+    <string name="account_management">Account Management</string>
+    <string name="jugnoo_pay">Jugnoo Pay</string>
 
 
 </resources>

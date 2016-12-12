@@ -194,7 +194,7 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
                     Set set = new TreeSet(new Comparator<SelectUser>() {
                         @Override
                         public int compare(SelectUser o1, SelectUser o2) {
-                            if(o1.getName().toString().equalsIgnoreCase(o2.getName().toString())){
+                            if(o1.getPhone().toString().equalsIgnoreCase(o2.getPhone().toString())){
                                 return 0;
                             }
                             return 1;

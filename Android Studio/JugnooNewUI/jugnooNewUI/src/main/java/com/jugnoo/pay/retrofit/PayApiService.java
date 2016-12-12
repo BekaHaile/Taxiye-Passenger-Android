@@ -142,4 +142,9 @@ public interface PayApiService {
     @POST("/get_transaction_history")
     void getTransactionHistory(@FieldMap Map<String, String> params,
                                Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/reset_account")
+    void resetAccount(@FieldMap Map<String, String> params,
+                           Callback<SettleUserDebt> callback);
 }

@@ -17,6 +17,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -29,8 +30,10 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
 import com.jugnoo.pay.adapters.PendingTrnscAdapater;
 import com.jugnoo.pay.models.AccountManagementResponse;
+import com.jugnoo.pay.models.AccountMgmtCallbackRequest;
 import com.jugnoo.pay.models.CommonResponse;
 import com.jugnoo.pay.models.FetchPayDataResponse;
 import com.jugnoo.pay.models.SendMoneyResponse;
@@ -63,8 +66,10 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.MenuBar;
+import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -87,6 +92,7 @@ public class MainActivity extends BaseActivity {
     private final int MY_PERMISSIONS_REQUEST_READ_CONTACTS = 1;
     private final int VPA_REGISTER_INTENT_REQUEST_CODE = 121;
     private final int CHANGE_MPIN_INTENT_REQUEST_CODE = 122;
+    private final int MANAGE_ACCOUNT_INTENT_REQUEST_CODE = 123;
 
     private boolean isSendingMoney = true;
     @OnClick(R.id.linearLayoutSendMoney)
@@ -171,8 +177,9 @@ public class MainActivity extends BaseActivity {
     private MenuBar menuBar;
     private ImageButton imageButtonBack;
     private TextView textViewToolbarTitle;
-    private ImageView toolbarDivider, ivToolbarSetting;
-
+    private ImageView toolbarDivider, ivToolbarSetting, imageViewSharePaymentId;
+    private FetchPayDataResponse fetchPayDataResponse;
+    private CallbackManager callbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +193,8 @@ public class MainActivity extends BaseActivity {
             drawer.setDrawerListener(toggle);
             toggle.setDrawerIndicatorEnabled(false);
 
+            callbackManager = CallbackManager.Factory.create();
+
             toggle.syncState();
             userDetails = Prefs.with(MainActivity.this).getObject(SharedPreferencesName.APP_USER, CommonResponse.class);
 
@@ -198,6 +207,7 @@ public class MainActivity extends BaseActivity {
             toolbarDivider.setVisibility(View.GONE);
             ivToolbarSetting = (ImageView) findViewById(R.id.ivToolbarSetting);
             ivToolbarSetting.setVisibility(View.VISIBLE);
+            imageViewSharePaymentId = (ImageView) findViewById(R.id.imageViewSharePaymentId);
 
 
             float marginBottom = 77f;
@@ -259,6 +269,18 @@ public class MainActivity extends BaseActivity {
                 }
             });
 
+            imageViewSharePaymentId.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        ReferralActions.genericShareDialog(MainActivity.this, callbackManager,
+								getString(R.string.jugnoo_pay), fetchPayDataResponse.getShareButtonText(), "");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
             LocalBroadcastManager.getInstance(this).registerReceiver(localBroadcastReceiver,
                     new IntentFilter(Constants.INTENT_ACTION_PAY_BROADCAST));
 
@@ -282,54 +304,13 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    private void accountManagement(){
-        CallProgressWheel.showLoadingDialog(MainActivity.this, "Please wait..");
-        HashMap<String, String> params = new HashMap<>();
-
-        params.put("access_token",  Data.userData.accessToken);
-
-        RestClient.getPayApiService().accountManagement(params, new Callback<AccountManagementResponse>() {
-            @Override
-            public void success(AccountManagementResponse accountManagementResponse, Response response) {
-                CallProgressWheel.dismissLoadingDialog();
-                if(accountManagementResponse != null) {
-                    int flag = accountManagementResponse.getFlag();
-                    if(flag == 143) {
-                        String mid = accountManagementResponse.getMid();
-                        String mkey = accountManagementResponse.getMkey();
-                        String merchantTxnID = accountManagementResponse.getToken();
-                        String vpa = accountManagementResponse.getVpa();
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString("mid", mid);
-                        bundle.putString("merchantKey", mkey);
-                        bundle.putString("merchantTxnID", merchantTxnID);
-                        bundle.putString("virtualAddress", vpa);     // vijay27@yesb
-                        Intent intent = new Intent(getApplicationContext(), AddAccount.class);
-                        intent.putExtras(bundle);
-                        startActivityForResult(intent, 1);
-                    }
-                    else {
-                        System.out.println(flag);
-                    }
-                } else {
-                    System.out.println("response object is null");
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                System.out.println("failure..");
-            }
-        });
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             super.onActivityResult(requestCode, resultCode, data);
             if (requestCode == VPA_REGISTER_INTENT_REQUEST_CODE
-                    && resultCode == Activity.RESULT_OK && data != null) {
+                    && resultCode == Activity.RESULT_OK
+                    && data != null) {
                 Bundle bundle = data.getExtras();
                 String pgMeTrnRefNo = bundle.getString("pgMeTrnRefNo");
                 String yblRefId = bundle.getString("yblRefId");
@@ -413,12 +394,29 @@ public class MainActivity extends BaseActivity {
                 //--------------------
 
                 changeMPINCallbackApi(setMPINResponse);
+            } else if (requestCode == MANAGE_ACCOUNT_INTENT_REQUEST_CODE
+                    && resultCode == Activity.RESULT_OK
+                    && data != null) {
+                Bundle bundle= data.getExtras();
+                String pgMeTrnRefNo = bundle.getString("pgMeTrnRefNo");
+                String yblRefId = bundle.getString("yblRefId");
+                String virtualAddress = bundle.getString("virtualAddress");
+                String status= bundle.getString("status");
+                String statusdesc = bundle.getString("statusdesc");
+                String date = bundle.getString("date");
+                String AccountNo = bundle.getString("accountNo");
+                String ifsc = bundle.getString("ifsc");
+                String accName = bundle.getString("accName");
+                AccountMgmtCallbackRequest accountManagementResponse = new AccountMgmtCallbackRequest(pgMeTrnRefNo, yblRefId, virtualAddress, status, statusdesc, date, AccountNo, ifsc, accName);
+                String message = accountManagementResponse.toString();
+
             }
             else{
                 if(data == null){
                     Log.e("call failed","call failed");
                 }
             }
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -553,6 +551,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void updateTransactions(FetchPayDataResponse fetchPayDataResponse){
+        this.fetchPayDataResponse = fetchPayDataResponse;
         vpa = fetchPayDataResponse.getVpa();
         Utils.setTextUnderline(textViewPaymentIdValue, fetchPayDataResponse.getVpa());
         transactionHistories.clear();
@@ -564,6 +563,7 @@ public class MainActivity extends BaseActivity {
         }
         pendingTrnscAdapater.notifyDataSetChanged();
         relativeLayoutNoPayments.setVisibility((transactionHistories.size() > 0) ? View.GONE : View.VISIBLE);
+        imageViewSharePaymentId.setVisibility(TextUtils.isEmpty(fetchPayDataResponse.getShareButtonText()) ? View.GONE : View.VISIBLE);
     }
 
     private void retryDialogFetchPayData(DialogErrorType dialogErrorType){
@@ -639,7 +639,10 @@ public class MainActivity extends BaseActivity {
             map.put(TITLE, getString(R.string.change_mpin));
             data.add(map);
             map = new HashMap<>();
-            map.put(TITLE, getString(R.string.reset_account));
+            map.put(TITLE, getString(R.string.reset_pay_account));
+            data.add(map);
+            map = new HashMap<>();
+            map.put(TITLE, getString(R.string.account_management));
             data.add(map);
             popupWindow = new ListPopupWindow(this);
             ListAdapter adapter = new SimpleAdapter(
@@ -652,7 +655,7 @@ public class MainActivity extends BaseActivity {
             popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_white));
             popupWindow.setAnchorView(anchor);
             popupWindow.setAdapter(adapter);
-            popupWindow.setWidth(400);
+            popupWindow.setWidth(Utils.dpToPx(this, 200));
             popupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -661,23 +664,29 @@ public class MainActivity extends BaseActivity {
                             apiChangeMPIN();
                             break;
                         case 1:
+                            apiResetAccount();
+                            break;
+                        case 2:
+                            apiAccountManagement();
                             break;
                         default:
                             break;
                     }
                     popupWindow.dismiss();
+                    popupShowing = false;
                 }
             });
+            popupShowing = false;
             popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                 @Override
                 public void onDismiss() {
                     popupShowing = false;
                 }
             });
-            popupShowing = false;
         }
         if(popupShowing){
             popupWindow.dismiss();
+            popupShowing = false;
         } else {
             popupWindow.show();
             popupShowing = true;
@@ -686,36 +695,40 @@ public class MainActivity extends BaseActivity {
 
 
     private void apiChangeMPIN() {
-        if (AppStatus.getInstance(this).isOnline(this)) {
-            CallProgressWheel.showLoadingDialog(this, getString(R.string.loading));
-            HashMap<String, String> params = new HashMap<>();
-            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+        try {
+            if (AppStatus.getInstance(this).isOnline(this)) {
+				CallProgressWheel.showLoadingDialog(this, getString(R.string.loading));
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
-            RestClient.getPayApiService().setMPIN(params, new Callback<SendMoneyResponse>() {
-                @Override
-                public void success(SendMoneyResponse sendMoneyResponse, Response response) {
-                    CallProgressWheel.dismissLoadingDialog();
-                    try {
-                        int flag = sendMoneyResponse.getFlag();
-                        if (flag == com.jugnoo.pay.utils.ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
-                            callBankSetMPINApi(sendMoneyResponse.getTxnDetails());
-                        } else {
-                            DialogPopup.alertPopup(MainActivity.this, "", sendMoneyResponse.getMessage());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        retryDialogChangeMPIN(DialogErrorType.SERVER_ERROR);
-                    }
-                }
+				RestClient.getPayApiService().setMPIN(params, new Callback<SendMoneyResponse>() {
+					@Override
+					public void success(SendMoneyResponse sendMoneyResponse, Response response) {
+						CallProgressWheel.dismissLoadingDialog();
+						try {
+							int flag = sendMoneyResponse.getFlag();
+							if (flag == com.jugnoo.pay.utils.ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
+								callBankSetMPINApi(sendMoneyResponse.getTxnDetails());
+							} else {
+								DialogPopup.alertPopup(MainActivity.this, "", sendMoneyResponse.getMessage());
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							retryDialogChangeMPIN(DialogErrorType.SERVER_ERROR);
+						}
+					}
 
-                @Override
-                public void failure(RetrofitError error) {
-                    CallProgressWheel.dismissLoadingDialog();
-                    retryDialogChangeMPIN(DialogErrorType.CONNECTION_LOST);
-                }
-            });
-        } else {
-            retryDialogChangeMPIN(DialogErrorType.NO_NET);
+					@Override
+					public void failure(RetrofitError error) {
+						CallProgressWheel.dismissLoadingDialog();
+						retryDialogChangeMPIN(DialogErrorType.CONNECTION_LOST);
+					}
+				});
+			} else {
+				retryDialogChangeMPIN(DialogErrorType.NO_NET);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -768,31 +781,167 @@ public class MainActivity extends BaseActivity {
     }
 
     private void changeMPINCallbackApi(SetMPINResponse setMPINResponse) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put(Constants.KEY_ACCESS_TOKEN,  Data.userData.accessToken);
-        params.put(Constants.KEY_MESSAGE, setMPINResponse.toString());
-        RestClient.getPayApiService().setMPINCallback(params, new Callback<CommonResponse>() {
-            @Override
-            public void success(CommonResponse commonResponse, Response response) {
-                try {
-                    int flag = commonResponse.getFlag();
-                    if (flag == com.jugnoo.pay.utils.ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
-                        //callBankSetMPINApi(sendMoneyResponse.getTxnDetails());
+        try {
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.KEY_ACCESS_TOKEN,  Data.userData.accessToken);
+            params.put(Constants.KEY_MESSAGE, setMPINResponse.toString());
+            RestClient.getPayApiService().setMPINCallback(params, new Callback<CommonResponse>() {
+				@Override
+				public void success(CommonResponse commonResponse, Response response) {
+					try {
+						int flag = commonResponse.getFlag();
+						if (flag == com.jugnoo.pay.utils.ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
+							//callBankSetMPINApi(sendMoneyResponse.getTxnDetails());
 
-                    } else {
-                        DialogPopup.alertPopup(MainActivity.this, "", commonResponse.getMessage());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+						} else {
+							DialogPopup.alertPopup(MainActivity.this, "", commonResponse.getMessage());
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 
-            @Override
-            public void failure(RetrofitError error) {
-            }
-        });
-
-
+				@Override
+				public void failure(RetrofitError error) {
+				}
+			});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    private void apiResetAccount() {
+        try {
+            if (AppStatus.getInstance(this).isOnline(this)) {
+				CallProgressWheel.showLoadingDialog(this, getString(R.string.loading));
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+
+				RestClient.getPayApiService().resetAccount(params, new Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+						CallProgressWheel.dismissLoadingDialog();
+						try {
+							int flag = settleUserDebt.getFlag();
+							if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+								DialogPopup.alertPopup(MainActivity.this, "", settleUserDebt.getMessage());
+							} else {
+								DialogPopup.alertPopup(MainActivity.this, "", settleUserDebt.getMessage());
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							retryDialogResetAccount(DialogErrorType.SERVER_ERROR);
+						}
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+						CallProgressWheel.dismissLoadingDialog();
+						retryDialogResetAccount(DialogErrorType.CONNECTION_LOST);
+					}
+				});
+			} else {
+				retryDialogResetAccount(DialogErrorType.NO_NET);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retryDialogResetAccount(DialogErrorType dialogErrorType){
+        DialogPopup.dialogNoInternet(this,
+                dialogErrorType,
+                new Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        apiResetAccount();
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                });
+    }
+
+
+
+
+
+    private void apiAccountManagement(){
+        try {
+            if (AppStatus.getInstance(this).isOnline(this)) {
+                CallProgressWheel.showLoadingDialog(MainActivity.this, getString(R.string.loading));
+                HashMap<String, String> params = new HashMap<>();
+
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+
+                RestClient.getPayApiService().accountManagement(params, new Callback<AccountManagementResponse>() {
+                    @Override
+                    public void success(AccountManagementResponse accountManagementResponse, Response response) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        try {
+                            int flag = accountManagementResponse.getFlag();
+                            if (flag == 143) {
+                                String mid = accountManagementResponse.getMid();
+                                String mkey = accountManagementResponse.getMkey();
+                                String merchantTxnID = accountManagementResponse.getToken();
+                                String vpa = accountManagementResponse.getVpa();
+
+                                Bundle bundle = new Bundle();
+                                bundle.putString("mid", mid);
+                                bundle.putString("merchantKey", mkey);
+                                bundle.putString("merchantTxnID", merchantTxnID);
+                                bundle.putString("virtualAddress", vpa);     // vijay27@yesb
+                                Intent intent = new Intent(getApplicationContext(), AddAccount.class);
+                                intent.putExtras(bundle);
+                                startActivityForResult(intent, MANAGE_ACCOUNT_INTENT_REQUEST_CODE);
+                            } else {
+                                DialogPopup.alertPopup(MainActivity.this, "", accountManagementResponse.getMessage());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            retryDialogAccountManagement(DialogErrorType.SERVER_ERROR);
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        retryDialogAccountManagement(DialogErrorType.CONNECTION_LOST);
+                    }
+                });
+            } else {
+                retryDialogAccountManagement(DialogErrorType.NO_NET);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retryDialogAccountManagement(DialogErrorType dialogErrorType){
+        DialogPopup.dialogNoInternet(this,
+                dialogErrorType,
+                new Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        apiAccountManagement();
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                });
+    }
+
 
 }

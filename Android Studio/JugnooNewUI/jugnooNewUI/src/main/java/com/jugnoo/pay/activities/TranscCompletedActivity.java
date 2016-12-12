@@ -183,7 +183,7 @@ public class TranscCompletedActivity extends BaseActivity {
             if(callback!=null) {
                 // for send
                 callingSendMoneyCallbackApi(callback.getMessage(), "", callback.getAccess_token());
-                textViewPaid.setText(getResources().getString(R.string.paid_string));
+                textViewPaid.setText(getResources().getString(R.string.to));
             } else if(transactionStatus.equalsIgnoreCase("Failed")){
                 tvTransStatusVal.setText(getString(R.string.failed));
                 tvTransStatusVal.setTextColor(getResources().getColor(R.color.red_status));
@@ -205,7 +205,7 @@ public class TranscCompletedActivity extends BaseActivity {
                 // for Request
                 scrollView.setVisibility(View.VISIBLE);
                 toolbarTitleTxt.setText("Jugnoo Pay");
-                textViewPaid.setText(getResources().getString(R.string.requested_to));
+                textViewPaid.setText(getResources().getString(R.string.from));
                 rvBankRefId.setVisibility(View.GONE);
                 rvNpciTransId.setVisibility(View.GONE);
                 cardViewDebitFrom.setVisibility(View.GONE);
