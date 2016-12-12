@@ -408,8 +408,7 @@ public class MainActivity extends BaseActivity {
                 String ifsc = bundle.getString("ifsc");
                 String accName = bundle.getString("accName");
                 AccountMgmtCallbackRequest accountManagementResponse = new AccountMgmtCallbackRequest(pgMeTrnRefNo, yblRefId, virtualAddress, status, statusdesc, date, AccountNo, ifsc, accName);
-                String message = accountManagementResponse.toString();
-
+                apiAccountManagementCallback(accountManagementResponse);
             }
             else{
                 if(data == null){
@@ -941,6 +940,36 @@ public class MainActivity extends BaseActivity {
                     public void negativeClick(View view) {
                     }
                 });
+    }
+
+    private void apiAccountManagementCallback(AccountMgmtCallbackRequest request) {
+        try {
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.KEY_ACCESS_TOKEN,  Data.userData.accessToken);
+            params.put(Constants.KEY_MESSAGE, request.toString());
+            RestClient.getPayApiService().accountManagementCallback(params, new Callback<SettleUserDebt>() {
+                @Override
+                public void success(SettleUserDebt commonResponse, Response response) {
+                    try {
+                        int flag = commonResponse.getFlag();
+                        if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                            //callBankSetMPINApi(sendMoneyResponse.getTxnDetails());
+
+                        } else {
+                            DialogPopup.alertPopup(MainActivity.this, "", commonResponse.getMessage());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

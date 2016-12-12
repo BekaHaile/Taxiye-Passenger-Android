@@ -147,4 +147,9 @@ public interface PayApiService {
     @POST("/reset_account")
     void resetAccount(@FieldMap Map<String, String> params,
                            Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/account_mgmt_callback")
+    void accountManagementCallback(@FieldMap Map<String, String> param,
+                                   Callback<SettleUserDebt> callback);
 }
