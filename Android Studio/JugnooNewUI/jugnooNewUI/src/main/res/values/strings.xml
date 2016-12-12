@@ -1382,6 +1382,8 @@
     <string name="fill_your_amount">Please fill your amount</string>
     <string name="register">Register</string>
     <string name="pay_transactions">Pay Transactions</string>
+    <string name="change_mpin">Change MPIN</string>
+    <string name="reset_account">Reset Account</string>
 
 
 </resources>
