@@ -120,3 +120,17 @@
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
 
+# for butterknife
+-dontwarn butterknife.internal.**
+-keep class **$$ViewInjector { *; }
+-keepnames class * { @butterknife.InjectView *;}
+-dontwarn butterknife.Views$InjectViewProcessor
+-dontwarn com.gc.materialdesign.views.**
+-keep class **$$ViewBinder { *; }
+
+-dontwarn org.apache.**
+-keep public class com.jugnoo.pay.models.** { *; }
+-keep public class in.org.npci.commonlibrary.** { *; }
+-keep public class com.yesbank.** { *; }
+-keep public class org.npci.upi.security.services.** { *; }
+-keep public class org.apache.xml.security.** { *; }
