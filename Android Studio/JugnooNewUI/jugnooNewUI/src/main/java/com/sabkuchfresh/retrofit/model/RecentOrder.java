@@ -21,6 +21,9 @@ public class RecentOrder {
     @SerializedName("end_time")
     @Expose
     private String endTime;
+    @SerializedName("order_status_text")
+    @Expose
+    private String orderStatusText;
 
     /**
      *
@@ -94,4 +97,11 @@ public class RecentOrder {
         this.endTime = endTime;
     }
 
+    public String getOrderStatusText() {
+        return orderStatusText;
+    }
+
+    public void setOrderStatusText(String orderStatusText) {
+        this.orderStatusText = orderStatusText;
+    }
 }

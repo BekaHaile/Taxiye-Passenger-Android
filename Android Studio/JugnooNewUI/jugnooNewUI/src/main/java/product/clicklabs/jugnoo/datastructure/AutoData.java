@@ -15,8 +15,8 @@ public class AutoData {
 
     private String destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, inRideSendInviteTextBold,
             inRideSendInviteTextNormal, confirmScreenFareEstimateEnable, poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
-            rideEndGoodFeedbackText, baseFarePoolText;
-    private int rideEndGoodFeedbackViewType;
+            rideEndGoodFeedbackText, baseFarePoolText, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2;
+    private int rideEndGoodFeedbackViewType, rideStartInviteTextDeepIndexV2;
 
     private int referAllStatus;
     private String referAllText, referAllTitle;
@@ -49,7 +49,8 @@ public class AutoData {
                     String poolDestinationPopupText1, String poolDestinationPopupText2, String poolDestinationPopupText3,
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
-                    NearbyPickupRegions nearbyPickupRegionses) {
+                    NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
+                    int rideStartInviteTextDeepIndexV2) {
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -70,6 +71,9 @@ public class AutoData {
         this.referAllTextLogin = referAllTextLogin;
         this.referAllTitleLogin = referAllTitleLogin;
         this.nearbyPickupRegionses = nearbyPickupRegionses;
+        this.inRideSendInviteTextBoldV2 = inRideSendInviteTextBoldV2;
+        this.inRideSendInviteTextNormalV2 = inRideSendInviteTextNormalV2;
+        this.rideStartInviteTextDeepIndexV2 = rideStartInviteTextDeepIndexV2;
     }
 
     public String getDestinationHelpText() {
@@ -406,5 +410,29 @@ public class AutoData {
 
     public void setNearbyPickupRegionses(NearbyPickupRegions nearbyPickupRegionses) {
         this.nearbyPickupRegionses = nearbyPickupRegionses;
+    }
+
+    public String getInRideSendInviteTextBoldV2() {
+        return inRideSendInviteTextBoldV2;
+    }
+
+    public void setInRideSendInviteTextBoldV2(String inRideSendInviteTextBoldV2) {
+        this.inRideSendInviteTextBoldV2 = inRideSendInviteTextBoldV2;
+    }
+
+    public String getInRideSendInviteTextNormalV2() {
+        return inRideSendInviteTextNormalV2;
+    }
+
+    public void setInRideSendInviteTextNormalV2(String inRideSendInviteTextNormalV2) {
+        this.inRideSendInviteTextNormalV2 = inRideSendInviteTextNormalV2;
+    }
+
+    public int getRideStartInviteTextDeepIndexV2() {
+        return rideStartInviteTextDeepIndexV2;
+    }
+
+    public void setRideStartInviteTextDeepIndexV2(int rideStartInviteTextDeepIndexV2) {
+        this.rideStartInviteTextDeepIndexV2 = rideStartInviteTextDeepIndexV2;
     }
 }

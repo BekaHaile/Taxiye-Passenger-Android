@@ -887,8 +887,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         try {
             if(Data.autoData != null){
-				textViewSendInvites.setText(Data.autoData.getInRideSendInviteTextBold());
-				textViewSendInvites2.setText(Data.autoData.getInRideSendInviteTextNormal());
+				textViewSendInvites.setText(Data.autoData.getInRideSendInviteTextBoldV2());
+				textViewSendInvites2.setText(Data.autoData.getInRideSendInviteTextNormalV2());
 				if(Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
 					textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
 				} else{
@@ -939,7 +939,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewPoolInfo1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
+                if(Data.autoData.getRegions().size() == 1){
+                    slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
+                } else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
                     slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
                             Data.userData.getCoupons(ProductType.AUTO));
                     FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.TAP_ON_OFFER_STRIP);
@@ -1293,7 +1295,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         linearLayoutSendInvites.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                intentToShareActivity(false);
+
+                Data.deepLinkIndex = Data.autoData.getRideStartInviteTextDeepIndexV2();
+                deepLinkAction.openDeepLink(menuBar);
+                //intentToShareActivity(false);
                 Bundle bundle = new Bundle();
                 if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
                     MyApplication.getInstance().logEvent(TRANSACTION + "_" + RIDE_START + "_" + SEND_INVITES+"_"+AUTO, bundle);
@@ -8702,8 +8707,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 mapBottomPadding = 60f;
                 //setGoogleMapPadding(70);
             } else{
-                viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
+                viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(false);
+
+                textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1()+" - ");
+                relativeLayoutPoolInfoBar.setBackgroundColor(getResources().getColor(R.color.text_color));
+                textViewPoolInfo1.setTextColor(getResources().getColor(R.color.white));
+
+                final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+                final SpannableStringBuilder sb = new SpannableStringBuilder("Click to see.");
+                sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                textViewPoolInfo1.append(sb);
             }
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                     && !specialPickupScreenOpened && !confirmedScreenOpened) {

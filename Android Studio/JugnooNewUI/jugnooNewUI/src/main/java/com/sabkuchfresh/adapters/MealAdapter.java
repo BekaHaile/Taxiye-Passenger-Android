@@ -133,6 +133,11 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
                     statusHolder.tvOrderIdValue.setText(recentOrder.getOrderId().toString());
                     statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
+                    if((recentOrder.getOrderStatusText() != null) && (!recentOrder.getOrderStatusText().equalsIgnoreCase(""))){
+                       statusHolder.tvDeliveryTime.setText(recentOrder.getOrderStatusText());
+                    } else{
+                        statusHolder.tvDeliveryTime.setText(activity.getResources().getString(R.string.delivery_before_colon)+" "+recentOrder.getEndTime());
+                    }
 
                     statusHolder.container.setOnClickListener(new View.OnClickListener() {
                         @Override

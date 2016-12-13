@@ -1,12 +1,10 @@
 package product.clicklabs.jugnoo.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -68,14 +66,13 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
             holder = new ViewHolderFeedbackReason();
             convertView = mInflater.inflate(R.layout.list_item_feedback_reason, null);
 
-            holder.textViewFeedbackReason = (TextView) convertView.findViewById(R.id.textViewFeedbackReason); holder.textViewFeedbackReason.setTypeface(Fonts.mavenLight(context));
-            holder.imageViewFeedbackReasonCheck = (ImageView) convertView.findViewById(R.id.imageViewFeedbackReasonCheck);
+            holder.textViewFeedbackReason = (TextView) convertView.findViewById(R.id.textViewFeedbackReason); holder.textViewFeedbackReason.setTypeface(Fonts.avenirNext(context));
 
             holder.relative = (LinearLayout) convertView.findViewById(R.id.relative);
 
-            holder.relative.setTag(holder);
+            holder.textViewFeedbackReason.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(720, ViewGroup.LayoutParams.WRAP_CONTENT));
+            holder.relative.setLayoutParams(new ListView.LayoutParams(300, 90));
             ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
@@ -91,15 +88,40 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
 
         if(feedbackReason.checked){
             //holder.relative.setBackgroundColor(Color.WHITE);
-            holder.imageViewFeedbackReasonCheck.setImageResource(R.drawable.check_box_checked);
+            //holder.imageViewFeedbackReasonCheck.setImageResource(R.drawable.check_box_checked);
+            holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_text_color);
+            holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.white));
         }
         else{
             //holder.relative.setBackgroundColor(Color.TRANSPARENT);
-            holder.imageViewFeedbackReasonCheck.setImageResource(R.drawable.check_box_unchecked);
+            //holder.imageViewFeedbackReasonCheck.setImageResource(R.drawable.check_box_unchecked);
+            holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_white_stroke);
+            holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.text_color));
         }
 
-        holder.relative.setOnClickListener(new View.OnClickListener() {
+        /*holder.relative.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                try {
+                    holder = (ViewHolderFeedbackReason) v.getTag();
+                    if(feedbackReasons.get(holder.id).checked){
+                        feedbackReasons.get(holder.id).checked = false;
+                    }
+                    else{
+                        feedbackReasons.get(holder.id).checked = true;
+                    }
+                    notifyDataSetChanged();
+
+                    feedbackReasonsListEventHandler.onLastItemSelected(isLastSelected());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });*/
+
+        holder.textViewFeedbackReason.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -147,7 +169,6 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
 
     private class ViewHolderFeedbackReason {
         TextView textViewFeedbackReason;
-        ImageView imageViewFeedbackReasonCheck;
         LinearLayout relative;
         int id;
     }
