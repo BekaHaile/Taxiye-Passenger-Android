@@ -746,6 +746,11 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             {
                 rlAmountPayable.setVisibility(View.VISIBLE);
                 tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderAmount())));
+                if(historyResponse.getData().get(0).getPaymentMode() != PaymentOption.CASH.getOrdinal()){
+                    tvAmountPayable.setText(R.string.amount_paid);
+                } else {
+                    tvAmountPayable.setText(R.string.amount_payable);
+                }
             } else{
                 rlAmountPayable.setVisibility(View.GONE);
                 llFinalAmount.setVisibility(View.GONE);

@@ -890,7 +890,7 @@
 	<string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
 	<string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith Jugnoo Meals!</string>
 	<string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith Jugnoo Grocery!</string>
-	<string name="thank_you_for_placing_order_menus">Thank you for placing your order\nwith Jugnoo Menus!</string>
+	<string name="thank_you_for_placing_order_menus_format">Order placed with %s.\nYou will get a confirmation once your order is accepted.</string>
 	<string name="your_order_id">Your Order ID:</string>
 	<string name="will_be_delivered_by">will be delivered by</string>
 	<string name="your_cart_is_empty">Your cart is empty</string>
@@ -1262,6 +1262,7 @@
 	<string name="service_tax">Service Tax</string>
 	<string name="vat">VAT</string>
 	<string name="packaging_charges">Packaging Charges</string>
+	<string name="amount_paid">Amount Paid</string>
 
 
 </resources>

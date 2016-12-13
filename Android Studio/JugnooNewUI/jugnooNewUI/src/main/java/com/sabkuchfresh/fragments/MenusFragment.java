@@ -329,8 +329,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
                 params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(vendor.getRestaurantId()));
                 params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
                 params.put(Constants.INTERATED, "1");

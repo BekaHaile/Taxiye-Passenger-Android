@@ -300,6 +300,6 @@
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_below="@+id/relativeLayoutMain"
-        android:background="@color/text_color_hint"/>
+        android:background="@color/stroke_color_light"/>
 
 </RelativeLayout>

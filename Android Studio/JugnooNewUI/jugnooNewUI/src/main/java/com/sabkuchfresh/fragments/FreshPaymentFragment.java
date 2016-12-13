@@ -950,7 +950,7 @@ public class FreshPaymentFragment extends Fragment implements FlurryEventNames {
                                     }).show(String.valueOf(placeOrderResponse.getOrderId()),
                                             DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getStartTime())
                                                     + " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime()),
-                                            activity.getSlotSelected().getDayName(), true);
+                                            activity.getSlotSelected().getDayName(), true, "");
                                     activity.setSelectedPromoCoupon(noSelectionCoupon);
 
 

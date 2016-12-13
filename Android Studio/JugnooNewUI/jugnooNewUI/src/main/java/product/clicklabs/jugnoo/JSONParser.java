@@ -601,9 +601,6 @@ public class JSONParser implements Constants {
         JSONObject jMealsObject = jObj.optJSONObject(KEY_MEALS);
         JSONObject jGroceryObject = jObj.optJSONObject(KEY_GROCERY);
         JSONObject jMenusObject = jObj.optJSONObject(KEY_MENUS);
-        if(jMenusObject == null){
-            jMenusObject = new JSONObject(Constants.EMPTY_JSON_OBJECT);
-        }
 
         parseUserData(context, jUserDataObject, loginResponse.getUserData());
         parseAutoData(context, jAutosObject, loginResponse.getAutos());

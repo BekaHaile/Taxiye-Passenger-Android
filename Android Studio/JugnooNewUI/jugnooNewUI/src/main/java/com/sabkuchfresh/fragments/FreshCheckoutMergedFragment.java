@@ -1064,14 +1064,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                                 + " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime());
                                         deliveryDay = activity.getSlotSelected().getDayName();
                                     }
-
+                                    String restaurantName = "";
+                                    if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null){
+                                        restaurantName = activity.getVendorOpened().getName();
+                                    }
                                     new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
                                         @Override
                                         public void onDismiss() {
                                             activity.orderComplete();
                                         }
                                     }).show(String.valueOf(placeOrderResponse.getOrderId()),
-                                            deliverySlot, deliveryDay, showDeliverySlot);
+                                            deliverySlot, deliveryDay, showDeliverySlot, restaurantName);
                                     activity.setSelectedPromoCoupon(noSelectionCoupon);
 
 
@@ -1150,9 +1153,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             public void onClick(View v) {
                                                 Log.v("redirect value","redirect value"+redirect);
                                                 if(appType == AppConstant.ApplicationType.MENUS && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag && isEmpty == 1) {
-                                                        activity.clearMenusCart();
+                                                    activity.clearMenusCart();
+                                                    activity.setRefreshCart(true);
+                                                    activity.performBackPressed();
+                                                    activity.setRefreshCart(true);
+                                                    activity.performBackPressed();
                                                 }
-                                                if(redirect == 0) {
+                                                else if(redirect == 1) {
                                                     activity.setRefreshCart(true);
                                                     activity.performBackPressed();
                                                     activity.setRefreshCart(true);
