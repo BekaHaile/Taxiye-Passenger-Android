@@ -1143,10 +1143,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         });
                                     } else {
                                         final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
+                                        final int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                                        final int isEmpty = jObj.optInt(Constants.KEY_IS_EMPTY, 0);
                                         DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 Log.v("redirect value","redirect value"+redirect);
+                                                if(appType == AppConstant.ApplicationType.MENUS && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag && isEmpty == 1) {
+                                                    activity.clearMenusCart();
+                                                }
                                                 if(redirect == 0) {
                                                     activity.setRefreshCart(true);
                                                     activity.performBackPressed();

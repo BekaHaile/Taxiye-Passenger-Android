@@ -665,7 +665,11 @@ public class HistoryResponse {
          * @return The orderRefundAmount
          */
         public Double getOrderRefundAmount() {
-            return orderRefundAmount;
+            if(orderRefundAmount != null){
+                return orderRefundAmount;
+            } else {
+                return 0d;
+            }
         }
 
         /**

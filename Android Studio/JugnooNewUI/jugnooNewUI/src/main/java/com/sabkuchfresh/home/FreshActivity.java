@@ -1775,6 +1775,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         Prefs.with(this).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
     }
 
+
+
     private void gaEvents(String category, String action, String label) {
         if (category.equalsIgnoreCase("")) {
             if (getTopFragment() instanceof FreshFragment) {
@@ -1789,7 +1791,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         }
     }
 
-    private void clearMenusCart() {
+    public void clearMenusCart() {
         Prefs.with(this).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
     }
 

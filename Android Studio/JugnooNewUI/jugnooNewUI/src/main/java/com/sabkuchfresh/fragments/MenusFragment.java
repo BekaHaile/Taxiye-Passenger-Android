@@ -65,7 +65,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private MenusRestaurantAdapter menusRestaurantAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
-    private TextView textViewNoMenus;
+    private TextView textViewNothingFound;
 
     private View rootView;
     private FreshActivity activity;
@@ -111,7 +111,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        ((TextView)rootView.findViewById(R.id.textViewNothingFound)).setTypeface(Fonts.mavenMedium(activity));
+        textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
 
         recyclerViewRestaurant = (RecyclerView) rootView.findViewById(R.id.recyclerViewRestaurant);
@@ -257,7 +257,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
                                     menusRestaurantAdapter.setList(vendors);
                                     menusRestaurantAdapter.applyFilter();
-                                    relativeLayoutNoMenus.setVisibility(menusResponse.getVendors().size() == 0 ? View.VISIBLE : View.GONE);
+                                    relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
+                                            && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
 //                                    relativeLayoutSearchFilter.setVisibility(relativeLayoutNoMenus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);

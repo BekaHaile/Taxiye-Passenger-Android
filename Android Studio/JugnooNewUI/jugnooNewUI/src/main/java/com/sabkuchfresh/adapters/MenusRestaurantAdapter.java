@@ -61,6 +61,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final int STATUS_ITEM = 3;
     private static final int NO_VENDORS_ITEM = 4;
 
+
     public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors,ArrayList<RecentOrder> recentOrders,ArrayList<String> possibleStatus, Callback callback) {
         this.activity = activity;
         this.vendorsComplete = vendors;
@@ -210,8 +211,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ASSL.DoMagic(v);
             return new ViewNoVenderItem(v, activity);
         }
-
-
             throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
 
@@ -447,13 +446,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemViewType(int position)
     {
 
-        if(vendorsComplete.size()>0)
+        if(vendorsCompleteCount()>0)
         {
             if(position==0) {
                 Log.e(TAG, position+">"+SEARCH_FILTER_ITEM);
                 return SEARCH_FILTER_ITEM;
             }
-            else if(position>0 && position-1<recentOrders.size())
+            else if(position>0 && position-1 < recentOrdersSize())
             {
                 Log.e(TAG, position+">"+STATUS_ITEM);
                 return STATUS_ITEM;
@@ -470,47 +469,45 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
             else
             {
-                Log.e(TAG, position+">"+BLANK_ITEM);
-                return BLANK_ITEM;
+                if(vendorsToShowCount() > 0){
+                    return BLANK_ITEM;
+                } else {
+                    return NO_VENDORS_ITEM;
+                }
             }
-        }
-        else if(position<recentOrders.size())
-        {
+        } else if(position<recentOrdersSize()) {
             Log.e(TAG, position+">"+STATUS_ITEM);
             return STATUS_ITEM;
         }
         else
         {
             Log.e(TAG, position+">"+BLANK_ITEM);
-            return BLANK_ITEM;
+            if(vendorsToShowCount() > 0){
+                return BLANK_ITEM;
+            } else {
+                return NO_VENDORS_ITEM;
+            }
         }
 
-
-
-/*       if(position == 0 && vendorsComplete.size() > 0)
-        {
-            return SEARCH_FILTER_ITEM;
-        }
-        else if(((vendorsComplete.size() > 0 ? position-1 : position) < vendorsToShow.size()))
-        {
-            return MAIN_ITEM;
-        }
-        else
-        {
-            return BLANK_ITEM;
-        }*/
     }
 
     @Override
     public int getItemCount() {
-        int recentOrdersSize = recentOrders == null ? 0 : recentOrders.size();
-        int vendorsToShowCount = vendorsToShow == null ? 0 : vendorsToShow.size();
-        int noVenderToShowCount = (vendorsToShow.size()==0) ? 1 : 0;
+        int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
+        int filterCount = (vendorsCompleteCount() > 0) ? 1 : 0;
+        int blankItem = (vendorsToShowCount() > 0) ? 1 : 0;
 
-        return  recentOrdersSize + vendorsToShowCount
-                + (vendorsComplete.size() > 0 ? 1 : 0) // for filter
-                + (recentOrdersSize+vendorsToShowCount+noVenderToShowCount > 0 ? 1 : 0); // blank item
-//        return (vendorsToShow == null) ? 0 : vendorsToShow.size() + (vendorsComplete.size() > 0 ? 1 + (vendorsToShow.size() > 0 ? 1 : 0) : 0) + recentOrdersSize;
+        return  recentOrdersSize() + vendorsToShowCount() + noVenderToShowCount + filterCount + blankItem;
+    }
+
+    private int recentOrdersSize(){
+        return recentOrders == null ? 0 : recentOrders.size();
+    }
+    private int vendorsToShowCount(){
+        return vendorsToShow == null ? 0 : vendorsToShow.size();
+    }
+    private int vendorsCompleteCount(){
+        return vendorsComplete == null ? 0 : vendorsComplete.size();
     }
 
 
@@ -555,6 +552,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             textViewNoMenus.setTypeface(Fonts.mavenMedium(context));
         }
     }
+
+
 
     static class ViewHolderFilter extends RecyclerView.ViewHolder {
         private RelativeLayout relativeLayoutSearchFilter;
