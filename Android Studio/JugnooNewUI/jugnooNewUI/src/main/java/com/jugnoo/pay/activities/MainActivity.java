@@ -25,7 +25,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListPopupWindow;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -676,12 +675,12 @@ public class MainActivity extends BaseActivity {
                 }
             });
             popupShowing = false;
-            popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                @Override
-                public void onDismiss() {
-                    popupShowing = false;
-                }
-            });
+//            popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//                @Override
+//                public void onDismiss() {
+//                    popupShowing = false;
+//                }
+//            });
         }
         if(popupShowing){
             popupWindow.dismiss();

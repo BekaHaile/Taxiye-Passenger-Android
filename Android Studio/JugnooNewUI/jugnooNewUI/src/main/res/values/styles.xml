@@ -30,8 +30,8 @@
         <item name="android:divider">#ffffff</item>
         <item name="android:dividerHeight">0dp</item>
     </style>
-     
-     
+
+
       <style name="Animations" />
 
     <style name="Animations.LoadingDialogFade">
@@ -223,12 +223,12 @@
     </style>
 
     <style name="TransparentTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">#000</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/white_less_dark</item>
+        <item name="colorPrimaryDark">@color/white_less_dark</item>
+        <item name="colorAccent">@color/white_less_dark</item>
         <item name="colorControlNormal">#e2e2e2</item>
-        <item name="colorControlActivated">@color/colorAccent</item>
-        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/white_less_dark</item>
+        <item name="colorControlHighlight">@color/white_less_dark</item>
         <item name="android:textColorHint">#595968</item>
     </style>
 
@@ -261,6 +261,10 @@
         <item name="colorAccent">@color/services_name_txt_color</item>
         <item name="colorControlNormal">@color/services_name_txt_color</item>
         <item name="colorControlActivated">@color/services_name_txt_color</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:textColor">@color/text_color</item>
     </style>
 
 

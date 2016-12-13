@@ -13,6 +13,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -69,6 +70,8 @@ public class ApiGetRideSummary {
 
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
+			params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
+			params.put(Constants.KEY_DEVICE_TYPE, String.valueOf(Data.DEVICE_TYPE));
 			if(engagementId != -1) {
 				params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
 			} else if(orderId != -1) {

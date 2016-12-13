@@ -303,6 +303,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
+                params.put(Constants.KEY_DEVICE_TYPE, String.valueOf(Data.DEVICE_TYPE));
                 params.put(Constants.KEY_ORDER_ID, "" + orderId);
                 params.put(Constants.KEY_PRODUCT_TYPE, "" + productType);
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
@@ -404,6 +406,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
+                params.put(Constants.KEY_DEVICE_TYPE, String.valueOf(Data.DEVICE_TYPE));
                 params.put(Constants.KEY_FRESH_ORDER_ID, String.valueOf(orderId));
                 params.put(Constants.KEY_CLIENT_ID, orderHistory.getClientId());
                 params.put(Constants.INTERATED, "1");

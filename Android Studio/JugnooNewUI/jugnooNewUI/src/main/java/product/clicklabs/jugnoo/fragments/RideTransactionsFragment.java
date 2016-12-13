@@ -251,8 +251,10 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 				linearLayoutNoRides.setVisibility(View.GONE);
 
 				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", Data.userData.accessToken);
-				params.put("start_from", "" + rideInfosList.size());
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_START_FROM, "" + rideInfosList.size());
+				params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
+				params.put(Constants.KEY_DEVICE_TYPE, String.valueOf(Data.DEVICE_TYPE));
 
 				RestClient.getApiServices().getRecentRides(params, new Callback<HistoryResponse>() {
 					@Override
