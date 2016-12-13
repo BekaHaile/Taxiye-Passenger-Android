@@ -32,8 +32,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.jugnoo.pay.activities.SignUpActivity;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -46,6 +44,7 @@ import java.util.TimeZone;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -681,7 +680,7 @@ public class CommonMethods {
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    ctx.startActivity(new Intent(ctx, SignUpActivity.class));
+                                    new HomeUtil().logoutFunc(ctx, "");
                                 }
                             }, new View.OnClickListener() {
                                 @Override

@@ -153,10 +153,6 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.drawer_layout)
     DrawerLayout drawer;
 
-    void profileLayoutClicked() {
-        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-        overridePendingTransition(R.anim.right_in, R.anim.right_out);
-    }
 
     void textViewAboutClicked() {
         CommonMethods.openUrl(MainActivity.this, userDetails.getSupport_link());

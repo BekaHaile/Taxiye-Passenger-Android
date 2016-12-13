@@ -478,28 +478,6 @@
             android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/TransparentTheme"
             ></activity>
-        <activity android:name="com.jugnoo.pay.activities.SignUpActivity"
-                  android:screenOrientation="portrait"
-                  android:windowSoftInputMode="stateHidden"
-                  android:theme="@style/TransparentTheme"
-            ></activity>
-        <activity android:name="com.jugnoo.pay.activities.SignInActivity"
-                  android:screenOrientation="portrait"
-                  android:windowSoftInputMode="stateHidden"
-                  android:theme="@style/TransparentTheme"
-            ></activity>
-
-        <activity android:name="com.jugnoo.pay.activities.ForgotPasswordActivity"
-                  android:screenOrientation="portrait"
-                  android:windowSoftInputMode="adjustResize"
-                  android:theme="@style/TransparentTheme"
-            ></activity>
-
-        <activity android:name="com.jugnoo.pay.activities.ResetPasswordActivity"
-                  android:screenOrientation="portrait"
-                  android:windowSoftInputMode="stateHidden"
-                  android:theme="@style/TransparentTheme"
-            ></activity>
 
         <activity android:name="com.jugnoo.pay.activities.SelectContactActivity"
                   android:screenOrientation="portrait"
@@ -516,25 +494,10 @@
                   android:windowSoftInputMode="stateHidden"
                   android:theme="@style/TransparentTheme"
             ></activity>
-        <activity android:name="com.jugnoo.pay.activities.TransacHistoryActivity"
-                  android:screenOrientation="portrait"
-                  android:windowSoftInputMode="stateHidden"
-                  android:theme="@style/TransparentTheme"
-            ></activity>
-        <activity android:name="com.jugnoo.pay.activities.ProfileActivity"
-                  android:screenOrientation="portrait"
-                  android:windowSoftInputMode="stateHidden"
-                  android:theme="@style/TransparentTheme"
-            ></activity>
-        <activity android:name="com.jugnoo.pay.activities.WebActivity"
+        <activity android:name="com.jugnoo.pay.activities.AddPaymentAddressActivity"
                   android:screenOrientation="portrait"
                   android:windowSoftInputMode="stateAlwaysHidden"
                   android:theme="@style/TransparentTheme"
-            ></activity>
-        <activity android:name="com.jugnoo.pay.activities.AddPaymentAddressActivity"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"
-            android:theme="@style/TransparentTheme"
             />
 
     </application>

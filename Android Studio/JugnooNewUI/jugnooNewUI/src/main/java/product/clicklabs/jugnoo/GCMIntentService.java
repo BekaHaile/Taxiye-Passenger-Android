@@ -375,6 +375,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					if(deepindex == -1 && tabIndex > 0){
 						deepindex = AppLinkIndex.FRESH_PAGE.getOrdinal();
 					}
+					String url = jObj.optString(KEY_URL, "");
+					int showDialog = jObj.optInt(Constants.KEY_SHOW_DIALOG, 0);
+					int showPush = jObj.optInt(Constants.KEY_SHOW_PUSH, 1);
 
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -505,9 +508,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString(KEY_IMAGE, "");
 							}
-							String url = jObj.optString(KEY_URL, "");
-							int showDialog = jObj.optInt(Constants.KEY_SHOW_DIALOG, 0);
-							int showPush = jObj.optInt(Constants.KEY_SHOW_PUSH, 1);
 							if(showDialog == 1) {
 								Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, message);
 							}
@@ -678,7 +678,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 					} else if (PushFlags.REFRESH_PAY_DATA.getOrdinal() == flag) {
 						message1 = jObj.optString(KEY_MESSAGE, "");
-						notificationManager(this, title, message1, playSound);
+						notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
+								null, url, playSound, showDialog, showPush, tabIndex, flag);
 						Intent intent = new Intent(Constants.INTENT_ACTION_PAY_BROADCAST);
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_MESSAGE, message);

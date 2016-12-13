@@ -4,7 +4,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/appBackgroundColor"
+                android:background="@color/white"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
     >
     <!--tools:showIn="@layout/app_bar_main"-->
@@ -61,7 +61,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/sliding_bottom_bg_color"
+            android:background="@color/menu_item_selector_color"
             >
 
             <LinearLayout
