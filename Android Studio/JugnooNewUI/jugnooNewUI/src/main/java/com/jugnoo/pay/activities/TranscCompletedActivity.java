@@ -1,5 +1,6 @@
 package com.jugnoo.pay.activities;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,6 +41,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -96,10 +98,8 @@ public class TranscCompletedActivity extends BaseActivity {
                 SendMoneyActivity.sendMoneyActivityObj.finish();
             } catch (Exception e) { e.printStackTrace(); }
 
-            try{
-                finish();
-            } catch (Exception e) { e.printStackTrace(); }
-
+            startActivity(new Intent(this, SupportActivity.class));
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
         }
         catch(Exception e)
         {
@@ -154,6 +154,7 @@ public class TranscCompletedActivity extends BaseActivity {
             cardViewDebitFrom = (CardView) findViewById(R.id.cardViewDebitFrom);
             cardViewMessage = (CardView) findViewById(R.id.cardViewMessage);
             buttonOk.setTypeface(Fonts.mavenRegular(this));
+            buttonOk.setText(getString(R.string.need_help));
             mobileTxt.setTypeface(Fonts.mavenRegular(this));
             contactNameTxt.setTypeface(Fonts.mavenMedium(this));
             textViewMessage.setTypeface(Fonts.mavenMedium(this));

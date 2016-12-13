@@ -341,6 +341,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm, textViewPoolInfo1,
             textViewRideEndWithImage;
     private RelativeLayout changeLocalityLayout, relativeLayoutPoolInfoBar, relativeLayoutRideEndWithImage;
+    private LinearLayout linearlayoutChangeLocalityInner;
     private View viewPoolInfoBarAnim;
     private AnimationDrawable jugnooAnimation;
     private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, ivEndRideType,
@@ -586,6 +587,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         //Initial layout
         initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
         changeLocalityLayout = (RelativeLayout)findViewById(R.id.changeLocalityLayout);
+        linearlayoutChangeLocalityInner = (LinearLayout) findViewById(R.id.linearlayoutChangeLocalityInner);
         textViewChangeLocality = (TextView)findViewById(R.id.textViewChangeLocality);textViewChangeLocality.setTypeface(Fonts.mavenLight(this));
         buttonChangeLocalityMyLocation = (Button) findViewById(R.id.buttonChangeLocalityMyLocation);
 
@@ -946,12 +948,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         });
 
 
-        changeLocalityLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         textVieGetFareEstimateConfirm.setOnClickListener(new OnClickListener() {
             @Override
@@ -4898,14 +4894,14 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.GONE);
-                fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
                 //imageViewFabFake.setVisibility(View.VISIBLE);
-                setJeanieVisibility();
             }
+//            setFabMarginInitial(false);
+            setJeanieVisibility();
             showPokestopOnOffButton(passengerScreenMode);
         }
     }
@@ -8620,8 +8616,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 int handlerTime = 0;
                 if (viewPoolInfoBarAnim.getVisibility() == View.VISIBLE) {
                     //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (22f * scale + 0.5f));
-                    animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (22f * scale + 0.5f));
-                    handlerTime = 0;
+                    if(changeLocalityLayout.getVisibility() == View.VISIBLE) {
+                        animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (62f * scale + 0.5f));
+                        handlerTime = 0;
+                    } else {
+                        animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (22f * scale + 0.5f));
+                        handlerTime = 0;
+                    }
                 } else {
                     //fabViewTest.menuLabelsRightTest.setPadding((int) (40 * ASSL.Yscale()), 0, 0, (int) (52f * scale + 0.5f));
                     animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (62f * scale + 0.5f));
@@ -8630,7 +8631,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } else {
                         handlerTime = 250;
                     }
-
                 }
                 animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override

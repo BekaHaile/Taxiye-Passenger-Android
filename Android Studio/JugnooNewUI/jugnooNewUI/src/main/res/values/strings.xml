@@ -1387,6 +1387,7 @@
     <string name="reset_pay_account">Reset Pay Account</string>
     <string name="account_management">Account Management</string>
     <string name="jugnoo_pay">Jugnoo Pay</string>
+    <string name="reset_account_alert_message">After resetting the account, your vpa will be erased and you will be logged out of the app. Are you sure you want to proceed ?</string>
 
 
 </resources>

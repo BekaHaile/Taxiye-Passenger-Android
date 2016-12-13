@@ -64,6 +64,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.home.FABViewTest;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -662,7 +663,22 @@ public class MainActivity extends BaseActivity {
                             apiChangeMPIN();
                             break;
                         case 1:
-                            apiResetAccount();
+                            DialogPopup.alertPopupTwoButtonsWithListeners(MainActivity.this, "",
+                                    getString(R.string.reset_account_alert_message),
+                                    getString(R.string.ok),
+                                    getString(R.string.cancel),
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            apiResetAccount();
+                                        }
+                                    },
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                        }
+                                    }, false, false);
                             break;
                         case 2:
                             apiAccountManagement();
@@ -822,7 +838,7 @@ public class MainActivity extends BaseActivity {
 						try {
 							int flag = settleUserDebt.getFlag();
 							if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-								DialogPopup.alertPopup(MainActivity.this, "", settleUserDebt.getMessage());
+                                new HomeUtil().logoutFunc(MainActivity.this, null);
 							} else {
 								DialogPopup.alertPopup(MainActivity.this, "", settleUserDebt.getMessage());
 							}

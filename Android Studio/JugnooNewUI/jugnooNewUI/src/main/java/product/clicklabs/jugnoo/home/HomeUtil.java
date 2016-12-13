@@ -1,18 +1,30 @@
 package product.clicklabs.jugnoo.home;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoTools;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.GCMIntentService;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
+import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -93,5 +105,32 @@ public class HomeUtil {
 		}
 	}
 
+	public void logoutFunc(Activity activity, String message){
+		try {
+			PicassoTools.clearCache(Picasso.with(activity));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		FacebookLoginHelper.logoutFacebook();
+
+		GCMIntentService.clearNotifications(activity);
+
+		Data.clearDataOnLogout(activity);
+
+		HomeActivity.userMode = UserMode.PASSENGER;
+		HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+
+		ActivityCompat.finishAffinity(activity);
+		Intent intent = new Intent(activity, SplashNewActivity.class);
+		if(message != null){
+			intent.putExtra(Constants.KEY_LOGGED_OUT, 1);
+			intent.putExtra(Constants.KEY_MESSAGE, message);
+		}
+		activity.startActivity(intent);
+		activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+
+		Branch.getInstance(activity).logout();
+	}
 
 }
