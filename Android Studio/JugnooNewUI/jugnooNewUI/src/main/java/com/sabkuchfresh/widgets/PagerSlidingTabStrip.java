@@ -210,39 +210,43 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	public void notifyDataSetChanged() {
 
-		tabsContainer.removeAllViews();
+		try {
+			tabsContainer.removeAllViews();
 
-		tabCount = pager.getAdapter().getCount();
+			tabCount = pager.getAdapter().getCount();
 
-		for (int i = 0; i < tabCount; i++) {
-			if (pager.getAdapter() instanceof IconTabProvider) {
-				addIconTab(i, ((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
-			} else if(pager.getAdapter() instanceof CustomTabProvider){
-				addTab(i, ((CustomTabProvider)pager.getAdapter()).getCustomTabView(i));
-			} else {
-				addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
-			}
+			for (int i = 0; i < tabCount; i++) {
+                if (pager.getAdapter() instanceof IconTabProvider) {
+                    addIconTab(i, ((IconTabProvider) pager.getAdapter()).getPageIconResId(i));
+                } else if(pager.getAdapter() instanceof CustomTabProvider){
+                    addTab(i, ((CustomTabProvider)pager.getAdapter()).getCustomTabView(i));
+                } else {
+                    addTextTab(i, pager.getAdapter().getPageTitle(i).toString());
+                }
+            }
+
+			updateTabStyles(0);
+
+			getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+                @SuppressWarnings("deprecation")
+    //			@SuppressLint("NewApi")
+                @Override
+                public void onGlobalLayout() {
+
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                        getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    } else {
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+
+                    currentPosition = pager.getCurrentItem();
+                    scrollToChild(currentPosition, 0);
+                }
+            });
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		updateTabStyles(0);
-
-		getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
-
-			@SuppressWarnings("deprecation")
-//			@SuppressLint("NewApi")
-			@Override
-			public void onGlobalLayout() {
-
-				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-					getViewTreeObserver().removeGlobalOnLayoutListener(this);
-				} else {
-					getViewTreeObserver().removeOnGlobalLayoutListener(this);
-				}
-
-				currentPosition = pager.getCurrentItem();
-				scrollToChild(currentPosition, 0);
-			}
-		});
 
 	}
 

@@ -704,8 +704,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         }
         if(savedPlaces > 0) {
             textViewSavedPlaces.setVisibility(View.VISIBLE);
+            cardViewSavedPlaces.setVisibility(View.VISIBLE);
         } else {
             textViewSavedPlaces.setVisibility(View.GONE);
+            cardViewSavedPlaces.setVisibility(View.GONE);
         }
 
 
@@ -713,8 +715,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             savedPlacesAdapterRecent.notifyDataSetChanged();
             if (savedPlacesAdapterRecent.getCount() > 0) {
                 textViewRecentAddresses.setVisibility(View.VISIBLE);
+                cardViewRecentAddresses.setVisibility(View.VISIBLE);
             } else {
                 textViewRecentAddresses.setVisibility(View.GONE);
+                cardViewRecentAddresses.setVisibility(View.GONE);
             }
         }
     }

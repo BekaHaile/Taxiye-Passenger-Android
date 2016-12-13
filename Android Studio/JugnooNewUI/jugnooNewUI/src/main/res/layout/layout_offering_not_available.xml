@@ -4,7 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_menus_nothing_found"
-    android:visibility="visible">
+    android:visibility="gone">
+    <ImageView
+        android:id="@+id/imageViewShadow"
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        android:visibility="gone"
+        />
+
 
     <TextView
         android:id="@+id/textViewOhSnap"
@@ -23,6 +31,8 @@
         android:layout_below="@+id/textViewOhSnap"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20px"
+        android:layout_marginLeft="30px"
+        android:layout_marginRight="30px"
         android:gravity="center"
         android:text="@string/nothing_found_near_you"
         android:textColor="@color/text_color"

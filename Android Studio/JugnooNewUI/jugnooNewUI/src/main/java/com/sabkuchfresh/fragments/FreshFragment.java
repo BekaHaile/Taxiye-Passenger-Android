@@ -142,6 +142,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
+        rootView.findViewById(R.id.imageViewShadow).setVisibility(View.VISIBLE);
 
         searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
@@ -312,6 +313,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 				getAllProducts(true, activity.getSelectedLatLng());
 			}
 			activity.setRefreshCart(false);
+            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                activity.showBottomBar(false);
+            }
 		}
 	}
 
@@ -361,6 +365,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+                                    mainLayout.setVisibility(View.GONE);
+                                    activity.showBottomBar(false);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
                                             productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
@@ -368,7 +374,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                     activity.setProductsResponse(productsResponse);
                                     setSortingList();
                                     if(activity.freshSort == -1) {
-                                        int sortedBy = jObj.getInt(Constants.SORTED_BY);
+                                        int sortedBy = jObj.optInt(Constants.SORTED_BY);
                                         activity.freshSort = sortedBy;
                                         slots.get(sortedBy).setCheck(true);
                                     } else {

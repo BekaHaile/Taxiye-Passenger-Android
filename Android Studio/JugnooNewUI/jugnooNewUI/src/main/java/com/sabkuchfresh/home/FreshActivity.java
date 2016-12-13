@@ -821,11 +821,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             fabViewTest.fabMealsTest.setVisibility(View.GONE);
         }
 
-        if (Data.userData.getDeliveryEnabled() == 1) {
-            fabViewTest.fabDeliveryTest.setVisibility(View.VISIBLE);
-        } else {
-            fabViewTest.fabDeliveryTest.setVisibility(View.GONE);
-        }
+//        if (Data.userData.getDeliveryEnabled() == 1) {
+//            fabViewTest.fabDeliveryTest.setVisibility(View.VISIBLE);
+//        } else {
+//            fabViewTest.fabDeliveryTest.setVisibility(View.GONE);
+//        }
     }
 
     public void fragmentUISetup(Fragment fragment) {
@@ -1382,7 +1382,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 } else if(groceryFrag != null) {
                     groceryFrag.getAllProducts(true, getSelectedLatLng());
                 } else if(menusFrag != null) {
-                    menusFrag.getAllMenus(true, new LatLng(Data.latitude, Data.longitude));
+                    menusFrag.getAllMenus(true, getSelectedLatLng());
                 }
             }
         }, 1000);

@@ -33,7 +33,7 @@ public class FABViewTest {
     Activity activity;
     public RelativeLayout relativeLayoutFABTest;
     public FloatingActionMenu menuLabelsRightTest;
-    public FloatingActionButton fabDeliveryTest;
+//    public FloatingActionButton fabDeliveryTest;
     public FloatingActionButton fabMealsTest;
     public FloatingActionButton fabFreshTest;
     public FloatingActionButton fabAutosTest;
@@ -55,7 +55,7 @@ public class FABViewTest {
 //            relativeLayoutFABTest = (RelativeLayout) view.findViewById(R.id.relativeLayoutFABTest);
             relativeLayoutFABTest = (RelativeLayout) view;
             menuLabelsRightTest = (FloatingActionMenu) view.findViewById(R.id.menu_labels_right_Test);
-            fabDeliveryTest = (FloatingActionButton) view.findViewById(R.id.fabDeliveryTest);
+//            fabDeliveryTest = (FloatingActionButton) view.findViewById(R.id.fabDeliveryTest);
             fabMealsTest = (FloatingActionButton) view.findViewById(R.id.fabMealsTest);
             fabFreshTest = (FloatingActionButton) view.findViewById(R.id.fabFreshTest);
             fabAutosTest = (FloatingActionButton) view.findViewById(R.id.fabAutosTest);
@@ -65,13 +65,13 @@ public class FABViewTest {
             //fabExtra.setVisibility(View.GONE);
             menuLabelsRightTest.setIconAnimated(true);
             menuLabelsRightTest.setClosedOnTouchOutside(true);
-            fabDeliveryTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
+//            fabDeliveryTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabMealsTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabFreshTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabGroceryTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabMenusTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
             fabAutosTest.setLabelTextColor(activity.getResources().getColor(R.color.black));
-            fabDeliveryTest.setOnClickListener(clickListener);
+//            fabDeliveryTest.setOnClickListener(clickListener);
             fabGroceryTest.setOnClickListener(clickListener);
             fabMenusTest.setOnClickListener(clickListener);
             fabMealsTest.setOnClickListener(clickListener);
@@ -262,7 +262,7 @@ public class FABViewTest {
             menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_menu_selector);
         }
 
-        fabDeliveryTest.setVisibility(View.GONE);
+//        fabDeliveryTest.setVisibility(View.GONE);
         //fabGrocery.setVisibility(View.GONE);
         if(Config.getAutosClientId().equalsIgnoreCase(currentOpenedOffering)){
             fabAutosTest.setVisibility(View.GONE);
@@ -322,13 +322,13 @@ public class FABViewTest {
                     }
                 }
 
-                if (Data.userData.getDeliveryEnabled() != 1) {
-                    fabDeliveryTest.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabDeliveryTest.setVisibility(View.VISIBLE);
-                    }
-                }
+//                if (Data.userData.getDeliveryEnabled() != 1) {
+//                    fabDeliveryTest.setVisibility(View.GONE);
+//                } else {
+//                    if(isOpened) {
+//                        fabDeliveryTest.setVisibility(View.VISIBLE);
+//                    }
+//                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -353,9 +353,9 @@ public class FABViewTest {
                 fabMenusTest.setVisibility(View.VISIBLE);
             }
 
-            if (Data.userData.getDeliveryEnabled() == 1) {
-                fabDeliveryTest.setVisibility(View.VISIBLE);
-            }
+//            if (Data.userData.getDeliveryEnabled() == 1) {
+//                fabDeliveryTest.setVisibility(View.VISIBLE);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -43,7 +43,9 @@
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/grey_light"
             fab:fab_colorRipple="@color/grey_light_alpha"
-            fab:fab_label="Delivery" />
+            fab:fab_label="Delivery"
+            android:visibility="gone"
+            />
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabMenusTest"

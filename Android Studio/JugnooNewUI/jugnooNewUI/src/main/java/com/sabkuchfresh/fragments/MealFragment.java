@@ -184,6 +184,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 getAllProducts(true, activity.getSelectedLatLng());
             }
             activity.setRefreshCart(false);
+            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                activity.showBottomBar(false);
+            }
         }
     }
 
@@ -277,17 +280,29 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
+                            if(!isHidden()) {
+                                activity.showBottomBar(true);
+                            } else {
+                                Fragment fragment = activity.getTopFragment();
+                                if(fragment != null && fragment instanceof MealFragment) {
+                                    activity.showBottomBar(false);
+                                }
+                            }
+
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = JSONParser.getServerMessage(jObj);
+                            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
-                                int sortedBy = jObj.getInt(Constants.SORTED_BY);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+                                    mSwipeRefreshLayout.setVisibility(View.GONE);
+                                    activity.showBottomBar(false);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
                                             productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
                                 else {
+                                    int sortedBy = jObj.optInt(Constants.SORTED_BY);
                                     mealsData.clear();
                                     mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
                                     recentOrder.clear();
@@ -346,14 +361,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             e.printStackTrace();
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
-                        if(!isHidden()) {
-                            activity.showBottomBar(true);
-                        } else {
-                            Fragment fragment = activity.getTopFragment();
-                            if(fragment != null && fragment instanceof MealFragment) {
-                                activity.showBottomBar(false);
-                            }
-                        }
                     }
 
                     @Override

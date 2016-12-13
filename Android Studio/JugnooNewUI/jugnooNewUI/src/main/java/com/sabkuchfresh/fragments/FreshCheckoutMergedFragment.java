@@ -1150,7 +1150,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             public void onClick(View v) {
                                                 Log.v("redirect value","redirect value"+redirect);
                                                 if(appType == AppConstant.ApplicationType.MENUS && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag && isEmpty == 1) {
-                                                    activity.clearMenusCart();
+                                                        activity.clearMenusCart();
                                                 }
                                                 if(redirect == 0) {
                                                     activity.setRefreshCart(true);
@@ -1432,8 +1432,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
 
                 int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                 String idKey = Constants.KEY_SUB_ITEM_ID;
