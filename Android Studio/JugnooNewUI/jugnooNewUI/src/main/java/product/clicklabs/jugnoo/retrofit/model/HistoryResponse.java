@@ -946,7 +946,13 @@ public class HistoryResponse {
         }
 
         public String getPhoneNo() {
-            return phoneNo;
+            String phone = null;
+            if(phoneNo != null && !phoneNo.equalsIgnoreCase("")) {
+                phone = phoneNo;
+            } else{
+                phone = getSupportNumber();
+            }
+            return phone;
         }
 
         public void setPhoneNo(String phoneNo) {

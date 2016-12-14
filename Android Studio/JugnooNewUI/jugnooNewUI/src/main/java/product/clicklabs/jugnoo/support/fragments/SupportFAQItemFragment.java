@@ -112,9 +112,7 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 			if(scrollViewRoot != null) {
 				new ASSL(activity, scrollViewRoot, 1134, 720, false);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
 
 		linearLayoutMain = (LinearLayout)rootView.findViewById(R.id.linearLayoutMain);
 
@@ -139,6 +137,10 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		textViewDescription.setText(item.getText());
 
 		showItem();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		buttonSubmit.setOnClickListener(new View.OnClickListener() {
 			@Override
