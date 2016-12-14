@@ -14,7 +14,6 @@
         android:layout_centerVertical="true"
         android:layout_margin="10px"
         android:scaleType="centerInside"
-        android:src="@drawable/img_ice_cream_banner"
         android:tag="mwar"/>
 
 

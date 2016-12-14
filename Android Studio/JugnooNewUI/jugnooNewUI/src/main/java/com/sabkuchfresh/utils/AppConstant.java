@@ -5,17 +5,6 @@ package com.sabkuchfresh.utils;
  */
 public class AppConstant {
 
-    public static interface SupportType {
-        public static final int SUPPORT = 0;
-        public static final int HISTORY = 1;
-        public static final int ABOUT = 2;
-        public static final int NOTIFICATION = 3;
-        public static final int SHARE = 4;
-        public static final int FEED_BACK = 5;
-        public static final int PROMO = 6;
-    }
-
-
     public interface ListType {
         public static final int HOME = 0;
         public static final int OTHER = 1;

@@ -18,7 +18,7 @@ import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.FreshDeliverySlotsDialog;
+import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
@@ -51,7 +51,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
     private RelativeLayout searchLayout;
 
-    private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
+    private FreshSortingDialog freshSortingDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     public VendorMenuFragment(){}
     protected Bus mBus;
@@ -137,7 +137,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 		success(activity.getProductsResponse());
 
-		getFreshDeliverySlotsDialog();
+		getFreshSortingDialog();
 
 		return rootView;
 	}
@@ -257,14 +257,14 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 	}
 
 
-	public FreshDeliverySlotsDialog getFreshDeliverySlotsDialog() {
+	public FreshSortingDialog getFreshSortingDialog() {
 
-		if (freshDeliverySlotsDialog == null) {
+		if (freshSortingDialog == null) {
 			setSortingList();
 			slots.get(activity.freshSort).setCheck(true);
 			activity.onSortEvent(new SortSelection(activity.freshSort));
-			freshDeliverySlotsDialog = new FreshDeliverySlotsDialog(activity, slots,
-					new FreshDeliverySlotsDialog.FreshDeliverySortDialogCallback() {
+			freshSortingDialog = new FreshSortingDialog(activity, slots,
+					new FreshSortingDialog.FreshDeliverySortDialogCallback() {
 						@Override
 						public void onOkClicked(int position) {
 							activity.freshSort = position;
@@ -272,7 +272,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 						}
 					});
 		}
-		return freshDeliverySlotsDialog;
+		return freshSortingDialog;
 	}
 
 	private void setSortingList() {

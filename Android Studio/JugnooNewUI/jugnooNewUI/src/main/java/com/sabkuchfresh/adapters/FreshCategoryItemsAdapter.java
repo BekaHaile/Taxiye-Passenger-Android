@@ -411,8 +411,6 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             bannerHolder.relative.setVisibility(View.VISIBLE);
             bannerHolder.imageViewBanner.setVisibility(View.VISIBLE);
             Picasso.with(context).load(categoryBanners.getSmallImage())
-                    .placeholder(R.drawable.img_ice_cream_banner)
-                    .error(R.drawable.img_ice_cream_banner)
                     .fit()
                     .into(bannerHolder.imageViewBanner);
 

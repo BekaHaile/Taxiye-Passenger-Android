@@ -27,7 +27,7 @@ import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.FreshDeliverySlotsDialog;
+import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.home.FreshNoDeliveriesDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
@@ -85,7 +85,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
     private RelativeLayout searchLayout;
 
-    private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
+    private FreshSortingDialog freshSortingDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     private ArrayList<SubItem> freshData = new ArrayList<>();
     public FreshFragment(){}
@@ -474,11 +474,11 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	}
 
 
-    public FreshDeliverySlotsDialog getFreshDeliverySlotsDialog() {
+    public FreshSortingDialog getFreshSortingDialog() {
 
-        if (freshDeliverySlotsDialog == null) {
-            freshDeliverySlotsDialog = new FreshDeliverySlotsDialog(activity, slots,
-                    new FreshDeliverySlotsDialog.FreshDeliverySortDialogCallback() {
+        if (freshSortingDialog == null) {
+            freshSortingDialog = new FreshSortingDialog(activity, slots,
+                    new FreshSortingDialog.FreshDeliverySortDialogCallback() {
                         @Override
                         public void onOkClicked(int position) {
                             //setSelectedSlotToView();
@@ -488,7 +488,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                         }
                     });
         }
-        return freshDeliverySlotsDialog;
+        return freshSortingDialog;
     }
 
     @Subscribe

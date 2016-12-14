@@ -25,7 +25,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.sabkuchfresh.adapters.FreshAddressAdapter;
+import com.sabkuchfresh.adapters.FreshAddressAdapterCallback;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
@@ -72,7 +72,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by ankit on 14/09/16.
  */
-public class DeliveryAddressesFragment extends Fragment implements FreshAddressAdapter.Callback,
+public class DeliveryAddressesFragment extends Fragment implements FreshAddressAdapterCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
     private View rootView;
@@ -803,4 +803,5 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         }
         return apiFetchUserAddress;
     }
+
 }

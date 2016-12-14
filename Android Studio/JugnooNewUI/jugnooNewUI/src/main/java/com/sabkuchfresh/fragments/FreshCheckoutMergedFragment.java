@@ -33,7 +33,6 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
-import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressAdded;
@@ -636,7 +635,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     };
 
-    private FreshPaymentFragment.CallbackPaymentOptionSelector callbackPaymentOptionSelector = new FreshPaymentFragment.CallbackPaymentOptionSelector() {
+    private CallbackPaymentOptionSelector callbackPaymentOptionSelector = new CallbackPaymentOptionSelector() {
         @Override
         public void onPaymentOptionSelected(PaymentOption paymentOption) {
             activity.setPaymentOption(paymentOption);
@@ -648,6 +647,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             activity.setPaymentOption(paymentOption);
         }
     };
+
+
+    public interface CallbackPaymentOptionSelector{
+        void onPaymentOptionSelected(PaymentOption paymentOption);
+        void onWalletAdd(PaymentOption paymentOption);
+    }
 
     @Override
     public void onResume() {
@@ -1678,7 +1683,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             for (DeliverySlot deliverySlot : activity.getUserCheckoutResponse().getCheckoutData().getDeliverySlots()) {
                 int slotsEnabled = 0;
                 for (Slot slot : deliverySlot.getSlots()) {
-                    slot.setSlotViewType(FreshCheckoutAdapter.SlotViewType.SLOT_TIME);
+                    slot.setSlotViewType(SlotViewType.SLOT_TIME);
                     slot.setDayName(deliverySlot.getDayName());
                     slotsEnabled = slot.getIsActiveSlot() == 1 ? slotsEnabled + 1 : slotsEnabled;
                     slots.add(slot);
@@ -1908,6 +1913,26 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             return netAmountWOTaxes() * (activity.getVendorOpened().getValueAddedTax()/100d);
         } else {
             return 0;
+        }
+    }
+
+    public enum SlotViewType {
+        SLOT_TIME(0),
+        SLOT_DAY(1),
+        DIVIDER(2),
+        HEADER(3),
+        SLOT_STATUS(4),
+        FEED(5)
+        ;
+
+        private int ordinal;
+
+        SlotViewType(int ordinal) {
+            this.ordinal = ordinal;
+        }
+
+        public int getOrdinal() {
+            return ordinal;
         }
     }
 

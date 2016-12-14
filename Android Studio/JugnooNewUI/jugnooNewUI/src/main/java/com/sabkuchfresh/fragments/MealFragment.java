@@ -21,7 +21,7 @@ import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.FreshDeliverySlotsDialog;
+import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -78,7 +78,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     private LinearLayout noFreshsView;
     private TextView swipe_text;
 
-    private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
+    private FreshSortingDialog freshSortingDialog;
     private ArrayList<RecentOrder> recentOrder = new ArrayList<>();
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<SubItem> mealsData = new ArrayList<>();
@@ -199,11 +199,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
     }
 
-    public FreshDeliverySlotsDialog getFreshDeliverySlotsDialog() {
+    public FreshSortingDialog getFreshSortingDialog() {
 
-        if (freshDeliverySlotsDialog == null) {
-            freshDeliverySlotsDialog = new FreshDeliverySlotsDialog(activity, slots,
-                    new FreshDeliverySlotsDialog.FreshDeliverySortDialogCallback() {
+        if (freshSortingDialog == null) {
+            freshSortingDialog = new FreshSortingDialog(activity, slots,
+                    new FreshSortingDialog.FreshDeliverySortDialogCallback() {
                         @Override
                         public void onOkClicked(int position) {
                             //setSelectedSlotToView();
@@ -214,7 +214,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                         }
                     });
         }
-        return freshDeliverySlotsDialog;
+        return freshSortingDialog;
     }
 
 

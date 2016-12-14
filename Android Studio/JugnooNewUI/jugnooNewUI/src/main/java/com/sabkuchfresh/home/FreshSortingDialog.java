@@ -10,11 +10,9 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.adapters.FreshDeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshSortingAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.utils.AppConstant;
 
@@ -31,30 +29,19 @@ import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by shankar on 3/4/16.
- * @deprecated By Gurmail
  */
-public class FreshDeliverySlotsDialog implements FlurryEventNames {
+public class FreshSortingDialog implements FlurryEventNames {
 
-	private final String TAG = FreshDeliverySlotsDialog.class.getSimpleName();
+	private final String TAG = FreshSortingDialog.class.getSimpleName();
 	private FreshActivity activity;
-	private FreshDeliverySlotsDialogCallback callback;
-	private FreshDeliverySlotsAdapter freshDeliverySlotsAdapter;
-	private ArrayList<Slot> slots;
 	private Dialog dialog;
 
     private ArrayList<SortResponseModel> sortList;
     private FreshDeliverySortDialogCallback sortDialogCallback;
     private FreshSortingAdapter sortingAdapter;
 
-	public FreshDeliverySlotsDialog(FreshActivity activity, ArrayList<Slot> slots,
-									FreshDeliverySlotsDialogCallback callback) {
-		this.activity = activity;
-		this.slots = slots;
-		this.callback = callback;
-	}
-
-    public FreshDeliverySlotsDialog(FreshActivity activity, ArrayList<SortResponseModel> sortList,
-                                    FreshDeliverySortDialogCallback sortDialogCallback) {
+    public FreshSortingDialog(FreshActivity activity, ArrayList<SortResponseModel> sortList,
+                              FreshDeliverySortDialogCallback sortDialogCallback) {
         this.activity = activity;
         this.sortList = sortList;
         this.sortDialogCallback = sortDialogCallback;
@@ -158,22 +145,6 @@ public class FreshDeliverySlotsDialog implements FlurryEventNames {
         return dialog;
     }
 
-	public void notifySlots(){
-		if(freshDeliverySlotsAdapter != null) {
-			freshDeliverySlotsAdapter.notifyDataSetChanged();
-		}
-	}
-
-
-    public void notifySortList() {
-        if(sortingAdapter != null) {
-            sortingAdapter.notifyDataSetChanged();
-        }
-    }
-
-	public interface FreshDeliverySlotsDialogCallback {
-		void onOkClicked();
-	}
 
     public interface FreshDeliverySortDialogCallback {
         void onOkClicked(int value);

@@ -39,15 +39,9 @@ import com.sabkuchfresh.fragments.AddAddressMapFragment;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
-import com.sabkuchfresh.fragments.FreshCartItemsFragment;
-import com.sabkuchfresh.fragments.FreshCheckoutFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
-import com.sabkuchfresh.fragments.FreshOrderHistoryFragment;
-import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
-import com.sabkuchfresh.fragments.FreshPaymentFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
-import com.sabkuchfresh.fragments.FreshSupportFragment;
 import com.sabkuchfresh.fragments.GroceryFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MealFragment;
@@ -105,6 +99,7 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -247,50 +242,29 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
                     int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                     if (updateCartValuesGetTotalPrice().second > 0) {
-                        if (getTransactionUtils().checkIfFragmentAdded(FreshActivity.this, FreshCartItemsFragment.class.getName())) {
-                            //int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
-                            if(appType == AppConstant.ApplicationType.MEALS) {
-                                if(isAvailable()) {
-                                    Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_has_available));
-                                } else {
-                                    openCart(appType);
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_CART+"_"+FirebaseEvents.CHECKOUT, null);
-                                }
-                            } else {
-                                openCart(appType);
-                                if(appType == AppConstant.ApplicationType.GROCERY){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + FirebaseEvents.CHECKOUT, null);
-                                } else if(appType == AppConstant.ApplicationType.MENUS){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_CART + "_" + FirebaseEvents.CHECKOUT, null);
-                                } else {
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_CART + "_" + FirebaseEvents.CHECKOUT, null);
-                                }
-                            }
+                        if (isMealAddonItemsAvailable()) {
+                            addMealAddonItemsFragment();
                         } else {
-                            if(isMealAddonItemsAvailable()){
-                                addMealAddonItemsFragment();
-                            } else {
-                                openCart(appType);
+                            openCart(appType);
 
-                                if (appType == AppConstant.ApplicationType.MEALS) {
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_CART, null);
-                                } else {
-                                    if ((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())) {
-                                        if (appType == AppConstant.ApplicationType.GROCERY) {
-                                            MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_GO, null);
-                                        } else if (appType == AppConstant.ApplicationType.MENUS) {
-                                            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_SEARCH_GO, null);
-                                        } else {
-                                            MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_GO, null);
-                                        }
+                            if (appType == AppConstant.ApplicationType.MEALS) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.M_CART, null);
+                            } else {
+                                if ((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())) {
+                                    if (appType == AppConstant.ApplicationType.GROCERY) {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_GO, null);
+                                    } else if (appType == AppConstant.ApplicationType.MENUS) {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_SEARCH_GO, null);
                                     } else {
-                                        if (appType == AppConstant.ApplicationType.GROCERY) {
-                                            MyApplication.getInstance().logEvent(FirebaseEvents.G_CART, null);
-                                        } else if (appType == AppConstant.ApplicationType.MENUS) {
-                                            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_CART, null);
-                                        } else {
-                                            MyApplication.getInstance().logEvent(FirebaseEvents.F_CART, null);
-                                        }
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_SEARCH_GO, null);
+                                    }
+                                } else {
+                                    if (appType == AppConstant.ApplicationType.GROCERY) {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_CART, null);
+                                    } else if (appType == AppConstant.ApplicationType.MENUS) {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_CART, null);
+                                    } else {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_CART, null);
                                     }
                                 }
                             }
@@ -347,13 +321,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     VendorMenuFragment vendorMenuFragment = getVendorMenuFragment();
 
                     if (fragment != null && !fragment.isHidden()) {
-                        fragment.getFreshDeliverySlotsDialog().showSorting();
+                        fragment.getFreshSortingDialog().showSorting();
                     } else if(mealFragment != null && !mealFragment.isHidden()) {
-                        mealFragment.getFreshDeliverySlotsDialog().showSorting();
+                        mealFragment.getFreshSortingDialog().showSorting();
                     } else if(groceryFragment != null && !groceryFragment.isHidden()) {
-                        groceryFragment.getFreshDeliverySlotsDialog().showSorting();
+                        groceryFragment.getFreshSortingDialog().showSorting();
                     } else if(vendorMenuFragment != null && !vendorMenuFragment.isHidden()) {
-                        vendorMenuFragment.getFreshDeliverySlotsDialog().showSorting();
+                        vendorMenuFragment.getFreshSortingDialog().showSorting();
                     }
                 }
             });
@@ -631,15 +605,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return (VendorMenuFragment) getSupportFragmentManager().findFragmentByTag(VendorMenuFragment.class.getName());
     }
 
-    private FreshCartItemsFragment getFreshCartItemsFragment() {
-        return (FreshCartItemsFragment) getSupportFragmentManager().findFragmentByTag(FreshCartItemsFragment.class.getName());
-    }
     private FreshCheckoutMergedFragment getFreshCheckoutMergedFragment() {
         return (FreshCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutMergedFragment.class.getName());
-    }
-
-    private FreshCheckoutFragment getFreshCheckoutFragment() {
-        return (FreshCheckoutFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutFragment.class.getName());
     }
 
     public DeliveryAddressesFragment getDeliveryAddressesFragment() {
@@ -662,9 +629,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         return (FeedbackFragment) getSupportFragmentManager().findFragmentByTag(FeedbackFragment.class.getName());
     }
 
-    private FreshPaymentFragment getFreshPaymentFragment() {
-        return (FreshPaymentFragment) getSupportFragmentManager().findFragmentByTag(FreshPaymentFragment.class.getName());
-    }
 
     public Product product;
     public List<Product> productList = new ArrayList<>();
@@ -737,13 +701,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     textViewCartItemsCountNew.setVisibility(View.GONE);
                     imageViewCartNew.setImageResource(R.drawable.ic_cart_empty);
                 }
-                if (getFreshCartItemsFragment() != null) {
-                    if (this.getFreshCartItemsFragment().isVisible() && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
-                        textViewMinOrder.setVisibility(View.VISIBLE);
-                    } else {
-                        textViewMinOrder.setVisibility(View.GONE);
-                    }
-                } else if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
+                if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
                     if (getFreshCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
                     } else {
@@ -795,11 +753,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             fabViewTest.fabMealsTest.setVisibility(View.GONE);
         }
 
-        if (Data.userData.getDeliveryEnabled() == 1) {
-            fabViewTest.fabDeliveryTest.setVisibility(View.VISIBLE);
-        } else {
-            fabViewTest.fabDeliveryTest.setVisibility(View.GONE);
-        }
+//        if (Data.userData.getDeliveryEnabled() == 1) {
+//            fabViewTest.fabDeliveryTest.setVisibility(View.VISIBLE);
+//        } else {
+//            fabViewTest.fabDeliveryTest.setVisibility(View.GONE);
+//        }
     }
 
     public void fragmentUISetup(Fragment fragment) {
@@ -1023,33 +981,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
                 topBar.textViewReset.setVisibility(View.GONE);
             }
-            else if (fragment instanceof FreshCartItemsFragment) {
-				textViewMinOrder.setText(String.format(getResources().getString(R.string.fresh_min_order_value), getProductsResponse().getDeliveryInfo().getMinAmount().intValue()));
-				try {
-	//                String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
-	//                String split_one = splited[1];
-					if (getTotalPrice() < getProductsResponse().getDeliveryInfo().getMinAmount()) {
-						textViewMinOrder.setVisibility(View.VISIBLE);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.VISIBLE);
-				topBar.imageViewDelete.setVisibility(View.VISIBLE);
-                topBar.imageViewDelete.setOnClickListener(topBar.topBarOnClickListener);
-				textViewCheckout.setVisibility(View.VISIBLE);
-				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
-                relativeLayoutCart.setVisibility(View.VISIBLE);
-
-				relativeLayoutSort.setVisibility(View.GONE);
-
-				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.setText(getResources().getString(R.string.my_cart));
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-			} else if (fragment instanceof FreshCheckoutFragment || fragment instanceof FreshCheckoutMergedFragment) {
+            else if (fragment instanceof FreshCheckoutMergedFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -1099,63 +1031,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.editTextDeliveryAddress.setVisibility(View.VISIBLE);
                 topBar.editTextDeliveryAddress.requestFocus();
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FreshPaymentFragment) {
-				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.VISIBLE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-				relativeLayoutSort.setVisibility(View.GONE);
-                relativeLayoutCart.setVisibility(View.VISIBLE);
-
-				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.setText(getResources().getString(R.string.payment));
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-			} else if (fragment instanceof FreshOrderHistoryFragment) {
-				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.VISIBLE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-				relativeLayoutSort.setVisibility(View.GONE);
-                relativeLayoutCart.setVisibility(View.VISIBLE);
-
-				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.setText(getResources().getString(R.string.order_history));
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-			} else if (fragment instanceof FreshOrderSummaryFragment) {
-				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.VISIBLE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-				relativeLayoutSort.setVisibility(View.GONE);
-                relativeLayoutCart.setVisibility(View.VISIBLE);
-
-				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.setText(getResources().getString(R.string.order_summary));
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-			} else if (fragment instanceof FreshSupportFragment) {
-				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.VISIBLE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-				relativeLayoutSort.setVisibility(View.GONE);
-                relativeLayoutCart.setVisibility(View.VISIBLE);
-
-				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.setText(getResources().getString(R.string.support));
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
-			} else if (fragment instanceof FreshSearchFragment) {
+            } else if (fragment instanceof FreshSearchFragment) {
 				topView.setVisibility(View.GONE);
                 RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
                 params1.setMargins(0, 0, 0, 0);
@@ -1234,11 +1110,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                             frag = getMealAddonItemsFragment();
                             if(frag != null){
                                 ((MealAddonItemsFragment)frag).deleteCart();
-                            } else{
-                                frag = getFreshCartItemsFragment();
-                                if(frag != null){
-                                    ((FreshCartItemsFragment)frag).deleteCart();
-                                }
                             }
                         }
 
@@ -1364,9 +1235,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 .commitAllowingStateLoss();
     }
 
-    public void openOrderHistory() {
-        getTransactionUtils().openOrderHistoryFragment(FreshActivity.this, relativeLayoutContainer);
-    }
 
     /**
      * Method used to open feedback screen
@@ -1425,8 +1293,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 e.printStackTrace();
             }
         } else {
-            if (getFreshPaymentFragment() != null) {
-            }
             if((getSupportFragmentManager().getBackStackEntryCount() == 2 && getFreshSearchFragment() == null) ||
                     (getSupportFragmentManager().getBackStackEntryCount() == 3 && getFreshSearchFragment() != null)){
                 FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.HOME_SCREEN);
@@ -2105,21 +1971,16 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 if (frag != null) {
                     ((MealAddonItemsFragment) frag).deleteCart();
                 } else {
-                    frag = getFreshCartItemsFragment();
-                    if (frag != null) {
-                        ((FreshCartItemsFragment) frag).deleteCart();
-                    } else {
-                        if (getProductsResponse() != null && getProductsResponse().getCategories() != null) {
-                            for (Category category : getProductsResponse().getCategories()) {
-                                for (SubItem subItem : category.getSubItems()) {
-                                    if (subItem.getSubItemQuantitySelected() > 0) {
-                                        subItem.setSubItemQuantitySelected(0);
-                                    }
+                    if (getProductsResponse() != null && getProductsResponse().getCategories() != null) {
+                        for (Category category : getProductsResponse().getCategories()) {
+                            for (SubItem subItem : category.getSubItems()) {
+                                if (subItem.getSubItemQuantitySelected() > 0) {
+                                    subItem.setSubItemQuantitySelected(0);
                                 }
                             }
                         }
-                        updateCartValuesGetTotalPrice();
                     }
+                    updateCartValuesGetTotalPrice();
                 }
             }
             clearMealCart();

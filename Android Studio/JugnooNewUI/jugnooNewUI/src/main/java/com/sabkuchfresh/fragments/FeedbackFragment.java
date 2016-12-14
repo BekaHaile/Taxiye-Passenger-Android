@@ -5,13 +5,13 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -44,7 +44,6 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.ProductType;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
@@ -68,7 +67,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by gurmail on 24/05/16.
  */
-public class FeedbackFragment extends BaseFragment implements View.OnClickListener, FlurryEventNames {
+public class FeedbackFragment extends Fragment implements View.OnClickListener, FlurryEventNames {
 
 
     private View rootView;
