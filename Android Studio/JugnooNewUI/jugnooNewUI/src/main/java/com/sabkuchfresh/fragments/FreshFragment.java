@@ -316,6 +316,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.showBottomBar(false);
             }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    activity.setMinOrderAmountText();
+                }
+            }, 500);
 		}
 	}
 
@@ -372,6 +378,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                 }
                                 else {
                                     activity.setProductsResponse(productsResponse);
+                                    activity.setMinOrderAmountText();
                                     setSortingList();
                                     if(activity.freshSort == -1) {
                                         int sortedBy = jObj.optInt(Constants.SORTED_BY);

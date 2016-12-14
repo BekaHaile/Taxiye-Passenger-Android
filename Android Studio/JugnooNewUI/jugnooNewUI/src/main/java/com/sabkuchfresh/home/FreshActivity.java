@@ -202,6 +202,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
             resetAddressFields();
 
+            if(getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)){
+                setSelectedLatLng(new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude),
+                        getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude)));
+            }
+
             relativeLayoutCart = (RelativeLayout) findViewById(R.id.relativeLayoutCart);
             linearLayoutCheckoutContainer = (LinearLayout) findViewById(R.id.linearLayoutCheckoutContainer);
             relativeLayoutCheckoutBar = (RelativeLayout) findViewById(R.id.relativeLayoutCheckoutBar);
@@ -733,6 +738,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         textViewMinOrder.setVisibility(View.GONE);
                     }
                 }
+                else if((getFreshFragment() != null || getGroceryFragment() != null)) {
+                    setMinOrderAmountText();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -831,7 +839,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 					//fabViewTest.setFABMenuDrawable();
 				}
 
-
 				relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 relativeLayoutCart.setVisibility(View.GONE);
 				linearLayoutCheckout.setVisibility(View.GONE);
@@ -845,6 +852,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
                 topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
                 setRelativeLayoutLocalityClick();
+                setMinOrderAmountText();
 
 			} else if(fragment instanceof MealFragment){
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -890,8 +898,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                     //fabViewTest.setFABMenuDrawable();
                 }
-
-
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 relativeLayoutCart.setVisibility(View.GONE);
                 linearLayoutCheckout.setVisibility(View.GONE);
@@ -905,6 +911,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
                 topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
                 setRelativeLayoutLocalityClick();
+                setMinOrderAmountText();
 
             } else if (fragment instanceof MenusFragment) {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -1088,6 +1095,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
                 topBar.title.setVisibility(View.VISIBLE);
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                setMinOrderAmountText();
 
 			} else if(fragment instanceof FeedbackFragment) {
                 topBar.below_shadow.setVisibility(View.GONE);
@@ -1121,6 +1129,23 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             topBar.title.setLayoutParams(titleLayoutParams);
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setMinOrderAmountText(){
+        try {
+            if(getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
+                if (getFreshCheckoutMergedFragment() == null && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+                    textViewMinOrder.setVisibility(View.VISIBLE);
+                }
+                else {
+                    textViewMinOrder.setVisibility(View.GONE);
+                }
+                textViewMinOrder.setText(getString(R.string.fresh_min_order_value, Utils.getMoneyDecimalFormatWithoutFloat()
+                        .format(getProductsResponse().getDeliveryInfo().getMinAmount())));
+            }
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -1445,7 +1470,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     public LatLng getCurrentPlaceLatLng() {
-        return new LatLng(Data.latitude, Data.longitude);
+        return getSelectedLatLng();
     }
 
     public TransactionUtils getTransactionUtils() {

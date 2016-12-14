@@ -371,10 +371,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(type == AppConstant.ApplicationType.MENUS && subTotalAmount < activity.getVendorOpened().getMinimumOrderAmount()) {
+                if((type == AppConstant.ApplicationType.MENUS && subTotalAmount < activity.getVendorOpened().getMinimumOrderAmount())) {
                     Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
                             Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getVendorOpened().getMinimumOrderAmount())));
-                } else if (buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
+                }
+//                else if((((type == AppConstant.ApplicationType.GROCERY) || (type == AppConstant.ApplicationType.FRESH)) && subTotalAmount < activity.getProductsResponse().getDeliveryInfo().getMinAmount())) {
+//                    Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
+//                            Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getProductsResponse().getDeliveryInfo().getMinAmount())));
+//                }
+                else if (buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
                     getCheckoutDataAPI();
                 } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
@@ -1392,6 +1397,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
                 promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
             } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                if(promoCoupons == null){
+                    promoCoupons = new ArrayList<>();
+                }
                 promoCoupons.clear();
                 ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(ProductType.MENUS);
                 if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal())

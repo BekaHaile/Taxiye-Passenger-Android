@@ -72,6 +72,10 @@ public class AppSwitcher {
 			}
 			intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 			intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
+//			if(!(activity instanceof HomeActivity)) {
+				intent.putExtra(Constants.KEY_LATITUDE, latLng.latitude);
+				intent.putExtra(Constants.KEY_LONGITUDE, latLng.longitude);
+//			}
 			if (data != null) {
 				intent.setData(data);
 			}

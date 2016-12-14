@@ -321,7 +321,12 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.showBottomBar(false);
             }
-
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    activity.setMinOrderAmountText();
+                }
+            }, 500);
 		}
 	}
 
@@ -376,6 +381,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 }
                                 else {
                                     activity.setProductsResponse(productsResponse);
+                                    activity.setMinOrderAmountText();
                                     setSortingList();
                                     if(activity.freshSort == -1) {
                                         int sortedBy = jObj.optInt(Constants.SORTED_BY);

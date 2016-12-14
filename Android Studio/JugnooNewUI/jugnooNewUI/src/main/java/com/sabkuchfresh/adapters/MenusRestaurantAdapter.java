@@ -218,10 +218,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         try {
             if (holder instanceof ViewTitleStatus) {
-                final ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
+                ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
                 try {
                     position = vendorsComplete.size() > 0 ? position - 1 : position;
-                    final RecentOrder recentOrder = recentOrders.get(position);
+                    RecentOrder recentOrder = recentOrders.get(position);
                     for(int i=0; i<statusHolder.relativeStatusBar.getChildCount(); i++)
                     {
                         if(statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup)
@@ -240,16 +240,21 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
                     statusHolder.tvOrderIdValue.setText(recentOrder.getOrderId().toString());
                     statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
-
+                    statusHolder.container.setTag(position);
                     statusHolder.container.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(activity, RideTransactionsActivity.class);
-                            intent.putExtra(Constants.KEY_ORDER_ID, recentOrder.getOrderId());
-                            intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MENUS.getOrdinal());
-                            activity.startActivity(intent);
-                            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.ORDER_STATUS);
+                            try {
+                                int pos = (int) v.getTag();
+                                Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                                intent.putExtra(Constants.KEY_ORDER_ID, recentOrders.get(pos).getOrderId());
+                                intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MENUS.getOrdinal());
+                                activity.startActivity(intent);
+                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.ORDER_STATUS);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                 } catch (Exception e) {
