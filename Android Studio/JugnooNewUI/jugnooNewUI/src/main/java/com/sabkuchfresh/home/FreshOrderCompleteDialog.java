@@ -38,7 +38,7 @@ public class FreshOrderCompleteDialog {
 		this.callback = callback;
 	}
 
-	public Dialog show(String orderId, String deliverySlot, String deliveryDay, boolean showDeliverySlot) {
+	public Dialog show(String orderId, String deliverySlot, String deliveryDay, boolean showDeliverySlot, String restaurantName) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -62,7 +62,7 @@ public class FreshOrderCompleteDialog {
 			else if(type == AppConstant.ApplicationType.GROCERY)
 				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_grocery));
 			else if(type == AppConstant.ApplicationType.MENUS)
-				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_menus));
+				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_menus_format, restaurantName));
 
 			TextView textViewOrderId = (TextView) dialog.findViewById(R.id.textViewOrderId);
 			textViewOrderId.setTypeface(Fonts.mavenRegular(activity));

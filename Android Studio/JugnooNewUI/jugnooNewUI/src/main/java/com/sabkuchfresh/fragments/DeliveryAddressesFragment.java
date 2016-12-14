@@ -131,7 +131,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             selectAddressTag = Constants.MEALS_SELECT_ADDRESS;
         } else if(appType == AppConstant.ApplicationType.GROCERY){
             selectAddressTag = Constants.GROCERY_SELECT_ADDRESS;
+        } else if(appType == AppConstant.ApplicationType.MENUS){
+            selectAddressTag = Constants.MENUS_SELECT_ADDRESS;
         }
+
 
         linearLayoutMain = (RelativeLayout) rootView.findViewById(R.id.linearLayoutMain);
 
@@ -701,8 +704,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         }
         if(savedPlaces > 0) {
             textViewSavedPlaces.setVisibility(View.VISIBLE);
+            cardViewSavedPlaces.setVisibility(View.VISIBLE);
         } else {
             textViewSavedPlaces.setVisibility(View.GONE);
+            cardViewSavedPlaces.setVisibility(View.GONE);
         }
 
 
@@ -710,8 +715,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             savedPlacesAdapterRecent.notifyDataSetChanged();
             if (savedPlacesAdapterRecent.getCount() > 0) {
                 textViewRecentAddresses.setVisibility(View.VISIBLE);
+                cardViewRecentAddresses.setVisibility(View.VISIBLE);
             } else {
                 textViewRecentAddresses.setVisibility(View.GONE);
+                cardViewRecentAddresses.setVisibility(View.GONE);
             }
         }
     }

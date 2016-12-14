@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.app.ProgressDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -51,6 +52,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -92,6 +94,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private boolean loader = true, resumed = false;
     protected Bus mBus;
     PushDialog pushDialog;
+    private RelativeLayout relativeLayoutNoMenus;
+    private TextView textViewNothingFound;
 
 
 	@Override
@@ -133,6 +137,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+        relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
+        ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
+        relativeLayoutNoMenus.setVisibility(View.GONE);
+        rootView.findViewById(R.id.imageViewShadow).setVisibility(View.VISIBLE);
 
         searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
@@ -303,6 +313,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 				getAllProducts(true, activity.getSelectedLatLng());
 			}
 			activity.setRefreshCart(false);
+            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                activity.showBottomBar(false);
+            }
 		}
 	}
 
@@ -327,6 +340,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
 					@Override
 					public void success(ProductsResponse productsResponse, Response response) {
+                        relativeLayoutNoMenus.setVisibility(View.GONE);
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
 
@@ -349,47 +363,56 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                 }
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);
-                                activity.setProductsResponse(productsResponse);
-                                setSortingList();
-                                if(activity.freshSort == -1) {
-                                    int sortedBy = jObj.getInt(Constants.SORTED_BY);
-									activity.freshSort = sortedBy;
-                                    slots.get(sortedBy).setCheck(true);
-                                } else {
-                                    slots.get(activity.freshSort).setCheck(true);
-                                    activity.onSortEvent(new SortSelection(activity.freshSort));
+                                if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
+                                    relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+                                    mainLayout.setVisibility(View.GONE);
+                                    activity.showBottomBar(false);
+                                    textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
+                                            productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
-
-								if(activity.getProductsResponse() != null
-										&& activity.getProductsResponse().getCategories() != null) {
-									activity.updateCartFromSP();
-									activity.updateCartValuesGetTotalPrice();
-                                    if(loader) {
-                                        freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
-                                        tabs.setViewPager(viewPager);
-                                        viewPager.setCurrentItem(Data.tabLinkIndex);
-                                        Data.tabLinkIndex = 0;
-                                        tabs.setBackgroundColor(activity.getResources().getColor(R.color.white_light_grey));
+                                else {
+                                    activity.setProductsResponse(productsResponse);
+                                    setSortingList();
+                                    if(activity.freshSort == -1) {
+                                        int sortedBy = jObj.optInt(Constants.SORTED_BY);
+                                        activity.freshSort = sortedBy;
+                                        slots.get(sortedBy).setCheck(true);
                                     } else {
-										freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
+                                        slots.get(activity.freshSort).setCheck(true);
+                                        activity.onSortEvent(new SortSelection(activity.freshSort));
                                     }
-									tabs.notifyDataSetChanged();
 
-                                    if(activity.updateCart) {
-                                        activity.updateCart = false;
-                                        activity.openCart();
-                                        activity.getRelativeLayoutCartNew().performClick();
+                                    if(activity.getProductsResponse() != null
+                                            && activity.getProductsResponse().getCategories() != null) {
+                                        activity.updateCartFromSP();
+                                        activity.updateCartValuesGetTotalPrice();
+                                        if(loader) {
+                                            freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
+                                            tabs.setViewPager(viewPager);
+                                            viewPager.setCurrentItem(Data.tabLinkIndex);
+                                            Data.tabLinkIndex = 0;
+                                            tabs.setBackgroundColor(activity.getResources().getColor(R.color.white_light_grey));
+                                        } else {
+                                            freshCategoryFragmentsAdapter.setCategories(activity.getProductsResponse().getCategories());
+                                        }
+                                        tabs.notifyDataSetChanged();
+
+                                        if(activity.updateCart) {
+                                            activity.updateCart = false;
+                                            activity.openCart();
+                                            activity.getRelativeLayoutCartNew().performClick();
+                                        }
+                                        if(productsResponse.getShowMessage() != null
+                                                && productsResponse.getShowMessage().equals(1)) {
+                                            new FreshNoDeliveriesDialog(activity, new FreshNoDeliveriesDialog.Callback() {
+                                                @Override
+                                                public void onDismiss() {
+
+                                                }
+                                            }).show(message);
+                                        }
                                     }
-									if(productsResponse.getShowMessage() != null
-											&& productsResponse.getShowMessage().equals(1)) {
-										new FreshNoDeliveriesDialog(activity, new FreshNoDeliveriesDialog.Callback() {
-											@Override
-											public void onDismiss() {
-
-											}
-										}).show(message);
-									}
-								}
+                                }
 							} else {
                                 activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
                                 noFreshsView.setVisibility(View.VISIBLE);

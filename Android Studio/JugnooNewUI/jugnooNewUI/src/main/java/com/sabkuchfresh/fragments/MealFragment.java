@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.app.ProgressDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -84,6 +87,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     private ArrayList<SubItem> mealsData = new ArrayList<>();
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     private boolean resumed = false;
+    private RelativeLayout relativeLayoutNoMenus;
+    private TextView textViewNothingFound;
 
     public MealFragment() {
     }
@@ -109,6 +114,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             e.printStackTrace();
         }
         linearLayoutRoot.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
+
+        relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
+        ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
+        relativeLayoutNoMenus.setVisibility(View.GONE);
 
         mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
 
@@ -174,6 +184,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 getAllProducts(true, activity.getSelectedLatLng());
             }
             activity.setRefreshCart(false);
+            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                activity.showBottomBar(false);
+            }
         }
     }
 
@@ -263,63 +276,80 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                     @Override
                     public void success(ProductsResponse productsResponse, Response response) {
                         noFreshsView.setVisibility(View.GONE);
+                        relativeLayoutNoMenus.setVisibility(View.GONE);
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            String message = JSONParser.getServerMessage(jObj);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt(Constants.KEY_FLAG);
-                                int sortedBy = jObj.getInt(Constants.SORTED_BY);
-
-                                mealsData.clear();
-                                mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
-                                recentOrder.clear();
-                                recentOrder.addAll(productsResponse.getRecentOrders());
-                                status.clear();
-                                status.addAll(productsResponse.getRecentOrdersPossibleStatus());
-                                activity.setProductsResponse(productsResponse);
-
-                                setSortingList();
-                                if (activity.mealSort == -1) {
-                                    slots.get(sortedBy).setCheck(true);
-                                    activity.mealSort = sortedBy;
-                                } else {
-                                    slots.get(activity.mealSort).setCheck(true);
-                                    onSortEvent(activity.mealSort);
-                                }
-
-
-                                activity.canOrder = false;
-                                int size = productsResponse.getCategories().get(0).getSubItems().size();
-                                for (int i = 0; i < size; i++) {
-                                    if (productsResponse.getCategories().get(0).getSubItems().get(i).getcanOrder() == 1) {
-                                        activity.canOrder = true;
-                                        break;
-                                    }
-
-                                }
-
-                                mealAdapter.setList(mealsData);
-                                recyclerViewCategoryItems.smoothScrollToPosition(0);
-
-                                if(mealsData.size()+recentOrder.size()>0) {
-                                    noMealsView.setVisibility(View.GONE);
-                                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                    activity.showBottomBar(true);
-                                } else {
-                                    noMealsView.setVisibility(View.VISIBLE);
-                                    //mSwipeRefreshLayout.setVisibility(View.GONE);
+                            if(!isHidden()) {
+                                activity.showBottomBar(true);
+                            } else {
+                                Fragment fragment = activity.getTopFragment();
+                                if(fragment != null && fragment instanceof MealFragment) {
                                     activity.showBottomBar(false);
                                 }
+                            }
 
-                                if (activity.getProductsResponse() != null
-                                        && activity.getProductsResponse().getCategories() != null) {
-                                    activity.updateCartFromSP();
-                                    activity.updateCartValuesGetTotalPrice();
+                            JSONObject jObj = new JSONObject(responseStr);
+                            String message = JSONParser.getServerMessage(jObj);
+                            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                int flag = jObj.getInt(Constants.KEY_FLAG);
+                                if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
+                                    relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+                                    mSwipeRefreshLayout.setVisibility(View.GONE);
+                                    activity.showBottomBar(false);
+                                    textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
+                                            productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
+                                else {
+                                    int sortedBy = jObj.optInt(Constants.SORTED_BY);
+                                    mealsData.clear();
+                                    mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
+                                    recentOrder.clear();
+                                    recentOrder.addAll(productsResponse.getRecentOrders());
+                                    status.clear();
+                                    status.addAll(productsResponse.getRecentOrdersPossibleStatus());
+                                    activity.setProductsResponse(productsResponse);
+
+                                    setSortingList();
+                                    if (activity.mealSort == -1) {
+                                        slots.get(sortedBy).setCheck(true);
+                                        activity.mealSort = sortedBy;
+                                    } else {
+                                        slots.get(activity.mealSort).setCheck(true);
+                                        onSortEvent(activity.mealSort);
+                                    }
 
 
+                                    activity.canOrder = false;
+                                    int size = productsResponse.getCategories().get(0).getSubItems().size();
+                                    for (int i = 0; i < size; i++) {
+                                        if (productsResponse.getCategories().get(0).getSubItems().get(i).getcanOrder() == 1) {
+                                            activity.canOrder = true;
+                                            break;
+                                        }
+
+                                    }
+
+                                    mealAdapter.setList(mealsData);
+                                    recyclerViewCategoryItems.smoothScrollToPosition(0);
+
+                                    if(mealsData.size()+recentOrder.size()>0) {
+                                        noMealsView.setVisibility(View.GONE);
+                                        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                                        activity.showBottomBar(true);
+                                    } else {
+                                        noMealsView.setVisibility(View.VISIBLE);
+                                        //mSwipeRefreshLayout.setVisibility(View.GONE);
+                                        activity.showBottomBar(false);
+                                    }
+
+                                    if (activity.getProductsResponse() != null
+                                            && activity.getProductsResponse().getCategories() != null) {
+                                        activity.updateCartFromSP();
+                                        activity.updateCartValuesGetTotalPrice();
+                                    }
+                                }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -331,14 +361,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             e.printStackTrace();
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
-                        if(!isHidden()) {
-                            activity.showBottomBar(true);
-                        } else {
-                            Fragment fragment = activity.getTopFragment();
-                            if(fragment != null && fragment instanceof MealFragment) {
-                                activity.showBottomBar(false);
-                            }
-                        }
                     }
 
                     @Override

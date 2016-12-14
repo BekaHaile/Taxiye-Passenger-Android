@@ -231,17 +231,18 @@
 
         <TextView
             android:id="@+id/textViewReset"
-            android:layout_width="114px"
-            android:layout_height="40px"
-            android:background="@drawable/background_white_rounded_bordered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/reset"
+            android:textAllCaps="true"
             android:textColor="@color/text_color_selector"
-            android:textSize="@dimen/text_size_22"
+            android:textSize="30.6px"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="28px"
+            android:layout_marginRight="10px"
             android:visibility="gone"
+            android:padding="15px"
             />
 
     </RelativeLayout>
