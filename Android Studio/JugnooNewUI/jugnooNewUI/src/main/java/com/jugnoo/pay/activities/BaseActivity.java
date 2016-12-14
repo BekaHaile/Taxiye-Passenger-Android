@@ -11,16 +11,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -73,7 +69,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         } else {
 
-            showAlertNoInternet(appCompatActivity);
 
         }
      }
@@ -105,7 +100,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         } else {
 
-            showAlertNoInternet(appCompatActivity);
 
         }
 
@@ -117,53 +111,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void showAlertNoInternet(final Activity context) {
-        Button btnNoInternet;
-        Toolbar mToolBar;
-        TextView toolbarTitleTxt;
-        ImageButton backBtn;
-
-        try {
-            if (dialog == null) {
-                dialog = new Dialog(context, R.style.AppTheme);
-                dialog.setContentView(R.layout.layout_no_internet_connection);
-                //        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
-//        lp.dimAmount = 0.5f;// Dim level. 0.0 - no dim, 1.0 - completely opaque
-//        dialog.getWindow().setAttributes(lp);
-                dialog.setCancelable(false);
-                dialog.setCanceledOnTouchOutside(false);
-
-
-                btnNoInternet = (Button) dialog.findViewById(R.id.refresh_btn);
-
-
-                btnNoInternet.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        if (!isNetworkConnected()) {
-
-                            showAlertNoInternet(context);
-
-                        } else {
-
-                            if (dialog != null) {
-                                dialog.dismiss();
-
-                            }
-                        }
-
-
-                    }
-                });
-            }
-
-
-            dialog.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void setupParent(View view) {

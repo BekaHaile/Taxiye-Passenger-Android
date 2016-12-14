@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -23,14 +22,12 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.FeedbackActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.RideTransactionsAdapter;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -149,22 +146,6 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 
 							FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
 							FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-
-					@Override
-					public void onRateRideClick(int position, HistoryResponse.Datum rideInfo) {
-						try {
-							Intent intent = new Intent(activity, FeedbackActivity.class);
-							intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.PAST_RIDE.getOrdinal());
-							intent.putExtra("position", position);
-							intent.putExtra(Constants.KEY_DRIVER_ID, rideInfo.getDriverId());
-							intent.putExtra(Constants.KEY_ENGAGEMENT_ID, rideInfo.getEngagementId());
-							activity.startActivity(intent);
-							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-							FlurryEventLogger.event(FlurryEventNames.RIDE_RATED_ON_RIDE_HISTORY);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

@@ -60,67 +60,6 @@ public class FreshDeliverySlotsDialog implements FlurryEventNames {
         this.sortDialogCallback = sortDialogCallback;
     }
 
-	public Dialog show() {
-		try {
-			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
-			dialog.setContentView(R.layout.dialog_fresh_delivery_slots);
-
-			RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
-			new ASSL(activity, relative, 1134, 720, false);
-
-			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-			layoutParams.dimAmount = 0.6f;
-			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-			dialog.setCancelable(true);
-			dialog.setCanceledOnTouchOutside(true);
-
-			TextView textViewSelectDeliverySlot = (TextView) dialog.findViewById(R.id.textViewSelectDeliverySlot);
-			textViewSelectDeliverySlot.setTypeface(Fonts.mavenRegular(activity));
-
-			RecyclerView recyclerViewDeliverySlots = (RecyclerView) dialog.findViewById(R.id.recyclerViewDeliverySlots);
-			recyclerViewDeliverySlots.setLayoutManager(new LinearLayoutManager(activity));
-			recyclerViewDeliverySlots.setItemAnimator(new DefaultItemAnimator());
-			recyclerViewDeliverySlots.setHasFixedSize(false);
-
-			Button btnOk = (Button) dialog.findViewById(R.id.btnOk); btnOk.setTypeface(Fonts.mavenRegular(activity));
-			Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel); btnCancel.setTypeface(Fonts.mavenRegular(activity));
-
-			btnOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					activity.setSlotSelected(activity.getSlotSelected());
-					callback.onOkClicked();
-					dialog.dismiss();
-				}
-			});
-
-			btnCancel.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
-
-			freshDeliverySlotsAdapter = new FreshDeliverySlotsAdapter(activity, slots,
-					new FreshDeliverySlotsAdapter.Callback() {
-						@Override
-						public void onSlotSelected(int position, Slot slot) {
-                            FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, ""+(position+1));
-							activity.setSlotSelected(slot);
-						}
-					});
-
-			recyclerViewDeliverySlots.setAdapter(freshDeliverySlotsAdapter);
-
-			dialog.show();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return dialog;
-	}
-
     int pos = 102;
     private int actualPos = 1;
     public Dialog showSorting() {

@@ -163,12 +163,10 @@ import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
-import product.clicklabs.jugnoo.home.dialogs.PoolIntroDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
-import product.clicklabs.jugnoo.home.fragments.BadFeedbackFragment;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
@@ -3626,12 +3624,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 tag = RideSummaryFragment.class.getName();
                 title = getResources().getString(R.string.receipt);
             }
-            else if(RideEndFragmentMode.BAD_FEEDBACK == rideEndFragmentMode){
-                fragToCheck = getBadFeedbackFragment();
-                fragToAdd = new BadFeedbackFragment();
-                tag = BadFeedbackFragment.class.getName();
-                title = getResources().getString(R.string.feedback);
-            }
             if ((fragToCheck == null || fragToCheck.isRemoving())
                     && fragToAdd != null) {
                 getSupportFragmentManager().beginTransaction()
@@ -3658,12 +3650,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Fragment frag = getSupportFragmentManager()
                 .findFragmentByTag(RideSummaryFragment.class.getName());
         return (RideSummaryFragment) frag;
-    }
-
-    private BadFeedbackFragment getBadFeedbackFragment(){
-        Fragment frag = getSupportFragmentManager()
-                .findFragmentByTag(BadFeedbackFragment.class.getName());
-        return (BadFeedbackFragment) frag;
     }
 
     private void updateInRideAddMoneyToWalletButtonText(){
@@ -9084,44 +9070,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    private void showPoolIntroDialog(){
-        try {
-            boolean poolEnabled = false;
-            if(Data.autoData.getRegions() != null) {
-                for (Region region : Data.autoData.getRegions()) {
-                    if(region.getRideType() == RideTypeValue.POOL.getOrdinal()){
-                        poolEnabled = true;
-                        break;
-                    }
-                }
-            }
-            if(poolEnabled && (dialogUploadContacts == null || !dialogUploadContacts.isShowing())) {
-                new PoolIntroDialog(HomeActivity.this, new PoolIntroDialog.Callback() {
-                    @Override
-                    public void onContinueClicked() {
-
-                    }
-
-                    @Override
-                    public void onMayBeLaterClicked() {
-
-                    }
-
-                    @Override
-                    public void onDialogDismiss() {
-
-                    }
-
-                    @Override
-                    public void notShown() {
-
-                    }
-                }).show();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void clearMap(){
         try {

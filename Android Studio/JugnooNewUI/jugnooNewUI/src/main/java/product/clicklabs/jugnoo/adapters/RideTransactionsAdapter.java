@@ -268,7 +268,6 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         void onShowMoreClick();
 
-        void onRateRideClick(int position, HistoryResponse.Datum rideInfo);
     }
 
     private int getVehicleTypeDrawable(int vehicleType, int rideType){

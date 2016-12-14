@@ -494,12 +494,6 @@ public class FreshCheckoutFragment extends Fragment implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.imageViewEditAddress:
-//                relativeLayoutAddress.performClick();
-                break;
-            case R.id.imageViewEditSlot:
-//                relativeLayoutSlot.performClick();
-                break;
         }
     }
 

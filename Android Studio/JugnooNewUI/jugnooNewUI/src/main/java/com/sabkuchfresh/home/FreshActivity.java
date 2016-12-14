@@ -49,7 +49,6 @@ import com.sabkuchfresh.fragments.FreshPaymentFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.FreshSupportFragment;
 import com.sabkuchfresh.fragments.GroceryFragment;
-import com.sabkuchfresh.fragments.HomeFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MealFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
@@ -610,10 +609,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         } else if(mealFragment != null && !mealFragment.isHidden()) {
             addFreshFragment1(mealFragment, true);
         }
-    }
-
-    private HomeFragment getHomeFragment() {
-        return (HomeFragment) getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getName());
     }
 
     public FreshFragment getFreshFragment() {
@@ -1177,22 +1172,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				topBar.title.setVisibility(View.VISIBLE);
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-			} else if (fragment instanceof HomeFragment) {
-				topBar.imageViewMenu.setVisibility(View.VISIBLE);
-				topBar.relativeLayoutNotification.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.GONE);
-				topBar.imageViewDelete.setVisibility(View.GONE);
-				textViewCheckout.setVisibility(View.GONE);
-				relativeLayoutCheckoutBar.setVisibility(View.GONE);
-
-				relativeLayoutSort.setVisibility(View.VISIBLE);
-                relativeLayoutCart.setVisibility(View.GONE);
-
-
-				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.setText(getResources().getString(R.string.app_name));
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-
 			} else if(fragment instanceof FeedbackFragment) {
                 topBar.below_shadow.setVisibility(View.GONE);
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -1382,14 +1361,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 .add(relativeLayoutContainer.getId(), new MenusFragment(),
                         MenusFragment.class.getName())
                 .addToBackStack(MenusFragment.class.getName())
-                .commitAllowingStateLoss();
-    }
-
-    private void addNewFreshFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new HomeFragment(),
-                        HomeFragment.class.getName())
-                .addToBackStack(HomeFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 
