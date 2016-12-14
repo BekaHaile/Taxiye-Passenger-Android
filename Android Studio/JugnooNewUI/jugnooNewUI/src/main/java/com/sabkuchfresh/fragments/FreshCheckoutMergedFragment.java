@@ -352,10 +352,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         relativeLayoutDeliveryAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType) != AppConstant.ApplicationType.MENUS) {
-                    FlurryEventLogger.event(CHECKOUT_SCREEN, SCREEN_TRANSITION, ADDRESS_SCREEN);
-                    activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
-                }
+                FlurryEventLogger.event(CHECKOUT_SCREEN, SCREEN_TRANSITION, ADDRESS_SCREEN);
+                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
             }
         });
 
@@ -1442,7 +1440,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
 
-                int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                final int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                 String idKey = Constants.KEY_SUB_ITEM_ID;
                 if(type == AppConstant.ApplicationType.MENUS){
                     idKey = Constants.KEY_ITEM_ID;
@@ -1521,6 +1519,23 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                     buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.place_order));
                                     activity.setUserCheckoutResponse(userCheckoutResponse);
                                     Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
+
+                                    if(!activity.isAddressConfirmed() && activity.getSelectedAddressId() == 0)
+                                    {
+                                        activity.setSelectedAddress("");
+                                        activity.setSelectedLatLng(null);
+                                        activity.setSelectedAddressId(0);
+                                        activity.setSelectedAddressType("");
+                                        relativeLayoutDeliveryAddress.setEnabled(true);
+                                    }
+                                    else
+                                    {
+                                        if(type == AppConstant.ApplicationType.MENUS)
+                                        {
+                                            relativeLayoutDeliveryAddress.setEnabled(false);
+                                        }
+                                    }
+
                                     setActivityLastAddressFromResponse(userCheckoutResponse);
                                     updateCartDataView();
 

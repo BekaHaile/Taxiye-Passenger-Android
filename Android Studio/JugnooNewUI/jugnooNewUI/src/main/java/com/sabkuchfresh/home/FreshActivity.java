@@ -58,6 +58,7 @@ import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
+import com.sabkuchfresh.retrofit.model.DeliveryInfo;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
@@ -763,16 +764,21 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     textViewCartItemsCountNew.setVisibility(View.GONE);
                     imageViewCartNew.setImageResource(R.drawable.ic_cart_empty);
                 }
-                if (getFreshCartItemsFragment() != null) {
+                if (getFreshCartItemsFragment() != null)
+                {
                     if (this.getFreshCartItemsFragment().isVisible() && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
                     } else {
                         textViewMinOrder.setVisibility(View.GONE);
                     }
-                } else if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
-                    if (getFreshCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
+                }
+                else if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null)
+                {
+                    if (getFreshCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount())
+                    {
                         textViewMinOrder.setVisibility(View.VISIBLE);
-                    } else {
+                    }
+                    else {
                         textViewMinOrder.setVisibility(View.GONE);
                     }
                 }
@@ -2292,8 +2298,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 
     private MenusResponse.Vendor vendorOpened;
-
-
     public MenusResponse.Vendor getVendorOpened() {
         return vendorOpened;
     }
@@ -2554,4 +2558,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
     private HomeUtil homeUtil = new HomeUtil();
 
+    private boolean isAddressConfirmed = false;
+    public boolean isAddressConfirmed(){
+        return isAddressConfirmed;
+    }
+    public void setIsAddressConfirmed(boolean isAddressConfirmed){
+        this.isAddressConfirmed = isAddressConfirmed;
+    }
 }
