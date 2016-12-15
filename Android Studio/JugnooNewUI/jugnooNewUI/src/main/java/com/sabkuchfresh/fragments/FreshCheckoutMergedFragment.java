@@ -241,6 +241,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 				activity.setSelectedLatLng(new LatLng(Data.getDatumToReOrder().getDeliveryLatitude(), Data.getDatumToReOrder().getDeliveryLongitude()));
 				activity.setSelectedAddressId(Data.getDatumToReOrder().getAddressId());
 				activity.setSelectedAddressType(Data.getDatumToReOrder().getDeliveryAddressType());
+                activity.setRefreshCart(true);
 			}
         } catch (Exception e) {
             e.printStackTrace();
