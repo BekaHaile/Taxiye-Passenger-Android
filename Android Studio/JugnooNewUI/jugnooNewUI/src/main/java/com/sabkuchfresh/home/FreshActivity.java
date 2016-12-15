@@ -1402,22 +1402,22 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                FreshFragment freshFrag = getFreshFragment();
-                MealFragment mealsFrag = getMealFragment();
-                GroceryFragment groceryFrag = getGroceryFragment();
-                MenusFragment menusFrag = getMenusFragment();
-                if (freshFrag != null) {
-                    freshFrag.getAllProducts(true, getSelectedLatLng());
-                } else if(mealsFrag != null) {
-                    mealsFrag.getAllProducts(true, getSelectedLatLng());
-                } else if(groceryFrag != null) {
-                    groceryFrag.getAllProducts(true, getSelectedLatLng());
-                } else if(menusFrag != null) {
-                    menusFrag.getAllMenus(true, getSelectedLatLng());
-                }
+//                FreshFragment freshFrag = getFreshFragment();
+//                MealFragment mealsFrag = getMealFragment();
+//                GroceryFragment groceryFrag = getGroceryFragment();
+//                MenusFragment menusFrag = getMenusFragment();
+//                if (freshFrag != null) {
+//                    freshFrag.getAllProducts(true, getSelectedLatLng());
+//                } else if(mealsFrag != null) {
+//                    mealsFrag.getAllProducts(true, getSelectedLatLng());
+//                } else if(groceryFrag != null) {
+//                    groceryFrag.getAllProducts(true, getSelectedLatLng());
+//                } else if(menusFrag != null) {
+//                    menusFrag.getAllMenus(true, getSelectedLatLng());
+//                }
+                setLocalityAddressFirstTime(Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType));
             }
         }, 1000);
-
 
     }
 
