@@ -550,4 +550,8 @@ public interface Constants {
 
 
 	String KEY_IS_EMPTY = "is_empty";
+	String KEY_CURRENT_LATITUDE = "current_latitude";
+	String KEY_CURRENT_LONGITUDE = "current_longitude";
+	String KEY_MENU_LATITUDE = "menu_latitude";
+	String KEY_MENU_LONGITUDE = "menu_longitude";
 }

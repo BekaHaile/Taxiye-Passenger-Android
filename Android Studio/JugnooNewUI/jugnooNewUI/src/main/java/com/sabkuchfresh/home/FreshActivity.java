@@ -58,7 +58,6 @@ import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
-import com.sabkuchfresh.retrofit.model.DeliveryInfo;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
@@ -163,6 +162,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
      */
     protected Bus mBus;
     private double totalPrice = 0;
+    private int totalQuantity = 0;
 
     public boolean updateCart = false;
 
@@ -742,7 +742,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public Pair<Double, Integer> updateCartValuesGetTotalPrice() {
         Pair<Double, Integer> pair;
         totalPrice = 0;
-        int totalQuantity = 0;
+        totalQuantity = 0;
         try {
             if (getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
@@ -1068,7 +1068,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 				try {
 	//                String[] splited = textViewTotalPrice.getText().toString().split("\\s+");
 	//                String split_one = splited[1];
-					if (getTotalPrice() < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+					if (totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
 						textViewMinOrder.setVisibility(View.VISIBLE);
 					}
 				} catch (Exception e) {
@@ -1283,7 +1283,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void setMinOrderAmountText(){
         try {
             if(getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
-                if (getFreshCheckoutMergedFragment() == null && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+                if (totalQuantity > 0 && getFreshCheckoutMergedFragment() == null && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
                     textViewMinOrder.setVisibility(View.VISIBLE);
                 }
                 else {
