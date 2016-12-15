@@ -8730,7 +8730,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public LatLng getCurrentPlaceLatLng(){
-        if(map != null){
+        if(Data.getLatLngOfJeanieLastShown() != null){
+            return Data.getLatLngOfJeanieLastShown();
+        }
+        else if(map != null){
             return map.getCameraPosition().target;
         }
         return null;

@@ -180,13 +180,18 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             activity.fragmentUISetup(this);
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
-            if(activity.isRefreshCart()){
-                activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
-            }
-            activity.setRefreshCart(false);
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.showBottomBar(false);
             }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(activity.isRefreshCart()){
+                        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
+                    }
+                    activity.setRefreshCart(false);
+                }
+            }, 300);
         }
     }
 

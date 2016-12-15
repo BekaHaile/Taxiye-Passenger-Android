@@ -482,6 +482,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         if(flag == -1) {
 							String message = intent.getStringExtra("message");
 							int type = intent.getIntExtra("open_type", 0);
+
 							if (type == 0) {
 								Log.d("receiver", "Got message: " + message);
 								if (drawerLayout.isDrawerOpen(GravityCompat.START)) {

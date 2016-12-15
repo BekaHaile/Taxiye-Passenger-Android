@@ -220,6 +220,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
         activity.subItemsInCart.clear();
 
+
         if(activity.getProductsResponse() != null
                 && activity.getProductsResponse().getCategories() != null) {
             for (Category category : activity.getProductsResponse().getCategories()) {
@@ -233,6 +234,19 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
         }
+
+        try {
+            if(Data.getDatumToReOrder() != null){
+				activity.setSelectedAddress(Data.getDatumToReOrder().getDeliveryAddress());
+				activity.setSelectedLatLng(new LatLng(Data.getDatumToReOrder().getDeliveryLatitude(), Data.getDatumToReOrder().getDeliveryLongitude()));
+				activity.setSelectedAddressId(Data.getDatumToReOrder().getAddressId());
+				activity.setSelectedAddressType(Data.getDatumToReOrder().getDeliveryAddressType());
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Data.setDatumToReOrder(null);
+
         activity.setMenuRefreshLatLng(new LatLng(activity.getSelectedLatLng().latitude, activity.getSelectedLatLng().longitude));
 
         ((TextView)rootView.findViewById(R.id.textViewDeliverySlot)).setTypeface(Fonts.mavenMedium(activity));

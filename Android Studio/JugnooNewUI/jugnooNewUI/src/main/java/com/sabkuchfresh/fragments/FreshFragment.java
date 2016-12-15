@@ -309,10 +309,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
-			if(activity.isRefreshCart()){
-				activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
-			}
-			activity.setRefreshCart(false);
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.showBottomBar(false);
             }
@@ -320,8 +316,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 @Override
                 public void run() {
                     activity.setMinOrderAmountText();
+					if(activity.isRefreshCart()){
+						activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
+					}
+					activity.setRefreshCart(false);
                 }
-            }, 500);
+            }, 300);
 		}
 	}
 

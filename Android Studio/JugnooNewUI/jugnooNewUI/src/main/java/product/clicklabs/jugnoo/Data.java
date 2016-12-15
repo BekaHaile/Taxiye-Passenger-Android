@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -458,5 +460,25 @@ public class Data {
 
 	public static void setMenusData(MenusData menusData) {
 		Data.menusData = menusData;
+	}
+
+	private static LatLng latLngOfJeanieLastShown;
+
+	public static LatLng getLatLngOfJeanieLastShown() {
+		return latLngOfJeanieLastShown;
+	}
+
+	public static void setLatLngOfJeanieLastShown(LatLng latLngOfJeanieLastShown) {
+		Data.latLngOfJeanieLastShown = latLngOfJeanieLastShown;
+	}
+
+	private static HistoryResponse.Datum datumToReOrder;
+
+	public static HistoryResponse.Datum getDatumToReOrder() {
+		return datumToReOrder;
+	}
+
+	public static void setDatumToReOrder(HistoryResponse.Datum datumToReOrder) {
+		Data.datumToReOrder = datumToReOrder;
 	}
 }

@@ -200,10 +200,15 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             activity.fragmentUISetup(this);
             activity.resumeMethod();
             menusRestaurantAdapter.applyFilter();
-            if(activity.isRefreshCart()){
-                activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
-            }
-            activity.setRefreshCart(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(activity.isRefreshCart()){
+                        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
+                    }
+                    activity.setRefreshCart(false);
+                }
+            }, 300);
         }
     }
 

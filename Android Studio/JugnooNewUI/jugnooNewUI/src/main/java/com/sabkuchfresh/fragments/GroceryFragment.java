@@ -314,19 +314,19 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
-			if(activity.isRefreshCart()){
-				activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
-			}
-			activity.setRefreshCart(false);
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.showBottomBar(false);
             }
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    activity.setMinOrderAmountText();
-                }
-            }, 500);
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					activity.setMinOrderAmountText();
+					if(activity.isRefreshCart()){
+						activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
+					}
+					activity.setRefreshCart(false);
+				}
+			}, 300);
 		}
 	}
 

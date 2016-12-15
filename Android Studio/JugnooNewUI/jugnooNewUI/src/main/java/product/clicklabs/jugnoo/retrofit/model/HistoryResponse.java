@@ -274,6 +274,15 @@ public class HistoryResponse {
         @SerializedName("packing_charges")
         @Expose
         private Double packingCharges;
+        @SerializedName("delivery_latitude")
+        @Expose
+        private Double deliveryLatitude;
+        @SerializedName("delivery_longitude")
+        @Expose
+        private Double deliveryLongitude;
+        @SerializedName("address_id")
+        @Expose
+        private Integer addressId;
 
         /**
          * @return The pickupAddress
@@ -954,6 +963,9 @@ public class HistoryResponse {
         }
 
         public String getDeliveryAddressType() {
+            if(deliveryAddressType == null){
+                return "";
+            }
             return deliveryAddressType;
         }
 
@@ -1046,6 +1058,33 @@ public class HistoryResponse {
 
         public void setPackingCharges(Double packingCharges) {
             this.packingCharges = packingCharges;
+        }
+
+        public Double getDeliveryLatitude() {
+            return deliveryLatitude;
+        }
+
+        public void setDeliveryLatitude(Double deliveryLatitude) {
+            this.deliveryLatitude = deliveryLatitude;
+        }
+
+        public Double getDeliveryLongitude() {
+            return deliveryLongitude;
+        }
+
+        public void setDeliveryLongitude(Double deliveryLongitude) {
+            this.deliveryLongitude = deliveryLongitude;
+        }
+
+        public Integer getAddressId() {
+            if(addressId == null){
+                return 0;
+            }
+            return addressId;
+        }
+
+        public void setAddressId(Integer addressId) {
+            this.addressId = addressId;
         }
     }
 
