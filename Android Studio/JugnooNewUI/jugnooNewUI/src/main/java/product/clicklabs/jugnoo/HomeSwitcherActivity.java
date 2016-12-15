@@ -14,6 +14,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NonScrollGridView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
@@ -38,8 +40,9 @@ public class HomeSwitcherActivity extends Activity {
     TextView textViewRides, textViewMeals, textViewFresh, textViewGrocery, textViewDelivery, textViewPay;
     FloatingActionMenu fabMenuIns;
     Animation bounceAnim, bounceScaleAnim;
-    GridView gridView;
+    NonScrollGridView gridView;
     ArrayList<String> gridViewData;
+    private ScrollView scrollViewRideSummary;
 
     @Override
     protected void onResume() {
@@ -71,15 +74,16 @@ public class HomeSwitcherActivity extends Activity {
 
         ((TextView) findViewById(R.id.textViewWeHave)).setTypeface(Fonts.mavenMedium(this));
         ((TextView) findViewById(R.id.textViewWeHave2)).setTypeface(Fonts.mavenMedium(this));
+        scrollViewRideSummary = (ScrollView) findViewById(R.id.scrollViewRideSummary);
 
-        relativeLayoutHomeData = (RelativeLayout) findViewById(R.id.relativeLayoutHomeData);
+      /*  relativeLayoutHomeData = (RelativeLayout) findViewById(R.id.relativeLayoutHomeData);*/
         /*relativeLayoutRides = (CardView) findViewById(R.id.relativeLayoutRides);
         relativeLayoutMeals = (CardView) findViewById(R.id.relativeLayoutMeals);
         relativeLayoutFresh = (CardView) findViewById(R.id.relativeLayoutFresh);
         relativeLayoutGrocery = (CardView) findViewById(R.id.relativeLayoutGrocery);
         relativeLayoutDelivery = (CardView) findViewById(R.id.relativeLayoutDelivery);
         relativeLayoutPay = (CardView) findViewById(R.id.relativeLayoutPay);*/
-        gridView = (GridView) findViewById(R.id.gridview);
+        gridView = (NonScrollGridView) findViewById(R.id.gridView);
         gridViewData = new ArrayList<>();
 
 
@@ -120,16 +124,21 @@ public class HomeSwitcherActivity extends Activity {
             if ((Data.userData.getGroceryEnabled() == 1)) {
                 gridViewData.add(Config.getGroceryClientId());
             }
-            if ((Data.userData.getDeliveryEnabled() == 1)) {
-                gridViewData.add(Config.getDeliveryClientId());
-            }
-            /*
-            if ((Data.userData.getPayNowEnabled == 1))
-            {
-                gridViewData.add(Data.userData.getPAyNowEnabled,Config.getPayNowClientId());
-            }
-            */
 
+
+/*
+            if ((Data.userData.getMenusEnabled() == 1)) {
+                gridViewData.add(Config.getMenusClientId());
+            }
+            if ((Data.userData.getPayEnabled == 1))
+            {
+               gridViewData.add(Config.getPayClientId());
+    //            gridViewData.add(Data.userData.getPAyNowEnabled,Config.getPayNowClientId());
+            }
+*/
+            /*if ((Data.userData.getDeliveryEnabled() == 1)) {
+                gridViewData.add(Config.getDeliveryClientId());
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -137,7 +146,7 @@ public class HomeSwitcherActivity extends Activity {
         Log.v("length of data","length of data"+gridViewData.size());
         GridViewAdapter gridViewAdapter = new GridViewAdapter(this, gridViewData);
         gridView.setAdapter(gridViewAdapter);
-
+        gridView.setNumColumns((gridViewData.size()>2)?2:1);
 
        /* try {
                if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)

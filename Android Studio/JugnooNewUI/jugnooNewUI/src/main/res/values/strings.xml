@@ -1218,4 +1218,8 @@
 	<string name="we_have_these_offerings">Following services are available at your location.\nPlease select a service:</string>
 	<string name="you_can_always_navigate">You can always navigate between various\nservices using Jugnoo Jeanie.</string>
 
+
+	<string name="menus">Menus</string>
+	<string name="pay">Pay</string>
+
 </resources>
