@@ -315,7 +315,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
 			if(activity.isRefreshCart()){
-				getAllProducts(true, activity.getSelectedLatLng());
+				activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
 			}
 			activity.setRefreshCart(false);
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
@@ -330,7 +330,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 		}
 	}
 
-	public void getAllProducts(final boolean loader, LatLng latLng) {
+	public void getAllProducts(final boolean loader, final LatLng latLng) {
 		try {
             this.loader = loader;
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
@@ -382,6 +382,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 else {
                                     activity.setProductsResponse(productsResponse);
                                     activity.setMinOrderAmountText();
+									activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
                                     setSortingList();
                                     if(activity.freshSort == -1) {
                                         int sortedBy = jObj.optInt(Constants.SORTED_BY);

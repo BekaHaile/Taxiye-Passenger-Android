@@ -174,7 +174,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private CheckoutSaveData checkoutSaveData;
     private int type;
-    private LatLng menuLatLng;
 
     @Override
     public void onStart() {
@@ -234,7 +233,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
         }
-        menuLatLng = new LatLng(activity.getSelectedLatLng().latitude, activity.getSelectedLatLng().longitude);
+        activity.setMenuRefreshLatLng(new LatLng(activity.getSelectedLatLng().latitude, activity.getSelectedLatLng().longitude));
 
         ((TextView)rootView.findViewById(R.id.textViewDeliverySlot)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenMedium(activity));
@@ -962,8 +961,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
 
-                params.put(Constants.KEY_MENU_LATITUDE, String.valueOf(menuLatLng.latitude));
-                params.put(Constants.KEY_MENU_LONGITUDE, String.valueOf(menuLatLng.longitude));
+                params.put(Constants.KEY_MENU_LATITUDE, String.valueOf(activity.getMenuRefreshLatLng().latitude));
+                params.put(Constants.KEY_MENU_LONGITUDE, String.valueOf(activity.getMenuRefreshLatLng().longitude));
 
                 params.put(Constants.DELIVERY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.DELIVERY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
@@ -1451,8 +1450,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_LATITUDE, String.valueOf(menuLatLng.latitude));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(menuLatLng.longitude));
+                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getMenuRefreshLatLng().latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getMenuRefreshLatLng().longitude));
                 params.put(Constants.KEY_CURRENT_LATITUDE, String.valueOf(Data.latitude));
                 params.put(Constants.KEY_CURRENT_LONGITUDE, String.valueOf(Data.longitude));
 
@@ -1650,8 +1649,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     try {
                         activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
                                 Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+                        activity.setRefreshCart(true);
                     } catch (Exception e) {
-                        activity.setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
                     }
                 } else {
                     activity.setSelectedAddress("");

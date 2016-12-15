@@ -2590,4 +2590,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void setIsAddressConfirmed(boolean isAddressConfirmed){
         this.isAddressConfirmed = isAddressConfirmed;
     }
+
+    private LatLng menuRefreshLatLng;
+    public LatLng getMenuRefreshLatLng() {
+        return menuRefreshLatLng;
+    }
+    public void setMenuRefreshLatLng(LatLng menuRefreshLatLng) {
+        this.menuRefreshLatLng = menuRefreshLatLng;
+    }
 }

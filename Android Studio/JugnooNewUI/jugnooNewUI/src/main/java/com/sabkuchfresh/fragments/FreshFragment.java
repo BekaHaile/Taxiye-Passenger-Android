@@ -310,7 +310,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
 			if(activity.isRefreshCart()){
-				getAllProducts(true, activity.getSelectedLatLng());
+				activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 			}
 			activity.setRefreshCart(false);
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
@@ -325,7 +325,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		}
 	}
 
-	public void getAllProducts(final boolean loader, LatLng latLng) {
+	public void getAllProducts(final boolean loader, final LatLng latLng) {
 		try {
             this.loader = loader;
 			if(AppStatus.getInstance(activity).isOnline(activity)) {
@@ -379,6 +379,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                 else {
                                     activity.setProductsResponse(productsResponse);
                                     activity.setMinOrderAmountText();
+									activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
                                     setSortingList();
                                     if(activity.freshSort == -1) {
                                         int sortedBy = jObj.optInt(Constants.SORTED_BY);

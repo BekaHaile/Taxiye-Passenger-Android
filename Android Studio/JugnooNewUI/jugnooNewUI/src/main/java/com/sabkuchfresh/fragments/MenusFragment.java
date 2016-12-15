@@ -201,7 +201,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             activity.resumeMethod();
             menusRestaurantAdapter.applyFilter();
             if(activity.isRefreshCart()){
-                getAllMenus(true, activity.getSelectedLatLng());
+                activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
             }
             activity.setRefreshCart(false);
         }
@@ -259,6 +259,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                     menusRestaurantAdapter.applyFilter();
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
+                                    activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
 //                                    relativeLayoutSearchFilter.setVisibility(relativeLayoutNoMenus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
