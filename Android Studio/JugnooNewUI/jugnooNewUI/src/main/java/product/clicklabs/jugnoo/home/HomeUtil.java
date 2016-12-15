@@ -181,6 +181,9 @@ public class HomeUtil {
 				for(SearchResult searchResult : Data.userData.getSearchResults()){
 					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult)));
 				}
+				for(SearchResult searchResult : Data.userData.getSearchResultsRecent()){
+					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult)));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
