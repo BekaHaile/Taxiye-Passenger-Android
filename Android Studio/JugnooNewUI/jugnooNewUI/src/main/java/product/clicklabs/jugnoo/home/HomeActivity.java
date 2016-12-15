@@ -1837,7 +1837,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
                         return true;
-                    } else {
+                    }
+                    else if(arg0.getTitle().contains("saved: ")){
+                        return false;
+                    }
+                    else {
                         return true;
                     }
                 }
@@ -9125,6 +9129,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.clear();
             pokestopHelper.mapCleared();
             pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
+            homeUtil.displaySavedAddressesAsFlags(this, assl, map);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -9296,6 +9301,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             apiFetchUserAddress = new ApiFetchUserAddress(this, new ApiFetchUserAddress.Callback() {
                 @Override
                 public void onSuccess() {
+                    try {
+                        homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
