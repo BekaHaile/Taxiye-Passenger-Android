@@ -47,6 +47,7 @@ public interface Constants {
 	String SP_FRESH_CART= "fresh_cart";
 	String SP_MEAL_CART= "meal_cart";
 	String SP_GROCERY_CART= "grocery_cart";
+	String SP_MENUS_CART= "menus_cart";
 	String KEY_CATEGORY_POSITION = "category_position";
 
 
@@ -338,6 +339,24 @@ public interface Constants {
 	String REFERRAL = "Referral";
 	String ISSUES = "Issues";
 	String SLASH = "/";
+	String AUTOS_SELECT_ADDRESS = "Autos Select Address";
+	String FRESH_SELECT_ADDRESS = "Fresh Select Address";
+	String MEALS_SELECT_ADDRESS = "Meals Select Address";
+	String GROCERY_SELECT_ADDRESS = "Grocery Select Address";
+	String MENUS_SELECT_ADDRESS = "Menus Select Address";
+	String NEW = "New";
+	String SEARCHED = "Searched";
+	String SAVED = "Saved";
+	String RECENT = "Recent";
+	String TAP_ON_OFFER_STRIP = "Tap on offer strip";
+	String NAME_EMAIL_AUTOFILLED = "Name/email autofilled";
+	String PHONE_AUTOFILLED = "Phone autofilled";
+	String PHONE_AUTOFILLED_FB = "Phone autofilled FB";
+	String NAME_EMAIL_AUTOFILLED_EDITED = "Name/email autofilled edited";
+	String NAME_EMAIL_AUTOFILLED_UNEDITED = "Name/email autofilled unedited";
+	String ORDER_STATUS = "Order status";
+	String SKIP_BOTTOM = "Skip bottom";
+	String SKIP_TOP = "Skip top";
 
 	String KEY_UPDATED_USER_NAME = "updated_user_name";
 	String KEY_UPDATED_USER_EMAIL = "updated_user_email";
@@ -416,6 +435,8 @@ public interface Constants {
 	String KEY_FRESH = "fresh";
 	String KEY_MEALS = "meals";
 	String KEY_GROCERY = "grocery";
+	String KEY_MENUS = "menus";
+	String KEY_PAY = "pay";
 
 	String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
 	String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
@@ -433,6 +454,8 @@ public interface Constants {
 	String KEY_MEALS_ENABLED = "meals_enabled";
 	String KEY_FRESH_ENABLED = "fresh_enabled";
 	String KEY_GROCERY_ENABLED = "grocery_enabled";
+	String KEY_MENUS_ENABLED = "menus_enabled";
+	String KEY_PAY_ENABLED = "pay_enabled";
 	String KEY_DELIVERY_ENABLED = "delivery_enabled";
 	String KEY_ORDER_HISTORY = "order_history";
 	String INTENT_KEY_FROM_BAD = "FromBad";
@@ -515,8 +538,29 @@ public interface Constants {
 	String SP_FRESH_CHECKOUT_SAVE_DATA = "sp_fresh_checkout_save_data";
 	String SP_MEALS_CHECKOUT_SAVE_DATA = "sp_meals_checkout_save_data";
 	String SP_GROCERY_CHECKOUT_SAVE_DATA = "sp_grocery_checkout_save_data";
+	String SP_MENUS_CHECKOUT_SAVE_DATA = "sp_menus_checkout_save_data";
 
 	String KEY_VALID_STOCK_COUNT = "valid_stock_count";
 	String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
 	String KEY_CHAT_COUNT = "chat_count";
+
+	String KEY_RESTAURANT_ID = "restaurant_id";
+	String KEY_RESTAURANT_NAME = "restaurant_name";
+
+	String KEY_ITEM_ID = "item_id";
+	String SP_FRESH_LAST_ADDRESS_OBJ = "sp_fresh_last_address_obj";
+	String KEY_VPA = "vpa";
+	String KEY_JUGNOO_PAY = "pay";
+	String KEY_FETCH_TRANSACTION_SUMMARY = "fetch_transaction_history";
+
+	String KEY_TXN_TYPE = "txn_type";
+	String KEY_TXN_ID = "txn_id";
+	String KEY_TXN_OBJECT = "txn_object";
+	String INTENT_ACTION_PAY_BROADCAST = "INTENT_ACTION_PAY_BROADCAST";
+	String KEY_START_FROM = "start_from";
+	String KEY_IS_EMPTY = "is_empty";
+	String KEY_CURRENT_LATITUDE = "current_latitude";
+	String KEY_CURRENT_LONGITUDE = "current_longitude";
+	String KEY_MENU_LATITUDE = "menu_latitude";
+	String KEY_MENU_LONGITUDE = "menu_longitude";
 }

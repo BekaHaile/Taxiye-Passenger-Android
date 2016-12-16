@@ -96,6 +96,8 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
                                 MyApplication.getInstance().logEvent(FirebaseEvents.M_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
                             } else if (appType == AppConstant.ApplicationType.GROCERY) {
                                 MyApplication.getInstance().logEvent(FirebaseEvents.G_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
+                            } else if (appType == AppConstant.ApplicationType.MENUS) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
                             } else {
                                 MyApplication.getInstance().logEvent(FirebaseEvents.F_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);
                             }

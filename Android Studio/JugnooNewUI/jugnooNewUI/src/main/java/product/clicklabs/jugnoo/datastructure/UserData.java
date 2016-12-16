@@ -55,7 +55,8 @@ public class UserData {
 	private int freeChargeEnabled;
 	private double freeChargeBalance = -1;
 
-	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, inviteFriendButton;
+	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled,
+			inviteFriendButton, payEnabled;
 
 	private ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
 	private int currentCity = 1;
@@ -74,6 +75,7 @@ public class UserData {
 	private ArrayList<SearchResult> searchResults = new ArrayList<>();
 	private ArrayList<SearchResult> searchResultsRecent = new ArrayList<>();
 
+
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
 					String jugnooFbBanner,
@@ -88,7 +90,8 @@ public class UserData {
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
-					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int inviteFriendButton, String defaultClientId,
+					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
+					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
@@ -151,6 +154,8 @@ public class UserData {
 		this.mealsEnabled = mealsEnabled;
 		this.freshEnabled = freshEnabled;
 		this.groceryEnabled = groceryEnabled;
+		this.menusEnabled = menusEnabled;
+		this.payEnabled = payEnabled;
 		this.deliveryEnabled = deliveryEnabled;
 
 		this.inviteFriendButton = inviteFriendButton;
@@ -710,6 +715,12 @@ public class UserData {
 			if(Data.getGroceryData() != null && Data.getGroceryData().getPromoCoupons() != null) {
 				count += Data.getGroceryData().getPromoCoupons().size();
 			}
+			if(Data.getMenusData() != null && Data.getMenusData().getPromoCoupons() != null) {
+				count += Data.getMenusData().getPromoCoupons().size();
+			}
+			if(Data.getPayData() != null && Data.getPayData().getPromoCoupons() != null) {
+				count += Data.getPayData().getPromoCoupons().size();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -778,6 +789,36 @@ public class UserData {
 			if(Data.getGroceryData() != null) {
 				coupons.addAll(Data.getGroceryData().getPromoCoupons());
 			}
+		} else if(productType == ProductType.MENUS) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getMenus().equals(1)) ||
+							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getMenus().equals(1))) {
+						coupons.add(promoCoupon);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			if(Data.getMenusData() != null) {
+				coupons.addAll(Data.getMenusData().getPromoCoupons());
+			}
+		}else if(productType == ProductType.PAY) {
+			for(int i = 0;i<promoCoupons.size();i++) {
+				PromoCoupon promoCoupon = promoCoupons.get(i);
+				try {
+					if ((promoCoupon instanceof CouponInfo && ((CouponInfo) promoCoupon).getPay().equals(1)) ||
+							(promoCoupon instanceof PromotionInfo && ((PromotionInfo) promoCoupon).getPay().equals(1))) {
+						coupons.add(promoCoupon);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			if(Data.getPayData() != null) {
+				coupons.addAll(Data.getPayData().getPromoCoupons());
+			}
 		}
 
 		return coupons;
@@ -829,6 +870,22 @@ public class UserData {
 
 	public void setSearchResultsRecent(ArrayList<SearchResult> searchResultsRecent) {
 		this.searchResultsRecent = searchResultsRecent;
+	}
+
+	public int getMenusEnabled() {
+		return menusEnabled;
+	}
+
+	public void setMenusEnabled(int menusEnabled) {
+		this.menusEnabled = menusEnabled;
+	}
+
+	public int getPayEnabled() {
+		return payEnabled;
+	}
+
+	public void setPayEnabled(int payEnabled) {
+		this.payEnabled = payEnabled;
 	}
 
 	//	"meals_enabled": 1,

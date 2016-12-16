@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.fragments;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -23,15 +22,12 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.FeedbackActivity;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.RideTransactionsAdapter;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.FeedbackMode;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -134,13 +130,12 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 								}
 							} else if (historyData.getProductType() == ProductType.FRESH.getOrdinal()
 									|| historyData.getProductType() == ProductType.MEALS.getOrdinal()
-									|| historyData.getProductType() == ProductType.GROCERY.getOrdinal()) {
+									|| historyData.getProductType() == ProductType.GROCERY.getOrdinal()
+									|| historyData.getProductType() == ProductType.MENUS.getOrdinal()
+									|| historyData.getProductType() == ProductType.PAY.getOrdinal()) {
 								if (activity instanceof RideTransactionsActivity) {
-										new TransactionUtils().openOrderStatusFragment(activity, ((RideTransactionsActivity) activity).getContainer(), historyData.getOrderId());
-//									else {
-//										new TransactionUtils().openOrderSummaryFragment(activity,
-//												((RideTransactionsActivity) activity).getContainer(), historyData);
-//									}
+										new TransactionUtils().openOrderStatusFragment(activity, ((RideTransactionsActivity) activity).getContainer(),
+												historyData.getOrderId(), historyData.getProductType());
 								} else if (activity instanceof SupportActivity) {
 									new TransactionUtils().openRideIssuesFragment(activity,
 											((SupportActivity) activity).getContainer(),
@@ -151,22 +146,6 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 
 							FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_RIDE_SUMMARY);
 							FlurryEventLogger.event(FlurryEventNames.RIDE_SUMMARY_CHECKED_LATER);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-
-					@Override
-					public void onRateRideClick(int position, HistoryResponse.Datum rideInfo) {
-						try {
-							Intent intent = new Intent(activity, FeedbackActivity.class);
-							intent.putExtra(FeedbackMode.class.getName(), FeedbackMode.PAST_RIDE.getOrdinal());
-							intent.putExtra("position", position);
-							intent.putExtra(Constants.KEY_DRIVER_ID, rideInfo.getDriverId());
-							intent.putExtra(Constants.KEY_ENGAGEMENT_ID, rideInfo.getEngagementId());
-							activity.startActivity(intent);
-							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-							FlurryEventLogger.event(FlurryEventNames.RIDE_RATED_ON_RIDE_HISTORY);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -253,8 +232,10 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 				linearLayoutNoRides.setVisibility(View.GONE);
 
 				HashMap<String, String> params = new HashMap<>();
-				params.put("access_token", Data.userData.accessToken);
-				params.put("start_from", "" + rideInfosList.size());
+				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+				params.put(Constants.KEY_START_FROM, "" + rideInfosList.size());
+				params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
+				params.put(Constants.KEY_DEVICE_TYPE, String.valueOf(Data.DEVICE_TYPE));
 
 				RestClient.getApiServices().getRecentRides(params, new Callback<HistoryResponse>() {
 					@Override

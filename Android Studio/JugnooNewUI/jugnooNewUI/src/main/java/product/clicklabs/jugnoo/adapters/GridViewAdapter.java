@@ -114,13 +114,13 @@ public class GridViewAdapter extends BaseAdapter
                 if(gridList.get(position).equalsIgnoreCase(Config.getMenusClientId()))
                 {
                     holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_menus_selector);
-                    holder.imageViewGridScreen.setImageResource(R.drawable.menu_icon_normal);
+                    holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_menus);
                     holder.textViewGridScreen.setText(R.string.menus);
                 }
                 if(gridList.get(position).equalsIgnoreCase(Config.getPayClientId()))
                 {
                     holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_pay_selector);
-                    holder.imageViewGridScreen.setImageResource(R.drawable.ic_rupee);
+                    holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_pay);
                     holder.textViewGridScreen.setText(R.string.pay);
                 }
 /*

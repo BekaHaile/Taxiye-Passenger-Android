@@ -36,12 +36,12 @@
             <TextView
                 android:id="@+id/textViewMinOrder"
                 android:layout_width="match_parent"
-                android:layout_height="74px"
+                android:layout_height="68px"
                 android:background="@drawable/background_white_below_line"
                 android:gravity="center"
-                android:text="Free Delivery on Orders above 299"
+                android:text="@string/minimum_order"
                 android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_32"
+                android:textSize="@dimen/text_size_28"
                 android:visibility="visible" />
 
             <RelativeLayout
@@ -57,7 +57,6 @@
                     android:layout_height="match_parent"
                     android:layout_marginTop="6px"
                     android:background="@drawable/background_white_grey_light_selector">
-
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutSort"
@@ -122,9 +121,10 @@
                             android:text="0"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_24"
-                              />
+                            />
 
                     </RelativeLayout>
+
                 </RelativeLayout>
 
                 <TextView
@@ -173,7 +173,9 @@
                             android:layout_height="36px"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="40px"
-                            android:tag="mwar" />
+                            android:tag="mwar"
+                            android:src="@drawable/ic_cart_empty"
+                            />
 
                         <TextView
                             android:id="@+id/textViewCartItemsCountNew"
@@ -234,32 +236,11 @@
                 </RelativeLayout>
 
 
-                <!--<View-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="6px"-->
-                    <!--android:background="@drawable/shadow_up" />-->
-
             </RelativeLayout>
         </LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/imageViewFabFake"
-            android:layout_width="68dp"
-            android:layout_height="68dp"
-            android:src="@drawable/ic_fab_fake_selector"
-            android:tag="DontTouchMe"
-            android:layout_above="@+id/linearLayoutCheckoutContainer"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginBottom="25dp"
-            android:layout_centerVertical="true"
-            android:visibility="gone"
-            />
-
         <include layout="@layout/layout_home_activity_fab_test"/>
-
-
 
     </RelativeLayout>
 

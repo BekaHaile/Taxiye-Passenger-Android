@@ -1,4 +1,41 @@
 <resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="toolbar_text_size">20sp</dimen>
+    <dimen name="btn_height">45dp</dimen>
+    <dimen name="btn_width">200dp</dimen>
+    <dimen name="btn_text_size">17sp</dimen>
+    <dimen name="text_size_10">10sp</dimen>
+    <dimen name="et_text_size">12.5sp</dimen>
+    <dimen name="text_view_size">15.4sp</dimen>
+    <dimen name="nav_text_view_size">17.4sp</dimen>
+    <dimen name="normal_text_view_size">13.4sp</dimen>
+    <dimen name="small_text_view_size">12.3sp</dimen>
+    <dimen name="large_text_view_size">23sp</dimen>
+    <dimen name="medium_text_view_size"> 20.2sp</dimen>
+
+
+    // for country spinner
+    <dimen name="spinner_height">300dp</dimen>
+    <dimen name="spinner_width">72dp</dimen>
+    <dimen name="text_size">16sp</dimen>
+    <dimen name="flag_size">24dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
+    <dimen name="margin_medium">8dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    <dimen name="padding_medium">8dp</dimen>
+
+    //layout margin
+    <dimen name="layout_margin">43dp</dimen>
+    <dimen name="other_layout_margin">20dp</dimen>
+
+
+
+
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
@@ -141,6 +178,10 @@
     <dimen name="text_size_18">18px</dimen>
     <dimen name="text_size_15">15px</dimen>
 
+    <dimen name="text_size_11sp">11sp</dimen>
+    <dimen name="padding_2dp">2dp</dimen>
+    <dimen name="padding_4dp">4dp</dimen>
+
 
 
     <!-- NL dimensions-->
@@ -183,8 +224,6 @@
     <dimen name="margin_xx_small">4dp</dimen>
     <dimen name="margin_x_small">8dp</dimen>
     <dimen name="margin_minimum">12dp</dimen>
-    <dimen name="margin_medium">16dp</dimen>
-    <dimen name="margin_large">24dp</dimen>
     <dimen name="margin_tag_spinner">28dp</dimen>
     <dimen name="margin_huge">32dp</dimen>
     <dimen name="bar_height">48dp</dimen>
@@ -252,4 +291,42 @@
     <dimen name="dp_363">
         363dp
     </dimen>
+    <dimen name="text_size_52">52px</dimen>
+
+    <dimen name="icon_cross">23dp</dimen>
+    <dimen name="label_title_size">14sp</dimen>
+    <dimen name="padding_label_view">10dp</dimen>
+    <dimen name="margin_between_labels">3dp</dimen>
+    <dimen name="padding_icon_cross">5dp</dimen>
+    <dimen name="sp_14">
+        14sp
+    </dimen>
+    <dimen name="sp_16">
+        16sp
+    </dimen>
+    <dimen name="sp_11">
+        11sp
+    </dimen>
+    <dimen name="sp_13">
+        13sp
+    </dimen>
+    <dimen name="sp_15">
+        15sp
+    </dimen>
+    <dimen name="sp_18">
+        18sp
+    </dimen>
+    <dimen name="sp_20">
+        20sp
+    </dimen>
+    <dimen name="sp_12">
+        12sp
+    </dimen>
+    <dimen name="sp_17">
+        17sp
+    </dimen>
+    <dimen name="sp_19">
+        19sp
+    </dimen>
+
 </resources>

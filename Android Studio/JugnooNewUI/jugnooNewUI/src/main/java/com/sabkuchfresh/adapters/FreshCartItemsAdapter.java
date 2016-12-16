@@ -3,11 +3,13 @@ package com.sabkuchfresh.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,16 +17,20 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -39,6 +45,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 	private String categoryName;
 	private Callback callback;
 	private boolean checkForCouponApplied;
+	private int appType;
 
 	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, String categoryName, boolean checkForCouponApplied,
 								 Callback callback) {
@@ -48,6 +55,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		this.callback = callback;
 		this.categoryName = categoryName;
 		this.checkForCouponApplied = checkForCouponApplied;
+		appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
 	}
 
 	public synchronized void setResults(ArrayList<SubItem> subItems) {
@@ -108,7 +116,8 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		}
 
 		try {
-			if (subItem.getSubItemImage() != null && !"".equalsIgnoreCase(subItem.getSubItemImage())) {
+			if (!TextUtils.isEmpty(subItem.getSubItemImage())) {
+				mHolder.imageViewItemImage.setVisibility(View.VISIBLE);
 				Picasso.with(context).load(subItem.getSubItemImage())
 						.placeholder(R.drawable.ic_fresh_item_placeholder)
 						.fit()
@@ -116,11 +125,25 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 						.error(R.drawable.ic_fresh_item_placeholder)
 						.into(mHolder.imageViewItemImage);
 			} else {
-				mHolder.imageViewItemImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
+				mHolder.imageViewItemImage.setVisibility(View.GONE);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		mHolder.imageViewFoodType.setVisibility(appType == AppConstant.ApplicationType.MENUS ? View.VISIBLE : View.GONE);
+		mHolder.imageViewFoodType.setImageResource(subItem.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
+		RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+		RelativeLayout.LayoutParams paramsLLC = (RelativeLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
+		if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
+			paramsFT.setMargins(0, (int)(ASSL.Yscale()*25f), 0, 0);
+			paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
+		} else {
+			paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
+			paramsLLC.setMargins((int)(ASSL.Xscale()*30f), 0, 0, 0);
+		}
+		mHolder.imageViewFoodType.setLayoutParams(paramsFT);
+		mHolder.linearLayoutContent.setLayoutParams(paramsLLC);
 
 
 		mHolder.imageViewMinus.setTag(position);
@@ -221,13 +244,16 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 	static class MainViewHolder extends RecyclerView.ViewHolder {
 		public int id;
 		public RelativeLayout relative;
-		private ImageView imageViewItemImage, imageViewSep, imageViewMinus, imageViewPlus;
+		public LinearLayout linearLayoutContent;
+		private ImageView imageViewItemImage, imageViewSep, imageViewMinus, imageViewPlus, imageViewFoodType;
 		public TextView textViewItemName, textViewItemPrice, textViewQuantity;
 
 		public MainViewHolder(View itemView, Context context) {
 			super(itemView);
 			relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+			linearLayoutContent = (LinearLayout) itemView.findViewById(R.id.linearLayoutContent);
 			imageViewItemImage = (ImageView) itemView.findViewById(R.id.imageViewItemImage);
+			imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
 			imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
 			imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
 			imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);

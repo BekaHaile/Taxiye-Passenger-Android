@@ -375,6 +375,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					if(deepindex == -1 && tabIndex > 0){
 						deepindex = AppLinkIndex.FRESH_PAGE.getOrdinal();
 					}
+					String url = jObj.optString(KEY_URL, "");
+					int showDialog = jObj.optInt(Constants.KEY_SHOW_DIALOG, 0);
+					int showPush = jObj.optInt(Constants.KEY_SHOW_PUSH, 1);
 
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -505,9 +508,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString(KEY_IMAGE, "");
 							}
-							String url = jObj.optString(KEY_URL, "");
-							int showDialog = jObj.optInt(Constants.KEY_SHOW_DIALOG, 0);
-							int showPush = jObj.optInt(Constants.KEY_SHOW_PUSH, 1);
 							if(showDialog == 1) {
 								Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, message);
 							}
@@ -587,7 +587,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 					}
 					else if (PushFlags.UPLOAD_CONTACTS_ERROR.getOrdinal() == flag) {
-						if(HomeActivity.appInterruptHandler != null && Utils.isForeground(this)){
+						if(HomeActivity.appInterruptHandler != null){ //&& Utils.isForeground(this)){
 							HomeActivity.appInterruptHandler.showDialog(message1);
 						}
 						else{
@@ -657,15 +657,33 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						intent.putExtra(KEY_CLIENT_ID, clientId);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-					} else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
+					}
+					else if (PushFlags.MENUS_STATUS.getOrdinal() == flag) {
+						String clientId = jObj.optString(KEY_CLIENT_ID, "");
+						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
+						if(!TextUtils.isEmpty(phoneNo)){
+							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, clientId);
+						} else{
+							notificationManager(this, title, message1, playSound);
+						}
+						Intent intent = new Intent(Data.LOCAL_BROADCAST);
+						intent.putExtra(Constants.KEY_FLAG, flag);
+						intent.putExtra(Constants.KEY_MESSAGE, message);
+						intent.putExtra(KEY_CLIENT_ID, clientId);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+					}
+
+
+					else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
 						String clientId = jObj.optString(KEY_CLIENT_ID, "");
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						//message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
-						String name = Utils.getActivityName(this);
+						String name = "";//Utils.getActivityName(this);
 
 
-						if(!name.equalsIgnoreCase(this.getPackageName())
-								|| Data.context == null || !(Data.context instanceof ChatActivity)){
+						if(!name.equalsIgnoreCase(this.getPackageName()) ||
+								Data.context == null || !(Data.context instanceof ChatActivity)){
 							String chatMessage = jObj.getJSONObject(KEY_MESSAGE).optString("chat_message", "");
 							notificationManagerCustomID(this, title, chatMessage, PROMOTION_NOTIFICATION_ID, AppLinkIndex.CHAT_PAGE.getOrdinal(),
 									null, "", playSound, 0, 1, tabIndex, flag);
@@ -676,6 +694,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						} else {
 							// Nothing
 						}
+					} else if (PushFlags.REFRESH_PAY_DATA.getOrdinal() == flag) {
+						message1 = jObj.optString(KEY_MESSAGE, "");
+						notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
+								null, url, playSound, showDialog, showPush, tabIndex, flag);
+						Intent intent = new Intent(Constants.INTENT_ACTION_PAY_BROADCAST);
+						intent.putExtra(Constants.KEY_FLAG, flag);
+						intent.putExtra(Constants.KEY_MESSAGE, message);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
 
 					incrementPushCounter(jObj, flag);

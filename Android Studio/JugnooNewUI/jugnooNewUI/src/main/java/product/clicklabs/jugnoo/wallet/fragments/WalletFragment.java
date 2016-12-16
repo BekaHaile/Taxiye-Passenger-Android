@@ -52,7 +52,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
     RelativeLayout relativeLayoutFreeCharge;
     TextView textViewFreeCharge, textViewFreeChargeBalanceValue;
 
-    RelativeLayout relativeLayoutWalletTransactions;
+    RelativeLayout relativeLayoutWalletTransactions, relativeLayoutPayTransactions;
 
 
     View rootView;
@@ -108,10 +108,11 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
         textViewFreeCharge = (TextView) rootView.findViewById(R.id.textViewFreeCharge); textViewFreeCharge.setTypeface(Fonts.mavenRegular(paymentActivity));
         textViewFreeChargeBalanceValue = (TextView) rootView.findViewById(R.id.textViewFreeChargeBalanceValue); textViewFreeChargeBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
-
+		relativeLayoutPayTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPayTransactions);
+		((TextView) rootView.findViewById(R.id.textViewPayTransactions)).setTypeface(Fonts.mavenRegular(paymentActivity));
         relativeLayoutWalletTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWalletTransactions);
 		((TextView) rootView.findViewById(R.id.textViewWalletTransactions)).setTypeface(Fonts.mavenRegular(paymentActivity));
-
+		relativeLayoutPayTransactions.setVisibility(View.GONE);
 
 		textViewPromotion.setVisibility(View.GONE);
 
@@ -194,20 +195,40 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 		relativeLayoutWalletTransactions.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				WalletTransactionsFragment walletTransactionsFragment = new WalletTransactionsFragment();
+				Bundle bundle = new Bundle();
+				bundle.putInt(Constants.KEY_PAY, 0);
+				walletTransactionsFragment.setArguments(bundle);
 				paymentActivity.getSupportFragmentManager().beginTransaction()
 						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-						.add(R.id.fragLayout, new WalletTransactionsFragment(), WalletTransactionsFragment.class.getName())
+						.add(R.id.fragLayout, walletTransactionsFragment, WalletTransactionsFragment.class.getName())
 						.addToBackStack(WalletTransactionsFragment.class.getName())
 						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commit();
 				FlurryEventLogger.event(RECENT_TRANSACTIONS);
-                Bundle bundle = new Bundle();
-                MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+VIEW_RECENT_TRANSACTION, bundle);
+                Bundle bundle1 = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.FB_REVENUE+"_"+WALLET+"_"+VIEW_RECENT_TRANSACTION, bundle1);
 				FlurryEventLogger.eventGA(Constants.REVENUE, "Wallet", "View Recent Transaction");
 			}
 		});
 
+		relativeLayoutPayTransactions.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				WalletTransactionsFragment walletTransactionsFragment = new WalletTransactionsFragment();
+				Bundle bundle = new Bundle();
+				bundle.putInt(Constants.KEY_PAY, 1);
+				walletTransactionsFragment.setArguments(bundle);
+				paymentActivity.getSupportFragmentManager().beginTransaction()
+						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+						.add(R.id.fragLayout, walletTransactionsFragment, WalletTransactionsFragment.class.getName())
+						.addToBackStack(WalletTransactionsFragment.class.getName())
+						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+						.commit();
+			}
+		});
 
 
 		setUserWalletInfo();
@@ -321,6 +342,11 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 
 			}
 		} catch(Exception e){
+			e.printStackTrace();
+		}
+		try{
+			relativeLayoutPayTransactions.setVisibility((Data.userData.getPayEnabled() == 1) ? View.VISIBLE : View.GONE);
+		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}

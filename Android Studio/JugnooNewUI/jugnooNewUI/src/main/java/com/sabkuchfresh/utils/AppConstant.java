@@ -5,42 +5,6 @@ package com.sabkuchfresh.utils;
  */
 public class AppConstant {
 
-
-    public static final String REVERSE_GEO_CODING_URL = "http://maps.googleapis.com/maps/api/geocode/json?latlng=";
-
-    /**
-     * Constant interface. DO NOT IMPLEMENT.
-     *
-     * @author Gurmail S. Kang
-     */
-    public static interface MenuClick {
-        public static final int USERINFO = 0;
-        public static final int WALLET = 1;
-        public static final int HISTORY = 2;
-        public static final int SUPPORT = 3;
-        public static final int ABOUTUS = 4;
-        public static final int NOTIFICATION_CENTER = 5;
-        public static final int REFER = 6;
-        public static final int FATAFAT = 11;
-        public static final int MEALS = 12;
-    }
-
-    public static interface SupportType {
-        public static final int SUPPORT = 0;
-        public static final int HISTORY = 1;
-        public static final int ABOUT = 2;
-        public static final int NOTIFICATION = 3;
-        public static final int SHARE = 4;
-        public static final int FEED_BACK = 5;
-        public static final int PROMO = 6;
-    }
-
-    public static interface EditAddressType {
-        public static final int HOME = 2;
-        public static final int WORK = 3;
-        public static final int OTHER = 4;
-    }
-
     public interface ListType {
         public static final int HOME = 0;
         public static final int OTHER = 1;
@@ -55,11 +19,8 @@ public class AppConstant {
         public static final int FRESH = 1;
         public static final int MEALS = 2;
         public static final int GROCERY = 3;
-    }
-
-    public static interface OrderType {
-        public static final int FRESH = 0;
-        public static final int MEALS = 1;
+        int MENUS = 4;
+        int PAY = 5;
     }
 
     public static interface EventTracker {
@@ -70,17 +31,24 @@ public class AppConstant {
 
     }
 
-    public static interface DeepLinking {
-        public static final int History_SCREEN = 1;
-        public static final int NOTIFICATION_SCREEN = 2;
-        public static final int SHARE_SCREEN = 3;
-        public static final int Wallet_SCREEN = 4;
-        public static final int PLAY_Store = 5;
-        public static final int USER_PROFILE = 6;
-//        public static final int PAYMENT = 7;
-//        public static final int PAYMENT = 8;
-//        public static final int PAYMENT = 9;
-    }
+    public static String SENT_TOKEN_TO_SERVER = "SendTokenToServer";
+    public static String CONTACT_DATA = "contact_data";
+    public static String REQUEST_STATUS = "request_status";
+    public static String REQUEST_STATUS_CONFIRMATION = "request_status_confirmation";
+    public static String TRANSACTION_DATA = "transc_data";
+    public static String SEND_TRANSACTION_DATA = "send_transc_data";
+    public static String PENDING_TRANSACTION_STATUS= "pending_transc_status";
+    public static String ORDER_ID = "OrderId";
+    public static String TRANSACTION_STATUS = "transaction_status";
+    public static String URL = "url";
 
+    // custom dialog strings
+    public static String CANCEL = "CANCEL";
+    public static String OK = "OK";
+    public static String NO = "NO";
+    public static String YES = "YES";
+    public static String PLEASE ="Please wait..";
+    public static String LOG_OUT = "LOGOUT";
+    public static String REGISTER = "REGISTER";
 
 }

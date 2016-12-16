@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
@@ -86,6 +87,10 @@ public class AppSwitcher {
 			}
 			intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 			intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
+//			if(!(activity instanceof HomeActivity)) {
+				intent.putExtra(Constants.KEY_LATITUDE, latLng.latitude);
+				intent.putExtra(Constants.KEY_LONGITUDE, latLng.longitude);
+//			}
 			if (data != null) {
 				intent.setData(data);
 			}
@@ -211,19 +216,79 @@ public class AppSwitcher {
 						activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
 						ActivityCompat.finishAffinity(activity);
 
-						new ApiUpdateClientId().updateClientId(clientId);
-						Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-					}
-				} else if (activity instanceof FreshActivity && !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))) {
-					if ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null)
-							|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.getMealsData() == null)
-							|| (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null)) {
-						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-								callback);
-					} else {
+					new ApiUpdateClientId().updateClientId(clientId);
+					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				}
+			} else if (clientId.equalsIgnoreCase(Config.getMenusClientId()) && !(activity instanceof FreshActivity)) {
+				if (Data.getMenusData() == null) {
+					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+							callback);
+				} else {
+					intent.setClass(activity, FreshActivity.class);
+					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					ActivityCompat.finishAffinity(activity);
+
+					new ApiUpdateClientId().updateClientId(clientId);
+					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				}
+			}
+			else if (clientId.equalsIgnoreCase(Config.getPayClientId()) && !(activity instanceof MainActivity)) {
+				if (Data.getPayData() == null) {
+					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+							new ApiLoginUsingAccessToken.Callback() {
+								@Override
+								public void noNet() {
+									DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
+								}
+
+								@Override
+								public void success(String clientId) {
+									if (!intentSentAfterDataCheck(activity, clientId, data, bundle, clearActivityStack)) {
+										intent.setClass(activity, MainActivity.class);
+										intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+										activity.startActivity(intent);
+										activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+										ActivityCompat.finishAffinity(activity);
+									}
+								}
+
+								@Override
+								public void failure() {
+
+								}
+
+								@Override
+								public void onRetry(View view) {
+									switchApp(activity, clientId, data, latLng, bundle);
+								}
+
+								@Override
+								public void onNoRetry(View view) {
+
+								}
+							});
+				} else {
+					intent.setClass(activity, MainActivity.class);
+					activity.startActivity(intent);
+					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+					ActivityCompat.finishAffinity(activity);
+
+					new ApiUpdateClientId().updateClientId(clientId);
+					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+				}
+			}
+			else if (activity instanceof FreshActivity && !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))) {
+				if ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null)
+						|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.getMealsData() == null)
+						|| (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null)
+						|| (clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null)) {
+					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+							callback);
+				} else {
 						intent.setClass(activity, FreshActivity.class);
 						activity.startActivity(intent);
-						activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
+						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 						ActivityCompat.finishAffinity(activity);
 
 						new ApiUpdateClientId().updateClientId(clientId);
@@ -300,6 +365,32 @@ public class AppSwitcher {
 				}
 			}
 			else if(clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null){
+				if(Data.autoData != null) {
+					intent.setClass(activity, HomeActivity.class);
+					clientId = Config.getAutosClientId();
+					if (data != null) {
+						intent.setData(data);
+					}
+				}
+				else if(Data.getFreshData() != null){
+					intent.setClass(activity, FreshActivity.class);
+					clientId = Config.getFreshClientId();
+				}
+			}
+			else if(clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null){
+				if(Data.autoData != null) {
+					intent.setClass(activity, HomeActivity.class);
+					clientId = Config.getAutosClientId();
+					if (data != null) {
+						intent.setData(data);
+					}
+				}
+				else if(Data.getFreshData() != null){
+					intent.setClass(activity, FreshActivity.class);
+					clientId = Config.getFreshClientId();
+				}
+			}
+			else if(clientId.equalsIgnoreCase(Config.getPayClientId()) && Data.getPayData() == null){
 				if(Data.autoData != null) {
 					intent.setClass(activity, HomeActivity.class);
 					clientId = Config.getAutosClientId();

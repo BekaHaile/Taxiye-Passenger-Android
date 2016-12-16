@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="585px"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -10,6 +10,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="340px"
+        android:contentDescription="@string/view_account"
         android:background="@drawable/background_menu_bar_theme"
         android:orientation="vertical">
 
@@ -47,21 +48,21 @@
                 android:id="@+id/textViewUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="GaganDeep"
                 android:gravity="center"
+                android:text="GaganDeep"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_34" />
+                android:textSize="@dimen/text_size_34"/>
 
             <TextView
                 android:id="@+id/textViewViewPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10px"
-                android:singleLine="true"
                 android:gravity="center"
+                android:singleLine="true"
                 android:text="View Account"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_30" />
+                android:textSize="@dimen/text_size_30"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -70,29 +71,29 @@
         android:layout_width="match_parent"
         android:layout_height="30px"
         android:layout_below="@+id/linearLayout"
-        android:background="@color/white" />
+        android:background="@color/white"/>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_below="@+id/linearLayout"
-        android:src="@color/stroke_color_light" />
+        android:src="@color/stroke_color_light"/>
 
     <ImageView
         android:layout_width="19px"
         android:layout_height="33px"
-        android:tag="mwar"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="30px"
         android:layout_marginTop="120px"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/back_arrow_white"/>
+        android:src="@drawable/back_arrow_white"
+        android:tag="mwar"/>
 
     <LinearLayout
         android:id="@+id/linearLayoutCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:layout_below="@+id/extraSpace"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
@@ -100,31 +101,31 @@
             android:layout_height="match_parent"
             android:src="@drawable/background_white_theme_selector"/>
 
-    <ImageView
-        android:layout_width="90px"
-        android:layout_height="81px"
-        android:layout_marginLeft="7px"
-        android:tag="mwar"
-        android:src="@drawable/ic_menu_category_selector"/>
+        <ImageView
+            android:layout_width="90px"
+            android:layout_height="81px"
+            android:layout_marginLeft="7px"
+            android:src="@drawable/ic_menu_category_selector"
+            android:tag="mwar"/>
 
-    <TextView
-        android:id="@+id/textViewCategories"
-        android:layout_width="400px"
-        android:layout_height="81px"
-        android:layout_centerVertical="true"
-        android:paddingLeft="14px"
-        android:text="Categories"
-        android:gravity="center_vertical"
-        android:textColor="@color/text_color_white_theme_selector"
-        android:textSize="@dimen/text_size_38"/>
+        <TextView
+            android:id="@+id/textViewCategories"
+            android:layout_width="400px"
+            android:layout_height="81px"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="14px"
+            android:text="Categories"
+            android:textColor="@color/text_color_white_theme_selector"
+            android:textSize="@dimen/text_size_38"/>
 
         <ImageView
             android:id="@+id/imageViewArrow"
             android:layout_width="23px"
             android:layout_height="41px"
-            android:tag="mwar"
             android:rotation="270"
-            android:src="@drawable/ic_back"/>
+            android:src="@drawable/ic_back"
+            android:tag="mwar"/>
 
     </LinearLayout>
 
@@ -133,8 +134,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linearLayoutCategories"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/linearLayoutSubAutos"
@@ -147,73 +148,75 @@
                 android:layout_width="90px"
                 android:layout_height="81px"
                 android:layout_marginLeft="110px"
+                android:src="@drawable/ic_menu_category_auto_selector"
                 android:tag="mwar"
-                android:src="@drawable/ic_menu_category_auto_selector"/>
+                android:scaleX="-1"
+                />
 
-        <TextView
-            android:id="@+id/textViewAutos"
-            android:layout_width="match_parent"
-            android:layout_height="81px"
-            android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/menu_text_margin_offerings"
-            android:text="@string/autos"
-            android:gravity="center_vertical"
-            android:textColor="@color/text_color_white_theme_selector"
-            android:textSize="@dimen/text_size_38"/>
-
-        </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutSubFresh"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="90px"
-            android:layout_height="81px"
-            android:layout_marginLeft="110px"
-            android:tag="mwar"
-            android:src="@drawable/ic_menu_category_fresh_selector"/>
-
-        <TextView
-            android:id="@+id/textViewFresh"
-            android:layout_width="match_parent"
-            android:layout_height="81px"
-            android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/menu_text_margin_offerings"
-            android:text="Fresh"
-            android:gravity="center_vertical"
-            android:textColor="@color/text_color_white_theme_selector"
-            android:textSize="@dimen/text_size_38"/>
+            <TextView
+                android:id="@+id/textViewAutos"
+                android:layout_width="match_parent"
+                android:layout_height="81px"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:text="@string/autos"
+                android:textColor="@color/text_color_white_theme_selector"
+                android:textSize="@dimen/text_size_38"/>
 
         </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayoutSubMeals"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="90px"
-            android:layout_height="81px"
-            android:layout_marginLeft="110px"
-            android:tag="mwar"
-            android:src="@drawable/ic_menu_category_meals_selector"/>
-
-        <TextView
-            android:id="@+id/textViewMeals"
+        <LinearLayout
+            android:id="@+id/linearLayoutSubMeals"
             android:layout_width="match_parent"
-            android:layout_height="81px"
-            android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/menu_text_margin_offerings"
-            android:text="Meals"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textColor="@color/text_color_white_theme_selector"
-            android:textSize="@dimen/text_size_38"/>
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="90px"
+                android:layout_height="81px"
+                android:layout_marginLeft="110px"
+                android:src="@drawable/ic_menu_category_meals_selector"
+                android:tag="mwar"/>
+
+            <TextView
+                android:id="@+id/textViewMeals"
+                android:layout_width="match_parent"
+                android:layout_height="81px"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:text="Meals"
+                android:textColor="@color/text_color_white_theme_selector"
+                android:textSize="@dimen/text_size_38"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSubFresh"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="90px"
+                android:layout_height="81px"
+                android:layout_marginLeft="110px"
+                android:src="@drawable/ic_menu_category_fresh_selector"
+                android:tag="mwar"/>
+
+            <TextView
+                android:id="@+id/textViewFresh"
+                android:layout_width="match_parent"
+                android:layout_height="81px"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:text="Fresh"
+                android:textColor="@color/text_color_white_theme_selector"
+                android:textSize="@dimen/text_size_38"/>
 
         </LinearLayout>
 
@@ -228,46 +231,109 @@
                 android:layout_width="90px"
                 android:layout_height="81px"
                 android:layout_marginLeft="110px"
-                android:tag="mwar"
-                android:src="@drawable/ic_menu_category_grocery_selector"/>
+                android:src="@drawable/ic_menu_category_grocery_selector"
+                android:tag="mwar"/>
 
             <TextView
                 android:id="@+id/textViewGrocery"
                 android:layout_width="match_parent"
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
+                android:gravity="center_vertical"
                 android:paddingLeft="@dimen/menu_text_margin_offerings"
                 android:text="@string/grocery"
-                android:gravity="center_vertical"
                 android:textColor="@color/text_color_white_theme_selector"
                 android:textSize="@dimen/text_size_38"/>
 
         </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/linearLayoutSubDelivery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="90px"
-            android:layout_height="81px"
-            android:layout_marginLeft="110px"
-            android:tag="mwar"
-            android:src="@drawable/ic_menu_category_delivery_selector"/>
-
-        <TextView
-            android:id="@+id/textViewDelivery"
+        <LinearLayout
+            android:id="@+id/linearLayoutSubMenus"
             android:layout_width="match_parent"
-            android:layout_height="81px"
-            android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/menu_text_margin_offerings"
-            android:text="Delivery"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:textColor="@color/text_color_white_theme_selector"
-            android:textSize="@dimen/text_size_38"/>
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32px"
+                android:layout_height="36px"
+                android:layout_marginLeft="140px"
+                android:layout_marginRight="30px"
+                android:src="@drawable/ic_menu_category_menus_selector"
+                android:tag="mwar"
+                android:layout_gravity="center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/textViewMenus"
+                android:layout_width="match_parent"
+                android:layout_height="81px"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:text="@string/menus"
+                android:textColor="@color/text_color_white_theme_selector"
+                android:textSize="@dimen/text_size_38"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSubPay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32px"
+                android:layout_height="36px"
+                android:layout_marginLeft="140px"
+                android:layout_marginRight="30px"
+                android:src="@drawable/ic_menu_category_pay_selector"
+                android:tag="mwar"
+                android:layout_gravity="center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/textViewPay"
+                android:layout_width="match_parent"
+                android:layout_height="81px"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:text="@string/pay"
+                android:textColor="@color/text_color_white_theme_selector"
+                android:textSize="@dimen/text_size_38"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutSubDelivery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            >
+
+            <ImageView
+                android:layout_width="90px"
+                android:layout_height="81px"
+                android:layout_marginLeft="110px"
+                android:src="@drawable/ic_menu_category_delivery_selector"
+                android:tag="mwar"/>
+
+            <TextView
+                android:id="@+id/textViewDelivery"
+                android:layout_width="match_parent"
+                android:layout_height="81px"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:text="Delivery"
+                android:textColor="@color/text_color_white_theme_selector"
+                android:textSize="@dimen/text_size_38"/>
 
         </LinearLayout>
     </LinearLayout>

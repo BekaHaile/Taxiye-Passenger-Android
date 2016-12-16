@@ -121,8 +121,10 @@ public class EmergencyDialog {
 
 
 			if(modeEnabled == 1){
+				textViewEnableEmergencyMode.setTextColor(activity.getResources().getColorStateList(R.color.text_color_light_selector));
 				textViewEnableEmergencyMode.setText(activity.getResources().getString(R.string.disable_emergency_mode));
 			} else{
+				textViewEnableEmergencyMode.setTextColor(activity.getResources().getColorStateList(R.color.text_color_red_dark_aplha_selector));
 				textViewEnableEmergencyMode.setText(activity.getResources().getString(R.string.enable_emergency_mode));
 			}
 

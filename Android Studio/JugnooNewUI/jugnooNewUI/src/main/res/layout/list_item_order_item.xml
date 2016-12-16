@@ -70,6 +70,17 @@
                 android:textColor="@color/text_color_light"
                 android:textSize="@dimen/text_size_28"/>
 
+            <TextView
+                android:id="@+id/textViewItemCancelled"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10px"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="@string/item_cancelled"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/text_size_28"/>
+
         </LinearLayout>
 
     </LinearLayout>

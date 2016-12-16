@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -18,9 +19,12 @@ import product.clicklabs.jugnoo.datastructure.DeliveryData;
 import product.clicklabs.jugnoo.datastructure.FreshData;
 import product.clicklabs.jugnoo.datastructure.GroceryData;
 import product.clicklabs.jugnoo.datastructure.MealsData;
+import product.clicklabs.jugnoo.datastructure.MenusData;
+import product.clicklabs.jugnoo.datastructure.PayData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -66,8 +70,6 @@ public class Data {
 
 
 
-	public static int freshSort = -1;
-	public static int mealSort = -1;
 	public static Activity context = null;
 	
 	
@@ -97,6 +99,8 @@ public class Data {
 	private static MealsData mealsData;
 	private static GroceryData groceryData;
 	private static DeliveryData DeliveryData;
+	private static MenusData menusData;
+	private static PayData payData;
 
 	
 	public static LocationFetcher locationFetcher;
@@ -254,6 +258,16 @@ public class Data {
 
 			Prefs.with(context).remove(Constants.SP_FRESH_CART);
 			Prefs.with(context).remove(Constants.SP_MEAL_CART);
+			Prefs.with(context).remove(Constants.SP_GROCERY_CART);
+			Prefs.with(context).remove(Constants.SP_MENUS_CART);
+			Prefs.with(context).remove(Constants.SP_FRESH_CHECKOUT_SAVE_DATA);
+			Prefs.with(context).remove(Constants.SP_MEALS_CHECKOUT_SAVE_DATA);
+			Prefs.with(context).remove(Constants.SP_GROCERY_CHECKOUT_SAVE_DATA);
+			Prefs.with(context).remove(Constants.SP_MENUS_CHECKOUT_SAVE_DATA);
+
+			Prefs.with(context).remove(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
+
+
 			Prefs.with(context).remove(context.getResources().getString(R.string.pref_address_selected));
 
 
@@ -442,4 +456,39 @@ public class Data {
 		DeliveryData = deliveryData;
 	}
 
+	public static MenusData getMenusData() {
+		return menusData;
+	}
+
+	public static void setMenusData(MenusData menusData) {
+		Data.menusData = menusData;
+	}
+
+	public static PayData getPayData() {
+		return payData;
+	}
+
+	public static void setPayData(PayData payData) {
+		Data.payData = payData;
+	}
+
+	private static LatLng latLngOfJeanieLastShown;
+
+	public static LatLng getLatLngOfJeanieLastShown() {
+		return latLngOfJeanieLastShown;
+	}
+
+	public static void setLatLngOfJeanieLastShown(LatLng latLngOfJeanieLastShown) {
+		Data.latLngOfJeanieLastShown = latLngOfJeanieLastShown;
+	}
+
+	private static HistoryResponse.Datum datumToReOrder;
+
+	public static HistoryResponse.Datum getDatumToReOrder() {
+		return datumToReOrder;
+	}
+
+	public static void setDatumToReOrder(HistoryResponse.Datum datumToReOrder) {
+		Data.datumToReOrder = datumToReOrder;
+	}
 }

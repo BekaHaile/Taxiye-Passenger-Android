@@ -34,6 +34,12 @@ public class CouponInfo extends PromoCoupon{
 	@SerializedName("grocery")
 	@Expose
 	private Integer grocery = 0;
+	@SerializedName("menus")
+	@Expose
+	private Integer menus = 0;
+	@SerializedName("pay")
+	@Expose
+	private Integer pay = 0;
 	@SerializedName("master_coupon")
 	@Expose
 	private Integer masterCoupon = 0;
@@ -148,4 +154,22 @@ public class CouponInfo extends PromoCoupon{
 		this.grocery = grocery;
 	}
 
+	public Integer getMenus() {
+		if(menus == null){
+			return 0;
+		}
+		return menus;
+	}
+
+	public void setMenus(Integer menus) {
+		this.menus = menus;
+	}
+
+	public Integer getPay() {
+		return pay;
+	}
+
+	public void setPay(Integer pay) {
+		this.pay = pay;
+	}
 }

@@ -7,26 +7,16 @@
     android:orientation="horizontal"
     android:splitMotionEvents="false">
 
-
-    <ImageView
-        android:id="@+id/imageViewFeedbackReasonCheck"
-        android:layout_width="24px"
-        android:layout_height="24px"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="30px"
-        android:src="@drawable/check_box_checked"
-        android:tag="mwar" />
-
-
     <TextView
         android:id="@+id/textViewFeedbackReason"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
+        android:layout_width="300px"
+        android:layout_height="90px"
+        android:gravity="center"
         android:padding="14px"
         android:text="Reason"
+        android:background="@drawable/capsule_white_stroke"
         android:textColor="@color/text_color"
-        android:textSize="28px" />
+        android:textSize="@dimen/text_size_32" />
 
 
 </LinearLayout>

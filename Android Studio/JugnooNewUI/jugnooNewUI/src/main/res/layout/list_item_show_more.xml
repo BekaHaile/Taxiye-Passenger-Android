@@ -4,14 +4,15 @@
     android:layout_width="@dimen/screen_width"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:splitMotionEvents="false" >
+    android:splitMotionEvents="false"
+    android:background="@color/white">
 
     <RelativeLayout 
         android:id="@+id/relativeLayoutShowMore"
         android:layout_width="match_parent"
         android:layout_height="100px"
         android:visibility="visible"
-        android:background="@drawable/background_white_selector"
+        android:background="@drawable/bg_transparent_menu_item_selector"
         
         >
         

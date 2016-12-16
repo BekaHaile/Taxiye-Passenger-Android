@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.view.View;
 
 import org.json.JSONObject;
@@ -44,12 +45,13 @@ public class ApiFetchWalletBalance {
 		this.callback = callback;
 	}
 
-	public void getBalance(boolean showDialog) {
+	public void getBalance(final boolean showDialog) {
 		try {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 
+				ProgressDialog progressDialog = null;
 				if (showDialog) {
-					DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+					progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
 				}
 
 				HashMap<String, String> params = new HashMap<>();
@@ -58,6 +60,7 @@ public class ApiFetchWalletBalance {
 				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
 				final long startTime = System.currentTimeMillis();
+				final ProgressDialog finalProgressDialog = progressDialog;
 				RestClient.getApiServices().fetchWalletBalance(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -82,14 +85,18 @@ public class ApiFetchWalletBalance {
 							e.printStackTrace();
 							retryDialog(DialogErrorType.SERVER_ERROR);
 						}
-						DialogPopup.dismissLoadingDialog();
+						try{if(showDialog && finalProgressDialog != null){
+							finalProgressDialog.dismiss();
+						}} catch (Exception e){}
 						callback.onFinish();
 					}
 
 					@Override
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "fetchWalletBalance error=" + error.toString());
-						DialogPopup.dismissLoadingDialog();
+						try{if(showDialog && finalProgressDialog != null){
+							finalProgressDialog.dismiss();
+						}} catch (Exception e){}
 						retryDialog(DialogErrorType.CONNECTION_LOST);
 						callback.onFailure();
 					}

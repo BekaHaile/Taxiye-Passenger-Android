@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
@@ -106,7 +106,6 @@
         android:id="@+id/imageViewFabFakeFinal"
         android:layout_width="68dp"
         android:layout_height="68dp"
-        android:src="@drawable/ic_fab_fake_selector"
         android:layout_alignParentBottom="true"
         android:tag="DontTouchMe"
         android:layout_marginLeft="20dp"
@@ -251,6 +250,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="left"
                         android:maxLines="2"
+                        android:contentDescription="@string/driver_mode"
                         android:text="Driver Name"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
@@ -480,6 +480,7 @@
                     android:layout_width="127px"
                     android:layout_height="128px"
                     android:layout_marginTop="0px"
+                    android:contentDescription="@string/chat_with_driver"
                     android:background="@drawable/chat_driver_selector"
                     android:tag="mwar" />
 
@@ -506,6 +507,7 @@
             android:layout_width="132px"
             android:layout_height="136px"
             android:layout_alignParentRight="true"
+            android:contentDescription="@string/call_driver"
             android:layout_marginTop="0px"
             android:visibility="visible"
             android:background="@drawable/ic_ride_call_selector"

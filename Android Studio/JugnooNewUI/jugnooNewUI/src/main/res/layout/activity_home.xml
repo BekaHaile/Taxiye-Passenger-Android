@@ -102,7 +102,7 @@
                     android:id="@+id/viewSlidingExtra"
                     android:layout_width="match_parent"
                     android:layout_height="125px"
-                    android:background="#EBeeeeee"
+                    android:background="@color/fab_bg"
                     android:visibility="gone"/>
 
 
@@ -188,6 +188,7 @@
 
 
             <LinearLayout
+                android:id="@+id/linearlayoutChangeLocalityInner"
                 android:layout_width="match_parent"
                 android:layout_height="224px"
                 android:layout_alignParentBottom="true"

@@ -780,7 +780,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-												loginResponse, LoginVia.EMAIL_OTP);
+												loginResponse, LoginVia.EMAIL_OTP,
+												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
 										Database.getInstance(OTPConfirmScreen.this).close();
 										loginDataFetched = true;
@@ -886,7 +887,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-												loginResponse, LoginVia.FACEBOOK_OTP);
+												loginResponse, LoginVia.FACEBOOK_OTP,
+												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										loginDataFetched = true;
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
 										Database.getInstance(OTPConfirmScreen.this).close();
@@ -985,7 +987,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-												loginResponse, LoginVia.GOOGLE_OTP);
+												loginResponse, LoginVia.GOOGLE_OTP,
+												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										loginDataFetched = true;
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(googleRegisterData.email);
 										Database.getInstance(OTPConfirmScreen.this).close();
@@ -1402,7 +1405,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.EMAIL);
+											loginResponse, LoginVia.EMAIL,
+											new LatLng(Data.loginLatitude, Data.loginLongitude));
 									Database.getInstance(OTPConfirmScreen.this).insertEmail(emailId);
 									loginDataFetched = true;
 									DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -1512,7 +1516,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.FACEBOOK);
+											loginResponse, LoginVia.FACEBOOK,
+											new LatLng(Data.loginLatitude, Data.loginLongitude));
 									loginDataFetched = true;
 
 									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
@@ -1621,7 +1626,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.GOOGLE);
+											loginResponse, LoginVia.GOOGLE,
+											new LatLng(Data.loginLatitude, Data.loginLongitude));
 									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 

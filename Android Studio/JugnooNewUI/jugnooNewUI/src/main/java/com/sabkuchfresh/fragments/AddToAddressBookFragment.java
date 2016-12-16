@@ -204,6 +204,9 @@ public class AddToAddressBookFragment extends Fragment {
                     Utils.hideSoftKeyboard(activity, editTextLabel);
                     String localAddress = getAddressFromForm();
                     if (checkFields()) {
+                        if(activity instanceof FreshActivity){
+                            ((FreshActivity)activity).setIsAddressConfirmed(true);
+                        }
                         saveAddressFromForm(localAddress, -1, -1);
                     }
                 } else {
@@ -768,9 +771,9 @@ public class AddToAddressBookFragment extends Fragment {
             }
 
             if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
-                label = Constants.TYPE_HOME;
+                label = Utils.firstCharCapital(Constants.TYPE_HOME);
             } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
-                label = Constants.TYPE_WORK;
+                label = Utils.firstCharCapital(Constants.TYPE_WORK);
             } else {
                 label = editTextLabel.getText().toString().trim();
             }

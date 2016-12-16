@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="product.clicklabs.jugnoo"
           xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="258"
-          android:versionName="2.5.8">
+          android:versionCode="262"
+          android:versionName="2.6.2"
+          xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="15"
         android:targetSdkVersion="19"/>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -17,7 +18,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -28,6 +28,7 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
 
     <permission
         android:name="product.clicklabs.jugnoo.permission.MAPS_RECEIVE"
@@ -42,11 +43,12 @@
 
     <application
         android:name=".MyApplication"
-        android:allowBackup="true"
         android:icon="@drawable/jugnoo_icon"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
-        android:theme="@style/AppTheme">
+        tools:replace="android:allowBackup"
+        android:allowBackup="true"
+        android:theme="@style/AppThemePay">
         <meta-data
             android:name="payu_merchant_id"
             android:value="HjlOjY"/>
@@ -54,7 +56,8 @@
         <activity
             android:name=".wallet.PaymentActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
 
         <service
             android:name=".GCMIntentService"
@@ -74,7 +77,8 @@
         <activity
             android:name=".SplashNewActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -104,25 +108,29 @@
         <activity
             android:name=".home.HomeActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".ChatActivity"
             android:label="@string/app_name"
             android:configChanges="keyboard|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".ForgotPasswordScreen"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".OTPConfirmScreen"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
 
             <!-- jugnooautos-verify://app?otp=1234 -->
             <intent-filter android:label="@string/app_name">
@@ -146,122 +154,128 @@
         <activity
             android:name=".promotion.ShareActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".promotion.PromotionActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".HelpParticularActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".AddPlaceActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".support.SupportActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".WebActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".FeedbackActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="com.sabkuchfresh.home.FeedbackActivity"
-            android:label="@string/receipt"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".AboutActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".AccountActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".PhoneNoOTPConfirmScreen"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".RideTransactionsActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".RideCancellationActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".ChangePasswordActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".MultipleAccountsActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".RequestDuplicateRegistrationActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".ChangePhoneBeforeOTPActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".DebugOptionsActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".FareEstimateActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".ReferDriverActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".NotificationCenterActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".emergency.EmergencyActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".t20.T20Activity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".wallet.WalletRechargeWebViewActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".utils.CallActivity"
@@ -385,7 +399,8 @@
         <activity
             android:name="com.sabkuchfresh.home.FreshActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
 
         <meta-data
@@ -428,7 +443,8 @@
         <activity
             android:name=".home.trackinglog.TrackingLogActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity
@@ -436,6 +452,41 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait">
         </activity>
+
+
+
+
+
+
+
+        <activity
+            android:name="com.jugnoo.pay.activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:theme="@style/TransparentTheme"
+            ></activity>
+
+        <activity android:name="com.jugnoo.pay.activities.SelectContactActivity"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="stateHidden"
+                  android:theme="@style/TransparentTheme"
+            ></activity>
+        <activity android:name="com.jugnoo.pay.activities.SendMoneyActivity"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="stateHidden"
+                  android:theme="@style/TransparentTheme"
+            ></activity>
+        <activity android:name="com.jugnoo.pay.activities.TranscCompletedActivity"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="stateHidden"
+                  android:theme="@style/TransparentTheme"
+            ></activity>
+        <activity android:name="com.jugnoo.pay.activities.AddPaymentAddressActivity"
+                  android:screenOrientation="portrait"
+                  android:windowSoftInputMode="stateAlwaysHidden"
+                  android:theme="@style/TransparentTheme"
+            />
+
     </application>
 
 </manifest>

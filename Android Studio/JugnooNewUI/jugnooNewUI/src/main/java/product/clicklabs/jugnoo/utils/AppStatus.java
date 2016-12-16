@@ -29,15 +29,18 @@ public class AppStatus {
 	public boolean isOnline(Context con) {
 		try {
 			connectManager = (ConnectivityManager) con.getSystemService(Context.CONNECTIVITY_SERVICE);
-			if (connectManager != null) {
-				NetworkInfo[] info = connectManager.getAllNetworkInfo();
-				if (info != null) {
-					for (int i = 0; i < info.length; i++) {
-						if (info[i].getState() == NetworkInfo.State.CONNECTED) {
-							return true;
-						}
-					}
+			NetworkInfo activeNetwork = connectManager.getActiveNetworkInfo();
+			if (activeNetwork != null) { // connected to the internet
+				if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+					// connected to wifi
+					return true;
+				} else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+					// connected to the mobile provider's data plan
+					return true;
 				}
+			} else {
+				// not connected to the internet
+				return false;
 			}
 			FlurryEventLogger.event(FlurryEventNames.ERROR_NO_INTERNET);
 			return false;

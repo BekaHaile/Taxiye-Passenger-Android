@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.dialogs.BannerDetailDialog;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.utils.AppConstant;
@@ -58,6 +59,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     private int listType = 0;
     private int currentGroupId;
     private String categoryName;
+    private int appType;
 
     public FreshCategoryItemsAdapter(Context context, ArrayList<SubItem> subItems, Category.CategoryBanner categoryBanners, int showCategoryBanner,
                                      OpenMode openMode, Callback callback, int listType, String categoryName, int currentGroupId) {
@@ -70,6 +72,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         this.listType = listType;
         this.categoryName = categoryName;
         this.currentGroupId = currentGroupId;
+        appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
     }
 
     public synchronized void setResults(ArrayList<SubItem> subItems){
@@ -129,7 +132,12 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             final SubItem subItem = subItems.get(position);
 
             mHolder.textViewItemName.setText(subItem.getSubItemName());
-            mHolder.textViewItemUnit.setText(subItem.getBaseUnit());
+            if(!TextUtils.isEmpty(subItem.getBaseUnit())) {
+                mHolder.textViewItemUnit.setVisibility(View.VISIBLE);
+                mHolder.textViewItemUnit.setText(subItem.getBaseUnit());
+            } else {
+                mHolder.textViewItemUnit.setVisibility(View.GONE);
+            }
             mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
                     Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
 
@@ -215,6 +223,15 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
                 mHolder.textViewOutOfStock.setVisibility(View.GONE);
             }
+
+            if(appType == AppConstant.ApplicationType.MENUS
+                    && context instanceof FreshActivity
+                    && ((FreshActivity)context).getVendorOpened() != null
+                    && (1 == ((FreshActivity)context).getVendorOpened().getIsClosed() || 0 == ((FreshActivity)context).getVendorOpened().getIsAvailable())){
+                mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
+                mHolder.mAddButton.setVisibility(View.GONE);
+                mHolder.textViewOutOfStock.setVisibility(View.GONE);
+            }
 //            if (openMode == OpenMode.CART) {
                 mHolder.imageViewDelete.setVisibility(View.GONE);
 //            } else {
@@ -222,8 +239,15 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 //            }
 
             if(!subItem.getSubItemDesc().equalsIgnoreCase("")){
-                mHolder.imageViewMoreInfoSeprator.setVisibility(View.VISIBLE);
+                mHolder.imageViewMoreInfoSeprator.setVisibility(!TextUtils.isEmpty(subItem.getBaseUnit()) ? View.VISIBLE : View.GONE);
                 mHolder.textViewMoreInfo.setVisibility(View.VISIBLE);
+                if(appType == AppConstant.ApplicationType.MENUS){
+                    mHolder.textViewMoreInfo.setTextColor(context.getResources().getColor(R.color.text_color_light));
+                    mHolder.textViewMoreInfo.setText(subItem.getSubItemDesc());
+                } else {
+                    mHolder.textViewMoreInfo.setTextColor(context.getResources().getColor(R.color.theme_color));
+                    mHolder.textViewMoreInfo.setText(context.getString(R.string.more_info));
+                }
             } else{
                 mHolder.imageViewMoreInfoSeprator.setVisibility(View.GONE);
                 mHolder.textViewMoreInfo.setVisibility(View.GONE);
@@ -240,7 +264,9 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DialogPopup.alertPopupWithCancellable((Activity)context, "", subItem.getSubItemDesc());
+                    if(appType != AppConstant.ApplicationType.MENUS) {
+                        DialogPopup.alertPopupWithCancellable((Activity) context, "", subItem.getSubItemDesc());
+                    }
                 }
             });
 
@@ -275,25 +301,25 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 @Override
                 public void onClick(View v) {
                     try {
-
                         int pos = (int) v.getTag();
-//                        subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock() ?
-//                                subItems.get(pos).getSubItemQuantitySelected() + 1 : subItems.get(pos).getStock());
-                        if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-                            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
-                        } else {
-                            Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
-                        }
-                        callback.onPlusClicked(pos, subItems.get(pos));
+                        if(callback.checkForAdd(pos, subItems.get(pos))) {
+                            if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
+                                subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+                            } else {
+                                Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
+                            }
+                            callback.onPlusClicked(pos, subItems.get(pos));
+                            notifyDataSetChanged();
 
-                        notifyDataSetChanged();
-                        int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
-                        if(appType == AppConstant.ApplicationType.FRESH){
-                            FlurryEventLogger.event(FlurryEventNames.FRESH_FRAGMENT, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-                            MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
-                        } else if(appType == AppConstant.ApplicationType.GROCERY){
-                            FlurryEventLogger.event(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-                            MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
+                            FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
+                            int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
+                            if (appType == AppConstant.ApplicationType.FRESH) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
+                            } else if (appType == AppConstant.ApplicationType.GROCERY) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
+                            } else if (appType == AppConstant.ApplicationType.MENUS) {
+                                MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -339,7 +365,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             });
 
             try {
-                if (subItem.getSubItemImage() != null && !"".equalsIgnoreCase(subItem.getSubItemImage())) {
+                if (!TextUtils.isEmpty(subItem.getSubItemImage())) {
                     Picasso.with(context).load(subItem.getSubItemImage())
                             .placeholder(R.drawable.ic_fresh_item_placeholder)
                             .fit()
@@ -348,10 +374,35 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             .into(mHolder.imageViewItemImage);
                 } else {
                     mHolder.imageViewItemImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
+                    mHolder.imageViewItemImage.setVisibility((appType == AppConstant.ApplicationType.MENUS) ? View.GONE : View.VISIBLE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            mHolder.imageViewFoodType.setVisibility(appType == AppConstant.ApplicationType.MENUS ? View.VISIBLE : View.GONE);
+            mHolder.imageViewFoodType.setImageResource(subItem.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
+            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+            RelativeLayout.LayoutParams paramsLLC = (RelativeLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
+            if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
+                if(mHolder.textViewMoreInfo.getVisibility() == View.VISIBLE){
+                    paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
+                } else {
+                    paramsFT.setMargins(0, (int)(ASSL.Yscale()*25f), 0, 0);
+                }
+                paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
+            } else {
+                paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
+                paramsLLC.setMargins((int)(ASSL.Xscale()*30f), 0, 0, 0);
+            }
+            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
+            mHolder.linearLayoutContent.setLayoutParams(paramsLLC);
+            if(TextUtils.isEmpty(subItem.getBaseUnit()) && TextUtils.isEmpty(subItem.getSubItemDesc())) {
+                mHolder.linearLayoutUnitMoreInfo.setVisibility(View.GONE);
+            } else {
+                mHolder.linearLayoutUnitMoreInfo.setVisibility(View.VISIBLE);
+            }
+
         } else if(holder instanceof ViewTitleHolder) {
             ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
             titleholder.relative.setVisibility(View.VISIBLE);
@@ -360,8 +411,6 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             bannerHolder.relative.setVisibility(View.VISIBLE);
             bannerHolder.imageViewBanner.setVisibility(View.VISIBLE);
             Picasso.with(context).load(categoryBanners.getSmallImage())
-                    .placeholder(R.drawable.img_ice_cream_banner)
-                    .error(R.drawable.img_ice_cream_banner)
                     .fit()
                     .into(bannerHolder.imageViewBanner);
 
@@ -393,19 +442,22 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             return subItems == null ? 0 : subItems.size();
     }
 
+
     static class MainViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
-        private ImageView imageViewItemImage, imageViewMinus, imageViewPlus, imageViewDelete, bannerBg, imageViewMoreInfoSeprator;
+        private ImageView imageViewItemImage, imageViewFoodType, imageViewMinus, imageViewPlus, imageViewDelete, bannerBg, imageViewMoreInfoSeprator;
         public TextView textViewItemName, textViewItemUnit, textViewItemPrice, textViewQuantity, textViewItemCost, textViewItemOff, offerTag;
         public TextView unavilableView, textViewOutOfStock, textViewMoreInfo;
         public Button mAddButton;
-        public LinearLayout linearLayoutQuantitySelector, offerTagLayout;
+        public LinearLayout linearLayoutContent, linearLayoutQuantitySelector, offerTagLayout, linearLayoutUnitMoreInfo;
         public MainViewHolder(View itemView, Context context) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+            linearLayoutContent = (LinearLayout) itemView.findViewById(R.id.linearLayoutContent);
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             offerTagLayout = (LinearLayout) itemView.findViewById(R.id.offer_tag_layout);
             imageViewItemImage = (ImageView) itemView.findViewById(R.id.imageViewItemImage);
+            imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
             imageViewDelete = (ImageView) itemView.findViewById(R.id.imageViewDelete);
@@ -416,7 +468,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             unavilableView = (TextView) itemView.findViewById(R.id.unavilable_view); unavilableView.setTypeface(Fonts.mavenRegular(context));
 
-            textViewItemName = (TextView)itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenRegular(context));
+            textViewItemName = (TextView)itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenMedium(context));
             textViewItemUnit = (TextView)itemView.findViewById(R.id.textViewItemUnit); textViewItemUnit.setTypeface(Fonts.mavenRegular(context));
             textViewItemPrice = (TextView)itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenRegular(context));
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
@@ -424,6 +476,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             textViewItemOff = (TextView)itemView.findViewById(R.id.textViewItemOff); textViewItemOff.setTypeface(Fonts.mavenRegular(context));
             textViewOutOfStock = (TextView)itemView.findViewById(R.id.textViewOutOfStock); textViewOutOfStock.setTypeface(Fonts.mavenRegular(context));
             offerTag = (TextView)itemView.findViewById(R.id.offer_tag); offerTag.setTypeface(Fonts.mavenRegular(context));
+            linearLayoutUnitMoreInfo = (LinearLayout) itemView.findViewById(R.id.linearLayoutUnitMoreInfo);
         }
     }
 
@@ -448,6 +501,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public interface Callback{
+        boolean checkForAdd(int position, SubItem subItem);
         void onPlusClicked(int position, SubItem subItem);
         void onMinusClicked(int position, SubItem subItem);
         void onDeleteClicked(int position, SubItem subItem);

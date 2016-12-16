@@ -21,6 +21,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Pair;
@@ -182,6 +183,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public static JSONObject multipleCaseJSON;
 	private boolean openHomeSwitcher = true;
 
+	private String phoneFetchedName = "", phoneFetchedEmail = "";
 
 	@Override
 	protected void onStop() {
@@ -876,6 +878,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					String referralCode = editTextSPromo.getText().toString().trim();
 					String emailId = editTextSEmail.getText().toString().trim();
 					boolean noFbEmail = false;
+
+					if(!TextUtils.isEmpty(phoneFetchedEmail) && !phoneFetchedEmail.equalsIgnoreCase(emailId)
+							&& !TextUtils.isEmpty(phoneFetchedName) && !phoneFetchedName.equalsIgnoreCase(name)){
+						FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.NAME_EMAIL_AUTOFILLED_EDITED);
+					} else if(!TextUtils.isEmpty(phoneFetchedEmail) && phoneFetchedEmail.equalsIgnoreCase(emailId)
+							&& !TextUtils.isEmpty(phoneFetchedName) && phoneFetchedName.equalsIgnoreCase(name)){
+						FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.NAME_EMAIL_AUTOFILLED_UNEDITED);
+					}
 
 					if (RegisterationType.FACEBOOK == registerationType && emailId.equalsIgnoreCase("")) {
 						emailId = "n@n.c";
@@ -2159,7 +2169,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.EMAIL);
+											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
 
 								}
@@ -2279,7 +2289,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.FACEBOOK);
+											loginResponse, LoginVia.FACEBOOK, new LatLng(Data.loginLatitude, Data.loginLongitude));
 
 
 									Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
@@ -2397,7 +2407,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.GOOGLE);
+											loginResponse, LoginVia.GOOGLE, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 
@@ -2594,6 +2604,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void fillSocialAccountInfo(RegisterationType registerationType) {
 		try {
+			phoneFetchedName = "";
+			phoneFetchedEmail = "";
 			SplashNewActivity.registerationType = registerationType;
 			if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
 				editTextSName.setText(Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
@@ -2610,6 +2622,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					editTextSEmail.setEnabled(true);
 				}
 				editTextSPhone.setText(fbVerifiedNumber);
+				if(!TextUtils.isEmpty(fbVerifiedNumber)){
+					FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.PHONE_AUTOFILLED_FB);
+				}
 
 			} else if (RegisterationType.GOOGLE == SplashNewActivity.registerationType) {
 				editTextSName.setText(Data.googleSignInAccount.getDisplayName());
@@ -2635,6 +2650,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						if(ownerEmail != null && (!ownerEmail.equalsIgnoreCase(""))){
 							editTextSEmail.setText(ownerEmail);
 							editTextSName.setText(Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail)));
+							FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.NAME_EMAIL_AUTOFILLED);
+							phoneFetchedName = editTextSName.getText().toString();
+							phoneFetchedEmail = editTextSEmail.getText().toString();
 						} else{
 							editTextSEmail.setText("");
 						}
@@ -2645,6 +2663,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 				String mPhoneNumber = tMgr.getLine1Number();
 				editTextSPhone.setText(mPhoneNumber);
+				if(!TextUtils.isEmpty(mPhoneNumber)){
+					FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.PHONE_AUTOFILLED);
+				}
 
 			}
 		} catch (Exception e) {
@@ -3205,7 +3226,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                             } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
                                 if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
                                     new JSONParser().parseAccessTokenLoginData(activity, jsonString,
-                                            loginResponse, LoginVia.EMAIL_OTP);
+                                            loginResponse, LoginVia.EMAIL_OTP, new LatLng(Data.loginLatitude, Data.loginLongitude));
                                     Database.getInstance(activity).insertEmail(email);
                                     Database.getInstance(activity).close();
                                     loginDataFetched = true;

@@ -40,12 +40,15 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imageViewMenu"
             android:gravity="center"
             android:text="@string/app_name"
             android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_40"/>
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/text_size_40"
+            android:layout_marginLeft="20px"
+            />
 
         <EditText
             android:id="@+id/editTextDeliveryAddress"
@@ -172,7 +175,75 @@
             />
 
 
+        <RelativeLayout
+            android:id="@+id/relativeLayoutLocality"
+            android:layout_width="350px"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:visibility="visible"
+            >
 
+            <LinearLayout
+                android:layout_width="250px"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/imageViewLocality"
+                android:gravity="right"
+                android:layout_marginRight="-10px"
+                >
+                <TextView
+                    android:id="@+id/textViewLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/delivery_address"
+                    android:textColor="@color/text_color_theme_alpha_selector"
+                    android:textSize="@dimen/text_size_22"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewLocationValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text=""
+                    android:textColor="@color/text_color_selector"
+                    android:textSize="@dimen/text_size_26"
+                    android:singleLine="true"
+                    />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageViewLocality"
+                android:layout_width="96px"
+                android:layout_height="96px"
+                android:layout_alignParentRight="true"
+                android:tag="mwar"
+                android:src="@drawable/ic_locality_select"
+                />
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/textViewReset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/reset"
+            android:textAllCaps="true"
+            android:textColor="@color/text_color_selector"
+            android:textSize="30.6px"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10px"
+            android:visibility="gone"
+            android:padding="15px"
+            />
 
     </RelativeLayout>
 

@@ -351,6 +351,16 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                         if(promCouponResponse.getGroceryCoupons() != null)
                                             promoCoupons.addAll(promCouponResponse.getGroceryCoupons());
 
+                                        if(promCouponResponse.getMenusPromotions() != null)
+                                            promoCoupons.addAll(promCouponResponse.getMenusPromotions());
+                                        if(promCouponResponse.getMenusCoupons() != null)
+                                            promoCoupons.addAll(promCouponResponse.getMenusCoupons());
+
+                                        if(promCouponResponse.getPayPromotions() != null)
+                                            promoCoupons.addAll(promCouponResponse.getPayPromotions());
+                                        if(promCouponResponse.getPayCoupons() != null)
+                                            promoCoupons.addAll(promCouponResponse.getPayCoupons());
+
                                         updateListData();
 
                                     } else {

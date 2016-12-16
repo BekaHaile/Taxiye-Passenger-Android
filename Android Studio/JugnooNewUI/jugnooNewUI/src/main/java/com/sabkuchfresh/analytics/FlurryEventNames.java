@@ -19,7 +19,8 @@ public interface FlurryEventNames {
             Support_SCREEN = "Support SCREEN",
                     FRESH_FRAGMENT = "Fresh Screen",
             MEALS_FRAGMENT = "Meals Screen",
-            GROCERY_FRAGMENT = "Grocery Screen"
+            GROCERY_FRAGMENT = "Grocery Screen",
+            MENUS_FRAGMENT = "Menus Screen"
     ;
 
 

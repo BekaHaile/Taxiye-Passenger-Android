@@ -56,6 +56,18 @@ public class PromCouponResponse {
     @SerializedName("grocery_coupons")
     @Expose
     private List<CouponInfo> groceryCoupons = new ArrayList<>();
+    @SerializedName("menus_promotions")
+    @Expose
+    private List<PromotionInfo> menusPromotions = new ArrayList<>();
+    @SerializedName("menus_coupons")
+    @Expose
+    private List<CouponInfo> menusCoupons = new ArrayList<>();
+    @SerializedName("pay_promotions")
+    @Expose
+    private List<PromotionInfo> payPromotions = new ArrayList<>();
+    @SerializedName("pay_coupons")
+    @Expose
+    private List<CouponInfo> payCoupons = new ArrayList<>();
     @SerializedName("head")
     @Expose
     private String head;
@@ -197,5 +209,37 @@ public class PromCouponResponse {
 
     public void setGroceryCoupons(List<CouponInfo> groceryCoupons) {
         this.groceryCoupons = groceryCoupons;
+    }
+
+    public List<PromotionInfo> getMenusPromotions() {
+        return menusPromotions;
+    }
+
+    public void setMenusPromotions(List<PromotionInfo> menusPromotions) {
+        this.menusPromotions = menusPromotions;
+    }
+
+    public List<CouponInfo> getMenusCoupons() {
+        return menusCoupons;
+    }
+
+    public void setMenusCoupons(List<CouponInfo> menusCoupons) {
+        this.menusCoupons = menusCoupons;
+    }
+
+    public List<PromotionInfo> getPayPromotions() {
+        return payPromotions;
+    }
+
+    public void setPayPromotions(List<PromotionInfo> payPromotions) {
+        this.payPromotions = payPromotions;
+    }
+
+    public List<CouponInfo> getPayCoupons() {
+        return payCoupons;
+    }
+
+    public void setPayCoupons(List<CouponInfo> payCoupons) {
+        this.payCoupons = payCoupons;
     }
 }
