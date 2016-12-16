@@ -209,6 +209,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         textViewRSData.setText(""+dateValue);
 
         if(feedbackOrderItems != null && !feedbackOrderItems.equalsIgnoreCase("")){
+            textViewRSTotalFare.setVisibility(View.GONE);
             tvItems.setVisibility(View.VISIBLE);
             tvItems.setText(feedbackOrderItems);
         }
