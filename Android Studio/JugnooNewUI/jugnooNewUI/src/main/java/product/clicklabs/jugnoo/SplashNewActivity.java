@@ -181,6 +181,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	String name = "", referralCode = "", emailId = "", phoneNo = "", password = "", signUpBy = "";
 	public static RegisterationType registerationType = RegisterationType.EMAIL;
 	public static JSONObject multipleCaseJSON;
+	private boolean openHomeSwitcher = true;
 
 	private String phoneFetchedName = "", phoneFetchedEmail = "";
 
@@ -1757,7 +1758,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						loginDataFetched = false;
 
 						MyApplication.getInstance().getAppSwitcher().switchApp(SplashNewActivity.this,
-								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude));
+								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+								getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), false);
 //						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
 //						intent.setData(getIntent().getData());
 //						startActivity(intent);
@@ -1774,7 +1776,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						loginDataFetched = false;
 
 						MyApplication.getInstance().getAppSwitcher().switchApp(SplashNewActivity.this,
-								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude));
+								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+								Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), false);
 //						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
 //						intent.setData(Data.splashIntentUri);
 //						startActivity(intent);

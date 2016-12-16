@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutGridViewScreen"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:id="@+id/cardViewGridViewScreen"
+        android:layout_width="@dimen/px_220"
+        android:layout_height="@dimen/px_220"
+        android:layout_marginLeft="@dimen/px_50"
+        android:layout_marginTop="@dimen/px_40"
+        android:background="@drawable/circle_border_auto_selector">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent">
+
+            <ImageView
+                android:id="@+id/imageViewGridViewScreen"
+                android:layout_width="85px"
+                android:layout_height="75px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/px_40"
+                android:src="@drawable/home_switcher_auto" />
+
+            <TextView
+                android:id="@+id/textViewGridViewScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/px_10"
+                android:layout_below="@+id/imageViewGridViewScreen"
+                android:text="@string/rides"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_34" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

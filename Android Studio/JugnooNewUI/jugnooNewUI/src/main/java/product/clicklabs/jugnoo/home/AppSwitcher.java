@@ -13,6 +13,7 @@ import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.HomeSwitcherActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.apis.ApiUpdateClientId;
@@ -32,28 +33,41 @@ public class AppSwitcher {
 	public AppSwitcher(){}
 
 	/**
-	 *
+	 * From menu
 	 * @param activity
 	 * @param clientId client id for the app
 	 * @param latLng
      */
-	public void switchApp(final Activity activity, final String clientId, LatLng latLng, boolean clearActivityStack) {
+	public void switchApp(Activity activity, String clientId, LatLng latLng, boolean clearActivityStack) {
 		Bundle bundle = new Bundle();
 		bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, true);
-		switchApp(activity, clientId, null, latLng, bundle, clearActivityStack);
+		switchApp(activity, clientId, null, latLng, bundle, clearActivityStack, false, false);
 	}
 
 	/**
-	 *
+	 * After splash
 	 * @param activity
 	 * @param clientId client id for the app
 	 * @param data
      * @param latLng
      */
-	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng) {
+	public void switchApp(Activity activity, String clientId, Uri data, LatLng latLng, boolean openHomeSwitcher) {
 		Bundle bundle = new Bundle();
 		bundle.putBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false);
-		switchApp(activity, clientId, data, latLng, bundle, false);
+		switchApp(activity, clientId, data, latLng, bundle, false, openHomeSwitcher, false);
+	}
+
+
+	/**
+	 * For reorder offering opening
+	 * @param activity
+	 * @param clientId
+	 * @param data
+	 * @param latLng
+	 * @param bundle
+	 */
+	public void switchApp(Activity activity, String clientId, Uri data, LatLng latLng, Bundle bundle){
+		switchApp(activity, clientId, data, latLng, bundle, false, false, false);
 	}
 
 	/**
@@ -64,7 +78,8 @@ public class AppSwitcher {
 	 * @param latLng
      * @param bundle
      */
-	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle, final boolean clearActivityStack){
+	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle,
+						  final boolean clearActivityStack, final boolean openHomeSwitcher, final boolean slowTransition){
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 			final Intent intent = new Intent();
 			if(clearActivityStack) {
@@ -80,118 +95,126 @@ public class AppSwitcher {
 				intent.setData(data);
 			}
 
-			ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
-				@Override
-				public void noNet() {
-					DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
-				}
-
-				@Override
-				public void success(String clientId) {
-					if (!intentSentAfterDataCheck(activity, clientId, data, bundle, clearActivityStack)) {
-						intent.setClass(activity, FreshActivity.class);
-						intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-						activity.startActivity(intent);
-						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-						ActivityCompat.finishAffinity(activity);
+			if(openHomeSwitcher){
+				intent.setClass(activity, HomeSwitcherActivity.class);
+				intent.putExtra(Constants.KEY_LATITUDE, latLng.latitude);
+				intent.putExtra(Constants.KEY_LONGITUDE, latLng.longitude);
+				activity.startActivity(intent);
+				activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
+				//activity.finish();
+			} else {
+				ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
+					@Override
+					public void noNet() {
+						DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
 					}
 
-				}
+					@Override
+					public void success(String clientId) {
+						if (!intentSentAfterDataCheck(activity, clientId, data, bundle, clearActivityStack)) {
+							intent.setClass(activity, FreshActivity.class);
+							intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+							activity.startActivity(intent);
+							activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
+							ActivityCompat.finishAffinity(activity);
+						}
 
-				@Override
-				public void failure() {
+					}
 
-				}
+					@Override
+					public void failure() {
 
-				@Override
-				public void onRetry(View view) {
-					switchApp(activity, clientId, data, latLng, bundle, clearActivityStack);
-				}
+					}
 
-				@Override
-				public void onNoRetry(View view) {
+					@Override
+					public void onRetry(View view) {
+						switchApp(activity, clientId, data, latLng, bundle, clearActivityStack, openHomeSwitcher, slowTransition);
+					}
 
-				}
-			};
+					@Override
+					public void onNoRetry(View view) {
 
-			if (clientId.equalsIgnoreCase(Config.getAutosClientId()) && !(activity instanceof HomeActivity)) {
-				if (Data.autoData == null) {
-					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-							new ApiLoginUsingAccessToken.Callback() {
-								@Override
-								public void noNet() {
-									DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
-								}
+					}
+				};
 
-								@Override
-								public void success(String clientId) {
-									if (!intentSentAfterDataCheck(activity, clientId, data, bundle, clearActivityStack)) {
-										intent.setClass(activity, HomeActivity.class);
-										intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-										activity.startActivity(intent);
-										activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-										ActivityCompat.finishAffinity(activity);
+				if (clientId.equalsIgnoreCase(Config.getAutosClientId()) && !(activity instanceof HomeActivity)) {
+					if (Data.autoData == null) {
+						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+								new ApiLoginUsingAccessToken.Callback() {
+									@Override
+									public void noNet() {
+										DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
 									}
-								}
 
-								@Override
-								public void failure() {
+									@Override
+									public void success(String clientId) {
+										if (!intentSentAfterDataCheck(activity, clientId, data, bundle, clearActivityStack)) {
+											intent.setClass(activity, HomeActivity.class);
+											intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+											activity.startActivity(intent);
+											activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
+											ActivityCompat.finishAffinity(activity);
+										}
+									}
 
-								}
+									@Override
+									public void failure() {
 
-								@Override
-								public void onRetry(View view) {
-									switchApp(activity, clientId, data, latLng, bundle, clearActivityStack);
-								}
+									}
 
-								@Override
-								public void onNoRetry(View view) {
+									@Override
+									public void onRetry(View view) {
+										switchApp(activity, clientId, data, latLng, bundle, clearActivityStack, openHomeSwitcher, slowTransition);
+									}
 
-								}
-							});
-				} else {
-					intent.setClass(activity, HomeActivity.class);
-					activity.startActivity(intent);
-					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					ActivityCompat.finishAffinity(activity);
-					new ApiUpdateClientId().updateClientId(clientId);
-					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-				}
-			} else if (clientId.equalsIgnoreCase(Config.getFreshClientId()) && !(activity instanceof FreshActivity)) {
-				if (Data.getFreshData() == null) {
-					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-							callback);
-				} else {
-					intent.setClass(activity, FreshActivity.class);
-					activity.startActivity(intent);
-					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					ActivityCompat.finishAffinity(activity);
+									@Override
+									public void onNoRetry(View view) {
 
-					new ApiUpdateClientId().updateClientId(clientId);
-					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-				}
-			} else if (clientId.equalsIgnoreCase(Config.getMealsClientId()) && !(activity instanceof FreshActivity)) {
-				if (Data.getMealsData() == null) {
-					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-							callback);
-				} else {
-					intent.setClass(activity, FreshActivity.class);
-					activity.startActivity(intent);
-					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					ActivityCompat.finishAffinity(activity);
+									}
+								});
+					} else {
+						intent.setClass(activity, HomeActivity.class);
+						activity.startActivity(intent);
+						activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
+						ActivityCompat.finishAffinity(activity);
+						new ApiUpdateClientId().updateClientId(clientId);
+						Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+					}
+				} else if (clientId.equalsIgnoreCase(Config.getFreshClientId()) && !(activity instanceof FreshActivity)) {
+					if (Data.getFreshData() == null) {
+						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+								callback);
+					} else {
+						intent.setClass(activity, FreshActivity.class);
+						activity.startActivity(intent);
+						activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
+						ActivityCompat.finishAffinity(activity);
 
-					new ApiUpdateClientId().updateClientId(clientId);
-					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
-				}
-			} else if (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && !(activity instanceof FreshActivity)) {
-				if (Data.getGroceryData() == null) {
-					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-							callback);
-				} else {
-					intent.setClass(activity, FreshActivity.class);
-					activity.startActivity(intent);
-					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					ActivityCompat.finishAffinity(activity);
+						new ApiUpdateClientId().updateClientId(clientId);
+						Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+					}
+				} else if (clientId.equalsIgnoreCase(Config.getMealsClientId()) && !(activity instanceof FreshActivity)) {
+					if (Data.getMealsData() == null) {
+						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+								callback);
+					} else {
+						intent.setClass(activity, FreshActivity.class);
+						activity.startActivity(intent);
+						activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
+						ActivityCompat.finishAffinity(activity);
+
+						new ApiUpdateClientId().updateClientId(clientId);
+						Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+					}
+				} else if (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && !(activity instanceof FreshActivity)) {
+					if (Data.getGroceryData() == null) {
+						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+								callback);
+					} else {
+						intent.setClass(activity, FreshActivity.class);
+						activity.startActivity(intent);
+						activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
+						ActivityCompat.finishAffinity(activity);
 
 					new ApiUpdateClientId().updateClientId(clientId);
 					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
@@ -237,7 +260,7 @@ public class AppSwitcher {
 
 								@Override
 								public void onRetry(View view) {
-									switchApp(activity, clientId, data, latLng, bundle, clearActivityStack);
+									switchApp(activity, clientId, data, latLng, bundle);
 								}
 
 								@Override
@@ -263,28 +286,30 @@ public class AppSwitcher {
 					new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 							callback);
 				} else {
-					intent.setClass(activity, FreshActivity.class);
-					activity.startActivity(intent);
-					activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-					ActivityCompat.finishAffinity(activity);
+						intent.setClass(activity, FreshActivity.class);
+						activity.startActivity(intent);
+						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+						ActivityCompat.finishAffinity(activity);
 
-					new ApiUpdateClientId().updateClientId(clientId);
-					Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+						new ApiUpdateClientId().updateClientId(clientId);
+						Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+					}
 				}
 			}
 		} else {
-			retryDialog(DialogErrorType.NO_NET, activity, clientId, data, latLng, bundle, clearActivityStack);
+			retryDialog(DialogErrorType.NO_NET, activity, clientId, data, latLng, bundle, clearActivityStack, openHomeSwitcher, slowTransition);
 		}
-
 	}
 
-	private void retryDialog(DialogErrorType dialogErrorType, final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle, final boolean clearActivityStack){
+	private void retryDialog(DialogErrorType dialogErrorType, final Activity activity, final String clientId, final Uri data,
+							 final LatLng latLng, final Bundle bundle, final boolean clearActivityStack, final boolean openHomeSwitcher,
+							 final boolean slowTransition){
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
 				new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View view) {
-						switchApp(activity, clientId, data, latLng, bundle, clearActivityStack);
+						switchApp(activity, clientId, data, latLng, bundle, clearActivityStack, openHomeSwitcher, slowTransition);
 					}
 
 					@Override
@@ -387,7 +412,7 @@ public class AppSwitcher {
 			intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 			intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
 			activity.startActivity(intent);
-			activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+			activity.overridePendingTransition(R.anim.fade_in_slow, R.anim.fade_out_slow);
 			ActivityCompat.finishAffinity(activity);
 			return true;
 		} catch (Exception e) {
@@ -396,6 +421,22 @@ public class AppSwitcher {
 		}
 	}
 
+
+	private int getInAnim(boolean slowTransition){
+		if(slowTransition){
+			return R.anim.fade_in_slow;
+		} else{
+			return R.anim.fade_in;
+		}
+	}
+
+	private int getOutAnim(boolean slowTransition){
+		if(slowTransition){
+			return R.anim.fade_out_slow;
+		} else{
+			return R.anim.fade_out;
+		}
+	}
 
 
 

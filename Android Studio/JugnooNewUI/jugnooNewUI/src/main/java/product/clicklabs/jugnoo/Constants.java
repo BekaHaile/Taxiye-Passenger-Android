@@ -563,4 +563,6 @@ public interface Constants {
 	String KEY_CURRENT_LONGITUDE = "current_longitude";
 	String KEY_MENU_LATITUDE = "menu_latitude";
 	String KEY_MENU_LONGITUDE = "menu_longitude";
+
+	String SHOW_HOME_SCREEN = "show_home_screen";
 }

@@ -270,4 +270,11 @@
 
 
 
+    <color name="color_auto_border">#f06f3b</color>
+    <color name="color_meals_border">#ba5a62</color>
+    <color name="color_fresh_border">#b8e986</color>
+    <color name="color_grocery_border">#50e3c2</color>
+    <color name="color_menus_border">#f8e81c</color>
+    <color name="color_pay_border">#cf9df6</color>
+
 </resources>

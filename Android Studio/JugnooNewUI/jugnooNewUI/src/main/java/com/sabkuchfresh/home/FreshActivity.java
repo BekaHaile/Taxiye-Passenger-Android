@@ -178,6 +178,20 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_fresh);
+
+            if(Data.userData.getShowHomeScreen() == 1)
+            {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this,
+                                Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+                                getIntent().getData(), getSelectedLatLng(), true);
+                    }
+                }, 500);
+                Data.userData.setShowHomeScreen(0);
+            }
+
             Log.e("", "");
             Data.currentActivity = FreshActivity.class.getName();
             drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -469,7 +483,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 									Bundle bundle = new Bundle();
 									bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
 									MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
-											getCurrentPlaceLatLng(), bundle, false);
+											getCurrentPlaceLatLng(), bundle);
 								}
 							} else if (type == 1) {
 								intentToShareActivity();
@@ -485,7 +499,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
-                                            getCurrentPlaceLatLng(), bundle, false);
+                                            getCurrentPlaceLatLng(), bundle);
                                 }
                             } else if(type == 3){
                                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -499,7 +513,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getMenusClientId(), null,
-                                            getCurrentPlaceLatLng(), bundle, false);
+                                            getCurrentPlaceLatLng(), bundle);
                                 }
                             } else if(type == 10){
                                 setRefreshCart(true);
@@ -560,6 +574,24 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     protected void onResume() {
         super.onResume();
         try {
+
+            if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getAutosClientId())){
+                HomeActivity.homeSwitcher = true;
+                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getAutosClientId(), null,
+                        getCurrentPlaceLatLng(), null);
+            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getMealsClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getMealsClientId(), null,
+                        getCurrentPlaceLatLng(), null);
+            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getGroceryClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
+                        getCurrentPlaceLatLng(), null);
+            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getFreshClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
+                        getCurrentPlaceLatLng(), null);
+            }
+            Prefs.with(this).save("home_switcher_client_id", "");
+
+
         if (!HomeActivity.checkIfUserDataNull(this)) {
             menuBar.setUserData();
             topBar.setUserData();

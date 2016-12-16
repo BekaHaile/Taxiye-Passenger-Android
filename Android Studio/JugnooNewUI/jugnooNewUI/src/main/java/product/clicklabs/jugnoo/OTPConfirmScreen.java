@@ -102,11 +102,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	private boolean giveAMissedCall;
 	private Handler handler = new Handler();
 	private String signupBy = "", email = "", password = "";
-	private boolean onlyDigits;
 	private RelativeLayout rlProgress;
 	private ProgressWheel progressBar;
 	private boolean runAfterDelay;
 	private TextView tvProgress;
+	private boolean onlyDigits, openHomeSwitcher = false;
 
 
 	@Override
@@ -134,6 +134,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		setContentView(R.layout.activity_otp_confrim);
 
 		loginDataFetched = false;
+		openHomeSwitcher = false;
 
 		try {
 			if(getIntent().hasExtra(LINKED_WALLET)){
@@ -1095,7 +1096,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			loginDataFetched = false;
 
 			MyApplication.getInstance().getAppSwitcher().switchApp(OTPConfirmScreen.this,
-					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude));
+					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+					Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), openHomeSwitcher);
 //			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
 //			intent.setData(Data.splashIntentUri);
 //			startActivity(intent);

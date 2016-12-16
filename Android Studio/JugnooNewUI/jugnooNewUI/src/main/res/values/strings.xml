@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
     <string name="no_more_than">Can\'t order more than %d units</string>
 
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live
+    <!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string>&lt;!&ndash; General&ndash;&gt;-->
+    <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -1166,6 +1166,11 @@
 	<string name="suggested_addresses">Suggested Addresses</string>
 	<string name="save_address_as">Save address as:</string>
 	<string name="address_name">Address Name</string>
+	<string name="hi_username_format">Hi %s!</string>
+	<string name="we_have_these_offerings">Following services are available at your location.\nPlease select a service:</string>
+	<string name="you_can_always_navigate">You can always navigate between various\nservices using Jugnoo Jeanie.</string>
+
+
 	<string name="jugnoo_offerings">Jugnoo Offerings</string>
 	<string name="side_menu">Side menu</string>
 	<string name="view_account">View Account</string>

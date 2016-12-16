@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.jugnoo.pay.activities.MainActivity;
 
 import product.clicklabs.jugnoo.datastructure.HelpSection;

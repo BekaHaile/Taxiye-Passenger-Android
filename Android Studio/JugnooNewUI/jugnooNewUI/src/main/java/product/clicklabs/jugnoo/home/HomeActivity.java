@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home;
 
 import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -87,6 +88,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -480,15 +482,31 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private ArrayList<Marker> markersSpecialPickup = new ArrayList<>();
     private ArrayList<MarkerOptions> markerOptionsSpecialPickup = new ArrayList<>();
     private float mapPaddingSpecialPickup = 268f, mapPaddingConfirm = 238f;
+    public static boolean homeSwitcher;
     private boolean setPickupAddressZoomedOnce = false;
 
 
+    @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         MyApplication.getInstance().trackScreenView(TAG);
         Data.currentActivity = HomeActivity.class.getName();
+
+        if(Data.userData.getShowHomeScreen() == 1)
+        {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this,
+                            Prefs.with(HomeActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+                            getIntent().getData(), getCurrentPlaceLatLng(), true);
+                }
+            }, 500);
+            Data.userData.setShowHomeScreen(0);
+        }
+
 
         try {
             setContentView(R.layout.activity_home);
@@ -4167,6 +4185,26 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         super.onResume();
 
         try {
+
+            if(!homeSwitcher) {
+                homeSwitcher = true;
+                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this,
+                        Prefs.with(HomeActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+                        getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), true);
+            }
+
+            if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getFreshClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
+                        getCurrentPlaceLatLng(), bundle);
+            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getMealsClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getMealsClientId(), null,
+                        getCurrentPlaceLatLng(), bundle);
+            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getGroceryClientId())){
+                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getGroceryClientId(), null,
+                        getCurrentPlaceLatLng(), bundle);
+            }
+            Prefs.with(this).save("home_switcher_client_id", "");
+
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
             if (!checkIfUserDataNull(HomeActivity.this)) {
                 setUserData();
@@ -8746,8 +8784,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         else if(map != null){
             return map.getCameraPosition().target;
+        } else {
+            return new LatLng(Data.latitude, Data.longitude);
         }
-        return null;
     }
 
 
@@ -9172,7 +9211,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
-                                            getCurrentPlaceLatLng(), bundle, false);
+                                            getCurrentPlaceLatLng(), bundle);
                                 }
                             } else if(type == 2){
                                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -9182,7 +9221,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getGroceryClientId(), null,
-                                            getCurrentPlaceLatLng(), bundle, false);
+                                            getCurrentPlaceLatLng(), bundle);
                                 }
                             } else if(type == 3){
                                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -9192,7 +9231,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getMenusClientId(), null,
-                                            getCurrentPlaceLatLng(), bundle, false);
+                                            getCurrentPlaceLatLng(), bundle);
                                 }
                             }
                         } else {
