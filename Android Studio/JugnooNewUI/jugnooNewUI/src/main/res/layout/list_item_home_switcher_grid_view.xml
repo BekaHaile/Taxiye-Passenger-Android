@@ -13,6 +13,7 @@
         android:layout_height="@dimen/px_220"
         android:layout_marginLeft="@dimen/px_50"
         android:layout_marginTop="@dimen/px_40"
+        android:tag="mwar"
         android:background="@drawable/circle_border_auto_selector">
 
         <RelativeLayout
