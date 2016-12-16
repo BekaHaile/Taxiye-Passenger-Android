@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -149,11 +150,24 @@ public class HomeUtil {
 
 	private MarkerOptions getMarkerOptionsForSavedAddress(Activity activity, ASSL assl, SearchResult searchResult){
 		MarkerOptions markerOptions = new MarkerOptions();
-		markerOptions.title("saved: "+searchResult.getName());
-		markerOptions.snippet(searchResult.getAddress());
+		markerOptions.title(TextUtils.isEmpty(searchResult.getName()) ? "recent" : searchResult.getName());
+
+		StringBuilder address = new StringBuilder();
+		String arr[] = searchResult.getAddress().split(",");
+		for(String arri : arr){
+			address.append(arri).append(",");
+		}
+		String addressStr = "";
+		if(address.length() > 0){
+			addressStr = address.toString();
+			addressStr = addressStr.substring(0, addressStr.length()-1);
+		}
+
+		markerOptions.snippet(addressStr);
 		markerOptions.position(searchResult.getLatLng());
+		markerOptions.anchor(0.5f, 0.5f);
 		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-				.createMarkerBitmapForResource(activity, assl, R.drawable.green_flag, 56f, 56f)));
+				.createMarkerBitmapForResource(activity, assl, R.drawable.star_yellow, 50f, 47f)));
 		return markerOptions;
 	}
 
