@@ -88,7 +88,6 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sabkuchfresh.home.FreshActivity;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -1427,26 +1426,30 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         relativeLayoutFinalDropLocationClick.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() != 1) {
-                    initDropLocationSearchUI(true);
-                    Bundle bundle = new Bundle();
-                    if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-                        if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+ENTER_DESTINATION+"_"+AUTO, bundle);
-                        } else {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+ENTER_DESTINATION+"_"+POOL, bundle);
-                        }
-                        FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "enter destination");
-                    } else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                        FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Ride Start", "enter destination");
+                try {
+                    if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() != 1) {
+						initDropLocationSearchUI(true);
+						Bundle bundle = new Bundle();
+						if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+							if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
+								MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+ENTER_DESTINATION+"_"+AUTO, bundle);
+							} else {
+								MyApplication.getInstance().logEvent(TRANSACTION+"_"+ACCEPT_RIDE+"_"+ENTER_DESTINATION+"_"+POOL, bundle);
+							}
+							FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "accept ride", "enter destination");
+						} else if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+							FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Ride Start", "enter destination");
 
-                        if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+RIDE_START+"_"+ENTER_DESTINATION+"_"+AUTO, bundle);
-                        } else {
-                            MyApplication.getInstance().logEvent(TRANSACTION+"_"+RIDE_START+"_"+ENTER_DESTINATION+"_"+POOL, bundle);
-                        }
-                    }
+							if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
+								MyApplication.getInstance().logEvent(TRANSACTION+"_"+RIDE_START+"_"+ENTER_DESTINATION+"_"+AUTO, bundle);
+							} else {
+								MyApplication.getInstance().logEvent(TRANSACTION+"_"+RIDE_START+"_"+ENTER_DESTINATION+"_"+POOL, bundle);
+							}
+						}
 
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -8335,60 +8338,64 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     public void onPlaceSearchPost(SearchResult searchResult) {
 
-        if(PassengerScreenMode.P_INITIAL == passengerScreenMode
-                || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
-            if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-                if (map != null && searchResult != null) {
-                    try {
-//                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    setSearchResultToPickupCase(searchResult);
-                }
-            } else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
+        try {
+            if(PassengerScreenMode.P_INITIAL == passengerScreenMode
+					|| PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+				if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+					if (map != null && searchResult != null) {
+						try {
+	//                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						setSearchResultToPickupCase(searchResult);
+					}
+				} else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
 
-                if(Data.autoData.getDropLatLng() == null){
-                    translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
-                    translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
-                }
-                Data.autoData.setDropLatLng(searchResult.getLatLng());
-                Data.autoData.setDropAddress(searchResult.getAddress());
-                dropLocationSet = true;
-                relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-                imageViewDropCross.setVisibility(View.VISIBLE);
+					if(Data.autoData.getDropLatLng() == null){
+						translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
+						translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
+					}
+					Data.autoData.setDropLatLng(searchResult.getLatLng());
+					Data.autoData.setDropAddress(searchResult.getAddress());
+					dropLocationSet = true;
+					relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+					imageViewDropCross.setVisibility(View.VISIBLE);
 
-                // Save Last 3 Destination...
-                saveLastDestinations(searchResult);
+					// Save Last 3 Destination...
+					saveLastDestinations(searchResult);
 
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
-                switchPassengerScreen(passengerScreenMode);
+					passengerScreenMode = PassengerScreenMode.P_INITIAL;
+					textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
+					switchPassengerScreen(passengerScreenMode);
 
-                if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
-                        shakeAnim > 0 && !updateSpecialPickupScreen()){
-                    imageViewRideNow.performClick();
-                }
-            }
+					if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
+							shakeAnim > 0 && !updateSpecialPickupScreen()){
+						imageViewRideNow.performClick();
+					}
+				}
+			}
+			else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+				saveLastDestinations(searchResult);
+				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
+						getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress());
+				FlurryEventLogger.event(DROP_LOCATION_USED_FINIDING_DRIVER);
+			}
+			else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+					|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+					|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+				saveLastDestinations(searchResult);
+				zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng());
+
+				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
+						getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
+				FlurryEventLogger.event(DROP_LOCATION_USED_RIDE_ACCEPTED);
+			}
+
+            Log.e("onPlaceSearchPost", "=" + searchResult);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
-            saveLastDestinations(searchResult);
-            sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-                    getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress());
-            FlurryEventLogger.event(DROP_LOCATION_USED_FINIDING_DRIVER);
-        }
-        else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-                || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
-            saveLastDestinations(searchResult);
-            zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng());
-
-            sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-                    getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
-            FlurryEventLogger.event(DROP_LOCATION_USED_RIDE_ACCEPTED);
-        }
-
-        Log.e("onPlaceSearchPost", "=" + searchResult);
     }
 
     @Override

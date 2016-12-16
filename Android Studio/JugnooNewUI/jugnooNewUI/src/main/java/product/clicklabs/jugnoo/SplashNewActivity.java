@@ -547,13 +547,17 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			linearLayoutWalletOption.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					int walletFromServer = (int) linearLayoutWalletOption.getTag();
-					if(linkedWallet == walletFromServer){
-						linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
-						imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_unchecked);
-					} else {
-						linkedWallet = walletFromServer;
-						imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_checked);
+					try {
+						int walletFromServer = (int) linearLayoutWalletOption.getTag();
+						if(linkedWallet == walletFromServer){
+							linkedWallet = LinkedWalletStatus.NO_WALLET.getOrdinal();
+							imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_unchecked);
+						} else {
+							linkedWallet = walletFromServer;
+							imageViewWalletOptionCheck.setImageResource(R.drawable.checkbox_signup_checked);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 				}
 			});
@@ -1385,8 +1389,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 	public void retryAccessTokenLogin() {
-		if (State.LOGIN != state && State.SIGNUP != state && resumed) {
-			buttonRefresh.performClick();
+		try {
+			if (State.LOGIN != state && State.SIGNUP != state && resumed) {
+				buttonRefresh.performClick();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

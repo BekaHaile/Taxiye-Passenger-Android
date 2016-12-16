@@ -75,9 +75,16 @@ public class AddWalletFragment extends Fragment {
 	TextView textViewScroll;
 
 	private int openWalletType;
+	private static final String KEY_OPEN_WALLET_TYPE = "openWalletType";
 
-	public AddWalletFragment(int openWalletType){
-		this.openWalletType = openWalletType;
+	public static AddWalletFragment newInstance(int openWalletType){
+		AddWalletFragment fragment = new AddWalletFragment();
+
+		Bundle args = new Bundle();
+		args.putInt(KEY_OPEN_WALLET_TYPE, openWalletType);
+		fragment.setArguments(args);
+
+		return fragment;
 	}
 
 	@Override
@@ -107,6 +114,8 @@ public class AddWalletFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_add_wallet, container, false);
+
+		this.openWalletType = getArguments().getInt(KEY_OPEN_WALLET_TYPE, 0);
 
 		paymentActivity = (PaymentActivity) getActivity();
 

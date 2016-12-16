@@ -775,12 +775,16 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
 		HomeActivity.checkForAccessTokenChange(this);
 
-		reloadProfileAPI(this);
-        textViewEmergencyContact.setText(getResources()
-                .getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
-                        R.string.emergency_contacts : R.string.add_emergency_contacts));
+        try {
+            reloadProfileAPI(this);
+            textViewEmergencyContact.setText(getResources()
+					.getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
+							R.string.emergency_contacts : R.string.add_emergency_contacts));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		scrollView.scrollTo(0, 0);
+        scrollView.scrollTo(0, 0);
 	}
 
 	@Override

@@ -1551,6 +1551,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     public PaymentOption getPaymentOption() {
+        if(paymentOption == null){
+            return PaymentOption.CASH;
+        }
         return paymentOption;
     }
 

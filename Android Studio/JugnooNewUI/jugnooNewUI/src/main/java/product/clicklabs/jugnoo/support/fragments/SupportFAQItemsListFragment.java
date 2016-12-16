@@ -125,10 +125,14 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 	}
 
 	private void setActivityTitle(){
-		if(activity instanceof RideTransactionsActivity){
-			((RideTransactionsActivity)activity).setTitle(item.getText());
-		} else if(activity instanceof SupportActivity){
-			((SupportActivity)activity).setTitle(item.getText());
+		try {
+			if(activity instanceof RideTransactionsActivity){
+				((RideTransactionsActivity)activity).setTitle(item.getText());
+			} else if(activity instanceof SupportActivity){
+				((SupportActivity)activity).setTitle(item.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

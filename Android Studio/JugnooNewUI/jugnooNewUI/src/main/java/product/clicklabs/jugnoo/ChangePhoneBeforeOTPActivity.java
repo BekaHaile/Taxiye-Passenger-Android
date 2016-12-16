@@ -107,42 +107,46 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 			
 			@Override
 			public void onClick(View v) {
-                String previousPhoneNumber = "", accessToken = "";
-                if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
-                    previousPhoneNumber = OTPConfirmScreen.facebookRegisterData.phoneNo;
-                    accessToken = OTPConfirmScreen.facebookRegisterData.accessToken;
-                }
-				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
-					previousPhoneNumber = OTPConfirmScreen.googleRegisterData.phoneNo;
-					accessToken = OTPConfirmScreen.googleRegisterData.accessToken;
-				}
-                else{
-                    previousPhoneNumber = OTPConfirmScreen.emailRegisterData.phoneNo;
-                    accessToken = OTPConfirmScreen.emailRegisterData.accessToken;
-                }
+				try {
+					String previousPhoneNumber = "", accessToken = "";
+					if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
+						previousPhoneNumber = OTPConfirmScreen.facebookRegisterData.phoneNo;
+						accessToken = OTPConfirmScreen.facebookRegisterData.accessToken;
+					}
+					else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
+						previousPhoneNumber = OTPConfirmScreen.googleRegisterData.phoneNo;
+						accessToken = OTPConfirmScreen.googleRegisterData.accessToken;
+					}
+					else{
+						previousPhoneNumber = OTPConfirmScreen.emailRegisterData.phoneNo;
+						accessToken = OTPConfirmScreen.emailRegisterData.accessToken;
+					}
 
-                String phoneNoChanged = editTextNewPhoneNumber.getText().toString().trim();
-                if("".equalsIgnoreCase(phoneNoChanged)){
-                    editTextNewPhoneNumber.requestFocus();
-                    editTextNewPhoneNumber.setError("Phone number can't be empty");
-                }
-                else{
-                    phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
-                    if(Utils.validPhoneNumber(phoneNoChanged)) {
-                        phoneNoChanged = "+91" + phoneNoChanged;
-                        if(previousPhoneNumber.equalsIgnoreCase(phoneNoChanged)){
-                            editTextNewPhoneNumber.requestFocus();
-                            editTextNewPhoneNumber.setError("Changed Phone number is same as the previous one.");
-                        }
-                        else{
-                            updateUserProfileAPI(ChangePhoneBeforeOTPActivity.this, phoneNoChanged, accessToken);
-                        }
-                    }
-                    else{
-                        editTextNewPhoneNumber.requestFocus();
-                        editTextNewPhoneNumber.setError("Please enter valid phone number");
-                    }
-                }
+					String phoneNoChanged = editTextNewPhoneNumber.getText().toString().trim();
+					if("".equalsIgnoreCase(phoneNoChanged)){
+						editTextNewPhoneNumber.requestFocus();
+						editTextNewPhoneNumber.setError("Phone number can't be empty");
+					}
+					else{
+						phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
+						if(Utils.validPhoneNumber(phoneNoChanged)) {
+							phoneNoChanged = "+91" + phoneNoChanged;
+							if(previousPhoneNumber.equalsIgnoreCase(phoneNoChanged)){
+								editTextNewPhoneNumber.requestFocus();
+								editTextNewPhoneNumber.setError("Changed Phone number is same as the previous one.");
+							}
+							else{
+								updateUserProfileAPI(ChangePhoneBeforeOTPActivity.this, phoneNoChanged, accessToken);
+							}
+						}
+						else{
+							editTextNewPhoneNumber.requestFocus();
+							editTextNewPhoneNumber.setError("Please enter valid phone number");
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 

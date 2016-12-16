@@ -59,27 +59,31 @@ public class ContactsUploadService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
-        if(intent.hasExtra("access_token")){
-            accessToken = intent.getExtras().get("access_token").toString();
-            sessionId = intent.getExtras().get("session_id").toString();
-            engagementId = intent.getExtras().get("engagement_id").toString();
-            isLoginPopup = intent.getStringExtra(Constants.KEY_IS_LOGIN_POPUP);
+        try {
+            if(intent.hasExtra("access_token")){
+				accessToken = intent.getExtras().get("access_token").toString();
+				sessionId = intent.getExtras().get("session_id").toString();
+				engagementId = intent.getExtras().get("engagement_id").toString();
+				isLoginPopup = intent.getStringExtra(Constants.KEY_IS_LOGIN_POPUP);
+			}
+
+            Log.v("intent values are ","--> "+accessToken+", "+sessionId+", "+engagementId);
+
+            final Cursor contacts = getContentResolver().query(
+					ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,
+					null, null);
+
+            if (contacts.getCount() > 0) {
+				mSyncQueue = new ArrayDeque<>(contacts.getCount() / UPLOAD_BATCH_SIZE + 1);
+				//queueUpSyncs(contacts);
+				newQueueUpSyncs();
+			} else {
+				mSyncQueue = new ArrayDeque<>();
+			}
+            contacts.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        Log.v("intent values are ","--> "+accessToken+", "+sessionId+", "+engagementId);
-
-        final Cursor contacts = getContentResolver().query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,
-                null, null);
-
-        if (contacts.getCount() > 0) {
-            mSyncQueue = new ArrayDeque<>(contacts.getCount() / UPLOAD_BATCH_SIZE + 1);
-            //queueUpSyncs(contacts);
-            newQueueUpSyncs();
-        } else {
-            mSyncQueue = new ArrayDeque<>();
-        }
-        contacts.close();
     }
 
 

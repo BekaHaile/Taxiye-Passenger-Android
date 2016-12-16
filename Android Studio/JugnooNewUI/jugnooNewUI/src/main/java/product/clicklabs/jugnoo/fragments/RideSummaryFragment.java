@@ -132,183 +132,188 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.fragment_ride_summary, container, false);
-
-        activity = getActivity();
-        relative = (RelativeLayout) rootView.findViewById(R.id.relative);
-        new ASSL(activity, relative, 1134, 720, false);
-
-        relativeLayoutMap = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMap);
-        relativeLayoutMap.setVisibility(View.GONE);
-        ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapLite)).getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mapLite = googleMap;
-                if (mapLite != null) {
-                    mapLite.getUiSettings().setAllGesturesEnabled(false);
-                    mapLite.getUiSettings().setZoomControlsEnabled(false);
-                    mapLite.setMyLocationEnabled(false);
-                    mapLite.getUiSettings().setTiltGesturesEnabled(false);
-                    mapLite.getUiSettings().setMyLocationButtonEnabled(false);
-                    mapLite.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
-                    mapLite.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(Marker marker) {
-                            return true;
-                        }
-                    });
-
-                    if (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0) {
-                        mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(30.7500, 76.7800), 15));
-                    } else {
-                        mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), 15));
-                    }
-                }
-            }
-        });
-
-        relativeLayoutFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFare);
-        relativeLayoutRideSummary = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideSummary);
-        relativeLayoutRideSummary.setVisibility(View.GONE);
-        scrollViewEndRide = (ScrollView) rootView.findViewById(R.id.scrollViewEndRide);
-
-        imageViewEndRideAutoIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideAutoIcon);
-        textViewEndRideDriverName = (TextView) rootView.findViewById(R.id.textViewEndRideDriverName);
-        textViewEndRideDriverName.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideDriverCarNumber = (TextView) rootView.findViewById(R.id.textViewEndRideDriverCarNumber);
-        textViewEndRideDriverCarNumber.setTypeface(Fonts.mavenRegular(activity));
-
-        textViewEndRideStartLocationValue = (TextView) rootView.findViewById(R.id.textViewEndRideStartLocationValue);
-        textViewEndRideStartLocationValue.setTypeface(Fonts.mavenLight(activity));
-        textViewEndRideEndLocationValue = (TextView) rootView.findViewById(R.id.textViewEndRideEndLocationValue);
-        textViewEndRideEndLocationValue.setTypeface(Fonts.mavenLight(activity));
-        textViewEndRideStartTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideStartTimeValue);
-        textViewEndRideStartTimeValue.setTypeface(Fonts.mavenLight(activity));
-        textViewEndRideEndTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideEndTimeValue);
-        textViewEndRideEndTimeValue.setTypeface(Fonts.mavenLight(activity));
-
-        textViewEndRideFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareValue);
-        textViewEndRideFareValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideDiscountValue = (TextView) rootView.findViewById(R.id.textViewEndRideDiscountValue);
-        textViewEndRideDiscountValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideFinalFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFinalFareValue);
-        textViewEndRideFinalFareValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideJugnooCashValue = (TextView) rootView.findViewById(R.id.textViewEndRideJugnooCashValue);
-        textViewEndRideJugnooCashValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRidePaytmValue = (TextView) rootView.findViewById(R.id.textViewEndRidePaytmValue);
-        textViewEndRidePaytmValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideMobikwikValue = (TextView) rootView.findViewById(R.id.textViewEndRideMobikwikValue);
-        textViewEndRideMobikwikValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideFreeChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideFreeChargeValue);
-        textViewEndRideFreeChargeValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue);
-        textViewEndRideToBePaidValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideBaseFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideBaseFareValue);
-        textViewEndRideBaseFareValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideDistanceValue = (TextView) rootView.findViewById(R.id.textViewEndRideDistanceValue);
-        textViewEndRideDistanceValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideTime = (TextView) rootView.findViewById(R.id.textViewEndRideTime);
-        textViewEndRideTime.setTypeface(Fonts.mavenLight(activity));
-        textViewEndRideTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideTimeValue);
-        textViewEndRideTimeValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideWaitTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideWaitTimeValue);
-        textViewEndRideWaitTimeValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideFareFactorValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareFactorValue);
-        textViewEndRideFareFactorValue.setTypeface(Fonts.mavenRegular(activity));
-
-        relativeLayoutLuggageCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLuggageCharge);
-        relativeLayoutConvenienceCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutConvenienceCharge);
-        relativeLayoutEndRideDiscount = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideDiscount);
-        relativeLayoutPaidUsingJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingJugnooCash);
-        relativeLayoutPaidUsingPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingPaytm);
-        relativeLayoutPaidUsingMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMobikwik);
-        relativeLayoutPaidUsingFreeCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingFreeCharge);
-        linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
-        relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
-        imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
-        linearLayoutRideDetail = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideDetail);
-        relativeLayoutFinalFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFinalFare);
-
-        textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue);
-        textViewEndRideLuggageChargeValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideConvenienceChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideConvenienceChargeValue);
-        textViewEndRideConvenienceChargeValue.setTypeface(Fonts.mavenRegular(activity));
-        textViewEndRideDiscount = (TextView) rootView.findViewById(R.id.textViewEndRideDiscount);
-        textViewEndRideDiscount.setTypeface(Fonts.mavenLight(activity));
-
-        listViewEndRideDiscounts = (NonScrollListView) rootView.findViewById(R.id.listViewEndRideDiscounts);
-        endRideDiscountsAdapter = new EndRideDiscountsAdapter(activity);
-        listViewEndRideDiscounts.setAdapter(endRideDiscountsAdapter);
-
-        buttonEndRideOk = (Button) rootView.findViewById(R.id.buttonEndRideOk);
-        buttonEndRideOk.setTypeface(Fonts.mavenRegular(activity));
-
-
-        ((TextView) rootView.findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.mavenRegular(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.mavenMedium(activity));
-
-        ((TextView) rootView.findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideLuggageCharge)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideConvenienceCharge)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRidePaytm)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideMobikwik)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideFreeCharge)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
-        ((TextView) rootView.findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.mavenLight(activity));
-        ((TextView) rootView.findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.mavenLight(activity));
-
-
-        buttonEndRideOk.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (activity instanceof RideTransactionsActivity) {
-                    new TransactionUtils().openRideIssuesFragment(activity,
-                            ((RideTransactionsActivity) activity).getContainer(),
-                            engagementId, -1, endRideData, items, 0, false, autosStatus, null);
-                    FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
-                    Bundle bundle = new Bundle();
-                    MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.RIDE_HISTORY+"_"+ FirebaseEvents.NEED_HELP_ON_A_RIDE, bundle);
-                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Need help on a ride");
-                } else {
-                    performBackPressed();
-                }
-            }
-        });
-
         try {
-            if (engagementId == -1 && Data.autoData.getEndRideData() != null) {
-                endRideData = Data.autoData.getEndRideData();
-                setRideData();
-            } else if (engagementId != -1) {
-                if (endRideData != null) {
-                    setRideData();
-                } else {
-                    getRideSummaryAPI(activity, "" + engagementId);
-                }
-            } else {
-                throw new Exception();
-            }
+            rootView = inflater.inflate(R.layout.fragment_ride_summary, container, false);
+
+            activity = getActivity();
+            relative = (RelativeLayout) rootView.findViewById(R.id.relative);
+            new ASSL(activity, relative, 1134, 720, false);
+
+            relativeLayoutMap = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMap);
+            relativeLayoutMap.setVisibility(View.GONE);
+            ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapLite)).getMapAsync(new OnMapReadyCallback() {
+				@Override
+				public void onMapReady(GoogleMap googleMap) {
+					mapLite = googleMap;
+					if (mapLite != null) {
+						mapLite.getUiSettings().setAllGesturesEnabled(false);
+						mapLite.getUiSettings().setZoomControlsEnabled(false);
+						mapLite.setMyLocationEnabled(false);
+						mapLite.getUiSettings().setTiltGesturesEnabled(false);
+						mapLite.getUiSettings().setMyLocationButtonEnabled(false);
+						mapLite.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+						mapLite.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+							@Override
+							public boolean onMarkerClick(Marker marker) {
+								return true;
+							}
+						});
+
+						if (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0) {
+							mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(30.7500, 76.7800), 15));
+						} else {
+							mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), 15));
+						}
+					}
+				}
+			});
+
+            relativeLayoutFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFare);
+            relativeLayoutRideSummary = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideSummary);
+            relativeLayoutRideSummary.setVisibility(View.GONE);
+            scrollViewEndRide = (ScrollView) rootView.findViewById(R.id.scrollViewEndRide);
+
+            imageViewEndRideAutoIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideAutoIcon);
+            textViewEndRideDriverName = (TextView) rootView.findViewById(R.id.textViewEndRideDriverName);
+            textViewEndRideDriverName.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideDriverCarNumber = (TextView) rootView.findViewById(R.id.textViewEndRideDriverCarNumber);
+            textViewEndRideDriverCarNumber.setTypeface(Fonts.mavenRegular(activity));
+
+            textViewEndRideStartLocationValue = (TextView) rootView.findViewById(R.id.textViewEndRideStartLocationValue);
+            textViewEndRideStartLocationValue.setTypeface(Fonts.mavenLight(activity));
+            textViewEndRideEndLocationValue = (TextView) rootView.findViewById(R.id.textViewEndRideEndLocationValue);
+            textViewEndRideEndLocationValue.setTypeface(Fonts.mavenLight(activity));
+            textViewEndRideStartTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideStartTimeValue);
+            textViewEndRideStartTimeValue.setTypeface(Fonts.mavenLight(activity));
+            textViewEndRideEndTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideEndTimeValue);
+            textViewEndRideEndTimeValue.setTypeface(Fonts.mavenLight(activity));
+
+            textViewEndRideFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareValue);
+            textViewEndRideFareValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideDiscountValue = (TextView) rootView.findViewById(R.id.textViewEndRideDiscountValue);
+            textViewEndRideDiscountValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideFinalFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFinalFareValue);
+            textViewEndRideFinalFareValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideJugnooCashValue = (TextView) rootView.findViewById(R.id.textViewEndRideJugnooCashValue);
+            textViewEndRideJugnooCashValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRidePaytmValue = (TextView) rootView.findViewById(R.id.textViewEndRidePaytmValue);
+            textViewEndRidePaytmValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideMobikwikValue = (TextView) rootView.findViewById(R.id.textViewEndRideMobikwikValue);
+            textViewEndRideMobikwikValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideFreeChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideFreeChargeValue);
+            textViewEndRideFreeChargeValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue);
+            textViewEndRideToBePaidValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideBaseFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideBaseFareValue);
+            textViewEndRideBaseFareValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideDistanceValue = (TextView) rootView.findViewById(R.id.textViewEndRideDistanceValue);
+            textViewEndRideDistanceValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideTime = (TextView) rootView.findViewById(R.id.textViewEndRideTime);
+            textViewEndRideTime.setTypeface(Fonts.mavenLight(activity));
+            textViewEndRideTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideTimeValue);
+            textViewEndRideTimeValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideWaitTimeValue = (TextView) rootView.findViewById(R.id.textViewEndRideWaitTimeValue);
+            textViewEndRideWaitTimeValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideFareFactorValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareFactorValue);
+            textViewEndRideFareFactorValue.setTypeface(Fonts.mavenRegular(activity));
+
+            relativeLayoutLuggageCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLuggageCharge);
+            relativeLayoutConvenienceCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutConvenienceCharge);
+            relativeLayoutEndRideDiscount = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideDiscount);
+            relativeLayoutPaidUsingJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingJugnooCash);
+            relativeLayoutPaidUsingPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingPaytm);
+            relativeLayoutPaidUsingMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMobikwik);
+            relativeLayoutPaidUsingFreeCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingFreeCharge);
+            linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
+            relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
+            imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
+            linearLayoutRideDetail = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideDetail);
+            relativeLayoutFinalFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFinalFare);
+
+            textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue);
+            textViewEndRideLuggageChargeValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideConvenienceChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideConvenienceChargeValue);
+            textViewEndRideConvenienceChargeValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideDiscount = (TextView) rootView.findViewById(R.id.textViewEndRideDiscount);
+            textViewEndRideDiscount.setTypeface(Fonts.mavenLight(activity));
+
+            listViewEndRideDiscounts = (NonScrollListView) rootView.findViewById(R.id.listViewEndRideDiscounts);
+            endRideDiscountsAdapter = new EndRideDiscountsAdapter(activity);
+            listViewEndRideDiscounts.setAdapter(endRideDiscountsAdapter);
+
+            buttonEndRideOk = (Button) rootView.findViewById(R.id.buttonEndRideOk);
+            buttonEndRideOk.setTypeface(Fonts.mavenRegular(activity));
+
+
+            ((TextView) rootView.findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.mavenRegular(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.mavenRegular(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.mavenMedium(activity));
+
+            ((TextView) rootView.findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideLuggageCharge)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideConvenienceCharge)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRidePaytm)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideMobikwik)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideFreeCharge)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideToBePaid)).setTypeface(Fonts.mavenLight(activity), Typeface.BOLD);
+            ((TextView) rootView.findViewById(R.id.textViewEndRideBaseFare)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideDistance)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideTime)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideWaitTime)).setTypeface(Fonts.mavenLight(activity));
+
+
+            buttonEndRideOk.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					if (activity instanceof RideTransactionsActivity) {
+						new TransactionUtils().openRideIssuesFragment(activity,
+								((RideTransactionsActivity) activity).getContainer(),
+								engagementId, -1, endRideData, items, 0, false, autosStatus, null);
+						FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_NEED_HELP);
+						Bundle bundle = new Bundle();
+						MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.RIDE_HISTORY+"_"+ FirebaseEvents.NEED_HELP_ON_A_RIDE, bundle);
+						FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Ride History", "Need help on a ride");
+					} else {
+						performBackPressed();
+					}
+				}
+			});
+
+            try {
+				if (engagementId == -1 && Data.autoData.getEndRideData() != null) {
+					endRideData = Data.autoData.getEndRideData();
+					setRideData();
+				} else if (engagementId != -1) {
+					if (endRideData != null) {
+						setRideData();
+					} else {
+						getRideSummaryAPI(activity, "" + engagementId);
+					}
+				} else {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				performBackPressed();
+			}
+
+            if (activity instanceof RideTransactionsActivity) {
+				buttonEndRideOk.setText(activity.getResources().getString(R.string.need_help));
+			} else if (activity instanceof HomeActivity) {
+				buttonEndRideOk.setText(activity.getResources().getString(R.string.ok));
+			} else if (activity instanceof SupportActivity) {
+				buttonEndRideOk.setText(activity.getResources().getString(R.string.ok));
+			}
+
+            setActivityTitle();
         } catch (Exception e) {
             e.printStackTrace();
-            performBackPressed();
+            return super.onCreateView(inflater, container, savedInstanceState);
         }
-
-        if (activity instanceof RideTransactionsActivity) {
-            buttonEndRideOk.setText(activity.getResources().getString(R.string.need_help));
-        } else if (activity instanceof HomeActivity) {
-            buttonEndRideOk.setText(activity.getResources().getString(R.string.ok));
-        } else if (activity instanceof SupportActivity) {
-            buttonEndRideOk.setText(activity.getResources().getString(R.string.ok));
-        }
-
-        setActivityTitle();
 
         return rootView;
     }

@@ -274,44 +274,48 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 
 	public void getRideSummaryAPI(final Activity activity, final int engagementId, final int orderId, final int supportCategory,
 								  final boolean fromOrderHistory, final ProductType productType) {
-		new ApiGetRideSummary(activity, Data.userData.accessToken, engagementId, orderId, Data.autoData.getFareStructure().getFixedFare(),
-				new ApiGetRideSummary.Callback() {
-					@Override
-					public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
-						if(endRideData != null && endRideData.driverName != null) {
-							SupportRideIssuesFragment.this.endRideData = endRideData;
+		try {
+			new ApiGetRideSummary(activity, Data.userData.accessToken, engagementId, orderId, Data.autoData.getFareStructure().getFixedFare(),
+					new ApiGetRideSummary.Callback() {
+						@Override
+						public void onSuccess(EndRideData endRideData, HistoryResponse.Datum datum, ArrayList<ShowPanelResponse.Item> items) {
+							if(endRideData != null && endRideData.driverName != null) {
+								SupportRideIssuesFragment.this.endRideData = endRideData;
+							}
+							if(datum != null && datum.getOrderId() != null) {
+								SupportRideIssuesFragment.this.datum = datum;
+							}
+							if(items != null) {
+								SupportRideIssuesFragment.this.items = items;
+							}
+							setRideData();
+							updateIssuesList(items);
+							linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
+							cardViewRecycler.setVisibility(View.VISIBLE);
 						}
-						if(datum != null && datum.getOrderId() != null) {
-							SupportRideIssuesFragment.this.datum = datum;
+
+						@Override
+						public boolean onActionFailed(String message) {
+							return true;
 						}
-						if(items != null) {
-							SupportRideIssuesFragment.this.items = items;
+
+						@Override
+						public void onFailure() {
 						}
-						setRideData();
-						updateIssuesList(items);
-						linearLayoutRideShortInfo.setVisibility(View.VISIBLE);
-						cardViewRecycler.setVisibility(View.VISIBLE);
-					}
 
-					@Override
-					public boolean onActionFailed(String message) {
-						return true;
-					}
+						@Override
+						public void onRetry(View view) {
+							getRideSummaryAPI(activity, engagementId, orderId, supportCategory, fromOrderHistory, productType);
+						}
 
-					@Override
-					public void onFailure() {
-					}
-
-					@Override
-					public void onRetry(View view) {
-						getRideSummaryAPI(activity, engagementId, orderId, supportCategory, fromOrderHistory, productType);
-					}
-
-					@Override
-					public void onNoRetry(View view) {
-						performBackPress();
-					}
-				}).getRideSummaryAPI(supportCategory, productType, fromOrderHistory);
+						@Override
+						public void onNoRetry(View view) {
+							performBackPress();
+						}
+					}).getRideSummaryAPI(supportCategory, productType, fromOrderHistory);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 

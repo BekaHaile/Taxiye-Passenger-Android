@@ -628,31 +628,34 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 		HomeActivity.checkForAccessTokenChange(this);
 
-		if(giveAMissedCall) {
-			giveAMissedCall = false;
-			//buttonVerify.performClick();
-			rlProgress.setVisibility(View.VISIBLE);
-			progressBar.setVisibility(View.VISIBLE);
-			tvProgress.setText(getResources().getString(R.string.trying_to_verify));
-			progressBar.spin();
-			if (signupBy.equalsIgnoreCase("email")) {
-				if (onlyDigits) {
-					email = "+91" + email;
-					sendLoginValues(OTPConfirmScreen.this, email, password, true);
-				} else {
-					sendLoginValues(OTPConfirmScreen.this, email, password, false);
+		try {
+			if(giveAMissedCall) {
+				giveAMissedCall = false;
+				//buttonVerify.performClick();
+				rlProgress.setVisibility(View.VISIBLE);
+				progressBar.setVisibility(View.VISIBLE);
+				tvProgress.setText(getResources().getString(R.string.trying_to_verify));
+				progressBar.spin();
+				if (signupBy.equalsIgnoreCase("email")) {
+					if (onlyDigits) {
+						email = "+91" + email;
+						sendLoginValues(OTPConfirmScreen.this, email, password, true);
+					} else {
+						sendLoginValues(OTPConfirmScreen.this, email, password, false);
+					}
+				} else if (signupBy.equalsIgnoreCase("facebook")) {
+					sendFacebookLoginValues(OTPConfirmScreen.this);
+				} else if (signupBy.equalsIgnoreCase("google")) {
+					sendGoogleLoginValues(OTPConfirmScreen.this);
 				}
-			} else if (signupBy.equalsIgnoreCase("facebook")) {
-				sendFacebookLoginValues(OTPConfirmScreen.this);
-			} else if (signupBy.equalsIgnoreCase("google")) {
-				sendGoogleLoginValues(OTPConfirmScreen.this);
+				// api call
+				handler.postDelayed(runnable, 5000);
 			}
-			// api call
-			handler.postDelayed(runnable, 5000);
-		}
-		if(backFromMissedCall){
-			backFromMissedCall = false;
-
+			if(backFromMissedCall){
+				backFromMissedCall = false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

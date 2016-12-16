@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.location.Location;
 
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.LocationFetcher;
@@ -18,9 +17,9 @@ public class LocationReceiverBG extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         try {
             if(LocationResult.hasResult(intent)) {
-//                LocationResult locationResult = LocationResult.extractResult(intent);
-//                final Location location = locationResult.getLastLocation();
-                final Location location = (Location) intent.getExtras().get(LocationServices.FusedLocationApi.KEY_LOCATION_CHANGED);
+                LocationResult locationResult = LocationResult.extractResult(intent);
+                final Location location = locationResult.getLastLocation();
+//                final Location location = (Location) intent.getExtras().get(LocationServices.FusedLocationApi.KEY_LOCATION_CHANGED);
                 if (location != null && !Utils.mockLocationEnabled(location)) {
                     LocationFetcher.saveLatLngToSP(context, location.getLatitude(), location.getLongitude());
                     Intent intent1 = new Intent();

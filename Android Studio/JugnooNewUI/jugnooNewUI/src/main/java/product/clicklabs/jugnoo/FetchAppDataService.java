@@ -43,14 +43,16 @@ public class FetchAppDataService extends IntentService implements Constants {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-
-		if (intent.hasExtra(KEY_ACCESS_TOKEN)) {
-			String accessToken = intent.getStringExtra(KEY_ACCESS_TOKEN);
-			long timeToSave = intent.getLongExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (System.currentTimeMillis() + (24 * 60 * 60 * 1000)));
-//			long timeToSave = intent.getLongExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (0));
-			fetchAppList(this, accessToken, timeToSave);
+		try {
+			if (intent.hasExtra(KEY_ACCESS_TOKEN)) {
+				String accessToken = intent.getStringExtra(KEY_ACCESS_TOKEN);
+				long timeToSave = intent.getLongExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (System.currentTimeMillis() + (24 * 60 * 60 * 1000)));
+	//			long timeToSave = intent.getLongExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (0));
+				fetchAppList(this, accessToken, timeToSave);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	public void fetchAppList(final Context context, final String accessToken, final long timeToSave) {
