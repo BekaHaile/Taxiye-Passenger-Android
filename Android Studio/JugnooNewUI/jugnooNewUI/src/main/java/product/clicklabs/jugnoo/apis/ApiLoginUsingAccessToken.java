@@ -3,6 +3,8 @@ package product.clicklabs.jugnoo.apis;
 import android.app.Activity;
 import android.view.View;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -45,7 +47,7 @@ public class ApiLoginUsingAccessToken {
 	}
 
 
-	public void hit(String accessToken, double latitude, double longitude, String specificClientId, final Callback callback){
+	public void hit(String accessToken, final double latitude, final double longitude, String specificClientId, final Callback callback){
 
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 
@@ -98,7 +100,7 @@ public class ApiLoginUsingAccessToken {
 					FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_LOGIN_USING_ACCESS_TOKEN, startTime);
 					String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 					Log.i(TAG, "loginUsingAccessToken response = " + responseStr);
-					performLoginSuccess(activity, responseStr, loginResponse, callback);
+					performLoginSuccess(activity, responseStr, loginResponse, callback, new LatLng(latitude, longitude));
 				}
 
 				@Override
@@ -115,7 +117,8 @@ public class ApiLoginUsingAccessToken {
 
 	}
 
-	public void performLoginSuccess(Activity activity, String response, LoginResponse loginResponse, final Callback callback) {
+	public void performLoginSuccess(Activity activity, String response, LoginResponse loginResponse, final Callback callback,
+									final LatLng latLng) {
 		try {
 			JSONObject jObj = new JSONObject(response);
 
@@ -126,7 +129,7 @@ public class ApiLoginUsingAccessToken {
 					if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 						String resp;
 						try {
-							resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse, LoginVia.ACCESS);
+							resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse, LoginVia.ACCESS, latLng);
 						} catch (Exception e) {
 							e.printStackTrace();
 							resp = Constants.SERVER_TIMEOUT;

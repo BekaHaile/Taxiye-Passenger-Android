@@ -624,7 +624,7 @@ public class JSONParser implements Constants {
 
 
     public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse,
-                                            LoginVia loginVia) throws Exception {
+                                            LoginVia loginVia, LatLng latLng) throws Exception {
 
         JSONObject jObj = new JSONObject(response);
 
@@ -663,6 +663,7 @@ public class JSONParser implements Constants {
         loginAnalyticEvents(context, loginVia);
 
         Prefs.with(context).save(SP_FRESH_LAST_ADDRESS_OBJ, EMPTY_JSON_OBJECT);
+        Data.setLatLngOfJeanieLastShown(latLng);
 
         return resp;
     }

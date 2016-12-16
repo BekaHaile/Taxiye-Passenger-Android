@@ -803,9 +803,17 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         ivSpecialPickupArrow = (ImageView) findViewById(R.id.ivSpecialPickupArrow);
         bSpecialPicupConfirmRequest = (Button) findViewById(R.id.bSpecialPicupConfirmRequest); bSpecialPicupConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         specialPickupItemsAdapter = new SpecialPickupItemsAdapter(HomeActivity.this, specialPickups);
-        spin.setDropDownWidth((int)(ASSL.Xscale()*550));
-        spin.setDropDownVerticalOffset((int)(ASSL.Xscale()*1));
-        spin.setAdapter(specialPickupItemsAdapter);
+        try {
+            spin.setDropDownWidth((int)(ASSL.Xscale()*550));
+            spin.setDropDownVerticalOffset((int)(ASSL.Xscale()*1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            spin.setAdapter(specialPickupItemsAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         rlSpecialPickup.setOnClickListener(new OnClickListener() {
             @Override
@@ -8733,7 +8741,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public LatLng getCurrentPlaceLatLng(){
-        if(map != null){
+        if(Data.getLatLngOfJeanieLastShown() != null){
+            return Data.getLatLngOfJeanieLastShown();
+        }
+        else if(map != null){
             return map.getCameraPosition().target;
         }
         return null;

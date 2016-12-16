@@ -2166,7 +2166,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.EMAIL);
+											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
 
 								}
@@ -2286,7 +2286,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.FACEBOOK);
+											loginResponse, LoginVia.FACEBOOK, new LatLng(Data.loginLatitude, Data.loginLongitude));
 
 
 									Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
@@ -2404,7 +2404,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.GOOGLE);
+											loginResponse, LoginVia.GOOGLE, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 
@@ -3223,7 +3223,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                             } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
                                 if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
                                     new JSONParser().parseAccessTokenLoginData(activity, jsonString,
-                                            loginResponse, LoginVia.EMAIL_OTP);
+                                            loginResponse, LoginVia.EMAIL_OTP, new LatLng(Data.loginLatitude, Data.loginLongitude));
                                     Database.getInstance(activity).insertEmail(email);
                                     Database.getInstance(activity).close();
                                     loginDataFetched = true;

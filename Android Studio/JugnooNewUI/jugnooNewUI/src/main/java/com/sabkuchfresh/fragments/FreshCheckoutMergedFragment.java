@@ -31,6 +31,7 @@ import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -218,6 +219,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
         activity.subItemsInCart.clear();
 
+
         if(activity.getProductsResponse() != null
                 && activity.getProductsResponse().getCategories() != null) {
             for (Category category : activity.getProductsResponse().getCategories()) {
@@ -243,6 +245,21 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            if(Data.getDatumToReOrder() != null){
+				activity.setSelectedAddress(Data.getDatumToReOrder().getDeliveryAddress());
+				activity.setSelectedLatLng(new LatLng(Data.getDatumToReOrder().getDeliveryLatitude(), Data.getDatumToReOrder().getDeliveryLongitude()));
+				activity.setSelectedAddressId(Data.getDatumToReOrder().getAddressId());
+				activity.setSelectedAddressType(Data.getDatumToReOrder().getDeliveryAddressType());
+                activity.setRefreshCart(true);
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Data.setDatumToReOrder(null);
+
+        activity.setMenuRefreshLatLng(new LatLng(activity.getSelectedLatLng().latitude, activity.getSelectedLatLng().longitude));
 
         ((TextView)rootView.findViewById(R.id.textViewDeliverySlot)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenMedium(activity));
@@ -976,6 +993,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
 
+                params.put(Constants.KEY_MENU_LATITUDE, String.valueOf(activity.getMenuRefreshLatLng().latitude));
+                params.put(Constants.KEY_MENU_LONGITUDE, String.valueOf(activity.getMenuRefreshLatLng().longitude));
+
                 params.put(Constants.DELIVERY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.DELIVERY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
 
@@ -1465,8 +1485,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getMenuRefreshLatLng().latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getMenuRefreshLatLng().longitude));
+                params.put(Constants.KEY_CURRENT_LATITUDE, String.valueOf(Data.latitude));
+                params.put(Constants.KEY_CURRENT_LONGITUDE, String.valueOf(Data.longitude));
 
                 final int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                 String idKey = Constants.KEY_SUB_ITEM_ID;
@@ -1547,22 +1569,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                     buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.place_order));
                                     activity.setUserCheckoutResponse(userCheckoutResponse);
                                     Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
-
-                                    if(!activity.isAddressConfirmed() && activity.getSelectedAddressId() == 0)
-                                    {
-                                        activity.setSelectedAddress("");
-                                        activity.setSelectedLatLng(null);
-                                        activity.setSelectedAddressId(0);
-                                        activity.setSelectedAddressType("");
-                                        relativeLayoutDeliveryAddress.setEnabled(true);
-                                    }
-                                    else
-                                    {
-                                        if(type == AppConstant.ApplicationType.MENUS)
-                                        {
-                                            relativeLayoutDeliveryAddress.setEnabled(false);
-                                        }
-                                    }
 
                                     setActivityLastAddressFromResponse(userCheckoutResponse);
                                     updateCartDataView();
@@ -1670,22 +1676,32 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
         try {
-//            int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+            if(!activity.isAddressConfirmed() && activity.getSelectedAddressId() == 0) {
+                if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
+                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
+                    activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
+                    activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
+                    try {
+                        activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
+                                Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
+                        activity.setRefreshCart(true);
+                    } catch (Exception e) {
+                    }
+                } else {
+                    activity.setSelectedAddress("");
+                    activity.setSelectedLatLng(null);
+                    activity.setSelectedAddressId(0);
+                    activity.setSelectedAddressType("");
+                }
+                relativeLayoutDeliveryAddress.setEnabled(true);
+            }
+            else {
+                if(type == AppConstant.ApplicationType.MENUS) {
+                    relativeLayoutDeliveryAddress.setEnabled(false);
+                }
+            }
+
 //            if(type != AppConstant.ApplicationType.MENUS) {
-//                if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
-//                    activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
-//                } else {
-//                    activity.setSelectedAddress("");
-//                }
-//                activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());
-//                activity.setSelectedAddressId(userCheckoutResponse.getCheckoutData().getLastAddressId());
-//                try {
-//                    activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
-//                            Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
-//                } catch (Exception e) {
-//                    activity.setSelectedLatLng(new LatLng(Data.latitude, Data.longitude));
-//                }
-//
 //                if (!checkoutSaveData.isDefault()) {
 //                    activity.setSelectedAddress(checkoutSaveData.getAddress());
 //                    activity.setSelectedAddressType(checkoutSaveData.getAddressType());

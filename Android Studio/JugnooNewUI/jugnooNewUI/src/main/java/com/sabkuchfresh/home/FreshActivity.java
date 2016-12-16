@@ -51,7 +51,6 @@ import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
-import com.sabkuchfresh.retrofit.model.DeliveryInfo;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
@@ -157,6 +156,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
      */
     protected Bus mBus;
     private double totalPrice = 0;
+    private int totalQuantity = 0;
 
     public boolean updateCart = false;
 
@@ -455,6 +455,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         if(flag == -1) {
 							String message = intent.getStringExtra("message");
 							int type = intent.getIntExtra("open_type", 0);
+
 							if (type == 0) {
 								Log.d("receiver", "Got message: " + message);
 								if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -701,7 +702,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public Pair<Double, Integer> updateCartValuesGetTotalPrice() {
         Pair<Double, Integer> pair;
         totalPrice = 0;
-        int totalQuantity = 0;
+        totalQuantity = 0;
         try {
             if (getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
@@ -1136,7 +1137,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void setMinOrderAmountText(){
         try {
             if(getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
-                if (getFreshCheckoutMergedFragment() == null && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+                if (totalQuantity > 0 && getFreshCheckoutMergedFragment() == null && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
                     textViewMinOrder.setVisibility(View.VISIBLE);
                 }
                 else {
@@ -1250,22 +1251,22 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                FreshFragment freshFrag = getFreshFragment();
-                MealFragment mealsFrag = getMealFragment();
-                GroceryFragment groceryFrag = getGroceryFragment();
-                MenusFragment menusFrag = getMenusFragment();
-                if (freshFrag != null) {
-                    freshFrag.getAllProducts(true, getSelectedLatLng());
-                } else if(mealsFrag != null) {
-                    mealsFrag.getAllProducts(true, getSelectedLatLng());
-                } else if(groceryFrag != null) {
-                    groceryFrag.getAllProducts(true, getSelectedLatLng());
-                } else if(menusFrag != null) {
-                    menusFrag.getAllMenus(true, getSelectedLatLng());
-                }
+//                FreshFragment freshFrag = getFreshFragment();
+//                MealFragment mealsFrag = getMealFragment();
+//                GroceryFragment groceryFrag = getGroceryFragment();
+//                MenusFragment menusFrag = getMenusFragment();
+//                if (freshFrag != null) {
+//                    freshFrag.getAllProducts(true, getSelectedLatLng());
+//                } else if(mealsFrag != null) {
+//                    mealsFrag.getAllProducts(true, getSelectedLatLng());
+//                } else if(groceryFrag != null) {
+//                    groceryFrag.getAllProducts(true, getSelectedLatLng());
+//                } else if(menusFrag != null) {
+//                    menusFrag.getAllMenus(true, getSelectedLatLng());
+//                }
+                setLocalityAddressFirstTime(Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType));
             }
         }, 1000);
-
 
     }
 
@@ -2419,5 +2420,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
     public void setIsAddressConfirmed(boolean isAddressConfirmed){
         this.isAddressConfirmed = isAddressConfirmed;
+    }
+
+    private LatLng menuRefreshLatLng;
+    public LatLng getMenuRefreshLatLng() {
+        return menuRefreshLatLng;
+    }
+    public void setMenuRefreshLatLng(LatLng menuRefreshLatLng) {
+        this.menuRefreshLatLng = menuRefreshLatLng;
     }
 }

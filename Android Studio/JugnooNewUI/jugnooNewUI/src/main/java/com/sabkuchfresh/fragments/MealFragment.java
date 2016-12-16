@@ -180,13 +180,18 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             activity.fragmentUISetup(this);
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
-            if(activity.isRefreshCart()){
-                getAllProducts(true, activity.getSelectedLatLng());
-            }
-            activity.setRefreshCart(false);
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.showBottomBar(false);
             }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(activity.isRefreshCart()){
+                        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
+                    }
+                    activity.setRefreshCart(false);
+                }
+            }, 300);
         }
     }
 
@@ -255,7 +260,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         getAllProducts(false, activity.getSelectedLatLng());
     }
 
-    public void getAllProducts(final boolean loader, LatLng latLng) {
+    public void getAllProducts(final boolean loader, final LatLng latLng) {
         try {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
                 ProgressDialog progressDialog = null;
@@ -310,7 +315,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                     status.clear();
                                     status.addAll(productsResponse.getRecentOrdersPossibleStatus());
                                     activity.setProductsResponse(productsResponse);
-
+                                    activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
                                     setSortingList();
                                     if (activity.mealSort == -1) {
                                         slots.get(sortedBy).setCheck(true);

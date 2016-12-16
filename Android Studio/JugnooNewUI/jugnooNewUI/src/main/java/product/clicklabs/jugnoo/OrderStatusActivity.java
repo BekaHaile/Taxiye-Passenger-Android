@@ -906,13 +906,13 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             }
             if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
                 Prefs.with(activity).save(Constants.SP_FRESH_CART, jCart.toString());
-                sendMessage(0);
+                sendMessage(0, orderHistory);
             } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
                 Prefs.with(activity).save(Constants.SP_GROCERY_CART, jCart.toString());
-                sendMessage(2);
+                sendMessage(2, orderHistory);
             } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
                 Prefs.with(activity).save(Constants.SP_MENUS_CART, jCart.toString());
-                sendMessage(3);
+                sendMessage(3, orderHistory);
             }
 
             DialogPopup.showLoadingDialog(activity, "Please wait...");
@@ -928,12 +928,13 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         }
     }
 
-    private void sendMessage(int type) {
+    private void sendMessage(int type, HistoryResponse.Datum orderHistory) {
         Log.d("sender", "Broadcasting message");
         Intent intent = new Intent(Data.LOCAL_BROADCAST);
         // You can also include some extra data.
         intent.putExtra("message", "This is my message!");
         intent.putExtra("open_type", type);
+        Data.setDatumToReOrder(orderHistory);
         LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
     }
 

@@ -89,6 +89,7 @@ public class ApiFindADriver {
 
 						parseFindADriverResponse(findADriverResponse);
 
+						Data.setLatLngOfJeanieLastShown(latLng);
 						refreshLatLng = latLng;
 						refreshTime = System.currentTimeMillis();
 						if(callback != null && !confirmedScreenOpened) {
