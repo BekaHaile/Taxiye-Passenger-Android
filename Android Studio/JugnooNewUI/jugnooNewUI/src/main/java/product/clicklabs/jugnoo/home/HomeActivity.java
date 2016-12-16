@@ -8692,7 +8692,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 textViewPoolInfo1.append(sb);
                 mapBottomPadding = 60f;
                 //setGoogleMapPadding(70);
-            } else{
+            } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
+                    (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
+                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) &&
+                    (Data.autoData.getRegions().size() == 1)){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(false);
 
@@ -8704,6 +8707,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 final SpannableStringBuilder sb = new SpannableStringBuilder("Click to see.");
                 sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 textViewPoolInfo1.append(sb);
+                mapBottomPadding = 60f;
+                //setGoogleMapPadding(70);
+            } else{
+                viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
+                setFabMarginInitial(false);
+
             }
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                     && !specialPickupScreenOpened && !confirmedScreenOpened) {
