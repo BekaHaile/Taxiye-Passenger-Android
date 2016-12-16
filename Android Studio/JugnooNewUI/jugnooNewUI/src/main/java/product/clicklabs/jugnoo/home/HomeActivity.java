@@ -1849,7 +1849,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         return true;
                     }
-                    else if(arg0.getTitle().contains("saved: ")){
+                    else if(!TextUtils.isEmpty(arg0.getTitle()) || "recent".equalsIgnoreCase(arg0.getTitle())){
+                        CustomInfoWindow customIW = new CustomInfoWindow(HomeActivity.this, arg0.getTitle(), arg0.getSnippet());
+                        map.setInfoWindowAdapter(customIW);
                         return false;
                     }
                     else {
