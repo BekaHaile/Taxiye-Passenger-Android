@@ -219,6 +219,7 @@ public class JSONParser implements Constants {
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
         int topupCardEnabled = userData.optInt(KEY_TOPUP_CARD_ENABLED, 0);
 
+        int showHomeScreen = userData.optInt(SHOW_HOME_SCREEN, 0);
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance,
@@ -233,7 +234,7 @@ public class JSONParser implements Constants {
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled,
                 inviteFriendButton, defaultClientId, integratedJugnooEnabled,
-                topupCardEnabled);
+                topupCardEnabled, showHomeScreen);
 
 
         Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);

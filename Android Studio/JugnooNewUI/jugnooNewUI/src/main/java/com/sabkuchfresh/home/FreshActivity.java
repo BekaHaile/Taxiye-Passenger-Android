@@ -178,6 +178,20 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_fresh);
+
+            if(Data.userData.getShowHomeScreen() == 1)
+            {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this,
+                                Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+                                getIntent().getData(), getSelectedLatLng(), true);
+                    }
+                }, 500);
+                Data.userData.setShowHomeScreen(0);
+            }
+
             Log.e("", "");
             Data.currentActivity = FreshActivity.class.getName();
             drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);

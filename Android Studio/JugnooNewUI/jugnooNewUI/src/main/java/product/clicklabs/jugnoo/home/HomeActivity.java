@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home;
 
 import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -87,6 +88,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -484,12 +486,27 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private boolean setPickupAddressZoomedOnce = false;
 
 
+    @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         MyApplication.getInstance().trackScreenView(TAG);
         Data.currentActivity = HomeActivity.class.getName();
+
+        if(Data.userData.getShowHomeScreen() == 1)
+        {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this,
+                            Prefs.with(HomeActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+                            getIntent().getData(), getCurrentPlaceLatLng(), true);
+                }
+            }, 500);
+            Data.userData.setShowHomeScreen(0);
+        }
+
 
         try {
             setContentView(R.layout.activity_home);
@@ -8767,8 +8784,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         else if(map != null){
             return map.getCameraPosition().target;
+        } else {
+            return new LatLng(Data.latitude, Data.longitude);
         }
-        return null;
     }
 
 

@@ -126,16 +126,16 @@ public class HomeSwitcherActivity extends Activity {
             }
 
 
-/*
+
             if ((Data.userData.getMenusEnabled() == 1)) {
                 gridViewData.add(Config.getMenusClientId());
             }
-            if ((Data.userData.getPayEnabled == 1))
+            if ((Data.userData.getPayEnabled() == 1))
             {
                gridViewData.add(Config.getPayClientId());
     //            gridViewData.add(Data.userData.getPAyNowEnabled,Config.getPayNowClientId());
             }
-*/
+
             /*if ((Data.userData.getDeliveryEnabled() == 1)) {
                 gridViewData.add(Config.getDeliveryClientId());
             }*/

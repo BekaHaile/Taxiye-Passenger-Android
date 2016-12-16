@@ -75,6 +75,7 @@ public class UserData {
 	private ArrayList<SearchResult> searchResults = new ArrayList<>();
 	private ArrayList<SearchResult> searchResultsRecent = new ArrayList<>();
 
+	private int showHomeScreen;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -92,7 +93,7 @@ public class UserData {
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
 					int inviteFriendButton, String defaultClientId,
-					int integratedJugnooEnabled, int topupCardEnabled){
+					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -164,6 +165,7 @@ public class UserData {
 		this.integratedJugnooEnabled = integratedJugnooEnabled;
 		this.topupCardEnabled = topupCardEnabled;
 
+		this.showHomeScreen = showHomeScreen;
 	}
 
 	private void checkUserImage(){
@@ -887,6 +889,17 @@ public class UserData {
 	public void setPayEnabled(int payEnabled) {
 		this.payEnabled = payEnabled;
 	}
+
+
+	public int getShowHomeScreen() {
+		return showHomeScreen;
+	}
+
+	public void setShowHomeScreen(int showHomeScreen) {
+		this.showHomeScreen = showHomeScreen;
+	}
+
+
 
 	//	"meals_enabled": 1,
 //			"fresh_enabled": 1,
