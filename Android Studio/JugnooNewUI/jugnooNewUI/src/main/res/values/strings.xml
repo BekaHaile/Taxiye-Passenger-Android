@@ -1402,6 +1402,9 @@
     <string name="reset_account_alert_message">After resetting the account, your vpa will be erased and you will be logged out of the app. Are you sure you want to proceed ?</string>
     <string name="delivery_before_colon">Delivery before:</string>
     <string name="oh_no_what_went_wrong">Oh no, what went wrong?</string>
+    <string name="please_enter_name">Please enter name</string>
+    <string name="please_enter_vpa">Please enter Virtual Payment Address</string>
+    <string name="please_enter_valid_vpa">Please enter a valid Virtual Payment Address</string>
 
 
 </resources>

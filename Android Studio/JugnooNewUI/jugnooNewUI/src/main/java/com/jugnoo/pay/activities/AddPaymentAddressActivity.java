@@ -91,12 +91,16 @@ public class AddPaymentAddressActivity extends BaseActivity {
         bAddPaymentAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = etPaymentAddress.getText().toString().trim();
+                String name = etName.getText().toString().trim();
                 String vpa = etPaymentAddress.getText().toString().trim();
-                if(name.length() > 0 && vpa.length() > 0 && Utils.isVPAValid(vpa)){
-                    apiAddPaymentAddress();
+                if(name.length() == 0){
+                    Utils.showToast(AddPaymentAddressActivity.this, getString(R.string.please_enter_name));
+                } else if(vpa.length() == 0){
+                    Utils.showToast(AddPaymentAddressActivity.this, getString(R.string.please_enter_vpa));
+                } else if(!Utils.isVPAValid(vpa)){
+                    Utils.showToast(AddPaymentAddressActivity.this, getString(R.string.please_enter_valid_vpa));
                 } else {
-                    Utils.showToast(AddPaymentAddressActivity.this, getString(R.string.fields_invalid));
+                    apiAddPaymentAddress();
                 }
             }
         });
