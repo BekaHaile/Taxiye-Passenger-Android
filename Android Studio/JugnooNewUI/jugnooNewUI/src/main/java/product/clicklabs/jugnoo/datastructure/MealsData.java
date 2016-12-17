@@ -16,9 +16,10 @@ public class MealsData {
 	private String feedbackDeliveryDate, rideEndGoodFeedbackText;
 	private int feedbackViewType;
 	private JSONArray negativeFeedbackReasons;
+	private String feedbackOrderItems;
 
 	public MealsData(String orderId, int pendingFeedback, double amount, String feedbackDeliveryDate, int feedbackViewType,
-					 String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons) {
+					 String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons, String feedbackOrderItems) {
 		this.orderId = orderId;
 		this.pendingFeedback = pendingFeedback;
 		this.amount = amount;
@@ -26,6 +27,7 @@ public class MealsData {
 		this.feedbackViewType = feedbackViewType;
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 		this.negativeFeedbackReasons = negativeFeedbackReasons;
+		this.feedbackOrderItems = feedbackOrderItems;
 	}
 
 	public ArrayList<PromoCoupon> getPromoCoupons() {
@@ -90,5 +92,13 @@ public class MealsData {
 
 	public void setNegativeFeedbackReasons(JSONArray negativeFeedbackReasons) {
 		this.negativeFeedbackReasons = negativeFeedbackReasons;
+	}
+
+	public String getFeedbackOrderItems() {
+		return feedbackOrderItems;
+	}
+
+	public void setFeedbackOrderItems(String feedbackOrderItems) {
+		this.feedbackOrderItems = feedbackOrderItems;
 	}
 }

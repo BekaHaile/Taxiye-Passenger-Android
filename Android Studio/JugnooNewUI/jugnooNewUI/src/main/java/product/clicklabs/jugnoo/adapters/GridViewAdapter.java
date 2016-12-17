@@ -72,7 +72,7 @@ public class GridViewAdapter extends BaseAdapter
             holder.cardViewGridScreen = (LinearLayout) convertView.findViewById(R.id.cardViewGridViewScreen);
             holder.imageViewGridScreen = (ImageView) convertView.findViewById(R.id.imageViewGridViewScreen);
             holder.textViewGridScreen = (TextView) convertView.findViewById(R.id.textViewGridViewScreen);
-            holder.linearLayoutGridViewScreen.setLayoutParams(new LinearLayout.LayoutParams(270, 260));
+            holder.linearLayoutGridViewScreen.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ASSL.DoMagic(holder.linearLayoutGridViewScreen);
         }
         else

@@ -356,8 +356,10 @@ public class JSONParser implements Constants {
             int feedbackViewType = jMealsData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             String rideEndGoodFeedbackText = jMealsData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
             JSONArray negativeFeedbackReasons = jMealsData.optJSONArray("negative_feedback_reasons");
+            String feedbackOrderItems = jMealsData.optString("feedback_order_items", "");
 
-            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText, negativeFeedbackReasons));
+            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText, negativeFeedbackReasons
+            , feedbackOrderItems));
         } catch (Exception e) {
             e.printStackTrace();
         }

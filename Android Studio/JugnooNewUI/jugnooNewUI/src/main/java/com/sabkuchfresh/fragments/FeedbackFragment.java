@@ -76,7 +76,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private FreshActivity activity;
     private LinearLayout linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer, llBadReason;
     private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
-    private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue,
+    private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue, tvItems,
             textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp, textViewRideEndWithImage;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;
     private ScrollView scrollViewRideSummary;
@@ -84,7 +84,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private int viewType = -1;
     private String dateValue = "", endRideGoodFeedbackText;
     private double orderAmount = 0;
-    private String orderId = "";
+    private String orderId = "", feedbackOrderItems = "";
     private int rateApp = 0;
     private RateAppDialogContent rateAppDialogContent;
 
@@ -129,6 +129,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 				orderAmount = Data.getMealsData().getAmount();
 				orderId = Data.getMealsData().getOrderId();
 				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+                feedbackOrderItems = Data.getMealsData().getFeedbackOrderItems();
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
                 productType = ProductType.MEALS;
                 reasons.clear();
@@ -187,6 +188,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         textViewThanks = (TextView) rootView.findViewById(R.id.textViewThanks);
         textViewRSTotalFare = (TextView) rootView.findViewById(R.id.textViewRSTotalFare);
         textViewRSData = (TextView) rootView.findViewById(R.id.textViewRSData);
+        tvItems = (TextView) rootView.findViewById(R.id.tvItems); tvItems.setTypeface(Fonts.avenirMedium(activity));
         textViewRSCashPaidValue = (TextView) rootView.findViewById(R.id.textViewRSCashPaidValue);
         textViewRSInvoice = (TextView) rootView.findViewById(R.id.textViewRSInvoice);
         textViewRSRateYourRide = (TextView) rootView.findViewById(R.id.textViewRSRateYourRide);
@@ -205,6 +207,13 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         textViewRSCashPaidValue.setText(getResources().getString(R.string.rupee)
                 + "" + Utils.getMoneyDecimalFormat().format(orderAmount));
         textViewRSData.setText(""+dateValue);
+
+        if(feedbackOrderItems != null && !feedbackOrderItems.equalsIgnoreCase("")){
+            textViewRSTotalFare.setVisibility(View.GONE);
+            tvItems.setVisibility(View.VISIBLE);
+            tvItems.setText(feedbackOrderItems);
+        }
+
 
         linearLayoutRideSummaryContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideSummaryContainer);
         linearLayoutRSViewInvoice = (LinearLayout) rootView.findViewById(R.id.linearLayoutRSViewInvoice);
