@@ -1094,7 +1094,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			MyApplication.getInstance().getAppSwitcher().switchApp(OTPConfirmScreen.this,
 					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-					Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), openHomeSwitcher);
+					Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), false);
 //			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
 //			intent.setData(Data.splashIntentUri);
 //			startActivity(intent);

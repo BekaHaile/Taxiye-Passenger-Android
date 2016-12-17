@@ -487,18 +487,18 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         MyApplication.getInstance().trackScreenView(TAG);
         Data.currentActivity = HomeActivity.class.getName();
 
-        if(Data.userData.getShowHomeScreen() == 1)
-        {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this,
-                            Prefs.with(HomeActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-                            getIntent().getData(), getCurrentPlaceLatLng(), true);
-                }
-            }, 500);
-            Data.userData.setShowHomeScreen(0);
-        }
+//        if(Data.userData.getShowHomeScreen() == 1)
+//        {
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this,
+//                            Prefs.with(HomeActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+//                            getIntent().getData(), getCurrentPlaceLatLng(), true);
+//                }
+//            }, 500);
+//            Data.userData.setShowHomeScreen(0);
+//        }
 
 
         try {

@@ -1405,6 +1405,7 @@
     <string name="please_enter_name">Please enter name</string>
     <string name="please_enter_vpa">Please enter Virtual Payment Address</string>
     <string name="please_enter_valid_vpa">Please enter a valid Virtual Payment Address</string>
+    <string name="categories">Categories</string>
 
 
 </resources>
