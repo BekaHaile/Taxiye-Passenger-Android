@@ -868,7 +868,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 				if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     //imageViewFabFake.setVisibility(View.VISIBLE);
-					fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    float marginBottom = 85f;
+                    int dpAsPixels = (int) (marginBottom*scale + 0.5f);
+                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
 					//fabViewTest.setFABMenuDrawable();
 				}
 
@@ -929,6 +932,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     //imageViewFabFake.setVisibility(View.VISIBLE);
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    float marginBottom = 85f;
+                    int dpAsPixels = (int) (marginBottom*scale + 0.5f);
+                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
                     //fabViewTest.setFABMenuDrawable();
                 }
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);

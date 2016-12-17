@@ -23,6 +23,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
@@ -79,50 +80,49 @@ public class GridViewAdapter extends BaseAdapter
         try
         {
             holder.id = position;
+
+            Log.v("gridListSize ","gridListSize "+gridList.size());
+
             if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
                     && (Data.userData.getGroceryEnabled() == 0)
-                    /*&& (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)*/ )
+                    && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0))
             {
                 holder.linearLayoutGridViewScreen.setVisibility(View.GONE);
             }
             else
             {
 
-                holder.linearLayoutGridViewScreen.setVisibility(View.VISIBLE);
-                holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_auto_selector);
-                holder.imageViewGridScreen.setImageResource(R.drawable.home_switcher_auto);
-                holder.textViewGridScreen.setText(R.string.autos);
+                    holder.linearLayoutGridViewScreen.setVisibility(View.VISIBLE);
+                    holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_auto_selector);
+                    holder.imageViewGridScreen.setImageResource(R.drawable.home_switcher_auto);
+                    holder.textViewGridScreen.setText(R.string.autos);
 
-                if(gridList.get(position).equalsIgnoreCase(Config.getMealsClientId()))
-                {
-                    holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_meals_selector);
-                    holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_meals);
-                    holder.textViewGridScreen.setText(R.string.meals);
-                }
-                if(gridList.get(position).equalsIgnoreCase(Config.getFreshClientId()))
-                {
-                    holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_fresh_selector);
-                    holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_fresh);
-                    holder.textViewGridScreen.setText(R.string.fresh);
-                }
-                if(gridList.get(position).equalsIgnoreCase(Config.getGroceryClientId()))
-                {
-                    holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_grocery_selector);
-                    holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_grocery);
-                    holder.textViewGridScreen.setText(R.string.grocery);
-                }
-                if(gridList.get(position).equalsIgnoreCase(Config.getMenusClientId()))
-                {
-                    holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_menus_selector);
-                    holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_menus);
-                    holder.textViewGridScreen.setText(R.string.menus);
-                }
-                if(gridList.get(position).equalsIgnoreCase(Config.getPayClientId()))
-                {
-                    holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_pay_selector);
-                    holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_pay);
-                    holder.textViewGridScreen.setText(R.string.pay);
-                }
+                    if (gridList.get(position).equalsIgnoreCase(Config.getMealsClientId())) {
+                        holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_meals_selector);
+                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_meals);
+                        holder.textViewGridScreen.setText(R.string.meals);
+                    }
+                    if (gridList.get(position).equalsIgnoreCase(Config.getFreshClientId())) {
+                        holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_fresh_selector);
+                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_fresh);
+                        holder.textViewGridScreen.setText(R.string.fresh);
+                    }
+                    if (gridList.get(position).equalsIgnoreCase(Config.getGroceryClientId())) {
+                        holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_grocery_selector);
+                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_grocery);
+                        holder.textViewGridScreen.setText(R.string.grocery);
+                    }
+                    if (gridList.get(position).equalsIgnoreCase(Config.getMenusClientId())) {
+                        holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_menus_selector);
+                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_menus);
+                        holder.textViewGridScreen.setText(R.string.menus);
+                    }
+                    if (gridList.get(position).equalsIgnoreCase(Config.getPayClientId())) {
+                        holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_pay_selector);
+                        holder.imageViewGridScreen.setImageResource(R.drawable.ic_fab_pay);
+                        holder.textViewGridScreen.setText(R.string.pay);
+                    }
+
 /*
                 if(gridList.get(position).equalsIgnoreCase(Config.getDeliveryClientId()))
                 {

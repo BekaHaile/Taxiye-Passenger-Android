@@ -4190,7 +4190,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 homeSwitcher = true;
                 MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this,
                         Prefs.with(HomeActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-                        getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), true);
+                        getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), false);
             }
 
             if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getFreshClientId())){

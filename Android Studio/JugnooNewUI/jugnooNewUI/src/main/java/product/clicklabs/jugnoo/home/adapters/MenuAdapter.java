@@ -31,6 +31,7 @@ import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.HomeSwitcherActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
@@ -272,25 +273,22 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutCategories.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LatLng currLatLng = new LatLng(Data.latitude, Data.longitude);
-                    if(activity instanceof HomeActivity){
-                        currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
-                    } else if(activity instanceof FreshActivity){
-                        currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
-                    }
-                    /*MyApplication.getInstance().getAppSwitcher().switchApp(activity,
-                            Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-                            null, currLatLng, null, true, true, true);*/
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            MyApplication.getInstance().getAppSwitcher().switchApp(activity,
-                                    Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-                                    activity.getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), true);
+                    if(!(activity instanceof HomeSwitcherActivity)) {
+                        LatLng currLatLng = new LatLng(Data.latitude, Data.longitude);
+                        if (activity instanceof HomeActivity) {
+                            currLatLng = ((HomeActivity) activity).getCurrentPlaceLatLng();
+                        } else if (activity instanceof FreshActivity) {
+                            currLatLng = ((FreshActivity) activity).getCurrentPlaceLatLng();
                         }
-                    }, 500);
-
+                        final LatLng finalCurrLatLng = currLatLng;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                MyApplication.getInstance().getAppSwitcher().switchApp(activity,
+                                        Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+                                        activity.getIntent().getData(), finalCurrLatLng, true);
+                            }
+                        }, 500);
 
 
 //                    if(holder.linearLayoutSubCategories.getVisibility() == View.VISIBLE){
@@ -306,7 +304,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //                        //holder.linearLayoutCategories.startAnimation(animation);
 //                    }
 
-                    //notifyItemChanged(0);
+                        //notifyItemChanged(0);
+                    }
+                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
             });
 
