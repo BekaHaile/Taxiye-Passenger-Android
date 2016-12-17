@@ -22,9 +22,6 @@ public class GenerateTokenRequest {
     @SerializedName("phone_number")
     @Expose
     private String phone_number;
-    @SerializedName("device_type")
-    @Expose
-    private String device_type;
 
     public String getPhone_number() {
         return phone_number;
@@ -124,11 +121,4 @@ public class GenerateTokenRequest {
         this.longitude = longitude;
     }
 
-    public String getDeviceType() {
-        return device_type;
-    }
-
-    public void setDeviceType(String device_type) {
-        this.device_type = device_type;
-    }
 }

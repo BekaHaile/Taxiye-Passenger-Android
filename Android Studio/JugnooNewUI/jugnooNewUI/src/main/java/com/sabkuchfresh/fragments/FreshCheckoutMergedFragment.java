@@ -1038,8 +1038,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     chargeDetails.put(Events.TYPE, "Fresh");
                 }
                 params.put(Constants.INTERATED, "1");
-                params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
-                params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 
                 if(type == AppConstant.ApplicationType.MENUS){
                     params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
@@ -1551,8 +1549,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
                 params.put(Constants.INTERATED, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-                params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
-                params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
                 Callback<UserCheckoutResponse> callback = new Callback<UserCheckoutResponse>() {

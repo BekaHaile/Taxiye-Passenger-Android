@@ -178,8 +178,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 					HashMap<String, String> params = new HashMap<>();
 					params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-					params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
-					params.put(Constants.KEY_DEVICE_TYPE, String.valueOf(Data.DEVICE_TYPE));
 
 					RestClient.getApiServices().showPanel(params,
 							new Callback<ShowPanelResponse>() {

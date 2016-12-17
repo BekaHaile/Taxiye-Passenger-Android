@@ -2109,9 +2109,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			}
 			params.put("password", password);
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -2231,9 +2229,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("username", Data.facebookUserData.userName);
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -2348,9 +2344,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -2788,9 +2782,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
 
-            params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", MyApplication.getInstance().deviceName());
-            params.put("app_version", "" + MyApplication.getInstance().appVersion());
             params.put("os_version", MyApplication.getInstance().osVersion());
             params.put("country", MyApplication.getInstance().country());
 
@@ -2919,9 +2911,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
-            params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", MyApplication.getInstance().deviceName());
-            params.put("app_version", "" + MyApplication.getInstance().appVersion());
             params.put("os_version", MyApplication.getInstance().osVersion());
             params.put("country", MyApplication.getInstance().country());
             params.put("unique_device_id", Data.uniqueDeviceId);
@@ -3034,9 +3024,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
-            params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", MyApplication.getInstance().deviceName());
-            params.put("app_version", "" + MyApplication.getInstance().appVersion());
             params.put("os_version", MyApplication.getInstance().osVersion());
             params.put("country", MyApplication.getInstance().country());
             params.put("unique_device_id", Data.uniqueDeviceId);
@@ -3194,9 +3182,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("email", email);
             params.put("password", "");
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
-            params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", MyApplication.getInstance().deviceName());
-            params.put("app_version", "" + MyApplication.getInstance().appVersion());
             params.put("os_version", MyApplication.getInstance().osVersion());
             params.put("country", MyApplication.getInstance().country());
             params.put("unique_device_id", Data.uniqueDeviceId);

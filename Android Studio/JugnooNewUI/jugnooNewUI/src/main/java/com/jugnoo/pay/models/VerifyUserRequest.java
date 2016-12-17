@@ -38,9 +38,6 @@ public class VerifyUserRequest {
     @SerializedName("vpa")
     @Expose
     private String vpa;
-    @SerializedName("device_type")
-    @Expose
-    private String device_type;
     @SerializedName("message")
     @Expose
     private String message;
@@ -188,14 +185,6 @@ public class VerifyUserRequest {
 
     public void setVpa(String vpa) {
         this.vpa = vpa;
-    }
-
-    public String getDeviceType() {
-        return device_type;
-    }
-
-    public void setDeviceType(String device_type) {
-        this.device_type = device_type;
     }
 
     public String getAutos_user_id() {

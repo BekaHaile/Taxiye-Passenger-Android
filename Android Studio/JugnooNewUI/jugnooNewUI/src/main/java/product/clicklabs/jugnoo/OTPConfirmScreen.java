@@ -741,9 +741,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("email", emailRegisterData.emailId);
                 params.put("password", emailRegisterData.password);
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
-                params.put("device_type", Data.DEVICE_TYPE);
                 params.put("device_name", MyApplication.getInstance().deviceName());
-                params.put("app_version", "" + MyApplication.getInstance().appVersion());
                 params.put("os_version", MyApplication.getInstance().osVersion());
                 params.put("country", MyApplication.getInstance().country());
                 params.put("unique_device_id", Data.uniqueDeviceId);
@@ -848,9 +846,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("username", facebookRegisterData.fbUserName);
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
-                params.put("device_type", Data.DEVICE_TYPE);
                 params.put("device_name", MyApplication.getInstance().deviceName());
-                params.put("app_version", "" + MyApplication.getInstance().appVersion());
                 params.put("os_version", MyApplication.getInstance().osVersion());
                 params.put("country", MyApplication.getInstance().country());
                 params.put("unique_device_id", Data.uniqueDeviceId);
@@ -948,9 +944,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("google_access_token", googleRegisterData.accessToken);
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
-				params.put("device_type", Data.DEVICE_TYPE);
 				params.put("device_name", MyApplication.getInstance().deviceName());
-				params.put("app_version", "" + MyApplication.getInstance().appVersion());
 				params.put("os_version", MyApplication.getInstance().osVersion());
 				params.put("country", MyApplication.getInstance().country());
 				params.put("unique_device_id", Data.uniqueDeviceId);
@@ -1351,9 +1345,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 			params.put("password", password);
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -1465,9 +1457,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			params.put("username", Data.facebookUserData.userName);
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -1572,9 +1562,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);

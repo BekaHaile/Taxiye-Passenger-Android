@@ -182,7 +182,6 @@ public class WalletTopupFragment extends Fragment {
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 				params.put(Constants.KEY_TOPUP_CARD_CODE, code);
-				params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 
 				RestClient.getApiServices().topupCustomerJC(params, new Callback<SettleUserDebt>() {
 					@Override

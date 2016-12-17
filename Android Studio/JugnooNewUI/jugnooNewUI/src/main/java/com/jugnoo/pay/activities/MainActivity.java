@@ -460,7 +460,6 @@ public class MainActivity extends BaseActivity {
             request.setUniqueDeviceId(CommonMethods.getUniqueDeviceId(this));
             request.setToken(Data.getPayData().getPay().getToken());
             request.setVpa(verifyRegisterResponse.getVirtualAddress());
-            request.setDeviceType(Data.DEVICE_TYPE);
             request.setAccess_token(Data.userData.accessToken);
             request.setAutos_user_id(Data.userData.getUserId());
             request.setUserEmail(Data.userData.userEmail);
@@ -510,7 +509,6 @@ public class MainActivity extends BaseActivity {
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
-                params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
                 params.put(Constants.KEY_DEVICE_TOKEN, MyApplication.getInstance().getDeviceToken());
 
                 RestClient.getPayApiService().fetchPayData(params, new Callback<FetchPayDataResponse>() {

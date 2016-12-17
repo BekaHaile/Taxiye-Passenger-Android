@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -133,8 +131,6 @@ public class TrackingLogHelper {
 						HashMap<String, String> map = new HashMap<>();
 						map.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 						map.put(Constants.KEY_ENGAGEMENT_ID, filePrefix);
-						map.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
-						map.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
 						map.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 						Response response = RestClient.getApiServices().customerUploadRideLog(typedFile, map);
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());

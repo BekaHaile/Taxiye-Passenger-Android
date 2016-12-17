@@ -67,8 +67,6 @@ public class ApiLoginUsingAccessToken {
 			params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
 
 
-			params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
-			params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 			params.put(Constants.KEY_UNIQUE_DEVICE_ID, Data.uniqueDeviceId);
 			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 			params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");

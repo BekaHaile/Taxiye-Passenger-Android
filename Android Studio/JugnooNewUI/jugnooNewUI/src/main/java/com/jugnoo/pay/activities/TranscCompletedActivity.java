@@ -411,7 +411,6 @@ public class TranscCompletedActivity extends BaseActivity {
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
-                params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
                 params.put(Constants.KEY_TXN_ID, String.valueOf(orderId));
                 params.put(Constants.KEY_TXN_TYPE, String.valueOf(txnType));
 
