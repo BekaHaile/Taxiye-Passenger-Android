@@ -5,17 +5,27 @@ import com.jugnoo.pay.retrofit.PayApiService;
 import com.sabkuchfresh.apis.FreshApiService;
 import com.sabkuchfresh.apis.MenusApiService;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.ConnectionPool;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
+import okhttp3.Request;
+import okhttp3.Response;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.retrofit.model.ChatApiService;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
 import retrofit.ErrorHandler;
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 
@@ -55,6 +65,18 @@ public class RestClient {
         builder.writeTimeout(15, TimeUnit.SECONDS);
         builder.retryOnConnectionFailure(false);
         builder.protocols(protocolList);
+        builder.addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request();
+                HashMap<String, String> map = new HashMap<String, String>();
+                map.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
+                map.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
+                AddPostParamRequestBody newBody = new AddPostParamRequestBody(request.body(), map);
+                Request newRequest = request.newBuilder().post(newBody).url(request.url()).build();
+                return chain.proceed(newRequest);
+            }
+        });
 
         return builder.build();
     }
@@ -71,7 +93,7 @@ public class RestClient {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+//                    .setLog(fooLog)
                     .setErrorHandler(new ErrorHandler() {
                         @Override
                         public Throwable handleError(RetrofitError cause) {
@@ -171,7 +193,7 @@ public class RestClient {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getFreshServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+//                    .setLog(fooLog)
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();
@@ -195,7 +217,7 @@ public class RestClient {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getChatServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+//                    .setLog(fooLog)
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();
@@ -219,7 +241,7 @@ public class RestClient {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getMenusServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+//                    .setLog(fooLog)
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();
@@ -244,7 +266,7 @@ public class RestClient {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getPayServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+//                    .setLog(fooLog)
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();

@@ -678,10 +678,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     public void showBottomBar(boolean flag) {
-        if(flag && (getFeedbackFragment() == null || !getFeedbackFragment().isVisible()))
+        if(flag && (getFeedbackFragment() == null || !getFeedbackFragment().isVisible())) {
             relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
-        else
+        }else {
             relativeLayoutCheckoutBar.setVisibility(View.GONE);
+            textViewMinOrder.setVisibility(View.GONE);
+        }
     }
 
 
@@ -1169,7 +1171,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void setMinOrderAmountText(){
         try {
             if(getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
-                if (totalQuantity > 0 && getFreshCheckoutMergedFragment() == null && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+                if (totalQuantity > 0 && getFreshCheckoutMergedFragment() == null && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()
+                        && (relativeLayoutCheckoutBar.getVisibility() == View.VISIBLE)) {
                     textViewMinOrder.setVisibility(View.VISIBLE);
                 }
                 else {
