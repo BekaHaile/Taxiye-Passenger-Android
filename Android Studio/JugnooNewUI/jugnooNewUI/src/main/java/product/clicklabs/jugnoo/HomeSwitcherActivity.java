@@ -3,7 +3,11 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -13,15 +17,19 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.sabkuchfresh.home.TopBar;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.GridViewAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -44,6 +52,10 @@ public class HomeSwitcherActivity extends Activity {
     ArrayList<String> gridViewData;
     private ScrollView scrollViewRideSummary;
 
+    ImageView imageViewMenuBar;
+    DrawerLayout drawerLayout;
+    private MenuBar menuBar;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -56,7 +68,8 @@ public class HomeSwitcherActivity extends Activity {
         setContentView(R.layout.activity_home_switcher);
 
         relative = (RelativeLayout) findViewById(R.id.relative);
-        new ASSL(this, relative, 1134, 720, false);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        new ASSL(this, drawerLayout, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
@@ -75,6 +88,17 @@ public class HomeSwitcherActivity extends Activity {
         ((TextView) findViewById(R.id.textViewWeHave)).setTypeface(Fonts.mavenMedium(this));
         ((TextView) findViewById(R.id.textViewWeHave2)).setTypeface(Fonts.mavenMedium(this));
         scrollViewRideSummary = (ScrollView) findViewById(R.id.scrollViewRideSummary);
+
+        imageViewMenuBar = (ImageView) findViewById(R.id.imageViewMenu);
+
+        menuBar = new MenuBar(this, drawerLayout);
+        //menuBar.setUserData();
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.setDrawerListener(toggle);
+        toggle.setDrawerIndicatorEnabled(false);
+
 
       /*  relativeLayoutHomeData = (RelativeLayout) findViewById(R.id.relativeLayoutHomeData);*/
         /*relativeLayoutRides = (CardView) findViewById(R.id.relativeLayoutRides);
@@ -124,16 +148,12 @@ public class HomeSwitcherActivity extends Activity {
             if ((Data.userData.getGroceryEnabled() == 1)) {
                 gridViewData.add(Config.getGroceryClientId());
             }
-
-
-
             if ((Data.userData.getMenusEnabled() == 1)) {
                 gridViewData.add(Config.getMenusClientId());
             }
             if ((Data.userData.getPayEnabled() == 1))
             {
                gridViewData.add(Config.getPayClientId());
-    //            gridViewData.add(Data.userData.getPAyNowEnabled,Config.getPayNowClientId());
             }
 
             /*if ((Data.userData.getDeliveryEnabled() == 1)) {
@@ -147,6 +167,13 @@ public class HomeSwitcherActivity extends Activity {
         GridViewAdapter gridViewAdapter = new GridViewAdapter(this, gridViewData);
         gridView.setAdapter(gridViewAdapter);
         gridView.setNumColumns((gridViewData.size()>2)?2:1);
+
+        imageViewMenuBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
 
        /* try {
                if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
