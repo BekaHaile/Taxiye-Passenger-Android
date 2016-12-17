@@ -79,8 +79,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
 
-    public RequestRideOptionsFragment(){}
-
     /*public RelativeLayout getRelativeLayoutPoolInfoBar() {
         return relativeLayoutPoolInfoBar;
     }*/

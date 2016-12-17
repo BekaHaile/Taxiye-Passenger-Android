@@ -60,7 +60,7 @@ public class TransactionUtils {
 					activity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 							.add(container.getId(),
-									new SupportFAQItemsListFragment(engagementId, rideDate, item, phoneNumber, orderId, orderDate, supportNumber, productType),
+									SupportFAQItemsListFragment.newInstance(engagementId, rideDate, item, phoneNumber, orderId, orderDate, supportNumber, productType),
 									SupportFAQItemsListFragment.class.getName()+item.getSupportId())
 							.addToBackStack(SupportFAQItemsListFragment.class.getName()+item.getSupportId())
 							.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -83,7 +83,7 @@ public class TransactionUtils {
 				activity.getSupportFragmentManager().beginTransaction()
 						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 						.add(container.getId(),
-								new SupportFAQItemFragment(engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate, supportNumber, productType),
+								SupportFAQItemFragment.newInstance(engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate, supportNumber, productType),
 								SupportFAQItemFragment.class.getName())
 						.addToBackStack(SupportFAQItemFragment.class.getName())
 						.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -112,7 +112,7 @@ public class TransactionUtils {
 				fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
 			}
 			fragmentTransaction.add(container.getId(),
-					new SupportRideIssuesFragment(engagementId, orderId, endRideData, items, rideCancelled, autosStatus, datum),
+					SupportRideIssuesFragment.newInstance(engagementId, orderId, endRideData, items, rideCancelled, autosStatus, datum),
 					SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName());
 			if(fromBadFeedback == 0 && fragmentManager.getBackStackEntryCount() > 0){
@@ -136,7 +136,7 @@ public class TransactionUtils {
 			activity.getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(container.getId(),
-							new RideSummaryFragment(engagementId, rideCancelled, autosStatus),
+							RideSummaryFragment.newInstance(engagementId, null, rideCancelled, autosStatus),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

@@ -56,7 +56,6 @@ public class FreshSearchFragment extends Fragment {
     private int currentGroupId = 1;
 	private ArrayList<SubItem> subItemsInSearch;
 
-	public FreshSearchFragment(){}
 
     @Override
     public void onStart() {

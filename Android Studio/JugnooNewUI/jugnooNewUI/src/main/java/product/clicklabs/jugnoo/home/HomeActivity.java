@@ -72,9 +72,6 @@ import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -223,7 +220,6 @@ import retrofit.mime.TypedByteArray;
 
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, FirebaseEvents, View.OnClickListener {
 
 
@@ -433,8 +429,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public boolean intentFired = false, dropLocationSearched = false, confirmedScreenOpened, specialPickupScreenOpened;
 
-    private GoogleApiClient mGoogleApiClient;
-
 
     CallbackManager callbackManager;
     public final int FARE_ESTIMATE = 4;
@@ -527,14 +521,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Data.latitude = Data.loginLatitude;
         Data.longitude = Data.loginLongitude;
 
-
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
 
 
         FacebookSdk.sdkInitialize(this);
@@ -3541,7 +3527,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             relativeLayoutSearch.setVisibility(View.VISIBLE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_SEARCH);
             if(frag == null || frag.isRemoving()) {
-                PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
                 if(placeSearchMode.getOrdinal() == PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal()){
@@ -3550,9 +3535,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.enter_pickup));
                 }
                 bundle.putInt(KEY_SEARCH_MODE, placeSearchMode.getOrdinal());
-                placeSearchListFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
-                        .add(relativeLayoutSearch.getId(), placeSearchListFragment,
+                        .add(relativeLayoutSearch.getId(), PlaceSearchListFragment.newInstance(bundle),
                                 PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_SEARCH)
                         .commitAllowingStateLoss();
             }
@@ -3576,7 +3560,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
             if(frag == null || frag.isRemoving()) {
-                PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
                 Bundle bundle = new Bundle();
                 if(textViewAssigningDropLocationClick.getText().length() > 0){
                     bundle.putString(KEY_SEARCH_FIELD_TEXT, textViewAssigningDropLocationClick.getText().toString());
@@ -3585,9 +3568,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
                 bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
-                placeSearchListFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
-                        .add(relativeLayoutAssigningDropLocationParent.getId(), placeSearchListFragment,
+                        .add(relativeLayoutAssigningDropLocationParent.getId(), PlaceSearchListFragment.newInstance(bundle),
                                 PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_ASSIGNING)
                         .commitAllowingStateLoss();
             }
@@ -3611,7 +3593,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL);
             if(frag == null || frag.isRemoving()) {
-                PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
                 Bundle bundle = new Bundle();
                 if(textViewFinalDropLocationClick.getText().length() > 0){
                     bundle.putString(KEY_SEARCH_FIELD_TEXT, textViewFinalDropLocationClick.getText().toString());
@@ -3620,9 +3601,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
                 bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
-                placeSearchListFragment.setArguments(bundle);
                 getSupportFragmentManager().beginTransaction()
-                        .add(relativeLayoutFinalDropLocationParent.getId(), placeSearchListFragment,
+                        .add(relativeLayoutFinalDropLocationParent.getId(), PlaceSearchListFragment.newInstance(bundle),
                                 PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_REQUEST_FINAL)
                         .commitAllowingStateLoss();
             }
@@ -3649,7 +3629,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             String tag = "", title = "";
             if(RideEndFragmentMode.INVOICE == rideEndFragmentMode) {
                 fragToCheck = getRideSummaryFragment();
-                fragToAdd = new RideSummaryFragment(-1, false, EngagementStatus.ENDED.getOrdinal());
+                fragToAdd = RideSummaryFragment.newInstance(-1, null, false, EngagementStatus.ENDED.getOrdinal());
                 tag = RideSummaryFragment.class.getName();
                 title = getResources().getString(R.string.receipt);
             }
@@ -6685,7 +6665,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //            FlurryAgent.init(this, Config.getFlurryKey());
 //            FlurryAgent.onStartSession(this, Config.getFlurryKey());
 //            FlurryAgent.onEvent("HomeActivity started");
-            mGoogleApiClient.connect();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6696,7 +6675,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
             super.onStop();
 //            FlurryAgent.onEndSession(this);
-            mGoogleApiClient.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -7787,19 +7765,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
 
 
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
     }
 
     @Override

@@ -81,11 +81,18 @@ public class EmergencyContactOperationsFragment extends Fragment {
 
 	private View rootView;
     private FragmentActivity activity;
+	private static final String LIST_MODE = "listMode";
 
 
-	public EmergencyContactOperationsFragment(String engagementId, ContactsListAdapter.ListMode listMode){
-		this.engagementId = engagementId;
-		this.listMode = listMode;
+	public static EmergencyContactOperationsFragment newInstance(String engagementId, ContactsListAdapter.ListMode listMode){
+		EmergencyContactOperationsFragment emergencyContactOperationsFragment = new EmergencyContactOperationsFragment();
+
+		Bundle bundle = new Bundle();
+		bundle.putString(Constants.KEY_ENGAGEMENT_ID, engagementId);
+		bundle.putInt(LIST_MODE, listMode.getOrdinal());
+		emergencyContactOperationsFragment.setArguments(bundle);
+
+		return emergencyContactOperationsFragment;
 	}
 
 	@Override
@@ -117,6 +124,19 @@ public class EmergencyContactOperationsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_emergency_contacts_operations, container, false);
 
+		this.engagementId = getArguments().getString(Constants.KEY_ENGAGEMENT_ID, "");
+		int listModeInt = getArguments().getInt(LIST_MODE, ContactsListAdapter.ListMode.ADD_CONTACTS.getOrdinal());
+		if(listModeInt == ContactsListAdapter.ListMode.ADD_CONTACTS.getOrdinal()){
+			listMode = ContactsListAdapter.ListMode.ADD_CONTACTS;
+		} else if(listModeInt == ContactsListAdapter.ListMode.EMERGENCY_CONTACTS.getOrdinal()){
+			listMode = ContactsListAdapter.ListMode.EMERGENCY_CONTACTS;
+		} else if(listModeInt == ContactsListAdapter.ListMode.DELETE_CONTACTS.getOrdinal()){
+			listMode = ContactsListAdapter.ListMode.DELETE_CONTACTS;
+		} else if(listModeInt == ContactsListAdapter.ListMode.CALL_CONTACTS.getOrdinal()){
+			listMode = ContactsListAdapter.ListMode.CALL_CONTACTS;
+		} else if(listModeInt == ContactsListAdapter.ListMode.SEND_RIDE_STATUS.getOrdinal()){
+			listMode = ContactsListAdapter.ListMode.SEND_RIDE_STATUS;
+		}
 
         activity = getActivity();
 

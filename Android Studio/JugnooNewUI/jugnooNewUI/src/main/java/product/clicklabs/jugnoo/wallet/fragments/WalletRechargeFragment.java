@@ -84,26 +84,29 @@ public class WalletRechargeFragment extends Fragment {
 	String amount1 = "500", amount2 = "1000", amount3 = "2000";
 	private int openWalletType;
 
-	public WalletRechargeFragment(){
-		this.openWalletType = PaymentOption.PAYTM.getOrdinal();
+	public static WalletRechargeFragment newInstance(int openWalletType){
+		WalletRechargeFragment fragment = new WalletRechargeFragment();
+
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_WALLET_TYPE, openWalletType);
+		fragment.setArguments(bundle);
+
+		return fragment;
 	}
 
-	public WalletRechargeFragment(int openWalletType){
-		this.openWalletType = openWalletType;
+	private void parseArguments(){
+		openWalletType = getArguments().getInt(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 	}
 
 
 	@Override
 	public void onStart() {
 		super.onStart();
-//		FlurryAgent.init(getActivity(), Config.getFlurryKey());
-//		FlurryAgent.onStartSession(getActivity(), Config.getFlurryKey());
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-//		FlurryAgent.onEndSession(getActivity());
 	}
 
 	public int getButtonRemoveWalletVisiblity(){
@@ -114,7 +117,7 @@ public class WalletRechargeFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_wallet_recharge, container, false);
 		paymentActivity = (PaymentActivity) getActivity();
-
+		parseArguments();
 		paymentActivity.setWalletAddMoneyState(WalletAddMoneyState.INIT);
 
 

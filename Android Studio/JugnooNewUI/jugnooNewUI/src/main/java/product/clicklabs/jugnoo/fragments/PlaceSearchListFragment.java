@@ -1,7 +1,7 @@
 package product.clicklabs.jugnoo.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -74,33 +75,24 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	private SearchListAdapter.SearchListActionsHandler searchListActionsHandler;
 	private SearchListAdapter searchListAdapter;
 
-
-	public PlaceSearchListFragment(){
-
+	public static PlaceSearchListFragment newInstance(Bundle bundle){
+		PlaceSearchListFragment fragment = new PlaceSearchListFragment();
+		fragment.setArguments(bundle);
+		return fragment;
 	}
 
-	@SuppressLint("ValidFragment")
-	public PlaceSearchListFragment(SearchListAdapter.SearchListActionsHandler searchListActionsHandler, GoogleApiClient mGoogleApiClient){
-		this.searchListActionsHandler = searchListActionsHandler;
-		this.mGoogleApiClient = mGoogleApiClient;
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+
+		try{
+			this.searchListActionsHandler = (SearchListAdapter.SearchListActionsHandler) context;
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 
-    @Override
-    public void onStart() {
-        super.onStart();
-//        FlurryAgent.init(activity, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-//        FlurryAgent.onEvent(PlaceSearchListFragment.class.getSimpleName() + " started");
-    }
-
-    @Override
-    public void onStop() {
-		super.onStop();
-//        FlurryAgent.onEndSession(activity);
-    }
-	
-
-    @Override
+	@Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_place_search_list, container, false);
 
@@ -109,6 +101,14 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+
+		mGoogleApiClient = new GoogleApiClient
+				.Builder(activity)
+				.addApi(Places.GEO_DATA_API)
+				.addApi(Places.PLACE_DETECTION_API)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this)
+				.build();
 
 
 		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
@@ -170,7 +170,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 								imageViewSearchCross.setVisibility(View.GONE);
 								showSearchLayout();
 							}
-							searchListActionsHandler.onTextChange(text);
+							if(searchListActionsHandler != null){searchListActionsHandler.onTextChange(text);}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -179,38 +179,38 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 					@Override
 					public void onSearchPre() {
 						progressBarSearch.setVisibility(View.VISIBLE);
-						searchListActionsHandler.onSearchPre();
+						if(searchListActionsHandler != null){searchListActionsHandler.onSearchPre();}
 					}
 
 					@Override
 					public void onSearchPost() {
 						progressBarSearch.setVisibility(View.GONE);
-						searchListActionsHandler.onSearchPost();
+						if(searchListActionsHandler != null){searchListActionsHandler.onSearchPost();}
 					}
 
 					@Override
 					public void onPlaceClick(SearchResult autoCompleteSearchResult) {
-						searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
+						if(searchListActionsHandler != null){searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);}
 					}
 
 					@Override
 					public void onPlaceSearchPre() {
 						progressBarSearch.setVisibility(View.VISIBLE);
-						searchListActionsHandler.onPlaceSearchPre();
+						if(searchListActionsHandler != null){searchListActionsHandler.onPlaceSearchPre();}
 					}
 
 					@Override
 					public void onPlaceSearchPost(SearchResult searchResult) {
 						scrollViewSearch.setVisibility(View.GONE);
 						progressBarSearch.setVisibility(View.GONE);
-						searchListActionsHandler.onPlaceSearchPost(searchResult);
+						if(searchListActionsHandler != null){searchListActionsHandler.onPlaceSearchPost(searchResult);}
 						FlurryEventLogger.eventGA(Constants.INFORMATIVE, Constants.AUTOS_SELECT_ADDRESS, Constants.SEARCHED);
 					}
 
 					@Override
 					public void onPlaceSearchError() {
 						progressBarSearch.setVisibility(View.GONE);
-						searchListActionsHandler.onPlaceSearchError();
+						if(searchListActionsHandler != null){searchListActionsHandler.onPlaceSearchError();}
 					}
 
 					@Override
@@ -224,6 +224,7 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 						} else {
 							cardViewSearch.setVisibility(View.GONE);
 						}
+						if(searchListActionsHandler != null){searchListActionsHandler.onNotifyDataSetChanged(count);}
 					}
 				}, true);
 
@@ -376,6 +377,18 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+		mGoogleApiClient.connect();
+	}
+
+	@Override
+	public void onStop() {
+		mGoogleApiClient.disconnect();
+		super.onStop();
+	}
+
+	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		try {
 			super.onActivityResult(requestCode, resultCode, data);
@@ -402,7 +415,9 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 				}
 
 			}
-			searchListActionsHandler.onPlaceSaved();
+			if(searchListActionsHandler != null){
+				searchListActionsHandler.onPlaceSaved();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -433,9 +448,11 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	}
 
 	private void clickOnSavedItem(SearchResult searchResult){
-		searchListActionsHandler.onPlaceClick(searchResult);
-		searchListActionsHandler.onPlaceSearchPre();
-		searchListActionsHandler.onPlaceSearchPost(searchResult);
+		if(searchListActionsHandler != null) {
+			searchListActionsHandler.onPlaceClick(searchResult);
+			searchListActionsHandler.onPlaceSearchPre();
+			searchListActionsHandler.onPlaceSearchPost(searchResult);
+		}
 		Utils.hideSoftKeyboard(activity, editTextSearch);
 	}
 

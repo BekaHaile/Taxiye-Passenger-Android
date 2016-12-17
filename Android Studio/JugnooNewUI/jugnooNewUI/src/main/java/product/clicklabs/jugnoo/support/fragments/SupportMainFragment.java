@@ -65,8 +65,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 
 	private int showPanelCalled = 0, getRideSummaryCalled = 0;
 
-	public SupportMainFragment(){}
-
     @Override
     public void onStart() {
         super.onStart();

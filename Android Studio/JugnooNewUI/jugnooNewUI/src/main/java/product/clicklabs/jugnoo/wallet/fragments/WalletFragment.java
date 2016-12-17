@@ -250,7 +250,7 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 				if(walletAdded){
 					paymentActivity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-							.add(R.id.fragLayout, new WalletRechargeFragment(paymentOption), WalletRechargeFragment.class.getName())
+							.add(R.id.fragLayout, WalletRechargeFragment.newInstance(paymentOption), WalletRechargeFragment.class.getName())
 							.addToBackStack(WalletRechargeFragment.class.getName())
 							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
