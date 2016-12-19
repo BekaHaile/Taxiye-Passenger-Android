@@ -113,7 +113,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10px"
-                        android:text="Aug 5, 2016"
+                        android:text=""
+                        android:maxLines="2"
+                        android:ellipsize="end"
                         android:visibility="gone"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_26" />
@@ -126,6 +128,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="44px"
                     android:layout_toLeftOf="@+id/amountLayout"
+                    android:visibility="gone"
                     android:src="@color/grey_dark_less" />
 
                 <LinearLayout
