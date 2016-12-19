@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
@@ -32,6 +33,7 @@ import java.util.Comparator;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -149,11 +151,16 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
                 }
 
-
+                else if (activity.getSortBySelected() == MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED)
+                {
+                    point = rhs.getApplicablePaymentMode() - lhs.getApplicablePaymentMode();
+                }
+/*
                 else if (activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY)
                 {
                     point = rhs.getPopularity() - lhs.getPopularity();
                 }
+*/
                 else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE)
                 {
                     point = -(rhs.getDistance() - lhs.getDistance());

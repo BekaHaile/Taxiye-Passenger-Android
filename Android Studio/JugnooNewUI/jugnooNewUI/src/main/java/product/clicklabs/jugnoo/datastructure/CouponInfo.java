@@ -166,6 +166,9 @@ public class CouponInfo extends PromoCoupon{
 	}
 
 	public Integer getPay() {
+		if(pay == null){
+			return 0;
+		}
 		return pay;
 	}
 

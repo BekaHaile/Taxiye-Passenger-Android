@@ -32,6 +32,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -44,6 +45,7 @@ import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
+import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -146,6 +148,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private ScrollView scrollView;
     private LinearLayout linearLayoutMain;
     private TextView textViewScroll;
+
+    private TextView textViewDeliveryInstructionsText;
 
 
 
@@ -266,7 +270,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         ((TextView)rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewPaymentVia)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
-        ((TextView)rootView.findViewById(R.id.textViewDeliveryInstructions)).setTypeface(Fonts.mavenMedium(activity));
+//        ((TextView)rootView.findViewById(R.id.textViewDeliveryInstructions)).setTypeface(Fonts.mavenMedium(activity));
 
 
         relativeLayoutCartTop = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCartTop);
@@ -320,6 +324,22 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             linearLayoutDeliverySlot.setVisibility(View.GONE);
         }
 
+        textViewDeliveryInstructionsText = ((TextView)rootView.findViewById(R.id.textViewDeliveryInstructions));
+        textViewDeliveryInstructionsText.setTypeface(Fonts.mavenMedium(activity));
+        editTextDeliveryInstructions = (EditText) rootView.findViewById(R.id.editTextDeliveryInstructions);
+        editTextDeliveryInstructions.setTypeface(Fonts.mavenRegular(activity));
+
+        if(type == AppConstant.ApplicationType.MENUS)
+        {
+            textViewDeliveryInstructionsText.setText(R.string.delivery_instructions_for_menus);
+            editTextDeliveryInstructions.setHint(R.string.add_special_notes_for_menus);
+        } else
+        {
+            textViewDeliveryInstructionsText.setText(R.string.delivery_instructions);
+            editTextDeliveryInstructions.setHint(R.string.add_special_notes);
+        }
+
+
         relativeLayoutDeliveryAddress = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDeliveryAddress);
         imageViewAddressType = (ImageView) rootView.findViewById(R.id.imageViewAddressType);
         imageViewDeliveryAddressForward = (ImageView) rootView.findViewById(R.id.imageViewDeliveryAddressForward);
@@ -348,9 +368,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
         promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this);
         listViewOffers.setAdapter(promoCouponsAdapter);
-
-        editTextDeliveryInstructions = (EditText) rootView.findViewById(R.id.editTextDeliveryInstructions);
-        editTextDeliveryInstructions.setTypeface(Fonts.mavenRegular(activity));
 
         buttonPlaceOrder = (Button) rootView.findViewById(R.id.buttonPlaceOrder); buttonPlaceOrder.setTypeface(Fonts.mavenRegular(activity));
 
@@ -1548,6 +1565,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     params.put(Constants.GROUP_ID, ""+activity.getProductsResponse().getCategories().get(0).getCurrentGroupId());
                 } else if(type == AppConstant.ApplicationType.MENUS){
                     params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
+                    String data = new Gson().toJson(activity.getVendorOpened(), MenusResponse.Vendor.class);
+                    params.put(Constants.KEY_RESTAURANT_DATA, data);
                 }
                 params.put(Constants.INTERATED, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));

@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
     <string name="no_more_than">Can\'t order more than %d units</string>
 
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live
+<!--    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live-->
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string>&lt;!&ndash; General&ndash;&gt;-->
+    <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -1118,6 +1118,7 @@
     <string name="recent_addresses">Recent Addresses</string>
     <string name="avail_offers">Avail Offers</string>
     <string name="delivery_instructions">Delivery Instructions</string>
+    <string name="delivery_instructions_for_menus">Special Instructions</string>
     <string name="address_label_matched_message_format">Address with label \"%s\" already present. Do you want to overwrite it?</string>
     <string name="next">Next</string>
     <string name="skip_and_proceed">Skip and proceed</string>
@@ -1130,6 +1131,7 @@
     <string name="set">Set</string>
     <string name="payment_via">Payment Via</string>
     <string name="add_special_notes">Add special notes to driver..</string>
+    <string name="add_special_notes_for_menus">Allergic to something? Want your food less spicy? Mention it here..</string>
     <string name="confirm_pay">Confirm &amp; Pay</string>
     <string name="cart_items">Cart Items</string>
     <string name="cart_items_format">Cart Items(%s)</string>
@@ -1395,5 +1397,6 @@
     <string name="please_enter_valid_address_or_phone">Please enter a valid Payment address or phone number</string>
     <string name="categories">Categories</string>
 
+    <string name="accept_online_payment">Accept Online Payment</string>
 
 </resources>

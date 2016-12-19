@@ -84,13 +84,13 @@ public class GridViewAdapter extends BaseAdapter
 
             Log.v("gridListSize ","gridListSize "+gridList.size());
 
-            if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
+          /*  if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
                     && (Data.userData.getGroceryEnabled() == 0)
                     && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0))
             {
                 holder.linearLayoutGridViewScreen.setVisibility(View.GONE);
             }
-            else
+            else*/
             {
 
                     holder.linearLayoutGridViewScreen.setVisibility(View.VISIBLE);

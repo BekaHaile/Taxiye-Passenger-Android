@@ -487,18 +487,21 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         MyApplication.getInstance().trackScreenView(TAG);
         Data.currentActivity = HomeActivity.class.getName();
 
-//        if(Data.userData.getShowHomeScreen() == 1)
-//        {
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this,
-//                            Prefs.with(HomeActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-//                            getIntent().getData(), getCurrentPlaceLatLng(), true);
-//                }
-//            }, 500);
-//            Data.userData.setShowHomeScreen(0);
-//        }
+       /* if((Data.userData.getShowHomeScreen() == 1)
+                && ((Data.userData.getFreshEnabled() != 0) || (Data.userData.getMealsEnabled() != 0)
+                || (Data.userData.getGroceryEnabled() != 0) || (Data.userData.getMenusEnabled() != 0)
+                || (Data.userData.getPayEnabled() != 0)))
+        {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this,
+                           Prefs.with(HomeActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+                            getIntent().getData(), getCurrentPlaceLatLng(), true);
+                }
+            }, 500);
+            Data.userData.setShowHomeScreen(0);
+        }*/
 
 
         try {
@@ -7576,10 +7579,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         int currentUserStatus = 2;
                         final PassengerScreenMode passengerScreenModeOld = passengerScreenMode;
                         String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
-                                currentUserStatus, getApiFindADriver(), Data.autoData.getLastRefreshLatLng());
+                                currentUserStatus, getApiFindADriver(), getCurrentPlaceLatLng());
                         if (resp.contains(Constants.SERVER_TIMEOUT)) {
                             String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
-                                    currentUserStatus, getApiFindADriver(), Data.autoData.getLastRefreshLatLng());
+                                    currentUserStatus, getApiFindADriver(), getCurrentPlaceLatLng());
                             if (resp1.contains(Constants.SERVER_TIMEOUT)) {
                                 runOnUiThread(new Runnable() {
                                     @Override
