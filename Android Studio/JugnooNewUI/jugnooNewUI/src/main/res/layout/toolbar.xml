@@ -67,7 +67,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
                 android:padding="5dp"
-                android:src="@drawable/ic_setting"
+                android:src="@drawable/ic_pay_setting_selector"
                 android:visibility="gone"/>
 
         </RelativeLayout>

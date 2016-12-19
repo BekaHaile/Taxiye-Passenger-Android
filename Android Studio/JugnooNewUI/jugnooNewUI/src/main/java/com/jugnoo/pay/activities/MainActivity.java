@@ -467,7 +467,22 @@ public class MainActivity extends BaseActivity {
             request.setPhone_no(Data.userData.phoneNo);
             request.setMessage(verifyRegisterResponse.toString());
 
-            RestClient.getPayApiService().verifyUser(request, new Callback<FetchPayDataResponse>() {
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.KEY_DEVICE_TOKEN, MyApplication.getInstance().getDeviceToken());
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            params.put("autos_user_id", Data.userData.getUserId());
+            params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
+            params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+            params.put(Constants.KEY_MESSAGE, verifyRegisterResponse.toString());
+            params.put(Constants.KEY_PHONE_NO, Data.userData.phoneNo);
+            params.put("token", Data.getPayData().getPay().getToken());
+            params.put(Constants.KEY_UNIQUE_DEVICE_ID, CommonMethods.getUniqueDeviceId(this));
+            params.put("user_email", Data.userData.userEmail);
+            params.put(Constants.KEY_USER_NAME, Data.userData.userName);
+            params.put(Constants.KEY_VPA, verifyRegisterResponse.getVirtualAddress());
+
+
+            RestClient.getPayApiService().verifyUser(params, new Callback<FetchPayDataResponse>() {
                 @Override
                 public void success(FetchPayDataResponse fetchPayDataResponse, Response response) {
                     CallProgressWheel.dismissLoadingDialog();
@@ -646,7 +661,7 @@ public class MainActivity extends BaseActivity {
                     new String[]{TITLE}, // These are just the keys that the data uses (constant strings)
                     new int[]{R.id.textView}); // The view ids to map the data to
 
-            popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_white));
+            popupWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.background_white_bordered));
             popupWindow.setAnchorView(anchor);
             popupWindow.setAdapter(adapter);
             popupWindow.setWidth(Utils.dpToPx(this, 200));

@@ -138,7 +138,7 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
             getActivity().finish();
         }
         else {
-            Utils.showToast(getActivity(), getString(R.string.invalid_phone_error));
+            Utils.showToast(getActivity(), getString(R.string.please_enter_valid_address_or_phone));
         }
     }
 

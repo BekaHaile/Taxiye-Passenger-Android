@@ -48,8 +48,9 @@ public interface PayApiService {
     void resetPassword(@FieldMap Map<String, String> params, Callback<CommonResponse> callback);
 
     // register user
+    @FormUrlEncoded
     @POST("/verify_and_register")
-    void verifyUser(@Body() VerifyUserRequest request, Callback<FetchPayDataResponse> callback);
+    void verifyUser(@FieldMap() Map<String, String> params, Callback<FetchPayDataResponse> callback);
 
 
     @POST("/login_using_access_token")
