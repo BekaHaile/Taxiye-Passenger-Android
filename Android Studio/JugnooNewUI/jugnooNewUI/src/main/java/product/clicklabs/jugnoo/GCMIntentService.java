@@ -42,6 +42,7 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -124,9 +125,16 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 		}
 	}
 
+	private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag){
+		notificationManagerCustomID(context, title, message, notificationId, deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag,
+				0, ProductType.AUTO.getOrdinal());
+	}
+
     @SuppressWarnings("deprecation")
     private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
-											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag) {
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag,
+											 int orderId, int productType) {
 
         try {
             long when = System.currentTimeMillis();
@@ -142,6 +150,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
 				notificationIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
 				notificationIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
+				notificationIntent.putExtra(Constants.KEY_ORDER_ID, orderId);
+				notificationIntent.putExtra(Constants.KEY_PRODUCT_TYPE, productType);
 			} else{
 				notificationIntent.setData(Uri.parse(url));
 			}
@@ -660,13 +670,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					}
 					else if (PushFlags.MENUS_STATUS.getOrdinal() == flag) {
 						String clientId = jObj.optString(KEY_CLIENT_ID, "");
-						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+						int orderId = jObj.optInt(KEY_ORDER_ID, 0);
+						int productType = jObj.optInt(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
-						if(!TextUtils.isEmpty(phoneNo)){
-							generateNotificationForCall(this, title, message1, NOTIFICATION_ID, phoneNo, null, playSound, clientId);
-						} else{
-							notificationManager(this, title, message1, playSound);
-						}
+						notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
+								null, url, playSound, showDialog, showPush, tabIndex, flag, orderId, productType);
 						Intent intent = new Intent(Data.LOCAL_BROADCAST);
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_MESSAGE, message);

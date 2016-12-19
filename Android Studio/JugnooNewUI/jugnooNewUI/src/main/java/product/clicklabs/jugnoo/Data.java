@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.PayData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
@@ -121,7 +122,7 @@ public class Data {
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 
     public static String deepLinkClassName = "", deepLinkReferralCode = "";
-	public static int deepLinkIndex;
+	public static int deepLinkIndex, deepLinkOrderId, deepLinkProductType;
 	public static int deepLinkPickup = -1;
 	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
 	public static boolean locationSettingsNoPressed = false, locationAddressSettingsNoPressed = false;
@@ -315,6 +316,10 @@ public class Data {
 
 			if(data.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
 				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter(Constants.KEY_DEEPINDEX));
+				if(intent.getIntExtra(Constants.KEY_ORDER_ID, 0) != 0){
+					Data.deepLinkOrderId = intent.getIntExtra(Constants.KEY_ORDER_ID, 0);
+					Data.deepLinkProductType = intent.getIntExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
+				}
 			}
 
 			if(intent.hasExtra(Constants.KEY_TAB_INDEX)){

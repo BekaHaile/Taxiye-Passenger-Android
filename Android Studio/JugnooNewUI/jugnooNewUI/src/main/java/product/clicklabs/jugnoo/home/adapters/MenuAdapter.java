@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -439,6 +440,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void onClickAction(final String tag){
+        onClickAction(tag, 0, 0);
+    }
+    public void onClickAction(final String tag, final int orderId, final int productType){
         try {
             if(MenuInfoTags.GAME.getTag().equalsIgnoreCase(tag)){
                 if (Data.userData.getGamePredictEnable() == 1) {
@@ -578,6 +582,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(tag)) {
                 Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                intent.putExtra(Constants.KEY_ORDER_ID, orderId);
+                intent.putExtra(Constants.KEY_PRODUCT_TYPE, productType);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.RIDE_HISTORY);

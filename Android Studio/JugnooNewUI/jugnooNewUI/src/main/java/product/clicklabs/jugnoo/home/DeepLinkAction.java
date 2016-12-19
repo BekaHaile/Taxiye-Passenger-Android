@@ -21,7 +21,7 @@ public class DeepLinkAction {
 				menuBar.menuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag());
 			}
 			else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.HISTORY.getTag());
+				menuBar.menuAdapter.onClickAction(MenuInfoTags.HISTORY.getTag(), Data.deepLinkOrderId, Data.deepLinkProductType);
 			}
 			else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
 				menuBar.menuAdapter.onClickAction(MenuInfoTags.SUPPORT.getTag());
