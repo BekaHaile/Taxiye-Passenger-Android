@@ -55,14 +55,6 @@ public class LoginRequest {
         this.device_token = device_token;
     }
 
-    public String getDeviceType() {
-        return device_type;
-    }
-
-    public void setDeviceType(String device_type) {
-        this.device_type = device_type;
-    }
-
     @SerializedName("phone_no")
     @Expose
     private String phone_no;
@@ -81,7 +73,4 @@ public class LoginRequest {
     @SerializedName("device_token")
     @Expose
     private String device_token;
-    @SerializedName("device_type")
-    @Expose
-    private String device_type;
 }

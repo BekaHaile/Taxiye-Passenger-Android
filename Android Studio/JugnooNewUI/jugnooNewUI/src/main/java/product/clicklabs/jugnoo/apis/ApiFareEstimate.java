@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -50,7 +51,7 @@ public class ApiFareEstimate {
             if (AppStatus.getInstance(context).isOnline(context)) {
                 if (sourceLatLng != null && destLatLng != null) {
                     DialogPopup.showLoadingDialog(context, "Loading...");
-                    RestClient.getGoogleApiServices().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
+                    RestClient.getGoogleApiService().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
                             destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, new retrofit.Callback<SettleUserDebt>() {
                                 @Override
                                 public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -141,7 +142,8 @@ public class ApiFareEstimate {
                 params.put(Constants.KEY_RIDE_TYPE, String.valueOf(region.getRideType()));
                 params.put(Constants.KEY_REGION_ID, String.valueOf(region.getRegionId()));
 
-                RestClient.getApiServices().getFareEstimate(params, new retrofit.Callback<SettleUserDebt>() {
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getApiService().getFareEstimate(params, new retrofit.Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         DialogPopup.dismissLoadingDialog();

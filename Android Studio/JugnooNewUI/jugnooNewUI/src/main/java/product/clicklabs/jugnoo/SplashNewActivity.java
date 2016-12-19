@@ -1499,7 +1499,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 			HashMap<String, String> params = new HashMap<>();
 
-			RestClient.getApiServices().getAllowedAuthChannels(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().getAllowedAuthChannels(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					DialogPopup.dismissLoadingDialog();
@@ -2109,9 +2110,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			}
 			params.put("password", password);
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -2137,7 +2136,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			Log.i("params", "=" + params);
 
-			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2231,9 +2231,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("username", Data.facebookUserData.userName);
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -2259,7 +2257,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			Log.i("params", "" + params);
 
-			RestClient.getApiServices().loginUsingFacebook(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingFacebook(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2348,9 +2347,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -2377,7 +2374,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Log.i("params", "" + params);
 
 
-			RestClient.getApiServices().loginUsingGoogle(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingGoogle(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2788,9 +2786,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
 
-            params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", MyApplication.getInstance().deviceName());
-            params.put("app_version", "" + MyApplication.getInstance().appVersion());
             params.put("os_version", MyApplication.getInstance().osVersion());
             params.put("country", MyApplication.getInstance().country());
 
@@ -2821,7 +2817,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             Log.i("register_using_email params", params.toString());
 
 
-            RestClient.getApiServices().registerUsingEmail(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().registerUsingEmail(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2919,9 +2916,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
-            params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", MyApplication.getInstance().deviceName());
-            params.put("app_version", "" + MyApplication.getInstance().appVersion());
             params.put("os_version", MyApplication.getInstance().osVersion());
             params.put("country", MyApplication.getInstance().country());
             params.put("unique_device_id", Data.uniqueDeviceId);
@@ -2947,7 +2942,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             Log.e("register_using_facebook params", params.toString());
 
 
-            RestClient.getApiServices().registerUsingFacebook(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().registerUsingFacebook(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -3034,9 +3030,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("latitude", "" + Data.loginLatitude);
             params.put("longitude", "" + Data.loginLongitude);
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
-            params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", MyApplication.getInstance().deviceName());
-            params.put("app_version", "" + MyApplication.getInstance().appVersion());
             params.put("os_version", MyApplication.getInstance().osVersion());
             params.put("country", MyApplication.getInstance().country());
             params.put("unique_device_id", Data.uniqueDeviceId);
@@ -3061,7 +3055,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             Log.e("register_using_facebook params", params.toString());
 
-            RestClient.getApiServices().registerUsingGoogle(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().registerUsingGoogle(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -3194,9 +3189,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             params.put("email", email);
             params.put("password", "");
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
-            params.put("device_type", Data.DEVICE_TYPE);
             params.put("device_name", MyApplication.getInstance().deviceName());
-            params.put("app_version", "" + MyApplication.getInstance().appVersion());
             params.put("os_version", MyApplication.getInstance().osVersion());
             params.put("country", MyApplication.getInstance().country());
             params.put("unique_device_id", Data.uniqueDeviceId);
@@ -3213,7 +3206,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             Log.i("params", "" + params.toString());
 
-            RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
                 @Override
                 public void success(LoginResponse loginResponse, Response response) {
 

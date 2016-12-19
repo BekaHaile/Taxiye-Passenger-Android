@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.RideTransactionsAdapter;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -234,10 +235,9 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_START_FROM, "" + rideInfosList.size());
-				params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
-				params.put(Constants.KEY_DEVICE_TYPE, String.valueOf(Data.DEVICE_TYPE));
 
-				RestClient.getApiServices().getRecentRides(params, new Callback<HistoryResponse>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().getRecentRides(params, new Callback<HistoryResponse>() {
 					@Override
 					public void success(HistoryResponse historyResponse, Response response) {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());

@@ -164,7 +164,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 			getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(getContainer().getId(),
-							new RideSummaryFragment(endRideData, rideCancelled, autosStatus),
+							RideSummaryFragment.newInstance(Integer.parseInt(endRideData.engagementId), endRideData, rideCancelled, autosStatus),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
 					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()

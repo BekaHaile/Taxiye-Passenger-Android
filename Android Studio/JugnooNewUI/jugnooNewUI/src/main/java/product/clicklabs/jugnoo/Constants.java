@@ -278,6 +278,7 @@ public interface Constants {
 	String KEY_GIVEN_RATING = "given_rating";
 
 	String EMPTY_JSON_OBJECT = "{}";
+	String EMPTY_JSON_ARRAY = "[]";
 
 	String KEY_REFER_ALL_STATUS = "refer_all_status";
 	String KEY_REFER_ALL_TEXT = "refer_all_text";

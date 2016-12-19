@@ -17,6 +17,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.AppRatingTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -132,7 +133,9 @@ public class RateAppDialog {
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_RATING_FLAG, String.valueOf(ratingFlag.getOrdinal()));
-				RestClient.getApiServices().acceptAppRatingRequest(params, new retrofit.Callback<SettleUserDebt>() {
+
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().acceptAppRatingRequest(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -160,7 +163,9 @@ public class RateAppDialog {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				RestClient.getApiServices().thumbsUpClicked(params, new retrofit.Callback<SettleUserDebt>() {
+
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().thumbsUpClicked(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +14,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -240,8 +241,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         else if(viewholder instanceof ViewHeaderHolder){
             final ViewHeaderHolder holder = (ViewHeaderHolder) viewholder;
-            holder.textViewCategories.setText(R.string.home);
-            holder.imageViewArrow.setVisibility(View.GONE);
+            holder.textViewCategories.setText(R.string.categories);
+            holder.imageViewArrow.setVisibility(View.VISIBLE);
             try {
                 holder.textViewUserName.setText(Data.userData.userName);
                 holder.textViewViewPhone.setText(Data.userData.phoneNo);
@@ -272,41 +273,40 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutCategories.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LatLng currLatLng = new LatLng(Data.latitude, Data.longitude);
-                    if(activity instanceof HomeActivity){
-                        currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
-                    } else if(activity instanceof FreshActivity){
-                        currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+//                    if(!(activity instanceof HomeSwitcherActivity)) {
+//                        LatLng currLatLng = new LatLng(Data.latitude, Data.longitude);
+//                        if (activity instanceof HomeActivity) {
+//                            currLatLng = ((HomeActivity) activity).getCurrentPlaceLatLng();
+//                        } else if (activity instanceof FreshActivity) {
+//                            currLatLng = ((FreshActivity) activity).getCurrentPlaceLatLng();
+//                        }
+//                        final LatLng finalCurrLatLng = currLatLng;
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                MyApplication.getInstance().getAppSwitcher().switchApp(activity,
+//                                        Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+//                                        activity.getIntent().getData(), finalCurrLatLng, true);
+//                            }
+//                        }, 500);
+
+
+                    if(holder.linearLayoutSubCategories.getVisibility() == View.VISIBLE){
+                        holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_down);
+                        holder.imageViewArrow.setRotation(270);
+                        //holder.linearLayoutCategories.startAnimation(animation);
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES, null);
+                    } else {
+                        holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
+                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_up);
+                        holder.imageViewArrow.setRotation(90);
+                        //holder.linearLayoutCategories.startAnimation(animation);
                     }
-                    /*MyApplication.getInstance().getAppSwitcher().switchApp(activity,
-                            Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-                            null, currLatLng, null, true, true, true);*/
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            MyApplication.getInstance().getAppSwitcher().switchApp(activity,
-                                    Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-                                    activity.getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), true);
-                        }
-                    }, 500);
 
-
-
-//                    if(holder.linearLayoutSubCategories.getVisibility() == View.VISIBLE){
-//                        holder.linearLayoutSubCategories.setVisibility(View.GONE);
-//                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_down);
-//                        holder.imageViewArrow.setRotation(270);
-//                        //holder.linearLayoutCategories.startAnimation(animation);
-//                        MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES, null);
-//                    } else {
-//                        holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
-//                        Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_up);
-//                        holder.imageViewArrow.setRotation(90);
-//                        //holder.linearLayoutCategories.startAnimation(animation);
+                        //notifyItemChanged(0);
 //                    }
-
-                    //notifyItemChanged(0);
+//                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
             });
 

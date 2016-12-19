@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
@@ -42,33 +44,47 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 	private ShowPanelResponse.Item item;
 	private String phoneNumber, rideDate, orderDate, supportNumber;
 
-	public SupportFAQItemsListFragment(){}
-
 
 	@Override
     public void onStart() {
         super.onStart();
-//        FlurryAgent.init(activity, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-//        FlurryAgent.onEvent(SupportFAQItemsListFragment.class.getSimpleName() + " started");
     }
 
     @Override
     public void onStop() {
 		super.onStop();
-//        FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQItemsListFragment(int engagementId, String rideDate, ShowPanelResponse.Item item, String phoneNumber,
-									   int orderId, String orderDate, String supportNumber, int productType){
-		this.engagementId = engagementId;
-		this.item = item;
-		this.phoneNumber = phoneNumber;
-		this.rideDate = rideDate;
-		this.orderId = orderId;
-		this.orderDate = orderDate;
-		this.supportNumber = supportNumber;
-		this.productType = productType;
+	private static final String ITEM = "item";
+
+	public static SupportFAQItemsListFragment newInstance(int engagementId, String rideDate,
+													 ShowPanelResponse.Item item, String phoneNumber,
+													 int orderId, String orderDate, String supportNumber, int productType){
+		SupportFAQItemsListFragment fragment = new SupportFAQItemsListFragment();
+
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_ENGAGEMENT_ID, engagementId);
+		bundle.putString(Constants.KEY_RIDE_DATE, rideDate);
+		bundle.putString(ITEM, new Gson().toJson(item, ShowPanelResponse.Item.class));
+		bundle.putString(Constants.KEY_PHONE_NO, phoneNumber);
+		bundle.putInt(Constants.KEY_ORDER_ID, orderId);
+		bundle.putString(Constants.KEY_ORDER_DATE, orderDate);
+		bundle.putString(Constants.KEY_SUPPORT_NUMBER, supportNumber);
+		bundle.putInt(Constants.KEY_PRODUCT_TYPE, productType);
+		fragment.setArguments(bundle);
+
+		return fragment;
+	}
+
+	private void parseArguments(){
+		this.engagementId = getArguments().getInt(Constants.KEY_ENGAGEMENT_ID);
+		this.rideDate = getArguments().getString(Constants.KEY_RIDE_DATE);
+		this.item = new Gson().fromJson(getArguments().getString(ITEM), ShowPanelResponse.Item.class);
+		this.phoneNumber = getArguments().getString(Constants.KEY_PHONE_NO);
+		this.orderId = getArguments().getInt(Constants.KEY_ORDER_ID);
+		this.orderDate = getArguments().getString(Constants.KEY_ORDER_DATE);
+		this.supportNumber = getArguments().getString(Constants.KEY_SUPPORT_NUMBER);
+		this.productType = getArguments().getInt(Constants.KEY_PRODUCT_TYPE);
 	}
 
     @Override
@@ -77,6 +93,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 
         activity = getActivity();
 		setActivityTitle();
+		parseArguments();
 
 		root = (LinearLayout) rootView.findViewById(R.id.root);
 		try {

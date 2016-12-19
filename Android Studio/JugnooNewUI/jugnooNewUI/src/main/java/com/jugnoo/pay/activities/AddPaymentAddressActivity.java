@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -91,12 +92,16 @@ public class AddPaymentAddressActivity extends BaseActivity {
         bAddPaymentAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = etPaymentAddress.getText().toString().trim();
+                String name = etName.getText().toString().trim();
                 String vpa = etPaymentAddress.getText().toString().trim();
-                if(name.length() > 0 && vpa.length() > 0 && Utils.isVPAValid(vpa)){
-                    apiAddPaymentAddress();
+                if(name.length() == 0){
+                    Utils.showToast(AddPaymentAddressActivity.this, getString(R.string.please_enter_name));
+                } else if(vpa.length() == 0){
+                    Utils.showToast(AddPaymentAddressActivity.this, getString(R.string.please_enter_vpa));
+                } else if(!Utils.isVPAValid(vpa)){
+                    Utils.showToast(AddPaymentAddressActivity.this, getString(R.string.please_enter_valid_vpa));
                 } else {
-                    Utils.showToast(AddPaymentAddressActivity.this, getString(R.string.fields_invalid));
+                    apiAddPaymentAddress();
                 }
             }
         });
@@ -141,6 +146,7 @@ public class AddPaymentAddressActivity extends BaseActivity {
                 params.put(Constants.KEY_USER_NAME, etName.getText().toString());
                 params.put(Constants.KEY_VPA, etPaymentAddress.getText().toString());
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getPayApiService().addPaymentAddress(params, new Callback<AccountManagementResponse>() {
                     @Override
                     public void success(AccountManagementResponse accountManagementResponse, Response response) {

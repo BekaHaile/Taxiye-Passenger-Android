@@ -44,6 +44,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
@@ -563,6 +564,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
                     }
                 };
+                new HomeUtil().putDefaultParams(params);
                 if(productType == ProductType.MENUS){
                     RestClient.getMenusApiService().orderFeedback(params, callback);
                 } else {
@@ -644,6 +646,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                     }
                 };
 
+                new HomeUtil().putDefaultParams(params);
                 if(productType == ProductType.MENUS){
                     RestClient.getMenusApiService().orderHistory(params, callback);
                 } else {

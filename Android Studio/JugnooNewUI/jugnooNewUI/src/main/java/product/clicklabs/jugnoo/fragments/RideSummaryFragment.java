@@ -22,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
+import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
@@ -90,22 +92,21 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
     private boolean rideCancelled;
     private int autosStatus;
 
-    public RideSummaryFragment() {
-    }
+    private static final String RIDE_CANCELLED = "rideCancelled", AUTO_STATUS = "autosStatus", END_RIDE_DATA = "endRideData";
 
-    @SuppressLint("ValidFragment")
-    public RideSummaryFragment(int engagementId, boolean rideCancelled, int autosStatus) {
-        this.engagementId = engagementId;
-        this.rideCancelled = rideCancelled;
-        this.autosStatus = autosStatus;
-    }
+    public static RideSummaryFragment newInstance(int engagementId, EndRideData endRideData, boolean rideCancelled, int autosStatus){
+        RideSummaryFragment rideSummaryFragment = new RideSummaryFragment();
 
-    @SuppressLint("ValidFragment")
-    public RideSummaryFragment(EndRideData endRideData, boolean rideCancelled, int autosStatus) {
-        this.engagementId = Integer.parseInt(endRideData.engagementId);
-        this.endRideData = endRideData;
-        this.rideCancelled = rideCancelled;
-        this.autosStatus = autosStatus;
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.KEY_ENGAGEMENT_ID, engagementId);
+        bundle.putBoolean(RIDE_CANCELLED, rideCancelled);
+        bundle.putInt(AUTO_STATUS, autosStatus);
+        if(endRideData != null){
+            bundle.putString(END_RIDE_DATA, new Gson().toJson(endRideData, EndRideData.class));
+        }
+        rideSummaryFragment.setArguments(bundle);
+
+        return rideSummaryFragment;
     }
 
 
@@ -118,17 +119,22 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
     @Override
     public void onStart() {
         super.onStart();
-//        FlurryAgent.init(activity, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-//        FlurryAgent.onEvent(RideSummaryFragment.class.getSimpleName() + " started");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-//        FlurryAgent.onEndSession(activity);
     }
 
+    private void parseFromArguments(){
+        this.engagementId = getArguments().getInt(Constants.KEY_ENGAGEMENT_ID, -1);
+        this.rideCancelled = getArguments().getBoolean(RIDE_CANCELLED, false);
+        this.autosStatus = getArguments().getInt(AUTO_STATUS, EngagementStatus.ENDED.getOrdinal());
+        String endRideDataStr = getArguments().getString(END_RIDE_DATA, Constants.EMPTY_JSON_OBJECT);
+        if(!Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(endRideDataStr)){
+            endRideData = new Gson().fromJson(endRideDataStr, EndRideData.class);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -138,6 +144,7 @@ public class RideSummaryFragment extends Fragment implements FlurryEventNames, C
             activity = getActivity();
             relative = (RelativeLayout) rootView.findViewById(R.id.relative);
             new ASSL(activity, relative, 1134, 720, false);
+            parseFromArguments();
 
             relativeLayoutMap = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMap);
             relativeLayoutMap.setVisibility(View.GONE);

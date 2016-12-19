@@ -8,9 +8,9 @@
     <string name="filter_title">Jugnoo</string>
     <string name="no_more_than">Can\'t order more than %d units</string>
 
-    <!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live-->
+    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General-->
+    <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string>&lt;!&ndash; General&ndash;&gt;-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -1389,6 +1389,10 @@
     <string name="reset_account_alert_message">After resetting the account, your vpa will be erased and you will be logged out of the app. Are you sure you want to proceed ?</string>
     <string name="delivery_before_colon">Delivery before:</string>
     <string name="oh_no_what_went_wrong">Oh no, what went wrong?</string>
+    <string name="please_enter_name">Please enter name</string>
+    <string name="please_enter_vpa">Please enter Virtual Payment Address</string>
+    <string name="please_enter_valid_vpa">Please enter a valid Virtual Payment Address</string>
+    <string name="categories">Categories</string>
 
 
 </resources>

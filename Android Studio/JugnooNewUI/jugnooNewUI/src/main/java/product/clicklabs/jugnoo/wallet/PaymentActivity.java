@@ -57,7 +57,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 			}
 			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragLayout, new WalletRechargeFragment(walletType), WalletRechargeFragment.class.getName())
+					.add(R.id.fragLayout, WalletRechargeFragment.newInstance(walletType), WalletRechargeFragment.class.getName())
 					.addToBackStack(WalletRechargeFragment.class.getName())
 					.commitAllowingStateLoss();
 		}

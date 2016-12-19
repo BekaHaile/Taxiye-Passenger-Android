@@ -55,6 +55,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -634,7 +635,8 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                 params.put("language", Locale.getDefault().getCountry());
                 params.put("sensor", "false");
 
-                RestClient.getGoogleApiServices().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getGoogleApiService().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
                     @Override
                     public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
                         try {

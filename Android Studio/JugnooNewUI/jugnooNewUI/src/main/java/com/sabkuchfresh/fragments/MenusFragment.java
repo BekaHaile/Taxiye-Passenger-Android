@@ -43,6 +43,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -239,6 +240,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
                 params.put(Constants.INTERATED, "1");
 
+                new HomeUtil().putDefaultParams(params);
                 final ProgressDialog finalProgressDialog = progressDialog;
                 RestClient.getMenusApiService().nearbyRestaurants(params, new Callback<MenusResponse>() {
                     @Override
@@ -342,6 +344,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 params.put(Constants.INTERATED, "1");
                 Log.i(TAG, "getVendorMenu params=" + params.toString());
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getMenusApiService().restaurantMenu(params, new Callback<ProductsResponse>() {
                     @Override
                     public void success(ProductsResponse productsResponse, Response response) {

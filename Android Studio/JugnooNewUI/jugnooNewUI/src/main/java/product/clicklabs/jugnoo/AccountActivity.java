@@ -823,7 +823,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             params.put(Constants.KEY_UPDATED_USER_EMAIL, updatedEmail);
             params.put(Constants.KEY_UPDATED_PHONE_NO, updatedPhone);
 
-            RestClient.getApiServices().updateUserProfile(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().updateUserProfile(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -890,7 +891,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
-                RestClient.getApiServices().reloadMyProfile(params, new Callback<SettleUserDebt>() {
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getApiService().reloadMyProfile(params, new Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -941,7 +943,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
-            RestClient.getApiServices().sendVerifyEmailLink(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().sendVerifyEmailLink(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -994,7 +997,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
             Log.i("access_token", "=" + Data.userData.accessToken);
 
-            RestClient.getApiServices().logoutUser(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().logoutUser(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1095,7 +1099,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             params.put(Constants.KEY_OLD_PASSWORD, oldPassword);
             params.put(Constants.KEY_NEW_PASSWORD, newPassword);
 
-            RestClient.getApiServices().updateUserProfile(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().updateUserProfile(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

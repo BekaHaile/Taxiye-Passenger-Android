@@ -63,7 +63,6 @@ public class ApiFindADriver {
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 			params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
 			params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
-			params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 
 			if (1 == showAllDrivers) {
 				params.put("show_all", "1");
@@ -76,7 +75,9 @@ public class ApiFindADriver {
 
 			Log.i("params in find_a_driver", "=" + params);
 			final long startTime = System.currentTimeMillis();
-			RestClient.getApiServices().findADriverCall(params, new retrofit.Callback<FindADriverResponse>() {
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().findADriverCall(params, new retrofit.Callback<FindADriverResponse>() {
 				@Override
 				public void success(FindADriverResponse findADriverResponse, Response response) {
 					try {

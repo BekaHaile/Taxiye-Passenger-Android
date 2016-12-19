@@ -67,8 +67,6 @@ public class ApiLoginUsingAccessToken {
 			params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
 
 
-			params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
-			params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 			params.put(Constants.KEY_UNIQUE_DEVICE_ID, Data.uniqueDeviceId);
 			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 			params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
@@ -94,7 +92,9 @@ public class ApiLoginUsingAccessToken {
 			Log.e("params login_using_access_token", "=" + params);
 
 			final long startTime = System.currentTimeMillis();
-			RestClient.getApiServices().loginUsingAccessToken(params, new retrofit.Callback<LoginResponse>() {
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingAccessToken(params, new retrofit.Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_LOGIN_USING_ACCESS_TOKEN, startTime);

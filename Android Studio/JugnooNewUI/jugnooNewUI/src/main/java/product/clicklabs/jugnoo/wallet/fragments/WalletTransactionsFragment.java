@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -307,10 +308,11 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 					}
 				};
 
+				new HomeUtil().putDefaultParams(params);
 				if(pay == 1){
 					RestClient.getPayApiService().getTransactionHistory(params, callback);
 				} else {
-					RestClient.getApiServices().getTransactionHistory(params, callback);
+					RestClient.getApiService().getTransactionHistory(params, callback);
 				}
 			}
 		} catch (Exception e) {

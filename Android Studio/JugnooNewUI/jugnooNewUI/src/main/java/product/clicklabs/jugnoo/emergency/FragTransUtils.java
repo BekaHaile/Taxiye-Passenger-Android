@@ -30,7 +30,7 @@ public class FragTransUtils {
 		if(ContactsListAdapter.ListMode.SEND_RIDE_STATUS == listMode){
 			activity.getSupportFragmentManager().beginTransaction()
 					.add(container.getId(),
-							new EmergencyContactOperationsFragment(engagementId, listMode),
+							EmergencyContactOperationsFragment.newInstance(engagementId, listMode),
 							EmergencyContactOperationsFragment.class.getName())
 					.addToBackStack(EmergencyContactOperationsFragment.class.getName())
 					.commitAllowingStateLoss();
@@ -38,7 +38,7 @@ public class FragTransUtils {
 			activity.getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(container.getId(),
-							new EmergencyContactOperationsFragment(engagementId, listMode),
+							EmergencyContactOperationsFragment.newInstance(engagementId, listMode),
 							EmergencyContactOperationsFragment.class.getName())
 					.addToBackStack(EmergencyContactOperationsFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

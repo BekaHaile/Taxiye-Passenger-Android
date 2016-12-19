@@ -27,6 +27,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -407,7 +408,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 //						}
 //					});
 
-			RestClient.getApiServices().verifyMyContactNumber(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().verifyMyContactNumber(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -512,7 +514,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 //					});
 
 
-			RestClient.getApiServices().sendNewNumberOtpViaCall(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().sendNewNumberOtpViaCall(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

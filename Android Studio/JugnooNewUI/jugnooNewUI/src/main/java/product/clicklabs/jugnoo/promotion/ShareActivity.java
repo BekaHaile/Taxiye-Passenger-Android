@@ -234,7 +234,8 @@ public class ShareActivity extends BaseFragmentActivity {
 			if(!HomeActivity.checkIfUserDataNull(this) && AppStatus.getInstance(this).isOnline(this)) {
 				if(Data.userData.getReferralLeaderboardEnabled() == 1) {
 					DialogPopup.showLoadingDialog(this, "Loading...");
-					RestClient.getApiServices().leaderboardServerCall(Data.userData.accessToken, Config.getAutosClientId(),
+
+					RestClient.getApiService().leaderboardServerCall(Data.userData.accessToken, Config.getAutosClientId(),
 							new Callback<LeaderboardResponse>() {
 								@Override
 								public void success(LeaderboardResponse leaderboardResponse, Response response) {
@@ -332,7 +333,8 @@ public class ShareActivity extends BaseFragmentActivity {
 			if(!HomeActivity.checkIfUserDataNull(this) && AppStatus.getInstance(this).isOnline(this)) {
 				if(Data.userData.getReferralActivityEnabled() == 1) {
 					DialogPopup.showLoadingDialog(this, "Loading...");
-					RestClient.getApiServices().leaderboardActivityServerCall(Data.userData.accessToken, Config.getAutosClientId(),
+
+					RestClient.getApiService().leaderboardActivityServerCall(Data.userData.accessToken, Config.getAutosClientId(),
 							new Callback<LeaderboardActivityResponse>() {
 								@Override
 								public void success(LeaderboardActivityResponse leaderboardActivityResponse, Response response) {

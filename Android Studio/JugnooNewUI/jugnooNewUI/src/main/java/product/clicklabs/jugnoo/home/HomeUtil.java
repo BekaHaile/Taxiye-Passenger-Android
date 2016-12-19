@@ -12,11 +12,13 @@ import com.squareup.picasso.PicassoTools;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.GCMIntentService;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -131,6 +133,12 @@ public class HomeUtil {
 		activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
 		Branch.getInstance(activity).logout();
+	}
+
+
+	public void putDefaultParams(Map<String, String> params){
+		params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
+		params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 	}
 
 }

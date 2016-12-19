@@ -31,9 +31,6 @@ public class AccessTokenRequest {
     @SerializedName("new_password")
     @Expose
     private String new_password;
-    @SerializedName("device_type")
-    @Expose
-    private String device_type;
     @SerializedName("unique_device_id")
     @Expose
     private String unique_device_id;
@@ -100,14 +97,6 @@ public class AccessTokenRequest {
 
     public void setDevice_token(String device_token) {
         this.device_token = device_token;
-    }
-
-    public String getDevice_type() {
-        return device_type;
-    }
-
-    public void setDevice_type(String device_type) {
-        this.device_type = device_type;
     }
 
     public String getUnique_device_id() {

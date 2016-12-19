@@ -158,7 +158,8 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 			if(params != null) {
 				if (AppStatus.getInstance(context).isOnline(context)) {
 					Log.i(TAG, "params before api=" + params);
-					RestClient.getApiServices().uploadAnalytics(params, new Callback<SettleUserDebt>() {
+					new HomeUtil().putDefaultParams(params);
+					RestClient.getApiService().uploadAnalytics(params, new Callback<SettleUserDebt>() {
 						@Override
 						public void success(SettleUserDebt settleUserDebt, Response response) {
 							try {
@@ -193,7 +194,8 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 			if(params != null) {
 				if (AppStatus.getInstance(context).isOnline(context)) {
 					Log.i(TAG, "params before sync api=" + params);
-					Response response = RestClient.getApiServices().uploadAnalytics(params);
+					new HomeUtil().putDefaultParams(params);
+					Response response = RestClient.getApiService().uploadAnalytics(params);
 
 					try {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

@@ -482,7 +482,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private void getAddressAsync(final LatLng currentLatLng, final GetAddressFromLatLng getAddressFromLatLng){
         try {
             DialogPopup.showLoadingDialog(getActivity(), "Loading...");
-            RestClient.getGoogleApiServices().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+            RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
                     "en", false, new Callback<SettleUserDebt>() {
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -522,7 +522,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 params.put("language", Locale.getDefault().getCountry());
                 params.put("sensor", "false");
 
-                RestClient.getGoogleApiServices().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
+                RestClient.getGoogleApiService().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
                     @Override
                     public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
                         try {

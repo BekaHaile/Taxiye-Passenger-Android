@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -103,7 +104,8 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 
-                RestClient.getApiServices().getNotificationPreference(params, new Callback<NotificationSettingResponseModel>() {
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getApiService().getNotificationPreference(params, new Callback<NotificationSettingResponseModel>() {
                     @Override
                     public void success(final NotificationSettingResponseModel notificationPrefResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
@@ -187,7 +189,8 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                 params.put(Constants.KEY_PUSH_TYPE, name);
                 params.put(Constants.KEY_PUSH_STATUS, ""+status);
 
-                RestClient.getApiServices().updateNotificationPreference(params, new Callback<NotificationInboxResponse>() {
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getApiService().updateNotificationPreference(params, new Callback<NotificationInboxResponse>() {
                     @Override
                     public void success(final NotificationInboxResponse notificationInboxResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();

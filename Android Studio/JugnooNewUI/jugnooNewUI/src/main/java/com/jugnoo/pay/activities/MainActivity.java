@@ -460,7 +460,6 @@ public class MainActivity extends BaseActivity {
             request.setUniqueDeviceId(CommonMethods.getUniqueDeviceId(this));
             request.setToken(Data.getPayData().getPay().getToken());
             request.setVpa(verifyRegisterResponse.getVirtualAddress());
-            request.setDeviceType(Data.DEVICE_TYPE);
             request.setAccess_token(Data.userData.accessToken);
             request.setAutos_user_id(Data.userData.getUserId());
             request.setUserEmail(Data.userData.userEmail);
@@ -510,9 +509,9 @@ public class MainActivity extends BaseActivity {
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
-                params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
                 params.put(Constants.KEY_DEVICE_TOKEN, MyApplication.getInstance().getDeviceToken());
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getPayApiService().fetchPayData(params, new Callback<FetchPayDataResponse>() {
                     @Override
                     public void success(FetchPayDataResponse fetchPayDataResponse, Response response) {
@@ -711,6 +710,7 @@ public class MainActivity extends BaseActivity {
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
+                new HomeUtil().putDefaultParams(params);
 				RestClient.getPayApiService().setMPIN(params, new Callback<SendMoneyResponse>() {
 					@Override
 					public void success(SendMoneyResponse sendMoneyResponse, Response response) {
@@ -795,6 +795,8 @@ public class MainActivity extends BaseActivity {
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN,  Data.userData.accessToken);
             params.put(Constants.KEY_MESSAGE, setMPINResponse.toString());
+
+            new HomeUtil().putDefaultParams(params);
             RestClient.getPayApiService().setMPINCallback(params, new Callback<CommonResponse>() {
 				@Override
 				public void success(CommonResponse commonResponse, Response response) {
@@ -827,6 +829,7 @@ public class MainActivity extends BaseActivity {
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
+                new HomeUtil().putDefaultParams(params);
 				RestClient.getPayApiService().resetAccount(params, new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -890,6 +893,7 @@ public class MainActivity extends BaseActivity {
 
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getPayApiService().accountManagement(params, new Callback<AccountManagementResponse>() {
                     @Override
                     public void success(AccountManagementResponse accountManagementResponse, Response response) {
@@ -958,6 +962,8 @@ public class MainActivity extends BaseActivity {
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN,  Data.userData.accessToken);
             params.put(Constants.KEY_MESSAGE, request.toString());
+
+            new HomeUtil().putDefaultParams(params);
             RestClient.getPayApiService().accountManagementCallback(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt commonResponse, Response response) {

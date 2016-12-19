@@ -55,6 +55,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -342,6 +343,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 params.put(Constants.INTERATED, "1");
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 
+				new HomeUtil().putDefaultParams(params);
                 final ProgressDialog finalProgressDialog = progressDialog;
                 RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
 					@Override
@@ -392,6 +394,14 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
                                     if(activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
+										if(activity.getProductsResponse().getCategories().size() == 0){
+											activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
+											noFreshsView.setVisibility(View.VISIBLE);
+											imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
+											mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+											activity.showBottomBar(false);
+											mainLayout.setVisibility(View.GONE);
+										}
                                         activity.updateCartFromSP();
                                         activity.updateCartValuesGetTotalPrice();
                                         if(loader) {

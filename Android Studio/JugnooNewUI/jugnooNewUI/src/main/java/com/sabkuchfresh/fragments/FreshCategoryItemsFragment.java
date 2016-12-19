@@ -44,8 +44,6 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
     private SwipeRefreshLayout mSwipeRefreshLayout;
 	private ImageView noMealsView;
 
-	public FreshCategoryItemsFragment(){
-	}
 
     protected Bus mBus;
 

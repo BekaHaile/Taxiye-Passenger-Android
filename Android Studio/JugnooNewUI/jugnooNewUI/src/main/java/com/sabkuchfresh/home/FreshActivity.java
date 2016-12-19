@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -82,6 +83,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -179,18 +181,18 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         try {
             setContentView(R.layout.activity_fresh);
 
-            if(Data.userData.getShowHomeScreen() == 1)
-            {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this,
-                                Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-                                getIntent().getData(), getSelectedLatLng(), true);
-                    }
-                }, 500);
-                Data.userData.setShowHomeScreen(0);
-            }
+//            if(Data.userData.getShowHomeScreen() == 1)
+//            {
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this,
+//                                Prefs.with(FreshActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+//                                getIntent().getData(), getSelectedLatLng(), true);
+//                    }
+//                }, 500);
+//                Data.userData.setShowHomeScreen(0);
+//            }
 
             Log.e("", "");
             Data.currentActivity = FreshActivity.class.getName();
@@ -678,10 +680,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
 
     public void showBottomBar(boolean flag) {
-        if(flag && (getFeedbackFragment() == null || !getFeedbackFragment().isVisible()))
+        if(flag && (getFeedbackFragment() == null || !getFeedbackFragment().isVisible())) {
             relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
-        else
+        }else {
             relativeLayoutCheckoutBar.setVisibility(View.GONE);
+            textViewMinOrder.setVisibility(View.GONE);
+        }
     }
 
 
@@ -868,7 +872,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
 				if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     //imageViewFabFake.setVisibility(View.VISIBLE);
-					fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    float marginBottom = 85f;
+                    int dpAsPixels = (int) (marginBottom*scale + 0.5f);
+                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
 					//fabViewTest.setFABMenuDrawable();
 				}
 
@@ -929,6 +936,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     //imageViewFabFake.setVisibility(View.VISIBLE);
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    float marginBottom = 85f;
+                    int dpAsPixels = (int) (marginBottom*scale + 0.5f);
+                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
                     //fabViewTest.setFABMenuDrawable();
                 }
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);
@@ -1169,14 +1179,17 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void setMinOrderAmountText(){
         try {
             if(getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
-                if (totalQuantity > 0 && getFreshCheckoutMergedFragment() == null && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+                if (totalQuantity > 0 && getFreshCheckoutMergedFragment() == null && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()
+                        && (relativeLayoutCheckoutBar.getVisibility() == View.VISIBLE)) {
                     textViewMinOrder.setVisibility(View.VISIBLE);
                 }
                 else {
                     textViewMinOrder.setVisibility(View.GONE);
                 }
-                textViewMinOrder.setText(getString(R.string.fresh_min_order_value, Utils.getMoneyDecimalFormatWithoutFloat()
-                        .format(getProductsResponse().getDeliveryInfo().getMinAmount())));
+                if(getProductsResponse() != null) {
+                    textViewMinOrder.setText(getString(R.string.fresh_min_order_value, Utils.getMoneyDecimalFormatWithoutFloat()
+                            .format(getProductsResponse().getDeliveryInfo().getMinAmount())));
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -2314,7 +2327,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void getAddressAndFetchOfferingData(final LatLng currentLatLng, final int appType){
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
-            RestClient.getGoogleApiServices().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+            RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
                     "en", false, new Callback<SettleUserDebt>() {
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -2330,18 +2343,42 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 DialogPopup.dismissLoadingDialog();
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                retryDialogLocationFetch(DialogErrorType.SERVER_ERROR, currentLatLng, appType);
                             }
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
                             DialogPopup.dismissLoadingDialog();
+                            retryDialogLocationFetch(DialogErrorType.CONNECTION_LOST, currentLatLng, appType);
                         }
                     });
         } catch (Exception e) {
             e.printStackTrace();
             DialogPopup.dismissLoadingDialog();
+            retryDialogLocationFetch(DialogErrorType.CONNECTION_LOST, currentLatLng, appType);
         }
+    }
+
+    private void retryDialogLocationFetch(DialogErrorType dialogErrorType, final LatLng currentLatLng, final int appType){
+        DialogPopup.dialogNoInternet(this,
+                dialogErrorType,
+                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        getAddressAndFetchOfferingData(currentLatLng, appType);
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+                        ActivityCompat.finishAffinity(FreshActivity.this);
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                        ActivityCompat.finishAffinity(FreshActivity.this);
+                    }
+                });
     }
 
 

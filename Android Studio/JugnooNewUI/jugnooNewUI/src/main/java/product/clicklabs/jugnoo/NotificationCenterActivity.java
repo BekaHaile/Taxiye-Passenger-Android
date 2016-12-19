@@ -20,6 +20,7 @@ import product.clicklabs.jugnoo.datastructure.DisplayPushHandler;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.fragments.NotificationSettingFragment;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -186,7 +187,8 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
                 }
 
 
-                RestClient.getApiServices().notificationInbox(params, new Callback<NotificationInboxResponse>() {
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getApiService().notificationInbox(params, new Callback<NotificationInboxResponse>() {
                     @Override
                     public void success(final NotificationInboxResponse notificationInboxResponse, Response response) {
                         DialogPopup.dismissLoadingDialog();
