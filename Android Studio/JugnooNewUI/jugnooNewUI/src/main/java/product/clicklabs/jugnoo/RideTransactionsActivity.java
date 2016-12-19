@@ -69,7 +69,7 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 		});
 
 
-		if(getIntent().hasExtra(Constants.KEY_ORDER_ID)){
+		if(getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0) != 0){
 			new TransactionUtils().openOrderStatusFragment(this, relativeLayoutContainer, getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0),
 					getIntent().getIntExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal()));
 		} else {
