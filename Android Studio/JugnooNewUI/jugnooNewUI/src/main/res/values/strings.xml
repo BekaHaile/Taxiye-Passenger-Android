@@ -704,262 +704,259 @@
 		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
 		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
-	<!-- Support Screen-->
-	<string name="issue_with_the_recent_ride">Issue with the recent ride?</string>
-	<string name="issue_with_the_recent_order">Issue with the recent order?</string>
-	<string name="date_colon_format">Date: %s</string>
-	<string name="start">Start</string>
-	<string name="end">End</string>
-	<string name="ride_date">Ride Date</string>
-	<string name="ride_history">Ride History</string>
-	<string name="ride_summary">Ride Summary</string>
-	<string name="support_main_title">How can we help?</string>
-	<string name="support_ride_issues_title">Select an Issue</string>
-	<string name="support_select_a_ride_title">Select a Ride</string>
-	<string name="sample_address">1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India</string>
-	<string name="support_feedback_empty_error">Please fill some feedback</string>
-	<string name="support_feedback_lengthy_error_format">Only %s characters allowed</string>
-	<string name="need_help">Need Help?</string>
-	<string name="help">Help</string>
+    <!-- Support Screen-->
+    <string name="issue_with_the_recent_ride">Issue with the recent ride?</string>
+    <string name="issue_with_the_recent_order">Issue with the recent order?</string>
+    <string name="date_colon_format">Date: %s</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="ride_date">Ride Date</string>
+    <string name="ride_history">Ride History</string>
+    <string name="ride_summary">Ride Summary</string>
+    <string name="support_main_title">How can we help?</string>
+    <string name="support_ride_issues_title">Select an Issue</string>
+    <string name="support_select_a_ride_title">Select a Ride</string>
+    <string name="sample_address">1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India</string>
+    <string name="support_feedback_empty_error">Please fill some feedback</string>
+    <string name="support_feedback_lengthy_error_format">Only %s characters allowed</string>
+    <string name="need_help">Need Help?</string>
+    <string name="help">Help</string>
 
-	<!-- Ride transactions-->
-	<string name="rate_this_ride">Rate this ride</string>
-	<string name="show_more">Show more</string>
-
-
-
-	<string name="no_net_title">CONNECTION LOST</string>
-	<string name="no_net_text">Oops! Your Internet is not working.\nPlease try again.</string>
-	<string name="conn_lost_title">CONNECTION LOST</string>
-	<string name="conn_lost_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
-	<string name="server_error_title">CONNECTION LOST</string>
-	<string name="server_error_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
-
-	<string name="app_quit_message">Are you sure you want to quit the app?</string>
+    <!-- Ride transactions-->
+    <string name="rate_this_ride">Rate this ride</string>
+    <string name="show_more">Show more</string>
 
 
-	<string name="no_coupons_currently">No coupons currently</string>
+    <string name="no_net_title">CONNECTION LOST</string>
+    <string name="no_net_text">Oops! Your Internet is not working.\nPlease try again.</string>
+    <string name="conn_lost_title">CONNECTION LOST</string>
+    <string name="conn_lost_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
+    <string name="server_error_title">CONNECTION LOST</string>
+    <string name="server_error_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
 
-	<string name="priority_tip_format">Priority Tip %sx</string>
-
-	<string name="support_call_us_dialog_message">Give us a Missed Call and we will get back to you</string>
-	<string name="call_jugnoo">Call Jugnoo</string>
-	<string name="star_please_fill_required_information">* Please fill required information</string>
-
-
-
-
-	<!-- Emergency New -->
-	<string name="enable_emergency_mode">Enable Emergency Mode</string>
-	<string name="send_ride_status">Send Ride Status</string>
-	<string name="in_app_customer_support">In App Customer Support</string>
-	<string name="emergency_mode_enabled">Emergency Mode Enabled</string>
-	<string name="emergency_mode_enabled_title">You have enabled emergency.</string>
-	<string name="emergency_mode_enabled_message">We have sent your location to your\nemergency contacts and Jugnoo support.</string>
-	<string name="call_police">Call Police</string>
-	<string name="call_emergency_contact">Call Emergency Contact</string>
-	<string name="call_your_contacts">Call Your Contacts</string>
-	<string name="disable_emergency_mode">Disable Emergency Mode</string>
-	<string name="emergency_contacts">Emergency Contacts</string>
-	<string name="add">Add</string>
-	<string name="add_contacts">Add Contacts</string>
-	<string name="contacts">Contacts</string>
-	<string name="edit">Edit</string>
-	<string name="delete">Delete</string>
-	<string name="send">Send</string>
-	<string name="send_invites">Send invites</string>
-	<string name="send_invites_2">to friends who haven\'t tried Jugnoo</string>
-	<string name="delete_emergency_contact_message">Are you sure you want to delete this contact from your emergency list?</string>
-	<string name="type_a_name_or_mobile_number">Type a name or a mobile number</string>
-	<string name="or_call_directly">or Call directly</string>
-	<string name="or_send_directly">or Send directly</string>
-	<string name="send_ride_status_no_contacts_message">Please select some contacts first</string>
-	<string name="send_ride_status_more_contacts_message_format">You have selected more than %1$s contacts, we will send ride status to only %2$s contacts at once.</string>
-	<string name="configure_your_emergency_contacts">Configure your\nemergency contacts</string>
-	<string name="inform_your_friends">Inform your friends and family\nabout your current location everytime\nyou ride with Jugnoo</string>
-	<string name="everything_is_alright_caps">EVERYTHING IS ALRIGHT</string>
-	<string name="you_have_disabled_jugnoo_emergency">You have disabled the Jugnoo\nEmergency mode</string>
-	<string name="please_select_some_contacts_first">Please select some contacts first</string>
-
-	<string name="vs">vs</string>
-	<string name="your_guess">Your Guess</string>
-	<string name="t20_world_cup_2016">T20 World Cup 2016</string>
-	<string name="time_ist_format">%s IST</string>
-	<string name="str_new">New</string>
-	<string name="play_predict_win">Play, Predict &amp; Win</string>
-	<string name="team_vs_team_format">%1$s Vs %2$s</string>
-	<string name="t20_terms">Guess the winner of today T20 match after your ride starts and win exciting Offers from Jugnoo</string>
-	<string name="who_do_you_think_will_win_today">Who do you think will win today?</string>
-	<string name="team_not_selected_error">Please select a team</string>
-	<string name="quit_jugnoo_t20">Are you sure you want to quit Jugnoo T20 WC?</string>
-
-	<string name="ride_cancelled_by_driver">Driver has cancelled the ride. Please try again. Apologies for inconvenience!</string>
-
-	<string name="enter_your_destination">Enter your destination</string>
-	<string name="cool_to_pool">Its cool to pool</string>
-	<string name="share_the_journey">Share the journey split the fare</string>
-	<string name="riding_alone">Riding Alone? Try Jugnoo Pool</string>
+    <string name="app_quit_message">Are you sure you want to quit the app?</string>
 
 
-	<string name="recharge">Recharge</string>
-	<string name="amount">Amount</string>
-	<string name="driver">Driver</string>
-	<string name="paytm_recharge_via_driver_info">is recharging\nyour Paytm account registered\non number</string>
-	<string name="type_the_amount_to_confirm_the_transaction">Type the amount to confirm\nthe transaction</string>
-	<string name="type_amount_to_confirm_the_transaction">Type correct amount to confirm\nthe transaction</string>
+    <string name="no_coupons_currently">No coupons currently</string>
 
-	<string name="coupons_available">Coupons Available</string>
-	<string name="ongoing_offers">Ongoing Offers</string>
+    <string name="priority_tip_format">Priority Tip %sx</string>
 
-	<string name="uninstall_driver_app">You need to uninstall Jugnoo Drivers App first to use this app</string>
-	<string name="disable_mock_location">Disable mock location first</string>
-
-	<string name="notifications">Notifications</string>
-	<string name="push_notification_pref">Push Notifications Preferences</string>
-	<string name="notification_pref_desc">We respect your personal space\nHelp us customize your experience</string>
-	<string name="fare_threshold_distance_message_format">First %s Kms included in base fare</string>
-
-	<string name="auto">Auto</string>
-	<string name="bike">Bike</string>
-	<string name="autos">Autos</string>
-	<string name="waiting_for_location">Waiting for location&#8230;</string>
-	<string name="get_a_ride">Get a Ride</string>
-	<string name="get_ride">Get Ride</string>
-	<string name="fresh">Fresh</string>
-	<string name="grocery">Grocery</string>
-	<string name="order_history">Order History</string>
-	<string name="delete_fresh_cart_message">Are you sure you want to delete all items in your cart?</string>
-	<string name="checkout">Checkout</string>
-	<string name="my_cart">My Cart</string>
-	<string name="total_amount">Total Amount</string>
-	<string name="order_amount">Order Amount</string>
-	<string name="delivery_charges">Delivery Charges</string>
-	<string name="discount">Discount</string>
-	<string name="delivery_address">Delivery Address</string>
-	<string name="address">Address</string>
-	<string name="add_address">Add Address</string>
-	<string name="delivery_date_time">Delivery Date &amp; Time</string>
-	<string name="proceed_to_payment">Proceed To Payment</string>
-	<string name="amount_payable">Amount Payable</string>
-	<string name="other">Other</string>
-	<string name="add_your_address">Add your address</string>
-	<string name="please_fill_your_address">Please fill your address</string>
-	<string name="limit_address">Address must be within 200 characters</string>
-	<string name="please_select_a_delivery_slot">Please select a Delivery Slot</string>
-	<string name="no_slots_currently">No Delivery Slots currently</string>
-	<string name="please_select_a_delivery_address">Please select a Delivery Address</string>
-	<string name="pay_rupees_using_format">Pay \u20B9%s using:</string>
-	<string name="payment">Payment</string>
-	<string name="place_order">Place Order</string>
-	<string name="recharge_now">Recharge Now</string>
-	<string name="pay_via_cash">Pay via Cash</string>
-	<string name="balance_running_low">Balance is running low!</string>
-	<string name="dont_have_enough_paytm_balance">You don\'t have enough money for\ntransaction in your Paytm wallet.</string>
-	<string name="dont_have_enough_mobikwik_balance">You don\'t have enough money for\ntransaction in your Mobikwik wallet.</string>
-	<string name="dont_have_enough_freecharge_balance">You don\'t have enough money for\ntransaction in your FreeCharge wallet.</string>
-	<string name="get_fresh">Get Fresh</string>
-	<string name="fruits_and_vegetables">FRUITS AND VEGETABLES</string>
-	<string name="delivered_at_your_doorstep">delivered at your doorstep</string>
-	<string name="continue_text">Continue</string>
-	<string name="try_now">Try Now</string>
-	<string name="order_status">Status:</string>
-	<string name="id">ID:</string>
-	<string name="order_date_colon">Order Date:</string>
-	<string name="delivery_address_colon">Delivery Address:</string>
-	<string name="order_id_colon">Order ID:</string>
-	<string name="delivery_date">Delivery Date</string>
-	<string name="delivery_slot">Delivery Slot</string>
-	<string name="order_receipt">Order Receipt</string>
-	<string name="payment_by">Payment By</string>
-	<string name="item_name_unit_price_format">%1$s (%2$s) X %3$s</string>
-	<string name="x_format">%1$s X %2$s</string>
-	<string name="order_summary">Order Summary</string>
-	<string name="got_any_queries">Got any queries/concerns/feedback?</string>
-	<string name="please_contact_the_helpline">Please contact the helpline</string>
-	<string name="place_order_confirmation">Are you sure you want to place your order?</string>
-	<string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
-	<string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith Jugnoo Meals!</string>
-	<string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith Jugnoo Grocery!</string>
-	<string name="thank_you_for_placing_order_menus_format">Order placed with %s.\nYou will get a confirmation once your order is accepted.</string>
-	<string name="your_order_id">Your Order ID:</string>
-	<string name="will_be_delivered_by">will be delivered by</string>
-	<string name="your_cart_is_empty">Your cart is empty</string>
-	<string name="search_items">Search Items</string>
-	<string name="item_cancelled">Cancelled</string>
+    <string name="support_call_us_dialog_message">Give us a Missed Call and we will get back to you</string>
+    <string name="call_jugnoo">Call Jugnoo</string>
+    <string name="star_please_fill_required_information">* Please fill required information</string>
 
 
-	<string name="refer_a_driver">Refer a Driver</string>
-	<string name="came_across_auto_driver">Riding with a driver\nnot aware of jugnoo yet?</string>
-	<string name="kindly_recommend_us_to_them">Kindly recommend us to them.</string>
-	<string name="if_they_are_interested">Please help us improve Jugnoo\nand increase driver income.\nWin! Win!</string>
-	<string name="name_of_driver">Name of Driver</string>
-	<string name="contact_number">Contact Number</string>
-	<string name="refer">Refer</string>
-	<string name="want_free_rides">Get Free Jugnoo Cash</string>
+    <!-- Emergency New -->
+    <string name="enable_emergency_mode">Enable Emergency Mode</string>
+    <string name="send_ride_status">Send Ride Status</string>
+    <string name="in_app_customer_support">In App Customer Support</string>
+    <string name="emergency_mode_enabled">Emergency Mode Enabled</string>
+    <string name="emergency_mode_enabled_title">You have enabled emergency.</string>
+    <string name="emergency_mode_enabled_message">We have sent your location to your\nemergency contacts and Jugnoo support.</string>
+    <string name="call_police">Call Police</string>
+    <string name="call_emergency_contact">Call Emergency Contact</string>
+    <string name="call_your_contacts">Call Your Contacts</string>
+    <string name="disable_emergency_mode">Disable Emergency Mode</string>
+    <string name="emergency_contacts">Emergency Contacts</string>
+    <string name="add">Add</string>
+    <string name="add_contacts">Add Contacts</string>
+    <string name="contacts">Contacts</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="send">Send</string>
+    <string name="send_invites">Send invites</string>
+    <string name="send_invites_2">to friends who haven\'t tried Jugnoo</string>
+    <string name="delete_emergency_contact_message">Are you sure you want to delete this contact from your emergency list?</string>
+    <string name="type_a_name_or_mobile_number">Type a name or a mobile number</string>
+    <string name="or_call_directly">or Call directly</string>
+    <string name="or_send_directly">or Send directly</string>
+    <string name="send_ride_status_no_contacts_message">Please select some contacts first</string>
+    <string name="send_ride_status_more_contacts_message_format">You have selected more than %1$s contacts, we will send ride status to only %2$s contacts at once.</string>
+    <string name="configure_your_emergency_contacts">Configure your\nemergency contacts</string>
+    <string name="inform_your_friends">Inform your friends and family\nabout your current location everytime\nyou ride with Jugnoo</string>
+    <string name="everything_is_alright_caps">EVERYTHING IS ALRIGHT</string>
+    <string name="you_have_disabled_jugnoo_emergency">You have disabled the Jugnoo\nEmergency mode</string>
+    <string name="please_select_some_contacts_first">Please select some contacts first</string>
 
-	<string name="inbox">Inbox</string>
-	<string name="play">Play</string>
-	<string name="no_campaign_currently">No campaign currently</string>
-	<string name="fare_ln_estimate">Fare\nEstimate</string>
-	<string name="base_fare_colon">Base Fare:</string>
-	<string name="fixed_fare_colon">Fixed Fare:</string>
-	<string name="minimum_fare_rupee_format">Minimum Fare \u20B9<b>%s</b></string>
-	<string name="base_fare_format">BASE FARE : <b>%s</b></string>
+    <string name="vs">vs</string>
+    <string name="your_guess">Your Guess</string>
+    <string name="t20_world_cup_2016">T20 World Cup 2016</string>
+    <string name="time_ist_format">%s IST</string>
+    <string name="str_new">New</string>
+    <string name="play_predict_win">Play, Predict &amp; Win</string>
+    <string name="team_vs_team_format">%1$s Vs %2$s</string>
+    <string name="t20_terms">Guess the winner of today T20 match after your ride starts and win exciting Offers from Jugnoo</string>
+    <string name="who_do_you_think_will_win_today">Who do you think will win today?</string>
+    <string name="team_not_selected_error">Please select a team</string>
+    <string name="quit_jugnoo_t20">Are you sure you want to quit Jugnoo T20 WC?</string>
+
+    <string name="ride_cancelled_by_driver">Driver has cancelled the ride. Please try again. Apologies for inconvenience!</string>
+
+    <string name="enter_your_destination">Enter your destination</string>
+    <string name="cool_to_pool">Its cool to pool</string>
+    <string name="share_the_journey">Share the journey split the fare</string>
+    <string name="riding_alone">Riding Alone? Try Jugnoo Pool</string>
 
 
-	<string name="format_x">%s x</string>
-	<string name="format_x_without_space">%sx</string>
+    <string name="recharge">Recharge</string>
+    <string name="amount">Amount</string>
+    <string name="driver">Driver</string>
+    <string name="paytm_recharge_via_driver_info">is recharging\nyour Paytm account registered\non number</string>
+    <string name="type_the_amount_to_confirm_the_transaction">Type the amount to confirm\nthe transaction</string>
+    <string name="type_amount_to_confirm_the_transaction">Type correct amount to confirm\nthe transaction</string>
 
-	<string name="fare_details">Fare Details</string>
-	<string name="pay_for_your_rides_using">Pay for your rides using</string>
-	<string name="enter_destination">Enter Destination</string>
-	<string name="destination_required">Destination required</string>
-	<string name="add_paytm_money_help_text">Pay for Jugnoo with a Mobile Wallet</string>
-	<string name="convenience_charge_rupees_format">Convenience Charge: \u20B9%s</string>
-	<string name="base_fare">Base Fare</string>
-	<string name="fixed_fare">Fixed Fare</string>
-	<string name="want_to_refer_a_driver">Want to refer a Driver?</string>
-	<string name="promotions">Promotions</string>
-	<string name="referrals">Referrals</string>
-	<string name="referrals_tab">REFER &amp; WIN</string>
-	<string name="leaderboard">Leaderboard</string>
-	<string name="activity">Activity</string>
-	<string name="enter_promo_code">Enter Promo code</string>
-	<string name="add_promo_code">Add Promo Code</string>
-	<string name="offers_available">Offers Available</string>
-	<string name="no_offers_currently">No offers currently</string>
-	<string name="valid_until_format">Valid until\n%s</string>
-	<string name="name">Name</string>
-	<string name="email">Email</string>
-	<string name="save">Save</string>
-	<string name="edit_profile">Edit Profile</string>
-	<string name="save_changes">Save Changes</string>
-	<string name="old_password">Old Password</string>
-	<string name="new_password">New Password</string>
-	<string name="retype_password">Retype Password</string>
-	<string name="username_empty_error">Username can\'t be empty</string>
-	<string name="email_empty_error">Email can\'t be empty</string>
-	<string name="phone_empty_error">Phone number can\'t be empty</string>
-	<string name="nothing_changed">Nothing changed</string>
-	<string name="old_password_empty_error">Please enter old password</string>
-	<string name="new_password_empty_error">Please enter new password</string>
-	<string name="retype_password_empty_error">Please retype new password</string>
-	<string name="retype_password_different_error">Passwords not matched</string>
-	<string name="new_password_same_error">New Password is same as the old one</string>
-	<string name="new_password_length_error_format">New Password must be of atleast %s characters</string>
-	<string name="add_emergency_contacts">Add Emergency Contacts</string>
-	<string name="pool_rides_offer_guaranteed_fares">Pool rides offer guaranteed fares. Check your fare on next screen before confirming the ride</string>
-	<string name="please_provide_pickup_and_dest">Please provide pickup and destination location to generate your guaranteed fare.</string>
-	<string name="you_will_not_change_dest">* You will not be able to change destination during the ride.</string>
+    <string name="coupons_available">Coupons Available</string>
+    <string name="ongoing_offers">Ongoing Offers</string>
 
-	<string name="receipt">Receipt</string>
-	<string name="feedback">Feedback</string>
-	<string name="confirmation">Confirmation</string>
-	<string name="max_people">MAX PEOPLE:</string>
-	<string name="fares_updated">Fares updated try again</string>
-	<string name="no_current_offers">No Current Offers</string>
-	<string name="mobikwik_wallet">MobiKwik Wallet</string>
->>>>>>> feature_menus
+    <string name="uninstall_driver_app">You need to uninstall Jugnoo Drivers App first to use this app</string>
+    <string name="disable_mock_location">Disable mock location first</string>
+
+    <string name="notifications">Notifications</string>
+    <string name="push_notification_pref">Push Notifications Preferences</string>
+    <string name="notification_pref_desc">We respect your personal space\nHelp us customize your experience</string>
+    <string name="fare_threshold_distance_message_format">First %s Kms included in base fare</string>
+
+    <string name="auto">Auto</string>
+    <string name="bike">Bike</string>
+    <string name="autos">Autos</string>
+    <string name="waiting_for_location">Waiting for location&#8230;</string>
+    <string name="get_a_ride">Get a Ride</string>
+    <string name="get_ride">Get Ride</string>
+    <string name="fresh">Fresh</string>
+    <string name="grocery">Grocery</string>
+    <string name="order_history">Order History</string>
+    <string name="delete_fresh_cart_message">Are you sure you want to delete all items in your cart?</string>
+    <string name="checkout">Checkout</string>
+    <string name="my_cart">My Cart</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="order_amount">Order Amount</string>
+    <string name="delivery_charges">Delivery Charges</string>
+    <string name="discount">Discount</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="address">Address</string>
+    <string name="add_address">Add Address</string>
+    <string name="delivery_date_time">Delivery Date &amp; Time</string>
+    <string name="proceed_to_payment">Proceed To Payment</string>
+    <string name="amount_payable">Amount Payable</string>
+    <string name="other">Other</string>
+    <string name="add_your_address">Add your address</string>
+    <string name="please_fill_your_address">Please fill your address</string>
+    <string name="limit_address">Address must be within 200 characters</string>
+    <string name="please_select_a_delivery_slot">Please select a Delivery Slot</string>
+    <string name="no_slots_currently">No Delivery Slots currently</string>
+    <string name="please_select_a_delivery_address">Please select a Delivery Address</string>
+    <string name="pay_rupees_using_format">Pay \u20B9%s using:</string>
+    <string name="payment">Payment</string>
+    <string name="place_order">Place Order</string>
+    <string name="recharge_now">Recharge Now</string>
+    <string name="pay_via_cash">Pay via Cash</string>
+    <string name="balance_running_low">Balance is running low!</string>
+    <string name="dont_have_enough_paytm_balance">You don\'t have enough money for\ntransaction in your Paytm wallet.</string>
+    <string name="dont_have_enough_mobikwik_balance">You don\'t have enough money for\ntransaction in your Mobikwik wallet.</string>
+    <string name="dont_have_enough_freecharge_balance">You don\'t have enough money for\ntransaction in your FreeCharge wallet.</string>
+    <string name="get_fresh">Get Fresh</string>
+    <string name="fruits_and_vegetables">FRUITS AND VEGETABLES</string>
+    <string name="delivered_at_your_doorstep">delivered at your doorstep</string>
+    <string name="continue_text">Continue</string>
+    <string name="try_now">Try Now</string>
+    <string name="order_status">Status:</string>
+    <string name="id">ID:</string>
+    <string name="order_date_colon">Order Date:</string>
+    <string name="delivery_address_colon">Delivery Address:</string>
+    <string name="order_id_colon">Order ID:</string>
+    <string name="delivery_date">Delivery Date</string>
+    <string name="delivery_slot">Delivery Slot</string>
+    <string name="order_receipt">Order Receipt</string>
+    <string name="payment_by">Payment By</string>
+    <string name="item_name_unit_price_format">%1$s (%2$s) X %3$s</string>
+    <string name="x_format">%1$s X %2$s</string>
+    <string name="order_summary">Order Summary</string>
+    <string name="got_any_queries">Got any queries/concerns/feedback?</string>
+    <string name="please_contact_the_helpline">Please contact the helpline</string>
+    <string name="place_order_confirmation">Are you sure you want to place your order?</string>
+    <string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fresh!</string>
+    <string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith Jugnoo Meals!</string>
+    <string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith Jugnoo Grocery!</string>
+    <string name="thank_you_for_placing_order_menus_format">Order placed with %s.\nYou will get a confirmation once your order is accepted.</string>
+    <string name="your_order_id">Your Order ID:</string>
+    <string name="will_be_delivered_by">will be delivered by</string>
+    <string name="your_cart_is_empty">Your cart is empty</string>
+    <string name="search_items">Search Items</string>
+    <string name="item_cancelled">Cancelled</string>
+
+
+    <string name="refer_a_driver">Refer a Driver</string>
+    <string name="came_across_auto_driver">Riding with a driver\nnot aware of jugnoo yet?</string>
+    <string name="kindly_recommend_us_to_them">Kindly recommend us to them.</string>
+    <string name="if_they_are_interested">Please help us improve Jugnoo\nand increase driver income.\nWin! Win!</string>
+    <string name="name_of_driver">Name of Driver</string>
+    <string name="contact_number">Contact Number</string>
+    <string name="refer">Refer</string>
+    <string name="want_free_rides">Get Free Jugnoo Cash</string>
+
+    <string name="inbox">Inbox</string>
+    <string name="play">Play</string>
+    <string name="no_campaign_currently">No campaign currently</string>
+    <string name="fare_ln_estimate">Fare\nEstimate</string>
+    <string name="base_fare_colon">Base Fare:</string>
+    <string name="fixed_fare_colon">Fixed Fare:</string>
+    <string name="minimum_fare_rupee_format">Minimum Fare \u20B9<b>%s</b></string>
+    <string name="base_fare_format">BASE FARE : <b>%s</b></string>
+
+
+    <string name="format_x">%s x</string>
+    <string name="format_x_without_space">%sx</string>
+
+    <string name="fare_details">Fare Details</string>
+    <string name="pay_for_your_rides_using">Pay for your rides using</string>
+    <string name="enter_destination">Enter Destination</string>
+    <string name="destination_required">Destination required</string>
+    <string name="add_paytm_money_help_text">Pay for Jugnoo with a Mobile Wallet</string>
+    <string name="convenience_charge_rupees_format">Convenience Charge: \u20B9%s</string>
+    <string name="base_fare">Base Fare</string>
+    <string name="fixed_fare">Fixed Fare</string>
+    <string name="want_to_refer_a_driver">Want to refer a Driver?</string>
+    <string name="promotions">Promotions</string>
+    <string name="referrals">Referrals</string>
+    <string name="referrals_tab">REFER &amp; WIN</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="activity">Activity</string>
+    <string name="enter_promo_code">Enter Promo code</string>
+    <string name="add_promo_code">Add Promo Code</string>
+    <string name="offers_available">Offers Available</string>
+    <string name="no_offers_currently">No offers currently</string>
+    <string name="valid_until_format">Valid until\n%s</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="save">Save</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="retype_password">Retype Password</string>
+    <string name="username_empty_error">Username can\'t be empty</string>
+    <string name="email_empty_error">Email can\'t be empty</string>
+    <string name="phone_empty_error">Phone number can\'t be empty</string>
+    <string name="nothing_changed">Nothing changed</string>
+    <string name="old_password_empty_error">Please enter old password</string>
+    <string name="new_password_empty_error">Please enter new password</string>
+    <string name="retype_password_empty_error">Please retype new password</string>
+    <string name="retype_password_different_error">Passwords not matched</string>
+    <string name="new_password_same_error">New Password is same as the old one</string>
+    <string name="new_password_length_error_format">New Password must be of atleast %s characters</string>
+    <string name="add_emergency_contacts">Add Emergency Contacts</string>
+    <string name="pool_rides_offer_guaranteed_fares">Pool rides offer guaranteed fares. Check your fare on next screen before confirming the ride</string>
+    <string name="please_provide_pickup_and_dest">Please provide pickup and destination location to generate your guaranteed fare.</string>
+    <string name="you_will_not_change_dest">* You will not be able to change destination during the ride.</string>
+
+    <string name="receipt">Receipt</string>
+    <string name="feedback">Feedback</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="max_people">MAX PEOPLE:</string>
+    <string name="fares_updated">Fares updated try again</string>
+    <string name="no_current_offers">No Current Offers</string>
+    <string name="mobikwik_wallet">MobiKwik Wallet</string>
+    >>>>>>> feature_menus
     <string name="freecharge_wallet">FreeCharge Wallet</string>
     <string name="add_mobikwik_wallet">Add MobiKwik Wallet</string>
     <string name="add_freecharge_wallet">Add FreeCharge Wallet</string>
@@ -1083,301 +1080,291 @@
 
     <string name="freecharge">FreeCharge</string>
     <string name="add_freecharge_cash">Add FreeCharge Cash</string>
-	<string name="freecharge_low_cash">Your FreeCharge cash is low</string>
-	<string name="freecharge_error_case_select_cash">We are not able to connect to FreeCharge</string>
-	<string name="freecharge_no_cash">You do not have money in your\nFreeCharge Account</string>
+    <string name="freecharge_low_cash">Your FreeCharge cash is low</string>
+    <string name="freecharge_error_case_select_cash">We are not able to connect to FreeCharge</string>
+    <string name="freecharge_no_cash">You do not have money in your\nFreeCharge Account</string>
 
-	<string name="yes">Yes</string>
-	<string name="never">Never</string>
-	<string name="maybe_later">Maybe Later</string>
-	<string name="yes_rate_it_now">Yes Rate it now!</string>
-	<string name="rate_app_dialog_title">Do you find Jugnoo useful?</string>
-	<string name="rate_app_dialog_message">We would appreciate if you could rate us on the Play Store</string>
-	<string name="rate_now">Rate Now</string>
-	<string name="not_now">Not Now</string>
-	<string name="never_ask_again">Never Ask Again</string>
+    <string name="yes">Yes</string>
+    <string name="never">Never</string>
+    <string name="maybe_later">Maybe Later</string>
+    <string name="yes_rate_it_now">Yes Rate it now!</string>
+    <string name="rate_app_dialog_title">Do you find Jugnoo useful?</string>
+    <string name="rate_app_dialog_message">We would appreciate if you could rate us on the Play Store</string>
+    <string name="rate_now">Rate Now</string>
+    <string name="not_now">Not Now</string>
+    <string name="never_ask_again">Never Ask Again</string>
 
-	<string name="getting_address">Getting address...</string>
-	<string name="tracking_log">Tracking Log</string>
-	<string name="engagement_id">Engagement ID</string>
-	<string name="empty_engagement_id">Empty engagement id</string>
-	<string name="invalid_engagement_id">Invalid engagement id</string>
-	<string name="offers">Offers</string>
-	<string name="select_offers">Select Offers</string>
-	<string name="add_new_address">Add new address</string>
-	<string name="could_not_find_address">Could not find address</string>
-	<string name="label_can_not_be_empty">Label can\'t be empty</string>
-	<string name="label">Label e.g. Home/Office</string>
-	<string name="add_favorite">Add Favorite</string>
-	<string name="address_book">Address Book</string>
-	<string name="wallet_topup">Wallet Topup</string>
-	<string name="enter_topup_card_code">Enter Topup Card code</string>
-	<string name="recharge_jc_topup_info">Recharge Jugnoo Cash with Topup Card</string>
-	<string name="topup_code_empty">Topup code empty</string>
-	<string name="update_address">Update Address</string>
-	<string name="address_delete_confirm_message">Are you sure you want to delete this address?</string>
-	<string name="edit_address">Edit Address</string>
-	<string name="saved_places">Saved Places</string>
-	<string name="recent_addresses">Recent Addresses</string>
-	<string name="avail_offers">Avail Offers</string>
-	<string name="delivery_instructions">Delivery Instructions</string>
-	<string name="address_label_matched_message_format">Address with label \"%s\" already present. Do you want to overwrite it?</string>
-	<string name="next">Next</string>
-	<string name="skip_and_proceed">Skip and proceed</string>
-	<string name="lets_complete_your_meal">Let\'s complete your meal</string>
-	<string name="pick_addons">Pick Add-Ons</string>
-	<string name="proceed">Proceed</string>
-	<string name="cant_remove_main_item">Can\'t remove main item</string>
-	<string name="changes_not_updated_exit">Your changes are not updated. Do you want to exit?</string>
-	<string name="pick">Pick</string>
-	<string name="set">Set</string>
-	<string name="payment_via">Payment Via</string>
-	<string name="add_special_notes">Add special notes to driver..</string>
-	<string name="confirm_pay">Confirm &amp; Pay</string>
-	<string name="cart_items">Cart Items</string>
-	<string name="cart_items_format">Cart Items(%s)</string>
-	<string name="payment_mode">Payment Mode</string>
-	<string name="order_status_txt">Order Status:</string>
-	<string name="order_time">Order Time:</string>
-	<string name="delivery_time">Delivery Time:</string>
-	<string name="delivery_to">Delivery To:</string>
-	<string name="payment_method">Payment Method</string>
-	<string name="no_delivery_slot">No delivery slots</string>
-	<string name="slot_is_disabled">Slot is disabled</string>
-	<string name="free">Free</string>
-	<string name="paid_via">Paid via</string>
-	<string name="billed_amount">Billed Amount</string>
-	<string name="refund">Refund</string>
-	<string name="coupon_remove_reapply_before_checkout">This will remove your applied coupon, you have to reapply your coupon</string>
-	<string name="tag_address_as">Tag address as:</string>
-	<string name="choose_pickup">Choose Pickup</string>
-	<string name="chat">Chat</string>
-	<string name="address_used_multiple_time_format">Used %s times</string>
-	<string name="address_used_one_time_format">Used %s time</string>
-	<string name="enter_pickup">Enter Pickup Location</string>
-	<string name="recent_locations">Recent locations</string>
-	<string name="saved_locations">Saved locations</string>
-	<string name="trying_to_verify">Trying to verify through\nmissed call...</string>
-	<string name="we_could_not_verify">Sorry, we could not verify through\nmissed call. Please try again.</string>
-	<string name="selecting_a_pickup_spot">Selecting a pickup spot will save you time and make it easier to find your driver.</string>
-	<string name="no_available_offers">No Available Offers</string>
-	<string name="select_an_offer">Select an Offer</string>
-	<string name="add_other_address">Add Other Address</string>
-	<string name="suggested_addresses">Suggested Addresses</string>
-	<string name="save_address_as">Save address as:</string>
-	<string name="address_name">Address Name</string>
-	<string name="hi_username_format">Hi %s!</string>
-	<string name="we_have_these_offerings">Following services are available at your location.\nPlease select a service:</string>
-	<string name="you_can_always_navigate">You can always navigate between various\nservices using Jugnoo Jeanie.</string>
-
-
-	<string name="jugnoo_offerings">Jugnoo Offerings</string>
-	<string name="side_menu">Side menu</string>
-	<string name="view_account">View Account</string>
-	<string name="my_location">My location</string>
-	<string name="chat_with_driver">chat with driver</string>
-	<string name="bad_feedback">bad feedback</string>
-	<string name="great_feedback">great feedback</string>
-	<string name="menus">Menus</string>
-	<string name="search_dot">Search...</string>
-	<string name="closed">Closed</string>
-	<string name="location">Location</string>
-	<string name="vendor_colon">Vendor:</string>
-	<string name="mins_format">%s mins</string>
-	<string name="opens_at_format">Opens at %s</string>
-	<string name="delivered_from_colon">Delivered from:</string>
-	<string name="oh_snap">Oh snap!</string>
-	<string name="nothing_found_near_you">Nothing found near you\ntry to search with a different location.</string>
-	<string name="sort_by">Sort by</string>
-	<string name="popularity">Popularity</string>
-	<string name="price">Price</string>
-	<string name="cuisines">Cuisines</string>
-	<string name="minimum_order">Minimum order</string>
-	<string name="less_than_150"><![CDATA[<Rs. 150]]></string>
-	<string name="less_than_250"><![CDATA[<Rs. 250]]></string>
-	<string name="less_than_500"><![CDATA[<Rs. 500]]></string>
-	<string name="delivery_time_wo_colon">Delivery time</string>
-	<string name="min_30">30 Min</string>
-	<string name="min_45">45 Min</string>
-	<string name="min_60">60 Min</string>
-	<string name="filters">Filters</string>
-	<string name="reset">Reset</string>
-	<string name="bullet">\u2022</string>
-	<string name="select_cuisines">Select Cuisines</string>
-	<string name="search_a_cuisine">Search a cuisine</string>
-	<string name="more_info">More info</string>
-	<string name="previous_vendor_cart_message_format">You have added some items in cart from %s.\nAre you sure you want to clear the cart?</string>
-	<string name="minimum_order_amount_is_format">Minimum order amount is \u20B9%s</string>
-	<string name="request_a_ride">Request a ride</string>
-	<string name="move_to_your_location">Move to your location</string>
-	<string name="no_cuisine_found">No cuisine found</string>
-	<string name="no_menus_available">No menus available</string>
-	<string name="service_tax">Service Tax</string>
-	<string name="vat">VAT</string>
-	<string name="packaging_charges">Packaging Charges</string>
-	<string name="amount_paid">Amount Paid</string>
-
-	<string name="pay">Pay</string>
+    <string name="getting_address">Getting address...</string>
+    <string name="tracking_log">Tracking Log</string>
+    <string name="engagement_id">Engagement ID</string>
+    <string name="empty_engagement_id">Empty engagement id</string>
+    <string name="invalid_engagement_id">Invalid engagement id</string>
+    <string name="offers">Offers</string>
+    <string name="select_offers">Select Offers</string>
+    <string name="add_new_address">Add new address</string>
+    <string name="could_not_find_address">Could not find address</string>
+    <string name="label_can_not_be_empty">Label can\'t be empty</string>
+    <string name="label">Label e.g. Home/Office</string>
+    <string name="add_favorite">Add Favorite</string>
+    <string name="address_book">Address Book</string>
+    <string name="wallet_topup">Wallet Topup</string>
+    <string name="enter_topup_card_code">Enter Topup Card code</string>
+    <string name="recharge_jc_topup_info">Recharge Jugnoo Cash with Topup Card</string>
+    <string name="topup_code_empty">Topup code empty</string>
+    <string name="update_address">Update Address</string>
+    <string name="address_delete_confirm_message">Are you sure you want to delete this address?</string>
+    <string name="edit_address">Edit Address</string>
+    <string name="saved_places">Saved Places</string>
+    <string name="recent_addresses">Recent Addresses</string>
+    <string name="avail_offers">Avail Offers</string>
+    <string name="delivery_instructions">Delivery Instructions</string>
+    <string name="address_label_matched_message_format">Address with label \"%s\" already present. Do you want to overwrite it?</string>
+    <string name="next">Next</string>
+    <string name="skip_and_proceed">Skip and proceed</string>
+    <string name="lets_complete_your_meal">Let\'s complete your meal</string>
+    <string name="pick_addons">Pick Add-Ons</string>
+    <string name="proceed">Proceed</string>
+    <string name="cant_remove_main_item">Can\'t remove main item</string>
+    <string name="changes_not_updated_exit">Your changes are not updated. Do you want to exit?</string>
+    <string name="pick">Pick</string>
+    <string name="set">Set</string>
+    <string name="payment_via">Payment Via</string>
+    <string name="add_special_notes">Add special notes to driver..</string>
+    <string name="confirm_pay">Confirm &amp; Pay</string>
+    <string name="cart_items">Cart Items</string>
+    <string name="cart_items_format">Cart Items(%s)</string>
+    <string name="payment_mode">Payment Mode</string>
+    <string name="order_status_txt">Order Status:</string>
+    <string name="order_time">Order Time:</string>
+    <string name="delivery_time">Delivery Time:</string>
+    <string name="delivery_to">Delivery To:</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="no_delivery_slot">No delivery slots</string>
+    <string name="slot_is_disabled">Slot is disabled</string>
+    <string name="free">Free</string>
+    <string name="paid_via">Paid via</string>
+    <string name="billed_amount">Billed Amount</string>
+    <string name="refund">Refund</string>
+    <string name="coupon_remove_reapply_before_checkout">This will remove your applied coupon, you have to reapply your coupon</string>
+    <string name="tag_address_as">Tag address as:</string>
+    <string name="choose_pickup">Choose Pickup</string>
+    <string name="chat">Chat</string>
+    <string name="address_used_multiple_time_format">Used %s times</string>
+    <string name="address_used_one_time_format">Used %s time</string>
+    <string name="enter_pickup">Enter Pickup Location</string>
+    <string name="recent_locations">Recent locations</string>
+    <string name="saved_locations">Saved locations</string>
+    <string name="trying_to_verify">Trying to verify through\nmissed call...</string>
+    <string name="we_could_not_verify">Sorry, we could not verify through\nmissed call. Please try again.</string>
+    <string name="selecting_a_pickup_spot">Selecting a pickup spot will save you time and make it easier to find your driver.</string>
+    <string name="no_available_offers">No Available Offers</string>
+    <string name="select_an_offer">Select an Offer</string>
+    <string name="add_other_address">Add Other Address</string>
+    <string name="suggested_addresses">Suggested Addresses</string>
+    <string name="save_address_as">Save address as:</string>
+    <string name="address_name">Address Name</string>
+    <string name="hi_username_format">Hi %s!</string>
+    <string name="we_have_these_offerings">Following services are available at your location.\nPlease select a service:</string>
+    <string name="you_can_always_navigate">You can always navigate between various\nservices using Jugnoo Jeanie.</string>
 
 
+    <string name="jugnoo_offerings">Jugnoo Offerings</string>
+    <string name="side_menu">Side menu</string>
+    <string name="view_account">View Account</string>
+    <string name="my_location">My location</string>
+    <string name="chat_with_driver">chat with driver</string>
+    <string name="bad_feedback">bad feedback</string>
+    <string name="great_feedback">great feedback</string>
+    <string name="menus">Menus</string>
+    <string name="search_dot">Search...</string>
+    <string name="closed">Closed</string>
+    <string name="location">Location</string>
+    <string name="vendor_colon">Vendor:</string>
+    <string name="mins_format">%s mins</string>
+    <string name="opens_at_format">Opens at %s</string>
+    <string name="delivered_from_colon">Delivered from:</string>
+    <string name="oh_snap">Oh snap!</string>
+    <string name="nothing_found_near_you">Nothing found near you\ntry to search with a different location.</string>
+    <string name="sort_by">Sort by</string>
+    <string name="popularity">Popularity</string>
+    <string name="price">Price</string>
+    <string name="cuisines">Cuisines</string>
+    <string name="minimum_order">Minimum order</string>
+    <string name="less_than_150"><![CDATA[<Rs. 150]]></string>
+    <string name="less_than_250"><![CDATA[<Rs. 250]]></string>
+    <string name="less_than_500"><![CDATA[<Rs. 500]]></string>
+    <string name="delivery_time_wo_colon">Delivery time</string>
+    <string name="min_30">30 Min</string>
+    <string name="min_45">45 Min</string>
+    <string name="min_60">60 Min</string>
+    <string name="filters">Filters</string>
+    <string name="reset">Reset</string>
+    <string name="bullet">\u2022</string>
+    <string name="select_cuisines">Select Cuisines</string>
+    <string name="search_a_cuisine">Search a cuisine</string>
+    <string name="more_info">More info</string>
+    <string name="previous_vendor_cart_message_format">You have added some items in cart from %s.\nAre you sure you want to clear the cart?</string>
+    <string name="minimum_order_amount_is_format">Minimum order amount is \u20B9%s</string>
+    <string name="request_a_ride">Request a ride</string>
+    <string name="move_to_your_location">Move to your location</string>
+    <string name="no_cuisine_found">No cuisine found</string>
+    <string name="no_menus_available">No menus available</string>
+    <string name="service_tax">Service Tax</string>
+    <string name="vat">VAT</string>
+    <string name="packaging_charges">Packaging Charges</string>
+    <string name="amount_paid">Amount Paid</string>
+
+    <string name="pay">Pay</string>
 
 
+    <string name="gcm_key">AIzaSyBj3fpsuedq8_w3euc_UxxXjeL4fxU5IRg</string>
+    // gcm sender id or project number
+    <!--<string name="google_project_id">360497338494</string>-->
+    <string name="google_project_id">277283237448</string>
+
+    <!--<string name="google_server_client_id">277283237448-9utarplql7eoisp84e7pj9cf0naha2tm.apps.googleusercontent.com</string>-->
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
 
+    <string name="session_expired_string">Session expired!</string>
+
+    //Screens Titles
+    <string name="otp_screen">One time password</string>
+    <!--<string name="home_screen">Home</string>-->
+    <string name="select_contact_screen">Select Contact</string>
+    <string name="send_money_screen">Send Money</string>
+    <string name="request_money_screen">Request Money</string>
+    <string name="requested_successfully">Requested Successfully</string>
+    <string name="forgot_password_screen">Forgot password</string>
+    <string name="reset_password_screen">Reset password</string>
+    <string name="transc_completed_screen">Transaction Completed</string>
+    <string name="pending_trnsc_screen">Pending Transactions</string>
+    <string name="profile_screen">Profile</string>
+    <string name="trnsc_history_screen">Transaction History</string>
+    <string name="add_card_screen">Add card</string>
+    <string name="payment_screen">Payment</string>
+    <string name="change_password_screen">Change Password</string>
+    <!--<string name="my_booking_screen">My bookings</string>-->
+    <string name="booking_creation_screen">Booking creation</string>
+    <string name="feedback_screen">Feedback</string>
+    <string name="help_screen">SHINRAI</string>
+    <string name="contact_screen">Contact Us</string>
+    <!--<string name="token_screen">Tokens</string>-->
+    <!--<string name="refer_screen">Refer and earn</string>-->
+    <string name="no_pending_txn">No pending transactions\ncurrently</string>
+    <string name="no_txn_currently">No transactions currently</string>
 
 
+    // signup
+    <string name="sign_up_string">Sign up</string>
+    <string name="sign_in_string">Sign in</string>
+    <string name="full_name_string">Full name</string>
+    <string name="mobile_string">Mobile Number</string>
+    <string name="email_string">Email ID</string>
+    <string name="regular_charges_string">*Regular SMS charges will apply</string>
+    <string name="password_string">Password</string>
+    <string name="confirm_password_string">Confirm password</string>
+    <string name="verify_code_string">Enter verification code</string>
+    <string name="signup_note_string">It seems that your Mobile has Dual-SIMs. Please make sure that your Mobile No. registered with your bank is your primary sim.</string>
+
+    <string name="before_terms_string">By Signing up you agree to our <u>Terms of Use</u></string>
+    <string name="terms_string"> Terms of Use/</string>
+    <string name="conditions_string"> Private Policy </string>
+    <string name="continue_string">Continue</string>
+    <string name="facebook_string">Sign up using</string>
+    <string name="dont_have_string">Don\'t have an account? </string>
+    <string name="rupees_symbol">\u20B9</string>
 
 
+    // Home page strings
+    <string name="send_money_string">SEND MONEY</string>
+    <string name="request_money_string">Request Money</string>
+    <string name="request">Request</string>
+    <string name="requested_to">Requested to</string>
+
+    // otp strings
+    <string name="otp_string">Enter the OTP sent on your mobile xxxxxxx333</string>
+    <string name="proceed_string">Proceed</string>
+
+    //forgot password screen
+    <string name="forgot_string">Forgot your password?</string>
+    <string name="new_password_string">New Password</string>
+    <string name="old_password_string">Password</string>
+    <string name="new_confirm_password_string">Retype Password</string>
+    <string name="reset_string">Reset password</string>
+    <string name="forgot_note_string">Enter your email id or phone number below to receive your password reset instructions</string>
+    <string name="enter_one_time_password_string">Please enter the one time password\nsent on your mobile.</string>
 
 
+    <string name="cancellation_policy_string"><u>Cancellation policy</u>.</string>
+    <string name="choose_mobile_number">Please make sure your mobile number registered with your bank is in your primary sim slot.</string>
 
 
+    // app policies url
 
-<string name="gcm_key">AIzaSyBj3fpsuedq8_w3euc_UxxXjeL4fxU5IRg</string>
-	// gcm sender id or project number
-	<!--<string name="google_project_id">360497338494</string>-->
-<string name="google_project_id">277283237448</string>
-
-	<!--<string name="google_server_client_id">277283237448-9utarplql7eoisp84e7pj9cf0naha2tm.apps.googleusercontent.com</string>-->
-
-<string name="navigation_drawer_open">Open navigation drawer</string>
-<string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="terms_url_string">http://54.149.71.85/shinrai-webpages/terms.html</string>
+    <string name="privacy_url_string">http://54.149.71.85/shinrai-webpages/privacy_policy.html</string>
+    <string name="pricing_url_string">http://54.149.71.85/shinrai-webpages/pricing_policy.html</string>
+    <string name="cancellation_url_string">http://54.149.71.85/shinrai-webpages/cancellation_policy.html</string>
+    <string name="website_url_string">http://shinrai.com</string>
+    <string name="help_note_string">Shinrai is based on trust, for any suggestions of problems that really matter and where we could do a difference, please send an e-mail at <u>weareshinrai@gmail.com.</u> Thanks for your trust, help and understanding! Lets rock it.</string>
 
 
-<string name="session_expired_string">Session expired!</string>
-
-	//Screens Titles
-<string name="otp_screen">One time password</string>
-	<!--<string name="home_screen">Home</string>-->
-<string name="select_contact_screen">Select Contact</string>
-<string name="send_money_screen">Send Money</string>
-<string name="request_money_screen">Request Money</string>
-<string name="requested_successfully">Requested Successfully</string>
-<string name="forgot_password_screen">Forgot password</string>
-<string name="reset_password_screen">Reset password</string>
-<string name="transc_completed_screen">Transaction Completed</string>
-<string name="pending_trnsc_screen">Pending Transactions</string>
-<string name="profile_screen">Profile</string>
-<string name="trnsc_history_screen">Transaction History</string>
-<string name="add_card_screen">Add card</string>
-<string name="payment_screen">Payment</string>
-<string name="change_password_screen">Change Password</string>
-	<!--<string name="my_booking_screen">My bookings</string>-->
-<string name="booking_creation_screen">Booking creation</string>
-<string name="feedback_screen">Feedback</string>
-<string name="help_screen">SHINRAI</string>
-<string name="contact_screen">Contact Us</string>
-	<!--<string name="token_screen">Tokens</string>-->
-	<!--<string name="refer_screen">Refer and earn</string>-->
-<string name="no_pending_txn">No pending transactions\ncurrently</string>
-<string name="no_txn_currently">No transactions currently</string>
-
-
-
-	// signup
-<string name="sign_up_string">Sign up</string>
-<string name="sign_in_string">Sign in</string>
-<string name="full_name_string">Full name</string>
-<string name="mobile_string">Mobile Number</string>
-<string name="email_string">Email ID</string>
-<string name="regular_charges_string">*Regular SMS charges will apply</string>
-<string name="password_string">Password</string>
-<string name="confirm_password_string">Confirm password</string>
-<string name="verify_code_string">Enter verification code</string>
-<string name="signup_note_string">It seems that your Mobile has Dual-SIMs. Please make sure that your Mobile No. registered with your bank is your primary sim.</string>
-
-<string name="before_terms_string">By Signing up you agree to our <u>Terms of Use</u></string>
-<string name="terms_string"> Terms of Use/</string>
-<string name="conditions_string"> Private Policy </string>
-<string name="continue_string">Continue</string>
-<string name="facebook_string">Sign up using</string>
-<string name="dont_have_string">Don\'t have an account? </string>
-<string name="rupees_symbol">\u20B9</string>
-
-
-	// Home page strings
-<string name="send_money_string">SEND MONEY</string>
-<string name="request_money_string">Request Money</string>
-<string name="request">Request</string>
-<string name="requested_to">Requested to</string>
-
-	// otp strings
-<string name="otp_string">Enter the OTP sent on your mobile xxxxxxx333</string>
-<string name="proceed_string">Proceed</string>
-
-	//forgot password screen
-<string name="forgot_string">Forgot your password?</string>
-<string name="new_password_string">New Password</string>
-<string name="old_password_string">Password</string>
-<string name="new_confirm_password_string">Retype Password</string>
-<string name="reset_string">Reset password</string>
-<string name="forgot_note_string">Enter your email id or phone number below to receive your password reset instructions</string>
-<string name="enter_one_time_password_string">Please enter the one time password\nsent on your mobile.</string>
-
-
-<string name="cancellation_policy_string"><u>Cancellation policy</u>.</string>
-<string name="choose_mobile_number">Please make sure your mobile number registered with your bank is in your primary sim slot.</string>
-
-
-	// app policies url
-
-<string name="terms_url_string">http://54.149.71.85/shinrai-webpages/terms.html</string>
-<string name="privacy_url_string">http://54.149.71.85/shinrai-webpages/privacy_policy.html</string>
-<string name="pricing_url_string">http://54.149.71.85/shinrai-webpages/pricing_policy.html</string>
-<string name="cancellation_url_string">http://54.149.71.85/shinrai-webpages/cancellation_policy.html</string>
-<string name="website_url_string">http://shinrai.com</string>
-<string name="help_note_string">Shinrai is based on trust, for any suggestions of problems that really matter and where we could do a difference, please send an e-mail at <u>weareshinrai@gmail.com.</u> Thanks for your trust, help and understanding! Lets rock it.</string>
-
-
-
-	// select contact strings
-<string name="add_contact">CONTACTS</string>
-<string name="mobile_contact">Type a name or mobile number</string>
-<string name="amount_string">Enter amount</string>
-<string name="message_string">Add a message (optional)</string>
-<string name="message">Message</string>
-<string name="send_string">Send Money</string>
-<string name="transaction_pending_string">Transaction pending</string>
-<string name="transaction_failed_string">Transaction failed</string>
-<string name="info_string">INFO</string>
-<string name="transc_id_string">Transaction ID</string>
-<string name="paid_string">Paid to</string>
-<string name="ok_string">OK</string>
-<string name="cancel_string">Cancel</string>
-<string name="decline_string">Decline</string>
-<string name="pay_string">Pay</string>
-<string name="change_pswd_string">CHANGE PASSWORD</string>
-<string name="logout_string">LOGOUT</string>
-	<string name="contact">Contact</string>
-	<string name="payment_address">Payment Address</string>
-	<string name="payment_id">Payment ID</string>
-	<string name="send_money">Send Money</string>
-	<string name="request_money">Request Money</string>
-	<string name="pending_payments">Pending Payments</string>
-	<string name="decline">Decline</string>
-	<string name="requested_by">Requested by</string>
-	<string name="dismiss">Dismiss</string>
-	<string name="requested_from">Requested from</string>
-	<string name="remind">Remind</string>
-	<string name="decline_request_message">Are you sure you want to decline the request?</string>
-	<string name="cancel_request_message">Are you sure you want to cancel the request?</string>
-	<string name="add_payment_address">Add Payment Address</string>
-	<string name="add_payment_add_title">You can send or request money to the Payment Address (VPA) of your contact.</string>
-	<string name="add_payment_add_desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
-	<string name="enter_name">Enter Name</string>
-	<string name="enter_payment_address">Enter Payment Address</string>
-	<string name="add_a_location">Add a location (optional)</string>
-	<string name="debit_from">Debit from</string>
-	<string name="no_pending_payments">No pending payments</string>
-	<string name="transaction_status">Transaction status:</string>
-	<string name="transaction_time">Transaction time:</string>
-	<string name="bank_ref_id">Bank Ref ID:</string>
-	<string name="npci_transaction_id">NPCI Transaction ID:</string>
-	<string name="no_payment_address_added">No Payment Address Contacts added.</string>
-	<string name="failed">Failed</string>
-	<string name="transaction_id_number_format">Transaction ID #%s</string>
-	<string name="successful">Successful</string>
-	<string name="generate_vpa">Generate VPA</string>
+    // select contact strings
+    <string name="add_contact">CONTACTS</string>
+    <string name="mobile_contact">Type a name or mobile number</string>
+    <string name="amount_string">Enter amount</string>
+    <string name="message_string">Add a message (optional)</string>
+    <string name="message">Message</string>
+    <string name="send_string">Send Money</string>
+    <string name="transaction_pending_string">Transaction pending</string>
+    <string name="transaction_failed_string">Transaction failed</string>
+    <string name="info_string">INFO</string>
+    <string name="transc_id_string">Transaction ID</string>
+    <string name="paid_string">Paid to</string>
+    <string name="ok_string">OK</string>
+    <string name="cancel_string">Cancel</string>
+    <string name="decline_string">Decline</string>
+    <string name="pay_string">Pay</string>
+    <string name="change_pswd_string">CHANGE PASSWORD</string>
+    <string name="logout_string">LOGOUT</string>
+    <string name="contact">Contact</string>
+    <string name="payment_address">Payment Address</string>
+    <string name="payment_id">Payment ID</string>
+    <string name="send_money">Send Money</string>
+    <string name="request_money">Request Money</string>
+    <string name="pending_payments">Pending Payments</string>
+    <string name="decline">Decline</string>
+    <string name="requested_by">Requested by</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="requested_from">Requested from</string>
+    <string name="remind">Remind</string>
+    <string name="decline_request_message">Are you sure you want to decline the request?</string>
+    <string name="cancel_request_message">Are you sure you want to cancel the request?</string>
+    <string name="add_payment_address">Add Payment Address</string>
+    <string name="add_bank_acc">Add A Bank Account</string>
+    <string name="add_payment_add_title">You can send or request money to the Payment Address (VPA) of your contact.</string>
+    <string name="add_payment_add_desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="enter_ifsc_code">Enter IFSC Code</string>
+    <string name="enter_acc_holder_name">Enter Account Holder Name</string>
+    <string name="enter_acc_number">Enter Account Number</string>
+    <string name="confirm_acc_number">Confirm Account Number</string>
+    <string name="enter_payment_address">Enter Payment Address</string>
+    <string name="add_a_location">Add a location (optional)</string>
+    <string name="debit_from">Debit from</string>
+    <string name="no_pending_payments">No pending payments</string>
+    <string name="transaction_status">Transaction status:</string>
+    <string name="transaction_time">Transaction time:</string>
+    <string name="bank_ref_id">Bank Ref ID:</string>
+    <string name="npci_transaction_id">NPCI Transaction ID:</string>
+    <string name="no_payment_address_added">No Payment Address Contacts added.</string>
+    <string name="failed">Failed</string>
+    <string name="transaction_id_number_format">Transaction ID #%s</string>
+    <string name="successful">Successful</string>
+    <string name="generate_vpa">Generate VPA</string>
     <string name="pay_colon">Pay:</string>
     <string name="vpa_not_valid">VPA not valid</string>
     <string name="fields_invalid">Entererd fields are invalid</string>

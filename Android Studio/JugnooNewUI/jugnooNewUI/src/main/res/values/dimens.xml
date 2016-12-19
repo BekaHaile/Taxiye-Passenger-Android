@@ -16,7 +16,7 @@
     <dimen name="normal_text_view_size">13.4sp</dimen>
     <dimen name="small_text_view_size">12.3sp</dimen>
     <dimen name="large_text_view_size">23sp</dimen>
-    <dimen name="medium_text_view_size"> 20.2sp</dimen>
+    <dimen name="medium_text_view_size">20.2sp</dimen>
 
 
     // for country spinner
@@ -32,9 +32,6 @@
     //layout margin
     <dimen name="layout_margin">43dp</dimen>
     <dimen name="other_layout_margin">20dp</dimen>
-
-
-
 
 
     <!-- Default screen margins, per the Android Design guidelines. -->
@@ -96,9 +93,6 @@
     <dimen name="redirect_bank_text_size">19.21px</dimen>
 
 
-
-
-
     <!-- payment option dialog dimensions -->
     <dimen name="payment_option_dialog_margin">70px</dimen>
     <dimen name="payment_option_dialog_title_text_size">28px</dimen>
@@ -126,7 +120,6 @@
     <dimen name="button_big_height">88px</dimen>
 
 
-
     <dimen name="social_button_width">282px</dimen>
     <dimen name="social_button_height">86px</dimen>
     <dimen name="social_button_google_left_margin">60px</dimen>
@@ -147,7 +140,6 @@
     <dimen name="share_activity_text_margin_top">62px</dimen>
     <dimen name="share_activity_data_text_margin_top">62px</dimen>
     <dimen name="share_activity_first_rl_margin_top">62px</dimen>
-
 
 
     <!-- share leaderboard screen-->
@@ -183,7 +175,6 @@
     <dimen name="padding_4dp">4dp</dimen>
 
 
-
     <!-- NL dimensions-->
     <dimen name="button_stroke_width">1dp</dimen>
     <dimen name="nl_sliding_bottom_without_tabs">306px</dimen>
@@ -211,10 +202,7 @@
     <dimen name="map_padding_request_final_extra">70px</dimen>
 
 
-
-
     <!--For fresh Application-->
-
 
 
     <dimen name="activity_margin">16dp</dimen>

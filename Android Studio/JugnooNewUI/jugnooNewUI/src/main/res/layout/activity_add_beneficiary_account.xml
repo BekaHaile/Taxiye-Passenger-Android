@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_add_beneficiary_account"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <!--tools:context="com.jugnoo.pay.activities.AddBeneficiaryAccount"-->
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/add_beneficiary_accoung_img"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="15dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lorem ipsum dolor"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textColor="@color/grey_black_light"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt"
+                android:gravity="center"
+                android:textColor="@color/grey_light_more"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/background_white_rounded_bordered">
+
+                <EditText
+                    android:id="@+id/etIfscCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_color"
+                    android:hint="@string/enter_ifsc_code"
+                    android:textColorHint="@color/text_color_hint"
+                    android:paddingLeft="8dp"
+                    android:inputType="textCapWords"
+                    android:lines="1"
+                    android:maxLines="1"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="7dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Click here" android:textSize="15sp"
+                    android:clickable="true" />
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="to search for IFSC code"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/background_white_rounded_bordered">
+
+                <EditText
+                    android:id="@+id/etAccountHolderName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_color"
+                    android:hint="@string/enter_acc_holder_name"
+                    android:textColorHint="@color/text_color_hint"
+                    android:paddingLeft="8dp"
+                    android:inputType="textCapWords"
+                    android:lines="1"
+                    android:maxLines="1"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/background_white_rounded_bordered">
+
+                <EditText
+                    android:id="@+id/etAccountNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_color"
+                    android:hint="@string/enter_acc_number"
+                    android:textColorHint="@color/text_color_hint"
+                    android:paddingLeft="8dp"
+                    android:inputType="textCapWords"
+                    android:lines="1"
+                    android:maxLines="1"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/background_white_rounded_bordered">
+
+                <EditText
+                    android:id="@+id/etConfirmAccountNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_color"
+                    android:hint="@string/confirm_acc_number"
+                    android:textColorHint="@color/text_color_hint"
+                    android:paddingLeft="8dp"
+                    android:inputType="textCapWords"
+                    android:lines="1"
+                    android:maxLines="1"/>
+
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btnAddBeneficiary"
+                android:layout_width="@dimen/btn_width"
+                android:layout_height="@dimen/btn_height"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:inputType="textEmailAddress"
+                android:background="@drawable/button_theme"
+                android:text="@string/add_bank_acc"
+                android:textAllCaps="false"
+                android:textColor="@color/whiteTxtColor"
+                android:textSize="@dimen/btn_text_size"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
