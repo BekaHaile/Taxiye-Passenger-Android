@@ -5642,7 +5642,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             nameValuePairs.put("pickup_latitude", "" + Data.autoData.getPickupLatLng().latitude);
                             nameValuePairs.put("pickup_longitude", ""+Data.autoData.getPickupLatLng().longitude);
 
-                            new HomeUtil().putDefaultParams(params);
+                            new HomeUtil().putDefaultParams(nameValuePairs);
                             Response response = RestClient.getApiService().getDriverCurrentLocation(nameValuePairs);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
                             FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_DRIVER_CURRENT_LOCATION, startTime);
