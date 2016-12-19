@@ -40,6 +40,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -414,6 +415,7 @@ public class TranscCompletedActivity extends BaseActivity {
                 params.put(Constants.KEY_TXN_ID, String.valueOf(orderId));
                 params.put(Constants.KEY_TXN_TYPE, String.valueOf(txnType));
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getPayApiService().getTransactionSummary(params, new Callback<TransactionSummaryResponse>() {
                     @Override
                     public void success(TransactionSummaryResponse summaryResponse, Response response) {

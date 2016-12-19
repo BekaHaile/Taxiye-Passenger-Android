@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -281,6 +282,7 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
                 params.put(Constants.KEY_ID, String.valueOf(orderId));
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getPayApiService().remindUser(params, new Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {

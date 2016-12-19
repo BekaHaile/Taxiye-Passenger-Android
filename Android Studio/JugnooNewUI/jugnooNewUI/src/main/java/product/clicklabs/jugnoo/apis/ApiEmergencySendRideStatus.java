@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -66,7 +67,8 @@ public class ApiEmergencySendRideStatus {
 
 				Log.i("params", "=" + params.toString());
 
-				RestClient.getApiServices().emergencySendRideStatusMessage(params, new retrofit.Callback<SettleUserDebt>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().emergencySendRideStatusMessage(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

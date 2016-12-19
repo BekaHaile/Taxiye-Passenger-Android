@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -145,6 +146,7 @@ public class PaymentFragment extends Fragment {
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getPayApiService().fetchPaymentAddress(params, new Callback<FetchPaymentAddressResponse>() {
                     @Override
                     public void success(FetchPaymentAddressResponse fetchPaymentAddressResponse, Response response) {
@@ -212,6 +214,7 @@ public class PaymentFragment extends Fragment {
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_VPA, vpa);
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getPayApiService().deletePaymentAddress(params, new Callback<AccountManagementResponse>() {
                     @Override
                     public void success(AccountManagementResponse accountManagementResponse, Response response) {

@@ -2327,7 +2327,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public void getAddressAndFetchOfferingData(final LatLng currentLatLng, final int appType){
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
-            RestClient.getGoogleApiServices().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+            RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
                     "en", false, new Callback<SettleUserDebt>() {
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {

@@ -1008,7 +1008,8 @@ public class JSONParser implements Constants {
             nameValuePairs.put(KEY_ACCESS_TOKEN, accessToken);
             nameValuePairs.put(KEY_LATITUDE, String.valueOf(latLng.latitude));
             nameValuePairs.put(KEY_LONGITUDE, String.valueOf(latLng.longitude));
-            Response response = RestClient.getApiServices().getCurrentUserStatus(nameValuePairs);
+            new HomeUtil().putDefaultParams(nameValuePairs);
+            Response response = RestClient.getApiService().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
             FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_CURRENT_USER_STATUS, startTime);
             Log.i(TAG, "getCurrentUserStatus response="+responseStr);

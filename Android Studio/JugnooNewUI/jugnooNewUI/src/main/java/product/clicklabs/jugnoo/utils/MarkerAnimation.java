@@ -138,7 +138,7 @@ public class MarkerAnimation {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Response response = RestClient.getGoogleApiServices().getDirections(source.latitude + "," + source.longitude,
+                Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
                         destination.latitude + "," + destination.longitude, false, "driving", false);
                 String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
                 return responseStr;

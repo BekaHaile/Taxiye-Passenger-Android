@@ -15,6 +15,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -61,7 +62,9 @@ public class FetchAppDataService extends IntentService implements Constants {
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(KEY_ACCESS_TOKEN, accessToken);
-				Response response = RestClient.getApiServices().getActiveAppList(params);
+
+				new HomeUtil().putDefaultParams(params);
+				Response response = RestClient.getApiService().getActiveAppList(params);
 				if(response != null){
 					try {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -102,7 +105,8 @@ public class FetchAppDataService extends IntentService implements Constants {
 				params.put("access_token", accessToken);
 				params.put("app_data", appPackagesStr);
 
-				Response response = RestClient.getApiServices().updateUserInstalledApp(params);
+				new HomeUtil().putDefaultParams(params);
+				Response response = RestClient.getApiService().updateUserInstalledApp(params);
 				if(response != null){
 					try {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());

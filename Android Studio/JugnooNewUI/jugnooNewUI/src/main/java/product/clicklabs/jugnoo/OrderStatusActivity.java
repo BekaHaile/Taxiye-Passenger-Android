@@ -44,6 +44,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -346,6 +347,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                     }
                 };
 
+                new HomeUtil().putDefaultParams(params);
                 if(productType == ProductType.MENUS.getOrdinal()){
                     RestClient.getMenusApiService().orderHistory(params, callback);
                 } else {
@@ -467,6 +469,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                     }
                 };
 
+                new HomeUtil().putDefaultParams(params);
                 if(productType == ProductType.MENUS.getOrdinal()){
                     RestClient.getMenusApiService().cancelOrder(params, callback);
                 } else {

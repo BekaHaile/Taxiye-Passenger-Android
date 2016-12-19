@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -178,7 +179,8 @@ public class ReferDriverDialog {
 				params.put(Constants.KEY_REFER_DRIVER_PHONE_NO, editTextPhone.getText().toString());
 				Log.i("Refer Driver params=", "" + params.toString());
 
-				RestClient.getApiServices().referDriver(params, new retrofit.Callback<SettleUserDebt>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().referDriver(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						DialogPopup.dismissLoadingDialog();

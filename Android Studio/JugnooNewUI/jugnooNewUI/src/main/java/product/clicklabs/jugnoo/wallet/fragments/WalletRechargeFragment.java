@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -441,6 +442,7 @@ public class WalletRechargeFragment extends Fragment {
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 				params.put(Constants.KEY_AMOUNT, amount);
+				new HomeUtil().putDefaultParams(params);
 
 				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
 					RestClient.getStringRestClient().paytmAddMoney(params, new Callback<String>() {
@@ -505,10 +507,11 @@ public class WalletRechargeFragment extends Fragment {
 						}
 					};
 
+					new HomeUtil().putDefaultParams(params);
 					if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()) {
-						RestClient.getApiServices().mobikwikAddMoney(params, callback);
+						RestClient.getApiService().mobikwikAddMoney(params, callback);
 					} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()){
-						RestClient.getApiServices().freechargeAddMoney(params, callback);
+						RestClient.getApiService().freechargeAddMoney(params, callback);
 					}
 				}
 			}
@@ -590,12 +593,13 @@ public class WalletRechargeFragment extends Fragment {
 					}
 				};
 
+				new HomeUtil().putDefaultParams(params);
 				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
-					RestClient.getApiServices().paytmDeletePaytm(params, callback);
+					RestClient.getApiService().paytmDeletePaytm(params, callback);
 				} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
-					RestClient.getApiServices().mobikwikUnlink(params, callback);
+					RestClient.getApiService().mobikwikUnlink(params, callback);
 				} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
-                    RestClient.getApiServices().freechargeUnlink(params, callback);
+                    RestClient.getApiService().freechargeUnlink(params, callback);
                 }
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,

@@ -78,6 +78,7 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -1229,6 +1230,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     }
                 };
 
+                new HomeUtil().putDefaultParams(params);
                 if(type == AppConstant.ApplicationType.MENUS){
                     RestClient.getMenusApiService().placeOrder(params, callback);
                 } else {
@@ -1656,6 +1658,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         retryDialog(DialogErrorType.CONNECTION_LOST);
                     }
                 };
+                new HomeUtil().putDefaultParams(params);
                 if(type == AppConstant.ApplicationType.MENUS){
                     RestClient.getMenusApiService().userCheckoutData(params, callback);
                 } else {

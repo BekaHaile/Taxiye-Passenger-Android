@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -132,7 +133,9 @@ public class TrackingLogHelper {
 						map.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 						map.put(Constants.KEY_ENGAGEMENT_ID, filePrefix);
 						map.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
-						Response response = RestClient.getApiServices().customerUploadRideLog(typedFile, map);
+
+						new HomeUtil().putDefaultParams(map);
+						Response response = RestClient.getApiService().customerUploadRideLog(typedFile, map);
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 						JSONObject jObject1 = new JSONObject(responseStr);
 						int flag = jObject1.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_FAILED.getOrdinal());

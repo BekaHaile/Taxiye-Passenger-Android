@@ -50,6 +50,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -276,6 +277,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 params.put(Constants.INTERATED, "1");
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
+                new HomeUtil().putDefaultParams(params);
                 final ProgressDialog finalProgressDialog = progressDialog;
                 RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
                     @Override

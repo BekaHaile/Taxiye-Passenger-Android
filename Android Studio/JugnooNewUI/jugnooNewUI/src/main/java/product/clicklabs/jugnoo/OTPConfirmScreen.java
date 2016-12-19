@@ -760,7 +760,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
                 Log.i("params", "" + params.toString());
 
-				RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -866,7 +867,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 Log.i("params", "" + params);
 
 
-				RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -963,7 +965,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 				Log.i("params", "" + params);
 
-				RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1036,7 +1039,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			params.put("phone_no", phoneNo);
 			Log.i("phone_no", ">" + phoneNo);
 
-			RestClient.getApiServices().sendOtpViaCall(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().sendOtpViaCall(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1217,14 +1221,15 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					}
 				};
 
+				new HomeUtil().putDefaultParams(params);
 				if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
-					RestClient.getApiServices().paytmRequestOtp(params, callback);
+					RestClient.getApiService().paytmRequestOtp(params, callback);
 				}
 				else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-					RestClient.getApiServices().mobikwikRequestOtp(params, callback);
+					RestClient.getApiService().mobikwikRequestOtp(params, callback);
 				}
 				else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
-					RestClient.getApiServices().freeChargeRequestOtp(params, callback);
+					RestClient.getApiService().freeChargeRequestOtp(params, callback);
 				}
 			} else{
 				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -1281,12 +1286,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
 					}
 				};
+				new HomeUtil().putDefaultParams(params);
 				if(linkedWallet == PaymentOption.PAYTM.getOrdinal()) {
-					RestClient.getApiServices().paytmLoginWithOtp(params, callback);
+					RestClient.getApiService().paytmLoginWithOtp(params, callback);
 				} else if(linkedWallet == PaymentOption.MOBIKWIK.getOrdinal()){
-					RestClient.getApiServices().mobikwikLoginWithOtp(params, callback);
+					RestClient.getApiService().mobikwikLoginWithOtp(params, callback);
 				} else if(linkedWallet == PaymentOption.FREECHARGE.getOrdinal()) {
-					RestClient.getApiServices().freeChargeLoginWithOtp(params, callback);
+					RestClient.getApiService().freeChargeLoginWithOtp(params, callback);
 				}
 			} else{
 				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -1371,7 +1377,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			Log.i("params", "=" + params);
 
-			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1483,7 +1490,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			Log.i("params", "" + params);
 
-			RestClient.getApiServices().loginUsingFacebook(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingFacebook(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1589,7 +1597,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			Log.i("params", "" + params);
 
 
-			RestClient.getApiServices().loginUsingGoogle(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingGoogle(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

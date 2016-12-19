@@ -1499,7 +1499,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 			HashMap<String, String> params = new HashMap<>();
 
-			RestClient.getApiServices().getAllowedAuthChannels(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().getAllowedAuthChannels(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					DialogPopup.dismissLoadingDialog();
@@ -2135,7 +2136,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			Log.i("params", "=" + params);
 
-			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2255,7 +2257,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			Log.i("params", "" + params);
 
-			RestClient.getApiServices().loginUsingFacebook(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingFacebook(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2371,7 +2374,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			Log.i("params", "" + params);
 
 
-			RestClient.getApiServices().loginUsingGoogle(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingGoogle(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2813,7 +2817,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             Log.i("register_using_email params", params.toString());
 
 
-            RestClient.getApiServices().registerUsingEmail(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().registerUsingEmail(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -2937,7 +2942,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
             Log.e("register_using_facebook params", params.toString());
 
 
-            RestClient.getApiServices().registerUsingFacebook(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().registerUsingFacebook(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -3049,7 +3055,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             Log.e("register_using_facebook params", params.toString());
 
-            RestClient.getApiServices().registerUsingGoogle(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().registerUsingGoogle(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -3199,7 +3206,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             Log.i("params", "" + params.toString());
 
-            RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
                 @Override
                 public void success(LoginResponse loginResponse, Response response) {
 

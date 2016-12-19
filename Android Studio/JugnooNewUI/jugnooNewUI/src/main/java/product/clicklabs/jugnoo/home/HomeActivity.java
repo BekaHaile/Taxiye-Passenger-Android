@@ -5219,7 +5219,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     Data.autoData.setPickupAddress("");
                 }
                 textView.setHint(R.string.getting_address);
-                RestClient.getGoogleApiServices().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+                RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
                         "en", false, new Callback<SettleUserDebt>() {
                             @Override
                             public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -5292,7 +5292,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Log.i("access_token", "=" + Data.userData.accessToken);
             Log.i("session_id", "=" + Data.autoData.getcSessionId());
 
-            RestClient.getApiServices().cancelTheRequest(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().cancelTheRequest(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -5468,7 +5469,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(KEY_ENGAGEMENT_ID, engagementId);
                 params.put(KEY_SHOW_RIDE_MENU, "0");
-                RestClient.getApiServices().getRideSummary(params, new Callback<ShowPanelResponse>() {
+
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getApiService().getRideSummary(params, new Callback<ShowPanelResponse>() {
                     @Override
                     public void success(ShowPanelResponse showPanelResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -5551,7 +5554,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Log.i("params", "=" + params);
 
-            RestClient.getApiServices().addDropLocation(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().addDropLocation(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -5638,7 +5642,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             nameValuePairs.put("pickup_latitude", "" + Data.autoData.getPickupLatLng().latitude);
                             nameValuePairs.put("pickup_longitude", ""+Data.autoData.getPickupLatLng().longitude);
 
-                            Response response = RestClient.getApiServices().getDriverCurrentLocation(nameValuePairs);
+                            new HomeUtil().putDefaultParams(params);
+                            Response response = RestClient.getApiService().getDriverCurrentLocation(nameValuePairs);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
                             FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_DRIVER_CURRENT_LOCATION, startTime);
 
@@ -5800,7 +5805,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         nameValuePairs.put("engagement_id", Data.autoData.getcEngagementId());
                         nameValuePairs.put("access_token", Data.userData.accessToken);
 
-                        Response response = RestClient.getApiServices().getOngoingRidePath(nameValuePairs);
+                        new HomeUtil().putDefaultParams(nameValuePairs);
+                        Response response = RestClient.getApiService().getOngoingRidePath(nameValuePairs);
                         String result = new String(((TypedByteArray)response.getBody()).getBytes());
                         FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_ONGOING_RIDE_PATH, startTime);
 
@@ -5978,7 +5984,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     });
                     try {
                         if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()) && Data.autoData.getDropLatLng() != null && lastLatLng != null && toShowPathToDrop()) {
-                            Response response = RestClient.getGoogleApiServices().getDirections(lastLatLng.latitude + "," + lastLatLng.longitude,
+                            Response response = RestClient.getGoogleApiService().getDirections(lastLatLng.latitude + "," + lastLatLng.longitude,
                                     Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
                             if (result != null) {
@@ -6952,7 +6958,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                     e.printStackTrace();
                                 }
 
-                                Response responseRetro = RestClient.getApiServices().requestRide(nameValuePairs);
+                                new HomeUtil().putDefaultParams(nameValuePairs);
+                                Response responseRetro = RestClient.getApiService().requestRide(nameValuePairs);
                                 String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
                                 FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_REQUEST_RIDE, apiStartTime);
 
@@ -8013,7 +8020,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             Log.i("params request_dup_registration", "=" + params);
 
-            RestClient.getApiServices().referAllContacts(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().referAllContacts(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -8055,7 +8063,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             params.put("access_token", Data.userData.accessToken);
             params.put("engagement_id", engagementId);
 
-            RestClient.getApiServices().skipRatingByCustomer(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().skipRatingByCustomer(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     Log.i(TAG, "skipRatingByCustomer response = " + response);
@@ -8099,7 +8108,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                 Log.i("params", "=" + params);
 
-                RestClient.getApiServices().rateTheDriver(params, new Callback<SettleUserDebt>() {
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getApiService().rateTheDriver(params, new Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

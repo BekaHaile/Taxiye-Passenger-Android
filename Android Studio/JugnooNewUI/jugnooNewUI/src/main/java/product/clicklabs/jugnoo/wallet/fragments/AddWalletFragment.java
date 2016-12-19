@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -349,12 +350,13 @@ public class AddWalletFragment extends Fragment {
 					}
 				};
 
+				new HomeUtil().putDefaultParams(params);
 				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
-					RestClient.getApiServices().paytmRequestOtp(params, callback);
+					RestClient.getApiService().paytmRequestOtp(params, callback);
 				} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
-					RestClient.getApiServices().mobikwikRequestOtp(params, callback);
+					RestClient.getApiService().mobikwikRequestOtp(params, callback);
 				} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
-					RestClient.getApiServices().freeChargeRequestOtp(params, callback);
+					RestClient.getApiService().freeChargeRequestOtp(params, callback);
                 }
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -440,12 +442,13 @@ public class AddWalletFragment extends Fragment {
 					}
 				};
 
+				new HomeUtil().putDefaultParams(params);
 				if(openWalletType == PaymentOption.PAYTM.getOrdinal()) {
-					RestClient.getApiServices().paytmLoginWithOtp(params, callback);
+					RestClient.getApiService().paytmLoginWithOtp(params, callback);
 				} else if(openWalletType == PaymentOption.MOBIKWIK.getOrdinal()){
-					RestClient.getApiServices().mobikwikLoginWithOtp(params, callback);
+					RestClient.getApiService().mobikwikLoginWithOtp(params, callback);
 				} else if(openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
-                    RestClient.getApiServices().freeChargeLoginWithOtp(params, callback);
+                    RestClient.getApiService().freeChargeLoginWithOtp(params, callback);
                 }
 			} else{
 				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,

@@ -390,7 +390,8 @@ public class ContactsUploadService extends IntentService {
 
             Log.i("params request_dup_registration", "=" + params);
 
-            Response response = RestClient.getApiServices().referAllContactsSync(params);
+            new HomeUtil().putDefaultParams(params);
+            Response response = RestClient.getApiService().referAllContactsSync(params);
             if(response != null){
                 try {
                     String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());

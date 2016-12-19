@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -145,6 +146,7 @@ public class AddPaymentAddressActivity extends BaseActivity {
                 params.put(Constants.KEY_USER_NAME, etName.getText().toString());
                 params.put(Constants.KEY_VPA, etPaymentAddress.getText().toString());
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getPayApiService().addPaymentAddress(params, new Callback<AccountManagementResponse>() {
                     @Override
                     public void success(AccountManagementResponse accountManagementResponse, Response response) {

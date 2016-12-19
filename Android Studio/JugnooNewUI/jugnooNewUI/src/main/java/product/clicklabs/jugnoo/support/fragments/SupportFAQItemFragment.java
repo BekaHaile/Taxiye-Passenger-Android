@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -310,7 +311,8 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType));
 			}
 
-			RestClient.getApiServices().generateSupportTicket(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().generateSupportTicket(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					DialogPopup.dismissLoadingDialog();

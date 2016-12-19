@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -61,7 +62,9 @@ public class ApiFetchWalletBalance {
 
 				final long startTime = System.currentTimeMillis();
 				final ProgressDialog finalProgressDialog = progressDialog;
-				RestClient.getApiServices().fetchWalletBalance(params, new retrofit.Callback<SettleUserDebt>() {
+
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().fetchWalletBalance(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_PAYTM_CHECK_BALANCE, startTime);

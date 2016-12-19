@@ -75,7 +75,9 @@ public class ApiFindADriver {
 
 			Log.i("params in find_a_driver", "=" + params);
 			final long startTime = System.currentTimeMillis();
-			RestClient.getApiServices().findADriverCall(params, new retrofit.Callback<FindADriverResponse>() {
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().findADriverCall(params, new retrofit.Callback<FindADriverResponse>() {
 				@Override
 				public void success(FindADriverResponse findADriverResponse, Response response) {
 					try {

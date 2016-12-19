@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -183,7 +184,8 @@ public class WalletTopupFragment extends Fragment {
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 				params.put(Constants.KEY_TOPUP_CARD_CODE, code);
 
-				RestClient.getApiServices().topupCustomerJC(params, new Callback<SettleUserDebt>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().topupCustomerJC(params, new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

@@ -92,7 +92,9 @@ public class ApiLoginUsingAccessToken {
 			Log.e("params login_using_access_token", "=" + params);
 
 			final long startTime = System.currentTimeMillis();
-			RestClient.getApiServices().loginUsingAccessToken(params, new retrofit.Callback<LoginResponse>() {
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingAccessToken(params, new retrofit.Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_LOGIN_USING_ACCESS_TOKEN, startTime);
