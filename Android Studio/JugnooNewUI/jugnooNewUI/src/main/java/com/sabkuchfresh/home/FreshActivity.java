@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -82,6 +83,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -2341,18 +2343,42 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                                 DialogPopup.dismissLoadingDialog();
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                retryDialogLocationFetch(DialogErrorType.SERVER_ERROR, currentLatLng, appType);
                             }
                         }
 
                         @Override
                         public void failure(RetrofitError error) {
                             DialogPopup.dismissLoadingDialog();
+                            retryDialogLocationFetch(DialogErrorType.CONNECTION_LOST, currentLatLng, appType);
                         }
                     });
         } catch (Exception e) {
             e.printStackTrace();
             DialogPopup.dismissLoadingDialog();
+            retryDialogLocationFetch(DialogErrorType.CONNECTION_LOST, currentLatLng, appType);
         }
+    }
+
+    private void retryDialogLocationFetch(DialogErrorType dialogErrorType, final LatLng currentLatLng, final int appType){
+        DialogPopup.dialogNoInternet(this,
+                dialogErrorType,
+                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        getAddressAndFetchOfferingData(currentLatLng, appType);
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+                        ActivityCompat.finishAffinity(FreshActivity.this);
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                        ActivityCompat.finishAffinity(FreshActivity.this);
+                    }
+                });
     }
 
 

@@ -133,4 +133,9 @@ public class HomeUtil {
 		Branch.getInstance(activity).logout();
 	}
 
+
+	public void putDefaultParams(){
+
+	}
+
 }
