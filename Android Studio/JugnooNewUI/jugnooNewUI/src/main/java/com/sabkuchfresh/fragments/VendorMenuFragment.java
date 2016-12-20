@@ -6,10 +6,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -30,7 +28,6 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 
 
@@ -40,14 +37,12 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 	private RelativeLayout linearLayoutRoot;
     private LinearLayout mainLayout;
     private LinearLayout noFreshsView;
-    private TextView swipe_text;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
-    private ImageView imageViewNoItem;
 
     private RelativeLayout searchLayout;
 
@@ -91,9 +86,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
-        imageViewNoItem = (ImageView) rootView.findViewById(R.id.imageViewNoItem);
-        swipe_text = (TextView) rootView.findViewById(R.id.swipe_text);
-        swipe_text.setTypeface(Fonts.mavenRegular(activity));
 
 		viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
