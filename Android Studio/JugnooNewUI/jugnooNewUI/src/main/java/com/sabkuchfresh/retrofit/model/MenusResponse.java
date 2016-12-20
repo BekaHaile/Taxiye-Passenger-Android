@@ -185,6 +185,9 @@ public class MenusResponse {
 		@SerializedName("packing_charges")
 		@Expose
 		private Double packingCharges;
+		@SerializedName("p_charges_prc")
+		@Expose
+		private Double packagingChargesInPercent;
 
 
 
@@ -399,6 +402,15 @@ public class MenusResponse {
 		public void setPackingCharges(Double packingCharges) {
 			this.packingCharges = packingCharges;
 		}
+
+		public Double getPackagingChargesInPercent() {
+			return packagingChargesInPercent;
+		}
+
+		public void setPackagingChargesInPercent(Double packagingChargesInPercent) {
+			this.packagingChargesInPercent = packagingChargesInPercent;
+		}
+
 	}
 
 

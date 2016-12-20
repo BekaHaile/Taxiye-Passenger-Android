@@ -2010,12 +2010,28 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private double packagingCharges(){
         if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
+                && (activity.getVendorOpened().getPackingCharges() != null || activity.getVendorOpened().getPackagingChargesInPercent() != null)){
+            if(activity.getVendorOpened().getPackagingChargesInPercent() != null){
+                return subTotalAmount * (activity.getVendorOpened().getPackagingChargesInPercent()/100d);
+            }
+            else{
+                return activity.getVendorOpened().getPackingCharges();
+            }
+        }
+        else{
+            return 0;
+        }
+    }
+
+/*
+    private double packagingCharges(){
+        if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
                 && activity.getVendorOpened().getPackingCharges() != null){
             return activity.getVendorOpened().getPackingCharges();
         } else {
             return 0;
         }
-    }
+    }*/
 
     private double serviceTax(){
         if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
