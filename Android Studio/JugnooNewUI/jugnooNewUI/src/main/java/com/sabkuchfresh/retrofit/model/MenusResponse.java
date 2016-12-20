@@ -185,7 +185,7 @@ public class MenusResponse {
 		@SerializedName("packing_charges")
 		@Expose
 		private Double packingCharges;
-		@SerializedName("p_charges_prc")
+		@SerializedName("packing_charges_percent")
 		@Expose
 		private Double packagingChargesInPercent;
 
