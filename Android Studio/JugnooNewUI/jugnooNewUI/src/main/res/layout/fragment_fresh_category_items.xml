@@ -33,7 +33,7 @@
             android:layout_width="376px"
             android:layout_height="270px"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/img_no_items_fresh"
+            android:background="@drawable/ic_no_grocery_items"
             android:tag="mwar"
             />
 

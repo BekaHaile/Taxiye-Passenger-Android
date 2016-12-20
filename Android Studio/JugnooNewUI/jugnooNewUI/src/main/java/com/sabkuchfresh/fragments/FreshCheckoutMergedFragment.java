@@ -845,7 +845,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             boolean goAhead = true;
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
                 if (Data.userData.getPaytmBalance() < payableAmount()) {
-                    if (Data.userData.getPaytmBalance() < 0) {
+                    if(Data.userData.getPaytmEnabled() == 0){
+                        relativeLayoutPaytm.performClick();
+                    } else if (Data.userData.getPaytmBalance() < 0) {
                         DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.paytm_error_cash_select_cash));
                     } else {
                         showWalletBalanceLowDialog(PaymentOption.PAYTM);
@@ -855,7 +857,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             }
             else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
                 if (Data.userData.getMobikwikBalance() < payableAmount()) {
-                    if (Data.userData.getMobikwikBalance() < 0) {
+                    if(Data.userData.getMobikwikEnabled() == 0){
+                        relativeLayoutMobikwik.performClick();
+                    } else if (Data.userData.getMobikwikBalance() < 0) {
                         DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.mobikwik_error_select_cash));
                     } else {
                         showWalletBalanceLowDialog(PaymentOption.MOBIKWIK);
@@ -865,7 +869,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             }
             else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
                 if (Data.userData.getFreeChargeBalance() < payableAmount()) {
-                    if (Data.userData.getFreeChargeBalance() < 0) {
+                    if(Data.userData.getFreeChargeEnabled() == 0){
+                        relativeLayoutFreeCharge.performClick();
+                    } else if (Data.userData.getFreeChargeBalance() < 0) {
                         DialogPopup.alertPopup(activity, "", activity.getResources().getString(R.string.freecharge_error_case_select_cash));
                     } else {
                         showWalletBalanceLowDialog(PaymentOption.FREECHARGE);
@@ -1694,7 +1700,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
         try {
-            if(!activity.isAddressConfirmed() && activity.getSelectedAddressId() == 0) {
+            if(!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType())) {
                 if (userCheckoutResponse.getCheckoutData().getLastAddress() != null) {
                     activity.setSelectedAddress(userCheckoutResponse.getCheckoutData().getLastAddress());
                     activity.setSelectedAddressType(userCheckoutResponse.getCheckoutData().getLastAddressType());

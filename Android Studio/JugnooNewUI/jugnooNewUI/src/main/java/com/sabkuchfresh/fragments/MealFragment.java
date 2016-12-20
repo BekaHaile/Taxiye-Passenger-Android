@@ -480,4 +480,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         }
     }
 
+    public MealAdapter getMealAdapter(){
+        return mealAdapter;
+    }
+
 }

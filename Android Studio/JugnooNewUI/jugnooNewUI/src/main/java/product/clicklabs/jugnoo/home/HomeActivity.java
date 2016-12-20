@@ -1726,6 +1726,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             }
         });
+
+        // Show tutorial for Jeanie
+//        if(Data.userData.getShowHomeScreen() == 1){
+//            fabViewTest.getMenuLabelsRightTest().performClick();
+//        }
     }
 
     @Override

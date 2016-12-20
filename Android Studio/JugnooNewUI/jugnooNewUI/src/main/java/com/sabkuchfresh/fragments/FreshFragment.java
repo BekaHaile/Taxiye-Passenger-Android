@@ -76,7 +76,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	private RelativeLayout linearLayoutRoot;
     private LinearLayout mainLayout;
     private LinearLayout noFreshsView;
-    private TextView swipe_text;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
@@ -84,7 +83,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
-    private ImageView imageViewNoItem;
+//    private ImageView imageViewNoItem;
 
     private RelativeLayout searchLayout;
 
@@ -148,9 +147,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
-        imageViewNoItem = (ImageView) rootView.findViewById(R.id.imageViewNoItem);
-        swipe_text = (TextView) rootView.findViewById(R.id.swipe_text);
-        swipe_text.setTypeface(Fonts.mavenRegular(activity));
+//        imageViewNoItem = (ImageView) rootView.findViewById(R.id.imageViewNoItem);
 
 		viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
@@ -397,7 +394,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 										if(activity.getProductsResponse().getCategories().size() == 0){
 											activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
 											noFreshsView.setVisibility(View.VISIBLE);
-											imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
+//											imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
 											mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 											activity.showBottomBar(false);
 											mainLayout.setVisibility(View.GONE);
@@ -434,7 +431,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 							} else {
                                 activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
                                 noFreshsView.setVisibility(View.VISIBLE);
-                                imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
+//                                imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
                                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                                 activity.showBottomBar(false);
                                 mainLayout.setVisibility(View.GONE);
@@ -482,7 +479,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
 	private void retryDialog(DialogErrorType dialogErrorType){
         noFreshsView.setVisibility(View.VISIBLE);
-        imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
+//        imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
         activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         activity.showBottomBar(false);

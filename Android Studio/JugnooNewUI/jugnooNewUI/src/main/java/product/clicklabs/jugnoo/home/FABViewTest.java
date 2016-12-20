@@ -51,6 +51,10 @@ public class FABViewTest {
         initComponent();
     }
 
+    public FloatingActionMenu getMenuLabelsRightTest() {
+        return menuLabelsRightTest;
+    }
+
     private void initComponent(){
         try {
 //            relativeLayoutFABTest = (RelativeLayout) view.findViewById(R.id.relativeLayoutFABTest);
@@ -118,6 +122,8 @@ public class FABViewTest {
                 }
             }
         });
+
+
 
         createCustomAnimation();
 

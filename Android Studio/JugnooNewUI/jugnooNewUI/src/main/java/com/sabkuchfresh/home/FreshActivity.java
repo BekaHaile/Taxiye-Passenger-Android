@@ -893,8 +893,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
                 setRelativeLayoutLocalityClick();
                 setMinOrderAmountText();
+                setNoItemsView(fragment);
 
-			} else if(fragment instanceof MealFragment){
+            } else if(fragment instanceof MealFragment){
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.GONE);
@@ -922,6 +923,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
                 topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
                 setRelativeLayoutLocalityClick();
+                setNoItemsView(fragment);
 			}
             else if (fragment instanceof GroceryFragment) {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -955,6 +957,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
                 setRelativeLayoutLocalityClick();
                 setMinOrderAmountText();
+                setNoItemsView(fragment);
 
             } else if (fragment instanceof MenusFragment) {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -1107,7 +1110,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.editTextDeliveryAddress.setVisibility(View.VISIBLE);
                 topBar.editTextDeliveryAddress.requestFocus();
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FreshSearchFragment) {
+            }
+            else if (fragment instanceof FreshSearchFragment) {
 				topView.setVisibility(View.GONE);
                 RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
                 params1.setMargins(0, 0, 0, 0);
@@ -1138,7 +1142,12 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 
                 topBar.title.setVisibility(View.VISIBLE);
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                setMinOrderAmountText();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setMinOrderAmountText();
+                    }
+                }, 200);
 
 			} else if(fragment instanceof FeedbackFragment) {
                 topBar.below_shadow.setVisibility(View.GONE);
@@ -1192,6 +1201,26 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 }
             }
         }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void setNoItemsView(Fragment fragment){
+        try {
+            if(fragment instanceof FreshFragment || fragment instanceof GroceryFragment){
+                    if(getProductsResponse() != null && getProductsResponse().getCategories().size() == 0){
+                        getTopBar().below_shadow.setVisibility(View.VISIBLE);
+                        showBottomBar(false);
+                    }
+            }
+            else if(fragment instanceof MealFragment){
+                if(((MealFragment)fragment).getMealAdapter().getItemCount()>0) {
+                    showBottomBar(true);
+                } else {
+                    showBottomBar(false);
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -1933,10 +1962,11 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                         e.printStackTrace();
                     }
                     try {
+                        int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                         if(!addressDeleted) {
                             setSelectedAddressId(searchResult.getId());
+                            saveOfferingLastAddress(appType);
                         } else{
-                            int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                             setSelectedAddress("");
                             setSelectedLatLng(null);
                             setSelectedAddressId(0);
