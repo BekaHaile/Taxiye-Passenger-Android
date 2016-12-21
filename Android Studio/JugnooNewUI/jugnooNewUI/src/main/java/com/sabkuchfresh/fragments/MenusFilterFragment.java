@@ -16,9 +16,18 @@ import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+
+import static product.clicklabs.jugnoo.Constants.ACCEPTONLINE;
+import static product.clicklabs.jugnoo.Constants.FREEDELIVERY;
+import static product.clicklabs.jugnoo.Constants.OFFERSDISCOUNT;
+import static product.clicklabs.jugnoo.Constants.PUREVEGETARIAN;
 
 
 public class MenusFilterFragment extends Fragment{
@@ -28,6 +37,14 @@ public class MenusFilterFragment extends Fragment{
 	private TextView textViewSortBy, textViewPopularity, textViewDistance, textViewPrice;
 	private CardView cardViewSort;
 	private RelativeLayout relativeLayoutPopularity, relativeLayoutDistance, relativeLayoutPrice;
+
+	private RelativeLayout relativeLayoutAcceptOnline, relativeLayoutOffersDiscount, relativeLayoutPureVeg, relativeLayoutFreeDelivery;
+	private TextView textViewQuickFilters, textViewAcceptOnline, textViewOffersDiscount, textViewPureVeg, textViewFreeDelivery;
+	private CardView cardViewQuickFilter;
+	private ImageView imageViewAcceptOnline, imageViewOffersDiscount, imageViewPureVeg, imageViewFreeDelivery;
+	private ArrayList<String> quickFilterLocal = new ArrayList<>();
+
+
 	private ImageView imageViewRadioPopularity, imageViewRadioDistance, imageViewRadioPrice;
 
 	private TextView textViewCuisines, textViewSelectCuisinesValue;
@@ -87,6 +104,21 @@ public class MenusFilterFragment extends Fragment{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		textViewQuickFilters = (TextView) rootView.findViewById(R.id.textViewQuickFilters); textViewQuickFilters.setTypeface(Fonts.mavenMedium(activity));
+		textViewAcceptOnline = (TextView) rootView.findViewById(R.id.textViewAcceptOnline); textViewAcceptOnline.setTypeface(Fonts.mavenMedium(activity));
+		textViewOffersDiscount = (TextView) rootView.findViewById(R.id.textViewOffersDiscount); textViewOffersDiscount.setTypeface(Fonts.mavenMedium(activity));
+		textViewPureVeg = (TextView) rootView.findViewById(R.id.textViewPureVeg); textViewPureVeg.setTypeface(Fonts.mavenMedium(activity));
+		textViewFreeDelivery = (TextView) rootView.findViewById(R.id.textViewFreeDelivery); textViewFreeDelivery.setTypeface(Fonts.mavenMedium(activity));
+		cardViewQuickFilter = (CardView) rootView.findViewById(R.id.cardViewQuickFilter);
+		relativeLayoutAcceptOnline = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAcceptOnline);
+		relativeLayoutOffersDiscount = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutOffersDiscount);
+		relativeLayoutPureVeg = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPureVeg);
+		relativeLayoutFreeDelivery = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFreeDelivery);
+		imageViewAcceptOnline = (ImageView) rootView.findViewById(R.id.imageViewAcceptOnline);
+		imageViewOffersDiscount = (ImageView) rootView.findViewById(R.id.imageViewOffersDiscount);
+		imageViewPureVeg = (ImageView) rootView.findViewById(R.id.imageViewPureVeg);
+		imageViewFreeDelivery = (ImageView) rootView.findViewById(R.id.imageViewFreeDelivery);
 
 		textViewSortBy = (TextView) rootView.findViewById(R.id.textViewSortBy); textViewSortBy.setTypeface(Fonts.mavenMedium(activity));
 		textViewPopularity = (TextView) rootView.findViewById(R.id.textViewPopularity); textViewPopularity.setTypeface(Fonts.mavenMedium(activity));
@@ -189,6 +221,58 @@ public class MenusFilterFragment extends Fragment{
 		});
 
 
+		relativeLayoutAcceptOnline.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(quickFilterLocal !=null && quickFilterLocal.size() !=0 && quickFilterLocal.contains(ACCEPTONLINE))
+				{
+					quickFilterLocal.remove(ACCEPTONLINE);
+				} else {
+					quickFilterLocal.add(ACCEPTONLINE);
+				}
+				imageViewAcceptOnline.setImageResource(quickFilterLocal.contains(ACCEPTONLINE)  ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+			}
+		});
+
+		relativeLayoutOffersDiscount.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(quickFilterLocal !=null && quickFilterLocal.size() !=0 && quickFilterLocal.contains(OFFERSDISCOUNT))
+				{
+					quickFilterLocal.remove(OFFERSDISCOUNT);
+				} else {
+					quickFilterLocal.add(OFFERSDISCOUNT);
+				}
+				imageViewOffersDiscount.setImageResource(quickFilterLocal.contains(OFFERSDISCOUNT)  ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+			}
+		});
+
+
+		relativeLayoutPureVeg.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(quickFilterLocal !=null && quickFilterLocal.size() !=0 && quickFilterLocal.contains(PUREVEGETARIAN))
+				{
+					quickFilterLocal.remove(PUREVEGETARIAN);
+				} else {
+					quickFilterLocal.add(PUREVEGETARIAN);
+				}
+				imageViewPureVeg.setImageResource(quickFilterLocal.contains(PUREVEGETARIAN)  ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+			}
+		});
+
+		relativeLayoutFreeDelivery.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(quickFilterLocal !=null && quickFilterLocal.size() !=0 && quickFilterLocal.contains(FREEDELIVERY))
+				{
+					quickFilterLocal.remove(FREEDELIVERY);
+				} else {
+					quickFilterLocal.add(FREEDELIVERY);
+				}
+				imageViewFreeDelivery.setImageResource(quickFilterLocal.contains(FREEDELIVERY)  ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+			}
+		});
 
 
 		relativeLayoutMO150.setOnClickListener(new View.OnClickListener() {
@@ -252,6 +336,10 @@ public class MenusFilterFragment extends Fragment{
 						activity.getCuisinesSelected().add(filterCuisine.getName());
 					}
 				}
+
+				activity.getQuickFilterSelected().clear();
+				activity.getQuickFilterSelected().addAll(quickFilterLocal);
+
 				activity.setSortBySelected(getSortBySelected());
 				activity.setDtSelected(getDtSelected());
 				activity.setMoSelected(getMoSelected());
@@ -270,10 +358,13 @@ public class MenusFilterFragment extends Fragment{
 		setSortBySelected(activity.getSortBySelected());
 		setDtSelected(activity.getDtSelected());
 		setMoSelected(activity.getMoSelected());
+		quickFilterLocal.clear();
+		quickFilterLocal.addAll(activity.getQuickFilterSelected());
 
 		updateSortTypeUI();
 		updateMinOrderUI();
 		updateDeliveryTimeUI();
+		updateQuickFilterUI();
 
 
 		return rootView;
@@ -302,6 +393,15 @@ public class MenusFilterFragment extends Fragment{
 		super.onDestroy();
         ASSL.closeActivity(scrollViewRoot);
         System.gc();
+	}
+
+
+	private void updateQuickFilterUI()
+	{
+		imageViewAcceptOnline.setImageResource(quickFilterLocal.contains(ACCEPTONLINE)  ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+		imageViewOffersDiscount.setImageResource(quickFilterLocal.contains(OFFERSDISCOUNT) ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+		imageViewPureVeg.setImageResource(quickFilterLocal.contains(PUREVEGETARIAN) ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+		imageViewFreeDelivery.setImageResource(quickFilterLocal.contains(FREEDELIVERY) ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
 	}
 
 
@@ -403,10 +503,12 @@ public class MenusFilterFragment extends Fragment{
 				setSortBySelected(SortType.NONE);
 				setMoSelected(MinOrder.NONE);
 				setDtSelected(DeliveryTime.NONE);
-
 				for(FilterCuisine filterCuisine : activity.getFilterCuisinesLocal()){
 					filterCuisine.setSelected(0);
 				}
+
+				quickFilterLocal.clear();
+				updateQuickFilterUI();
 
 				updateSortTypeUI();
 				updateMinOrderUI();

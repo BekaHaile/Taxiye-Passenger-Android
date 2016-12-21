@@ -123,6 +123,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             dtMatched = activity.getDtSelected() == MenusFilterFragment.DeliveryTime.NONE
                     || vendor.getMinDeliveryTime() <= activity.getDtSelected().getOrdinal();
 
+          /*  boolean qfMatched = true;
+            for(String filter : activity.getQuickFilterSelected())
+            {
+                if(filter.equalsIgnoreCase(Constants.ACCEPTONLINE))
+                {
+                    if(!vendor.getApplicablePaymentMode().equals(ApplicablePaymentMode.ONLINE))
+                    {
+                        qfMatched = true;
+                    }
+                }
+            }*/
             if(cuisineMatched && moMatched && dtMatched){
                 vendors.add(vendor);
             }
@@ -361,6 +372,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 holderFilter.editTextSearch.addTextChangedListener(textWatcher);
                 holderFilter.editTextSearch.requestFocus();
                 holderFilter.imageViewFilterApplied.setVisibility(filterApplied() ? View.VISIBLE : View.GONE);
+            } else if (holder instanceof ViewNoVenderItem){
+                ViewNoVenderItem holderNoVenderItem = (ViewNoVenderItem) holder;
+                if(vendorsComplete.size() == 0) {
+                    holderNoVenderItem.textViewNoMenus.setText(R.string.no_menus_available_your_location);
+                } else if(vendors.size() == 0){
+                    holderNoVenderItem.textViewNoMenus.setText(R.string.no_menus_available_with_these_filters);
+                } else if(vendorsToShow.size()==0) {
+                    holderNoVenderItem.textViewNoMenus.setText(R.string.no_menus_available_with_this_name);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -567,4 +567,8 @@ public interface Constants {
 	String KEY_MENU_LONGITUDE = "menu_longitude";
 
 	String SHOW_HOME_SCREEN = "show_home_screen";
+	String ACCEPTONLINE = "Accept Online Payment";
+	String OFFERSDISCOUNT = "Offers Discount";
+	String PUREVEGETARIAN = "Pure Vegetarian";
+	String FREEDELIVERY = "Free Delivery";
 }

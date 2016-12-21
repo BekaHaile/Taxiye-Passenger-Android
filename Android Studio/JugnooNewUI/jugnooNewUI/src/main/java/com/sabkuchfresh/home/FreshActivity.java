@@ -194,7 +194,6 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //                Data.userData.setShowHomeScreen(0);
 //            }
 
-            Log.e("", "");
             Data.currentActivity = FreshActivity.class.getName();
             drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
             new ASSL(this, drawerLayout, 1134, 720, false);
@@ -2284,6 +2283,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     private MenusFilterFragment.MinOrder moSelected = MenusFilterFragment.MinOrder.NONE;
     private MenusFilterFragment.DeliveryTime dtSelected = MenusFilterFragment.DeliveryTime.NONE;
     private ArrayList<String> cuisinesSelected = new ArrayList<>();
+    private ArrayList<String> quickFilterSelected = new ArrayList<>();
 
     public MenusFilterFragment.SortType getSortBySelected() {
         return sortBySelected;
@@ -2312,17 +2312,21 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public ArrayList<String> getCuisinesSelected() {
         return cuisinesSelected;
     }
-
     public void setCuisinesSelected(ArrayList<String> cuisinesSelected) {
         this.cuisinesSelected = cuisinesSelected;
     }
 
+    public ArrayList<String> getQuickFilterSelected() {
+        return quickFilterSelected;
+    }
+    public void setQuickFilterSelected(ArrayList<String> quickFilterSelected) {
+        this.quickFilterSelected = quickFilterSelected;
+    }
 
     private ArrayList<FilterCuisine> filterCuisinesLocal = new ArrayList<>();
     public ArrayList<FilterCuisine> getFilterCuisinesLocal() {
         return filterCuisinesLocal;
     }
-
     public void setFilterCuisinesLocal(ArrayList<FilterCuisine> filterCuisinesLocal) {
         this.filterCuisinesLocal = filterCuisinesLocal;
     }
