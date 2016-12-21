@@ -1816,7 +1816,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
-    private void updateAddressView(){
+    public void updateAddressView(){
         try {
             if (TextUtils.isEmpty(activity.getSelectedAddress())) {
                 setActivityLastAddressFromResponse(activity.getUserCheckoutResponse());
