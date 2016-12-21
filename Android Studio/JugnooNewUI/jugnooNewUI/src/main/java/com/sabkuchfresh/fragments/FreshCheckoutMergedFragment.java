@@ -80,6 +80,7 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -255,8 +256,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             if(Data.getDatumToReOrder() != null){
 				activity.setSelectedAddress(Data.getDatumToReOrder().getDeliveryAddress());
 				activity.setSelectedLatLng(new LatLng(Data.getDatumToReOrder().getDeliveryLatitude(), Data.getDatumToReOrder().getDeliveryLongitude()));
-				activity.setSelectedAddressId(Data.getDatumToReOrder().getAddressId());
-				activity.setSelectedAddressType(Data.getDatumToReOrder().getDeliveryAddressType());
+                ArrayList<SearchResult> searchResults = new HomeUtil().getSavedPlacesWithHomeWork(activity);
+                for(SearchResult searchResult : searchResults){
+                    if(Data.getDatumToReOrder().getAddressId().equals(searchResult.getId())){
+                        activity.setSelectedAddressId(Data.getDatumToReOrder().getAddressId());
+                        activity.setSelectedAddressType(Data.getDatumToReOrder().getDeliveryAddressType());
+                        break;
+                    }
+                }
                 activity.setRefreshCart(true);
 			}
         } catch (Exception e) {
