@@ -16,6 +16,14 @@ import product.clicklabs.jugnoo.home.models.Region;
  * Created by shankar on 1/5/16.
  */
 public class LoginResponse {
+	public Pay getPay() {
+		return pay;
+	}
+
+	public void setPay(Pay pay) {
+		this.pay = pay;
+	}
+
 	public class Cancellation {
 
 		@SerializedName("message")
@@ -96,6 +104,9 @@ public class LoginResponse {
 	@SerializedName("menus")
 	@Expose
 	private Menus menus;
+	@SerializedName("pay")
+	@Expose
+	private Pay pay;
 	@SerializedName("delivery")
 	@Expose
 	private Delivery delivery;
@@ -283,6 +294,8 @@ public class LoginResponse {
 		}
 	}
 
+
+
 	public class Menus{
 		@SerializedName("promotions")
 		@Expose
@@ -305,6 +318,111 @@ public class LoginResponse {
 
 		public void setCoupons(List<CouponInfo> coupons) {
 			this.coupons = coupons;
+		}
+	}
+
+	public class Pay{
+		@SerializedName("promotions")
+		@Expose
+		private List<PromotionInfo> promotions = new ArrayList<>();
+		@SerializedName("coupons")
+		@Expose
+		private List<CouponInfo> coupons = new ArrayList<>();
+		@SerializedName("mid")
+		@Expose
+		private String mid;
+		@SerializedName("mkey")
+		@Expose
+		private String mkey;
+		@SerializedName("token")
+		@Expose
+		private String token;
+		@SerializedName("faq_link")
+		@Expose
+		private String faqLink;
+		@SerializedName("support_link")
+		@Expose
+		private String supportLink;
+		@SerializedName("about_us")
+		@Expose
+		private String aboutUs;
+		@SerializedName("has_vpa")
+		@Expose
+		private Integer hasVpa;
+
+		public List<PromotionInfo> getPromotions() {
+			return promotions;
+		}
+
+		public void setPromotions(List<PromotionInfo> promotions) {
+			this.promotions = promotions;
+		}
+
+		public List<CouponInfo> getCoupons() {
+			return coupons;
+		}
+
+		public void setCoupons(List<CouponInfo> coupons) {
+			this.coupons = coupons;
+		}
+
+		public String getMid() {
+			return mid;
+		}
+
+		public void setMid(String mid) {
+			this.mid = mid;
+		}
+
+		public String getMkey() {
+			return mkey;
+		}
+
+		public void setMkey(String mkey) {
+			this.mkey = mkey;
+		}
+
+		public String getToken() {
+			return token;
+		}
+
+		public void setToken(String token) {
+			this.token = token;
+		}
+
+		public String getFaqLink() {
+			return faqLink;
+		}
+
+		public void setFaqLink(String faqLink) {
+			this.faqLink = faqLink;
+		}
+
+		public String getSupportLink() {
+			return supportLink;
+		}
+
+		public void setSupportLink(String supportLink) {
+			this.supportLink = supportLink;
+		}
+
+		public String getAboutUs() {
+			return aboutUs;
+		}
+
+		public void setAboutUs(String aboutUs) {
+			this.aboutUs = aboutUs;
+		}
+
+		public Integer getHasVpa() {
+			if(hasVpa == null){
+				return 0;
+			}
+			return hasVpa;
+		}
+
+		public void setHasVpa(Integer hasVpa) {
+			this.hasVpa = hasVpa;
 		}
 	}
 

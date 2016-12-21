@@ -89,7 +89,8 @@ public class PokestopHelper {
                 params.put(Constants.KEY_CITY_ID, String.valueOf(cityId));
 
 
-                RestClient.getApiServices().findPokestop(params, new retrofit.Callback<FindPokestopResponse>() {
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getApiService().findPokestop(params, new retrofit.Callback<FindPokestopResponse>() {
                     @Override
                     public void success(FindPokestopResponse findPokestopResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

@@ -135,8 +135,9 @@ public class LocationUpdateService extends Service {
 					params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
 					params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
 
+					new HomeUtil().putDefaultParams(params);
 					if(oneShot || emergencyLoc){
-						RestClient.getApiServices().saveCustomerEmergencyLocation(params, new Callback<SettleUserDebt>() {
+						RestClient.getApiService().saveCustomerEmergencyLocation(params, new Callback<SettleUserDebt>() {
 							@Override
 							public void success(SettleUserDebt settleUserDebt, Response response) {
 								String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -162,7 +163,8 @@ public class LocationUpdateService extends Service {
 							params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
 							Log.i(TAG, "customonReceive params=" + params);
 
-							RestClient.getApiServices().updateCustomerRideLocation(params, new Callback<SettleUserDebt>() {
+							new HomeUtil().putDefaultParams(params);
+							RestClient.getApiService().updateCustomerRideLocation(params, new Callback<SettleUserDebt>() {
 								@Override
 								public void success(SettleUserDebt settleUserDebt, Response response) {
 									String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

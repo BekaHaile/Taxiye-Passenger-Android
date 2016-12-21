@@ -26,7 +26,12 @@ public class MenusResponse {
 	@SerializedName("filter")
 	@Expose
 	private Filters filters;
-
+	@SerializedName("recent_orders")
+	@Expose
+	private List<RecentOrder> recentOrders = new ArrayList<RecentOrder>();
+	@SerializedName("recent_orders_possible_status")
+	@Expose
+	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
 	/**
 	 *
 	 * @return
@@ -107,6 +112,23 @@ public class MenusResponse {
 		this.filters = filters;
 	}
 
+	public List<RecentOrder> getRecentOrders() {
+		return recentOrders;
+	}
+
+	public void setRecentOrders(List<RecentOrder> recentOrders) {
+		this.recentOrders = recentOrders;
+	}
+
+	public List<String> getRecentOrdersPossibleStatus() {
+		return recentOrdersPossibleStatus;
+	}
+
+	public void setRecentOrdersPossibleStatus(List<String> recentOrdersPossibleStatus) {
+		this.recentOrdersPossibleStatus = recentOrdersPossibleStatus;
+	}
+
+
 
 	public class Vendor {
 
@@ -125,6 +147,11 @@ public class MenusResponse {
 		@SerializedName("is_closed")
 		@Expose
 		private Integer isClosed;
+
+		@SerializedName("is_available")
+		@Expose
+		private Integer isAvailable;
+
 		@SerializedName("distance")
 		@Expose
 		private Integer distance;
@@ -249,6 +276,20 @@ public class MenusResponse {
 		 */
 		public void setIsClosed(Integer isClosed) {
 			this.isClosed = isClosed;
+		}
+
+
+		public Integer getIsAvailable() {
+			return isAvailable;
+		}
+
+		/**
+		 *
+		 * @param isAvailable
+		 * The is_closed
+		 */
+		public void setIsAvailable(Integer isAvailable) {
+			this.isAvailable = isAvailable;
 		}
 
 		/**

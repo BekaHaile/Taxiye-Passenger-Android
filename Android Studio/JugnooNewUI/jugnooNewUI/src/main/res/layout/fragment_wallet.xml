@@ -253,6 +253,44 @@
         </LinearLayout>
 
 
+        <RelativeLayout
+            android:id="@+id/relativeLayoutPayTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="105px"
+            android:layout_marginBottom="30px"
+            android:layout_marginLeft="30px"
+            android:layout_marginRight="30px"
+            android:layout_above="@+id/relativeLayoutWalletTransactions"
+            android:background="@drawable/background_white_rounded_bordered">
+
+            <ImageView
+                android:id="@+id/imageViewPayTransactionsIcon"
+                android:layout_width="33px"
+                android:layout_height="35px"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30px"
+                android:src="@drawable/ic_recent_transactions" />
+
+            <TextView
+                android:id="@+id/textViewPayTransactions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20px"
+                android:layout_toRightOf="@+id/imageViewPayTransactionsIcon"
+                android:text="@string/pay_transactions"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_32" />
+
+            <ImageView
+                android:id="@+id/imageViewPayArrow"
+                style="@style/forward_image"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10px" />
+
+
+        </RelativeLayout>
+
         <!-- recent transactions rl-->
         <RelativeLayout
             android:id="@+id/relativeLayoutWalletTransactions"
@@ -279,7 +317,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20px"
                 android:layout_toRightOf="@+id/imageViewWalletTransactionsIcon"
-                android:text="View Wallet Transactions"
+                android:text="@string/wallet_transactions"
                 android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/text_size_32" />
 

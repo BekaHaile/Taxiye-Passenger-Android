@@ -120,7 +120,12 @@
                     android:textSize="@dimen/text_size_24"
                     />
 
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:orientation="horizontal"
+                    >
                 <TextView
                     android:id="@+id/textViewR1"
                     android:layout_width="20px"
@@ -153,7 +158,7 @@
                     android:layout_width="20px"
                     android:layout_height="30px"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginRight="7px"
+                    android:layout_marginRight="20px"
                     android:gravity="center"
                     android:tag="mwar"
                     android:text="@string/rupee"
@@ -162,7 +167,7 @@
                     />
 
             </LinearLayout>
-
+        </LinearLayout>
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

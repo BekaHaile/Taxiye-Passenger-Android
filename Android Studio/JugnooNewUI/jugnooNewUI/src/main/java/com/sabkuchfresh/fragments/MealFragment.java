@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.app.ProgressDialog;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +23,7 @@ import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.FreshDeliverySlotsDialog;
+import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -46,7 +48,9 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -78,12 +82,14 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     private LinearLayout noFreshsView;
     private TextView swipe_text;
 
-    private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
+    private FreshSortingDialog freshSortingDialog;
     private ArrayList<RecentOrder> recentOrder = new ArrayList<>();
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<SubItem> mealsData = new ArrayList<>();
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     private boolean resumed = false;
+    private RelativeLayout relativeLayoutNoMenus;
+    private TextView textViewNothingFound;
 
     public MealFragment() {
     }
@@ -109,6 +115,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             e.printStackTrace();
         }
         linearLayoutRoot.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
+
+        relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
+        ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
+        relativeLayoutNoMenus.setVisibility(View.GONE);
 
         mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
 
@@ -170,10 +181,18 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             activity.fragmentUISetup(this);
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
-            if(activity.isRefreshCart()){
-                getAllProducts(true, activity.getSelectedLatLng());
+            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                activity.showBottomBar(false);
             }
-            activity.setRefreshCart(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(activity.isRefreshCart()){
+                        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
+                    }
+                    activity.setRefreshCart(false);
+                }
+            }, 300);
         }
     }
 
@@ -199,11 +218,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
     }
 
-    public FreshDeliverySlotsDialog getFreshDeliverySlotsDialog() {
+    public FreshSortingDialog getFreshSortingDialog() {
 
-        if (freshDeliverySlotsDialog == null) {
-            freshDeliverySlotsDialog = new FreshDeliverySlotsDialog(activity, slots,
-                    new FreshDeliverySlotsDialog.FreshDeliverySortDialogCallback() {
+        if (freshSortingDialog == null) {
+            freshSortingDialog = new FreshSortingDialog(activity, slots,
+                    new FreshSortingDialog.FreshDeliverySortDialogCallback() {
                         @Override
                         public void onOkClicked(int position) {
                             //setSelectedSlotToView();
@@ -214,7 +233,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                         }
                     });
         }
-        return freshDeliverySlotsDialog;
+        return freshSortingDialog;
     }
 
 
@@ -242,7 +261,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         getAllProducts(false, activity.getSelectedLatLng());
     }
 
-    public void getAllProducts(final boolean loader, LatLng latLng) {
+    public void getAllProducts(final boolean loader, final LatLng latLng) {
         try {
             if (AppStatus.getInstance(activity).isOnline(activity)) {
                 ProgressDialog progressDialog = null;
@@ -258,68 +277,87 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 params.put(Constants.INTERATED, "1");
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
+                new HomeUtil().putDefaultParams(params);
                 final ProgressDialog finalProgressDialog = progressDialog;
                 RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
                     @Override
                     public void success(ProductsResponse productsResponse, Response response) {
                         noFreshsView.setVisibility(View.GONE);
+                        relativeLayoutNoMenus.setVisibility(View.GONE);
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
-                            JSONObject jObj = new JSONObject(responseStr);
-                            String message = JSONParser.getServerMessage(jObj);
-                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                int flag = jObj.getInt(Constants.KEY_FLAG);
-                                int sortedBy = jObj.getInt(Constants.SORTED_BY);
-
-                                mealsData.clear();
-                                mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
-                                recentOrder.clear();
-                                recentOrder.addAll(productsResponse.getRecentOrders());
-                                status.clear();
-                                status.addAll(productsResponse.getRecentOrdersPossibleStatus());
-                                activity.setProductsResponse(productsResponse);
-
-                                setSortingList();
-                                if (activity.mealSort == -1) {
-                                    slots.get(sortedBy).setCheck(true);
-                                    activity.mealSort = sortedBy;
-                                } else {
-                                    slots.get(activity.mealSort).setCheck(true);
-                                    onSortEvent(activity.mealSort);
-                                }
-
-
-                                activity.canOrder = false;
-                                int size = productsResponse.getCategories().get(0).getSubItems().size();
-                                for (int i = 0; i < size; i++) {
-                                    if (productsResponse.getCategories().get(0).getSubItems().get(i).getcanOrder() == 1) {
-                                        activity.canOrder = true;
-                                        break;
-                                    }
-
-                                }
-
-                                mealAdapter.setList(mealsData);
-                                recyclerViewCategoryItems.smoothScrollToPosition(0);
-
-                                if(mealsData.size()+recentOrder.size()>0) {
-                                    noMealsView.setVisibility(View.GONE);
-                                    mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                    activity.showBottomBar(true);
-                                } else {
-                                    noMealsView.setVisibility(View.VISIBLE);
-                                    //mSwipeRefreshLayout.setVisibility(View.GONE);
+                            if(!isHidden()) {
+                                activity.showBottomBar(true);
+                            } else {
+                                Fragment fragment = activity.getTopFragment();
+                                if(fragment != null && fragment instanceof MealFragment) {
                                     activity.showBottomBar(false);
                                 }
+                            }
 
-                                if (activity.getProductsResponse() != null
-                                        && activity.getProductsResponse().getCategories() != null) {
-                                    activity.updateCartFromSP();
-                                    activity.updateCartValuesGetTotalPrice();
+                            JSONObject jObj = new JSONObject(responseStr);
+                            String message = JSONParser.getServerMessage(jObj);
+                            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                int flag = jObj.getInt(Constants.KEY_FLAG);
+                                if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
+                                    relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+                                    mSwipeRefreshLayout.setVisibility(View.GONE);
+                                    noMealsView.setVisibility(View.GONE);
+                                    activity.showBottomBar(false);
+                                    textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
+                                            productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
+                                else {
+                                    int sortedBy = jObj.optInt(Constants.SORTED_BY);
+                                    mealsData.clear();
+                                    mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
+                                    recentOrder.clear();
+                                    recentOrder.addAll(productsResponse.getRecentOrders());
+                                    status.clear();
+                                    status.addAll(productsResponse.getRecentOrdersPossibleStatus());
+                                    activity.setProductsResponse(productsResponse);
+                                    activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
+                                    setSortingList();
+                                    if (activity.mealSort == -1) {
+                                        slots.get(sortedBy).setCheck(true);
+                                        activity.mealSort = sortedBy;
+                                    } else {
+                                        slots.get(activity.mealSort).setCheck(true);
+                                        onSortEvent(activity.mealSort);
+                                    }
 
 
+                                    activity.canOrder = false;
+                                    int size = productsResponse.getCategories().get(0).getSubItems().size();
+                                    for (int i = 0; i < size; i++) {
+                                        if (productsResponse.getCategories().get(0).getSubItems().get(i).getcanOrder() == 1) {
+                                            activity.canOrder = true;
+                                            break;
+                                        }
+
+                                    }
+
+                                    mealAdapter.setList(mealsData);
+                                    recyclerViewCategoryItems.smoothScrollToPosition(0);
+
+                                    if(mealsData.size()+recentOrder.size()>0) {
+                                        noMealsView.setVisibility(View.GONE);
+                                        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                                        activity.showBottomBar(true);
+                                    } else {
+                                        noMealsView.setVisibility(View.VISIBLE);
+                                        //mSwipeRefreshLayout.setVisibility(View.GONE);
+                                        activity.showBottomBar(false);
+                                    }
+
+                                    if (activity.getProductsResponse() != null
+                                            && activity.getProductsResponse().getCategories() != null) {
+                                        activity.updateCartFromSP();
+                                        activity.updateCartValuesGetTotalPrice();
+                                    }
+                                }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
@@ -331,14 +369,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             e.printStackTrace();
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
-                        if(!isHidden()) {
-                            activity.showBottomBar(true);
-                        } else {
-                            Fragment fragment = activity.getTopFragment();
-                            if(fragment != null && fragment instanceof MealFragment) {
-                                activity.showBottomBar(false);
-                            }
-                        }
                     }
 
                     @Override
@@ -367,7 +397,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {
-        noFreshsView.setVisibility(View.VISIBLE);
         activity.showBottomBar(false);
         mealsData.clear();
         mealAdapter.setList(mealsData);
@@ -449,6 +478,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 // should not happened
                 break;
         }
+    }
+
+    public MealAdapter getMealAdapter(){
+        return mealAdapter;
     }
 
 }

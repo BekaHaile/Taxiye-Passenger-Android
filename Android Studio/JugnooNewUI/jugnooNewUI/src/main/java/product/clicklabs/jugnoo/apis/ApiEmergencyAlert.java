@@ -13,6 +13,7 @@ import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PendingCall;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -57,7 +58,8 @@ public class ApiEmergencyAlert {
 					params.put(Constants.KEY_LONGITUDE, String.valueOf(LocationFetcher.getSavedLngFromSP(activity)));
 				}
 
-				RestClient.getApiServices().emergencyAlert(params, new retrofit.Callback<SettleUserDebt>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().emergencyAlert(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

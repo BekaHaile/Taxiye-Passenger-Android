@@ -97,10 +97,14 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 	}
 
 	protected void startLocationUpdates(long interval) {
-		createLocationRequest(interval);
-		Intent intent = new Intent(context, LocationReceiverBG.class);
-		locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationrequest, locationIntent);
+		try {
+			createLocationRequest(interval);
+			Intent intent = new Intent(context, LocationReceiverBG.class);
+			locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationrequest, locationIntent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -110,7 +114,13 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 	@Override
 	public void onConnected(Bundle connectionHint) {
 		Log.e(TAG, "onConnected ********************************************************");
-		startLocationUpdates(requestInterval);
+		try {
+			if(googleApiClient.isConnected()) {
+				startLocationUpdates(requestInterval);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

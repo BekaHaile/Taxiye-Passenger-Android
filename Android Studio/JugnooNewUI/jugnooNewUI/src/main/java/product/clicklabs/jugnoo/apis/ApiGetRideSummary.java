@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.ParseUtils;
@@ -87,7 +88,9 @@ public class ApiGetRideSummary {
 
 			final boolean finalShowRideMenu = showRideMenu;
 			final int finalSupportCategory = supportCategory;
-			RestClient.getApiServices().getRideSummary(params, new retrofit.Callback<ShowPanelResponse>() {
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().getRideSummary(params, new retrofit.Callback<ShowPanelResponse>() {
 				@Override
 				public void success(ShowPanelResponse showPanelResponse, Response response) {
 					try {

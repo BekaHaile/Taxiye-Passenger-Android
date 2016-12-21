@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -241,6 +242,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
         else if(viewholder instanceof ViewHeaderHolder){
             final ViewHeaderHolder holder = (ViewHeaderHolder) viewholder;
+            holder.textViewCategories.setText(R.string.categories);
+            holder.imageViewArrow.setVisibility(View.VISIBLE);
             try {
                 holder.textViewUserName.setText(Data.userData.userName);
                 holder.textViewViewPhone.setText(Data.userData.phoneNo);
@@ -271,6 +274,24 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.linearLayoutCategories.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+//                    if(!(activity instanceof HomeSwitcherActivity)) {
+//                        LatLng currLatLng = new LatLng(Data.latitude, Data.longitude);
+//                        if (activity instanceof HomeActivity) {
+//                            currLatLng = ((HomeActivity) activity).getCurrentPlaceLatLng();
+//                        } else if (activity instanceof FreshActivity) {
+//                            currLatLng = ((FreshActivity) activity).getCurrentPlaceLatLng();
+//                        }
+//                        final LatLng finalCurrLatLng = currLatLng;
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                MyApplication.getInstance().getAppSwitcher().switchApp(activity,
+//                                        Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+//                                        activity.getIntent().getData(), finalCurrLatLng, true);
+//                            }
+//                        }, 500);
+
+
                     if(holder.linearLayoutSubCategories.getVisibility() == View.VISIBLE){
                         holder.linearLayoutSubCategories.setVisibility(View.GONE);
                         Animation animation = AnimationUtils.loadAnimation(activity, R.anim.fab_scale_down);
@@ -283,7 +304,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         holder.imageViewArrow.setRotation(90);
                         //holder.linearLayoutCategories.startAnimation(animation);
                     }
-                    //notifyItemChanged(0);
+
+                        //notifyItemChanged(0);
+//                    }
+//                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
             });
 
@@ -352,6 +376,16 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_MENUS, new Bundle());
                 }
             });
+
+            holder.linearLayoutSubPay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickAction(MenuInfoTags.PAY.getTag());
+                    holder.imageViewArrow.setRotation(270);
+                    holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                    MyApplication.getInstance().logEvent(FirebaseEvents.MENU_CATEGORIES_PAY, new Bundle());
+                }
+            });
         }
 
     }
@@ -406,6 +440,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void onClickAction(final String tag){
+        onClickAction(tag, 0, 0);
+    }
+    public void onClickAction(final String tag, final int orderId, final int productType){
         try {
             if(MenuInfoTags.GAME.getTag().equalsIgnoreCase(tag)){
                 if (Data.userData.getGamePredictEnable() == 1) {
@@ -545,6 +582,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(tag)) {
                 Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                intent.putExtra(Constants.KEY_ORDER_ID, orderId);
+                intent.putExtra(Constants.KEY_PRODUCT_TYPE, productType);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 FlurryEventLogger.event(FlurryEventNames.RIDE_HISTORY);
@@ -581,6 +620,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), getLatLng(), false);
             }
+            else if(MenuInfoTags.PAY.getTag().equalsIgnoreCase(tag)){
+                drawerLayout.closeDrawer(GravityCompat.START);
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getPayClientId(), getLatLng(), false);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -597,7 +640,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if(Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
                         && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
-                        && (Data.userData.getMenusEnabled() == 0)) {
+                        && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)) {
                     holder.linearLayoutCategories.setVisibility(View.GONE);
                     holder.linearLayoutSubCategories.setVisibility(View.GONE);
                 } else {
@@ -632,6 +675,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     } else {
                         holder.linearLayoutSubMenus.setVisibility(View.GONE);
                     }
+
+                    if(Data.userData.getPayEnabled() == 1){
+                        holder.linearLayoutSubPay.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.linearLayoutSubPay.setVisibility(View.GONE);
+                    }
                 }
             }
         } catch (Exception e) {
@@ -659,9 +708,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public RelativeLayout relative;
         public ImageView imageViewProfile, imageViewArrow;
         public TextView textViewUserName, textViewViewPhone, textViewCategories, textViewAutos, textViewFresh, textViewMeals, textViewDelivery,
-                textViewGrocery, textViewMenus;
+                textViewGrocery, textViewMenus, textViewPay;
         public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubDelivery, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos,
-            linearLayoutSubGrocery, linearLayoutSubMenus;
+            linearLayoutSubGrocery, linearLayoutSubMenus, linearLayoutSubPay;
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
@@ -675,6 +724,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             textViewDelivery = (TextView) convertView.findViewById(R.id.textViewDelivery); textViewDelivery.setTypeface(Fonts.mavenRegular(context));
             textViewGrocery = (TextView) convertView.findViewById(R.id.textViewGrocery); textViewGrocery.setTypeface(Fonts.mavenRegular(context));
             textViewMenus = (TextView) convertView.findViewById(R.id.textViewMenus); textViewMenus.setTypeface(Fonts.mavenRegular(context));
+            textViewPay = (TextView) convertView.findViewById(R.id.textViewPay); textViewPay.setTypeface(Fonts.mavenRegular(context));
             linearLayoutCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutCategories);
             linearLayoutSubCategories = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubCategories);
             imageViewArrow = (ImageView) convertView.findViewById(R.id.imageViewArrow);
@@ -684,6 +734,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             linearLayoutSubDelivery = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubDelivery);
             linearLayoutSubGrocery = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubGrocery);
             linearLayoutSubMenus = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubMenus);
+            linearLayoutSubPay = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubPay);
         }
     }
 

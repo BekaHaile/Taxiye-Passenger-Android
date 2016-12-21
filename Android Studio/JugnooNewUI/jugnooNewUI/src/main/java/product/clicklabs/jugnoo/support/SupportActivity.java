@@ -105,6 +105,8 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 				pt = ProductType.GROCERY;
 			} else if(productType == ProductType.MENUS.getOrdinal()){
 				pt = ProductType.MENUS;
+			} else if(productType == ProductType.PAY.getOrdinal()){
+				pt = ProductType.PAY;
 			}
 			getRideSummaryAPI(this, pt, supportCategory); //for bad feedback case (thumbs down)
 			setTitle(getResources().getString(R.string.support_ride_issues_title));
@@ -162,7 +164,7 @@ public class SupportActivity extends BaseFragmentActivity implements FlurryEvent
 			getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(getContainer().getId(),
-							new RideSummaryFragment(endRideData, rideCancelled, autosStatus),
+							RideSummaryFragment.newInstance(Integer.parseInt(endRideData.engagementId), endRideData, rideCancelled, autosStatus),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
 					.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()

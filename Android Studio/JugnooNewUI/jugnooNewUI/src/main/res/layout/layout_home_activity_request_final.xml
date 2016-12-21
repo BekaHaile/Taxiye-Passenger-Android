@@ -106,7 +106,6 @@
         android:id="@+id/imageViewFabFakeFinal"
         android:layout_width="68dp"
         android:layout_height="68dp"
-        android:src="@drawable/ic_fab_fake_selector"
         android:layout_alignParentBottom="true"
         android:tag="DontTouchMe"
         android:layout_marginLeft="20dp"

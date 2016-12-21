@@ -3,7 +3,6 @@ package com.sabkuchfresh.apis;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
-import com.sabkuchfresh.retrofit.model.ReferralResponse;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 
 import java.util.Map;
@@ -12,7 +11,6 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
 import retrofit.http.POST;
 
 /**
@@ -45,11 +43,6 @@ public interface FreshApiService {
 	@POST("/cancel_order")
 	void cancelOrder(@FieldMap Map<String, String> params,
                      Callback<OrderHistoryResponse> callback);
-
-    @FormUrlEncoded
-    @GET("/v1/customer/fetch_code")
-    void referServerCall(@FieldMap Map<String, String> params,
-                         Callback<ReferralResponse> callback);
 
 
     @FormUrlEncoded

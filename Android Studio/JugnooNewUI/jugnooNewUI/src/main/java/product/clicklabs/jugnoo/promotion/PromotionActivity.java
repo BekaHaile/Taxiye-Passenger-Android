@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.promotion.adapters.PromotionsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -307,7 +308,8 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                     params.put(Constants.KEY_LATITUDE, "" + Data.latitude);
                     params.put(Constants.KEY_LONGITUDE, "" + Data.longitude);
 
-                    RestClient.getApiServices().getCouponsAndPromotions(params, new Callback<PromCouponResponse>() {
+                    new HomeUtil().putDefaultParams(params);
+                    RestClient.getApiService().getCouponsAndPromotions(params, new Callback<PromCouponResponse>() {
                         @Override
                         public void success(PromCouponResponse promCouponResponse, Response response) {
                             String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -355,6 +357,11 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                                             promoCoupons.addAll(promCouponResponse.getMenusPromotions());
                                         if(promCouponResponse.getMenusCoupons() != null)
                                             promoCoupons.addAll(promCouponResponse.getMenusCoupons());
+
+                                        if(promCouponResponse.getPayPromotions() != null)
+                                            promoCoupons.addAll(promCouponResponse.getPayPromotions());
+                                        if(promCouponResponse.getPayCoupons() != null)
+                                            promoCoupons.addAll(promCouponResponse.getPayCoupons());
 
                                         updateListData();
 
@@ -456,7 +463,8 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
                     params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                     params.put(Constants.KEY_CODE, promoCode);
 
-                    RestClient.getApiServices().enterCode(params, new Callback<SettleUserDebt>() {
+                    new HomeUtil().putDefaultParams(params);
+                    RestClient.getApiService().enterCode(params, new Callback<SettleUserDebt>() {
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {
                             String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

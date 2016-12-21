@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"
-    android:id="@+id/mainLayout"
-    android:splitMotionEvents="false"
     android:animateLayoutChanges="true"
-    >
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
 
     <LinearLayout
         android:id="@+id/linearLayoutRideSummaryContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
     </LinearLayout>
 
@@ -24,59 +21,74 @@
         android:id="@+id/scrollViewRideSummary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/linearLayoutRideSummaryContainer"
-        >
+        android:layout_below="@+id/linearLayoutRideSummaryContainer">
 
         <LinearLayout
             android:id="@+id/linearLayoutRideSummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40px">
+                android:layout_marginTop="40px"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/imageview_type"
                     android:layout_width="68px"
                     android:layout_height="52px"
-                    android:tag="mwar"
                     android:layout_marginLeft="46px"
-                    />
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewThanks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/thanks_for_ordering_with_us"
-                    android:textSize="@dimen/text_size_36"
-                    android:textColor="@color/text_color"
-                    android:gravity="center_vertical"
-                    android:layout_toRightOf="@+id/imageview_type"
                     android:layout_marginLeft="20px"
-                    />
+                    android:layout_toRightOf="@+id/imageview_type"
+                    android:gravity="center_vertical"
+                    android:text="@string/thanks_for_ordering_with_us"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_36" />
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="196px"
-                android:layout_marginTop="40px"
+                android:layout_height="158px"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
+                android:layout_marginTop="40px"
                 android:background="@drawable/bg_menu_item_selector_color_rb"
                 android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/rlOffering"
+                    android:layout_width="86px"
+                    android:layout_height="86px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/px_30"
+                    android:background="@drawable/circle_white_stroke_grey"
+                    android:gravity="center"
+                    android:tag="mwar">
+
+                    <ImageView
+                        android:id="@+id/ivOffering"
+                        android:layout_width="45px"
+                        android:layout_height="45px"
+                        android:src="@drawable/ic_fab_meals" />
+                </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="300px"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/px_40"
+                    android:layout_toRightOf="@+id/rlOffering"
                     android:gravity="center_vertical"
-                    android:layout_margin="40px"
                     android:orientation="vertical">
 
                     <TextView
@@ -85,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/delivery_date"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_30"/>
+                        android:textSize="@dimen/text_size_30" />
 
                     <TextView
                         android:id="@+id/textViewRSData"
@@ -94,49 +106,58 @@
                         android:layout_marginTop="10px"
                         android:text="Aug 5, 2016"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_40"
-                        />
+                        android:textSize="@dimen/text_size_32" />
+
+                    <TextView
+                        android:id="@+id/tvItems"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10px"
+                        android:text=""
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:visibility="gone"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
                 </LinearLayout>
 
                 <ImageView
                     android:id="@+id/divider"
                     android:layout_width="2px"
                     android:layout_height="108px"
-                    android:src="@color/grey_dark_less"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="44px"
                     android:layout_toLeftOf="@+id/amountLayout"
-                    />
+                    android:visibility="gone"
+                    android:src="@color/grey_dark_less" />
 
                 <LinearLayout
                     android:id="@+id/amountLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="40px"
                     android:layout_marginBottom="40px"
                     android:layout_marginRight="34px"
+                    android:layout_marginTop="40px"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
-                        android:visibility="gone"
                         android:id="@+id/textViewRSCashPaid"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/Cash_to_be_paid"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/end_ride_fare_title_text_size"/>
+                        android:textSize="@dimen/end_ride_fare_title_text_size"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/textViewRSCashPaidValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
                         android:text="@string/rupee_0"
                         android:textColor="@color/text_color"
-                        android:textSize="70px"
-                        />
+                        android:textSize="70px" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -155,18 +176,17 @@
                     android:layout_height="24px"
                     android:layout_marginRight="8px"
                     android:src="@drawable/ic_ride_receipt"
-                    android:tag="mwar"/>
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewRSInvoice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:textAllCaps="true"
                     android:text="@string/view_invoice"
+                    android:textAllCaps="true"
                     android:textColor="@color/text_color_theme_selector"
-                    android:textSize="@dimen/text_size_32"
-                    />
+                    android:textSize="@dimen/text_size_32" />
 
             </LinearLayout>
 
@@ -179,10 +199,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20px"
                     android:layout_marginLeft="56px"
+                    android:layout_marginRight="20px"
                     android:layout_toLeftOf="@+id/textViewRSRateYourRide"
-                    android:src="@color/text_color"/>
+                    android:src="@color/text_color" />
 
                 <TextView
                     android:id="@+id/textViewRSRateYourRide"
@@ -191,7 +211,7 @@
                     android:layout_centerInParent="true"
                     android:text="@string/order_expereince"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_36"/>
+                    android:textSize="@dimen/text_size_36" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -200,9 +220,8 @@
                     android:layout_marginLeft="20px"
                     android:layout_marginRight="56px"
                     android:layout_toRightOf="@+id/textViewRSRateYourRide"
-                    android:src="@color/text_color"/>
+                    android:src="@color/text_color" />
             </RelativeLayout>
-
 
 
             <RatingBar
@@ -213,9 +232,9 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30px"
                 android:numStars="5"
-                android:visibility="gone"
                 android:rating="1"
-                android:stepSize="1.0"/>
+                android:stepSize="1.0"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -226,24 +245,22 @@
                 android:orientation="horizontal">
 
 
-
                 <ImageView
                     android:id="@+id/imageViewThumbsDown"
-                    android:layout_width="290px"
-                    android:layout_height="290px"
+                    android:layout_width="244px"
+                    android:layout_height="244px"
                     android:layout_marginLeft="20px"
-                    android:src="@drawable/ic_thumbs_down_selector"
-                    android:tag="mwar"/>
+                    android:src="@drawable/ic_thumbs_down"
+                    android:tag="mwar" />
 
                 <ImageView
                     android:id="@+id/imageViewThumbsUp"
-                    android:layout_width="290px"
-                    android:layout_height="290px"
+                    android:layout_width="244px"
+                    android:layout_height="244px"
                     android:layout_marginLeft="50px"
                     android:layout_marginRight="20px"
                     android:src="@drawable/ic_thumbs_up_selector"
-                    android:tag="mwar"/>
-
+                    android:tag="mwar" />
 
 
             </LinearLayout>
@@ -251,139 +268,147 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20px">
+                android:layout_marginTop="20px"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textViewThumbsDown"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/bad"
                     android:layout_marginLeft="160px"
+                    android:text="@string/bad"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
-                    android:visibility="visible"
-                    android:textSize="@dimen/text_size_30"/>
+                    android:textSize="@dimen/text_size_30"
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/textViewThumbsUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/great"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="120px"
+                    android:text="@string/great"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
-                    android:visibility="visible"
-                    android:textSize="@dimen/text_size_30"/>
+                    android:textSize="@dimen/text_size_30"
+                    android:visibility="visible" />
             </RelativeLayout>
 
-
-            <TextView
-                android:id="@+id/textViewRSWhatImprove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="40px"
-                android:layout_marginTop="15px"
-                android:visibility="gone"
-                android:text="@string/what_could_we_improve"
-                android:textColor="@color/text_color"
-                android:textSize="30px"/>
-
-            <product.clicklabs.jugnoo.utils.NonScrollGridView
-                android:id="@+id/gridViewRSFeedbackReasons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10px"
-                android:layout_marginTop="20px"
-                android:visibility="gone"
-                android:divider="@color/transparent"
-                android:dividerHeight="0px"
-                android:numColumns="2"
-                android:splitMotionEvents="false"/>
-
-
-            <EditText
-                android:id="@+id/editTextRSFeedback"
-                android:layout_width="match_parent"
-                android:layout_height="200px"
-                android:layout_marginLeft="40px"
-                android:layout_marginRight="40px"
-                android:layout_marginTop="20px"
-                android:background="@drawable/background_white_rounded_bordered"
-                android:gravity="left"
-                android:visibility="gone"
-                android:hint="@string/leave_a_comment"
-                android:padding="20px"
-                android:scrollbars="vertical"
-                android:textColor="@color/grey_dark_more"
-                android:textSize="28px"
-                />
-
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="32px"
-                android:layout_marginLeft="60px"
-                android:layout_marginTop="10px"
-                android:animateLayoutChanges="true">
+                android:id="@+id/llBadReason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewRSOtherError"
+                    android:id="@+id/textViewRSWhatImprove"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/star_required"
-                    android:visibility="gone"
-                    android:textColor="@color/red_status"
-                    android:textSize="22px"/>
+                    android:layout_marginTop="15px"
+                    android:text="@string/oh_no_what_went_wrong"
+                    android:textColor="@color/text_color"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="@dimen/text_size_42"
+                    android:visibility="visible" />
+
+                <product.clicklabs.jugnoo.utils.NonScrollGridView
+                    android:id="@+id/gridViewRSFeedbackReasons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="40px"
+                    android:verticalSpacing="20px"
+                    android:horizontalSpacing="22px"
+                    android:divider="@color/transparent"
+                    android:dividerHeight="0px"
+                    android:numColumns="2"
+                    android:splitMotionEvents="false"
+                    android:visibility="visible" />
+
+
+                <EditText
+                    android:id="@+id/editTextRSFeedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="200px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="40px"
+                    android:layout_marginTop="20px"
+                    android:background="@drawable/background_white_rounded_bordered"
+                    android:gravity="left"
+                    android:hint="@string/leave_a_comment"
+                    android:padding="20px"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/grey_dark_more"
+                    android:textSize="28px"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="32px"
+                    android:layout_marginLeft="60px"
+                    android:layout_marginTop="10px"
+                    android:animateLayoutChanges="true">
+
+                    <TextView
+                        android:id="@+id/textViewRSOtherError"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/star_required"
+                        android:textColor="@color/red_status"
+                        android:textSize="22px"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/buttonRSSubmitFeedback"
+                    style="@style/ButtonTheme"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10px"
+                    android:layout_marginTop="20px"
+                    android:text="@string/submit"
+                    android:visibility="visible" />
+
+                <Button
+                    android:id="@+id/buttonRSSkipFeedback"
+                    android:layout_width="150px"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="40px"
+                    android:layout_marginTop="10px"
+                    android:background="@drawable/background_transparent"
+                    android:text="@string/skip"
+                    android:textColor="@color/text_color_light_selector"
+                    android:textSize="@dimen/button_small_text_size"
+                    android:visibility="gone" />
+
             </LinearLayout>
-
-            <Button
-                android:id="@+id/buttonRSSubmitFeedback"
-                style="@style/ButtonTheme"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10px"
-                android:visibility="gone"
-                android:layout_marginTop="20px"
-                android:text="@string/submit_feedback_caps"
-                />
-
-            <Button
-                android:id="@+id/buttonRSSkipFeedback"
-                android:layout_width="150px"
-                android:layout_height="@dimen/button_height"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="40px"
-                android:layout_marginTop="10px"
-                android:background="@drawable/background_transparent"
-                android:text="@string/skip"
-                android:visibility="gone"
-                android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/button_small_text_size"/>
 
             <TextView
                 android:id="@+id/textViewRSScroll"
                 android:layout_width="20px"
                 android:layout_height="20px"
-                android:text=" "/>
+                android:text=" " />
 
         </LinearLayout>
     </ScrollView>
-
 
 
     <RelativeLayout
         android:id="@+id/relativeLayoutGreat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageViewThumbsUpGif"
             android:layout_width="620px"
             android:layout_height="969px"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_thumbs_up"
-            />
+            android:src="@drawable/ic_thumbs_up" />
     </RelativeLayout>
 
 
@@ -392,85 +417,86 @@
         android:id="@+id/relativeLayoutRideEndWithImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:soundEffectsEnabled="false">
+        android:soundEffectsEnabled="false"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageViewRideEndWithImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:tag="mwar"
+            android:scaleType="centerCrop"
             android:src="@drawable/ride_end_image_1"
-            android:scaleType="centerCrop"/>
+            android:tag="mwar" />
 
         <ImageView
             android:layout_width="603px"
             android:layout_height="64px"
-            android:layout_marginTop="34px"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/happy_text"
-            android:layout_marginBottom="20px"
             android:layout_above="@+id/relativeLayoutBottomContainer"
-            android:tag="mwar"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20px"
+            android:layout_marginTop="34px"
+            android:src="@drawable/happy_text"
+            android:tag="mwar" />
 
         <RelativeLayout
             android:id="@+id/relativeLayoutBottomContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="56px"
             android:layout_marginLeft="50px"
             android:layout_marginRight="50px"
-            android:layout_marginBottom="56px"
-            android:layout_alignParentBottom="true"
             android:background="@drawable/background_white_rounded">
 
             <TextView
                 android:id="@+id/textViewRideEndWithImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30px"
-                android:layout_marginRight="44px"
-                android:layout_marginLeft="44px"
                 android:layout_marginBottom="30px"
+                android:layout_marginLeft="44px"
+                android:layout_marginRight="44px"
+                android:layout_marginTop="30px"
                 android:gravity="center"
+                android:text="@string/end_ride_with_image_text"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"
-                android:text="@string/end_ride_with_image_text"/>
+                android:textSize="@dimen/text_size_32" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRideEndWithImage"
-                android:gravity="center"
                 android:layout_marginBottom="32px"
-                android:tag="mwar"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:tag="mwar">
+
                 <Button
                     android:id="@+id/buttonEndRideSkip"
                     android:layout_width="152px"
                     android:layout_height="80px"
-                    android:text="@string/skip"
                     android:background="@drawable/button_white_grey_theme_border_selector"
+                    android:text="@string/skip"
+                    android:textAllCaps="true"
                     android:textColor="@color/text_color_theme_selector"
-                    android:textSize="@dimen/text_size_34"
-                    android:textAllCaps="true"/>
+                    android:textSize="@dimen/text_size_34" />
 
                 <Button
                     android:id="@+id/buttonEndRideInviteFriends"
                     android:layout_width="364px"
                     android:layout_height="80px"
-                    android:text="@string/invite_friends"
                     android:layout_marginLeft="20px"
                     android:background="@drawable/background_theme_gradient_selector"
+                    android:text="@string/invite_friends"
+                    android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_34"
-                    android:textAllCaps="true"/>
+                    android:textSize="@dimen/text_size_34" />
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
+
     <ImageView
         android:id="@+id/below_shadow"
         android:layout_width="match_parent"
         android:layout_height="6px"
-        android:background="@drawable/shadow_down"
-        />
+        android:background="@drawable/shadow_down" />
 </RelativeLayout>

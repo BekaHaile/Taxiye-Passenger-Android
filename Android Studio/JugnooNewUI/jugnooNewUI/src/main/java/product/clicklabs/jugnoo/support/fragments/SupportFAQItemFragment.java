@@ -18,6 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -31,6 +33,7 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -71,33 +74,48 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 	private String parentName, phoneNumber, rideDate, orderDate, supportNumber;
 	private ShowPanelResponse.Item item;
 
-	public SupportFAQItemFragment(){}
-
 	@Override
     public void onStart() {
         super.onStart();
-//        FlurryAgent.init(activity, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-//        FlurryAgent.onEvent(SupportFAQItemFragment.class.getSimpleName() + " started");
     }
 
     @Override
     public void onStop() {
 		super.onStop();
-//        FlurryAgent.onEndSession(activity);
     }
 
-	public SupportFAQItemFragment(int engagementId, String rideDate, String parentName, ShowPanelResponse.Item item, String phoneNumber,
-								  int orderId, String orderDate, String supportNumber, int productType){
-		this.engagementId = engagementId;
-		this.parentName = parentName;
-		this.item = item;
-		this.phoneNumber = phoneNumber;
-		this.rideDate = rideDate;
-		this.orderId = orderId;
-		this.orderDate = orderDate;
-		this.supportNumber = supportNumber;
-		this.productType = productType;
+	private static final String PARENT_NAME = "parentName", ITEM = "item";
+
+	public static SupportFAQItemFragment newInstance(int engagementId, String rideDate, String parentName,
+													 ShowPanelResponse.Item item, String phoneNumber,
+													 int orderId, String orderDate, String supportNumber, int productType){
+		SupportFAQItemFragment fragment = new SupportFAQItemFragment();
+
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_ENGAGEMENT_ID, engagementId);
+		bundle.putString(Constants.KEY_RIDE_DATE, rideDate);
+		bundle.putString(PARENT_NAME, parentName);
+		bundle.putString(ITEM, new Gson().toJson(item, ShowPanelResponse.Item.class));
+		bundle.putString(Constants.KEY_PHONE_NO, phoneNumber);
+		bundle.putInt(Constants.KEY_ORDER_ID, orderId);
+		bundle.putString(Constants.KEY_ORDER_DATE, orderDate);
+		bundle.putString(Constants.KEY_SUPPORT_NUMBER, supportNumber);
+		bundle.putInt(Constants.KEY_PRODUCT_TYPE, productType);
+		fragment.setArguments(bundle);
+
+		return fragment;
+	}
+
+	private void parseArguments(){
+		this.engagementId = getArguments().getInt(Constants.KEY_ENGAGEMENT_ID);
+		this.rideDate = getArguments().getString(Constants.KEY_RIDE_DATE);
+		this.parentName = getArguments().getString(PARENT_NAME);
+		this.item = new Gson().fromJson(getArguments().getString(ITEM), ShowPanelResponse.Item.class);
+		this.phoneNumber = getArguments().getString(Constants.KEY_PHONE_NO);
+		this.orderId = getArguments().getInt(Constants.KEY_ORDER_ID);
+		this.orderDate = getArguments().getString(Constants.KEY_ORDER_DATE);
+		this.supportNumber = getArguments().getString(Constants.KEY_SUPPORT_NUMBER);
+		this.productType = getArguments().getInt(Constants.KEY_PRODUCT_TYPE);
 	}
 
     @Override
@@ -107,14 +125,14 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
         activity = getActivity();
 		setActivityTitle();
 
+		parseArguments();
+
 		scrollViewRoot = (ScrollView) rootView.findViewById(R.id.scrollViewRoot);
 		try {
 			if(scrollViewRoot != null) {
 				new ASSL(activity, scrollViewRoot, 1134, 720, false);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
 
 		linearLayoutMain = (LinearLayout)rootView.findViewById(R.id.linearLayoutMain);
 
@@ -139,6 +157,10 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 		textViewDescription.setText(item.getText());
 
 		showItem();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		buttonSubmit.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -289,7 +311,8 @@ public class SupportFAQItemFragment extends Fragment implements FlurryEventNames
 				params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType));
 			}
 
-			RestClient.getApiServices().generateSupportTicket(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().generateSupportTicket(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					DialogPopup.dismissLoadingDialog();

@@ -37,6 +37,9 @@ public class CouponInfo extends PromoCoupon{
 	@SerializedName("menus")
 	@Expose
 	private Integer menus = 0;
+	@SerializedName("pay")
+	@Expose
+	private Integer pay = 0;
 	@SerializedName("master_coupon")
 	@Expose
 	private Integer masterCoupon = 0;
@@ -160,5 +163,16 @@ public class CouponInfo extends PromoCoupon{
 
 	public void setMenus(Integer menus) {
 		this.menus = menus;
+	}
+
+	public Integer getPay() {
+		if(pay == null){
+			return 0;
+		}
+		return pay;
+	}
+
+	public void setPay(Integer pay) {
+		this.pay = pay;
 	}
 }

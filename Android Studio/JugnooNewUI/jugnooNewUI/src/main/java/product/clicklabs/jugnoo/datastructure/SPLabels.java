@@ -6,8 +6,6 @@ package product.clicklabs.jugnoo.datastructure;
 public class SPLabels {
 
 
-
-
     public static final String SETTINGS_SP = "settingsPref",
         SHOW_ALL_DRIVERS = "showAllDrivers",
         SHOW_DRIVER_INFO = "showDriverInfo",
@@ -15,6 +13,7 @@ public class SPLabels {
         SERVER_SELECTED = "serverSelected",
                 FRESH_SERVER_SELECTED = "freshServerSelected",
                 MENUS_SERVER_SELECTED = "menusServerSelected",
+                PAY_SERVER_SELECTED = "payServerSelected",
 
         REFERRAL_OPEN_DATE_MILLIS = "referralOpenDateMillis",
         REFERRAL_TRANSACTION_COUNT = "referralTransactionCount",

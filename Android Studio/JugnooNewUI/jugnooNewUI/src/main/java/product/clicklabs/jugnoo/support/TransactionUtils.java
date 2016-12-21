@@ -6,8 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
-import com.sabkuchfresh.fragments.FreshOrderSummaryFragment;
-
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
@@ -62,7 +60,7 @@ public class TransactionUtils {
 					activity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 							.add(container.getId(),
-									new SupportFAQItemsListFragment(engagementId, rideDate, item, phoneNumber, orderId, orderDate, supportNumber, productType),
+									SupportFAQItemsListFragment.newInstance(engagementId, rideDate, item, phoneNumber, orderId, orderDate, supportNumber, productType),
 									SupportFAQItemsListFragment.class.getName()+item.getSupportId())
 							.addToBackStack(SupportFAQItemsListFragment.class.getName()+item.getSupportId())
 							.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -85,7 +83,7 @@ public class TransactionUtils {
 				activity.getSupportFragmentManager().beginTransaction()
 						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 						.add(container.getId(),
-								new SupportFAQItemFragment(engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate, supportNumber, productType),
+								SupportFAQItemFragment.newInstance(engagementId, rideDate, singleItemParentName, singleItemToOpen, phoneNumber, orderId, orderDate, supportNumber, productType),
 								SupportFAQItemFragment.class.getName())
 						.addToBackStack(SupportFAQItemFragment.class.getName())
 						.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -114,7 +112,7 @@ public class TransactionUtils {
 				fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
 			}
 			fragmentTransaction.add(container.getId(),
-					new SupportRideIssuesFragment(engagementId, orderId, endRideData, items, rideCancelled, autosStatus, datum),
+					SupportRideIssuesFragment.newInstance(engagementId, orderId, endRideData, items, rideCancelled, autosStatus, datum),
 					SupportRideIssuesFragment.class.getName())
 					.addToBackStack(SupportRideIssuesFragment.class.getName());
 			if(fromBadFeedback == 0 && fragmentManager.getBackStackEntryCount() > 0){
@@ -138,22 +136,9 @@ public class TransactionUtils {
 			activity.getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 					.add(container.getId(),
-							new RideSummaryFragment(engagementId, rideCancelled, autosStatus),
+							RideSummaryFragment.newInstance(engagementId, null, rideCancelled, autosStatus),
 							RideSummaryFragment.class.getName())
 					.addToBackStack(RideSummaryFragment.class.getName())
-					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
-							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-					.commitAllowingStateLoss();
-		}
-	}
-
-	public void openOrderSummaryFragment(FragmentActivity activity, View container, HistoryResponse.Datum datum) {
-		if(!checkIfFragmentAdded(activity, FreshOrderSummaryFragment.class.getName())) {
-			activity.getSupportFragmentManager().beginTransaction()
-					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-					.add(container.getId(), new FreshOrderSummaryFragment(datum),
-							FreshOrderSummaryFragment.class.getName())
-					.addToBackStack(FreshOrderSummaryFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
 							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();

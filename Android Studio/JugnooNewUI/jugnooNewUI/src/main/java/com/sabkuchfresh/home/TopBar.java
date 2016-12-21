@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 
 import product.clicklabs.jugnoo.Data;
@@ -94,7 +93,6 @@ public class TopBar implements FlurryEventNames {
 				} else{
 					Utils.showToast(activity, Config.getFreshServerUrlName());
 				}
-				FlurryEventLogger.checkServerPressed(Data.userData.accessToken);
 				return false;
 			}
 		});

@@ -481,20 +481,20 @@ public class MyApplication extends Application{
 		}
 		String freshServerUrlToSet = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
 		String menusServerUrlToSet = Prefs.with(context).getString(SPLabels.MENUS_SERVER_SELECTED, Config.getMenusDefaultServerUrl());
+		String payServerUrlToSet = Prefs.with(context).getString(SPLabels.PAY_SERVER_SELECTED, Config.getPayDefaultServerUrl());
 
-		if(configModeToSet != Config.getConfigMode() || !Config.getFreshServerUrl().equalsIgnoreCase(freshServerUrlToSet)
-				|| !Config.getMenusServerUrl().equalsIgnoreCase(menusServerUrlToSet)){
-			RestClient.clearRestClient();
+		if(configModeToSet != Config.getConfigMode()
+				|| !Config.getFreshServerUrl().equalsIgnoreCase(freshServerUrlToSet)
+				|| !Config.getMenusServerUrl().equalsIgnoreCase(menusServerUrlToSet)
+				|| !Config.getPayServerUrl().equalsIgnoreCase(payServerUrlToSet)){
+			RestClient.clearRestClients();
 		}
 		Config.setConfigMode(configModeToSet);
 		Config.FRESH_SERVER_URL = freshServerUrlToSet;
 
 		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
 
-		RestClient.setupRestClient();
-		RestClient.setupFreshApiRestClient();
-		RestClient.setupChatApiRestClient();
-		RestClient.setupMenusApiRestClient();
+		RestClient.setupAllClients();
 	}
 
 

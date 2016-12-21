@@ -24,6 +24,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
+import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
@@ -42,6 +43,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -64,12 +66,14 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private MenusRestaurantAdapter menusRestaurantAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
-    private TextView textViewNoMenus;
+    private TextView textViewNothingFound;
 
     private View rootView;
     private FreshActivity activity;
 
     private ArrayList<MenusResponse.Vendor> vendors = new ArrayList<>();
+    private ArrayList<RecentOrder> recentOrder = new ArrayList<>();
+    private ArrayList<String> status = new ArrayList<>();
 
     PushDialog pushDialog;
     private boolean resumed = false;
@@ -108,14 +112,14 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        ((TextView)rootView.findViewById(R.id.textViewNothingFound)).setTypeface(Fonts.mavenMedium(activity));
+        textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
         relativeLayoutNoMenus.setVisibility(View.GONE);
 
         recyclerViewRestaurant = (RecyclerView) rootView.findViewById(R.id.recyclerViewRestaurant);
         recyclerViewRestaurant.setLayoutManager(new LinearLayoutManager(activity));
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
-        textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus); textViewNoMenus.setTypeface(Fonts.mavenMedium(activity));
+        /*textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus); textViewNoMenus.setTypeface(Fonts.mavenMedium(activity));*/
 
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
@@ -125,7 +129,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         swipeRefreshLayout.setEnabled(true);
 
-        menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, new MenusRestaurantAdapter.Callback() {
+        menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors,recentOrder,status, new MenusRestaurantAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
                 getVendorMenu(vendor);
@@ -134,7 +138,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
             @Override
             public void onNotify(int count) {
-                textViewNoMenus.setVisibility(count > 0 || vendors.size() == 0 ? View.GONE : View.VISIBLE);
+      /*          textViewNoMenus.setVisibility(count > 0 || vendors.size() == 0 ? View.GONE : View.VISIBLE);*/
             }
         });
 
@@ -158,17 +162,17 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         try {
             if(Data.userData.getPromoSuccess() == 0) {
                 showPromoFailedAtSignupDialog();
-            } else if(Data.getGroceryData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
-                Data.getGroceryData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
+            } else if(Data.getMenusData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
+                Data.getMenusData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
                 showPopup();
-            } else if(Data.getGroceryData().getPopupData() != null) {
+            } else if(Data.getMenusData().getPopupData() != null) {
                 pushDialog = new PushDialog(activity, new PushDialog.Callback() {
                     @Override
                     public void onButtonClicked(int deepIndex) {
 
                     }
                 });
-                pushDialog.show(Data.getGroceryData().getPopupData());
+                pushDialog.show(Data.getMenusData().getPopupData());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -197,10 +201,15 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             activity.fragmentUISetup(this);
             activity.resumeMethod();
             menusRestaurantAdapter.applyFilter();
-            if(activity.isRefreshCart()){
-                getAllMenus(true, activity.getSelectedLatLng());
-            }
-            activity.setRefreshCart(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(activity.isRefreshCart()){
+                        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
+                    }
+                    activity.setRefreshCart(false);
+                }
+            }, 300);
         }
     }
 
@@ -231,6 +240,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
                 params.put(Constants.INTERATED, "1");
 
+                new HomeUtil().putDefaultParams(params);
                 final ProgressDialog finalProgressDialog = progressDialog;
                 RestClient.getMenusApiService().nearbyRestaurants(params, new Callback<MenusResponse>() {
                     @Override
@@ -245,9 +255,18 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()){
                                     activity.setMenusResponse(menusResponse);
                                     vendors = (ArrayList<MenusResponse.Vendor>) menusResponse.getVendors();
+
+                                    recentOrder.clear();
+                                    recentOrder.addAll(menusResponse.getRecentOrders());
+                                    status.clear();
+                                    status.addAll(menusResponse.getRecentOrdersPossibleStatus());
+
+
                                     menusRestaurantAdapter.setList(vendors);
                                     menusRestaurantAdapter.applyFilter();
-                                    relativeLayoutNoMenus.setVisibility(menusResponse.getVendors().size() == 0 ? View.VISIBLE : View.GONE);
+                                    relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
+                                            && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
+                                    activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
 //                                    relativeLayoutSearchFilter.setVisibility(relativeLayoutNoMenus.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
@@ -318,13 +337,14 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
                 params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(vendor.getRestaurantId()));
                 params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
                 params.put(Constants.INTERATED, "1");
                 Log.i(TAG, "getVendorMenu params=" + params.toString());
 
+                new HomeUtil().putDefaultParams(params);
                 RestClient.getMenusApiService().restaurantMenu(params, new Callback<ProductsResponse>() {
                     @Override
                     public void success(ProductsResponse productsResponse, Response response) {

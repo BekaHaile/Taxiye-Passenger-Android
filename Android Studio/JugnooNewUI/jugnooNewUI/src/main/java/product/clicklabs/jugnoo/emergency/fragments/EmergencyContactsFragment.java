@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -309,7 +310,8 @@ public class EmergencyContactsFragment extends Fragment {
 
 				Log.i("params", "=" + params.toString());
 
-				RestClient.getApiServices().emergencyContactsDelete(params, new Callback<SettleUserDebt>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().emergencyContactsDelete(params, new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

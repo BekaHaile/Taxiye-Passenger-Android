@@ -6,10 +6,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -18,7 +16,7 @@ import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.FreshDeliverySlotsDialog;
+import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
@@ -30,7 +28,6 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 
 
@@ -40,18 +37,16 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 	private RelativeLayout linearLayoutRoot;
     private LinearLayout mainLayout;
     private LinearLayout noFreshsView;
-    private TextView swipe_text;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
-    private ImageView imageViewNoItem;
 
     private RelativeLayout searchLayout;
 
-    private FreshDeliverySlotsDialog freshDeliverySlotsDialog;
+    private FreshSortingDialog freshSortingDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     public VendorMenuFragment(){}
     protected Bus mBus;
@@ -91,9 +86,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
-        imageViewNoItem = (ImageView) rootView.findViewById(R.id.imageViewNoItem);
-        swipe_text = (TextView) rootView.findViewById(R.id.swipe_text);
-        swipe_text.setTypeface(Fonts.mavenRegular(activity));
 
 		viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
@@ -137,7 +129,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 		success(activity.getProductsResponse());
 
-		getFreshDeliverySlotsDialog();
+		getFreshSortingDialog();
 
 		return rootView;
 	}
@@ -257,14 +249,14 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 	}
 
 
-	public FreshDeliverySlotsDialog getFreshDeliverySlotsDialog() {
+	public FreshSortingDialog getFreshSortingDialog() {
 
-		if (freshDeliverySlotsDialog == null) {
+		if (freshSortingDialog == null) {
 			setSortingList();
 			slots.get(activity.freshSort).setCheck(true);
 			activity.onSortEvent(new SortSelection(activity.freshSort));
-			freshDeliverySlotsDialog = new FreshDeliverySlotsDialog(activity, slots,
-					new FreshDeliverySlotsDialog.FreshDeliverySortDialogCallback() {
+			freshSortingDialog = new FreshSortingDialog(activity, slots,
+					new FreshSortingDialog.FreshDeliverySortDialogCallback() {
 						@Override
 						public void onOkClicked(int position) {
 							activity.freshSort = position;
@@ -272,7 +264,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 						}
 					});
 		}
-		return freshDeliverySlotsDialog;
+		return freshSortingDialog;
 	}
 
 	private void setSortingList() {

@@ -14,6 +14,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Log;
@@ -67,7 +68,8 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
                 final HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
                 params.put(Constants.KEY_DEVICE_TOKEN, refreshedToken);
-                Response response = RestClient.getApiServices().refreshDeviceToken(params);
+                new HomeUtil().putDefaultParams(params);
+                Response response = RestClient.getApiService().refreshDeviceToken(params);
             } else {
             }
         } catch (Exception e) {

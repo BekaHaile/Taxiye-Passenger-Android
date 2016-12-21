@@ -34,7 +34,6 @@ public interface MenusApiService {
 	void userCheckoutData(@FieldMap Map<String, String> params,
 						  Callback<UserCheckoutResponse> callback);
 
-
 	@FormUrlEncoded
 	@POST("/place_order")
 	void placeOrder(@FieldMap Map<String, String> params,

@@ -37,6 +37,7 @@ import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PayData;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PaytmRechargeInfo;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
@@ -212,11 +213,13 @@ public class JSONParser implements Constants {
         int deliveryEnabled = userData.optInt(KEY_DELIVERY_ENABLED, 0);
         int groceryEnabled = userData.optInt(KEY_GROCERY_ENABLED, 0);
         int menusEnabled = userData.optInt(KEY_MENUS_ENABLED, 0);
+        int payEnabled = userData.optInt(KEY_PAY_ENABLED, 0);
         String defaultClientId = userData.optString(KEY_DEFAULT_CLIENT_ID, Config.getAutosClientId());
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
         int topupCardEnabled = userData.optInt(KEY_TOPUP_CARD_ENABLED, 0);
 
+        int showHomeScreen = userData.optInt(SHOW_HOME_SCREEN, 0);
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance,
@@ -229,9 +232,9 @@ public class JSONParser implements Constants {
                 cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
-                mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled,
+                mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled,
                 inviteFriendButton, defaultClientId, integratedJugnooEnabled,
-                topupCardEnabled);
+                topupCardEnabled, showHomeScreen);
 
 
         Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
@@ -281,6 +284,9 @@ public class JSONParser implements Constants {
             String cancellationChargesPopupTextLine2 = autoData.optString("cancellation_charges_popup_text_line2", "");
             String inRideSendInviteTextBold = autoData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
             String inRideSendInviteTextNormal = autoData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
+            String inRideSendInviteTextBoldV2 = autoData.optString("in_ride_send_invite_text_bold_v2", context.getResources().getString(R.string.send_invites));
+            String inRideSendInviteTextNormalV2 = autoData.optString("in_ride_send_invite_text_normal_v2", context.getResources().getString(R.string.send_invites_2));
+            int rideStartInviteTextDeepIndexV2 = autoData.optInt("ride_start_invite_text_deep_index_v2", 0);
             String confirmScreenFareEstimateEnable = autoData.optString("confirm_screen_fare_estimate_enabled", "0");
             String poolDestinationPopupText1 = autoData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
             String poolDestinationPopupText2 = autoData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
@@ -307,7 +313,7 @@ public class JSONParser implements Constants {
 					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
-                    , referAllTitleLogin, nearbyPickupRegionses);
+                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2);
 
 
             if(Data.autoData.getPromoCoupons() == null){
@@ -349,8 +355,11 @@ public class JSONParser implements Constants {
             String feedbackDeliveryDate = jMealsData.optString(KEY_FEEDBACK_DATE, "");
             int feedbackViewType = jMealsData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             String rideEndGoodFeedbackText = jMealsData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
+            JSONArray negativeFeedbackReasons = jMealsData.optJSONArray("negative_feedback_reasons");
+            String feedbackOrderItems = jMealsData.optString("feedback_order_items", "");
 
-            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText));
+            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText, negativeFeedbackReasons
+            , feedbackOrderItems));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -382,6 +391,7 @@ public class JSONParser implements Constants {
             int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             int isFatafatEnabled = jFatafatData.optInt(KEY_FATAFAT_ENABLED, 1);
             String rideEndGoodFeedbackText = jFatafatData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
+            JSONArray negativeFeedbackReasons = jFatafatData.optJSONArray("negative_feedback_reasons");
 
             PopupData popupData = null;
             try {
@@ -422,7 +432,7 @@ public class JSONParser implements Constants {
             } catch (Exception e){ e.printStackTrace(); }
 
             Data.setFreshData(new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText));
+                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText, negativeFeedbackReasons));
 
             try {
                 if(Data.getFreshData().getPromoCoupons() == null){
@@ -454,6 +464,7 @@ public class JSONParser implements Constants {
             int feedbackViewType = jGroceryData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             int isFatafatEnabled = jGroceryData.optInt(KEY_FATAFAT_ENABLED, 1);
             String rideEndGoodFeedbackText = jGroceryData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
+            JSONArray negativeFeedbackReasons = jGroceryData.optJSONArray("negative_feedback_reasons");
 
             PopupData popupData = null;
             try {
@@ -494,7 +505,7 @@ public class JSONParser implements Constants {
             } catch (Exception e){ e.printStackTrace(); }
 
             Data.setGroceryData(new GroceryData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText));
+                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText, negativeFeedbackReasons));
 
             try {
                 if(Data.getGroceryData().getPromoCoupons() == null){
@@ -527,6 +538,7 @@ public class JSONParser implements Constants {
             int feedbackViewType = jMenusData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             int isFatafatEnabled = jMenusData.optInt(KEY_FATAFAT_ENABLED, 1);
             String rideEndGoodFeedbackText = jMenusData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
+            JSONArray negativeFeedbackReasons = jMenusData.optJSONArray("negative_feedback_reasons");
 
             PopupData popupData = null;
             try {
@@ -567,7 +579,7 @@ public class JSONParser implements Constants {
             } catch (Exception e){ e.printStackTrace(); }
 
             Data.setMenusData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText));
+                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText, negativeFeedbackReasons));
 
             try {
                 if(Data.getMenusData().getPromoCoupons() == null){
@@ -588,9 +600,34 @@ public class JSONParser implements Constants {
         }
     }
 
+    public void parsePayData(Context context, JSONObject jPayData, LoginResponse.Pay payData){
+        try{
+            if(payData != null) {
+                Data.setPayData(new PayData(payData));
+
+                try {
+                    if (Data.getPayData().getPromoCoupons() == null) {
+                        Data.getPayData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                    } else {
+                        Data.getPayData().getPromoCoupons().clear();
+                    }
+                    if (payData.getPromotions() != null)
+                        Data.getPayData().getPromoCoupons().addAll(payData.getPromotions());
+                    if (payData.getCoupons() != null)
+                        Data.getPayData().getPromoCoupons().addAll(payData.getCoupons());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse,
-                                            LoginVia loginVia) throws Exception {
+                                            LoginVia loginVia, LatLng latLng) throws Exception {
 
         JSONObject jObj = new JSONObject(response);
 
@@ -601,9 +638,7 @@ public class JSONParser implements Constants {
         JSONObject jMealsObject = jObj.optJSONObject(KEY_MEALS);
         JSONObject jGroceryObject = jObj.optJSONObject(KEY_GROCERY);
         JSONObject jMenusObject = jObj.optJSONObject(KEY_MENUS);
-        if(jMenusObject == null){
-            jMenusObject = new JSONObject(Constants.EMPTY_JSON_OBJECT);
-        }
+        JSONObject jPayObject = jObj.optJSONObject(KEY_PAY);
 
         parseUserData(context, jUserDataObject, loginResponse.getUserData());
         parseAutoData(context, jAutosObject, loginResponse.getAutos());
@@ -611,6 +646,7 @@ public class JSONParser implements Constants {
         parseMealsData(context, jMealsObject, loginResponse.getMeals());
         parseGroceryData(context, jGroceryObject, loginResponse.getGrocery());
         parseMenusData(context, jMenusObject, loginResponse.getMenus());
+        parsePayData(context, jPayObject, loginResponse.getPay());
         parseDeliveryData(loginResponse.getDelivery());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
@@ -630,6 +666,7 @@ public class JSONParser implements Constants {
         loginAnalyticEvents(context, loginVia);
 
         Prefs.with(context).save(SP_FRESH_LAST_ADDRESS_OBJ, EMPTY_JSON_OBJECT);
+        Data.setLatLngOfJeanieLastShown(latLng);
 
         return resp;
     }
@@ -971,7 +1008,8 @@ public class JSONParser implements Constants {
             nameValuePairs.put(KEY_ACCESS_TOKEN, accessToken);
             nameValuePairs.put(KEY_LATITUDE, String.valueOf(latLng.latitude));
             nameValuePairs.put(KEY_LONGITUDE, String.valueOf(latLng.longitude));
-            Response response = RestClient.getApiServices().getCurrentUserStatus(nameValuePairs);
+            new HomeUtil().putDefaultParams(nameValuePairs);
+            Response response = RestClient.getApiService().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
             FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_GET_CURRENT_USER_STATUS, startTime);
             Log.i(TAG, "getCurrentUserStatus response="+responseStr);

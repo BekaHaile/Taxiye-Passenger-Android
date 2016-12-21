@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -26,6 +25,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.t20.models.Schedule;
@@ -211,7 +211,8 @@ public class T20Dialog {
 			params.put(Constants.KEY_SCHEDULE_ID, String.valueOf(schedule.getScheduleId()));
 			params.put(Constants.KEY_TEAM_ID, String.valueOf(schedule.getSelectedTeamId()));
 
-			RestClient.getApiServices().insertUserT20Prediction(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().insertUserT20Prediction(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					DialogPopup.dismissLoadingDialog();

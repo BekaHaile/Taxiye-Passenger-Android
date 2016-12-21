@@ -2,7 +2,7 @@ package com.sabkuchfresh.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.sabkuchfresh.adapters.FreshCheckoutAdapter;
+import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 
 import product.clicklabs.jugnoo.utils.DateOperations;
 
@@ -104,7 +104,7 @@ public class Slot {
 
 
 
-	private FreshCheckoutAdapter.SlotViewType slotViewType;
+	private FreshCheckoutMergedFragment.SlotViewType slotViewType;
 	private String dayName;
 
 	/**
@@ -219,11 +219,11 @@ public class Slot {
 		this.endTime = endTime;
 	}
 
-	public FreshCheckoutAdapter.SlotViewType getSlotViewType() {
+	public FreshCheckoutMergedFragment.SlotViewType getSlotViewType() {
 		return slotViewType;
 	}
 
-	public void setSlotViewType(FreshCheckoutAdapter.SlotViewType slotViewType) {
+	public void setSlotViewType(FreshCheckoutMergedFragment.SlotViewType slotViewType) {
 		this.slotViewType = slotViewType;
 	}
 

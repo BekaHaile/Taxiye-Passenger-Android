@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -47,7 +48,8 @@ public class ApiFetchT20Schedule {
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
-			RestClient.getApiServices().fetchT20ScheduleAndUserPrediction(params, new retrofit.Callback<MatchScheduleResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().fetchT20ScheduleAndUserPrediction(params, new retrofit.Callback<MatchScheduleResponse>() {
 				@Override
 				public void success(MatchScheduleResponse matchScheduleResponse, Response response) {
 					DialogPopup.dismissLoadingDialog();

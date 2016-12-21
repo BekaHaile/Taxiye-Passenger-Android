@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -19,9 +20,12 @@ import product.clicklabs.jugnoo.datastructure.FreshData;
 import product.clicklabs.jugnoo.datastructure.GroceryData;
 import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.MenusData;
+import product.clicklabs.jugnoo.datastructure.PayData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -97,6 +101,7 @@ public class Data {
 	private static GroceryData groceryData;
 	private static DeliveryData DeliveryData;
 	private static MenusData menusData;
+	private static PayData payData;
 
 	
 	public static LocationFetcher locationFetcher;
@@ -117,7 +122,7 @@ public class Data {
     public static ArrayList<PreviousAccountInfo> previousAccountInfoList = new ArrayList<PreviousAccountInfo>();
 
     public static String deepLinkClassName = "", deepLinkReferralCode = "";
-	public static int deepLinkIndex;
+	public static int deepLinkIndex, deepLinkOrderId, deepLinkProductType;
 	public static int deepLinkPickup = -1;
 	public static double deepLinkPickupLatitude, deepLinkPickupLongitude;
 	public static boolean locationSettingsNoPressed = false, locationAddressSettingsNoPressed = false;
@@ -311,6 +316,10 @@ public class Data {
 
 			if(data.getQueryParameter(Constants.KEY_DEEPINDEX) != null){
 				Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter(Constants.KEY_DEEPINDEX));
+				if(intent.getIntExtra(Constants.KEY_ORDER_ID, 0) != 0){
+					Data.deepLinkOrderId = intent.getIntExtra(Constants.KEY_ORDER_ID, 0);
+					Data.deepLinkProductType = intent.getIntExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
+				}
 			}
 
 			if(intent.hasExtra(Constants.KEY_TAB_INDEX)){
@@ -458,5 +467,33 @@ public class Data {
 
 	public static void setMenusData(MenusData menusData) {
 		Data.menusData = menusData;
+	}
+
+	public static PayData getPayData() {
+		return payData;
+	}
+
+	public static void setPayData(PayData payData) {
+		Data.payData = payData;
+	}
+
+	private static LatLng latLngOfJeanieLastShown;
+
+	public static LatLng getLatLngOfJeanieLastShown() {
+		return latLngOfJeanieLastShown;
+	}
+
+	public static void setLatLngOfJeanieLastShown(LatLng latLngOfJeanieLastShown) {
+		Data.latLngOfJeanieLastShown = latLngOfJeanieLastShown;
+	}
+
+	private static HistoryResponse.Datum datumToReOrder;
+
+	public static HistoryResponse.Datum getDatumToReOrder() {
+		return datumToReOrder;
+	}
+
+	public static void setDatumToReOrder(HistoryResponse.Datum datumToReOrder) {
+		Data.datumToReOrder = datumToReOrder;
 	}
 }

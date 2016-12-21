@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -50,6 +49,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -246,7 +246,8 @@ public class TrackingLogActivity extends BaseFragmentActivity implements FlurryE
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
             params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
 
-            RestClient.getApiServices().customerFetchRideLog(params, new Callback<TrackingLogReponse>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().customerFetchRideLog(params, new Callback<TrackingLogReponse>() {
                 @Override
                 public void success(TrackingLogReponse trackingLogReponse, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

@@ -59,6 +59,8 @@ public class CleverTapUtils {
             MyApplication.getInstance().sendCleverTapEvent(Events.MEALS_ADDED_TO_CART, prodViewedAction);
         } else if(clientId.equalsIgnoreCase(Config.getGroceryClientId())) {
             MyApplication.getInstance().sendCleverTapEvent(Events.GROCERY_ADDED_TO_CART, prodViewedAction);
+        } else if(clientId.equalsIgnoreCase(Config.getMenusClientId())) {
+            MyApplication.getInstance().sendCleverTapEvent(Events.MENUS_ADDED_TO_CART, prodViewedAction);
         } else {
             MyApplication.getInstance().sendCleverTapEvent(Events.FRESH_ADDED_TO_CART, prodViewedAction);
         }
@@ -112,6 +114,26 @@ public class CleverTapUtils {
                 for(int i=0;i<Data.getGroceryData().getPromoCoupons().size();i++) {
                     coupons.add(Data.getGroceryData().getPromoCoupons().get(i).getTitle());
                     String value = getCouponValue(Data.getGroceryData().getPromoCoupons().get(i).getTitle());
+                    if(value.length()>0) {
+                        coupons.add(value);
+                        maxValue = getCouponMaxValue(maxValue, value);
+                    }
+                }
+            }
+            if(Data.getMenusData() != null && Data.getMenusData().getPromoCoupons() != null) {
+                for(int i=0;i<Data.getMenusData().getPromoCoupons().size();i++) {
+                    coupons.add(Data.getMenusData().getPromoCoupons().get(i).getTitle());
+                    String value = getCouponValue(Data.getMenusData().getPromoCoupons().get(i).getTitle());
+                    if(value.length()>0) {
+                        coupons.add(value);
+                        maxValue = getCouponMaxValue(maxValue, value);
+                    }
+                }
+            }
+            if(Data.getPayData() != null && Data.getPayData().getPromoCoupons() != null) {
+                for(int i=0;i<Data.getPayData().getPromoCoupons().size();i++) {
+                    coupons.add(Data.getPayData().getPromoCoupons().get(i).getTitle());
+                    String value = getCouponValue(Data.getPayData().getPromoCoupons().get(i).getTitle());
                     if(value.length()>0) {
                         coupons.add(value);
                         maxValue = getCouponMaxValue(maxValue, value);

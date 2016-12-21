@@ -30,8 +30,8 @@
         <item name="android:divider">#ffffff</item>
         <item name="android:dividerHeight">0dp</item>
     </style>
-     
-     
+
+
       <style name="Animations" />
 
     <style name="Animations.LoadingDialogFade">
@@ -202,6 +202,69 @@
         <item name="android:clickable">true</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:src">@drawable/cross</item>
+    </style>
+
+
+
+
+
+
+
+
+
+
+    <!-- Base application theme. -->
+    <style name="AppThemePay" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+
+    <style name="TransparentTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/white_less_dark</item>
+        <item name="colorPrimaryDark">@color/white_less_dark</item>
+        <item name="colorAccent">@color/white_less_dark</item>
+        <item name="colorControlNormal">#e2e2e2</item>
+        <item name="colorControlActivated">@color/white_less_dark</item>
+        <item name="colorControlHighlight">@color/white_less_dark</item>
+        <item name="android:textColorHint">#595968</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">#b61ec4</item>
+    </style>
+
+
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">#b61ec4</item>
+        <item name="android:textSize">9sp</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">#b61ec4</item>
+        <item name="colorControlNormal">@color/services_name_txt_color</item>
+        <item name="colorControlActivated">#b61ec4</item>
+    </style>
+
+    <style name="EditTextLabel" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">#888888</item>
+        <item name="android:textSize">9sp</item>
+        <item name="textColorError">@color/design_textinput_error_color_light</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/services_name_txt_color</item>
+        <item name="colorControlNormal">@color/services_name_txt_color</item>
+        <item name="colorControlActivated">@color/services_name_txt_color</item>
+    </style>
+
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:textColor">@color/text_color</item>
     </style>
 
 

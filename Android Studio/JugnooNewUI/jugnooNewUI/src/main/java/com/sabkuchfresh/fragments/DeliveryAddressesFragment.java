@@ -25,7 +25,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.sabkuchfresh.adapters.FreshAddressAdapter;
+import com.sabkuchfresh.adapters.FreshAddressAdapterCallback;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
@@ -72,7 +72,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by ankit on 14/09/16.
  */
-public class DeliveryAddressesFragment extends Fragment implements FreshAddressAdapter.Callback,
+public class DeliveryAddressesFragment extends Fragment implements FreshAddressAdapterCallback,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
     private View rootView;
@@ -131,7 +131,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             selectAddressTag = Constants.MEALS_SELECT_ADDRESS;
         } else if(appType == AppConstant.ApplicationType.GROCERY){
             selectAddressTag = Constants.GROCERY_SELECT_ADDRESS;
+        } else if(appType == AppConstant.ApplicationType.MENUS){
+            selectAddressTag = Constants.MENUS_SELECT_ADDRESS;
         }
+
 
         linearLayoutMain = (RelativeLayout) rootView.findViewById(R.id.linearLayoutMain);
 
@@ -479,7 +482,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private void getAddressAsync(final LatLng currentLatLng, final GetAddressFromLatLng getAddressFromLatLng){
         try {
             DialogPopup.showLoadingDialog(getActivity(), "Loading...");
-            RestClient.getGoogleApiServices().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+            RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
                     "en", false, new Callback<SettleUserDebt>() {
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -519,7 +522,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 params.put("language", Locale.getDefault().getCountry());
                 params.put("sensor", "false");
 
-                RestClient.getGoogleApiServices().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
+                RestClient.getGoogleApiService().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
                     @Override
                     public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
                         try {
@@ -701,8 +704,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         }
         if(savedPlaces > 0) {
             textViewSavedPlaces.setVisibility(View.VISIBLE);
+            cardViewSavedPlaces.setVisibility(View.VISIBLE);
         } else {
             textViewSavedPlaces.setVisibility(View.GONE);
+            cardViewSavedPlaces.setVisibility(View.GONE);
         }
 
 
@@ -710,8 +715,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             savedPlacesAdapterRecent.notifyDataSetChanged();
             if (savedPlacesAdapterRecent.getCount() > 0) {
                 textViewRecentAddresses.setVisibility(View.VISIBLE);
+                cardViewRecentAddresses.setVisibility(View.VISIBLE);
             } else {
                 textViewRecentAddresses.setVisibility(View.GONE);
+                cardViewRecentAddresses.setVisibility(View.GONE);
             }
         }
     }
@@ -803,4 +810,5 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         }
         return apiFetchUserAddress;
     }
+
 }

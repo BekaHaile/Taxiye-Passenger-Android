@@ -3,6 +3,8 @@ package product.clicklabs.jugnoo.apis;
 import android.app.Activity;
 import android.view.View;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -45,7 +47,7 @@ public class ApiLoginUsingAccessToken {
 	}
 
 
-	public void hit(String accessToken, double latitude, double longitude, String specificClientId, final Callback callback){
+	public void hit(String accessToken, final double latitude, final double longitude, String specificClientId, final Callback callback){
 
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 
@@ -65,8 +67,6 @@ public class ApiLoginUsingAccessToken {
 			params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
 
 
-			params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
-			params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 			params.put(Constants.KEY_UNIQUE_DEVICE_ID, Data.uniqueDeviceId);
 			params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
 			params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
@@ -92,13 +92,15 @@ public class ApiLoginUsingAccessToken {
 			Log.e("params login_using_access_token", "=" + params);
 
 			final long startTime = System.currentTimeMillis();
-			RestClient.getApiServices().loginUsingAccessToken(params, new retrofit.Callback<LoginResponse>() {
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingAccessToken(params, new retrofit.Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_LOGIN_USING_ACCESS_TOKEN, startTime);
 					String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 					Log.i(TAG, "loginUsingAccessToken response = " + responseStr);
-					performLoginSuccess(activity, responseStr, loginResponse, callback);
+					performLoginSuccess(activity, responseStr, loginResponse, callback, new LatLng(latitude, longitude));
 				}
 
 				@Override
@@ -115,7 +117,8 @@ public class ApiLoginUsingAccessToken {
 
 	}
 
-	public void performLoginSuccess(Activity activity, String response, LoginResponse loginResponse, final Callback callback) {
+	public void performLoginSuccess(Activity activity, String response, LoginResponse loginResponse, final Callback callback,
+									final LatLng latLng) {
 		try {
 			JSONObject jObj = new JSONObject(response);
 
@@ -126,7 +129,7 @@ public class ApiLoginUsingAccessToken {
 					if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 						String resp;
 						try {
-							resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse, LoginVia.ACCESS);
+							resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse, LoginVia.ACCESS, latLng);
 						} catch (Exception e) {
 							e.printStackTrace();
 							resp = Constants.SERVER_TIMEOUT;

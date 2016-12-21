@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 
 import com.facebook.CallbackManager;
 
@@ -269,7 +270,7 @@ public class ReferralActions implements FirebaseEvents {
         sendIntent.setType("text/plain");
         List<ResolveInfo> activities = activity.getPackageManager().queryIntentActivities(sendIntent, 0);
         sortAppsInGenericShareDialog(activities);
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
         builder.setTitle("Share with...");
         final ShareIntentListAdapter adapter = new ShareIntentListAdapter(activity,
                 R.layout.list_item_share_intent, activities.toArray());

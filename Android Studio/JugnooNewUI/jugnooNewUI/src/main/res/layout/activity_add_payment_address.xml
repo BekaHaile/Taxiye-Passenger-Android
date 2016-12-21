@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/add_payment_address_img"/>
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:text="@string/add_payment_add_title"
+        android:textSize="15sp"
+        android:gravity="center"
+        android:textColor="@color/text_color"/>
+
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/background_white_rounded_bordered">
+
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:textSize="15sp"
+                android:textColor="@color/text_color"
+                android:hint="@string/enter_name"
+                android:textColorHint="@color/text_color_hint"
+                android:paddingLeft="8dp"
+                android:inputType="textCapWords"
+                android:lines="1"
+                android:maxLines="1"
+                android:layout_toLeftOf="@+id/ivContacts"/>
+
+            <ImageView
+                android:id="@+id/ivContacts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_contact_pay"
+                android:layout_alignParentRight="true"
+                android:padding="10dp"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/etPaymentAddress"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:textSize="15sp"
+            android:textColor="@color/text_color"
+            android:hint="@string/enter_payment_address"
+            android:textColorHint="@color/text_color_hint"
+            android:layout_marginTop="10dp"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="8dp"
+            android:lines="1"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:background="@drawable/background_white_rounded_bordered"/>
+
+        <Button
+            android:id="@+id/bAddPaymentAddress"
+            android:layout_width="@dimen/btn_width"
+            android:layout_height="@dimen/btn_height"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:inputType="textEmailAddress"
+            android:background="@drawable/button_theme"
+            android:text="@string/add_payment_address"
+            android:textAllCaps="false"
+            android:textColor="@color/whiteTxtColor"
+            android:textSize="@dimen/btn_text_size"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

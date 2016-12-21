@@ -60,7 +60,7 @@
                         android:layout_centerVertical="true"
                         android:layout_toRightOf="@+id/imageViewRadioPopularity"
                         android:gravity="center_vertical"
-                        android:text="@string/popularity"
+                        android:text="@string/accept_online_payment"
                         android:textColor="@color/text_color_selector"
                         android:textSize="@dimen/text_size_32"
                         android:visibility="visible"

@@ -23,6 +23,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.ParseUtils;
 import product.clicklabs.jugnoo.support.RideOrderShortView;
@@ -64,8 +65,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
     private SupportActivity activity;
 
 	private int showPanelCalled = 0, getRideSummaryCalled = 0;
-
-	public SupportMainFragment(){}
 
     @Override
     public void onStart() {
@@ -181,7 +180,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					HashMap<String, String> params = new HashMap<>();
 					params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
-					RestClient.getApiServices().showPanel(params,
+					new HomeUtil().putDefaultParams(params);
+					RestClient.getApiService().showPanel(params,
 							new Callback<ShowPanelResponse>() {
 								@Override
 								public void success(ShowPanelResponse showPanelResponse, Response response) {

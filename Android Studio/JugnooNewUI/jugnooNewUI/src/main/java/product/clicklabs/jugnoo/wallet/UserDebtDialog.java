@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.UserData;
@@ -93,7 +94,8 @@ public class UserDebtDialog {
 				params.put(Constants.KEY_IP_ADDRESS, Utils.getLocalIpAddress());
 				Log.i("params", "=" + params);
 
-				RestClient.getApiServices().settleUserDebt(params, new retrofit.Callback<SettleUserDebt>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().settleUserDebt(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						Log.i(TAG, "adjustUserDebt response = " + response);

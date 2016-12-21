@@ -102,11 +102,11 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 	private boolean giveAMissedCall;
 	private Handler handler = new Handler();
 	private String signupBy = "", email = "", password = "";
-	private boolean onlyDigits;
 	private RelativeLayout rlProgress;
 	private ProgressWheel progressBar;
 	private boolean runAfterDelay;
 	private TextView tvProgress;
+	private boolean onlyDigits, openHomeSwitcher = false;
 
 
 	@Override
@@ -134,6 +134,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		setContentView(R.layout.activity_otp_confrim);
 
 		loginDataFetched = false;
+		openHomeSwitcher = false;
 
 		try {
 			if(getIntent().hasExtra(LINKED_WALLET)){
@@ -627,31 +628,34 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 		}
 		HomeActivity.checkForAccessTokenChange(this);
 
-		if(giveAMissedCall) {
-			giveAMissedCall = false;
-			//buttonVerify.performClick();
-			rlProgress.setVisibility(View.VISIBLE);
-			progressBar.setVisibility(View.VISIBLE);
-			tvProgress.setText(getResources().getString(R.string.trying_to_verify));
-			progressBar.spin();
-			if (signupBy.equalsIgnoreCase("email")) {
-				if (onlyDigits) {
-					email = "+91" + email;
-					sendLoginValues(OTPConfirmScreen.this, email, password, true);
-				} else {
-					sendLoginValues(OTPConfirmScreen.this, email, password, false);
+		try {
+			if(giveAMissedCall) {
+				giveAMissedCall = false;
+				//buttonVerify.performClick();
+				rlProgress.setVisibility(View.VISIBLE);
+				progressBar.setVisibility(View.VISIBLE);
+				tvProgress.setText(getResources().getString(R.string.trying_to_verify));
+				progressBar.spin();
+				if (signupBy.equalsIgnoreCase("email")) {
+					if (onlyDigits) {
+						email = "+91" + email;
+						sendLoginValues(OTPConfirmScreen.this, email, password, true);
+					} else {
+						sendLoginValues(OTPConfirmScreen.this, email, password, false);
+					}
+				} else if (signupBy.equalsIgnoreCase("facebook")) {
+					sendFacebookLoginValues(OTPConfirmScreen.this);
+				} else if (signupBy.equalsIgnoreCase("google")) {
+					sendGoogleLoginValues(OTPConfirmScreen.this);
 				}
-			} else if (signupBy.equalsIgnoreCase("facebook")) {
-				sendFacebookLoginValues(OTPConfirmScreen.this);
-			} else if (signupBy.equalsIgnoreCase("google")) {
-				sendGoogleLoginValues(OTPConfirmScreen.this);
+				// api call
+				handler.postDelayed(runnable, 5000);
 			}
-			// api call
-			handler.postDelayed(runnable, 5000);
-		}
-		if(backFromMissedCall){
-			backFromMissedCall = false;
-
+			if(backFromMissedCall){
+				backFromMissedCall = false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -737,9 +741,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("email", emailRegisterData.emailId);
                 params.put("password", emailRegisterData.password);
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
-                params.put("device_type", Data.DEVICE_TYPE);
                 params.put("device_name", MyApplication.getInstance().deviceName());
-                params.put("app_version", "" + MyApplication.getInstance().appVersion());
                 params.put("os_version", MyApplication.getInstance().osVersion());
                 params.put("country", MyApplication.getInstance().country());
                 params.put("unique_device_id", Data.uniqueDeviceId);
@@ -758,7 +760,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
                 Log.i("params", "" + params.toString());
 
-				RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -779,7 +782,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-												loginResponse, LoginVia.EMAIL_OTP);
+												loginResponse, LoginVia.EMAIL_OTP,
+												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
 										Database.getInstance(OTPConfirmScreen.this).close();
 										loginDataFetched = true;
@@ -843,9 +847,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 params.put("username", facebookRegisterData.fbUserName);
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
-                params.put("device_type", Data.DEVICE_TYPE);
                 params.put("device_name", MyApplication.getInstance().deviceName());
-                params.put("app_version", "" + MyApplication.getInstance().appVersion());
                 params.put("os_version", MyApplication.getInstance().osVersion());
                 params.put("country", MyApplication.getInstance().country());
                 params.put("unique_device_id", Data.uniqueDeviceId);
@@ -865,7 +867,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
                 Log.i("params", "" + params);
 
 
-				RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -885,7 +888,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-												loginResponse, LoginVia.FACEBOOK_OTP);
+												loginResponse, LoginVia.FACEBOOK_OTP,
+												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										loginDataFetched = true;
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
 										Database.getInstance(OTPConfirmScreen.this).close();
@@ -942,9 +946,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("google_access_token", googleRegisterData.accessToken);
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
-				params.put("device_type", Data.DEVICE_TYPE);
 				params.put("device_name", MyApplication.getInstance().deviceName());
-				params.put("app_version", "" + MyApplication.getInstance().appVersion());
 				params.put("os_version", MyApplication.getInstance().osVersion());
 				params.put("country", MyApplication.getInstance().country());
 				params.put("unique_device_id", Data.uniqueDeviceId);
@@ -963,7 +965,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 				Log.i("params", "" + params);
 
-				RestClient.getApiServices().verifyOtp(params, new Callback<LoginResponse>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
 					@Override
 					public void success(LoginResponse loginResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -984,7 +987,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 									if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-												loginResponse, LoginVia.GOOGLE_OTP);
+												loginResponse, LoginVia.GOOGLE_OTP,
+												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										loginDataFetched = true;
 										Database.getInstance(OTPConfirmScreen.this).insertEmail(googleRegisterData.email);
 										Database.getInstance(OTPConfirmScreen.this).close();
@@ -1035,7 +1039,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			params.put("phone_no", phoneNo);
 			Log.i("phone_no", ">" + phoneNo);
 
-			RestClient.getApiServices().sendOtpViaCall(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().sendOtpViaCall(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1092,7 +1097,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			loginDataFetched = false;
 
 			MyApplication.getInstance().getAppSwitcher().switchApp(OTPConfirmScreen.this,
-					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()), Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude));
+					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
+					Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), false);
 //			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
 //			intent.setData(Data.splashIntentUri);
 //			startActivity(intent);
@@ -1215,14 +1221,15 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 					}
 				};
 
+				new HomeUtil().putDefaultParams(params);
 				if(linkedWallet == LinkedWalletStatus.PAYTM_WALLET_ADDED.getOrdinal()){
-					RestClient.getApiServices().paytmRequestOtp(params, callback);
+					RestClient.getApiService().paytmRequestOtp(params, callback);
 				}
 				else if(linkedWallet == LinkedWalletStatus.MOBIKWIK_WALLET_ADDED.getOrdinal()){
-					RestClient.getApiServices().mobikwikRequestOtp(params, callback);
+					RestClient.getApiService().mobikwikRequestOtp(params, callback);
 				}
 				else if(linkedWallet == LinkedWalletStatus.FREECHARGE_WALLET_ADDED.getOrdinal()){
-					RestClient.getApiServices().freeChargeRequestOtp(params, callback);
+					RestClient.getApiService().freeChargeRequestOtp(params, callback);
 				}
 			} else{
 				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -1279,12 +1286,13 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 						DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
 					}
 				};
+				new HomeUtil().putDefaultParams(params);
 				if(linkedWallet == PaymentOption.PAYTM.getOrdinal()) {
-					RestClient.getApiServices().paytmLoginWithOtp(params, callback);
+					RestClient.getApiService().paytmLoginWithOtp(params, callback);
 				} else if(linkedWallet == PaymentOption.MOBIKWIK.getOrdinal()){
-					RestClient.getApiServices().mobikwikLoginWithOtp(params, callback);
+					RestClient.getApiService().mobikwikLoginWithOtp(params, callback);
 				} else if(linkedWallet == PaymentOption.FREECHARGE.getOrdinal()) {
-					RestClient.getApiServices().freeChargeLoginWithOtp(params, callback);
+					RestClient.getApiService().freeChargeLoginWithOtp(params, callback);
 				}
 			} else{
 				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
@@ -1343,9 +1351,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			}
 			params.put("password", password);
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -1371,7 +1377,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			Log.i("params", "=" + params);
 
-			RestClient.getApiServices().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingEmailOrPhoneNo(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1400,7 +1407,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.EMAIL);
+											loginResponse, LoginVia.EMAIL,
+											new LatLng(Data.loginLatitude, Data.loginLongitude));
 									Database.getInstance(OTPConfirmScreen.this).insertEmail(emailId);
 									loginDataFetched = true;
 									DialogPopup.showLoadingDialog(activity, "Loading...");
@@ -1456,9 +1464,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			params.put("username", Data.facebookUserData.userName);
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -1484,7 +1490,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 
 			Log.i("params", "" + params);
 
-			RestClient.getApiServices().loginUsingFacebook(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingFacebook(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1510,7 +1517,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login with facebook");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.FACEBOOK);
+											loginResponse, LoginVia.FACEBOOK,
+											new LatLng(Data.loginLatitude, Data.loginLongitude));
 									loginDataFetched = true;
 
 									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
@@ -1562,9 +1570,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
-			params.put("device_type", Data.DEVICE_TYPE);
 			params.put("device_name", MyApplication.getInstance().deviceName());
-			params.put("app_version", "" + MyApplication.getInstance().appVersion());
 			params.put("os_version", MyApplication.getInstance().osVersion());
 			params.put("country", MyApplication.getInstance().country());
 			params.put("unique_device_id", Data.uniqueDeviceId);
@@ -1591,7 +1597,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 			Log.i("params", "" + params);
 
 
-			RestClient.getApiServices().loginUsingGoogle(params, new Callback<LoginResponse>() {
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().loginUsingGoogle(params, new Callback<LoginResponse>() {
 				@Override
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1619,7 +1626,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-											loginResponse, LoginVia.GOOGLE);
+											loginResponse, LoginVia.GOOGLE,
+											new LatLng(Data.loginLatitude, Data.loginLongitude));
 									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 

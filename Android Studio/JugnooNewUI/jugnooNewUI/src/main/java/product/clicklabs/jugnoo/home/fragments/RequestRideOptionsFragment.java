@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,7 +32,6 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
-import product.clicklabs.jugnoo.home.dialogs.PoolDestinationDialog;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
@@ -80,8 +78,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
     private PromoCoupon selectedCoupon = null;
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
-
-    public RequestRideOptionsFragment(){}
 
     /*public RelativeLayout getRelativeLayoutPoolInfoBar() {
         return relativeLayoutPoolInfoBar;
@@ -510,28 +506,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             });
         }
         return fareDetailsDialog;
-    }
-
-    private PoolDestinationDialog poolDestinaionDialog;
-    private PoolDestinationDialog getPoolDestinationDialog(){
-        if(poolDestinaionDialog == null){
-            poolDestinaionDialog = new PoolDestinationDialog(activity, new PoolDestinationDialog.Callback() {
-
-                @Override
-                public void onEnterDestination() {
-                    if(Data.autoData.getDropLatLng() != null){
-                        activity.openConfirmRequestView();
-                    } else{
-                        if(activity.getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
-                            activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                            activity.setShakeAnim(0);
-                            activity.imageViewRideNowPoolCheck();
-                        }
-                    }
-                }
-            });
-        }
-        return poolDestinaionDialog;
     }
 
     public PaymentOptionDialog paymentOptionDialog;

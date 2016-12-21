@@ -117,6 +117,8 @@ public class RideOrderShortView {
 					imageViewProductType.setImageResource(R.drawable.ic_history_grocery);
 				} else if(datum.getProductType() == ProductType.MENUS.getOrdinal()){
 					imageViewProductType.setImageResource(R.drawable.ic_history_menus);
+				} else if(datum.getProductType() == ProductType.PAY.getOrdinal()){
+					imageViewProductType.setImageResource(R.drawable.ic_history_pay);
 				}
 				textViewIssueWithRide.setText(context.getString(R.string.issue_with_the_recent_order));
 				if(datum.getProductType() == ProductType.MENUS.getOrdinal()){
