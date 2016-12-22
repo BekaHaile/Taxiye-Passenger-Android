@@ -1,5 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#ff8162</color>
+    <color name="colorPrimaryDark">#f8b542</color>
+    <color name="colorAccent">#595968</color>
+
+
+    // app background color
+    <color name="appBackgroundColor">#ffffff</color>
+    <color name="layoutBackColor">#322940</color>
+    <color name="whiteTxtColor">#ffffff</color>
+    <color name="lightBlackTxtColor">#595968</color>
+    <color name="generalTxtColor">#bcbcbc</color>
+    <color name="hintColor">#595968</color>
+    <color name="drawerColor">#2a1231</color>
+
+    // for country spinner
+    <color name="pf_grey">#262626</color>
+    <color name="pf_grey_light">#999999</color>
+    <color name="pf_white">#ffffff</color>
+
+    // services name txt colors
+    <color name="services_name_txt_color">#4a4a4a</color>
+    <color name="services_item_bckgrnd_color">#f0f0f0</color>
+    <color name="document_layout_bordor_color">#9b9b9b</color>
+
+    // seekbar colors
+    <color name="progress_primary">#b61ec4</color>
+    <color name="progress_secondary">#dfdfdf</color>
+
+
+    // booking screen colors
+    <color name="past_booking_color">#de5b5b</color>
+    <color name="upcoming_booking_color">#2fcb11</color>
+    <color name="booking_yellow_color">#ffaf00</color>
+    <color name="booking_green_color">#a5d54e</color>
+
+    <color name="booking_pending_color">#7975bf</color>
+    <color name="booking_failed_color">#ce4141</color>
+    <color name="booking_completed_color">#a5d54e</color>
+
+
     <color name="white_less_dark">#F1F1F1</color>
     <color name="white_dark">#CFCFCF</color>
     <color name="white_dark1">#EFEFEF</color>
@@ -155,11 +195,13 @@
     <color name="theme_green_color">#5DC647</color>
     <color name="theme_red_color">#F54646</color>
     <color name="text_color_light">#A4A4A4</color>
+    <color name="text_color_light_less">#9d9da3</color>
     <color name="white_alpha_33">#33FFFFFF</color>
     <color name="sliding_bottom_bg_color">#FAFBFC</color>
     <color name="text_color_hint">#BCBCBC</color>
     <color name="nl_white_dark">#E0E0E0</color>
     <color name="menu_item_selector_color">#EEEEEE</color>
+    <color name="fab_bg">#ebeeeeee</color>
     <color name="menu_item_selector_color_F7">#F7F7F7</color>
     <color name="ride_history_item_text_color">#0EB2CE</color>
     <color name="google_path_polyline_color">#0889da</color>
@@ -223,5 +265,16 @@
     <color name="stroke_light_grey_alpha">#33979797</color>
     <color name="order_history_status_color">#1fbd2a</color>
 
+    <color name="green_rupee">#1fbd2a</color>
+
+
+
+
+    <color name="color_auto_border">#f06f3b</color>
+    <color name="color_meals_border">#ba5a62</color>
+    <color name="color_fresh_border">#b8e986</color>
+    <color name="color_grocery_border">#50e3c2</color>
+    <color name="color_menus_border">#f8e81c</color>
+    <color name="color_pay_border">#cf9df6</color>
 
 </resources>

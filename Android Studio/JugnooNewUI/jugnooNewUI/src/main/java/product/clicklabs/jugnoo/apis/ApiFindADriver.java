@@ -63,7 +63,6 @@ public class ApiFindADriver {
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 			params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
 			params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
-			params.put("device_type", Data.DEVICE_TYPE);
 
 			if (1 == showAllDrivers) {
 				params.put("show_all", "1");
@@ -76,7 +75,9 @@ public class ApiFindADriver {
 
 			Log.i("params in find_a_driver", "=" + params);
 			final long startTime = System.currentTimeMillis();
-			RestClient.getApiServices().findADriverCall(params, new retrofit.Callback<FindADriverResponse>() {
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().findADriverCall(params, new retrofit.Callback<FindADriverResponse>() {
 				@Override
 				public void success(FindADriverResponse findADriverResponse, Response response) {
 					try {
@@ -89,6 +90,8 @@ public class ApiFindADriver {
 
 						parseFindADriverResponse(findADriverResponse);
 
+						Data.setLatLngOfJeanieLastShown(latLng);
+						Data.autoData.setLastRefreshLatLng(latLng);
 						refreshLatLng = latLng;
 						refreshTime = System.currentTimeMillis();
 						if(callback != null && !confirmedScreenOpened) {
@@ -281,6 +284,38 @@ public class ApiFindADriver {
 				e.printStackTrace();
 			}
 
+			try {
+				if(Data.getMenusData() != null && Data.getMenusData().getPromoCoupons() == null){
+					Data.getMenusData().setPromoCoupons(new ArrayList<PromoCoupon>());
+				} else{
+					Data.getMenusData().getPromoCoupons().clear();
+				}
+				if(findADriverResponse.getMenusPromotions() != null) {
+					Data.getMenusData().getPromoCoupons().addAll(findADriverResponse.getMenusPromotions());
+				}
+				if(findADriverResponse.getMenusCoupons() != null) {
+					Data.getMenusData().getPromoCoupons().addAll(findADriverResponse.getMenusCoupons());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			try {
+				if(Data.getPayData() != null && Data.getPayData().getPromoCoupons() == null){
+					Data.getPayData().setPromoCoupons(new ArrayList<PromoCoupon>());
+				} else{
+					Data.getPayData().getPromoCoupons().clear();
+				}
+				if(findADriverResponse.getPayPromotions() != null) {
+					Data.getPayData().getPromoCoupons().addAll(findADriverResponse.getPayPromotions());
+				}
+				if(findADriverResponse.getPayCoupons() != null) {
+					Data.getPayData().getPromoCoupons().addAll(findADriverResponse.getPayCoupons());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			// for Dodo promo and coupons
 			try {
 				if(Data.getDeliveryData() != null && Data.getDeliveryData().getPromoCoupons() == null){
@@ -357,6 +392,12 @@ public class ApiFindADriver {
 			}
 			if(findADriverResponse.getGroceryEnabled() != null) {
 				Data.userData.setGroceryEnabled(findADriverResponse.getGroceryEnabled());
+			}
+			if(findADriverResponse.getMenusEnabled() != null) {
+				Data.userData.setMenusEnabled(findADriverResponse.getMenusEnabled());
+			}
+			if(findADriverResponse.getPayEnabled() != null) {
+				Data.userData.setPayEnabled(findADriverResponse.getPayEnabled());
 			}
 			if(findADriverResponse.getIntegratedJugnooEnabled() != null){
 				Data.userData.setIntegratedJugnooEnabled(findADriverResponse.getIntegratedJugnooEnabled());

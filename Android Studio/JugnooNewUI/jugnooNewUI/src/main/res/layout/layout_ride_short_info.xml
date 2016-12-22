@@ -90,6 +90,7 @@
                 android:textSize="@dimen/text_size_30"
                 android:layout_marginLeft="10px"
                 android:layout_marginRight="20px"
+                android:layout_gravity="center"
                 />
 
         </LinearLayout>

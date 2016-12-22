@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
 /**
@@ -13,15 +15,19 @@ public class MealsData {
 	private double amount;
 	private String feedbackDeliveryDate, rideEndGoodFeedbackText;
 	private int feedbackViewType;
+	private JSONArray negativeFeedbackReasons;
+	private String feedbackOrderItems;
 
 	public MealsData(String orderId, int pendingFeedback, double amount, String feedbackDeliveryDate, int feedbackViewType,
-					 String rideEndGoodFeedbackText) {
+					 String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons, String feedbackOrderItems) {
 		this.orderId = orderId;
 		this.pendingFeedback = pendingFeedback;
 		this.amount = amount;
 		this.feedbackDeliveryDate = feedbackDeliveryDate;
 		this.feedbackViewType = feedbackViewType;
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+		this.negativeFeedbackReasons = negativeFeedbackReasons;
+		this.feedbackOrderItems = feedbackOrderItems;
 	}
 
 	public ArrayList<PromoCoupon> getPromoCoupons() {
@@ -80,4 +86,19 @@ public class MealsData {
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
 	}
 
+	public JSONArray getNegativeFeedbackReasons() {
+		return negativeFeedbackReasons;
+	}
+
+	public void setNegativeFeedbackReasons(JSONArray negativeFeedbackReasons) {
+		this.negativeFeedbackReasons = negativeFeedbackReasons;
+	}
+
+	public String getFeedbackOrderItems() {
+		return feedbackOrderItems;
+	}
+
+	public void setFeedbackOrderItems(String feedbackOrderItems) {
+		this.feedbackOrderItems = feedbackOrderItems;
+	}
 }

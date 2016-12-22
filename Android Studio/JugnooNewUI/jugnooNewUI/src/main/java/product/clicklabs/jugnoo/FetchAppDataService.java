@@ -15,6 +15,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -43,14 +44,16 @@ public class FetchAppDataService extends IntentService implements Constants {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-
-		if (intent.hasExtra(KEY_ACCESS_TOKEN)) {
-			String accessToken = intent.getStringExtra(KEY_ACCESS_TOKEN);
-			long timeToSave = intent.getLongExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (System.currentTimeMillis() + (24 * 60 * 60 * 1000)));
-//			long timeToSave = intent.getLongExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (0));
-			fetchAppList(this, accessToken, timeToSave);
+		try {
+			if (intent.hasExtra(KEY_ACCESS_TOKEN)) {
+				String accessToken = intent.getStringExtra(KEY_ACCESS_TOKEN);
+				long timeToSave = intent.getLongExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (System.currentTimeMillis() + (24 * 60 * 60 * 1000)));
+	//			long timeToSave = intent.getLongExtra(KEY_APP_MONITORING_TIME_TO_SAVE, (0));
+				fetchAppList(this, accessToken, timeToSave);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	public void fetchAppList(final Context context, final String accessToken, final long timeToSave) {
@@ -59,7 +62,9 @@ public class FetchAppDataService extends IntentService implements Constants {
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(KEY_ACCESS_TOKEN, accessToken);
-				Response response = RestClient.getApiServices().getActiveAppList(params);
+
+				new HomeUtil().putDefaultParams(params);
+				Response response = RestClient.getApiService().getActiveAppList(params);
 				if(response != null){
 					try {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -100,7 +105,8 @@ public class FetchAppDataService extends IntentService implements Constants {
 				params.put("access_token", accessToken);
 				params.put("app_data", appPackagesStr);
 
-				Response response = RestClient.getApiServices().updateUserInstalledApp(params);
+				new HomeUtil().putDefaultParams(params);
+				Response response = RestClient.getApiService().updateUserInstalledApp(params);
 				if(response != null){
 					try {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());

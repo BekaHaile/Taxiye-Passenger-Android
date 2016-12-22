@@ -42,6 +42,7 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -124,9 +125,16 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 		}
 	}
 
+	private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag){
+		notificationManagerCustomID(context, title, message, notificationId, deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag,
+				0, ProductType.AUTO.getOrdinal());
+	}
+
     @SuppressWarnings("deprecation")
     private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
-											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag) {
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag,
+											 int orderId, int productType) {
 
         try {
             long when = System.currentTimeMillis();
@@ -142,6 +150,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				notificationIntent.setData(Uri.parse("jungooautos://app?deepindex=" + deepindex));
 				notificationIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
 				notificationIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
+				notificationIntent.putExtra(Constants.KEY_ORDER_ID, orderId);
+				notificationIntent.putExtra(Constants.KEY_PRODUCT_TYPE, productType);
 			} else{
 				notificationIntent.setData(Uri.parse(url));
 			}
@@ -375,6 +385,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					if(deepindex == -1 && tabIndex > 0){
 						deepindex = AppLinkIndex.FRESH_PAGE.getOrdinal();
 					}
+					String url = jObj.optString(KEY_URL, "");
+					int showDialog = jObj.optInt(Constants.KEY_SHOW_DIALOG, 0);
+					int showPush = jObj.optInt(Constants.KEY_SHOW_PUSH, 1);
 
 
 					if (PushFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
@@ -505,9 +518,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString(KEY_IMAGE, "");
 							}
-							String url = jObj.optString(KEY_URL, "");
-							int showDialog = jObj.optInt(Constants.KEY_SHOW_DIALOG, 0);
-							int showPush = jObj.optInt(Constants.KEY_SHOW_PUSH, 1);
 							if(showDialog == 1) {
 								Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, message);
 							}
@@ -657,7 +667,23 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						intent.putExtra(KEY_CLIENT_ID, clientId);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-					} else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
+					}
+					else if (PushFlags.MENUS_STATUS.getOrdinal() == flag) {
+						String clientId = jObj.optString(KEY_CLIENT_ID, "");
+						int orderId = jObj.optInt(KEY_ORDER_ID, 0);
+						int productType = jObj.optInt(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
+						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
+						notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
+								null, url, playSound, showDialog, showPush, tabIndex, flag, orderId, productType);
+						Intent intent = new Intent(Data.LOCAL_BROADCAST);
+						intent.putExtra(Constants.KEY_FLAG, flag);
+						intent.putExtra(Constants.KEY_MESSAGE, message);
+						intent.putExtra(KEY_CLIENT_ID, clientId);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+					}
+
+
+					else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
 						String clientId = jObj.optString(KEY_CLIENT_ID, "");
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
 						//message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
@@ -676,6 +702,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						} else {
 							// Nothing
 						}
+					} else if (PushFlags.REFRESH_PAY_DATA.getOrdinal() == flag) {
+						message1 = jObj.optString(KEY_MESSAGE, "");
+						notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
+								null, url, playSound, showDialog, showPush, tabIndex, flag);
+						Intent intent = new Intent(Constants.INTENT_ACTION_PAY_BROADCAST);
+						intent.putExtra(Constants.KEY_FLAG, flag);
+						intent.putExtra(Constants.KEY_MESSAGE, message);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
 
 					incrementPushCounter(jObj, flag);

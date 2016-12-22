@@ -21,7 +21,9 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.support.ParseUtils;
 import product.clicklabs.jugnoo.support.RideOrderShortView;
@@ -63,8 +65,6 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
     private SupportActivity activity;
 
 	private int showPanelCalled = 0, getRideSummaryCalled = 0;
-
-	public SupportMainFragment(){}
 
     @Override
     public void onStart() {
@@ -115,7 +115,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					@Override
 					public void onClick(int position, ShowPanelResponse.Item item) {
 						new TransactionUtils().openItemInFragment(activity, activity.getContainer(),
-								-1, "", activity.getResources().getString(R.string.support_main_title), item, "", -1, "", "");
+								-1, "", activity.getResources().getString(R.string.support_main_title), item, "", -1, "", "", ProductType.NOT_SURE.getOrdinal());
 
                         Bundle bundle = new Bundle();
                         String eventName = item.getText().replaceAll("\\W", "_");
@@ -137,7 +137,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		cardViewRideShortInfo.setVisibility(View.GONE);
 		cardViewRecycler.setVisibility(View.GONE);
 		showPanel();
-		activity.getRideSummaryAPI(activity);
+		activity.getRideSummaryAPI(activity, ProductType.NOT_SURE, EngagementStatus.ENDED.getOrdinal());
 
 		FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_SUPPORT);
 
@@ -152,7 +152,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			activity.setTitle(MyApplication.getInstance().ACTIVITY_NAME_SUPPORT);
 			if(Data.isSupportRideIssueUpdated) {
 				Data.isSupportRideIssueUpdated = false;
-				activity.getRideSummaryAPI(activity);
+				activity.getRideSummaryAPI(activity, ProductType.NOT_SURE, EngagementStatus.ENDED.getOrdinal());
 			}
 		}
 	}
@@ -180,7 +180,8 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 					HashMap<String, String> params = new HashMap<>();
 					params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
-					RestClient.getApiServices().showPanel(params,
+					new HomeUtil().putDefaultParams(params);
+					RestClient.getApiService().showPanel(params,
 							new Callback<ShowPanelResponse>() {
 								@Override
 								public void success(ShowPanelResponse showPanelResponse, Response response) {
@@ -256,7 +257,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 			showPanel();
 		}
 		if(getRideSummaryCalled != 1){
-			activity.getRideSummaryAPI(activity);
+			activity.getRideSummaryAPI(activity, ProductType.NOT_SURE, EngagementStatus.ENDED.getOrdinal());
 		}
 	}
 

@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -90,7 +91,8 @@ public class ApiAddHomeWorkAddress {
 				}
 				Log.i(TAG, "addHomeAndWorkAddress params=" + params.toString());
 
-				RestClient.getApiServices().addHomeAndWorkAddress(params, new retrofit.Callback<FetchUserAddressResponse>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().addHomeAndWorkAddress(params, new retrofit.Callback<FetchUserAddressResponse>() {
 					@Override
 					public void success(FetchUserAddressResponse fetchUserAddressResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -153,6 +155,7 @@ public class ApiAddHomeWorkAddress {
 											Data.userData.getSearchResults().remove(searchResult);
 										} else {
 											int index = Data.userData.getSearchResults().indexOf(searchResult);
+											Log.v("index value","index value"+index);
 											if(index != -1){
 												Data.userData.getSearchResults().set(index, searchResult);
 											} else{

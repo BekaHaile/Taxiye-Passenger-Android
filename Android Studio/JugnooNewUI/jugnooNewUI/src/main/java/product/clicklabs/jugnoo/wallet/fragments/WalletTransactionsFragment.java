@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,10 +29,12 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -41,8 +42,8 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
-import product.clicklabs.jugnoo.wallet.models.TransactionInfo;
 import product.clicklabs.jugnoo.wallet.adapters.WalletTransactionsAdapter;
+import product.clicklabs.jugnoo.wallet.models.TransactionInfo;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -72,21 +73,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
     private PaymentActivity paymentActivity;
 	private ImageView imageViewJugnooAnimation;
 	private AnimationDrawable jugnooAnimation;
+	private int pay = 0;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-//        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(paymentActivity, Config.getFlurryKey());
-//        FlurryAgent.onEvent("WalletTransactions started");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-//        FlurryAgent.onEndSession(paymentActivity);
-    }
-	
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -97,6 +85,8 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_wallet_transactions, container, false);
 
+		pay = getArguments().getInt(Constants.KEY_PAY, 0);
+
         paymentActivity = (PaymentActivity) getActivity();
 
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
@@ -104,6 +94,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
+		textViewTitle.setText(pay == 1 ? R.string.payment_transactions : R.string.wallet_transactions);
 
 		recyclerViewWalletTransactions = (RecyclerView) rootView.findViewById(R.id.recyclerViewWalletTransactions);
 		recyclerViewWalletTransactions.setLayoutManager(new LinearLayoutManager(paymentActivity));
@@ -233,7 +224,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 				params.put("is_access_token_new", "1");
 				params.put("start_from", "" + transactionInfoList.size());
 
-				RestClient.getApiServices().getTransactionHistory(params, new Callback<SettleUserDebt>() {
+				Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -245,30 +236,49 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 								if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
 									String error = jObj.getString("error");
 									updateListData(error, true);
-								} else if (ApiResponseFlags.TRANSACTION_HISTORY.getOrdinal() == flag) {
+								} else if (ApiResponseFlags.TRANSACTION_HISTORY.getOrdinal() == flag
+										|| ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 
-									jugnooBalance = jObj.getDouble("balance");
-									totalTransactions = jObj.getInt("num_txns");
-									pageSize = jObj.getInt("page_size");
+									JSONArray jTransactions = new JSONArray();
+									if(pay == 0) {
+										jugnooBalance = jObj.getDouble("balance");
+										totalTransactions = jObj.getInt("num_txns");
+										pageSize = jObj.getInt("page_size");
+										jTransactions = jObj.getJSONArray("transactions");
+									} else {
+										jTransactions = jObj.getJSONArray("transaction_history");
+										jugnooBalance = jObj.optDouble("balance", -1);
+										totalTransactions = jObj.optInt("num_txns", jTransactions.length());
+										pageSize = jObj.optInt("page_size", jTransactions.length());
+									}
 
-									JSONArray jTransactions = jObj.getJSONArray("transactions");
 									for (int i = 0; i < jTransactions.length(); i++) {
 										JSONObject jTransactionI = jTransactions.getJSONObject(i);
 
 										int paytm = jTransactionI.optInt(Constants.KEY_PAYTM, 0);
 										int mobikwik = jTransactionI.optInt(Constants.KEY_MOBIKWIK, 0);
 										int freecharge = jTransactionI.optInt(Constants.KEY_FREECHARGE, 0);
+										int pay = jTransactionI.optInt(Constants.KEY_JUGNOO_PAY, WalletTransactionsFragment.this.pay);
 
-										transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
-												jTransactionI.getInt("txn_type"),
-												jTransactionI.getString("txn_time"),
-												jTransactionI.getString("txn_date"),
-												jTransactionI.getString("txn_text"),
-												jTransactionI.getDouble("amount"),
-												paytm, mobikwik, freecharge));
+										if(pay == 1){
+											transactionInfoList.add(new TransactionInfo(jTransactionI.optInt("id", 0),
+													jTransactionI.optInt("txn_type", 0),
+													DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(jTransactionI.optString("date"))),
+													"", "", jTransactionI.optDouble("amount"),
+													paytm, mobikwik, freecharge, pay, jTransactionI.optInt("status", 0),
+													jTransactionI.optString("name", "")));
+										} else {
+											transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
+													jTransactionI.getInt("txn_type"),
+													jTransactionI.getString("txn_time"),
+													jTransactionI.getString("txn_date"),
+													jTransactionI.getString("txn_text"),
+													jTransactionI.getDouble("amount"),
+													paytm, mobikwik, freecharge, pay, 0, ""));
+										}
 									}
 
-									if (Data.userData != null) {
+									if (Data.userData != null && jugnooBalance > -1) {
 										Data.userData.setJugnooBalance(jugnooBalance);
 									}
 									paymentActivity.updateWalletFragment();
@@ -296,7 +306,14 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 						jugnooAnimation.stop();
 						updateListData("Some error occurred", true);
 					}
-				});
+				};
+
+				new HomeUtil().putDefaultParams(params);
+				if(pay == 1){
+					RestClient.getPayApiService().getTransactionHistory(params, callback);
+				} else {
+					RestClient.getApiService().getTransactionHistory(params, callback);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

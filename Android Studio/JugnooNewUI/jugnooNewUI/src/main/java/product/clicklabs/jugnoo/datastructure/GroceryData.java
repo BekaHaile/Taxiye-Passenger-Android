@@ -3,6 +3,8 @@ package product.clicklabs.jugnoo.datastructure;
 import com.sabkuchfresh.datastructure.PopupData;
 import com.sabkuchfresh.retrofit.model.Store;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
 /**
@@ -19,11 +21,12 @@ public class GroceryData {
 	private String feedbackDeliveryDate, rideEndGoodFeedbackText;
 	private int feedbackViewType;
 	private int isFatafatEnabled;
+	private JSONArray negativeFeedbackReasons;
 
 
 	public GroceryData(String question, String orderId, int questionType, int pendingFeedback,
 					   ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate,
-					   int feedbackViewType, int isFatafatEnabled, String rideEndGoodFeedbackText) {
+					   int feedbackViewType, int isFatafatEnabled, String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons) {
 		this.question = question;
 		this.orderId = orderId;
 		this.questionType = questionType;
@@ -35,6 +38,7 @@ public class GroceryData {
 		this.feedbackViewType = feedbackViewType;
 		this.isFatafatEnabled = isFatafatEnabled;
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+		this.negativeFeedbackReasons = negativeFeedbackReasons;
 	}
 
 	public String getQuestion() {
@@ -131,5 +135,13 @@ public class GroceryData {
 
 	public void setRideEndGoodFeedbackText(String rideEndGoodFeedbackText) {
 		this.rideEndGoodFeedbackText = rideEndGoodFeedbackText;
+	}
+
+	public JSONArray getNegativeFeedbackReasons() {
+		return negativeFeedbackReasons;
+	}
+
+	public void setNegativeFeedbackReasons(JSONArray negativeFeedbackReasons) {
+		this.negativeFeedbackReasons = negativeFeedbackReasons;
 	}
 }

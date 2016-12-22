@@ -10,11 +10,11 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -51,10 +51,9 @@ public class ApiFetchUserAddress {
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
-				params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
-				params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 
-				RestClient.getApiServices().customerFetchUserAddress(params, new retrofit.Callback<FetchUserAddressResponse>() {
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().customerFetchUserAddress(params, new retrofit.Callback<FetchUserAddressResponse>() {
 					@Override
 					public void success(FetchUserAddressResponse fetchUserAddressResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

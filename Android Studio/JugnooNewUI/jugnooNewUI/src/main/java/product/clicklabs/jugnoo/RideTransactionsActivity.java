@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -68,8 +69,9 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 		});
 
 
-		if(getIntent().hasExtra(Constants.KEY_ORDER_ID)){
-			new TransactionUtils().openOrderStatusFragment(this, relativeLayoutContainer, getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0));
+		if(getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0) != 0){
+			new TransactionUtils().openOrderStatusFragment(this, relativeLayoutContainer, getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0),
+					getIntent().getIntExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal()));
 		} else {
 			getSupportFragmentManager().beginTransaction()
 					.add(relativeLayoutContainer.getId(), new RideTransactionsFragment(), RideTransactionsFragment.class.getName())

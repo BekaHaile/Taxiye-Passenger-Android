@@ -22,11 +22,13 @@ import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -275,6 +277,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             else if(AppLinkIndex.GROCERY_PAGE.getOrdinal() == deepInt){
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getGroceryClientId(), new LatLng(Data.latitude, Data.longitude), true);
+            }
+            else if(AppLinkIndex.MENUS_PAGE.getOrdinal() == deepInt){
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), new LatLng(Data.latitude, Data.longitude), true);
+            }
+            else if(AppLinkIndex.PAY_PAGE.getOrdinal() == deepInt){
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getPayClientId(), new LatLng(Data.latitude, Data.longitude), true);
             }
 
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);

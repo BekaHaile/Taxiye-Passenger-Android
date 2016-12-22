@@ -21,7 +21,7 @@ public class DeepLinkAction {
 				menuBar.menuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag());
 			}
 			else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.HISTORY.getTag());
+				menuBar.menuAdapter.onClickAction(MenuInfoTags.HISTORY.getTag(), Data.deepLinkOrderId, Data.deepLinkProductType);
 			}
 			else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
 				menuBar.menuAdapter.onClickAction(MenuInfoTags.SUPPORT.getTag());
@@ -61,9 +61,19 @@ public class DeepLinkAction {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.GROCERY.getTag());
 				}
 			}
-			else if(AppLinkIndex.CHAT_PAGE.getOrdinal() == Data.deepLinkIndex){
-				if(Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
+			else if(AppLinkIndex.CHAT_PAGE.getOrdinal() == Data.deepLinkIndex) {
+				if (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
 					menuBar.openChat();
+				}
+			}
+			else if(AppLinkIndex.MENUS_PAGE.getOrdinal() == Data.deepLinkIndex){
+				if(Data.userData.getMenusEnabled() == 1) {
+					menuBar.menuAdapter.onClickAction(MenuInfoTags.MENUS.getTag());
+				}
+			}
+			else if(AppLinkIndex.PAY_PAGE.getOrdinal() == Data.deepLinkIndex){
+				if(Data.userData.getPayEnabled() == 1) {
+					menuBar.menuAdapter.onClickAction(MenuInfoTags.PAY.getTag());
 				}
 			}
 

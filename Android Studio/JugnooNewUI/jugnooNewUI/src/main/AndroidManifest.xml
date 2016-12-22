@@ -1,43 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="product.clicklabs.jugnoo"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          android:versionCode="261"
-          android:versionName="2.6.1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="product.clicklabs.jugnoo"
+    android:versionCode="264"
+    android:versionName="2.6.4">
 
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="19"/>
+        android:minSdkVersion="15"
+        android:targetSdkVersion="19" />
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <uses-permission android:name="android.permission.READ_PROFILE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <permission
         android:name="product.clicklabs.jugnoo.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature"/>
+        android:protectionLevel="signature" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true"/>
+        android:required="true" />
 
-    <uses-permission android:name="product.clicklabs.jugnoo.permission.MAPS_RECEIVE"/>
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="product.clicklabs.jugnoo.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
         android:name=".MyApplication"
@@ -45,265 +47,249 @@
         android:icon="@drawable/jugnoo_icon"
         android:label="@string/app_name"
         android:screenOrientation="portrait"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppThemePay"
+        tools:replace="android:allowBackup">
         <meta-data
             android:name="payu_merchant_id"
-            android:value="HjlOjY"/>
+            android:value="HjlOjY" />
 
         <activity
             android:name=".wallet.PaymentActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
 
         <service
             android:name=".GCMIntentService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
             android:name=".MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
         <activity
             android:name=".SplashNewActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <data android:scheme="jungooautos"/>
+                <data android:scheme="jungooautos" />
 
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
             <!-- jugnooautos://app?deepindex=0 -->
             <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="app"
-                    android:scheme="jugnooautos"/>
+                    android:scheme="jugnooautos" />
             </intent-filter>
         </activity>
         <activity
             android:name=".home.HomeActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ChatActivity"
-            android:label="@string/app_name"
             android:configChanges="keyboard|orientation|screenSize"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ForgotPasswordScreen"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".OTPConfirmScreen"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
 
             <!-- jugnooautos-verify://app?otp=1234 -->
             <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="app"
-                    android:scheme="jugnautos-verify"/>
+                    android:scheme="jugnautos-verify" />
             </intent-filter>
         </activity>
 
         <receiver android:name=".IncomingSmsReceiver">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
         <activity
             android:name=".promotion.ShareActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".promotion.PromotionActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".HelpParticularActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".AddPlaceActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".support.SupportActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".WebActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".FeedbackActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name="com.sabkuchfresh.home.FeedbackActivity"
-            android:label="@string/receipt"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".AboutActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".AccountActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".PhoneNoOTPConfirmScreen"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".RideTransactionsActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".RideCancellationActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".ChangePasswordActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".MultipleAccountsActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".RequestDuplicateRegistrationActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ChangePhoneBeforeOTPActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".DebugOptionsActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".FareEstimateActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ReferDriverActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".NotificationCenterActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".emergency.EmergencyActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".t20.T20Activity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".wallet.WalletRechargeWebViewActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".utils.CallActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent">
-        </activity>
+            android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".utils.GoogleSigninActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar">
-        </activity>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <receiver android:name=".home.LocationReceiverBG"/>
+        <receiver android:name=".home.LocationReceiverBG" />
 
         <service
             android:name=".home.ContactsUploadService"
-            android:enabled="true"/>
+            android:enabled="true" />
         <service
             android:name=".home.SyncIntentService"
-            android:enabled="true"/>
+            android:enabled="true" />
         <service
             android:name=".PushPendingCallsService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true" />
 
         <receiver android:name=".PushPendingCallsReceiver">
             <intent-filter>
-                <action android:name="product.clicklabs.jugnoo.PUSH_PENDING_CALLS"/>
+                <action android:name="product.clicklabs.jugnoo.PUSH_PENDING_CALLS" />
             </intent-filter>
         </receiver>
 
-
         <service
             android:name=".FetchAppDataService"
-            android:enabled="true">
-        </service>
+            android:enabled="true" />
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
 
         <!-- <meta-data -->
         <!-- android:name="com.google.android.maps.v2.API_KEY" -->
@@ -311,24 +297,24 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_api_key"/>
+            android:value="@string/google_maps_api_key" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/fb_app_id"/>
+            android:value="@string/fb_app_id" />
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="f96b4d9d9886e413041e7b14fa52434b87709356"/>
+            android:value="f96b4d9d9886e413041e7b14fa52434b87709356" />
         <meta-data
             android:name="io.branch.sdk.BranchKey"
-            android:value="key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J"/>
+            android:value="key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J" />
         <!-- key_test_dnhuSIzZt72MRWW4YrSlpddcrDn5yjio -->
         <!-- key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J -->
 
@@ -341,14 +327,14 @@
             android:name="com.google.android.gms.analytics.AnalyticsReceiver"
             android:enabled="true">
             <intent-filter>
-                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH"/>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
             </intent-filter>
         </receiver>
 
         <service
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <!--
              Optionally, register CampaignTrackingReceiver and CampaignTrackingService to enable
@@ -368,68 +354,99 @@
             android:name=".CustomCampaignTrackingReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.google.android.gms.analytics.CampaignTrackingService"/>
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
         <service
             android:name=".home.LocationUpdateService"
             android:enabled="true"
-            android:exported="false">
-        </service>
-
+            android:exported="false" />
 
         <!-- for fresh Application -->
         <activity
             android:name="com.sabkuchfresh.home.FreshActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="CLEVERTAP_ACCOUNT_ID"
-            android:value="@string/clevertap_account_id"/>
+            android:value="@string/clevertap_account_id" />
         ;
         <meta-data
             android:name="CLEVERTAP_TOKEN"
-            android:value="@string/clevertap_account_token"/>
+            android:value="@string/clevertap_account_token" />
 
         <service android:name="com.clevertap.android.sdk.FcmTokenListenerService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service android:name="com.clevertap.android.sdk.FcmMessageListenerService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <meta-data
             android:name="CLEVERTAP_NOTIFICATION_ICON"
-            android:value="notification_icon"/>
+            android:value="notification_icon" />
 
         <activity
             android:name="com.clevertap.android.sdk.InAppNotificationActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <!-- uncomment below block to ensure in-app notification isn't shown on a splash screen -->
         <meta-data
             android:name="CLEVERTAP_INAPP_EXCLUDE"
-            android:value="SplashNewActivity"/>
+            android:value="SplashNewActivity" />
 
         <service
             android:name=".home.trackinglog.TrackingLogSyncIntentService"
-            android:enabled="true"/>
+            android:enabled="true" />
 
         <activity
             android:name=".home.trackinglog.TrackingLogActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".HomeSwitcherActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.jugnoo.pay.activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="com.jugnoo.pay.activities.SelectContactActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.jugnoo.pay.activities.SendMoneyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.jugnoo.pay.activities.TranscCompletedActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.jugnoo.pay.activities.AddPaymentAddressActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="com.jugnoo.pay.activities.AddBeneficiaryAccount"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
     </application>
 
 </manifest>

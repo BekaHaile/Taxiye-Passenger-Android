@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.view.View;
 
 import org.json.JSONObject;
@@ -16,6 +17,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -44,12 +46,13 @@ public class ApiFetchWalletBalance {
 		this.callback = callback;
 	}
 
-	public void getBalance(boolean showDialog) {
+	public void getBalance(final boolean showDialog) {
 		try {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 
+				ProgressDialog progressDialog = null;
 				if (showDialog) {
-					DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+					progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
 				}
 
 				HashMap<String, String> params = new HashMap<>();
@@ -58,7 +61,10 @@ public class ApiFetchWalletBalance {
 				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
 				final long startTime = System.currentTimeMillis();
-				RestClient.getApiServices().fetchWalletBalance(params, new retrofit.Callback<SettleUserDebt>() {
+				final ProgressDialog finalProgressDialog = progressDialog;
+
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().fetchWalletBalance(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						FlurryEventLogger.eventApiResponseTime(FlurryEventNames.API_PAYTM_CHECK_BALANCE, startTime);
@@ -82,14 +88,18 @@ public class ApiFetchWalletBalance {
 							e.printStackTrace();
 							retryDialog(DialogErrorType.SERVER_ERROR);
 						}
-						DialogPopup.dismissLoadingDialog();
+						try{if(showDialog && finalProgressDialog != null){
+							finalProgressDialog.dismiss();
+						}} catch (Exception e){}
 						callback.onFinish();
 					}
 
 					@Override
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "fetchWalletBalance error=" + error.toString());
-						DialogPopup.dismissLoadingDialog();
+						try{if(showDialog && finalProgressDialog != null){
+							finalProgressDialog.dismiss();
+						}} catch (Exception e){}
 						retryDialog(DialogErrorType.CONNECTION_LOST);
 						callback.onFailure();
 					}

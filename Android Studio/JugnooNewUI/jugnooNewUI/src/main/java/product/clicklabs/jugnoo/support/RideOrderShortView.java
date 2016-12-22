@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -114,10 +115,19 @@ public class RideOrderShortView {
 					imageViewProductType.setImageResource(R.drawable.ic_support_meals);
 				} else if(datum.getProductType() == ProductType.GROCERY.getOrdinal()){
 					imageViewProductType.setImageResource(R.drawable.ic_history_grocery);
+				} else if(datum.getProductType() == ProductType.MENUS.getOrdinal()){
+					imageViewProductType.setImageResource(R.drawable.ic_history_menus);
+				} else if(datum.getProductType() == ProductType.PAY.getOrdinal()){
+					imageViewProductType.setImageResource(R.drawable.ic_history_pay);
 				}
 				textViewIssueWithRide.setText(context.getString(R.string.issue_with_the_recent_order));
-				textViewDriverName.setText(context.getString(R.string.delivery_date));
-				textViewDriverCarNumber.setText(datum.getExpectedDeliveryDate());
+				if(datum.getProductType() == ProductType.MENUS.getOrdinal()){
+					textViewDriverName.setText(context.getString(R.string.order_date_colon).replace(":", ""));
+					textViewDriverCarNumber.setText(DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getOrderTime())));
+				} else {
+					textViewDriverName.setText(context.getString(R.string.delivery_date));
+					textViewDriverCarNumber.setText(datum.getExpectedDeliveryDate());
+				}
 				textViewTripTotal.setText(R.string.order_total);
 				textViewTripTotalValue.setText(context.getString(R.string.rupees_value_format,
 						Utils.getMoneyDecimalFormat().format(datum.getOrderAmount())));

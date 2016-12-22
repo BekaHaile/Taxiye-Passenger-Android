@@ -75,18 +75,15 @@ public class OrderHistory{
     @SerializedName("discount")
     @Expose
     private Double discount;
-
-    public Integer getCanReorder() {
-        return canReorder;
-    }
-
-    public void setCanReorder(Integer canReorder) {
-        this.canReorder = canReorder;
-    }
-
-    @SerializedName("can_reorder")
+	@SerializedName("can_reorder")
     @Expose
     private Integer canReorder;
+	@SerializedName("delivery_latitude")
+	@Expose
+	private Double deliveryLatitude;
+	@SerializedName("delivery_longitude")
+	@Expose
+	private Double deliveryLongitude;
 
 
     public Double getJugnooDeducted() {
@@ -349,5 +346,29 @@ public class OrderHistory{
 
 	public void setExpectedDeliveryDate(String expectedDeliveryDate) {
 		this.expectedDeliveryDate = expectedDeliveryDate;
+	}
+
+	public Integer getCanReorder() {
+		return canReorder;
+	}
+
+	public void setCanReorder(Integer canReorder) {
+		this.canReorder = canReorder;
+	}
+
+	public Double getDeliveryLatitude() {
+		return deliveryLatitude;
+	}
+
+	public void setDeliveryLatitude(Double deliveryLatitude) {
+		this.deliveryLatitude = deliveryLatitude;
+	}
+
+	public Double getDeliveryLongitude() {
+		return deliveryLongitude;
+	}
+
+	public void setDeliveryLongitude(Double deliveryLongitude) {
+		this.deliveryLongitude = deliveryLongitude;
 	}
 }

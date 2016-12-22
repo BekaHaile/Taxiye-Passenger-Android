@@ -25,6 +25,10 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.UnderlineSpan;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -54,6 +58,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -825,6 +830,34 @@ public class Utils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void setTextUnderline(TextView textView, String text){
+		if(!TextUtils.isEmpty(text)) {
+			SpannableString content = new SpannableString(text);
+			content.setSpan(new UnderlineSpan(), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			textView.setText(content);
+		}
+	}
+
+	public static boolean isVPAValid(String vpa){
+		try {
+			return vpa.indexOf('@') > 0 && vpa.indexOf('@') < vpa.length()-1;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public static String removeExtraCharsPhoneNumber(String p){
+		char[] number = p.toCharArray();
+		Character[] arrayNumerics = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+		List<Character> listNumerics = Arrays.asList(arrayNumerics);
+		for (int i=0; i<number.length; i++) {
+			if(number[i] != '+' || !listNumerics.contains(number[i])) {
+				p.replace(number[i], ' ');
+			}
+		}
+		return p;
 	}
 
 }

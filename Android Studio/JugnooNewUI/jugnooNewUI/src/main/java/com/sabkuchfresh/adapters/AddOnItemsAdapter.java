@@ -157,6 +157,8 @@ public class AddOnItemsAdapter extends BaseAdapter {
                         MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
                     } else if (appType == AppConstant.ApplicationType.GROCERY) {
                         MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
+                    } else if (appType == AppConstant.ApplicationType.MENUS) {
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

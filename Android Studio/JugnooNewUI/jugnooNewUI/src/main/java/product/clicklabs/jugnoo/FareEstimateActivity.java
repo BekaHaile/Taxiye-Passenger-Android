@@ -68,12 +68,11 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 
     public ASSL assl;
 
-    private GoogleApiClient mGoogleApiClient;
-
     private int isPooled = 0, rideType = RideTypeValue.NORMAL.getOrdinal();
     private LatLng pickupLatLng;
     private SearchResult searchResultGlobal;
     private Region region;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onResume() {
@@ -219,15 +218,13 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
 				getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng());
 			} else {
 
-				PlaceSearchListFragment placeSearchListFragment = new PlaceSearchListFragment(this, mGoogleApiClient);
 				Bundle bundle = new Bundle();
 				bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
 				bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
 				bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
-				placeSearchListFragment.setArguments(bundle);
 
 				getSupportFragmentManager().beginTransaction()
-						.add(R.id.linearLayoutContainer, placeSearchListFragment, PlaceSearchListFragment.class.getSimpleName())
+						.add(R.id.linearLayoutContainer, PlaceSearchListFragment.newInstance(bundle), PlaceSearchListFragment.class.getSimpleName())
 						.commitAllowingStateLoss();
 			}
         } catch (Exception e) {
@@ -425,18 +422,6 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     }
 
     @Override
-    public void onConnected(Bundle bundle) {
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-    }
-
-    @Override
     public void onTextChange(String text) {
 
     }
@@ -486,5 +471,24 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     @Override
     public void onNotifyDataSetChanged(int count) {
 
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    public GoogleApiClient getmGoogleApiClient(){
+        return mGoogleApiClient;
     }
 }

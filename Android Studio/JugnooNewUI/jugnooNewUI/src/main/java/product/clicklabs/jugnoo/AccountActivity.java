@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
@@ -23,23 +22,20 @@ import android.widget.TextView.OnEditorActionListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoTools;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
-import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.fragments.AddressBookFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.JeanieIntroDialog;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -48,7 +44,6 @@ import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -375,6 +370,9 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                         } else if ("".equalsIgnoreCase(phoneNoChanged)) {
                             editTextPhone.requestFocus();
                             editTextPhone.setError(getResources().getString(R.string.phone_empty_error));
+                        } else if (!Utils.isEmailValid(emailChanged)) {
+                            editTextEmail.requestFocus();
+                            editTextEmail.setError(getResources().getString(R.string.invalid_email_error));
                         } else if (!Utils.validPhoneNumber(phoneNoChanged)) {
                             editTextPhone.requestFocus();
                             editTextPhone.setError(getResources().getString(R.string.invalid_phone_error));
@@ -777,12 +775,16 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
 		HomeActivity.checkForAccessTokenChange(this);
 
-		reloadProfileAPI(this);
-        textViewEmergencyContact.setText(getResources()
-                .getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
-                        R.string.emergency_contacts : R.string.add_emergency_contacts));
+        try {
+            reloadProfileAPI(this);
+            textViewEmergencyContact.setText(getResources()
+					.getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
+							R.string.emergency_contacts : R.string.add_emergency_contacts));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		scrollView.scrollTo(0, 0);
+        scrollView.scrollTo(0, 0);
 	}
 
 	@Override
@@ -821,7 +823,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             params.put(Constants.KEY_UPDATED_USER_EMAIL, updatedEmail);
             params.put(Constants.KEY_UPDATED_PHONE_NO, updatedPhone);
 
-            RestClient.getApiServices().updateUserProfile(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().updateUserProfile(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -888,7 +891,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
-                RestClient.getApiServices().reloadMyProfile(params, new Callback<SettleUserDebt>() {
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getApiService().reloadMyProfile(params, new Callback<SettleUserDebt>() {
                     @Override
                     public void success(SettleUserDebt settleUserDebt, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -939,7 +943,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
-            RestClient.getApiServices().sendVerifyEmailLink(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().sendVerifyEmailLink(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -992,7 +997,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
             Log.i("access_token", "=" + Data.userData.accessToken);
 
-            RestClient.getApiServices().logoutUser(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().logoutUser(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1007,7 +1013,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                                 String error = jObj.getString("error");
                                 DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.AUTH_LOGOUT_SUCCESSFUL.getOrdinal() == flag) {
-                                logoutFunc(activity, null);
+                                new HomeUtil().logoutFunc(activity, null);
                                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Logout");
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -1033,33 +1039,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 		}
 	}
 
-    private void logoutFunc(Activity activity, String message){
-        try {
-            PicassoTools.clearCache(Picasso.with(activity));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        FacebookLoginHelper.logoutFacebook();
-
-        GCMIntentService.clearNotifications(activity);
-
-        Data.clearDataOnLogout(activity);
-
-        HomeActivity.userMode = UserMode.PASSENGER;
-        HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-
-        ActivityCompat.finishAffinity(activity);
-        Intent intent = new Intent(activity, SplashNewActivity.class);
-        if(message != null){
-            intent.putExtra(Constants.KEY_LOGGED_OUT, 1);
-            intent.putExtra(Constants.KEY_MESSAGE, message);
-        }
-        startActivity(intent);
-        overridePendingTransition(R.anim.left_in, R.anim.left_out);
-
-        Branch.getInstance(activity).logout();
-    }
 
 
 
@@ -1119,7 +1099,8 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             params.put(Constants.KEY_OLD_PASSWORD, oldPassword);
             params.put(Constants.KEY_NEW_PASSWORD, newPassword);
 
-            RestClient.getApiServices().updateUserProfile(params, new Callback<SettleUserDebt>() {
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().updateUserProfile(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -1137,7 +1118,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                                 imageViewChangePassword.setVisibility(View.VISIBLE);
                                 relativeLayoutChangePassword.performClick();
                                 String message = jObj.getString(Constants.KEY_MESSAGE);
-                                logoutFunc(activity, message);
+                                new HomeUtil().logoutFunc(activity, null);
                             } else {
                                 DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
                             }

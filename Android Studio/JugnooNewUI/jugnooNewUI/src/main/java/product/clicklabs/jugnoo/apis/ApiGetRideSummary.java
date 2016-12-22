@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.ParseUtils;
@@ -74,6 +75,7 @@ public class ApiGetRideSummary {
 			} else if(orderId != -1) {
 				params.put(Constants.KEY_ORDER_ID, String.valueOf(orderId));
 			}
+			params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType.getOrdinal()));
 			if(showRideMenu) {
 				params.put(Constants.KEY_SHOW_RIDE_MENU, "1");
 			}
@@ -86,7 +88,9 @@ public class ApiGetRideSummary {
 
 			final boolean finalShowRideMenu = showRideMenu;
 			final int finalSupportCategory = supportCategory;
-			RestClient.getApiServices().getRideSummary(params, new retrofit.Callback<ShowPanelResponse>() {
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().getRideSummary(params, new retrofit.Callback<ShowPanelResponse>() {
 				@Override
 				public void success(ShowPanelResponse showPanelResponse, Response response) {
 					try {
@@ -110,12 +114,18 @@ public class ApiGetRideSummary {
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
+								HistoryResponse.Datum finalDatum = null;
+								if (showPanelResponse.getDatum() != null && showPanelResponse.getDatum().getProductType() != null) {
+									finalDatum = showPanelResponse.getDatum();
+								} else if(showPanelResponse.getMenusDatum() != null && showPanelResponse.getMenusDatum().getProductType() != null){
+									finalDatum = showPanelResponse.getMenusDatum();
+								}
 								int supportCategory = finalSupportCategory;
-								if(productType == ProductType.NOT_SURE) {
+								if(productType == ProductType.NOT_SURE || supportCategory == SupportCategory.NOT_SURE.getOrdinal()) {
 									if (endRideData != null) {
 										supportCategory = getSupportCategoryForEngagementStatus(endRideData.getStatus());
-									} else if (showPanelResponse.getDatum() != null) {
-										supportCategory = showPanelResponse.getDatum().getSupportCategory();
+									} else if (finalDatum != null) {
+										supportCategory = finalDatum.getSupportCategory();
 									}
 								}
 								ArrayList<ShowPanelResponse.Item> itemsMain = null;
@@ -127,7 +137,7 @@ public class ApiGetRideSummary {
 									itemsMain = Database2.getInstance(activity).getSupportDataItems(supportCategory);
 								}
 
-								callback.onSuccess(endRideData, showPanelResponse.getDatum(), itemsMain);
+								callback.onSuccess(endRideData, finalDatum, itemsMain);
 							} else if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
 								if(callback.onActionFailed(message)){
 									retryDialog(message);

@@ -11,11 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.utils.Fonts;
 import com.squareup.picasso.Picasso;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 
 /**
@@ -60,8 +60,6 @@ public class BannerDetailDialog {
 			textViewDesc.setText(desc);
 
 			Picasso.with(activity).load(image)
-					.placeholder(R.drawable.img_ice_cream_banner)
-					.error(R.drawable.img_ice_cream_banner)
 					.into(imageView);
 
 			button.setOnClickListener(new View.OnClickListener() {

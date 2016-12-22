@@ -75,10 +75,10 @@ public class PushPendingCallsReceiver extends BroadcastReceiver {
                 if (AppStatus.getInstance(context).isOnline(context)) {
                     Response response = null;
                     if(PendingCall.EMERGENCY_ALERT.getPath().equalsIgnoreCase(pendingAPICall.url)){
-                        response = RestClient.getApiServices().emergencyAlertSync(pendingAPICall.nameValuePairs);
+                        response = RestClient.getApiService().emergencyAlertSync(pendingAPICall.nameValuePairs);
                     }
                     else if(PendingCall.SKIP_RATING_BY_CUSTOMER.getPath().equalsIgnoreCase(pendingAPICall.url)){
-                        response = RestClient.getApiServices().skipRatingByCustomerSync(pendingAPICall.nameValuePairs);
+                        response = RestClient.getApiService().skipRatingByCustomerSync(pendingAPICall.nameValuePairs);
                     }
                     Log.e(TAG, "response="+response);
                     if(response != null){

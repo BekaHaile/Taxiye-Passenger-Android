@@ -17,10 +17,11 @@
 
         <TextView
             android:id="@+id/textViewSlotDay"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="TODAY"
+            android:gravity="center"
             android:textAllCaps="true"
             android:textColor="@color/text_color_light"
             android:textSize="@dimen/text_size_24"
@@ -28,7 +29,7 @@
 
         <TextView
             android:id="@+id/textViewSlotTime"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:text="10:00 AM - 12:00 PM"

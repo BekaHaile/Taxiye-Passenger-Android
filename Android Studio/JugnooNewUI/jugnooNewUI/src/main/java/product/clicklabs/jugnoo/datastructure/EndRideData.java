@@ -7,8 +7,10 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 
 public class EndRideData {
-	
-	public String engagementId, driverName, driverCarNumber, driverImage,
+
+	public String engagementId;
+	public String driverName;
+	public String driverCarNumber, driverImage,
 		pickupAddress, dropAddress,
 		pickupTime, dropTime;
 	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -107,42 +108,46 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 			
 			@Override
 			public void onClick(View v) {
-                String previousPhoneNumber = "", accessToken = "";
-                if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
-                    previousPhoneNumber = OTPConfirmScreen.facebookRegisterData.phoneNo;
-                    accessToken = OTPConfirmScreen.facebookRegisterData.accessToken;
-                }
-				else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
-					previousPhoneNumber = OTPConfirmScreen.googleRegisterData.phoneNo;
-					accessToken = OTPConfirmScreen.googleRegisterData.accessToken;
-				}
-                else{
-                    previousPhoneNumber = OTPConfirmScreen.emailRegisterData.phoneNo;
-                    accessToken = OTPConfirmScreen.emailRegisterData.accessToken;
-                }
+				try {
+					String previousPhoneNumber = "", accessToken = "";
+					if(SplashNewActivity.RegisterationType.FACEBOOK == SplashNewActivity.registerationType){
+						previousPhoneNumber = OTPConfirmScreen.facebookRegisterData.phoneNo;
+						accessToken = OTPConfirmScreen.facebookRegisterData.accessToken;
+					}
+					else if(SplashNewActivity.RegisterationType.GOOGLE == SplashNewActivity.registerationType){
+						previousPhoneNumber = OTPConfirmScreen.googleRegisterData.phoneNo;
+						accessToken = OTPConfirmScreen.googleRegisterData.accessToken;
+					}
+					else{
+						previousPhoneNumber = OTPConfirmScreen.emailRegisterData.phoneNo;
+						accessToken = OTPConfirmScreen.emailRegisterData.accessToken;
+					}
 
-                String phoneNoChanged = editTextNewPhoneNumber.getText().toString().trim();
-                if("".equalsIgnoreCase(phoneNoChanged)){
-                    editTextNewPhoneNumber.requestFocus();
-                    editTextNewPhoneNumber.setError("Phone number can't be empty");
-                }
-                else{
-                    phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
-                    if(Utils.validPhoneNumber(phoneNoChanged)) {
-                        phoneNoChanged = "+91" + phoneNoChanged;
-                        if(previousPhoneNumber.equalsIgnoreCase(phoneNoChanged)){
-                            editTextNewPhoneNumber.requestFocus();
-                            editTextNewPhoneNumber.setError("Changed Phone number is same as the previous one.");
-                        }
-                        else{
-                            updateUserProfileAPI(ChangePhoneBeforeOTPActivity.this, phoneNoChanged, accessToken);
-                        }
-                    }
-                    else{
-                        editTextNewPhoneNumber.requestFocus();
-                        editTextNewPhoneNumber.setError("Please enter valid phone number");
-                    }
-                }
+					String phoneNoChanged = editTextNewPhoneNumber.getText().toString().trim();
+					if("".equalsIgnoreCase(phoneNoChanged)){
+						editTextNewPhoneNumber.requestFocus();
+						editTextNewPhoneNumber.setError("Phone number can't be empty");
+					}
+					else{
+						phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
+						if(Utils.validPhoneNumber(phoneNoChanged)) {
+							phoneNoChanged = "+91" + phoneNoChanged;
+							if(previousPhoneNumber.equalsIgnoreCase(phoneNoChanged)){
+								editTextNewPhoneNumber.requestFocus();
+								editTextNewPhoneNumber.setError("Changed Phone number is same as the previous one.");
+							}
+							else{
+								updateUserProfileAPI(ChangePhoneBeforeOTPActivity.this, phoneNoChanged, accessToken);
+							}
+						}
+						else{
+							editTextNewPhoneNumber.requestFocus();
+							editTextNewPhoneNumber.setError("Please enter valid phone number");
+						}
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -197,7 +202,8 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
             params.put("updated_phone_no", updatedField);
             params.put("reg_wallet_type", String.valueOf(linkedWallet));
 
-            RestClient.getApiServices().updateUserProfile(params, new Callback<SettleUserDebt>() {
+			new HomeUtil().putDefaultParams(params);
+            RestClient.getApiService().updateUserProfile(params, new Callback<SettleUserDebt>() {
                 @Override
                 public void success(SettleUserDebt settleUserDebt, Response response) {
                     String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());

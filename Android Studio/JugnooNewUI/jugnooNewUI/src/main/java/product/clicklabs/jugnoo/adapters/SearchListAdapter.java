@@ -469,30 +469,34 @@ public class SearchListAdapter extends BaseAdapter{
 
 
     private synchronized void getSearchResultFromPlaceId(final String placeName, final String placeAddress, final String placeId) {
-        searchListActionsHandler.onPlaceSearchPre();
-        Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
-		Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
-				.setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(PlaceBuffer places) {
-                        try {
-                            Log.e("SearchListAdapter", "getPlaceById response=" + places);
-                            if (places.getStatus().isSuccess()) {
-                                final Place myPlace = places.get(0);
-                                final CharSequence thirdPartyAttributions = places.getAttributions();
-                                SearchResult searchResult = new SearchResult(placeName, placeAddress, placeId,
-										myPlace.getLatLng().latitude, myPlace.getLatLng().longitude);
-                                searchResult.setThirdPartyAttributions(thirdPartyAttributions);
-                                sendSearchResult(searchResult);
-                            }
-                            places.release();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-        Log.v("after call back", "after call back");
-    }
+		try {
+			searchListActionsHandler.onPlaceSearchPre();
+			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
+			Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
+					.setResultCallback(new ResultCallback<PlaceBuffer>() {
+						@Override
+						public void onResult(PlaceBuffer places) {
+							try {
+								Log.e("SearchListAdapter", "getPlaceById response=" + places);
+								if (places.getStatus().isSuccess()) {
+									final Place myPlace = places.get(0);
+									final CharSequence thirdPartyAttributions = places.getAttributions();
+									SearchResult searchResult = new SearchResult(placeName, placeAddress, placeId,
+											myPlace.getLatLng().latitude, myPlace.getLatLng().longitude);
+									searchResult.setThirdPartyAttributions(thirdPartyAttributions);
+									sendSearchResult(searchResult);
+								}
+								places.release();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+			Log.v("after call back", "after call back");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
     private synchronized void sendSearchResult(final SearchResult searchResult) {
         ((Activity)context).runOnUiThread(new Runnable() {
