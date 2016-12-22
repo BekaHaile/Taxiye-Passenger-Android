@@ -4224,7 +4224,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 if (map != null && myLocation != null && !isSpecialPickupScreenOpened()) {
                                     initialMyLocationBtn.performClick();
                                     mapTouched = true;
-                                    try {Data.autoData.setLastRefreshLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));} catch (Exception e) {}
+                                    try {
+                                        LatLng currLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                                        Data.setLatLngOfJeanieLastShown(currLatLng);
+                                        Data.autoData.setLastRefreshLatLng(currLatLng);
+                                    } catch (Exception e) {}
                                 }
                             }
                         }
