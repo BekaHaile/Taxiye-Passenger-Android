@@ -188,14 +188,15 @@ public class MenusFilterFragment extends Fragment{
 
 		buttonApply = (Button) rootView.findViewById(R.id.buttonApply); buttonApply.setTypeface(Fonts.mavenRegular(activity));
 
-		/*relativeLayoutPopularity.setOnClickListener(new View.OnClickListener() {
+		relativeLayoutPopularity.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setSortBySelected(getSortBySelected() != SortType.POPULARITY ? SortType.POPULARITY : SortType.NONE);
 				updateSortTypeUI();
 			}
-		});*/
+		});
 
+/*
 		relativeLayoutPopularity.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -203,6 +204,7 @@ public class MenusFilterFragment extends Fragment{
 				updateSortTypeUI();
 			}
 		});
+*/
 
 		relativeLayoutDistance.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -409,7 +411,7 @@ public class MenusFilterFragment extends Fragment{
 		imageViewRadioPopularity.setImageResource(R.drawable.ic_radio_button_normal);
 		imageViewRadioDistance.setImageResource(R.drawable.ic_radio_button_normal);
 		imageViewRadioPrice.setImageResource(R.drawable.ic_radio_button_normal);
-		if(getSortBySelected() == SortType.ONLINEPAYMENTACCEPTED){
+		if(getSortBySelected() == SortType.POPULARITY){
 			imageViewRadioPopularity.setImageResource(R.drawable.ic_radio_button_selected);
 		} else if(getSortBySelected() == SortType.DISTANCE){
 			imageViewRadioDistance.setImageResource(R.drawable.ic_radio_button_selected);

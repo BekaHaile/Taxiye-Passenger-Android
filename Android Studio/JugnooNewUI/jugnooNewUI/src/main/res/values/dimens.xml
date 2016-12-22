@@ -264,6 +264,9 @@
     <dimen name="px_2">
         2px
     </dimen>
+    <dimen name="px_3">
+        3px
+    </dimen>
     <dimen name="px_60">
         60px
     </dimen>

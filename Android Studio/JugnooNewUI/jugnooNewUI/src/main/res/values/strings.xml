@@ -1407,4 +1407,7 @@
     <string name="pure_veg">Pure Vegetarian</string>
     <string name="free_delivery">Free Delivery</string>
 
+    <string name="delivers_in_format">Delivers in %s mins</string>
+    <string name="minimum_order_rupee_format">Minimum Order \u20B9%s</string>
+
 </resources>

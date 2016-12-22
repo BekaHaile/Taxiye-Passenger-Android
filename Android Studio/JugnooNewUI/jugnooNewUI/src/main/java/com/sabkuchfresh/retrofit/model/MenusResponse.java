@@ -190,6 +190,22 @@ public class MenusResponse {
 		private Double packagingChargesInPercent;
 
 
+		@SerializedName("pure_veg")
+		@Expose
+		private Integer pureVegetarian;
+		@SerializedName("offer_discount")
+		@Expose
+		private Integer offersDiscounts;
+		@SerializedName("free_delivery")
+		@Expose
+		private Integer freeDelivery;
+
+		@SerializedName("close_in")
+		@Expose
+		private String closeIn;
+		@SerializedName("display_address")
+		@Expose
+		private String restaurantAdd;
 
 		/**
 		 *
@@ -411,6 +427,47 @@ public class MenusResponse {
 			this.packagingChargesInPercent = packagingChargesInPercent;
 		}
 
+
+		public Integer getPureVegetarian() {
+			return pureVegetarian;
+		}
+
+		public void setPureVegetarian(Integer pureVegetarian) {
+			this.pureVegetarian = pureVegetarian;
+		}
+
+		public Integer getOffersDiscounts() {
+			return offersDiscounts;
+		}
+
+		public void setOffersDiscounts(Integer offersDiscounts) {
+			this.offersDiscounts = offersDiscounts;
+		}
+
+		public Integer getFreeDelivery() {
+			return freeDelivery;
+		}
+
+		public void setFreeDelivery(Integer freeDelivery) {
+			this.freeDelivery = freeDelivery;
+		}
+
+
+		public String getInClose() {
+			return closeIn;
+		}
+
+		public void setInClose(String closeIn) {
+			this.closeIn = closeIn;
+		}
+
+		public String getRestaurantAddress() {
+			return restaurantAdd;
+		}
+
+		public void setRestaurantAddress(String restaurantAdd) {
+			this.restaurantAdd = restaurantAdd;
+		}
 	}
 
 
