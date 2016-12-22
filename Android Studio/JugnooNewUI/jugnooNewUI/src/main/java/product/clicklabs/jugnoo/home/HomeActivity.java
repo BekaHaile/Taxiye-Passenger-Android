@@ -72,6 +72,9 @@ import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -220,6 +223,7 @@ import retrofit.mime.TypedByteArray;
 
 
 public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, FirebaseEvents, View.OnClickListener {
 
 
@@ -477,6 +481,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private float mapPaddingSpecialPickup = 268f, mapPaddingConfirm = 238f;
     public static boolean homeSwitcher;
     private boolean setPickupAddressZoomedOnce = false;
+    private GoogleApiClient mGoogleApiClient;
 
 
     @SuppressLint("NewApi")
@@ -524,7 +529,13 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         Data.latitude = Data.loginLatitude;
         Data.longitude = Data.loginLongitude;
 
-
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
 
         FacebookSdk.sdkInitialize(this);
 
@@ -6676,6 +6687,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     protected void onStart() {
         try {
             super.onStart();
+            mGoogleApiClient.connect();
 //            FlurryAgent.init(this, Config.getFlurryKey());
 //            FlurryAgent.onStartSession(this, Config.getFlurryKey());
 //            FlurryAgent.onEvent("HomeActivity started");
@@ -6687,6 +6699,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     @Override
     protected void onStop() {
         try {
+            mGoogleApiClient.disconnect();
             super.onStop();
 //            FlurryAgent.onEndSession(this);
         } catch (Exception e) {
@@ -9318,5 +9331,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private HomeUtil homeUtil = new HomeUtil();
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    public GoogleApiClient getmGoogleApiClient(){
+        return mGoogleApiClient;
+    }
 
 }
