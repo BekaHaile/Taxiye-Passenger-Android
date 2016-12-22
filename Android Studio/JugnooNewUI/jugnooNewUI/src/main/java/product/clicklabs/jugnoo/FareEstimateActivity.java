@@ -12,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +48,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class FareEstimateActivity extends BaseFragmentActivity implements FlurryEventNames,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants {
 
     private final String TAG = FareEstimateActivity.class.getSimpleName();
@@ -68,6 +72,7 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     private LatLng pickupLatLng;
     private SearchResult searchResultGlobal;
     private Region region;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onResume() {
@@ -103,6 +108,14 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
                 e1.printStackTrace();
             }
         }
+
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
 
         relative = (LinearLayout) findViewById(R.id.relative);
         assl = new ASSL(this, relative, 1134, 720, false);
@@ -399,10 +412,12 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     @Override
     public void onStart() {
         super.onStart();
+        mGoogleApiClient.connect();
     }
 
     @Override
     public void onStop() {
+        mGoogleApiClient.disconnect();
         super.onStop();
     }
 
@@ -456,5 +471,24 @@ public class FareEstimateActivity extends BaseFragmentActivity implements Flurry
     @Override
     public void onNotifyDataSetChanged(int count) {
 
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    public GoogleApiClient getmGoogleApiClient(){
+        return mGoogleApiClient;
     }
 }
