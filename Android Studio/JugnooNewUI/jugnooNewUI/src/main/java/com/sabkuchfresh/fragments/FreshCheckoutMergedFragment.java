@@ -628,7 +628,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         if(promoAmount > 0){
             textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
             textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormat().format(subTotalAmount + deliveryCharges() + packagingCharges())));
+                    Utils.getMoneyDecimalFormat().format(totalUndiscounted())));
             textViewCartTotalUndiscount.setPaintFlags(textViewCartTotalUndiscount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else{
             textViewCartTotalUndiscount.setVisibility(View.GONE);
@@ -1973,11 +1973,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
     private double netAmountWOTaxes(){
-        return subTotalAmount - promoAmount + deliveryCharges() + packagingCharges();
+        return subTotalAmount + packagingCharges();
+    }
+
+    private double totalUndiscounted(){
+        return totalAmount() + promoAmount;
     }
 
     private double totalAmount(){
-        double totalAmount = netAmountWOTaxes() + serviceTax() + vat();
+        double totalAmount = netAmountWOTaxes() + serviceTax() + vat() + deliveryCharges() - promoAmount;
         if(totalAmount < 0) {
             totalAmount = 0;
         }

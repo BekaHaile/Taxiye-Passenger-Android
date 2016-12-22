@@ -8733,7 +8733,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) &&
                     (Data.autoData.getRegions().size() == 1)){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
-                setFabMarginInitial(false);
+                setFabMarginInitial(true);
 
                 textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1()+" - ");
                 relativeLayoutPoolInfoBar.setBackgroundColor(getResources().getColor(R.color.text_color));
