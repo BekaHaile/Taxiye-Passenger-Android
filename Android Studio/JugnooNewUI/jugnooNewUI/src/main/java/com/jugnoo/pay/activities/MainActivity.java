@@ -42,6 +42,7 @@ import com.jugnoo.pay.models.VerifyRegisterResponse;
 import com.jugnoo.pay.models.VerifyUserRequest;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
+import com.jugnoo.pay.utils.PrefManager;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.sabkuchfresh.utils.AppConstant;
 import com.yesbank.AddAccount;
@@ -79,6 +80,8 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+
+import static product.clicklabs.jugnoo.Data.context;
 
 public class MainActivity extends BaseActivity {
     @Bind(R.id.toolbar)
@@ -491,6 +494,11 @@ public class MainActivity extends BaseActivity {
                         if (flag == 401) {
                             updateTransactions(fetchPayDataResponse);
                             Data.getPayData().getPay().setHasVpa(1);
+
+                            // set First time launch false in prefManager
+                            PrefManager prefManager = new PrefManager(MainActivity.this);
+                            prefManager.setFirstTimeLaunch(false);
+
                         } else if (flag == 403) {
 //                            logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
 
@@ -534,6 +542,11 @@ public class MainActivity extends BaseActivity {
                         try{
                             if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == fetchPayDataResponse.getFlag()){
                                 updateTransactions(fetchPayDataResponse);
+
+                                // set isFirstTimeAppLaunch to false
+                                PrefManager prefManager = new PrefManager(MainActivity.this);
+                                prefManager.setFirstTimeLaunch(false);
+
                             } else {
                                 DialogPopup.alertPopup(MainActivity.this, "", fetchPayDataResponse.getMessage());
                             }

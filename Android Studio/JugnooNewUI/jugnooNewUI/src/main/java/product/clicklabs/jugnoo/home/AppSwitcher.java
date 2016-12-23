@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.activities.MainActivity;
+import com.jugnoo.pay.activities.PayTutorial;
 import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.Constants;
@@ -246,7 +247,9 @@ public class AppSwitcher {
 									@Override
 									public void success(String clientId) {
 										if (!intentSentAfterDataCheck(activity, clientId, data, bundle, clearActivityStack)) {
-											intent.setClass(activity, MainActivity.class);
+											// intent.setClass(activity, MainActivity.class);
+											intent.setClass(activity, PayTutorial.class);
+
 											intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 											activity.startActivity(intent);
 											activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -270,7 +273,9 @@ public class AppSwitcher {
 									}
 								});
 					} else {
-						intent.setClass(activity, MainActivity.class);
+						// intent.setClass(activity, MainActivity.class);
+						intent.setClass(activity, PayTutorial.class);
+
 						activity.startActivity(intent);
 						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 						ActivityCompat.finishAffinity(activity);

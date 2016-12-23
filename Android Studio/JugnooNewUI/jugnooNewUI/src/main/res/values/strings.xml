@@ -8,9 +8,10 @@
     <string name="filter_title">Jugnoo</string>
     <string name="no_more_than">Can\'t order more than %d units</string>
 
-    <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>  Live
+    <!--<string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>-->
+    Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string>&lt;!&ndash; General&ndash;&gt;-->
+    <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string><!-- General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -1396,6 +1397,13 @@
     <string name="please_enter_valid_vpa">Please enter a valid Virtual Payment Address</string>
     <string name="please_enter_valid_address_or_phone">Please enter a valid Payment address or phone number</string>
     <string name="categories">Categories</string>
+    <string name="pay_from_your_bank">Pay from your bank\nin seconds</string>
+    <string name="no_loading_money">No loading of money in wallets</string>
+    <string name="bank_grade_security">Bank grade security</string>
+    <string name="make_payment_with_mpin">Make payments with your MPIN on \nsecure NPCI plateform</string>
+    <string name="phone_number_registered_with_jugnoo">The phone number registered \nwith Jugnoo should be linked to \nyour bank account.</string>
+    <string name="registered_number_should_be">The registered number should be \nthe default/preferred sim for SMS \nand calls for regular updates</string>
+    <string name="GotIt">Got It</string>
 
     <string name="accept_online_payment">Accept Online Payment</string>
 
