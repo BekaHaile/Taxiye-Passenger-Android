@@ -26,6 +26,9 @@ public class PlaceOrderResponse {
 	@SerializedName("message")
 	@Expose
 	private String message;
+//	@SerializedName("payment_object")
+//	@Expose
+//	private Integer orderId;
 
 	/**
 	 *

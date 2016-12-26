@@ -17,11 +17,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jugnoo.pay.utils.PrefManager;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.utils.ASSL;
 
 import static product.clicklabs.jugnoo.Data.context;
 
@@ -51,6 +54,7 @@ public class PayTutorial extends AppCompatActivity {
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
 
+    RelativeLayout ActivityPayTutorialLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,9 @@ public class PayTutorial extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_pay_tutorial);
+
+        ActivityPayTutorialLayout = (RelativeLayout) findViewById(R.id.activity_pay_tutorial);
+        new ASSL(PayTutorial.this, ActivityPayTutorialLayout, 1134, 720, false);
 
         viewPager = (ViewPager) findViewById(R.id.vpPayTutorial);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
