@@ -33,6 +33,7 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -133,10 +134,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private ImageView imageViewAddressType, imageViewDeliveryAddressForward;
     private TextView textViewAddressName, textViewAddressValue;
 
-    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutCash;
+    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutJugnooPay, relativeLayoutCash;
     private LinearLayout linearLayoutWalletContainer;
     private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewRadioMobikwik, imageViewAddMobikwik,
-            imageViewRadioFreeCharge, imageViewAddFreeCharge, imageViewCashRadio;
+            imageViewRadioFreeCharge, imageViewAddFreeCharge, imageViewRadioJugnooPay, imageViewAddJugnooPay, imageViewCashRadio;
     private TextView textViewPaytmValue, textViewMobikwikValue, textViewFreeChargeValue;
 
     private LinearLayout linearLayoutOffers;
@@ -358,6 +359,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
         relativeLayoutMobikwik = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutMobikwik);
         relativeLayoutFreeCharge = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutFreeCharge);
+        relativeLayoutJugnooPay = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutJugnooPay);
         relativeLayoutCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCash);
         imageViewPaytmRadio = (ImageView) rootView.findViewById(R.id.imageViewPaytmRadio);
         imageViewAddPaytm = (ImageView) rootView.findViewById(R.id.imageViewAddPaytm);
@@ -365,11 +367,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         imageViewAddMobikwik = (ImageView) rootView.findViewById(R.id.imageViewAddMobikwik);
         imageViewRadioFreeCharge = (ImageView)rootView.findViewById(R.id.imageViewRadioFreeCharge);
         imageViewAddFreeCharge = (ImageView) rootView.findViewById(R.id.imageViewAddFreeCharge);
+        imageViewRadioJugnooPay = (ImageView)rootView.findViewById(R.id.imageViewRadioJugnooPay);
+        imageViewAddJugnooPay = (ImageView) rootView.findViewById(R.id.imageViewAddJugnooPay);
         imageViewCashRadio = (ImageView) rootView.findViewById(R.id.imageViewCashRadio);
         textViewPaytmValue = (TextView)rootView.findViewById(R.id.textViewPaytmValue);textViewPaytmValue.setTypeface(Fonts.mavenMedium(activity));
         textViewMobikwikValue = (TextView)rootView.findViewById(R.id.textViewMobikwikValue);textViewMobikwikValue.setTypeface(Fonts.mavenMedium(activity));
         textViewFreeChargeValue = (TextView)rootView.findViewById(R.id.textViewFreeChargeValue);textViewFreeChargeValue.setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenMedium(activity));
+        ((TextView)rootView.findViewById(R.id.textViewJugnooPay)).setTypeface(Fonts.mavenMedium(activity));
 
         linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
         listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
@@ -387,6 +392,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
+        relativeLayoutJugnooPay.setOnClickListener(onClickListenerPaymentOptionSelector);
 
         activity.setSelectedPromoCoupon(noSelectionCoupon);
 
@@ -667,6 +673,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                 callbackPaymentOptionSelector);
                         break;
 
+                    case R.id.relativeLayoutJugnooPay:
+                        MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
+                                +FirebaseEvents.PAY, bundle);
+                        MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.JUGNOO_PAY,
+                                callbackPaymentOptionSelector);
+                        break;
+
                     case R.id.relativeLayoutCash:
                         MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+offeringPrefix+"_"
                                 +FirebaseEvents.CASH, bundle);
@@ -815,29 +828,45 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 textViewFreeChargeValue.setVisibility(View.GONE);
                 imageViewAddFreeCharge.setVisibility(View.VISIBLE);
             }
+            if(Data.getPayData() != null && Data.getPayData().getPay().getHasVpa() == 1){
+                imageViewAddJugnooPay.setVisibility(View.GONE);
+            } else{
+                imageViewAddJugnooPay.setVisibility(View.VISIBLE);
+            }
 
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
             }
             else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_selected);
                 imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
             }
             else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_selected);
+                imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
+            }
+            else if (activity.getPaymentOption() == PaymentOption.JUGNOO_PAY) {
+                imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_selected);
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_normal);
             }
             else {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
+                imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
                 imageViewCashRadio.setImageResource(R.drawable.ic_radio_button_selected);
             }
             updateCartDataView();
@@ -883,6 +912,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     } else {
                         showWalletBalanceLowDialog(PaymentOption.FREECHARGE);
                     }
+                    goAhead = false;
+                }
+            }
+            else if (activity.getPaymentOption() == PaymentOption.JUGNOO_PAY) {
+                if (Data.getPayData() == null || Data.getPayData().getPay().getHasVpa() != 1) {
+                    relativeLayoutJugnooPay.performClick();
                     goAhead = false;
                 }
             }
@@ -1364,6 +1399,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         df.format(Math.ceil(payableAmount()
                                 - Data.userData.getFreeChargeBalance())));
             }
+            else if (paymentOption == PaymentOption.JUGNOO_PAY) {
+                intent.setClass(activity, MainActivity.class);
+                intent.putExtra(Constants.KEY_GO_BACK, 1);
+            }
             else {
                 intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
             }
@@ -1412,6 +1451,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                             linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.JUGNOO_PAY.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(relativeLayoutJugnooPay);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutCash);
                         }
@@ -1429,6 +1470,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 					relativeLayoutPaytm.setVisibility(View.GONE);
 					relativeLayoutMobikwik.setVisibility(View.GONE);
 					relativeLayoutFreeCharge.setVisibility(View.GONE);
+                    relativeLayoutJugnooPay.setVisibility(View.GONE);
 				} else if(activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()){
 					relativeLayoutCash.setVisibility(View.GONE);
 				}

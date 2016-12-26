@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.home.FreshActivity;
 
@@ -371,6 +372,10 @@ public class WalletCore {
 					&& Data.userData.getFreeChargeEnabled() == 1 && Data.userData.getFreeChargeBalance() > -1) {
                 return PaymentOption.FREECHARGE.getOrdinal();
             }
+			else if(previousPaymentOption == PaymentOption.JUGNOO_PAY.getOrdinal()
+					&& Data.getPayData() != null && Data.getPayData().getPay().getHasVpa() == 1) {
+				return PaymentOption.JUGNOO_PAY.getOrdinal();
+			}
 			else {
 				return PaymentOption.CASH.getOrdinal();
 			}
@@ -546,10 +551,18 @@ public class WalletCore {
 		try {
 			if (Data.userData.getPaytmEnabled() != 1
 					|| Data.userData.getMobikwikEnabled() != 1
-					 || Data.userData.getFreeChargeEnabled() != 1) {
+					|| Data.userData.getFreeChargeEnabled() != 1) {
 				Intent intent = new Intent(activity, PaymentActivity.class);
 				intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
 				intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption);
+				activity.startActivity(intent);
+				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
+			}
+			else if(paymentOption == PaymentOption.JUGNOO_PAY.getOrdinal()
+					&& Data.getPayData() != null && Data.getPayData().getPay().getHasVpa() == 0){
+				Intent intent = new Intent(activity, MainActivity.class);
+				intent.putExtra(Constants.KEY_GO_BACK, 1);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
@@ -705,7 +718,12 @@ public class WalletCore {
                             && Data.userData.getFreeChargeBalance() >= 1) {
                         paymentModeConfigDataDefault = paymentModeConfigData;
                         break;
-                    }
+                    } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.JUGNOO_PAY.getOrdinal()
+							&& Data.getPayData() != null
+							&& Data.getPayData().getPay().getHasVpa() == 1) {
+						paymentModeConfigDataDefault = paymentModeConfigData;
+						break;
+					}
 				}
 			}
 			if (paymentModeConfigDataDefault != null) {
@@ -722,8 +740,10 @@ public class WalletCore {
 			return PaymentOption.PAYTM;
 		} else if(PaymentOption.MOBIKWIK.getOrdinal() == paymentOption){
 			return PaymentOption.MOBIKWIK;
-		}  else if(PaymentOption.FREECHARGE.getOrdinal() == paymentOption){
+		} else if(PaymentOption.FREECHARGE.getOrdinal() == paymentOption){
 			return PaymentOption.FREECHARGE;
+		} else if(PaymentOption.JUGNOO_PAY.getOrdinal() == paymentOption){
+			return PaymentOption.JUGNOO_PAY;
 		} else{
 			return PaymentOption.CASH;
 		}
@@ -944,7 +964,8 @@ public class WalletCore {
 							@Override
 							public void onNegativeClick() {
 								try {
-									if(Data.userData.getMobikwikEnabled() != 1 && Data.userData.getFreeChargeEnabled() != 1){
+									if(Data.userData.getMobikwikEnabled() != 1 && Data.userData.getFreeChargeEnabled() != 1
+											&& (Data.getPayData() == null || Data.getPayData().getPay().getHasVpa() != 1)){
 										callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.CASH);
 									}
 								} catch (Exception e) {
@@ -996,7 +1017,8 @@ public class WalletCore {
 							@Override
 							public void onNegativeClick() {
 								try {
-									if(Data.userData.getPaytmEnabled() != 1 && Data.userData.getFreeChargeEnabled() != 1){
+									if(Data.userData.getPaytmEnabled() != 1 && Data.userData.getFreeChargeEnabled() != 1
+											&& (Data.getPayData() == null || Data.getPayData().getPay().getHasVpa() != 1)){
 										callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.CASH);
 									}
 								} catch (Exception e) {
@@ -1062,6 +1084,15 @@ public class WalletCore {
 								.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.FREECHARGE.getOrdinal());
 						callbackPaymentOptionSelector.onWalletAdd(PaymentOption.FREECHARGE);
 					}
+				}
+			}
+			else if(paymentOption == PaymentOption.JUGNOO_PAY){
+				if(Data.getPayData() != null && Data.getPayData().getPay().getHasVpa() == 1) {
+					callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.JUGNOO_PAY);
+				} else {
+					MyApplication.getInstance().getWalletCore()
+							.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.JUGNOO_PAY.getOrdinal());
+					callbackPaymentOptionSelector.onWalletAdd(PaymentOption.JUGNOO_PAY);
 				}
 			}
 			else if(paymentOption == PaymentOption.CASH){

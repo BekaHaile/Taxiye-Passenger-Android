@@ -4,7 +4,8 @@ public enum PaymentOption {
 	CASH(1),
 	PAYTM(2),
 	MOBIKWIK(3),
-    FREECHARGE(4)
+    FREECHARGE(4),
+	JUGNOO_PAY(5)
 	;
 
 	private int ordinal;

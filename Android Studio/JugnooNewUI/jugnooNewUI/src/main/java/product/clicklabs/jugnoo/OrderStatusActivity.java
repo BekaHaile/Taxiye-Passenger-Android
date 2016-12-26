@@ -698,6 +698,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 ivPaymentMethodVal.setImageResource(R.drawable.ic_mobikwik_small);
             } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()){
                 ivPaymentMethodVal.setImageResource(R.drawable.ic_freecharge_small);
+            } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()){
+                ivPaymentMethodVal.setImageResource(R.drawable.ic_fab_pay);
             } else{
                 ivPaymentMethodVal.setVisibility(View.GONE);
                 tvPaymentMethodCash.setVisibility(View.VISIBLE);
