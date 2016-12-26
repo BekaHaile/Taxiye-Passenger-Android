@@ -18,9 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -29,6 +27,7 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
@@ -45,8 +44,7 @@ import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class PlaceSearchListFragment extends Fragment implements FlurryEventNames,
-		GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, Constants {
+public class PlaceSearchListFragment extends Fragment implements FlurryEventNames, Constants {
 	
 	private LinearLayout linearLayoutRoot;
 
@@ -84,9 +82,13 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-
 		try{
 			this.searchListActionsHandler = (SearchListAdapter.SearchListActionsHandler) context;
+			if(context instanceof FareEstimateActivity){
+				this.mGoogleApiClient = ((FareEstimateActivity)context).getmGoogleApiClient();
+			} else {
+				this.mGoogleApiClient = ((HomeActivity)context).getmGoogleApiClient();
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -101,14 +103,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		new ASSL(activity, linearLayoutRoot, 1134, 720, false);
-
-		mGoogleApiClient = new GoogleApiClient
-				.Builder(activity)
-				.addApi(Places.GEO_DATA_API)
-				.addApi(Places.PLACE_DETECTION_API)
-				.addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this)
-				.build();
 
 
 		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
@@ -359,33 +353,6 @@ public class PlaceSearchListFragment extends Fragment implements FlurryEventName
 	public void onResume() {
 		super.onResume();
 		searchListAdapter.addSavedLocationsToList();
-	}
-
-	@Override
-	public void onConnected(Bundle bundle) {
-
-	}
-
-	@Override
-	public void onConnectionSuspended(int i) {
-
-	}
-
-	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {
-
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		mGoogleApiClient.connect();
-	}
-
-	@Override
-	public void onStop() {
-		mGoogleApiClient.disconnect();
-		super.onStop();
 	}
 
 	@Override

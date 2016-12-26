@@ -148,6 +148,22 @@ public class HomeUtil {
 		params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 	}
 
+	public ArrayList<SearchResult> getSavedPlacesWithHomeWork(Activity activity){
+		ArrayList<SearchResult> searchResults = new ArrayList<>();
+		if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+			String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+			SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+			searchResults.add(searchResult);
+		}
+		if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+			String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+			SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+			searchResults.add(searchResult);
+		}
+		searchResults.addAll(Data.userData.getSearchResults());
+		return searchResults;
+	}
+
 	private MarkerOptions getMarkerOptionsForSavedAddress(Activity activity, ASSL assl, SearchResult searchResult){
 		MarkerOptions markerOptions = new MarkerOptions();
 		markerOptions.title(TextUtils.isEmpty(searchResult.getName()) ? "recent" : searchResult.getName());

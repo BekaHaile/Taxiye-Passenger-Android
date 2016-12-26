@@ -1975,6 +1975,22 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                             setRefreshCart(true);
                             saveOfferingLastAddress(appType);
                             setLocalityAddressFirstTime(Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType));
+
+                            try {
+                                if(getUserCheckoutResponse() != null){
+									if(getUserCheckoutResponse().getCheckoutData().getLastAddressId().equals(searchResult.getId())){
+										getUserCheckoutResponse().getCheckoutData().setLastAddressId(0);
+										getUserCheckoutResponse().getCheckoutData().setLastAddressType("");
+									}
+								}
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        try {
+                            getFreshCheckoutMergedFragment().updateAddressView();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
