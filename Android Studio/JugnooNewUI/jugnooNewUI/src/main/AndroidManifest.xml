@@ -169,6 +169,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".JugnooStarActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".support.SupportActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"

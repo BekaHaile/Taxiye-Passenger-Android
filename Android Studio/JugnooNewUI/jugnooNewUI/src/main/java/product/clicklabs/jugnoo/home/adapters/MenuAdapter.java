@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
@@ -591,7 +592,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.RIDE_HISTORY, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Ride History");
             } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
-                activity.startActivity(new Intent(activity, SupportActivity.class));
+                activity.startActivity(new Intent(activity, JugnooStarActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.SUPPORT, bundle);
