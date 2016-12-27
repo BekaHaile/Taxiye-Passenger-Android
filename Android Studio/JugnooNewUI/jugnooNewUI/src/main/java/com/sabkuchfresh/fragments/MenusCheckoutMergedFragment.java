@@ -295,9 +295,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         list.add("charges");
         list.add("charg");
         list.add("charging");
-/*
-        list.addAll(list);
-*/
 
         menusItemChargesAdapter = new MenusItemChargesAdapter(activity,list);
         listViewMenusCharges.setAdapter(menusItemChargesAdapter);

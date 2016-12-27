@@ -81,13 +81,12 @@ public class MenusItemChargesAdapter extends BaseAdapter
             holder = (MenusItemChargesAdapter.ViewHolder) convertView.getTag();
         try
         {
-            holder.id = position;
 
             Log.v("gridListSize ","gridListSize "+itemCharges.size());
 
-            for(int i=0;i<itemCharges.size();i++) {
-                holder.textViewMenusItemCharge.setText(itemCharges.get(i));
-            }
+
+                holder.textViewMenusItemCharge.setText(itemCharges.get(position));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,7 +95,6 @@ public class MenusItemChargesAdapter extends BaseAdapter
     }
 
     static class ViewHolder {
-        public int id;
         public RelativeLayout relativeLayoutMenusItemCharges;
         public ImageView imageViewSep1;
         public TextView textViewMenusItemCharge, textViewMenusItemChargeValue;
