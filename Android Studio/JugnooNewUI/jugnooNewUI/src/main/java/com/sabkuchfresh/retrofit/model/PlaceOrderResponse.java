@@ -2,6 +2,7 @@ package com.sabkuchfresh.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.jugnoo.pay.models.SendMoneyResponse;
 
 /**
  * Created by shankar on 4/11/16.
@@ -29,6 +30,10 @@ public class PlaceOrderResponse {
 //	@SerializedName("payment_object")
 //	@Expose
 //	private Integer orderId;
+
+	@SerializedName("payment_object")
+	@Expose
+	private SendMoneyResponse.TxnDetails paymentObject;
 
 	/**
 	 *
@@ -138,4 +143,11 @@ public class PlaceOrderResponse {
 		this.message = message;
 	}
 
+	public SendMoneyResponse.TxnDetails getPaymentObject() {
+		return paymentObject;
+	}
+
+	public void setPaymentObject(SendMoneyResponse.TxnDetails paymentObject) {
+		this.paymentObject = paymentObject;
+	}
 }

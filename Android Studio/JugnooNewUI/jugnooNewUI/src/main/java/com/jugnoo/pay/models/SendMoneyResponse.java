@@ -166,6 +166,9 @@ public class TxnDetails {
      * @return The orderId
      */
     public Integer getOrderId() {
+        if(order_id == null){
+            return 0;
+        }
         return order_id;
     }
     /**

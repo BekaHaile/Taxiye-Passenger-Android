@@ -34,6 +34,10 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.jugnoo.pay.activities.MainActivity;
+import com.jugnoo.pay.models.MessageRequest;
+import com.jugnoo.pay.models.SendMoneyCallbackResponse;
+import com.jugnoo.pay.models.SendMoneyResponse;
+import com.jugnoo.pay.utils.CallProgressWheel;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -1124,42 +1128,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 final int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                    if(jObj.has(Constants.KEY_PAYMENT_OBJECT)){
+                                        paymentObject = placeOrderResponse.getPaymentObject();
+                                        activity.getPaySDKUtils().openSendMoneyPage(activity, placeOrderResponse.getPaymentObject());
+                                    } else {
+
+                                    }
                                     orderPlaced = true;
                                     activity.saveCheckoutData(true);
                                     long time = 0L;
                                     Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
                                     activity.resumeMethod();
-
-                                    chargeDetails.put("Charged ID", placeOrderResponse.getOrderId());
-                                    MyApplication.getInstance().charged(chargeDetails, items);
-
-
-                                    ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
-                                            .setTransactionId(String.valueOf(placeOrderResponse.getOrderId()))
-                                            .setTransactionAffiliation("Fresh Store")
-                                            .setTransactionRevenue(placeOrderResponse.getAmount())
-                                            .setTransactionTax(0)
-                                            //.setCheckoutStep(4)
-                                            .setTransactionShipping(0);
-
-
-                                    try {
-                                        AppEventsLogger logger = AppEventsLogger.newLogger(getActivity());
-
-                                        Bundle parameters = new Bundle();
-                                        parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "INR");
-                                        parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "product");
-                                        parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, String.valueOf(placeOrderResponse.getOrderId()));
-
-                                        logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
-                                                placeOrderResponse.getAmount(),
-                                                parameters);
-
-                                    } catch (Exception e) {
-                                    }
-
-                                    FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.ORDER_PLACED, productList);
-                                    FlurryEventLogger.orderedProduct(productList, productAction);
 
                                     int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                                     String deliverySlot = "", deliveryDay = "";
@@ -1183,7 +1162,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                     }).show(String.valueOf(placeOrderResponse.getOrderId()),
                                             deliverySlot, deliveryDay, showDeliverySlot, restaurantName);
                                     activity.setSelectedPromoCoupon(noSelectionCoupon);
-
+                                    flurryEventPlaceOrder(placeOrderResponse);
 
                                 } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
                                     final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
@@ -1335,6 +1314,43 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
 
+    private void flurryEventPlaceOrder(PlaceOrderResponse placeOrderResponse){
+        try {
+            chargeDetails.put("Charged ID", placeOrderResponse.getOrderId());
+            MyApplication.getInstance().charged(chargeDetails, items);
+
+
+            ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
+					.setTransactionId(String.valueOf(placeOrderResponse.getOrderId()))
+					.setTransactionAffiliation("Fresh Store")
+					.setTransactionRevenue(placeOrderResponse.getAmount())
+					.setTransactionTax(0)
+					//.setCheckoutStep(4)
+					.setTransactionShipping(0);
+
+
+            try {
+				AppEventsLogger logger = AppEventsLogger.newLogger(getActivity());
+
+				Bundle parameters = new Bundle();
+				parameters.putString(AppEventsConstants.EVENT_PARAM_CURRENCY, "INR");
+				parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, "product");
+				parameters.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, String.valueOf(placeOrderResponse.getOrderId()));
+
+				logger.logEvent(AppEventsConstants.EVENT_NAME_PURCHASED,
+						placeOrderResponse.getAmount(),
+						parameters);
+
+			} catch (Exception e) {
+			}
+
+            FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.ORDER_PLACED, productList);
+            FlurryEventLogger.orderedProduct(productList, productAction);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void showWalletBalanceLowDialog(final PaymentOption paymentOption) {
         try {
             FreshWalletBalanceLowDialog.Callback callback = new FreshWalletBalanceLowDialog.Callback() {
@@ -1458,6 +1474,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         }
                     }
                 }
+                Data.getPayData().getPay().setHasVpa(1);
                 linearLayoutWalletContainer.addView(relativeLayoutJugnooPay);
             }
         } catch (Exception e){
@@ -2096,6 +2113,82 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         public int getOrdinal() {
             return ordinal;
         }
+    }
+
+
+    private SendMoneyResponse.TxnDetails paymentObject;
+
+    public void apiPlaceOrderPayCallback(final MessageRequest message){
+        try {
+            if (AppStatus.getInstance(activity).isOnline(activity)) {
+                DialogPopup.showLoadingDialog(activity, "");
+                HashMap<String, String> params = new HashMap<>();
+
+                params.put(Constants.KEY_ORDER_ID, String.valueOf(paymentObject.getOrderId()));
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                if (message != null) {
+                    params.put(Constants.KEY_MESSAGE, message.toString());
+                }
+                Callback<SendMoneyCallbackResponse> callback = new Callback<SendMoneyCallbackResponse>() {
+                    @Override
+                    public void success(SendMoneyCallbackResponse commonResponse, Response response) {
+//                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        CallProgressWheel.dismissLoadingDialog();
+                        try {
+                            int flag = commonResponse.getFlag();
+                            if (flag == com.jugnoo.pay.utils.ApiResponseFlags.TXN_COMPLETED.getOrdinal()) {
+
+                            }
+                            else if (flag == com.jugnoo.pay.utils.ApiResponseFlags.TXN_FAILED.getOrdinal()) {
+
+                            }
+                            else {
+                                retryDialogPlaceOrderPayCallbackApi(DialogErrorType.SERVER_ERROR, message);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            retryDialogPlaceOrderPayCallbackApi(DialogErrorType.SERVER_ERROR, message);
+                        }
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        CallProgressWheel.dismissLoadingDialog();
+                        retryDialogPlaceOrderPayCallbackApi(DialogErrorType.CONNECTION_LOST, message);
+                    }
+                };
+                if(type == AppConstant.ApplicationType.MENUS){
+                    RestClient.getMenusApiService().placeOrderCallback(params, callback);
+                } else {
+                    RestClient.getFreshApiService().placeOrderCallback(params, callback);
+                }
+            } else {
+                retryDialogPlaceOrderPayCallbackApi(DialogErrorType.NO_NET, message);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retryDialogPlaceOrderPayCallbackApi(DialogErrorType dialogErrorType, final MessageRequest message){
+        DialogPopup.dialogNoInternet(activity,
+                dialogErrorType,
+                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        apiPlaceOrderPayCallback(message);
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                });
     }
 
 }

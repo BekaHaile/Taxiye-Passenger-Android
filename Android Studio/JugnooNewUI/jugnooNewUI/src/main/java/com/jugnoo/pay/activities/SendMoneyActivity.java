@@ -29,8 +29,6 @@ import com.jugnoo.pay.utils.Validator;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
-import com.yesbank.PayActivity;
-import com.yesbank.TransactionStatus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,7 +43,6 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 /**
  * Created by cl-macmini-38 on 9/21/16.
@@ -113,12 +110,15 @@ public class SendMoneyActivity extends BaseActivity {
     private SelectUser contactDetails;
     private boolean requestStatus = false, requestStatusConfirmation = false;
     private String accessToken;
+    private PaySDKUtils paySdkUtils;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_money);
         ButterKnife.bind(this);
+
+        paySdkUtils = new PaySDKUtils();
         requestStatus = getIntent().getBooleanExtra(AppConstant.REQUEST_STATUS, false);
         requestStatusConfirmation = getIntent().getBooleanExtra(AppConstant.REQUEST_STATUS_CONFIRMATION, false);
 
@@ -276,7 +276,7 @@ public class SendMoneyActivity extends BaseActivity {
                             int flag = sendMoneyResponse.getFlag();
                             if (flag == ApiResponseFlags.TXN_INITIATED.getOrdinal()) {
                                 contactDetails.setOrderId(String.valueOf(sendMoneyResponse.getTxnDetails().getOrderId()));
-								callBankTransactionApi(sendMoneyResponse.getTxnDetails());
+                                paySdkUtils.openSendMoneyPage(SendMoneyActivity.this, sendMoneyResponse.getTxnDetails());
 							} else {
                                 retryDialogSendMoneyApi(sendMoneyResponse.getMessage());
 							}
@@ -319,162 +319,16 @@ public class SendMoneyActivity extends BaseActivity {
     }
 
 
-    void callBankTransactionStatusApi(SendMoneyResponse.TxnDetails txnDetails) {
-        Bundle bundle = new Bundle();
-        bundle.putString("mid", txnDetails.getMid()); // YBL0000000000123
-        bundle.putString("merchantKey", txnDetails.getMkey());// b0222ce704ebc0c1f4dc24360751f9f6
-        bundle.putString("merchantTxnID", Integer.toString(txnDetails.getOrderId())); // 11
-        bundle.putString("yblTxnId", "");
-        bundle.putString("refranceId", "");
-        bundle.putString("add1", "");
-        bundle.putString("add2", "");
-        bundle.putString("add3", "");
-        bundle.putString("add4", "");
-        bundle.putString("add5", "");
-        bundle.putString("add6", "");
-        bundle.putString("add7", "");
-        bundle.putString("add8", "");
-        bundle.putString("add9", "NA");
-        bundle.putString("add10", "NA");
-//        bundle.putString("payeeMMID", "0000000");
-
-
-        System.out.println("mid== " + txnDetails.getMid());
-        System.out.println("merchantKey== " + txnDetails.getMkey());
-        System.out.println("merchantTxnID== " + Integer.toString(txnDetails.getOrderId()));
-        System.out.println("transactionDesc== " + txnDetails.getTransactionDescription());
-        System.out.println("currency== " + txnDetails.getCurrency());
-        System.out.println("paymentType== " + txnDetails.getPaymentType());
-        System.out.println("transactionType== " + txnDetails.getTransactionType());
-        System.out.println("merchantCatCode== " + txnDetails.getMcc());
-        System.out.println("amount== " + Integer.toString(txnDetails.getAmount()));
-        System.out.println("payeeMobileNo== " + "8179145931");
-
-
-        Intent intent = new Intent(getApplicationContext(), TransactionStatus.class);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, 3);
-    }
-
-    void callBankTransactionApi(SendMoneyResponse.TxnDetails txnDetails) {
-        Bundle bundle = new Bundle();
-        bundle.putString("mid", txnDetails.getMid()); // YBL0000000000123
-        bundle.putString("merchantKey", txnDetails.getMkey());// b0222ce704ebc0c1f4dc24360751f9f6
-        bundle.putString("merchantTxnID", Integer.toString(txnDetails.getOrderId())); // 11
-        bundle.putString("transactionDesc", txnDetails.getTransactionDescription()); // SEND MONEY REQUEST
-        bundle.putString("currency", txnDetails.getCurrency()); //INR
-        bundle.putString("appName", "com.jugnoo.pay"); // JUGNOO_PAY
-        bundle.putString("paymentType", txnDetails.getPaymentType()); // P2P
-        bundle.putString("transactionType", txnDetails.getTransactionType()); // PAY
-        bundle.putString("merchantCatCode", txnDetails.getMcc());  // 4814
-        bundle.putString("amount", Integer.toString(txnDetails.getAmount())); // 20.00
-        bundle.putString("payeeMobileNo", txnDetails.getPayee_phone_no());
-
-        bundle.putString("payeePayAddress", txnDetails.getPayee_vpa());
-
-        bundle.putString("payerMobileNo", txnDetails.getPayer_phone_no());
-        bundle.putString("payerPaymentAddress", txnDetails.getPayer_vpa());
-
-        // new keys for new yes bank SDK - added on 21-11-2016
-        bundle.putString("payeeAccntNo", txnDetails.getPayeeAccntNo());
-        bundle.putString("payeeIFSC", txnDetails.getPayeeIFSC());
-        bundle.putString("payeeAadhaarNo", txnDetails.getPayeeAadhaarNo());
-        bundle.putString("expiryTime", txnDetails.getExpiryTime());
-        bundle.putString("payerAccntNo", txnDetails.getPayerAccntNo());
-        bundle.putString("payerIFSC", txnDetails.getPayerIFSC());
-        bundle.putString("payerAadhaarNo", txnDetails.getPayerAadhaarNo());
-
-        bundle.putString("subMerchantID", txnDetails.getSubMerchantID());
-        bundle.putString("whitelistedAccnts", txnDetails.getWhitelistedAccnts());
-        bundle.putString("payerMMID", txnDetails.getPayerMMID());
-        bundle.putString("payeeMMID", txnDetails.getPayeeMMID());
-        bundle.putString("refurl", txnDetails.getRefurl());
-        //-----------------------
-
-        System.out.println("mid== " + txnDetails.getMid());
-        System.out.println("merchantKey== " + txnDetails.getMkey());
-        System.out.println("merchantTxnID== " + Integer.toString(txnDetails.getOrderId()));
-        System.out.println("transactionDesc== " + txnDetails.getTransactionDescription());
-        System.out.println("currency== " + txnDetails.getCurrency());
-        System.out.println("paymentType== " + txnDetails.getPaymentType());
-        System.out.println("transactionType== " + txnDetails.getTransactionType());
-        System.out.println("merchantCatCode== " + txnDetails.getMcc());
-        System.out.println("amount== " + Integer.toString(txnDetails.getAmount()));
-        System.out.println("payeeMobileNo== " + "8179145931");
-
-
-        Intent intent = new Intent(getApplicationContext(), PayActivity.class);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, 1);
-    }
-
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK
-                && data != null) {
-            Bundle bundle = data.getExtras();
-            String pgMeTrnRefNo = bundle.getString("pgMeTrnRefNo");
-            String orderNo = bundle.getString("orderNo");
-            String txnAmount = bundle.getString("txnAmount");
-            String tranAuthdate = bundle.getString("tranAuthdate");
-            String statusCode = bundle.getString("status");
-            String statusDesc = bundle.getString("statusDesc");
-            String responsecode = bundle.getString("responsecode");
-            String approvalCode = bundle.getString("approvalCode");
-            String payerVA = bundle.getString("payerVA");
-            String npciTxnId = bundle.getString("npciTxnId");
-            String refId = bundle.getString("refId");
-
-            // new parameters for new yes bank SDK
-            String payerAccountNo = bundle.getString("payerAccountNo");
-            String payerIfsc = bundle.getString("payerIfsc");
-            String payerAccName = bundle.getString("payerAccName");
-            //------------------------
-
-            String add1 = bundle.getString("add1");
-            String add2 = bundle.getString("add2");
-            String add3 = bundle.getString("add3");
-            String add4 = bundle.getString("add4");
-            String add5 = bundle.getString("add5");
-            String add6 = bundle.getString("add6");
-            String add7 = bundle.getString("add7");
-            String add8 = bundle.getString("add8");
-            String add9 = bundle.getString("add9");
-            String add10 = bundle.getString("add10");
-
-            System.out.println("pgMeTrnRefNo== " + pgMeTrnRefNo);
-            System.out.println("tranAuthdate== " + tranAuthdate);
-            System.out.println("status== " + statusCode);
-            System.out.println("statusDesc== " + statusDesc);
-            System.out.println("responsecode== " + responsecode);
-            System.out.println("approvalCode== " + approvalCode);
-            System.out.println("payerVA== " + payerVA);
-            System.out.println("npciTxnId== " + npciTxnId);
-            System.out.println("refId== " + refId);
-            System.out.println("orderNo== " + orderNo);
+        if (requestCode == PaySDKUtils.REQUEST_CODE_SEND_MONEY && resultCode == Activity.RESULT_OK && data != null) {
+            MessageRequest messageRequest = paySdkUtils.parseSendMoneyData(data);
 
             SendMoneyCallback sendMoneyCallback = new SendMoneyCallback();
-            sendMoneyCallback.setAmount(txnAmount);
+            sendMoneyCallback.setAmount(messageRequest.getTxnAmount());
             sendMoneyCallback.setAccess_token(accessToken);
             sendMoneyCallback.setPhone_no(contactDetails.getPhone());
-            MessageRequest messageRequest = new MessageRequest();
-            messageRequest.setApprovalCode(approvalCode);
-            messageRequest.setNpciTxnId(npciTxnId);
-            messageRequest.setOrderNo(orderNo);
-            messageRequest.setPayerVA(payerVA);
-            messageRequest.setRefId(refId);
-            messageRequest.setResponsecode(responsecode);
-            messageRequest.setTranAuthdate(tranAuthdate);
-            messageRequest.setPgMeTrnRefNo(pgMeTrnRefNo);
-            messageRequest.setStatus(statusCode);
-            messageRequest.setStatusDesc(statusDesc);
-
-            // new code - added at 21-11-2016
-            messageRequest.setPayerAccountNo(payerAccountNo);
-            messageRequest.setPayerIfsc(payerIfsc);
-            messageRequest.setPayerAccName(payerAccName);
-            //--------------
 
             sendMoneyCallback.setMessage(messageRequest);
             final SendMoneyRequest request = new SendMoneyRequest();
@@ -489,24 +343,9 @@ public class SendMoneyActivity extends BaseActivity {
             intent.putExtra(AppConstant.TRANSACTION_DATA, request);
             bun.putParcelable(AppConstant.CONTACT_DATA, contactDetails);
             intent.putExtras(bun);
-            intent.putExtra(AppConstant.ORDER_ID, orderNo);
+            intent.putExtra(AppConstant.ORDER_ID, messageRequest.getOrderNo());
             startActivity(intent);
             finish();
-//            callingSendMoneyCallbackApi(sendMoneyCallback);
-        }
-        else if (requestCode == 3 && resultCode == Activity.RESULT_OK && data != null) {
-            Bundle bundle= data.getExtras();
-            String yblRegID = bundle.getString("yblRegID");
-            String merchantTxnID = bundle.getString("merchantTxnID");
-            String amount = bundle.getString("amount");
-            String txnAuthDate= bundle.getString("txnAuthDate");
-            String status = bundle.getString("status");
-            String statusdesc = bundle.getString("statusdesc");
-            String respCode = bundle.getString("respCode");
-            String approvalNo = bundle.getString("approvalNo");
-            String payerVA = bundle.getString("payerVA");
-            String npciTxnId = bundle.getString("npciTxnId");
-            String refranceId = bundle.getString("refranceId");
         }
         else{
             if(data == null){
@@ -553,7 +392,7 @@ public class SendMoneyActivity extends BaseActivity {
 				RestClient.getPayApiService().requestMoney(request, new Callback<CommonResponse>() {
 					@Override
 					public void success(CommonResponse commonResponse, Response response) {
-                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+//                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						CallProgressWheel.dismissLoadingDialog();
 						try {
 							int flag = commonResponse.getFlag();

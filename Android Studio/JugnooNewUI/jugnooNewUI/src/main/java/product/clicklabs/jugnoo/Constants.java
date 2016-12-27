@@ -569,4 +569,5 @@ public interface Constants {
 	String SHOW_HOME_SCREEN = "show_home_screen";
 
 	String KEY_GO_BACK = "go_back";
+	String KEY_PAYMENT_OBJECT = "payment_object";
 }

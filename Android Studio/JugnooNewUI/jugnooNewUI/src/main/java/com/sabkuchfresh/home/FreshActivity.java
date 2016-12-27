@@ -28,6 +28,8 @@ import android.widget.TextView;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.jugnoo.pay.activities.PaySDKUtils;
+import com.jugnoo.pay.models.MessageRequest;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressAdded;
@@ -2546,5 +2548,30 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
     public void setMenuRefreshLatLng(LatLng menuRefreshLatLng) {
         this.menuRefreshLatLng = menuRefreshLatLng;
+    }
+
+    private PaySDKUtils paySDKUtils;
+    public PaySDKUtils getPaySDKUtils(){
+        if(paySDKUtils == null){
+            paySDKUtils = new PaySDKUtils();
+        }
+        return paySDKUtils;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (requestCode == PaySDKUtils.REQUEST_CODE_SEND_MONEY && resultCode == Activity.RESULT_OK && data != null) {
+				MessageRequest messageRequest = getPaySDKUtils().parseSendMoneyData(data);
+				getFreshCheckoutMergedFragment().apiPlaceOrderPayCallback(messageRequest);
+			} else {
+				if(data == null){
+					getFreshCheckoutMergedFragment().apiPlaceOrderPayCallback(null);
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
