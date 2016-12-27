@@ -80,6 +80,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -162,11 +163,13 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
+import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
+import product.clicklabs.jugnoo.home.dialogs.SavedAddressPickupDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
@@ -362,6 +365,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private final int SEARCH_FLIP_ANIMATION_TIME = 200;
     private final float SEARCH_FLIP_ANIMATION_MARGIN = 20f;
     public final int DESTINATION_PERSISTENCE_TIME = 30; // in minutes
+    private final double CHOOSE_SAVED_PICKUP_ADDRESS = 300;
 
     public static Location myLocation;
 
@@ -482,6 +486,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public static boolean homeSwitcher;
     private boolean setPickupAddressZoomedOnce = false;
     private GoogleApiClient mGoogleApiClient;
+    private float previousZoomLevel = -1.0f;
 
 
     @SuppressLint("NewApi")
@@ -1850,8 +1855,9 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         return true;
                     }
                     else if(!TextUtils.isEmpty(arg0.getTitle()) || "recent".equalsIgnoreCase(arg0.getTitle())){
-                        CustomInfoWindow customIW = new CustomInfoWindow(HomeActivity.this, arg0.getTitle(), arg0.getSnippet());
-                        map.setInfoWindowAdapter(customIW);
+//                        CustomInfoWindow customIW = new CustomInfoWindow(HomeActivity.this, arg0.getTitle(), arg0.getSnippet());
+//                        map.setInfoWindowAdapter(customIW);
+
                         return false;
                     }
                     else {
@@ -1931,6 +1937,25 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }
+
+                @Override
+                public void onCameraPositionChanged(CameraPosition cameraPosition) {
+
+                    Log.v("camera position is", "--> "+cameraPosition.zoom);
+                    if(previousZoomLevel != cameraPosition.zoom) {
+                        if ((savedAddressState != HomeUtil.SavedAddressState.MARKER_WITH_TEXT) && cameraPosition.zoom > 15f) {
+                            homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, true);
+                            savedAddressState = HomeUtil.SavedAddressState.MARKER_WITH_TEXT;
+                        } else if ((savedAddressState != HomeUtil.SavedAddressState.MARKER) && (cameraPosition.zoom < 15f) && (cameraPosition.zoom > 10f)) {
+                            homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, false);
+                            savedAddressState = HomeUtil.SavedAddressState.MARKER;
+                        } else if (cameraPosition.zoom < 10f) {
+                            homeUtil.removeSavedAddress(map);
+                            savedAddressState = HomeUtil.SavedAddressState.BLANK;
+                        }
+                    }
+                    previousZoomLevel = cameraPosition.zoom;
                 }
             };
 
@@ -2507,7 +2532,28 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                             if (callRequestRide) {
                                 promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
-                                callAnAutoPopup(HomeActivity.this);
+
+                                SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), CHOOSE_SAVED_PICKUP_ADDRESS, true);
+                                if(searchResult != null) {
+                                    //textView.setText(searchResult.getName());
+                                    //Data.autoData.setPickupAddress(searchResult.getAddress());
+                                    new SavedAddressPickupDialog(HomeActivity.this, searchResult, new SavedAddressPickupDialog.Callback() {
+                                        @Override
+                                        public void onDialogDismiss() {
+                                            requestRideDriverCheck();
+                                        }
+
+                                        @Override
+                                        public void yesClicked(SearchResult searchResult) {
+                                            Data.autoData.setPickupLatLng(searchResult.getLatLng());
+                                            requestRideDriverCheck();
+                                        }
+                                    }).show();
+                                } else{
+                                    callAnAutoPopup(HomeActivity.this);
+                                }
+
+
 
                                 Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
                                 Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_IN_RIDE_CROSSED, 0);
@@ -5263,7 +5309,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         textView.setHint(getResources().getString(R.string.set_pickup_location));
                                         textView.setText(address);
                                         Data.autoData.setPickupAddress(address);
-                                        SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng);
+                                        SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng, 100, false);
                                         if(searchResult != null) {
                                             textView.setText(searchResult.getName());
                                             Data.autoData.setPickupAddress(searchResult.getAddress());
@@ -6116,38 +6162,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             btnOk.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(AppStatus.getInstance(activity).isOnline(activity)) {
+                    if(requestRideDriverCheck()){
                         dialog.dismiss();
-                        Bundle bundle = new Bundle();
-                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+FirebaseEvents.HOME_SCREEN+"_"
-                                +DIFFERENT_PICKUP_LOCATION_POPUP+"_"+OK, bundle);
-                        if (getFilteredDrivers() == 0) {
-                            noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
-                            specialPickupScreenOpened = false;
-                            passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                            switchPassengerScreen(passengerScreenMode);
-                        } else {
-                            initiateRequestRide(true);
-                            FlurryEventLogger.event(FINAL_CALL_RIDE);
-                        }
-                    } else{
-                        DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE,
-                                Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
-                                    @Override
-                                    public void positiveClick(View v) {
-                                        btnOk.performClick();
-                                    }
-
-                                    @Override
-                                    public void neutralClick(View v) {
-
-                                    }
-
-                                    @Override
-                                    public void negativeClick(View v) {
-
-                                    }
-                                });
                     }
                 }
 
@@ -6224,14 +6240,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             textMessage.setText("The pickup location you have set is different from your current location. Are you sure this is your pickup location?");
                             dialog.show();
                         } else {
-                            if (getFilteredDrivers() == 0) {
-                                noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
-                                specialPickupScreenOpened = false;
-                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                                switchPassengerScreen(passengerScreenMode);
-                            } else{
-                                initiateRequestRide(true);
-                            }
+                            requestRideDriverCheck();
                         }
                     }
                 }
@@ -6240,6 +6249,44 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private boolean requestRideDriverCheck(){
+        if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+            Bundle bundle = new Bundle();
+            MyApplication.getInstance().logEvent(TRANSACTION+"_"+FirebaseEvents.HOME_SCREEN+"_"
+                    +DIFFERENT_PICKUP_LOCATION_POPUP+"_"+OK, bundle);
+            if (getFilteredDrivers() == 0) {
+                noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
+                specialPickupScreenOpened = false;
+                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                switchPassengerScreen(passengerScreenMode);
+            } else {
+                initiateRequestRide(true);
+                FlurryEventLogger.event(FINAL_CALL_RIDE);
+                return true;
+            }
+        } else{
+            DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE,
+                    Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View v) {
+                            requestRideDriverCheck();
+                        }
+
+                        @Override
+                        public void neutralClick(View v) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View v) {
+
+                        }
+                    });
+        }
+        return false;
     }
 
     private int getFilteredDrivers(){
@@ -9148,7 +9195,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.clear();
             pokestopHelper.mapCleared();
             pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
-            homeUtil.displaySavedAddressesAsFlags(this, assl, map);
+            homeUtil.displaySavedAddressesAsFlags(this, assl, map, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -9321,7 +9368,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void onSuccess() {
                     try {
-                        homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map);
+                        homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, true);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -9367,4 +9414,5 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return mGoogleApiClient;
     }
 
+    private HomeUtil.SavedAddressState savedAddressState = HomeUtil.SavedAddressState.BLANK;
 }

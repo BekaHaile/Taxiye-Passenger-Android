@@ -5,11 +5,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#0000"
-    android:splitMotionEvents="false" >
+    android:splitMotionEvents="false">
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
+        android:layout_height="wrap_content"
         android:splitMotionEvents="false">
 
         <RelativeLayout
@@ -17,21 +17,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/background_white_map_place_info"
-            android:padding="10dp" 
-        android:splitMotionEvents="false">
+            android:padding="10dp"
+            android:splitMotionEvents="false">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" 
-        android:splitMotionEvents="false">
+                android:layout_height="wrap_content"
+                android:splitMotionEvents="false">
 
                 <TextView
                     android:id="@+id/textViewTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="100dp"
-                    android:maxWidth="300dp"
                     android:gravity="center"
+                    android:maxWidth="300dp"
+                    android:minWidth="100dp"
                     android:text="Title"
                     android:textColor="@color/white"
                     android:textSize="15sp"
@@ -41,10 +41,10 @@
                     android:id="@+id/snippet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="100dp"
-                    android:maxWidth="300dp"
                     android:layout_below="@+id/textViewTitle"
                     android:gravity="center"
+                    android:maxWidth="300dp"
+                    android:minWidth="100dp"
                     android:text="Snippet"
                     android:textColor="@color/white"
                     android:textSize="10sp" />

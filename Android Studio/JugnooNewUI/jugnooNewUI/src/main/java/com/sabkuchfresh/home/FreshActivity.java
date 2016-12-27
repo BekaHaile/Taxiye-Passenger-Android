@@ -2496,7 +2496,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             if(searchResultLocality != null && !TextUtils.isEmpty(searchResultLocality.getAddress())){
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {
-                SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng());
+                SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(), 100, false);
                 if(searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())){
                     setSearchResultToActVarsAndFetchData(searchResult, appType);
                 } else {
