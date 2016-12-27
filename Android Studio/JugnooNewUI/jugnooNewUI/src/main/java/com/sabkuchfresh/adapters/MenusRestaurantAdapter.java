@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -80,7 +81,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.possibleStatus = possibleStatus;
         timerHandler.postDelayed(timerRunnable, 1000);
     }
-
         Handler timerHandler = new Handler();
         Runnable timerRunnable = new Runnable() {
                 @Override
@@ -295,7 +295,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 position = vendorsComplete.size() > 0 ? position - 1 : position;
                 ViewHolder mHolder = ((ViewHolder) holder);
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
-
                 mHolder.textViewRestaurantName.setText(vendor.getName());
 
                 DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
@@ -370,8 +369,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                     }
                 });
-
-
                /* mHolder.textViewR1.setTextColor(activity.getResources().getColor(R.color.text_color_light_less));
                 mHolder.textViewR2.setTextColor(activity.getResources().getColor(R.color.text_color_light_less));
                 mHolder.textViewR3.setTextColor(activity.getResources().getColor(R.color.text_color_light_less));

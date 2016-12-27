@@ -35,6 +35,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
+import com.sabkuchfresh.adapters.MenusItemChargesAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressAdded;
@@ -48,6 +49,7 @@ import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
+import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SlotViewType;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -106,30 +108,20 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class FreshCheckoutMergedFragment extends Fragment implements FlurryEventNames, DeliverySlotsAdapter.Callback,
+public class MenusCheckoutMergedFragment extends Fragment implements FlurryEventNames, DeliverySlotsAdapter.Callback,
         FreshCartItemsAdapter.Callback, PromoCouponsAdapter.Callback {
 
-    private final String TAG = FreshCheckoutMergedFragment.class.getSimpleName();
+    private final String TAG = MenusCheckoutMergedFragment.class.getSimpleName();
     private LinearLayout linearLayoutRoot;
 
     private RelativeLayout relativeLayoutCartTop;
     private TextView textViewCartItems, textViewCartTotalUndiscount, textViewCartTotal;
-    private ImageView imageViewCartArrow, imageViewDeleteCart, imageViewCartSep, imageViewSep1, imageViewSep2,
-            imageViewSep3, imageViewSep4, imageViewSep5;
+    private ImageView imageViewCartArrow, imageViewDeleteCart, imageViewCartSep;
     private LinearLayout linearLayoutCartDetails, linearLayoutCartExpansion;
-    private RelativeLayout relativeLayoutDiscount, relativeLayoutDeliveryCharges,
-            relativeLayoutServiceTax, relativeLayoutVAT, relativeLayoutPackagingCharges,
-            relativeLayoutJugnooCash;
-    private TextView textViewDiscountValue, textViewDeliveryChargesValue,
-            textViewServiceTax, textViewServiceTaxValue, textViewVAT, textViewVATValue, textViewPackagingChargesValue,
-            textViewJugnooCashValue;
     private NonScrollListView listViewCart;
+    private NonScrollListView listViewMenusCharges;
+    private MenusItemChargesAdapter menusItemChargesAdapter;
     private FreshCartItemsAdapter freshCartItemsAdapter;
-
-    private LinearLayout linearLayoutDeliverySlot;
-    private RecyclerView recyclerViewDeliverySlots;
-    private TextView textViewNoDeliverySlot;
-    private DeliverySlotsAdapter deliverySlotsAdapter;
 
     private RelativeLayout relativeLayoutDeliveryAddress;
     private ImageView imageViewAddressType, imageViewDeliveryAddressForward;
@@ -173,7 +165,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private boolean orderPlaced = false;
     private boolean cartChangedRefreshCheckout = false;
 
-    public FreshCheckoutMergedFragment() {
+    public MenusCheckoutMergedFragment() {
     }
 
     private List<Product> productList = new ArrayList<>();
@@ -202,7 +194,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_fresh_checkout_merged, container, false);
+        rootView = inflater.inflate(R.layout.fragment_menus_checkout_merged, container, false);
 
         cartChangedRefreshCheckout = false;
         activity = (FreshActivity) getActivity();
@@ -275,7 +267,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         activity.setMenuRefreshLatLng(new LatLng(activity.getSelectedLatLng().latitude, activity.getSelectedLatLng().longitude));
 
-        ((TextView)rootView.findViewById(R.id.textViewDeliverySlot)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewPaymentVia)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
@@ -289,49 +280,29 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         imageViewCartArrow = (ImageView) rootView.findViewById(R.id.imageViewCartArrow);
         imageViewDeleteCart = (ImageView) rootView.findViewById(R.id.imageViewDeleteCart);
         imageViewCartSep = (ImageView) rootView.findViewById(R.id.imageViewCartSep);
-        imageViewSep1 = (ImageView) rootView.findViewById(R.id.imageViewSep1);
-        imageViewSep2 = (ImageView) rootView.findViewById(R.id.imageViewSep2);
-        imageViewSep3 = (ImageView) rootView.findViewById(R.id.imageViewSep3);
-        imageViewSep4 = (ImageView) rootView.findViewById(R.id.imageViewSep4);
-        imageViewSep5 = (ImageView) rootView.findViewById(R.id.imageViewSep5);
         linearLayoutCartExpansion = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartExpansion);
         linearLayoutCartDetails = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartDetails);
-        relativeLayoutDiscount = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDiscount);
-        relativeLayoutDeliveryCharges = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDeliveryCharges);
-        relativeLayoutPackagingCharges = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPackagingCharges);
-        relativeLayoutServiceTax = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutServiceTax);
-        relativeLayoutVAT = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutVAT);
-        relativeLayoutJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutJugnooCash);
-        textViewDiscountValue = (TextView) rootView.findViewById(R.id.textViewDiscountValue); textViewDiscountValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewDeliveryChargesValue = (TextView) rootView.findViewById(R.id.textViewDeliveryChargesValue); textViewDeliveryChargesValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewPackagingChargesValue = (TextView) rootView.findViewById(R.id.textViewPackagingChargesValue); textViewPackagingChargesValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewServiceTax = (TextView) rootView.findViewById(R.id.textViewServiceTax); textViewServiceTax.setTypeface(Fonts.mavenMedium(activity));
-        textViewServiceTaxValue = (TextView) rootView.findViewById(R.id.textViewServiceTaxValue); textViewServiceTaxValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewVAT = (TextView) rootView.findViewById(R.id.textViewVAT); textViewVAT.setTypeface(Fonts.mavenMedium(activity));
-        textViewVATValue = (TextView) rootView.findViewById(R.id.textViewVATValue); textViewVATValue.setTypeface(Fonts.mavenMedium(activity));
-        textViewJugnooCashValue = (TextView) rootView.findViewById(R.id.textViewJugnooCashValue); textViewJugnooCashValue.setTypeface(Fonts.mavenMedium(activity));
+/*
         ((TextView)rootView.findViewById(R.id.textViewDiscount)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewPackagingCharges)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewJugnooCash)).setTypeface(Fonts.mavenMedium(activity));
+*/
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
+        listViewMenusCharges = (NonScrollListView) rootView.findViewById(R.id.listViewMenusCharges);
+
+        ArrayList<String> list = new ArrayList<>();
+        list.add("charges");
+        list.add("charg");
+        list.add("charging");
+        list.addAll(list);
+
+        menusItemChargesAdapter = new MenusItemChargesAdapter(activity,list);
+        listViewMenusCharges.setAdapter(menusItemChargesAdapter);
+
         freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, true, this);
         listViewCart.setAdapter(freshCartItemsAdapter);
 
-        linearLayoutDeliverySlot = (LinearLayout) rootView.findViewById(R.id.linearLayoutDeliverySlot);
-        recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
-        recyclerViewDeliverySlots.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewDeliverySlots.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewDeliverySlots.setHasFixedSize(false);
-        deliverySlotsAdapter = new DeliverySlotsAdapter(activity, slots, this);
-        recyclerViewDeliverySlots.setAdapter(deliverySlotsAdapter);
-        textViewNoDeliverySlot = (TextView) rootView.findViewById(R.id.textViewNoDeliverySlot);
-        textViewNoDeliverySlot.setTypeface(Fonts.mavenMedium(activity));
-        textViewNoDeliverySlot.setVisibility(View.GONE);
-
-        if(type == AppConstant.ApplicationType.MENUS) {
-            linearLayoutDeliverySlot.setVisibility(View.GONE);
-        }
 
         textViewDeliveryInstructionsText = ((TextView)rootView.findViewById(R.id.textViewDeliveryInstructions));
         textViewDeliveryInstructionsText.setTypeface(Fonts.mavenMedium(activity));
@@ -528,102 +499,37 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
 
         if (promoAmount > 0) {
-            relativeLayoutDiscount.setVisibility(View.VISIBLE);
-            textViewDiscountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(promoAmount)));
-        } else {
-            relativeLayoutDiscount.setVisibility(View.GONE);
+            //String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(promoAmount))
         }
 
-        relativeLayoutDeliveryCharges.setVisibility(View.VISIBLE);
         if (deliveryCharges() > 0) {
-            textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
+            //activity.getResources().getColor(R.color.text_color)
             String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(deliveryCharges()));
-            textViewDeliveryChargesValue.setText(deliveryCharge);
         } else {
-            textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.green_rupee));
-            textViewDeliveryChargesValue.setText(R.string.free);
+            //activity.getResources().getColor(R.color.green_rupee)
+            //R.string.free
         }
 
-        if (packagingCharges() > 0) {
-            relativeLayoutPackagingCharges.setVisibility(View.VISIBLE);
-            textViewPackagingChargesValue.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(packagingCharges())));
-        } else {
-            relativeLayoutPackagingCharges.setVisibility(View.GONE);
-        }
-
-        if (serviceTax() > 0) {
-            relativeLayoutServiceTax.setVisibility(View.VISIBLE);
-            textViewServiceTax.setText(activity.getString(R.string.service_tax)+" @ "+Utils.getMoneyDecimalFormat().format(activity.getVendorOpened().getServiceTax())+"%");
-            textViewServiceTaxValue.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(serviceTax())));
-        } else {
-            relativeLayoutServiceTax.setVisibility(View.GONE);
-        }
-
-        if (vat() > 0) {
-            relativeLayoutVAT.setVisibility(View.VISIBLE);
-            textViewVAT.setText(activity.getString(R.string.vat)+" @ "+Utils.getMoneyDecimalFormat().format(activity.getVendorOpened().getValueAddedTax())+"%");
-            textViewVATValue.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(vat())));
-        } else {
-            relativeLayoutVAT.setVisibility(View.GONE);
-        }
 
         if (totalAmount() > 0 && jcUsed() > 0) {
-            relativeLayoutJugnooCash.setVisibility(View.VISIBLE);
-            textViewJugnooCashValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
-                    Utils.getMoneyDecimalFormat().format(jcUsed())));
-        } else {
-            relativeLayoutJugnooCash.setVisibility(View.GONE);
-        }
-
-        if(relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
-                || relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
-                || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
-                || relativeLayoutVAT.getVisibility() == View.VISIBLE
-                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            imageViewSep1.setVisibility(View.VISIBLE);
-        } else{
-            imageViewSep1.setVisibility(View.GONE);
-        }
-        if(relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
-                || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
-                || relativeLayoutVAT.getVisibility() == View.VISIBLE
-                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            imageViewSep2.setVisibility(View.VISIBLE);
-        } else{
-            imageViewSep2.setVisibility(View.GONE);
-        }
-        if(relativeLayoutServiceTax.getVisibility() == View.VISIBLE
-                || relativeLayoutVAT.getVisibility() == View.VISIBLE
-                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            imageViewSep3.setVisibility(View.VISIBLE);
-        } else{
-            imageViewSep3.setVisibility(View.GONE);
-        }
-        if(relativeLayoutVAT.getVisibility() == View.VISIBLE
-                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            imageViewSep4.setVisibility(View.VISIBLE);
-        } else{
-            imageViewSep4.setVisibility(View.GONE);
-        }
-        if(relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            imageViewSep5.setVisibility(View.VISIBLE);
-        } else{
-            imageViewSep5.setVisibility(View.GONE);
+//            String.format(activity.getResources().getString(R.string.rupees_value_format),
+//                    Utils.getMoneyDecimalFormat().format(jcUsed()))
         }
 
 
-        if(relativeLayoutDiscount.getVisibility() == View.VISIBLE
-                || relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
-                || relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
-                || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
-                || relativeLayoutVAT.getVisibility() == View.VISIBLE
-                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            linearLayoutCartDetails.setVisibility(View.VISIBLE);
-            imageViewCartSep.setVisibility(View.GONE);
-        } else {
-            linearLayoutCartDetails.setVisibility(View.GONE);
-            imageViewCartSep.setVisibility(View.VISIBLE);
-        }
+
+//        if(relativeLayoutDiscount.getVisibility() == View.VISIBLE
+//                || relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
+//                || relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
+//                || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
+//                || relativeLayoutVAT.getVisibility() == View.VISIBLE
+//                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
+//            linearLayoutCartDetails.setVisibility(View.VISIBLE);
+//            imageViewCartSep.setVisibility(View.GONE);
+//        } else {
+//            linearLayoutCartDetails.setVisibility(View.GONE);
+//            imageViewCartSep.setVisibility(View.VISIBLE);
+//        }
 
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
@@ -694,7 +600,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             activity.setPaymentOption(paymentOption);
         }
     };
-
 
 
     @Override
@@ -1185,30 +1090,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             public void onClick(View v) {
                                                 try {
                                                     int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                                                    String fragName = FreshCheckoutMergedFragment.class.getName();
-                                                    if(validStockCount == 0){
-                                                        if(appType == AppConstant.ApplicationType.MEALS){
-                                                            if(activity.isMealAddonItemsAvailable()){
-                                                                fragName = MealAddonItemsFragment.class.getName();
-                                                            } else {
-                                                                fragName = FreshCheckoutMergedFragment.class.getName();
-                                                            }
-                                                        } else if(appType == AppConstant.ApplicationType.GROCERY){
-                                                            fragName = FreshCheckoutMergedFragment.class.getName();
-                                                        } else if(appType == AppConstant.ApplicationType.MENUS){
-                                                            fragName = MenusCheckoutMergedFragment.class.getName();
-                                                        }else {
-                                                            fragName = FreshCheckoutMergedFragment.class.getName();
-                                                        }
-                                                    } else {
-                                                        if(appType == AppConstant.ApplicationType.MEALS && activity.isMealAddonItemsAvailable()){
-                                                            fragName = MealAddonItemsFragment.class.getName();
-                                                        } else if(appType == AppConstant.ApplicationType.MENUS){
-                                                            fragName = MenusCheckoutMergedFragment.class.getName();
-                                                        } else {
-                                                            fragName = FreshCheckoutMergedFragment.class.getName();
-                                                        }
-                                                    }
+                                                    String fragName = MenusCheckoutMergedFragment.class.getName();
                                                     activity.setRefreshCart(true);
                                                     activity.getSupportFragmentManager().popBackStack(fragName, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                                 } catch (Exception e) {
@@ -1503,7 +1385,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     public void onSlotSelected(int position, Slot slot) {
         FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
         activity.setSlotSelected(slot);
-        recyclerViewDeliverySlots.scrollToPosition(position);
     }
 
 
@@ -1790,27 +1671,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     activity.setSlotSelected(null);
                 }
             }
-
-            for (DeliverySlot deliverySlot : activity.getUserCheckoutResponse().getCheckoutData().getDeliverySlots()) {
-                int slotsEnabled = 0;
-                for (Slot slot : deliverySlot.getSlots()) {
-                    slot.setSlotViewType(SlotViewType.SLOT_TIME);
-                    slot.setDayName(deliverySlot.getDayName());
-                    slotsEnabled = slot.getIsActiveSlot() == 1 ? slotsEnabled + 1 : slotsEnabled;
-                    slots.add(slot);
-                    if ((activity.getSlotSelected() == null || activity.getSlotSelected().getIsActiveSlot() != 1)
-                            && slot.getIsActiveSlot() == 1) {
-                        activity.setSlotSelected(slot);
-                    }
-                }
-            }
-
-            if(slots.size() == 0){
-                textViewNoDeliverySlot.setVisibility(View.VISIBLE);
-            } else {
-                textViewNoDeliverySlot.setVisibility(View.GONE);
-            }
-            deliverySlotsAdapter.notifyDataSetChanged();
         }
     }
 
@@ -2050,5 +1910,4 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             return 0;
         }
     }
-
 }

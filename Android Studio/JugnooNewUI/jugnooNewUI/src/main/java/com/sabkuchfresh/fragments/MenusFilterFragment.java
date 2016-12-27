@@ -12,6 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.otto.Bus;
@@ -345,6 +347,16 @@ public class MenusFilterFragment extends Fragment{
 				activity.setSortBySelected(getSortBySelected());
 				activity.setDtSelected(getDtSelected());
 				activity.setMoSelected(getMoSelected());
+
+				for(String qf : quickFilterLocal){
+					FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Quick Filter", qf);
+				}
+				for(String cuisines : activity.getCuisinesSelected()){
+					FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Cuisines", cuisines);
+				}
+				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Sort By", String.valueOf(activity.getSortBySelected()));
+				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Min Order", String.valueOf(activity.getMoSelected()));
+				FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, "Delivery Time", String.valueOf(activity.getDtSelected()));
 				activity.performBackPressed();
 			}
 		});

@@ -32,6 +32,8 @@ public class MenusResponse {
 	@SerializedName("recent_orders_possible_status")
 	@Expose
 	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
+
+
 	/**
 	 *
 	 * @return
@@ -206,7 +208,8 @@ public class MenusResponse {
 		@SerializedName("display_address")
 		@Expose
 		private String restaurantAdd;
-		@SerializedName("close_in_buffer")
+
+		@SerializedName("buffer_time")
 		@Expose
 		private Long bufferTime;
 
@@ -469,7 +472,6 @@ public class MenusResponse {
 			this.freeDelivery = freeDelivery;
 		}
 
-
 		public String getRestaurantAddress() {
 			return restaurantAdd;
 		}
@@ -566,5 +568,4 @@ public class MenusResponse {
 			this.distance = distance;
 		}
 	}
-
 }

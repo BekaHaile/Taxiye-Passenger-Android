@@ -35,6 +35,9 @@ public class ProductsResponse {
 	@SerializedName("recent_orders_possible_status")
 	@Expose
 	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
+	@SerializedName("charges")
+	@Expose
+	private List<Charges> charges = new ArrayList<Charges>();
 
 	/**
 	 *
@@ -129,4 +132,98 @@ public class ProductsResponse {
 	public void setRecentOrdersPossibleStatus(List<String> recentOrdersPossibleStatus) {
 		this.recentOrdersPossibleStatus = recentOrdersPossibleStatus;
 	}
+
+	public List<Charges> getCharges() {
+		return charges;
+	}
+
+	public void setCharges(List<Charges> charges) {
+		this.charges = charges;
+	}
+
+	public class Charges
+	{
+		@SerializedName("id")
+		@Expose
+		private Integer id;
+		@SerializedName("text")
+		@Expose
+		private String text;
+		@SerializedName("type")
+		@Expose
+		private Integer type;
+		@SerializedName("is_percent")
+		@Expose
+		private Integer isPercent;
+		@SerializedName("value")
+		@Expose
+		private String value;
+		@SerializedName("include_value")
+		@Expose
+		private List<Integer> includeValue = new ArrayList<Integer>();
+
+
+
+		public Integer getId() {
+			return id;
+		}
+
+		public void setId(Integer id) {
+			this.id = id;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public void setText(String text) {
+			this.text = text;
+		}
+
+		public Integer getType() {
+			return type;
+		}
+
+		public void setType(Integer type) {
+			this.type = type;
+		}
+
+		public Integer getIsPercent() {
+			return isPercent;
+		}
+
+		public void setIsPercent(Integer isPercent) {
+			this.isPercent = isPercent;
+		}
+
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+
+		public List<Integer> getIncludeValue() {
+			return includeValue;
+		}
+	}
+
+
+	public enum ChargeType{
+		SUBTOTAL_LEVEL(0),
+		ITEM_LEVEL(1)
+		;
+
+		private int ordinal;
+		ChargeType(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
+		}
+	}
+
 }

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
+import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 
 import org.json.JSONArray;
@@ -905,7 +905,7 @@ public class WalletCore {
 
 
 
-	public void paymentOptionSelectionAtFreshCheckout(final FreshActivity activity, final PaymentOption paymentOption, final FreshCheckoutMergedFragment.CallbackPaymentOptionSelector callbackPaymentOptionSelector){
+	public void paymentOptionSelectionAtFreshCheckout(final FreshActivity activity, final PaymentOption paymentOption, final CallbackPaymentOptionSelector callbackPaymentOptionSelector){
 		try {
 			if(paymentOption == PaymentOption.PAYTM){
 				if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() > 0) {
