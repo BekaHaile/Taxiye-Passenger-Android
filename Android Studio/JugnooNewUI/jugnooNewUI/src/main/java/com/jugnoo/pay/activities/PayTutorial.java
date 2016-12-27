@@ -3,6 +3,7 @@ package com.jugnoo.pay.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
@@ -22,9 +23,12 @@ import android.widget.TextView;
 
 import com.jugnoo.pay.utils.PrefManager;
 
+import org.w3c.dom.Text;
+
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 import static product.clicklabs.jugnoo.Data.context;
 
@@ -81,6 +85,9 @@ public class PayTutorial extends AppCompatActivity {
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
         btnSkip = (Button) findViewById(R.id.btn_skip);
         btnNext = (Button) findViewById(R.id.btn_next);
+
+        btnNext.setTypeface(Fonts.mavenMedium(PayTutorial.this));
+        btnSkip.setTypeface(Fonts.mavenMedium(PayTutorial.this));
 
         // layouts of all welcome sliders
         // add few more layouts if you want
@@ -213,6 +220,31 @@ public class PayTutorial extends AppCompatActivity {
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             View view = layoutInflater.inflate(layouts[position], container, false);
+
+            TextView tv1, tv2, tv3, tv4;
+            if (position == 0)
+            {
+                tv1 = (TextView) view.findViewById(R.id.tv1);
+                tv2 = (TextView) view.findViewById(R.id.tv2);
+                tv3 = (TextView) view.findViewById(R.id.tv3);
+                tv4 = (TextView) view.findViewById(R.id.tv4);
+
+                tv1.setTypeface(Fonts.mavenMedium(PayTutorial.this));
+                tv2.setTypeface(Fonts.mavenMedium(PayTutorial.this));
+                tv3.setTypeface(Fonts.mavenMedium(PayTutorial.this));
+                tv4.setTypeface(Fonts.mavenMedium(PayTutorial.this));
+            }
+            else if(position == 1)
+            {
+                tv1 = (TextView) view.findViewById(R.id.tv1);
+                tv2 = (TextView) view.findViewById(R.id.tv2);
+
+                tv1.setTypeface(Fonts.mavenMedium(PayTutorial.this));
+                tv2.setTypeface(Fonts.mavenMedium(PayTutorial.this));
+            }
+
+            view.setLayoutParams(new LinearLayout.LayoutParams(ViewPager.LayoutParams.MATCH_PARENT, ViewPager.LayoutParams.MATCH_PARENT));
+            ASSL.DoMagic(view);
             container.addView(view);
 
             return view;

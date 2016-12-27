@@ -13,6 +13,7 @@
         android:layout_marginBottom="@dimen/px_32"/>
 
     <TextView
+        android:id="@+id/tv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_46"
@@ -24,6 +25,7 @@
     <!--android:layout_width="202.5dp"-->
 
     <TextView
+        android:id="@+id/tv2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_size_32"
@@ -33,6 +35,7 @@
         android:layout_marginBottom="8px"/>
 
     <TextView
+        android:id="@+id/tv3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/bank_grade_security"
@@ -42,6 +45,7 @@
         />
 
     <TextView
+        android:id="@+id/tv4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/make_payment_with_mpin"
