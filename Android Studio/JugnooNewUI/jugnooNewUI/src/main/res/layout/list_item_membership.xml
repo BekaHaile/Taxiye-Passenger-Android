@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/llContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/px_34"
+        android:layout_marginTop="@dimen/px_30"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvOffering"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Autos"
+            android:textColor="@color/theme_color"
+            android:textSize="@dimen/text_size_30" />
+
+        <TextView
+            android:id="@+id/tvBenefitName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px_25"
+            android:text="Unlimited Free Deliveries"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_30" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="@dimen/px_75"
+        android:layout_height="@dimen/px_2"
+        android:background="@color/apply_btn_normal"
+        android:layout_below="@+id/llContainer"
+        android:layout_alignLeft="@+id/llContainer"
+        android:layout_alignStart="@+id/llContainer"
+        android:layout_marginLeft="108px"
+        android:layout_marginStart="108px"
+        android:layout_marginTop="@dimen/px_40"/>
+
+</RelativeLayout>

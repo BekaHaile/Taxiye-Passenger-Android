@@ -74,8 +74,10 @@ public class UserData {
 
 	private ArrayList<SearchResult> searchResults = new ArrayList<>();
 	private ArrayList<SearchResult> searchResultsRecent = new ArrayList<>();
+	private ArrayList<Subscription> subscriptions;
 
-	private int showHomeScreen;
+	private int showHomeScreen, hasSubscription;
+	private String subscriptionAutosTxt, subscriptionMealsTxt, subscriptionFreshTxt, subscriptionTitle;
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -93,7 +95,8 @@ public class UserData {
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
 					int inviteFriendButton, String defaultClientId,
-					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen){
+					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int hasSubscription,
+					String subscriptionAutosTxt, String subscriptionMealsTxt, String subscriptionFreshTxt, String subscriptionTitle){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -166,6 +169,11 @@ public class UserData {
 		this.topupCardEnabled = topupCardEnabled;
 
 		this.showHomeScreen = showHomeScreen;
+		this.hasSubscription = hasSubscription;
+		this.subscriptionAutosTxt = subscriptionAutosTxt;
+		this.subscriptionFreshTxt = subscriptionFreshTxt;
+		this.subscriptionMealsTxt = subscriptionMealsTxt;
+		this.subscriptionTitle = subscriptionTitle;
 	}
 
 	private void checkUserImage(){
@@ -899,7 +907,53 @@ public class UserData {
 		this.showHomeScreen = showHomeScreen;
 	}
 
+	public ArrayList<Subscription> getSubscriptions() {
+		return subscriptions;
+	}
 
+	public void setSubscriptions(ArrayList<Subscription> subscriptions) {
+		this.subscriptions = subscriptions;
+	}
+
+	public int getHasSubscription() {
+		return hasSubscription;
+	}
+
+	public void setHasSubscription(int hasSubscription) {
+		this.hasSubscription = hasSubscription;
+	}
+
+	public String getSubscriptionAutosTxt() {
+		return subscriptionAutosTxt;
+	}
+
+	public void setSubscriptionAutosTxt(String subscriptionAutosTxt) {
+		this.subscriptionAutosTxt = subscriptionAutosTxt;
+	}
+
+	public String getSubscriptionFreshTxt() {
+		return subscriptionFreshTxt;
+	}
+
+	public void setSubscriptionFreshTxt(String subscriptionFreshTxt) {
+		this.subscriptionFreshTxt = subscriptionFreshTxt;
+	}
+
+	public String getSubscriptionMealsTxt() {
+		return subscriptionMealsTxt;
+	}
+
+	public void setSubscriptionMealsTxt(String subscriptionMealsTxt) {
+		this.subscriptionMealsTxt = subscriptionMealsTxt;
+	}
+
+	public String getSubscriptionTitle() {
+		return subscriptionTitle;
+	}
+
+	public void setSubscriptionTitle(String subscriptionTitle) {
+		this.subscriptionTitle = subscriptionTitle;
+	}
 
 	//	"meals_enabled": 1,
 //			"fresh_enabled": 1,

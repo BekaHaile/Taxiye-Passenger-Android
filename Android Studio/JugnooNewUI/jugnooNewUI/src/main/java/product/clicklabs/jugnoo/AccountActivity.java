@@ -92,7 +92,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
-    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer;
+    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer, rlJugnooStar;
     NonScrollListView listViewSavedLocations;
     RelativeLayout relativeLayoutAddNewAddress;
     SavedPlacesAdapter savedPlacesAdapter;
@@ -232,6 +232,9 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
         relativeLayoutAddressBook = (RelativeLayout) findViewById(R.id.relativeLayoutAddressBook);
         ((TextView)findViewById(R.id.textViewAddressBook)).setTypeface(Fonts.mavenMedium(this));
+
+        rlJugnooStar = (RelativeLayout) findViewById(R.id.rlJugnooStar);
+        ((TextView)findViewById(R.id.tvJugnooStar)).setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
@@ -635,6 +638,14 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             @Override
             public void onClick(View v) {
                 openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, true);
+            }
+        });
+
+        rlJugnooStar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this, JugnooStarSubscribedActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
 

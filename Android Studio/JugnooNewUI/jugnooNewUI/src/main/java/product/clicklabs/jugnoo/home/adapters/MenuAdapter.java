@@ -208,6 +208,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
 
+                } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_star_selector);
+                    if(Data.userData.getHasSubscription() == 1){
+                        hideLayout(holder.relative);
+                    }
                 } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_refer_a_driver_selector);
                    /* try {
@@ -592,7 +597,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.RIDE_HISTORY, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Ride History");
             } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
-                activity.startActivity(new Intent(activity, JugnooStarActivity.class));
+                activity.startActivity(new Intent(activity, SupportActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE + "_" + FirebaseEvents.MENU + "_" + FirebaseEvents.SUPPORT, bundle);
@@ -604,6 +609,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.ABOUT, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "About");
+            } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(tag)){
+                activity.startActivity(new Intent(activity, JugnooStarActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.JUGNOO_STAR, bundle);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Jugnoo star");
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 drawerLayout.closeDrawer(GravityCompat.START);

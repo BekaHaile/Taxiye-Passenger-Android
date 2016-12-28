@@ -316,5 +316,11 @@
     <dimen name="sp_19">
         19sp
     </dimen>
+    <dimen name="px_270">270px</dimen>
+    <dimen name="px_135">135px</dimen>
+    <dimen name="px_46">46px</dimen>
+    <dimen name="px_34">34px</dimen>
+    <dimen name="px_28">28px</dimen>
+    <dimen name="px_75">75px</dimen>
 
 </resources>

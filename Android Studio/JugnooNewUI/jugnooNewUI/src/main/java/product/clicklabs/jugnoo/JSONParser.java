@@ -13,6 +13,7 @@ import com.sabkuchfresh.datastructure.PopupData;
 import com.sabkuchfresh.retrofit.model.Store;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.ReferralMessages;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.datastructure.Subscription;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -220,6 +222,12 @@ public class JSONParser implements Constants {
         int topupCardEnabled = userData.optInt(KEY_TOPUP_CARD_ENABLED, 0);
 
         int showHomeScreen = userData.optInt(SHOW_HOME_SCREEN, 0);
+        int hasSubscription = userData.optInt(HAS_SUBSCRIPTION, 0);
+        String subscriptionAutosTxt = userData.optString("sub_text_autos", "");
+        String subscriptionMealsTxt = userData.optString("sub_text_meals", "");
+        String subscriptionFreshTxt = userData.optString("sub_text_fresh", "");
+        String subscriptionTitle = userData.optString("subscription_title", context.getResources().getString(R.string.jugnoo_Star_title));
+
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance,
@@ -234,7 +242,10 @@ public class JSONParser implements Constants {
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled,
                 inviteFriendButton, defaultClientId, integratedJugnooEnabled,
-                topupCardEnabled, showHomeScreen);
+                topupCardEnabled, showHomeScreen, hasSubscription, subscriptionAutosTxt, subscriptionMealsTxt,
+                subscriptionFreshTxt, subscriptionTitle);
+
+        Data.userData.setSubscriptions((ArrayList<Subscription>) loginUserData.getSubscription());
 
 
         Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
@@ -270,6 +281,8 @@ public class JSONParser implements Constants {
 //            } else {
 //                Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, "");
 //            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1424,10 +1437,6 @@ public class JSONParser implements Constants {
         }
         return emergencyContactsList;
     }
-
-
-
-
 
 
 

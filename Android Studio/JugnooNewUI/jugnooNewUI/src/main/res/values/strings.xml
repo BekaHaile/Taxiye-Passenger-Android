@@ -1400,5 +1400,9 @@
     <string name="accept_online_payment">Accept Online Payment</string>
     <string name="jugnoo_star">Jugnoo star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>
+    <string name="join_now">Join Now</string>
+    <string name="current_membership_plan">Current membership plan</string>
+    <string name="membership_expires_on">Membership expires on</string>
+    <string name="i_dont_want_star"><u>I don\'t want to be a Star anymore</u></string>
 
 </resources>

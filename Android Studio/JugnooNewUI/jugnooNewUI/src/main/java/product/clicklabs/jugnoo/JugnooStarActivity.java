@@ -1,12 +1,20 @@
 package product.clicklabs.jugnoo;
 
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import product.clicklabs.jugnoo.adapters.StarBenefitsAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -19,9 +27,13 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class JugnooStarActivity extends BaseActivity implements View.OnClickListener{
 
-    private RelativeLayout relative;
-    private TextView textViewTitle;
-    private ImageView imageViewBack;
+    private RelativeLayout relative, rlPlan1, rlPlan2;
+    private TextView textViewTitle, tvSubTitle;
+    private ImageView imageViewBack, ivRadio1, ivRadio2;
+    private TextView tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2;
+    private RecyclerView rvBenefits;
+    private StarBenefitsAdapter starBenefitsAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +45,77 @@ public class JugnooStarActivity extends BaseActivity implements View.OnClickList
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         imageViewBack.setOnClickListener(this);
+
+        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR);
+        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
+
+        tvSubTitle = (TextView) findViewById(R.id.tvSubTitle); tvSubTitle.setTypeface(Fonts.avenirMedium(this));
+        rlPlan1 = (RelativeLayout) findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(this); rlPlan1.setVisibility(View.GONE);
+        rlPlan2 = (RelativeLayout) findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(this); rlPlan2.setVisibility(View.GONE);
+        ivRadio1 = (ImageView) findViewById(R.id.ivRadio1);
+        ivRadio2 = (ImageView) findViewById(R.id.ivRadio2);
+        tvActualAmount1 = (TextView) findViewById(R.id.tvActualAmount1); tvActualAmount1.setTypeface(Fonts.mavenMedium(this));
+        tvActualAmount2 = (TextView) findViewById(R.id.tvActualAmount2); tvActualAmount2.setTypeface(Fonts.mavenMedium(this));
+        tvAmount1 = (TextView) findViewById(R.id.tvAmount1); tvAmount1.setTypeface(Fonts.avenirNext(this));
+        tvAmount2 = (TextView) findViewById(R.id.tvAmount2); tvAmount2.setTypeface(Fonts.avenirNext(this));
+        tvPeriod1 = (TextView) findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.avenirMedium(this));
+        tvPeriod2 = (TextView) findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.avenirMedium(this));
+        rvBenefits = (RecyclerView) findViewById(R.id.rvBenefits);
+        rvBenefits.setLayoutManager(new LinearLayoutManager(this));
+        rvBenefits.setItemAnimator(new DefaultItemAnimator());
+        rvBenefits.setHasFixedSize(false);
+
+        try {
+            tvSubTitle.setText(Data.userData.getSubscriptionTitle());
+            if(Data.userData.getSubscriptions() != null){
+                for(int i=0; i<Data.userData.getSubscriptions().size(); i++) {
+                    if (i == 0) {
+                        rlPlan1.setVisibility(View.VISIBLE);
+                        if(Data.userData.getSubscriptions().get(i).getInitialAmount() != null && Data.userData.getSubscriptions().get(i).getInitialAmount() !=0){
+                            tvActualAmount1.setVisibility(View.VISIBLE);
+                            tvActualAmount1.setText(Data.userData.getSubscriptions().get(i).getInitialAmount());
+                            tvActualAmount1.setPaintFlags(tvActualAmount1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        }
+                        tvAmount1.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
+                                String.valueOf(Data.userData.getSubscriptions().get(i).getAmount())));
+                        tvPeriod1.setText(String.valueOf(Data.userData.getSubscriptions().get(i).getPlanDuration()));
+                    } else if (i == 1) {
+                        rlPlan2.setVisibility(View.VISIBLE);
+                        if(Data.userData.getSubscriptions().get(i).getInitialAmount() != null && Data.userData.getSubscriptions().get(i).getInitialAmount() !=0){
+                            tvActualAmount2.setVisibility(View.VISIBLE);
+                            tvActualAmount2.setText(String.valueOf(Data.userData.getSubscriptions().get(i).getInitialAmount()));
+                            tvActualAmount2.setPaintFlags(tvActualAmount2.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                        }
+                        tvAmount2.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
+                                String.valueOf(Data.userData.getSubscriptions().get(i).getAmount())));
+                        tvPeriod2.setText(String.valueOf(Data.userData.getSubscriptions().get(i).getPlanDuration()));
+                    }
+                }
+            }
+
+            String tempStr = Data.userData.getSubscriptionAutosTxt()+";;;"+Data.userData.getSubscriptionFreshTxt()+";;;"+Data.userData.getSubscriptionMealsTxt();
+            String[] strArray = tempStr.split(";;;");
+            ArrayList<String> benefits = new ArrayList<>(Arrays.asList(strArray));
+
+            starBenefitsAdapter = new StarBenefitsAdapter(JugnooStarActivity.this, benefits);
+            rvBenefits.setAdapter(starBenefitsAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void selectedPlan(RelativeLayout rlPlan, ImageView ivRadio){
+
+        rlPlan1.setBackgroundResource(R.drawable.capsule_white_stroke);
+        rlPlan2.setBackgroundResource(R.drawable.capsule_white_stroke);
+        ivRadio1.setImageResource(R.drawable.ic_radio_button_normal);
+        ivRadio2.setImageResource(R.drawable.ic_radio_button_normal);
+
+        rlPlan.setBackgroundResource(R.drawable.capsule_white_theme_stroke);
+        ivRadio.setImageResource(R.drawable.ic_radio_button_selected);
+
     }
 
     public void performBackPressed() {
@@ -48,7 +128,13 @@ public class JugnooStarActivity extends BaseActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.imageViewBack:
                 performBackPressed();
-            break;
+                break;
+            case R.id.rlPlan1:
+                selectedPlan(rlPlan1, ivRadio1);
+                break;
+            case R.id.rlPlan2:
+                selectedPlan(rlPlan2, ivRadio2);
+                break;
         }
     }
 }
