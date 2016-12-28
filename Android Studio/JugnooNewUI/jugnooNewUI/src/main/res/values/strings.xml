@@ -1406,5 +1406,6 @@
     <string name="GotIt">Got It</string>
 
     <string name="accept_online_payment">Accept Online Payment</string>
+    <string name="order_placed_redirecting_you_to_payment">Order placed\\nRedirecting you to payment</string>
 
 </resources>

@@ -1,11 +1,13 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -36,7 +38,6 @@ import com.google.gson.Gson;
 import com.jugnoo.pay.activities.MainActivity;
 import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
-import com.jugnoo.pay.models.SendMoneyResponse;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
@@ -1129,41 +1130,24 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                 final int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     if(jObj.has(Constants.KEY_PAYMENT_OBJECT)){
-                                        paymentObject = placeOrderResponse.getPaymentObject();
-                                        activity.getPaySDKUtils().openSendMoneyPage(activity, placeOrderResponse.getPaymentObject());
-                                    } else {
-
-                                    }
-                                    orderPlaced = true;
-                                    activity.saveCheckoutData(true);
-                                    long time = 0L;
-                                    Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
-                                    activity.resumeMethod();
-
-                                    int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                                    String deliverySlot = "", deliveryDay = "";
-                                    boolean showDeliverySlot = true;
-                                    if(type == AppConstant.ApplicationType.MENUS){
-                                        showDeliverySlot = false;
-                                    } else {
-                                        deliverySlot = DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getStartTime())
-                                                + " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime());
-                                        deliveryDay = activity.getSlotSelected().getDayName();
-                                    }
-                                    String restaurantName = "";
-                                    if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null){
-                                        restaurantName = activity.getVendorOpened().getName();
-                                    }
-                                    new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
-                                        @Override
-                                        public void onDismiss() {
-                                            activity.orderComplete();
+                                        FreshCheckoutMergedFragment.this.placeOrderResponse = placeOrderResponse;
+                                        final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstanceCard(activity,
+                                                activity.getString(R.string.order_placed_redirecting_you_to_payment), true);
+                                        if(progressDialog != null) {
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if (progressDialog != null) {
+                                                        progressDialog.dismiss();
+                                                    }
+                                                    activity.getPaySDKUtils().openSendMoneyPage(activity,
+                                                            FreshCheckoutMergedFragment.this.placeOrderResponse.getPaymentObject());
+                                                }
+                                            }, 3000);
                                         }
-                                    }).show(String.valueOf(placeOrderResponse.getOrderId()),
-                                            deliverySlot, deliveryDay, showDeliverySlot, restaurantName);
-                                    activity.setSelectedPromoCoupon(noSelectionCoupon);
-                                    flurryEventPlaceOrder(placeOrderResponse);
-
+                                    } else {
+                                        orderPlacedSuccess(placeOrderResponse);
+                                    }
                                 } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
                                     final String message1 = jObj.optString(Constants.KEY_MESSAGE, "");
                                     final double userDebt = jObj.optDouble(Constants.KEY_USER_DEBT, 0);
@@ -1313,6 +1297,37 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 });
     }
 
+    private void orderPlacedSuccess(PlaceOrderResponse placeOrderResponse){
+        orderPlaced = true;
+        activity.saveCheckoutData(true);
+        long time = 0L;
+        Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
+        activity.resumeMethod();
+
+        int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+        String deliverySlot = "", deliveryDay = "";
+        boolean showDeliverySlot = true;
+        if(type == AppConstant.ApplicationType.MENUS){
+            showDeliverySlot = false;
+        } else {
+            deliverySlot = DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getStartTime())
+                    + " - " + DateOperations.convertDayTimeAPViaFormat(activity.getSlotSelected().getEndTime());
+            deliveryDay = activity.getSlotSelected().getDayName();
+        }
+        String restaurantName = "";
+        if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null){
+            restaurantName = activity.getVendorOpened().getName();
+        }
+        new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+            @Override
+            public void onDismiss() {
+                activity.orderComplete();
+            }
+        }).show(String.valueOf(placeOrderResponse.getOrderId()),
+                deliverySlot, deliveryDay, showDeliverySlot, restaurantName);
+        activity.setSelectedPromoCoupon(noSelectionCoupon);
+        flurryEventPlaceOrder(placeOrderResponse);
+    }
 
     private void flurryEventPlaceOrder(PlaceOrderResponse placeOrderResponse){
         try {
@@ -2116,7 +2131,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
 
-    private SendMoneyResponse.TxnDetails paymentObject;
+    private PlaceOrderResponse placeOrderResponse;
 
     public void apiPlaceOrderPayCallback(final MessageRequest message){
         try {
@@ -2124,7 +2139,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 DialogPopup.showLoadingDialog(activity, "");
                 HashMap<String, String> params = new HashMap<>();
 
-                params.put(Constants.KEY_ORDER_ID, String.valueOf(paymentObject.getOrderId()));
+                params.put(Constants.KEY_ORDER_ID, String.valueOf(placeOrderResponse.getPaymentObject().getOrderId()));
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 if (message != null) {
                     params.put(Constants.KEY_MESSAGE, message.toString());
@@ -2137,7 +2152,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         try {
                             int flag = commonResponse.getFlag();
                             if (flag == com.jugnoo.pay.utils.ApiResponseFlags.TXN_COMPLETED.getOrdinal()) {
-
+                                orderPlacedSuccess(placeOrderResponse);
                             }
                             else if (flag == com.jugnoo.pay.utils.ApiResponseFlags.TXN_FAILED.getOrdinal()) {
 
