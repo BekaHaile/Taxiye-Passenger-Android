@@ -3,6 +3,7 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -526,6 +527,9 @@ public class SubItem {
     }
 
     public List<Tax> getTaxes() {
+        if(taxes == null){
+            taxes = new ArrayList<>();
+        }
         return taxes;
     }
 
@@ -535,6 +539,12 @@ public class SubItem {
 
 
     public class Tax {
+        public Tax(){}
+        public Tax(String key, Double value) {
+            this.key = key;
+            this.value = value;
+        }
+
         @SerializedName("key")
         @Expose
         private String key;

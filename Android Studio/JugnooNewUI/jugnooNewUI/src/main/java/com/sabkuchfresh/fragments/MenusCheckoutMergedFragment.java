@@ -9,9 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -51,7 +48,6 @@ import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
-import com.sabkuchfresh.retrofit.model.SlotViewType;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.utils.AppConstant;
@@ -64,6 +60,8 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -157,7 +155,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     private FreshActivity activity;
 
     // for payment screen
-    private double subTotalAmount = 0;
+    private double subTotalAmount = 0, totalTaxAmount = 0d;
     private double promoAmount = 0;
 
     private Bus mBus;
@@ -170,6 +168,8 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private List<Product> productList = new ArrayList<>();
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
+
+    private ArrayList<SubItem.Tax> taxList = new ArrayList<>();
 
     private CheckoutSaveData checkoutSaveData;
     private int type;
@@ -270,7 +270,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         ((TextView)rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewPaymentVia)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
-//        ((TextView)rootView.findViewById(R.id.textViewDeliveryInstructions)).setTypeface(Fonts.mavenMedium(activity));
 
 
         relativeLayoutCartTop = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCartTop);
@@ -282,21 +281,10 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         imageViewCartSep = (ImageView) rootView.findViewById(R.id.imageViewCartSep);
         linearLayoutCartExpansion = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartExpansion);
         linearLayoutCartDetails = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartDetails);
-/*
-        ((TextView)rootView.findViewById(R.id.textViewDiscount)).setTypeface(Fonts.mavenMedium(activity));
-        ((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenMedium(activity));
-        ((TextView)rootView.findViewById(R.id.textViewPackagingCharges)).setTypeface(Fonts.mavenMedium(activity));
-        ((TextView)rootView.findViewById(R.id.textViewJugnooCash)).setTypeface(Fonts.mavenMedium(activity));
-*/
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
         listViewMenusCharges = (NonScrollListView) rootView.findViewById(R.id.listViewMenusCharges);
 
-        ArrayList<String> list = new ArrayList<>();
-        list.add("charges");
-        list.add("charg");
-        list.add("charging");
-
-        menusItemChargesAdapter = new MenusItemChargesAdapter(activity,list);
+        menusItemChargesAdapter = new MenusItemChargesAdapter(activity, taxList);
         listViewMenusCharges.setAdapter(menusItemChargesAdapter);
 
         freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, true, this);
@@ -463,6 +451,13 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         checkoutSaveData = activity.getCheckoutSaveData();
         activity.setSplInstr(checkoutSaveData.getSpecialInstructions());
 
+        Collections.sort(activity.getProductsResponse().getCharges(), new Comparator<ProductsResponse.Charges>() {
+            @Override
+            public int compare(ProductsResponse.Charges lhs, ProductsResponse.Charges rhs) {
+                return lhs.getIncludeValue().size() - rhs.getIncludeValue().size();
+            }
+        });
+
         updateAddressView();
 
         updateCartDataView();
@@ -494,41 +489,96 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         return rootView;
     }
 
+
+    private Double getCalculatedChargesSubItem(SubItem subItem, ProductsResponse.Charges charges, List<ProductsResponse.Charges> chargesList, double value){
+        if (charges.getIsPercent() == 1) {
+            double percentVal = (subItem.getPrice() * (double) subItem.getSubItemQuantitySelected());
+            for (Integer pos : charges.getIncludeValue()) {
+                try {
+                    ProductsResponse.Charges chargesPos = chargesList.get(chargesList.indexOf(activity.getProductsResponse().new Charges(pos)));
+                    double valuePos = 0d;
+                    for (SubItem.Tax tax : subItem.getTaxes()) {
+                        if (tax.getKey().equalsIgnoreCase(chargesPos.getValue())) {
+                            valuePos = tax.getValue();
+                            break;
+                        }
+                    }
+                    percentVal = percentVal + getCalculatedChargesSubItem(subItem, chargesPos, chargesList, valuePos);
+                } catch (Exception e) {
+                }
+            }
+            return (percentVal * (value / 100d));
+        } else {
+            return ((double) subItem.getSubItemQuantitySelected() * value);
+        }
+    }
+
+    private Double getCalculatedCharges(double amount, ProductsResponse.Charges charges, List<ProductsResponse.Charges> chargesList){
+        if(charges.getType() == ProductsResponse.ChargeType.SUBTOTAL_LEVEL.getOrdinal()) {
+            if (charges.getIsPercent() == 1) {
+                double percentVal = amount;
+                for (Integer pos : charges.getIncludeValue()) {
+                    try {
+                        ProductsResponse.Charges chargesPos = chargesList.get(chargesList.indexOf(activity.getProductsResponse().new Charges(pos)));
+                        percentVal = percentVal + getCalculatedCharges(amount, chargesPos, chargesList);
+                    } catch (Exception e) {
+                    }
+                }
+                return (percentVal * (Double.parseDouble(charges.getValue()) / 100d));
+            } else {
+                return (Double.parseDouble(charges.getValue()));
+            }
+        } else if(charges.getType() == ProductsResponse.ChargeType.ITEM_LEVEL.getOrdinal()) {
+            double totalCharge = 0d;
+            for (SubItem subItem : activity.subItemsInCart) {
+                SubItem.Tax taxMatched = null;
+                for (SubItem.Tax tax : subItem.getTaxes()) {
+                    if (tax.getKey().equalsIgnoreCase(charges.getValue())) {
+                        taxMatched = tax;
+                        break;
+                    }
+                }
+                if (taxMatched != null) {
+                    totalCharge = totalCharge + getCalculatedChargesSubItem(subItem, charges, chargesList, taxMatched.getValue());
+                }
+            }
+            return totalCharge;
+        } else {
+            return 0d;
+        }
+    }
+
+
     private void updateCartUI() {
+        taxList.clear();
+
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
 
+        SubItem subItemTemp = new SubItem();
         if (promoAmount > 0) {
-            //String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(promoAmount))
+            taxList.add(subItemTemp.new Tax(getString(R.string.discount), promoAmount));
         }
 
-        if (deliveryCharges() > 0) {
-            //activity.getResources().getColor(R.color.text_color)
-            String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(deliveryCharges()));
-        } else {
-            //activity.getResources().getColor(R.color.green_rupee)
-            //R.string.free
+        totalTaxAmount = 0d;
+        for(ProductsResponse.Charges charges : activity.getProductsResponse().getCharges()){
+            SubItem.Tax tax = subItemTemp.new Tax(charges.getText(), getCalculatedCharges(subTotalAmount, charges, activity.getProductsResponse().getCharges()));
+            taxList.add(tax);
+            totalTaxAmount = totalTaxAmount + tax.getValue();
         }
-
 
         if (totalAmount() > 0 && jcUsed() > 0) {
-//            String.format(activity.getResources().getString(R.string.rupees_value_format),
-//                    Utils.getMoneyDecimalFormat().format(jcUsed()))
+            taxList.add(subItemTemp.new Tax(getString(R.string.jugnoo_cash), jcUsed()));
         }
 
+        menusItemChargesAdapter.notifyDataSetChanged();
 
-
-//        if(relativeLayoutDiscount.getVisibility() == View.VISIBLE
-//                || relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
-//                || relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
-//                || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
-//                || relativeLayoutVAT.getVisibility() == View.VISIBLE
-//                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-//            linearLayoutCartDetails.setVisibility(View.VISIBLE);
-//            imageViewCartSep.setVisibility(View.GONE);
-//        } else {
-//            linearLayoutCartDetails.setVisibility(View.GONE);
-//            imageViewCartSep.setVisibility(View.VISIBLE);
-//        }
+        if(taxList.size() > 0){
+            linearLayoutCartDetails.setVisibility(View.VISIBLE);
+            imageViewCartSep.setVisibility(View.GONE);
+        } else {
+            linearLayoutCartDetails.setVisibility(View.GONE);
+            imageViewCartSep.setVisibility(View.VISIBLE);
+        }
 
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
@@ -1831,16 +1881,12 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
 
-    private double netAmountWOTaxes(){
-        return subTotalAmount + packagingCharges();
-    }
-
     private double totalUndiscounted(){
         return totalAmount() + promoAmount;
     }
 
     private double totalAmount(){
-        double totalAmount = netAmountWOTaxes() + serviceTax() + vat() + deliveryCharges() - promoAmount;
+        double totalAmount = subTotalAmount + totalTaxAmount - promoAmount;
         if(totalAmount < 0) {
             totalAmount = 0;
         }
@@ -1863,50 +1909,4 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
-    private double deliveryCharges(){
-        return activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
-    }
-
-    private double packagingCharges(){
-        if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
-                && (activity.getVendorOpened().getPackingCharges() != null || activity.getVendorOpened().getPackagingChargesInPercent() != null)){
-            if((activity.getVendorOpened().getPackagingChargesInPercent() != null) && (activity.getVendorOpened().getPackagingChargesInPercent() != 0)){
-                return subTotalAmount * (activity.getVendorOpened().getPackagingChargesInPercent()/100d);
-            }
-            else{
-                return activity.getVendorOpened().getPackingCharges();
-            }
-        }
-        else{
-            return 0;
-        }
-    }
-
-/*
-    private double packagingCharges(){
-        if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
-                && activity.getVendorOpened().getPackingCharges() != null){
-            return activity.getVendorOpened().getPackingCharges();
-        } else {
-            return 0;
-        }
-    }*/
-
-    private double serviceTax(){
-        if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
-                && activity.getVendorOpened().getServiceTax() != null){
-            return netAmountWOTaxes() * (activity.getVendorOpened().getServiceTax()/100d);
-        } else {
-            return 0;
-        }
-    }
-
-    private double vat(){
-        if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
-                && activity.getVendorOpened().getValueAddedTax() != null){
-            return netAmountWOTaxes() * (activity.getVendorOpened().getValueAddedTax()/100d);
-        } else {
-            return 0;
-        }
-    }
 }

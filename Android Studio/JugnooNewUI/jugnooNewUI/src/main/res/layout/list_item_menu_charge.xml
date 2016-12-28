@@ -5,10 +5,10 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutMenusItemCharges"
         android:layout_width="match_parent"
-        android:layout_height="82px">
+        android:layout_height="50px">
 
         <TextView
-            android:id="@+id/textViewMenusItemCharge"
+            android:id="@+id/textViewMenusItemChargeName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -16,7 +16,7 @@
             android:gravity="center_vertical"
             android:text="@string/discount"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_30"
+            android:textSize="22px"
             />
 
 
@@ -31,7 +31,7 @@
             android:text="@string/rupee_0"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_36"
+            android:textSize="24px"
             />
 
         <ImageView

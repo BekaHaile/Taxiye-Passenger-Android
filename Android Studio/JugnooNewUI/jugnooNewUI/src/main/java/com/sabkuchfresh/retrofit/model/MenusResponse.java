@@ -209,7 +209,8 @@ public class MenusResponse {
 		@Expose
 		private String restaurantAdd;
 
-		@SerializedName("buffer_time")
+//		@SerializedName("buffer_time")
+		@SerializedName("close_in_buffer")
 		@Expose
 		private Long bufferTime;
 

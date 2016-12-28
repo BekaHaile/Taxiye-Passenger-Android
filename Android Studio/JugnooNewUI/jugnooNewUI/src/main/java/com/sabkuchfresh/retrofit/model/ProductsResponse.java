@@ -163,6 +163,19 @@ public class ProductsResponse {
 		private List<Integer> includeValue = new ArrayList<Integer>();
 
 
+		public Charges(){}
+		public Charges(Integer id){
+			this.id = id;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if(o instanceof Charges){
+				return ((Charges)o).getId().equals(getId());
+			} else {
+				return false;
+			}
+		}
 
 		public Integer getId() {
 			return id;
@@ -181,6 +194,9 @@ public class ProductsResponse {
 		}
 
 		public Integer getType() {
+			if(type == null){
+				return 0;
+			}
 			return type;
 		}
 
@@ -206,6 +222,9 @@ public class ProductsResponse {
 		}
 
 		public List<Integer> getIncludeValue() {
+			if(includeValue == null){
+				includeValue = new ArrayList<>();
+			}
 			return includeValue;
 		}
 	}
