@@ -1488,8 +1488,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         }
                     }
                 }
-                Data.getPayData().getPay().setHasVpa(1);
-                linearLayoutWalletContainer.addView(relativeLayoutJugnooPay);
             }
         } catch (Exception e){
             e.printStackTrace();
