@@ -44,8 +44,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private FreshActivity activity;
     private boolean tabClickFlag = false;
 
-    private RelativeLayout searchLayout;
-
     private FreshSortingDialog freshSortingDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     public VendorMenuFragment(){}
@@ -83,7 +81,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 			e.printStackTrace();
 		}
 
-        searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
 
@@ -119,13 +116,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             }
         });
 
-
-        searchLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.searchItem();
-            }
-        });
 
 		success(activity.getProductsResponse());
 

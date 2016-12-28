@@ -83,9 +83,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
-//    private ImageView imageViewNoItem;
-
-    private RelativeLayout searchLayout;
 
     private FreshSortingDialog freshSortingDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
@@ -144,7 +141,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         relativeLayoutNoMenus.setVisibility(View.GONE);
         rootView.findViewById(R.id.imageViewShadow).setVisibility(View.VISIBLE);
 
-        searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
 //        imageViewNoItem = (ImageView) rootView.findViewById(R.id.imageViewNoItem);
@@ -206,13 +202,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
             }
         });
 
-
-        searchLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.searchItem();
-            }
-        });
 
         setSortingList();
 
