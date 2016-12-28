@@ -570,4 +570,5 @@ public interface Constants {
 
 	String KEY_GO_BACK = "go_back";
 	String KEY_PAYMENT_OBJECT = "payment_object";
+	String KEY_PAY_ORDER_ID = "pay_order_id";
 }

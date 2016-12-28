@@ -38,7 +38,6 @@ import com.google.gson.Gson;
 import com.jugnoo.pay.activities.MainActivity;
 import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
-import com.jugnoo.pay.utils.CallProgressWheel;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -2139,8 +2138,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 DialogPopup.showLoadingDialog(activity, "");
                 HashMap<String, String> params = new HashMap<>();
 
-                params.put(Constants.KEY_ORDER_ID, String.valueOf(placeOrderResponse.getPaymentObject().getOrderId()));
+                params.put(Constants.KEY_ORDER_ID, String.valueOf(placeOrderResponse.getOrderId()));
+                params.put(Constants.KEY_PAY_ORDER_ID, String.valueOf(placeOrderResponse.getPaymentObject().getOrderId()));
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_CLIENT_ID,
+                        Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 if (message != null) {
                     params.put(Constants.KEY_MESSAGE, message.toString());
                 }
@@ -2148,14 +2150,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     @Override
                     public void success(SendMoneyCallbackResponse commonResponse, Response response) {
 //                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                        CallProgressWheel.dismissLoadingDialog();
+                        DialogPopup.dismissLoadingDialog();
                         try {
                             int flag = commonResponse.getFlag();
-                            if (flag == com.jugnoo.pay.utils.ApiResponseFlags.TXN_COMPLETED.getOrdinal()) {
+                            if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 orderPlacedSuccess(placeOrderResponse);
                             }
-                            else if (flag == com.jugnoo.pay.utils.ApiResponseFlags.TXN_FAILED.getOrdinal()) {
-
+                            else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
+                                DialogPopup.alertPopup(activity, "", commonResponse.getMessage());
                             }
                             else {
                                 retryDialogPlaceOrderPayCallbackApi(DialogErrorType.SERVER_ERROR, message);
@@ -2168,7 +2170,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                     @Override
                     public void failure(RetrofitError error) {
-                        CallProgressWheel.dismissLoadingDialog();
+                        DialogPopup.dismissLoadingDialog();
                         retryDialogPlaceOrderPayCallbackApi(DialogErrorType.CONNECTION_LOST, message);
                     }
                 };
