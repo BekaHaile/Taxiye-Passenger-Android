@@ -20,11 +20,12 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="96px"
+                android:layout_height="wrap_content"
                 android:contentInsetStart="0dp"
                 android:contentInsetLeft="0dp"
                 app:contentInsetLeft="0dp"
                 app:contentInsetStart="0dp"
+                android:background="@color/transparent"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 >
                 <!-- top bar layout -->
@@ -35,12 +36,22 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
+        <ImageView
+            android:id="@+id/below_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:layout_marginTop="@dimen/px_96"
+            android:src="@drawable/shadow_down"
+            />
+
         <RelativeLayout
             android:id="@+id/relativeLayoutContainer"
             android:layout_width="match_parent"
             android:layout_height="1038px"
             android:layout_above="@+id/linearLayoutCheckoutContainer"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+
 
         <LinearLayout
             android:id="@+id/linearLayoutCheckoutContainer"
@@ -51,6 +62,10 @@
             android:orientation="vertical"
             android:layout_gravity="bottom">
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="6px"
+                android:src="@drawable/shadow_up"/>
 
             <TextView
                 android:id="@+id/textViewMinOrder"

@@ -704,6 +704,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onResume() {
         super.onResume();
+        activity.resetToolbar();
         orderPaymentModes();
         setPaymentOptionUI();
     }

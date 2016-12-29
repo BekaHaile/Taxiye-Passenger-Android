@@ -24,6 +24,9 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -101,6 +104,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
+import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -280,10 +284,30 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 @Override
                 public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                     if(verticalOffset == 0){
-                        fabViewTest.getMenuLabelsRightTest().setVisibility(View.VISIBLE);
+                        if(fabViewTest.getMenuLabelsRightTest().getVisibility() == View.GONE) {
+                            fabViewTest.getMenuLabelsRightTest().setVisibility(View.VISIBLE);
+                            fabViewTest.getMenuLabelsRightTest().startAnimation(AnimationUtils.loadAnimation(FreshActivity.this, R.anim.fade_in_slow_fab));
+                            /*new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fabViewTest.getMenuLabelsRightTest().setVisibility(View.VISIBLE);
+                                    fabViewTest.getMenuLabelsRightTest().startAnimation(AnimationUtils.loadAnimation(FreshActivity.this, R.anim.fade_in_slow_fab));
+                                }
+                            }, 1000);*/
+                        }
                     } else{
-                        if(verticalOffset < -50){
-                            fabViewTest.getMenuLabelsRightTest().setVisibility(View.GONE);
+                        if(verticalOffset < -100) {
+                            if(fabViewTest.getMenuLabelsRightTest().getVisibility() == View.VISIBLE) {
+                                fabViewTest.getMenuLabelsRightTest().setVisibility(View.GONE);
+                                fabViewTest.getMenuLabelsRightTest().startAnimation(AnimationUtils.loadAnimation(FreshActivity.this, R.anim.fade_out_slow_fab));
+                                /*new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        fabViewTest.getMenuLabelsRightTest().setVisibility(View.GONE);
+                                        fabViewTest.getMenuLabelsRightTest().startAnimation(AnimationUtils.loadAnimation(FreshActivity.this, R.anim.fade_out_slow_fab));
+                                    }
+                                }, 1000);*/
+                            }
                         }
                     }
                 }
@@ -2597,6 +2621,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void resetToolbar() {
         AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
         params.setScrollFlags(0);
+
+        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        layoutParams.height = (int)(96f * ASSL.Xscale());
+        toolbar.setLayoutParams(layoutParams);
     }
 
     public void resetToolbarWithScroll(){
@@ -2605,5 +2633,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                 | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
                 | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+
+        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        layoutParams.height = (int)(164f * ASSL.Xscale());
+        toolbar.setLayoutParams(layoutParams);
     }
 }
