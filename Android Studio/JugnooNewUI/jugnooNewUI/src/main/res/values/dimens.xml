@@ -317,5 +317,6 @@
         19sp
     </dimen>
     <dimen name="px_16">16px</dimen>
+    <dimen name="px_70">70px</dimen>
 
 </resources>

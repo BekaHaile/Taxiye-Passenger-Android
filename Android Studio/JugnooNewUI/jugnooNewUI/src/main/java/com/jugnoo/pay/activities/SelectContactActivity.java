@@ -53,7 +53,7 @@ public class SelectContactActivity extends BaseActivity {
     private PagerSlidingTabStrip tabs;
     private ViewPager viewPager;
     private SendMoneyPagerAdapter sendMoneyPagerAdapter;
-    private ImageView toolbarDivider, ivToolbarAddVPA;
+    private ImageView toolbarDivider, ivToolbarAddVPA, ivAddVPA;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +67,8 @@ public class SelectContactActivity extends BaseActivity {
         ivToolbarRefreshContacts = (ImageView) findViewById(R.id.ivToolbarRefreshContacts); ivToolbarRefreshContacts.setVisibility(View.VISIBLE);
         ivToolbarAddVPA = (ImageView) findViewById(R.id.ivToolbarAddVPA); ivToolbarAddVPA.setVisibility(View.GONE);
         toolbarDivider = (ImageView) findViewById(R.id.toolbarDivider); toolbarDivider.setVisibility(View.GONE);
+
+
 
         selectContactActivityObj = this;
        requestStatus = getIntent().getBooleanExtra(AppConstant.REQUEST_STATUS,false);
@@ -88,7 +90,8 @@ public class SelectContactActivity extends BaseActivity {
                     ivToolbarRefreshContacts.setVisibility(View.VISIBLE);
                     ivToolbarAddVPA.setVisibility(View.GONE);
                 } else{
-                    ivToolbarAddVPA.setVisibility(View.VISIBLE);
+                    // commented on 29-12-2016
+                    // ivToolbarAddVPA.setVisibility(View.VISIBLE);
                     ivToolbarRefreshContacts.setVisibility(View.GONE);
                 }
             }
@@ -156,6 +159,11 @@ public class SelectContactActivity extends BaseActivity {
 
     public ImageView getIvToolbarAddVPA() {
         return ivToolbarAddVPA;
+    }
+
+    public ImageView getIvAddVPA()
+    {
+        return ivAddVPA;
     }
 
     @Override

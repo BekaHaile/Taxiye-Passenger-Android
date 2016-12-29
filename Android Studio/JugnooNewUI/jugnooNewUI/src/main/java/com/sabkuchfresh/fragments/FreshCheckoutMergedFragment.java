@@ -48,6 +48,7 @@ import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
+import com.sabkuchfresh.home.OrderCheckoutFailureDialog;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
@@ -1131,7 +1132,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                     if(jObj.has(Constants.KEY_PAYMENT_OBJECT)){
                                         FreshCheckoutMergedFragment.this.placeOrderResponse = placeOrderResponse;
                                         final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstanceCard(activity,
-                                                activity.getString(R.string.order_placed_redirecting_you_to_payment), true);
+                                                activity.getString(R.string.loading), true);
                                         if(progressDialog != null) {
                                             new Handler().postDelayed(new Runnable() {
                                                 @Override
@@ -1488,6 +1489,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         }
                     }
                 }
+
+                if (Data.getPayData() == null)
+                {
+                    // don't add jugnoo pay as payment method
+                }
+                else
+                {
+                    // adding jugnoo pay as payment method
+                    linearLayoutWalletContainer.addView(relativeLayoutJugnooPay);
+                }
+
             }
         } catch (Exception e){
             e.printStackTrace();
@@ -2157,21 +2169,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                             else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
                                 // DialogPopup.alertPopup(activity, "", commonResponse.getMessage());
 
-                                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", activity.getString(R.string.remove_payment_address_string),
-                                        activity.getString(R.string.Retry), activity.getString(R.string.change_payment_method),
-                                        new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                // clickListener.onDelete(savedUsersList.get(position).getVpa());
-                                                placeOrder();
-                                            }
-                                        },
-                                        new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                DialogPopup.dismissAlertPopup();
-                                            }
-                                        }, false, false);
+                                new OrderCheckoutFailureDialog(getActivity(), new OrderCheckoutFailureDialog.Callback() {
+                                    @Override
+                                    public void onRetryClicked() {
+                                        placeOrder();
+                                    }
+
+                                    @Override
+                                    public void onChangePaymentClicked() {
+
+                                    }
+                                }).show(commonResponse.getMessage());
 
                             }
                             else {

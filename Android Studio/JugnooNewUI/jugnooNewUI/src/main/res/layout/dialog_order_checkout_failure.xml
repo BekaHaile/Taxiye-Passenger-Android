@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="644px"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded_bordered"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        >
+
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/px_70"
+            android:layout_marginTop="@dimen/px_70"
+            android:layout_marginRight="@dimen/px_20"
+            android:layout_marginLeft="@dimen/px_20"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_30"
+            />
+
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginLeft="2px"
+            android:layout_marginRight="2px"
+            android:background="@color/text_color_hint"
+            />
+
+        <Button
+            android:id="@+id/buttonRechargeNow"
+            style="@style/ButtonTheme"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40px"
+            android:textSize="@dimen/text_size_26"
+            android:text="Retry with Jugnoo Pay"/>
+
+        <Button
+            android:id="@+id/buttonPayViaOther"
+            style="@style/ButtonThemeAlternate"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="40px"
+            android:layout_marginTop="30px"
+            android:text="@string/choose_other_mode_to_pay"
+            android:textAllCaps="true"
+            android:textSize="@dimen/text_size_26"/>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

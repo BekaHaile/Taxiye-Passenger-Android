@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -56,6 +57,7 @@ public class PaymentFragment extends Fragment {
     private LinearLayout llPlaceHolder;
     private PaymentAddressAdapter paymentAddressAdapter;
     private TextView tvTitle, tvNoMatchFound;
+    ImageView ivAddVPA;
     private ArrayList<FetchPaymentAddressResponse.VpaList> fetchList = new ArrayList<>();
 
     @Nullable
@@ -110,7 +112,8 @@ public class PaymentFragment extends Fragment {
         });
         rvPaymentAddress.setAdapter(paymentAddressAdapter);
 
-        (((SelectContactActivity)getActivity()).getIvToolbarAddVPA()).setOnClickListener(new View.OnClickListener() {
+        ivAddVPA = (ImageView) rootView.findViewById(R.id.ivAddVPA);
+        ivAddVPA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), AddPaymentAddressActivity.class));
@@ -118,8 +121,14 @@ public class PaymentFragment extends Fragment {
             }
         });
 
-
-
+        // (((SelectContactActivity)getActivity()).getIvToolbarAddVPA()).setOnClickListener(new View.OnClickListener() {
+//        (((SelectContactActivity)getActivity()).getIvAddVPA()).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getActivity(), AddPaymentAddressActivity.class));
+//                getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//            }
+//        });
 
         return rootView;
     }
