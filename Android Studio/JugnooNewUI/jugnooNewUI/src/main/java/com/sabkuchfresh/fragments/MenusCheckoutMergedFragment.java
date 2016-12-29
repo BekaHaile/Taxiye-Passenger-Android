@@ -569,7 +569,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         if (totalAmount() > 0 && jcUsed() > 0) {
             taxList.add(subItemTemp.new Tax(getString(R.string.jugnoo_cash), jcUsed()));
         }
-
         menusItemChargesAdapter.notifyDataSetChanged();
 
         if(taxList.size() > 0){
@@ -579,7 +578,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             linearLayoutCartDetails.setVisibility(View.GONE);
             imageViewCartSep.setVisibility(View.VISIBLE);
         }
-
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
         if(promoAmount > 0){
@@ -1859,6 +1857,8 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format_without_space,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(pair.first)));
+        /*textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
+                Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));*/
     }
 
     private void updateCartDataView(){
