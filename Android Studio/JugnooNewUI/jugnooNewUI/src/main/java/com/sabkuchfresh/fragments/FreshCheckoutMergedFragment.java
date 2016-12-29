@@ -2155,7 +2155,24 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                 orderPlacedSuccess(placeOrderResponse);
                             }
                             else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
-                                DialogPopup.alertPopup(activity, "", commonResponse.getMessage());
+                                // DialogPopup.alertPopup(activity, "", commonResponse.getMessage());
+
+                                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", activity.getString(R.string.remove_payment_address_string),
+                                        activity.getString(R.string.Retry), activity.getString(R.string.change_payment_method),
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                // clickListener.onDelete(savedUsersList.get(position).getVpa());
+                                                placeOrder();
+                                            }
+                                        },
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                DialogPopup.dismissAlertPopup();
+                                            }
+                                        }, false, false);
+
                             }
                             else {
                                 retryDialogPlaceOrderPayCallbackApi(DialogErrorType.SERVER_ERROR, message);
