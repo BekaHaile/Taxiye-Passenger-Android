@@ -160,16 +160,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
                 }
 
-                else if (activity.getSortBySelected() == MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED)
-                {
-                    point = rhs.getApplicablePaymentMode() - lhs.getApplicablePaymentMode();
-                }
-/*
+//                else if (activity.getSortBySelected() == MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED)
+//                {
+//                    point = rhs.getApplicablePaymentMode() - lhs.getApplicablePaymentMode();
+//                }
                 else if (activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY)
                 {
                     point = rhs.getPopularity() - lhs.getPopularity();
                 }
-*/
                 else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE)
                 {
                     point = -(rhs.getDistance() - lhs.getDistance());
