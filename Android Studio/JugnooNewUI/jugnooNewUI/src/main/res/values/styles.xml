@@ -223,7 +223,7 @@
     </style>
 
     <style name="TransparentTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/white_less_dark</item>
+        <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/white_less_dark</item>
         <item name="colorAccent">@color/white_less_dark</item>
         <item name="colorControlNormal">#e2e2e2</item>

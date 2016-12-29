@@ -215,6 +215,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
         }
 
+        activity.resetToolbar();
+
         type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
         mBus = (activity).getBus();
         orderPlaced = false;

@@ -176,6 +176,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     private AppBarLayout appBarLayout;
     private RelativeLayout searchLayout;
+    private Toolbar toolbar;
 
     public void openNotification() {
         menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
@@ -187,7 +188,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         try {
             setContentView(R.layout.activity_fresh);
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             toolbar.setTitle("");
 
@@ -895,8 +896,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
             relativeLayoutLeft.setVisibility(View.VISIBLE);
             searchLayout.setVisibility(View.GONE);
+            resetToolbar();
 
             if (fragment instanceof FreshFragment) {
+                resetToolbarWithScroll();
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
 				topBar.below_shadow.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -963,6 +966,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 setNoItemsView(fragment);
 			}
             else if (fragment instanceof GroceryFragment) {
+                resetToolbarWithScroll();
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.below_shadow.setVisibility(View.GONE);
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -1100,6 +1104,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.textViewReset.setVisibility(View.GONE);
             }
             else if (fragment instanceof FreshCheckoutMergedFragment) {
+                resetToolbar();
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -2587,5 +2592,18 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     }
     public void setMenuRefreshLatLng(LatLng menuRefreshLatLng) {
         this.menuRefreshLatLng = menuRefreshLatLng;
+    }
+
+    public void resetToolbar() {
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(0);
+    }
+
+    public void resetToolbarWithScroll(){
+        AppBarLayout.LayoutParams params =
+                (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+                | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
     }
 }
