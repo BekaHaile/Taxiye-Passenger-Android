@@ -29,6 +29,7 @@ public abstract class MapStateListener {
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
+                onCameraPositionChanged(cameraPosition);
                 unsettleMap();
                 if(!mMapTouched) {
                     runSettleTimer();
@@ -153,4 +154,5 @@ public abstract class MapStateListener {
     public abstract void onMapReleased();
     public abstract void onMapUnsettled();
     public abstract void onMapSettled();
+    public abstract void onCameraPositionChanged(CameraPosition cameraPosition);
 }

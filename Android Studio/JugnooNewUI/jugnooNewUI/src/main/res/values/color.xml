@@ -68,6 +68,7 @@
     <color name="bg_grey">#D8242930</color>
     <color name="bg_grey_opaque">#242930</color>
     <color name="bg_white_translucent">#AAFFFFFF</color>
+    <color name="bg_divider_saved_location">#aaaaaa</color>
 
     <color name="blue_btn">#4CC1D2</color>
     <color name="blue_btn_pressed">#2CA1B2</color>

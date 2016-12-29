@@ -318,5 +318,7 @@
     </dimen>
     <dimen name="px_16">16px</dimen>
     <dimen name="px_70">70px</dimen>
+    <dimen name="px_46">46px</dimen>
+    <dimen name="px_34">34px</dimen>
 
 </resources>

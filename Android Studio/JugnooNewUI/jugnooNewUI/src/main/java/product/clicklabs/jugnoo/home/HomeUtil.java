@@ -4,8 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
+import android.text.TextUtils;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -27,6 +32,8 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -75,7 +82,7 @@ public class HomeUtil {
 		}
 	}
 
-	public SearchResult getNearBySavedAddress(Context context, LatLng latLng){
+	public SearchResult getNearBySavedAddress(Context context, LatLng latLng, double compareDistance, boolean includeRecent){
 		try {
 			ArrayList<SearchResult> searchResults = new ArrayList<>();
 			if (!Prefs.with(context).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
@@ -89,12 +96,15 @@ public class HomeUtil {
 				searchResults.add(searchResult);
 			}
 			searchResults.addAll(Data.userData.getSearchResults());
+			if(includeRecent) {
+				searchResults.addAll(Data.userData.getSearchResultsRecent());
+			}
 
 			double distance = Double.MAX_VALUE;
 			SearchResult selectedNearByAddress = null;
 			for(int i=0; i<searchResults.size(); i++){
 				double fetchedDistance = MapUtils.distance(latLng, searchResults.get(i).getLatLng());
-				if ((fetchedDistance < 100) && (fetchedDistance < distance)) {
+				if ((fetchedDistance < compareDistance) && (fetchedDistance < distance)) {
 					distance = fetchedDistance;
 					selectedNearByAddress = searchResults.get(i);
 				}
@@ -141,7 +151,6 @@ public class HomeUtil {
 		params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 	}
 
-
 	public ArrayList<SearchResult> getSavedPlacesWithHomeWork(Activity activity){
 		ArrayList<SearchResult> searchResults = new ArrayList<>();
 		if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
@@ -157,4 +166,110 @@ public class HomeUtil {
 		searchResults.addAll(Data.userData.getSearchResults());
 		return searchResults;
 	}
+
+	public MarkerOptions getMarkerOptionsForSavedAddress(Activity activity, ASSL assl, SearchResult searchResult, boolean showAddress){
+		MarkerOptions markerOptions = new MarkerOptions();
+		markerOptions.title(TextUtils.isEmpty(searchResult.getName()) ? "recent" : searchResult.getName());
+
+		StringBuilder address = new StringBuilder();
+		String arr[] = searchResult.getAddress().split(",");
+		for(String arri : arr){
+			address.append(arri).append(",");
+		}
+		String addressStr = "";
+		if(address.length() > 0){
+			addressStr = address.toString();
+			addressStr = addressStr.substring(0, addressStr.length()-1);
+		}
+
+		String addressName = "";
+		int drawable = R.drawable.ic_saved_address_used;
+		if(searchResult.getName() != null && !searchResult.getName().equalsIgnoreCase("")){
+			addressName = searchResult.getName();
+
+			if(addressName.equalsIgnoreCase(Constants.TYPE_HOME)){
+				drawable = R.drawable.ic_saved_address_home;
+			} else if(addressName.equalsIgnoreCase(Constants.TYPE_WORK)){
+				drawable = R.drawable.ic_saved_address_work;
+			} else if(addressName.equalsIgnoreCase(Constants.TYPE_USED)){
+				drawable = R.drawable.ic_saved_address_used;
+			} else{
+				drawable = R.drawable.ic_saved_address_other;
+			}
+		}
+
+		if(addressName.equalsIgnoreCase(Constants.TYPE_USED)){
+			addressName = "";
+		}
+
+		if(!showAddress){
+			addressName = "";
+		}
+
+		markerOptions.snippet(addressStr);
+		markerOptions.position(searchResult.getLatLng());
+		markerOptions.anchor(0.1f, 1f);
+		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+				.getSavedAddressBitmap(activity, assl, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_28), drawable)));
+		return markerOptions;
+	}
+
+	private ArrayList<Marker> markersSavedAddresses = new ArrayList<>();
+
+	public void displaySavedAddressesAsFlags(Activity activity, ASSL assl, GoogleMap map, boolean showAddress){
+		try {
+			if(map != null){
+				removeSavedAddress(map);
+
+				if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+					String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+					SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+
+				}
+				if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+					String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+					SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+				}
+				for(SearchResult searchResult : Data.userData.getSearchResults()){
+					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+				}
+				for(SearchResult searchResult : Data.userData.getSearchResultsRecent()){
+					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void removeSavedAddress(GoogleMap map){
+		if(map != null) {
+			if (markersSavedAddresses != null) {
+				for (Marker marker : markersSavedAddresses) {
+					marker.remove();
+				}
+				markersSavedAddresses.clear();
+			}
+		}
+	}
+
+	public enum SavedAddressState{
+
+		MARKER_WITH_TEXT(0),
+		MARKER(1),
+		BLANK(2);
+
+		private int ordinal;
+
+		SavedAddressState(int ordinal) {
+			this.ordinal = ordinal;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
+		}
+	}
+
 }

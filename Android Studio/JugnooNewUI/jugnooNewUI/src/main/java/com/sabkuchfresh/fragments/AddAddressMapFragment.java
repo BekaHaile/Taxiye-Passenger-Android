@@ -32,6 +32,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.bus.AddressSearch;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
@@ -532,6 +533,11 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
                         unsatflag = true;
                     }
                     locationUpdate = false;
+                }
+
+                @Override
+                public void onCameraPositionChanged(CameraPosition cameraPosition) {
+
                 }
             };
 

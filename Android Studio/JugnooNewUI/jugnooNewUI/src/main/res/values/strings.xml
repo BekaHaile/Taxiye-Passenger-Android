@@ -1406,6 +1406,9 @@
     <string name="GotIt">Got It</string>
 
     <string name="accept_online_payment">Accept Online Payment</string>
+    <string name="close_to_saved_location">We noticed your request location is very close to a saved location.\nDo you want to request\npickup there?</string>
+    <string name="yes_update_pickup_location">Yes, update pickup location</string>
+    <string name="no_continue_with_current_pickup">No, continue with current pickup</string>
 
     <string name="order_placed_redirecting_you_to_payment">Order placed\n\nRedirecting you to payment</string>
 

@@ -1725,8 +1725,12 @@ public class JSONParser implements Constants {
                 Gson gson = new Gson();
                 for (int i = 0; i < addressResponse.getAddresses().size(); i++) {
                     FetchUserAddressResponse.Address address = addressResponse.getAddresses().get(i);
+                    if(address.getType().equalsIgnoreCase("")){
+                        address.setType(TYPE_USED);
+                    }
                     SearchResult searchResult = new SearchResult(address.getType(), address.getAddr(), address.getPlaceId(),
                             address.getLat(), address.getLng(), address.getId(), address.getIsConfirmed(), address.getFreq());
+
                     if (address.getType().equalsIgnoreCase(TYPE_HOME) && !homeSaved) {
                         if (!TextUtils.isEmpty(searchResult.getAddress())) {
                             Prefs.with(context).save(SPLabels.ADD_HOME, gson.toJson(searchResult, SearchResult.class));
@@ -1750,6 +1754,13 @@ public class JSONParser implements Constants {
                         searchResult.setType(SearchResult.Type.RECENT);
                         Data.userData.getSearchResultsRecent().add(searchResult);
                     }
+                }
+
+                for(int i=0; i<addressResponse.getAdditionalAddresses().size(); i++){
+                    FetchUserAddressResponse.Address address = addressResponse.getAdditionalAddresses().get(i);
+                    SearchResult searchResult = new SearchResult(TYPE_USED, address.getAddr(), address.getPlaceId(),
+                            address.getLat(), address.getLng(), address.getId(), address.getIsConfirmed(), address.getFreq());
+                    Data.userData.getSearchResultsRecent().add(searchResult);
                 }
             }
         } catch (Exception e) {

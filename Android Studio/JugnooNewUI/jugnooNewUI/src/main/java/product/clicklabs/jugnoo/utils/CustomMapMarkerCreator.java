@@ -121,6 +121,41 @@ public class CustomMapMarkerCreator {
 		return bmpText;
 	}
 
+	public static Bitmap getSavedAddressBitmap(final Context context, ASSL assl, String text, final int fontSize, int icon) {
+// ic_centre_pin_big
+		float scale = Math.min(assl.Xscale(), assl.Yscale());
+		final TextView textView = new TextView(context);
+		textView.setText(text);
+		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int)(scale * (float)fontSize));
+		textView.setTypeface(Fonts.mavenMedium(context));
+
+		final Rect boundsText = new Rect();
+
+
+		int width = (int)(200.0f * scale);
+		int height = (int)(49.0f * scale);
+
+		final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+		final Bitmap bmpText = Bitmap.createBitmap(width, height, conf);
+
+		final Paint paint = textView.getPaint();
+		paint.getTextBounds(text, 0, textView.length(), boundsText);
+		paint.setTextAlign(Paint.Align.RIGHT);
+		paint.setColor(context.getResources().getColor(R.color.text_color));
+
+		final Canvas canvasText = new Canvas(bmpText);
+
+		Drawable shape = context.getResources().getDrawable(icon);
+		shape.setBounds(0, 0, (int)(42.0f * scale), bmpText.getHeight());
+		shape.draw(canvasText);
+
+		canvasText.drawText(text, (canvasText.getWidth() / 2)+5, (31f*assl.Yscale()), paint);
+		//canvasText.drawText("MIN", canvasText.getWidth() / 2, (int)(37f*assl.Yscale()) + boundsText.height(), paint);
+
+
+		return bmpText;
+	}
+
 	public static Bitmap getTextAssignBitmap(final Context context, ASSL assl, String text, final int fontSize) {
 // ic_centre_pin_big
 		float scale = Math.min(assl.Xscale(), assl.Yscale());
