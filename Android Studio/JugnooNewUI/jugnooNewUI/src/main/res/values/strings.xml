@@ -10,7 +10,7 @@
 
     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string> Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
-    <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string>&lt;!&ndash; General&ndash;&gt;-->
+   <!-- <string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
 
 
     <string name="google_maps_browser_key">AIzaSyAPIQoWfHI2iRZkSV8jU4jT_b9Qth4vMdY</string>
@@ -1453,5 +1453,10 @@
     <string name="add_to_avail_unlimited_free_deliveries">Add to avail unlimited free deliveries</string>
     <string name="total">Total</string>
     <string name="sub_total">Sub Total</string>
+    <string name="customize_item">Customize Item</string>
+
+    <string name="customize_choose_item_value">You can choose upto %s items.</string>
+    <string name="customize_choose_option_value">You can choose 1 option</string>
+    <string name="onwards">- Onwards</string>
 
 </resources>

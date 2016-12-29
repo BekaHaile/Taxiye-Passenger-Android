@@ -1,7 +1,8 @@
-package com.sabkuchfresh.retrofit.model;
+package com.sabkuchfresh.retrofit.model.menus;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.retrofit.model.RecentOrder;
 
 import java.util.ArrayList;
 import java.util.List;

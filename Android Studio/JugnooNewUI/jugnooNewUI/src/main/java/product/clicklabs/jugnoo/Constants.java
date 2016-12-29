@@ -49,6 +49,7 @@ public interface Constants {
 	String SP_GROCERY_CART= "grocery_cart";
 	String SP_MENUS_CART= "menus_cart";
 	String KEY_CATEGORY_POSITION = "category_position";
+	String KEY_IS_VENDOR_MENU = "is_vendor_menu";
 
 
 

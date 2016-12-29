@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/transparent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="680px"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_grey_rounded_bordered"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:id="@+id/linearLayoutCustomizeItem"
+            android:layout_width="680px"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_orange_tr"
+            android:orientation="vertical"
+            android:splitMotionEvents="false"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/textViewCustomizeItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Customize Item"
+                android:textColor="@color/white"
+                android:textSize="43px"
+                android:layout_marginBottom="30px"
+                android:layout_marginTop="30px"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_marginLeft="2px"
+            android:layout_marginRight="2px"
+            android:background="@color/text_color_hint"/>
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageViewFoodType"
+                android:layout_width="40px"
+                android:layout_height="40px"
+                android:layout_marginLeft="20px"
+                android:layout_marginTop="35px"
+                android:layout_marginRight="15px"
+                android:tag="mwar"
+                />
+
+            <TextView
+                android:id="@+id/textViewCustomizeItemName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Margherita Pizza"
+                android:textSize="32px"
+                android:layout_marginTop="30px"
+                android:layout_marginRight="10px"
+                android:textColor="@color/lightBlackTxtColor"
+                android:layout_toRightOf="@+id/imageViewFoodType"/>
+
+            <TextView
+                android:id="@+id/textViewCustomizeItemDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Margherita Pizza"
+                android:textSize="24px"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_marginTop="4px"
+                android:layout_marginBottom="15px"
+                android:textColor="@color/lightBlackTxtColor"
+                android:layout_toRightOf="@+id/imageViewFoodType"
+                android:layout_below="@id/textViewCustomizeItemName"/>
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewCustomizeItemCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:splitMotionEvents="false"
+            android:background="@color/transparent"
+            android:layout_marginLeft="25px"
+            android:layout_marginRight="25px"
+            android:paddingTop="10px"
+            android:paddingBottom="10px"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="true">
+        </android.support.v7.widget.RecyclerView>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:background="@color/grey_light_alpha"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="2px"
+            android:layout_marginRight="2px"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:splitMotionEvents="false"
+            android:background="@color/transparent">
+
+
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0px"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:singleLine="true"
+                android:text="@string/cancel"
+                android:textColor="@color/text_color_selector"
+                android:textSize="@dimen/text_size_36"/>
+
+
+            <ImageView
+                android:layout_width="2px"
+                android:layout_marginTop="8px"
+                android:layout_marginBottom="8px"
+                android:layout_height="80px"
+                android:background="@color/grey_light_alpha"/>
+
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="0px"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:singleLine="true"
+                android:text="@string/ok"
+                android:textColor="@color/text_color_selector"
+                android:layout_toRightOf="@id/btnCancel"
+                android:textSize="@dimen/text_size_36"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

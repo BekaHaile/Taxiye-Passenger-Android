@@ -60,7 +60,7 @@ import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
-import com.sabkuchfresh.retrofit.model.MenusResponse;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -68,6 +68,7 @@ import com.sabkuchfresh.retrofit.model.SubItemCompare;
 import com.sabkuchfresh.retrofit.model.SubItemComparePrice;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceRev;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
@@ -178,6 +179,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public int freshSort = -1;
     public int mealSort = -1;
+    public int menusSort = -1;
+
+    private VendorMenuResponse vendorMenuResponse;
 
     private AppBarLayout appBarLayout;
     private RelativeLayout searchLayout;
@@ -1642,6 +1646,15 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         mContactNo = productsResponse.getSupportContact();
     }
 
+    public VendorMenuResponse getMenuProductsResponse() {
+        return vendorMenuResponse;
+    }
+
+    public void setMenuProductsResponse(VendorMenuResponse vendorMenuResponse) {
+        this.vendorMenuResponse = vendorMenuResponse;
+        mContactNo = vendorMenuResponse.getSupportContact();
+    }
+
     public LatLng getCurrentPlaceLatLng() {
         return getSelectedLatLng();
     }
@@ -2455,7 +2468,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                                 public void onClick(View v) {
                                     clearMenusCart();
                                     subItem.setSubItemQuantitySelected(subItem.getSubItemQuantitySelected() + 1);
-                                    getVendorMenuFragment().getFreshCategoryFragmentsAdapter().notifyDataSetChanged();
+                                    getVendorMenuFragment().getMenusCategoryFragmentsAdapter().notifyDataSetChanged();
                                     updateCartValuesGetTotalPrice();
                                 }
                             },

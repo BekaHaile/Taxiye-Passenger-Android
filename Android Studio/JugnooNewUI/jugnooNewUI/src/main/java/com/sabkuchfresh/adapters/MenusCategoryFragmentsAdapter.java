@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.fragments.FreshCategoryItemsFragment;
-import com.sabkuchfresh.retrofit.model.Category;
+import com.sabkuchfresh.fragments.MenusCategoryItemsFragment;
+import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
 
 import java.util.List;
@@ -24,14 +24,13 @@ import product.clicklabs.jugnoo.utils.Fonts;
 /**
  * Created by Ankit on 12/29/15.
  */
-public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter
+public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 		implements PagerSlidingTabStrip.CustomTabProvider {
 
 	private List<Category> categories;
 	private Context context;
 	private LayoutInflater inflater;
-
-	public FreshCategoryFragmentsAdapter(Context context, FragmentManager fm) {
+	public MenusCategoryFragmentsAdapter(Context context, FragmentManager fm) {
 		super(fm);
 		this.context = context;
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -44,7 +43,7 @@ public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 
 	@Override
 	public Fragment getItem(int position) {
-		return FreshCategoryItemsFragment.newInstance(position, 0);
+		return MenusCategoryItemsFragment.newInstance(position, 1);
 	}
 
 	@Override

@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
-import com.sabkuchfresh.analytics.FlurryEventNames;
+import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -32,12 +32,12 @@ import product.clicklabs.jugnoo.utils.Prefs;
 
 
 @SuppressLint("ValidFragment")
-public class FreshCategoryItemsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MenusCategoryItemsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
 	private RelativeLayout linearLayoutRoot;
 
 	private RecyclerView recyclerViewCategoryItems;
-	private FreshCategoryItemsAdapter freshCategoryItemsAdapter;
+	private MenusCategoryItemsAdapter menusCategoryItemsAdapter;
 
 	private View rootView;
     private FreshActivity activity;
@@ -47,8 +47,8 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 
     protected Bus mBus;
 
-	public static FreshCategoryItemsFragment newInstance(int position, int isVendorMenu){
-		FreshCategoryItemsFragment frag = new FreshCategoryItemsFragment();
+	public static MenusCategoryItemsFragment newInstance(int position, int isVendorMenu){
+		MenusCategoryItemsFragment frag = new MenusCategoryItemsFragment();
 		Bundle bundle = new Bundle();
 		bundle.putInt(Constants.KEY_CATEGORY_POSITION, position);
 		bundle.putInt(Constants.KEY_IS_VENDOR_MENU, isVendorMenu);
@@ -111,41 +111,35 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 					mSwipeRefreshLayout.setEnabled(true);
 				}
 
-				freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity,
-						(ArrayList<SubItem>) activity.getProductsResponse().getCategories().get(position).getSubItems(),
-						activity.getProductsResponse().getCategories().get(position).getCategoryBanner(),
-						activity.getProductsResponse().getCategories().get(position).getShowCategoryBanner(),
-						FreshCategoryItemsAdapter.OpenMode.INVENTORY,
-						new FreshCategoryItemsAdapter.Callback() {
+				menusCategoryItemsAdapter = new MenusCategoryItemsAdapter(activity,
+						(ArrayList<Subcategory>)activity.getMenuProductsResponse().getCategories().get(position).getSubcategories(),
+						new MenusCategoryItemsAdapter.Callback() {
 							@Override
-							public void onPlusClicked(int position, SubItem subItem) {
+							public void onPlusClicked(int position, Item subItem) {
 								activity.updateCartValuesGetTotalPrice();
 							}
 
 							@Override
-							public void onMinusClicked(int position, SubItem subItem) {
+							public void onMinusClicked(int position, Item subItem) {
 								activity.updateCartValuesGetTotalPrice();
 							}
 
 							@Override
-							public void onDeleteClicked(int position, SubItem subItem) {
-							}
-
-							@Override
-							public boolean checkForMinus(int position, SubItem subItem) {
+							public boolean checkForMinus(int position, Item subItem) {
 								return true;
 							}
 
 							@Override
-							public void minusNotDone(int position, SubItem subItem) {
+							public void minusNotDone(int position, Item subItem) {
 							}
 
 							@Override
-							public boolean checkForAdd(int position, SubItem subItem) {
-								return activity.checkForAdd(position, subItem);
+							public boolean checkForAdd(int position, Item subItem) {
+								/*return activity.checkForAdd(position, subItem);*/
+								return false;
 							}
-						} ,AppConstant.ListType.HOME, FlurryEventNames.HOME_SCREEN, 1);
-				recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
+						});
+				recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -167,7 +161,7 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
      * Method used to update list data
      */
     public void updateDetail() {
-        freshCategoryItemsAdapter.notifyDataSetChanged();
+		menusCategoryItemsAdapter.notifyDataSetChanged();
     }
 
     @Override

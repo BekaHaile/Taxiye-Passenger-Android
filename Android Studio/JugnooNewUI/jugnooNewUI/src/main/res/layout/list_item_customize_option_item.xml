@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutCustomizeOptionItem"
+        android:layout_width="match_parent"
+        android:layout_height="94px"
+        android:background="@drawable/bg_transparent_menu_item_selector">
+
+
+        <TextView
+            android:id="@+id/textViewCustomizeOptionItemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/imageViewCustomizeOptionItem"
+            android:gravity="center_vertical"
+            android:text="@string/accept_online_payment"
+            android:textColor="@color/text_color_selector"
+            android:textSize="@dimen/text_size_32"
+            android:visibility="visible"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewCustomizeOptionItem"
+            android:layout_width="33px"
+            android:layout_height="33px"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="24px"
+            android:layout_marginRight="24px"
+            android:src="@drawable/check_box_unchecked"
+            android:tag="mwar"
+            />
+
+        <TextView
+            android:id="@+id/textViewimageViewCustomizeOptionItemPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="24px"
+            android:text="Rs 25.00"
+            android:textColor="@color/text_color_selector"
+            android:textSize="@dimen/text_size_32"
+            android:visibility="visible"
+            />
+
+        <View
+            android:id="@+id/viewSaperator"
+            android:layout_width="match_parent"
+            android:layout_height="2px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="36px"
+            android:layout_marginRight="36px"
+            android:background="@color/stroke_light_grey_alpha"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>

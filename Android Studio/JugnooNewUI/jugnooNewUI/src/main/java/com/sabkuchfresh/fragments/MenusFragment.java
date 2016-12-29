@@ -22,9 +22,9 @@ import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-import com.sabkuchfresh.retrofit.model.MenusResponse;
-import com.sabkuchfresh.retrofit.model.ProductsResponse;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
+import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
@@ -344,9 +344,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 Log.i(TAG, "getVendorMenu params=" + params.toString());
 
                 new HomeUtil().putDefaultParams(params);
-                RestClient.getMenusApiService().restaurantMenu(params, new Callback<ProductsResponse>() {
+                RestClient.getMenusApiService().restaurantMenu(params, new Callback<VendorMenuResponse>() {
                     @Override
-                    public void success(ProductsResponse productsResponse, Response response) {
+                    public void success(VendorMenuResponse productsResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getVendorMenu response = " + responseStr);
                         try {
@@ -355,9 +355,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
                                     activity.setVendorOpened(vendor);
-                                    activity.setProductsResponse(productsResponse);
-                                    if(activity.freshSort == -1) {
-                                        activity.freshSort = jObj.getInt(Constants.SORTED_BY);
+                                    activity.setMenuProductsResponse(productsResponse);
+                                    if(activity.menusSort == -1) {
+                                        activity.menusSort = jObj.getInt(Constants.SORTED_BY);
                                     }
                                     if(vendor.getIsClosed()==1) {
                                         activity.clearMenusCart();
