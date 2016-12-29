@@ -40,6 +40,8 @@
             android:layout_height="wrap_content"
             android:text="@string/jugnoo_Star_title"
             android:textSize="@dimen/text_size_34"
+            android:layout_marginLeft="@dimen/px_40"
+            android:layout_marginRight="@dimen/px_40"
             android:layout_marginTop="@dimen/px_30"
             android:gravity="center"/>
         

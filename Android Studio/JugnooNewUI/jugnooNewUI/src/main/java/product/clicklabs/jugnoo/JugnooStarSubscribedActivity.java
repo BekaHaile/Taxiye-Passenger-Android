@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.adapters.StarBenefitsAdapter;
 import product.clicklabs.jugnoo.adapters.StarMembershipAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -57,6 +58,8 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
 
         starMembershipAdapter = new StarMembershipAdapter(JugnooStarSubscribedActivity.this, benefits);
         rvBenefits.setAdapter(starMembershipAdapter);
+
+        //textViewDriverCarNumber.setText(DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getOrderTime())));
     }
 
 
