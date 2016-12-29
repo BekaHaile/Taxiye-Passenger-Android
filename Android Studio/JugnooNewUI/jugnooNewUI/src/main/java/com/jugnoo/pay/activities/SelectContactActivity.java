@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -17,12 +18,14 @@ import android.widget.TextView;
 import com.jugnoo.pay.adapters.SendMoneyPagerAdapter;
 import com.jugnoo.pay.fragments.ContactsFragment;
 import com.jugnoo.pay.fragments.PaymentFragment;
+import com.sabkuchfresh.fragments.FreshFragment;
 import com.sabkuchfresh.utils.AppConstant;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
@@ -129,6 +132,14 @@ public class SelectContactActivity extends BaseActivity {
         });
 
 
+    }
+
+    public PaymentFragment getPaymentFragment() {
+        return (PaymentFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 1);
+    }
+
+    public ContactsFragment getContactsFragment(){
+        return (ContactsFragment) getSupportFragmentManager().findFragmentByTag(ContactsFragment.class.getName());
     }
 
     public EditText getSearchET() {

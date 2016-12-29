@@ -10,8 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 
+import com.jugnoo.pay.activities.SelectContactActivity;
 import com.jugnoo.pay.models.FetchPaymentAddressResponse;
 import com.jugnoo.pay.models.SelectUser;
 import com.jugnoo.pay.utils.CommonMethods;
@@ -29,7 +31,7 @@ import java.util.Locale;
 public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAdapter.MyViewHolder> {
     public ArrayList<FetchPaymentAddressResponse.VpaList> savedUsersList;
     public  int selectedPosition;
-    private Activity activity;
+    private SelectContactActivity activity;
     private ArrayList<FetchPaymentAddressResponse.VpaList> arraylist;
     private Callback clickListener;
     @Override
@@ -39,7 +41,7 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
         return new MyViewHolder(itemView);
     }
 
-    public PaymentAddressAdapter(Activity activity, ArrayList<FetchPaymentAddressResponse.VpaList> savedUsersList, Callback clickListener)
+    public PaymentAddressAdapter(SelectContactActivity activity, ArrayList<FetchPaymentAddressResponse.VpaList> savedUsersList, Callback clickListener)
     {
         this.savedUsersList = savedUsersList;
         this.activity = activity;
@@ -82,7 +84,22 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
         holder.ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickListener.onDelete(savedUsersList.get(position).getVpa());
+
+                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", activity.getString(R.string.remove_payment_address_string),
+                        activity.getString(R.string.yes), activity.getString(R.string.cancel),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                clickListener.onDelete(savedUsersList.get(position).getVpa());
+                            }
+                        },
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                DialogPopup.dismissAlertPopup();
+                            }
+                        }, false, false);
+
             }
         });
     }
@@ -92,12 +109,28 @@ public class PaymentAddressAdapter extends RecyclerView.Adapter<PaymentAddressAd
         charText = charText.toLowerCase(Locale.getDefault());
         savedUsersList.clear();
         if (charText.length() == 0) {
+
+            activity.getPaymentFragment().getTvNoMatchFound().setVisibility(View.GONE);
+            activity.getPaymentFragment().getRvPaymentAddress().setVisibility(View.VISIBLE);
+
             savedUsersList.addAll(arraylist);
         } else {
             for (FetchPaymentAddressResponse.VpaList wp : arraylist) {
                 if (wp.getName().toLowerCase(Locale.getDefault())
                         .contains(charText)) {
+
+                    activity.getPaymentFragment().getTvNoMatchFound().setVisibility(View.GONE);
+                    activity.getPaymentFragment().getRvPaymentAddress().setVisibility(View.VISIBLE);
+
                     savedUsersList.add(wp);
+                }
+                else
+                {
+                    if(wp == arraylist.get(arraylist.size() - 1) && savedUsersList.size() == 0)
+                    {
+                        activity.getPaymentFragment().getTvNoMatchFound().setVisibility(View.VISIBLE);
+                        activity.getPaymentFragment().getRvPaymentAddress().setVisibility(View.GONE);
+                    }
                 }
 
             }

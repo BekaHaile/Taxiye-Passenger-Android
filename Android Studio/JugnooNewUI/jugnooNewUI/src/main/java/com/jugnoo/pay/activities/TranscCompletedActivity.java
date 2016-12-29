@@ -373,7 +373,7 @@ public class TranscCompletedActivity extends BaseActivity {
 
             textViewPaid.setText(txnDetail.getTxnString());
             contactImg.setImageResource(R.drawable.icon_user);
-            mobileTxt.setVisibility(View.GONE);
+            // mobileTxt.setVisibility(View.GONE);
             imageViewCall.setVisibility(View.GONE);
             if(TextUtils.isEmpty(txnDetail.getName())){
 				if(!TextUtils.isEmpty(txnDetail.getPhoneNo()) && Utils.isPhoneValid(txnDetail.getPhoneNo())){

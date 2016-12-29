@@ -1406,6 +1406,11 @@
     <string name="GotIt">Got It</string>
 
     <string name="accept_online_payment">Accept Online Payment</string>
+
     <string name="order_placed_redirecting_you_to_payment">Order placed\n\nRedirecting you to payment</string>
+
+    <string name="remove_payment_address_string">Are you sure you want to remove this payment address?</string>
+    <string name="please_enter_valid_phone">Please enter valid phone number</string>
+
 
 </resources>

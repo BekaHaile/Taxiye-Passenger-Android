@@ -55,7 +55,7 @@ public class PaymentFragment extends Fragment {
     private RecyclerView rvPaymentAddress;
     private LinearLayout llPlaceHolder;
     private PaymentAddressAdapter paymentAddressAdapter;
-    private TextView tvTitle;
+    private TextView tvTitle, tvNoMatchFound;
     private ArrayList<FetchPaymentAddressResponse.VpaList> fetchList = new ArrayList<>();
 
     @Nullable
@@ -67,11 +67,13 @@ public class PaymentFragment extends Fragment {
         llPlaceHolder = (LinearLayout) rootView.findViewById(R.id.llPlaceHolder);
         tvTitle = (TextView) rootView.findViewById(R.id.tvTitle); tvTitle.setTypeface(Fonts.mavenRegular(getActivity()));
 
+        tvNoMatchFound = (TextView) rootView.findViewById(R.id.tvNoMatchFound);
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         rvPaymentAddress.setLayoutManager(mLayoutManager);
         rvPaymentAddress.setItemAnimator(new DefaultItemAnimator());
 
-        paymentAddressAdapter = new PaymentAddressAdapter(getActivity(), fetchList, new PaymentAddressAdapter.Callback() {
+        paymentAddressAdapter = new PaymentAddressAdapter((SelectContactActivity) getActivity(), fetchList, new PaymentAddressAdapter.Callback() {
             @Override
             public void recyclerViewListClicked(int position) {
                 SelectUser data = new SelectUser();
@@ -124,6 +126,14 @@ public class PaymentFragment extends Fragment {
 
     public PaymentAddressAdapter getPaymentAddressAdapter() {
         return paymentAddressAdapter;
+    }
+
+    public TextView getTvNoMatchFound() {
+        return tvNoMatchFound;
+    }
+
+    public RecyclerView getRvPaymentAddress() {
+        return rvPaymentAddress;
     }
 
     @Override

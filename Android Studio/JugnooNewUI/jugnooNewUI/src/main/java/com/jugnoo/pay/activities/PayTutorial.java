@@ -21,10 +21,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.utils.PrefManager;
 
 import org.w3c.dom.Text;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -58,11 +61,20 @@ public class PayTutorial extends AppCompatActivity {
     private Button btnSkip, btnNext;
     private PrefManager prefManager;
 
+    private double latitude;
+    private double longitude;
+
     RelativeLayout ActivityPayTutorialLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE))
+        {
+            this.latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude);
+            this.longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude);
+        }
 
         // Checking for first time launch - before calling setContentView()
         prefManager = new PrefManager(this);
@@ -201,7 +213,15 @@ public class PayTutorial extends AppCompatActivity {
 
     private void launchHomeScreen() {
         // prefManager.setFirstTimeLaunch(false);
-        startActivity(new Intent(PayTutorial.this, MainActivity.class));
+
+        Intent intent = new Intent(PayTutorial.this, MainActivity.class);
+        intent.putExtra(Constants.KEY_LATITUDE, this.latitude);
+        intent.putExtra(Constants.KEY_LONGITUDE, this.longitude);
+
+        startActivity(intent);
+
+
+
         finish();
     }
 

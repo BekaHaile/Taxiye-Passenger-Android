@@ -30,6 +30,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
+import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.adapters.PendingTrnscAdapater;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.AccountMgmtCallbackRequest;
@@ -180,6 +181,8 @@ public class MainActivity extends BaseActivity {
     private FetchPayDataResponse fetchPayDataResponse;
     private CallbackManager callbackManager;
 
+    private LatLng selectedLatLng;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,6 +199,12 @@ public class MainActivity extends BaseActivity {
 
             toggle.syncState();
             userDetails = Prefs.with(MainActivity.this).getObject(SharedPreferencesName.APP_USER, CommonResponse.class);
+
+
+            if(getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)){
+                setSelectedLatLng(new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude),
+                        getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude)));
+            }
 
             menuBar = new MenuBar(this, drawer);
             imageButtonBack = (ImageButton) findViewById(R.id.back_btn);
@@ -289,6 +298,23 @@ public class MainActivity extends BaseActivity {
 
         firstTimeApi();
     }
+
+    public LatLng getSelectedLatLng() {
+        if(selectedLatLng != null){
+            return selectedLatLng;
+        } else {
+            return new LatLng(Data.latitude, Data.longitude);
+        }
+    }
+
+    public void setSelectedLatLng(LatLng selectedLatLng) {
+        this.selectedLatLng = selectedLatLng;
+    }
+
+    public LatLng getCurrentPlaceLatLng() {
+        return getSelectedLatLng();
+    }
+
 
     private void firstTimeApi(){
         try {

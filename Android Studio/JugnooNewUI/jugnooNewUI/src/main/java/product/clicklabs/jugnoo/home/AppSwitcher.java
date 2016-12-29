@@ -250,6 +250,9 @@ public class AppSwitcher {
 											// intent.setClass(activity, MainActivity.class);
 											intent.setClass(activity, PayTutorial.class);
 
+											intent.putExtra(Constants.KEY_LATITUDE, latLng.latitude);
+											intent.putExtra(Constants.KEY_LONGITUDE, latLng.longitude);
+
 											intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 											activity.startActivity(intent);
 											activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -275,6 +278,9 @@ public class AppSwitcher {
 					} else {
 						// intent.setClass(activity, MainActivity.class);
 						intent.setClass(activity, PayTutorial.class);
+
+						intent.putExtra(Constants.KEY_LATITUDE, latLng.latitude);
+						intent.putExtra(Constants.KEY_LONGITUDE, latLng.longitude);
 
 						activity.startActivity(intent);
 						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
