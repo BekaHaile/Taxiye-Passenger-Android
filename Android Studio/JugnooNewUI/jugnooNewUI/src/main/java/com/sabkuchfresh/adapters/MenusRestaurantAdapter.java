@@ -3,6 +3,7 @@ package com.sabkuchfresh.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -24,9 +25,12 @@ import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.squareup.picasso.Picasso;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
@@ -74,7 +78,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
+        timerHandler.postDelayed(timerRunnable, 1000);
     }
+
+        Handler timerHandler = new Handler();
+        Runnable timerRunnable = new Runnable() {
+                @Override
+                public void run() {
+                        notifyDataSetChanged();
+                        timerHandler.postDelayed(this, 60000); //run every minute
+                    }
+            };
 
     private void searchVendors(String text){
         vendorsToShow.clear();
@@ -283,13 +297,50 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
 
                 mHolder.textViewRestaurantName.setText(vendor.getName());
+
+                DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+                String currentSystemTime = dateFormat.format(new Date()).toString();
+
+
+                long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()) , currentSystemTime);
+
+                long minutes =  ((timeDiff1 / (1000l*60l)));
+
+    //            long timeDiff = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()) , formattedDate) / (60 * 1000);
+
+
+                Log.e(TAG, " position= "+position+", get close time  "+DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn())+
+                        " minute= "+minutes+" restaurant name= "+vendor.getName());
+
+
+                if(minutes > vendor.getBufferTime()){
+                mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.GONE);
+                } else if(minutes <= vendor.getBufferTime() && minutes > 0) {
+                mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.VISIBLE);
+                mHolder.textViewRestaurantCloseTime.setText("Closes in "+minutes+" min");
+                } else {
+                mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.GONE);
+                vendor.setIsClosed(1);
+                }
                 mHolder.textViewClosed.setVisibility(((vendor.getIsClosed() == 1)||(vendor.getIsAvailable()==0)) ? View.VISIBLE : View.GONE);
+
+                mHolder.textViewDelivery.setVisibility(((vendor.getMinimumOrderAmount() != null)) ? View.VISIBLE : View.GONE);
+                mHolder.textViewDelivery.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
+
+                mHolder.imageViewAddressLine.setVisibility(((vendor.getRestaurantAddress() != null)) ? View.VISIBLE : View.GONE);
+                mHolder.textViewAddressLine.setVisibility(((vendor.getRestaurantAddress() != null)) ? View.VISIBLE : View.GONE);
+                mHolder.textViewAddressLine.setText(vendor.getRestaurantAddress());
+
+
+
+
+                /*mHolder.textViewClosed.setVisibility(((vendor.getIsClosed() == 1)||(vendor.getIsAvailable()==0)) ? View.VISIBLE : View.GONE);
                 mHolder.relativeLayoutRestaurantCloseTime.setVisibility(((vendor.getInClose() != null)) ? View.VISIBLE : View.GONE);
                 mHolder.textViewRestaurantCloseTime.setText(vendor.getInClose());
 
                 mHolder.textViewDelivery.setVisibility(((vendor.getMinimumOrderAmount() != null)) ? View.VISIBLE : View.GONE);
                 mHolder.textViewDelivery.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
-
+*/
                 mHolder.textViewAddressLine.setText(vendor.getRestaurantAddress());
 
                 if(vendor.getCuisines() != null && vendor.getCuisines().size() > 0){
@@ -549,7 +600,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout linearRoot;
-        public ImageView imageViewRestaurantImage;
+        public ImageView imageViewRestaurantImage, imageViewAddressLine;
         public TextView textViewClosed, textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines,
                 textViewR1, textViewR2, textViewR3;
 
@@ -561,7 +612,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             super(itemView);
             linearRoot = (LinearLayout) itemView.findViewById(R.id.linearRoot);
             imageViewRestaurantImage = (ImageView) itemView.findViewById(R.id.imageViewRestaurantImage);
-
+            imageViewAddressLine = (ImageView) itemView.findViewById(R.id.imageViewAddressLine);
             textViewClosed = (TextView) itemView.findViewById(R.id.textViewClosed); textViewClosed.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textViewRestaurantName = (TextView) itemView.findViewById(R.id.textViewRestaurantName); textViewRestaurantName.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textViewMinimumOrder = (TextView) itemView.findViewById(R.id.textViewMinimumOrder); textViewMinimumOrder.setTypeface(Fonts.mavenRegular(context));

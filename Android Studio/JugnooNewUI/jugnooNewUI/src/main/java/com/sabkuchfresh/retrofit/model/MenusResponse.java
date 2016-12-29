@@ -200,12 +200,15 @@ public class MenusResponse {
 		@Expose
 		private Integer freeDelivery;
 
-		@SerializedName("close_in")
+		@SerializedName("close_at")
 		@Expose
 		private String closeIn;
 		@SerializedName("display_address")
 		@Expose
 		private String restaurantAdd;
+		@SerializedName("close_in_buffer")
+		@Expose
+		private Long bufferTime;
 
 		/**
 		 *
@@ -429,7 +432,12 @@ public class MenusResponse {
 
 
 		public Integer getPureVegetarian() {
-			return pureVegetarian;
+			if(pureVegetarian != null) {
+				return pureVegetarian;
+			} else {
+				return 0;
+			}
+		//	return pureVegetarian;
 		}
 
 		public void setPureVegetarian(Integer pureVegetarian) {
@@ -437,7 +445,12 @@ public class MenusResponse {
 		}
 
 		public Integer getOffersDiscounts() {
-			return offersDiscounts;
+			if(offersDiscounts != null) {
+				return offersDiscounts;
+			} else {
+				return 0;
+			}
+		//	return offersDiscounts;
 		}
 
 		public void setOffersDiscounts(Integer offersDiscounts) {
@@ -445,7 +458,11 @@ public class MenusResponse {
 		}
 
 		public Integer getFreeDelivery() {
-			return freeDelivery;
+			if(freeDelivery != null) {
+				return freeDelivery;
+			} else {
+				return 0;
+			}
 		}
 
 		public void setFreeDelivery(Integer freeDelivery) {
@@ -453,20 +470,28 @@ public class MenusResponse {
 		}
 
 
-		public String getInClose() {
-			return closeIn;
-		}
-
-		public void setInClose(String closeIn) {
-			this.closeIn = closeIn;
-		}
-
 		public String getRestaurantAddress() {
 			return restaurantAdd;
 		}
 
 		public void setRestaurantAddress(String restaurantAdd) {
 			this.restaurantAdd = restaurantAdd;
+		}
+
+		public String getCloseIn() {
+			return closeIn;
+		}
+
+		public void setCloseIn(String closeIn) {
+			this.closeIn = closeIn;
+		}
+
+		public Long getBufferTime() {
+			return bufferTime;
+		}
+
+		public void setBufferTime(Long bufferTime) {
+			this.bufferTime = bufferTime;
 		}
 	}
 
