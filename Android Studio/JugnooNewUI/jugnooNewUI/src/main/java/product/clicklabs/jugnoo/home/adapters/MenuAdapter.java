@@ -40,7 +40,6 @@ import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
-import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -397,6 +396,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
         } else if(activity instanceof FreshActivity){
             latLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+        } else if(activity instanceof MainActivity){
+            latLng = ((MainActivity)activity).getCurrentPlaceLatLng();
         }
         return latLng;
     }

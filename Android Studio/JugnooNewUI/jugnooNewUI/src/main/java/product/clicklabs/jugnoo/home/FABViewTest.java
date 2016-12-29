@@ -11,6 +11,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.home.FreshActivity;
 
@@ -19,7 +20,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -317,6 +317,8 @@ public class FABViewTest {
                 latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
             } else if(activity instanceof FreshActivity){
                 latLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+            } else if(activity instanceof MainActivity){
+                latLng = ((MainActivity)activity).getCurrentPlaceLatLng();
             }
             final LatLng finalLatLng = latLng;
             menuLabelsRightTest.close(true);

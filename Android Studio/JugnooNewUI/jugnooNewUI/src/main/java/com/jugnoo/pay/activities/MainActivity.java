@@ -82,8 +82,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-import static product.clicklabs.jugnoo.Data.context;
-
 public class MainActivity extends BaseActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolBar;
@@ -196,6 +194,15 @@ public class MainActivity extends BaseActivity {
             toggle.setDrawerIndicatorEnabled(false);
 
             callbackManager = CallbackManager.Factory.create();
+
+            try {
+                if(com.sabkuchfresh.utils.Utils.compareDouble(Data.latitude, 0) == 0 && com.sabkuchfresh.utils.Utils.compareDouble(Data.longitude, 0) == 0){
+                    Data.latitude = Data.loginLatitude;
+                    Data.longitude = Data.loginLongitude;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             toggle.syncState();
             userDetails = Prefs.with(MainActivity.this).getObject(SharedPreferencesName.APP_USER, CommonResponse.class);
@@ -1043,5 +1050,8 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    public LatLng getCurrentPlaceLatLng() {
+        return new LatLng(Data.latitude, Data.longitude);
+    }
 
 }
