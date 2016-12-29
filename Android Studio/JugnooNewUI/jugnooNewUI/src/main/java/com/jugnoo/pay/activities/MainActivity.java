@@ -1050,8 +1050,4 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    public LatLng getCurrentPlaceLatLng() {
-        return new LatLng(Data.latitude, Data.longitude);
-    }
-
 }
