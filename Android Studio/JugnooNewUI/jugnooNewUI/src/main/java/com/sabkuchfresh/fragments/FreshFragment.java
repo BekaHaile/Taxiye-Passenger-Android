@@ -360,6 +360,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+                                    activity.getSearchLayout().setVisibility(View.GONE);
+                                    activity.resetToolbar();
                                     mainLayout.setVisibility(View.GONE);
                                     activity.showBottomBar(false);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?

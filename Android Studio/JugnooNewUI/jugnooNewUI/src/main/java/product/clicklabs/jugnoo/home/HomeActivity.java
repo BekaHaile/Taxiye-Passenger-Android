@@ -1858,7 +1858,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 //                        CustomInfoWindow customIW = new CustomInfoWindow(HomeActivity.this, arg0.getTitle(), arg0.getSnippet());
 //                        map.setInfoWindowAdapter(customIW);
 
-                        return false;
+                        return true;
                     }
                     else {
                         return true;

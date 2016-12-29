@@ -889,6 +889,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 //        }
     }
 
+    public RelativeLayout getSearchLayout() {
+        return searchLayout;
+    }
+
     public void fragmentUISetup(Fragment fragment) {
         try {
             int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
