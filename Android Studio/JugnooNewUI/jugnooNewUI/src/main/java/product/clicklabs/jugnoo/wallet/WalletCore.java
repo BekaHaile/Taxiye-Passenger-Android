@@ -549,20 +549,20 @@ public class WalletCore {
 
     public void openPaymentActivityInCaseOfWalletNotAdded(Activity activity, int paymentOption) {
 		try {
-			if (Data.userData.getPaytmEnabled() != 1
+			if(paymentOption == PaymentOption.JUGNOO_PAY.getOrdinal()
+					&& Data.getPayData() != null && Data.getPayData().getPay().getHasVpa() == 0){
+				Intent intent = new Intent(activity, MainActivity.class);
+				intent.putExtra(Constants.KEY_GO_BACK, 1);
+				activity.startActivity(intent);
+				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
+			}
+			else if (Data.userData.getPaytmEnabled() != 1
 					|| Data.userData.getMobikwikEnabled() != 1
 					|| Data.userData.getFreeChargeEnabled() != 1) {
 				Intent intent = new Intent(activity, PaymentActivity.class);
 				intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
 				intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption);
-				activity.startActivity(intent);
-				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-				FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
-			}
-			else if(paymentOption == PaymentOption.JUGNOO_PAY.getOrdinal()
-					&& Data.getPayData() != null && Data.getPayData().getPay().getHasVpa() == 0){
-				Intent intent = new Intent(activity, MainActivity.class);
-				intent.putExtra(Constants.KEY_GO_BACK, 1);
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				FlurryEventLogger.event(FlurryEventNames.WALLET_BEFORE_REQUEST_RIDE);
