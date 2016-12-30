@@ -322,5 +322,6 @@
     <dimen name="px_34">34px</dimen>
     <dimen name="px_28">28px</dimen>
     <dimen name="px_75">75px</dimen>
+    <dimen name="px_45">45px</dimen>
 
 </resources>

@@ -174,6 +174,7 @@
 
         <Button
             style="@style/ButtonTheme"
+            android:id="@+id/bJoinNow"
             android:layout_marginTop="@dimen/px_46"
             android:layout_gravity="center_horizontal"
             android:text="@string/join_now"/>
@@ -192,7 +193,8 @@
             android:id="@+id/rvBenefits"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/px_20"/>
+            android:paddingTop="@dimen/px_20"
+            android:paddingBottom="@dimen/px_20"/>
     </RelativeLayout>
 
     <ImageView
@@ -200,6 +202,13 @@
         android:layout_height="6px"
         android:layout_below="@+id/llContainer"
         android:background="@drawable/shadow_down" />
+
+    <RelativeLayout
+        android:id="@+id/rlFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:layout_below="@id/topBar"/>
 
 
     <ImageView

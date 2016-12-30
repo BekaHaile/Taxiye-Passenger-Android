@@ -509,4 +509,9 @@ public interface ApiService {
     void customerFetchUserAddress(@FieldMap Map<String, String> params,
                             Callback<FetchUserAddressResponse> callback);
 
+    @FormUrlEncoded
+    @POST("/cancel_subscription")
+    void cancelSubscription(@FieldMap Map<String, String> params,
+                                  Callback<SettleUserDebt> callback);
+
 }

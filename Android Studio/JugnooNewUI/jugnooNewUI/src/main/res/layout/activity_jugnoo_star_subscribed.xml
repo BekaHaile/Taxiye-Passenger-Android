@@ -104,20 +104,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvBenefits"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/px_100"
+            android:layout_height="wrap_content"
             android:paddingTop="@dimen/px_20"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/px_55"
-            android:gravity="center"
-            android:textStyle=""
-            android:text="@string/i_dont_want_star"
-            android:textColor="@color/theme_color"
-            android:textSize="@dimen/text_size_28"/>
     </RelativeLayout>
 
     <ImageView

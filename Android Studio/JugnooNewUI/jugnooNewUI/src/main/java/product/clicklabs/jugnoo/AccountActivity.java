@@ -784,19 +784,29 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 //            }
 //        }
 
-		HomeActivity.checkForAccessTokenChange(this);
-
         try {
-            reloadProfileAPI(this);
-            textViewEmergencyContact.setText(getResources()
-					.getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
-							R.string.emergency_contacts : R.string.add_emergency_contacts));
+            HomeActivity.checkForAccessTokenChange(this);
+
+            if(Data.userData.getHasSubscription() == 1){
+                rlJugnooStar.setVisibility(View.VISIBLE);
+            } else{
+                rlJugnooStar.setVisibility(View.GONE);
+            }
+
+            try {
+                reloadProfileAPI(this);
+                textViewEmergencyContact.setText(getResources()
+                        .getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
+                                R.string.emergency_contacts : R.string.add_emergency_contacts));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            scrollView.scrollTo(0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        scrollView.scrollTo(0, 0);
-	}
+    }
 
 	@Override
 	protected void onPause() {

@@ -1404,5 +1404,6 @@
     <string name="current_membership_plan">Current membership plan</string>
     <string name="membership_expires_on">Membership expires on</string>
     <string name="i_dont_want_star"><u>I don\'t want to be a Star anymore</u></string>
+    <string name="no">No</string>
 
 </resources>
