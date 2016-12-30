@@ -24,9 +24,7 @@ import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -106,7 +104,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
-import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -2654,7 +2651,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         params.setScrollFlags(0);
 
         AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-        layoutParams.height = (int)(96f * ASSL.Xscale());
+        layoutParams.height = (int)(96f * ASSL.Yscale());
         toolbar.setLayoutParams(layoutParams);
     }
 
@@ -2666,7 +2663,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
 
         AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-        layoutParams.height = (int)(164f * ASSL.Xscale());
+        layoutParams.height = (int)(164f * ASSL.Yscale());
         toolbar.setLayoutParams(layoutParams);
     }
 }

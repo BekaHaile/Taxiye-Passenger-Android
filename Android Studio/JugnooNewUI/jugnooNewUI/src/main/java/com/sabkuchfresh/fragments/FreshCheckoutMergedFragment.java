@@ -1134,9 +1134,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     if(jObj.has(Constants.KEY_PAYMENT_OBJECT)){
                                         FreshCheckoutMergedFragment.this.placeOrderResponse = placeOrderResponse;
-                                        final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstanceCard(activity,
-                                                activity.getString(R.string.loading), true);
-                                        if(progressDialog != null) {
+                                        final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity,
+                                                activity.getString(R.string.loading));
                                             new Handler().postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -1147,7 +1146,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                                             FreshCheckoutMergedFragment.this.placeOrderResponse.getPaymentObject());
                                                 }
                                             }, 3000);
-                                        }
                                     } else {
                                         orderPlacedSuccess(placeOrderResponse);
                                     }
@@ -1493,13 +1491,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     }
                 }
 
-                if (Data.getPayData() == null)
-                {
-                    // don't add jugnoo pay as payment method
-                }
-                else
-                {
-                    // adding jugnoo pay as payment method
+                if (Data.getPayData() != null && Data.userData.getPayEnabled() == 1) {
                     linearLayoutWalletContainer.addView(relativeLayoutJugnooPay);
                 }
 
@@ -2175,7 +2167,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                 new OrderCheckoutFailureDialog(getActivity(), new OrderCheckoutFailureDialog.Callback() {
                                     @Override
                                     public void onRetryClicked() {
-                                        placeOrder();
+                                        placeOrderApi();
                                     }
 
                                     @Override

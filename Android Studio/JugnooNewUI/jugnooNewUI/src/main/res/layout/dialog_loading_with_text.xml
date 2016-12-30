@@ -32,7 +32,7 @@
                 android:layout_marginLeft="20px"
                 android:layout_marginRight="20px"
                 android:text="je;;"
-                android:textColor="@color/text_color"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size_30"
                 android:visibility="gone"
                 android:gravity="center"

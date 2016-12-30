@@ -36,14 +36,6 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
-        <ImageView
-            android:id="@+id/below_shadow"
-            android:layout_width="match_parent"
-            android:layout_height="6px"
-            android:layout_marginTop="@dimen/px_96"
-            android:src="@drawable/shadow_down"
-            />
-
         <RelativeLayout
             android:id="@+id/relativeLayoutContainer"
             android:layout_width="match_parent"
@@ -51,7 +43,13 @@
             android:layout_above="@+id/linearLayoutCheckoutContainer"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-
+        <ImageView
+            android:id="@+id/below_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:layout_marginTop="@dimen/px_96"
+            android:src="@drawable/shadow_down"
+            />
 
         <LinearLayout
             android:id="@+id/linearLayoutCheckoutContainer"

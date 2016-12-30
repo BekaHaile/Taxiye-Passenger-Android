@@ -180,6 +180,7 @@ public class MainActivity extends BaseActivity {
     private CallbackManager callbackManager;
 
     private LatLng selectedLatLng;
+    private int goBack = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,6 +212,10 @@ public class MainActivity extends BaseActivity {
             if(getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)){
                 setSelectedLatLng(new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude),
                         getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude)));
+            }
+
+            if(getIntent().hasExtra(Constants.KEY_GO_BACK)){
+                goBack = getIntent().getIntExtra(Constants.KEY_GO_BACK, 0);
             }
 
             menuBar = new MenuBar(this, drawer);
@@ -531,6 +536,10 @@ public class MainActivity extends BaseActivity {
                             // set First time launch false in prefManager
                             PrefManager prefManager = new PrefManager(MainActivity.this);
                             prefManager.setFirstTimeLaunch(false);
+                            if(goBack == 1){
+                                finish();
+                                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                            }
 
                         } else if (flag == 403) {
 //                            logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
