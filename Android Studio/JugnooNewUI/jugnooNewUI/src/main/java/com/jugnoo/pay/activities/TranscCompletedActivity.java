@@ -211,7 +211,7 @@ public class TranscCompletedActivity extends BaseActivity {
                 rvBankRefId.setVisibility(View.GONE);
                 rvNpciTransId.setVisibility(View.GONE);
                 cardViewDebitFrom.setVisibility(View.GONE);
-                tvTransStatusVal.setText(getString(R.string.successful));
+                tvTransStatusVal.setText(getString(R.string.requested_in_caps));
                 tvTransStatusVal.setTextColor(getResources().getColor(R.color.green_rupee));
                 ivTransCompleted.setImageResource(R.drawable.ic_tick_copy);
                 tvTransStatusValMessage.setText(contactDetails.getStatusMessage());

@@ -1415,6 +1415,7 @@
     <string name="please_enter_valid_phone">Please enter valid phone number</string>
     <string name="Retry">Retry</string>
     <string name="change_payment_method">Change Payment Method</string>
+    <string name="requested_in_caps">REQUESTED</string>
 
 
 </resources>

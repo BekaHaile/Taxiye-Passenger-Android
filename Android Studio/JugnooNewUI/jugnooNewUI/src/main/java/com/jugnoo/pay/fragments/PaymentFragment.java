@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -112,7 +113,7 @@ public class PaymentFragment extends Fragment {
         });
         rvPaymentAddress.setAdapter(paymentAddressAdapter);
 
-        ivAddVPA = (ImageView) rootView.findViewById(R.id.ivAddVPA);
+        ivAddVPA = (FloatingActionButton) rootView.findViewById(R.id.fabAddVPA);
         ivAddVPA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

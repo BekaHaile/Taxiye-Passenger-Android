@@ -65,6 +65,8 @@ public class PayTutorial extends AppCompatActivity {
     private double longitude;
 
     RelativeLayout ActivityPayTutorialLayout;
+    private int goBack;
+    private int dontShowTurorialAgain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,16 @@ public class PayTutorial extends AppCompatActivity {
         {
             this.latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude);
             this.longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude);
+        }
+
+        if(getIntent().hasExtra(Constants.KEY_GO_BACK))
+        {
+            goBack = 1;
+        }
+
+        if(getIntent().hasExtra("comingFromPayment"))
+        {
+            dontShowTurorialAgain = 1;
         }
 
         // Checking for first time launch - before calling setContentView()
@@ -217,6 +229,13 @@ public class PayTutorial extends AppCompatActivity {
         Intent intent = new Intent(PayTutorial.this, MainActivity.class);
         intent.putExtra(Constants.KEY_LATITUDE, this.latitude);
         intent.putExtra(Constants.KEY_LONGITUDE, this.longitude);
+
+        if(goBack == 1)
+        {
+            intent.putExtra(Constants.KEY_GO_BACK, 1);
+            intent.putExtra("comingFromPayment", 1);
+        }
+
 
         startActivity(intent);
 

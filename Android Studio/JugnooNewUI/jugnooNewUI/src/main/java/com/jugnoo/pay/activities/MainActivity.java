@@ -181,6 +181,7 @@ public class MainActivity extends BaseActivity {
 
     private LatLng selectedLatLng;
     private int goBack = 0;
+    private PrefManager prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,8 +215,17 @@ public class MainActivity extends BaseActivity {
                         getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude)));
             }
 
-            if(getIntent().hasExtra(Constants.KEY_GO_BACK)){
-                goBack = getIntent().getIntExtra(Constants.KEY_GO_BACK, 0);
+            prefManager = new PrefManager(MainActivity.this);
+            int comingFromPayment =  getIntent().getIntExtra("comingFromPayment", 0);
+            goBack = getIntent().getIntExtra(Constants.KEY_GO_BACK, 0);
+            if(goBack == 1 && comingFromPayment == 0 && prefManager.isFirstTimeLaunch()){
+                Intent intent = new Intent(MainActivity.this, PayTutorial.class);
+                intent.putExtra(Constants.KEY_GO_BACK, 1);
+                intent.putExtra("comingFromPayment", 1);
+
+                startActivity(intent);
+                finish();
+                return;
             }
 
             menuBar = new MenuBar(this, drawer);
@@ -534,7 +544,6 @@ public class MainActivity extends BaseActivity {
                             Data.getPayData().getPay().setHasVpa(1);
 
                             // set First time launch false in prefManager
-                            PrefManager prefManager = new PrefManager(MainActivity.this);
                             prefManager.setFirstTimeLaunch(false);
                             if(goBack == 1){
                                 finish();
