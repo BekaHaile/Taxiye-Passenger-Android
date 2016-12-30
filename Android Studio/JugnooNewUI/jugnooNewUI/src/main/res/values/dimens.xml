@@ -320,5 +320,10 @@
     <dimen name="px_70">70px</dimen>
     <dimen name="px_46">46px</dimen>
     <dimen name="px_34">34px</dimen>
+    <dimen name="px_72">72px</dimen>
+    <dimen name="px_180">180px</dimen>
+    <dimen name="px_404">404px</dimen>
+    <dimen name="px_22">22px</dimen>
+    <dimen name="px_17">17px</dimen>
 
 </resources>

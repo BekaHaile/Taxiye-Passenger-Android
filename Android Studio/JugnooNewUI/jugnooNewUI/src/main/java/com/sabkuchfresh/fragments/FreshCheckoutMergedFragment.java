@@ -2137,6 +2137,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private PlaceOrderResponse placeOrderResponse;
 
+
     public void apiPlaceOrderPayCallback(final MessageRequest message){
         try {
             if (AppStatus.getInstance(activity).isOnline(activity)) {

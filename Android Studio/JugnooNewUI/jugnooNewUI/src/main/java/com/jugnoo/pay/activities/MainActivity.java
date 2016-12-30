@@ -1043,7 +1043,7 @@ public class MainActivity extends BaseActivity {
                             //callBankSetMPINApi(sendMoneyResponse.getTxnDetails());
 
                         } else {
-                            DialogPopup.alertPopup(MainActivity.this, "", commonResponse.getMessage());
+                            // DialogPopup.alertPopup(MainActivity.this, "", commonResponse.getMessage());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

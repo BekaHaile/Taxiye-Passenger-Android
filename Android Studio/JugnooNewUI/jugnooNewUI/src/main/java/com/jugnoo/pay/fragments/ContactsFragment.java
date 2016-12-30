@@ -85,6 +85,9 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
         ((SelectContactActivity)getActivity()).getIvToolbarRefreshContacts().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                ((SelectContactActivity)getActivity()).getSearchET().setText("");
+
                 fetchUserContacts();
             }
         });

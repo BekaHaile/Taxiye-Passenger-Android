@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:layout_marginBottom="@dimen/px_30"
     android:background="@color/white">
 
     <ImageView
@@ -10,7 +12,7 @@
         android:layout_height="404px"
         android:layout_gravity="center"
         android:src="@drawable/select_your_bank"
-        android:layout_marginBottom="@dimen/px_32"/>
+        />
 
     <TextView
         android:id="@+id/tv1"
@@ -19,8 +21,7 @@
         android:textSize="@dimen/text_size_46"
         android:gravity="center"
         android:text="@string/pay_from_your_bank"
-        android:layout_marginTop="@dimen/px_16"
-        android:layout_marginBottom="@dimen/px_16"
+        android:layout_marginTop="@dimen/px_70"
         android:textColor="@color/theme_color"/>
     <!--android:layout_width="202.5dp"-->
 
@@ -31,8 +32,8 @@
         android:textSize="@dimen/text_size_32"
         android:textColor="@color/grey_black_light"
         android:text="@string/no_loading_money"
-        android:layout_marginTop="@dimen/px_16"
-        android:layout_marginBottom="8px"/>
+        android:layout_marginTop="@dimen/px_30"
+        />
 
     <TextView
         android:id="@+id/tv3"
@@ -41,7 +42,7 @@
         android:text="@string/bank_grade_security"
         android:textSize="@dimen/px_32"
         android:textColor="@color/grey_black_light"
-        android:layout_marginBottom="@dimen/px_16"
+        android:layout_marginTop="@dimen/px_20"
         />
 
     <TextView
@@ -52,7 +53,7 @@
         android:gravity="center"
         android:textSize="@dimen/text_size_32"
         android:textColor="@color/grey_black_light"
-        android:layout_marginTop="@dimen/px_16"
-        android:layout_marginBottom="@dimen/px_16"/>
+        android:layout_marginTop="@dimen/px_20"
+        />
 
 </LinearLayout>
