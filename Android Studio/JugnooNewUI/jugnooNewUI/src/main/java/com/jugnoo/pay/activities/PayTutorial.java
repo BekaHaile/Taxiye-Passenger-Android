@@ -3,13 +3,11 @@ package com.jugnoo.pay.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
+import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,19 +19,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.utils.PrefManager;
-
-import org.w3c.dom.Text;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-
-import static product.clicklabs.jugnoo.Data.context;
 
 public class PayTutorial extends AppCompatActivity {
 
@@ -308,4 +300,12 @@ public class PayTutorial extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        try {
+            btnSkip.performClick();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

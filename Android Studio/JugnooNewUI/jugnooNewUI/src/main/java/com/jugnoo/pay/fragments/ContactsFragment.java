@@ -168,55 +168,59 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
         protected Void doInBackground(Void... voids) {
             // Get Contact list from Phone
 
-            if (phones != null) {
-                Log.e("count", "" + phones.getCount());
-                if (phones.getCount() == 0) {
-//                    Toast.makeText(SelectContactActivity.this, "No contacts in your contact list.", Toast.LENGTH_LONG).show();
-                } else {
-                    while (phones.moveToNext()) {
-                        Bitmap bit_thumb = null;
-                        String id = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
-                        String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                        String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                        String EmailAddr = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA2));
-                        String image_thumb = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
-                        /*try {
-                            if (image_thumb != null) {
-                                bit_thumb = MediaStore.Images.Media.getBitmap(resolver, Uri.parse(image_thumb));
-                            } else {
-                                Log.e("No Image Thumb", "--------------");
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }*/
+            try {
+                if (phones != null) {
+					Log.e("count", "" + phones.getCount());
+					if (phones.getCount() == 0) {
+	//                    Toast.makeText(SelectContactActivity.this, "No contacts in your contact list.", Toast.LENGTH_LONG).show();
+					} else {
+						while (phones.moveToNext()) {
+							Bitmap bit_thumb = null;
+							String id = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
+							String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+							String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+							String EmailAddr = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA2));
+							String image_thumb = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
+							/*try {
+								if (image_thumb != null) {
+									bit_thumb = MediaStore.Images.Media.getBitmap(resolver, Uri.parse(image_thumb));
+								} else {
+									Log.e("No Image Thumb", "--------------");
+								}
+							} catch (IOException e) {
+								e.printStackTrace();
+							}*/
 
-                        SelectUser selectUser = new SelectUser();
-                        selectUser.setThumb(image_thumb);
-                        selectUser.setName(name);
-                        selectUser.setPhone(phoneNumber.replace(" ", "").trim());
-                        selectUser.setEmail(id);
-                        selectUser.setCheckedBox(false);
-                        selectUsers.add(selectUser);
-                    }
-                    Set set = new TreeSet(new Comparator<SelectUser>() {
-                        @Override
-                        public int compare(SelectUser o1, SelectUser o2) {
-                            if(o1.getPhone().toString().equalsIgnoreCase(o2.getPhone().toString())){
-                                return 0;
-                            }
-                            return 1;
-                        }
-                    });
+							SelectUser selectUser = new SelectUser();
+							selectUser.setThumb(image_thumb);
+							selectUser.setName(name);
+							selectUser.setPhone(phoneNumber.replace(" ", "").trim());
+							selectUser.setEmail(id);
+							selectUser.setCheckedBox(false);
+							selectUsers.add(selectUser);
+						}
+						Set set = new TreeSet(new Comparator<SelectUser>() {
+							@Override
+							public int compare(SelectUser o1, SelectUser o2) {
+								if(o1.getPhone().toString().equalsIgnoreCase(o2.getPhone().toString())){
+									return 0;
+								}
+								return 1;
+							}
+						});
 
-                    set.addAll(selectUsers);
-                    selectUsers.clear();
-                    selectUsers = new ArrayList<SelectUser>(set);
-                    Gson gson = new Gson();
-                    String json = gson.toJson(selectUsers);
-                    Prefs.with(getActivity()).save(SharedPreferencesName.USER_CONTACTS, json);
-                }
-            } else {
-                Log.e("Cursor close 1", "----------------");
+						set.addAll(selectUsers);
+						selectUsers.clear();
+						selectUsers = new ArrayList<SelectUser>(set);
+						Gson gson = new Gson();
+						String json = gson.toJson(selectUsers);
+						Prefs.with(getActivity()).save(SharedPreferencesName.USER_CONTACTS, json);
+					}
+				} else {
+					Log.e("Cursor close 1", "----------------");
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
             }
             //phones.close();
             return null;
