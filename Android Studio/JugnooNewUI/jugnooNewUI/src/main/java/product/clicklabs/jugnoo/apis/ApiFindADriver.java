@@ -52,7 +52,8 @@ public class ApiFindADriver {
 	}
 
 	public void hit(String accessToken, final LatLng latLng, final int showAllDrivers, int showDriverInfo,
-					Region regionSelected, final boolean beforeRequestRide, final boolean confirmedScreenOpened){
+					Region regionSelected, final boolean beforeRequestRide, final boolean confirmedScreenOpened,
+					final boolean savedAddressUsed){
 		this.regionSelected = regionSelected;
 		try {
 			if(callback != null) {
@@ -98,10 +99,10 @@ public class ApiFindADriver {
 							callback.onCompleteFindADriver();
 						}
 
-						if(beforeRequestRide){
+						if(beforeRequestRide && !savedAddressUsed){
 							Region newRegion = null;
 							for (Region region : Data.autoData.getRegions()) {
-								if(region.getRegionId() == ApiFindADriver.this.regionSelected.getRegionId()){
+								if(region.getRegionId().equals(ApiFindADriver.this.regionSelected.getRegionId())){
 									newRegion = region;
 								}
 							}
@@ -110,8 +111,10 @@ public class ApiFindADriver {
 									|| Utils.compareDouble(driverFareFactorOld, newRegion.getDriverFareFactor()) != 0)){
 								callback.stopRequestRide(confirmedScreenOpened);
 							} else{
-								callback.continueRequestRide(confirmedScreenOpened);
+								callback.continueRequestRide(confirmedScreenOpened, false);
 							}
+						} else {
+							callback.continueRequestRide(false, savedAddressUsed);
 						}
 
 					} catch (Exception e) {
@@ -430,7 +433,7 @@ public class ApiFindADriver {
 		void onPre();
 		void onFailure();
 		void onCompleteFindADriver();
-		void continueRequestRide(boolean confirmedScreenOpened);
+		void continueRequestRide(boolean confirmedScreenOpened, boolean savedAddressUsed);
 		void stopRequestRide(boolean confirmedScreenOpened);
 		void onFinish();
 	}

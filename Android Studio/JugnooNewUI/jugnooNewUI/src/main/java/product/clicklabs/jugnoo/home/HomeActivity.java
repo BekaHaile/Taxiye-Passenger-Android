@@ -163,7 +163,6 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
-import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
@@ -1065,7 +1064,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 								Bundle bundle = new Bundle();
 								MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
 										+ FirebaseEvents.REQUEST_RIDE_L1_AUTO, bundle);
-								findDriversETACall(true, false);
+								findDriversETACall(true, false, false);
 							} else {
 								Bundle bundle = new Bundle();
 								MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION + "_" + FirebaseEvents.HOME_SCREEN + "_"
@@ -1095,7 +1094,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                     }
                     if(getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())){
-                        findDriversETACall(true, true);
+                        findDriversETACall(true, true, false);
                     } else {
                         requestRideClick();
                     }
@@ -1943,7 +1942,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 public void onCameraPositionChanged(CameraPosition cameraPosition) {
 
                     Log.v("camera position is", "--> "+cameraPosition.zoom);
-                    /*if(previousZoomLevel != cameraPosition.zoom) {
+                    if(previousZoomLevel != cameraPosition.zoom) {
                         if ((savedAddressState != HomeUtil.SavedAddressState.MARKER_WITH_TEXT) && cameraPosition.zoom > 15f) {
                             homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, true);
                             savedAddressState = HomeUtil.SavedAddressState.MARKER_WITH_TEXT;
@@ -1955,7 +1954,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             savedAddressState = HomeUtil.SavedAddressState.BLANK;
                         }
                     }
-                    previousZoomLevel = cameraPosition.zoom;*/
+                    previousZoomLevel = cameraPosition.zoom;
                 }
             };
 
@@ -2001,8 +2000,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             openPushDialog();
 
-            // TODO: 29/12/16  
-            //getApiFetchUserAddress().hit(false);
+            getApiFetchUserAddress().hit(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2413,7 +2411,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         HomeActivity.this.hasWindowFocus() && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
                     Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                     if (!dontCallRefreshDriver && Data.autoData.getPickupLatLng() != null) {
-                        findDriversETACall(false, false);
+                        findDriversETACall(false, false, false);
                     }
                 }
             }
@@ -2534,26 +2532,30 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (callRequestRide) {
                                 promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
-                                /*SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), CHOOSE_SAVED_PICKUP_ADDRESS, true);
+                                SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), CHOOSE_SAVED_PICKUP_ADDRESS, true);
                                 if(searchResult != null) {
-                                    //textView.setText(searchResult.getName());
-                                    //Data.autoData.setPickupAddress(searchResult.getAddress());
                                     new SavedAddressPickupDialog(HomeActivity.this, searchResult, new SavedAddressPickupDialog.Callback() {
                                         @Override
                                         public void onDialogDismiss() {
                                             requestRideDriverCheck();
+                                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup ignored");
                                         }
 
                                         @Override
                                         public void yesClicked(SearchResult searchResult) {
                                             Data.autoData.setPickupLatLng(searchResult.getLatLng());
-                                            requestRideDriverCheck();
+                                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup choosed");
+                                            if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+                                                findDriversETACall(true, false, true);
+                                            } else {
+                                                requestRideDriverCheck();
+                                            }
                                         }
                                     }).show();
                                 } else{
                                     callAnAutoPopup(HomeActivity.this);
-                                }*/
-                                callAnAutoPopup(HomeActivity.this);
+                                }
+                                //callAnAutoPopup(HomeActivity.this);
 
 
                                 Prefs.with(HomeActivity.this).save(Constants.SP_T20_DIALOG_BEFORE_START_CROSSED, 0);
@@ -4796,8 +4798,11 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
 
                         @Override
-                        public void continueRequestRide(boolean confirmedScreenOpened) {
-                            if(confirmedScreenOpened){
+                        public void continueRequestRide(boolean confirmedScreenOpened, boolean savedAddressUsed) {
+                            if(savedAddressUsed){
+                                requestRideDriverCheck();
+                            }
+                            else if(confirmedScreenOpened){
                                 requestRideClick();
                             } else {
                                 imageViewRideNowPoolCheck();
@@ -4829,10 +4834,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private ApiFindADriver apiFindADriver = null;
-    private void findDriversETACall(boolean beforeRequestRide, boolean confirmedScreenOpened){
+    private void findDriversETACall(boolean beforeRequestRide, boolean confirmedScreenOpened, boolean savedAddressUsed){
         getApiFindADriver().hit(Data.userData.accessToken, Data.autoData.getPickupLatLng(), showAllDrivers, showDriverInfo,
                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(), beforeRequestRide,
-                confirmedScreenOpened);
+                confirmedScreenOpened, savedAddressUsed);
     }
 
     private void findADriverFinishing(boolean showPoolIntro){
@@ -9196,7 +9201,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             map.clear();
             pokestopHelper.mapCleared();
             pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
-            //homeUtil.displaySavedAddressesAsFlags(this, assl, map, true);
+            homeUtil.displaySavedAddressesAsFlags(this, assl, map, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
