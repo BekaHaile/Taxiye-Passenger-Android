@@ -75,12 +75,13 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     private ImageView imageViewThumbsDown, imageViewThumbsUp, imageviewType, imageViewThumbsUpGif, imageViewRideEndWithImage,
             ivOffering;
     private FreshActivity activity;
-    private LinearLayout linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer, llBadReason;
+    private LinearLayout linearLayoutRideSummary, linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer, llBadReason;
     private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
     private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue, tvItems,
             textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp, textViewRideEndWithImage;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;
     private ScrollView scrollViewRideSummary;
+    private TextView textViewRSScroll;
 
     private int viewType = -1;
     private String dateValue = "", endRideGoodFeedbackText;
@@ -180,6 +181,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         new ASSL(activity, mainLayout, 1134, 720, false);
 
         scrollViewRideSummary = (ScrollView) rootView.findViewById(R.id.scrollViewRideSummary);
+        linearLayoutRideSummary = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideSummary);
+        textViewRSScroll = (TextView) rootView.findViewById(R.id.textViewRSScroll);
 
         relativeLayoutGreat = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutGreat);
         relativeLayoutGreat.setVisibility(View.GONE);
@@ -406,6 +409,21 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             }
         });
         activity.fragmentUISetup(this);
+
+//        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutRideSummary, textViewRSScroll,
+//                new KeyboardLayoutListener.KeyBoardStateHandler() {
+//            @Override
+//            public void keyboardOpened() {
+//
+//            }
+//
+//            @Override
+//            public void keyBoardClosed() {
+//
+//            }
+//        });
+//        linearLayoutRideSummary.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
         return rootView;
     }
 

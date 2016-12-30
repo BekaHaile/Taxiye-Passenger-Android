@@ -36,10 +36,11 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
+        <!--android:layout_height="1038px"-->
         <RelativeLayout
             android:id="@+id/relativeLayoutContainer"
             android:layout_width="match_parent"
-            android:layout_height="1038px"
+            android:layout_height="match_parent"
             android:layout_above="@+id/linearLayoutCheckoutContainer"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
