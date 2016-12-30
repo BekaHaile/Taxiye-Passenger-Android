@@ -158,9 +158,12 @@ public class ProductsResponse {
 		@SerializedName("value")
 		@Expose
 		private String value;
-		@SerializedName("include_value")
+		@SerializedName("included_values")
 		@Expose
 		private List<Integer> includeValue = new ArrayList<Integer>();
+		@SerializedName("force_show")
+		@Expose
+		private Integer forceShow;
 
 
 		public Charges(){}
@@ -226,6 +229,18 @@ public class ProductsResponse {
 				includeValue = new ArrayList<>();
 			}
 			return includeValue;
+		}
+
+		public void setIncludeValue(List<Integer> includeValue){
+			this.includeValue = includeValue;
+		}
+
+		public Integer getForceShow() {
+			return forceShow;
+		}
+
+		public void setForceShow(Integer forceShow) {
+			this.forceShow = forceShow;
 		}
 	}
 

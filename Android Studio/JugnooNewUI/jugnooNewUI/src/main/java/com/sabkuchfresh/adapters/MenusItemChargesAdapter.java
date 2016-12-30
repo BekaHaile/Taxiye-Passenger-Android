@@ -15,6 +15,7 @@ import com.sabkuchfresh.utils.Utils;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by socomo on 12/27/16.
@@ -37,32 +38,40 @@ public class MenusItemChargesAdapter extends BaseAdapter
         return taxes.size();
     }
     @Override
-    public Object getItem(int position)
-    {
-        return null;
+    public Object getItem(int position) {
+        return position;
     }
     @Override
-    public long getItemId(int position)
-    {
-        return 0;
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MenusItemChargesAdapter.ViewHolder holder = new MenusItemChargesAdapter.ViewHolder();
+        MenusItemChargesAdapter.ViewHolder holder;
         if (convertView == null) {
             convertView = menusItemChargesLayout.inflate(R.layout.list_item_menu_charge, null);
+            holder = new MenusItemChargesAdapter.ViewHolder();
             holder.relativeLayoutMenusItemCharges = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutMenusItemCharges);
             holder.imageViewSep1 = (ImageView) convertView.findViewById(R.id.imageViewSep1);
-            holder.textViewMenusItemChargeName = (TextView) convertView.findViewById(R.id.textViewMenusItemChargeName);
-            holder.textViewMenusItemChargeValue = (TextView) convertView.findViewById(R.id.textViewMenusItemChargeValue);
+            holder.textViewMenusItemChargeName = (TextView) convertView.findViewById(R.id.textViewMenusItemChargeName); holder.textViewMenusItemChargeName.setTypeface(Fonts.mavenMedium(context));
+            holder.textViewMenusItemChargeValue = (TextView) convertView.findViewById(R.id.textViewMenusItemChargeValue); holder.textViewMenusItemChargeValue.setTypeface(Fonts.mavenRegular(context));
+
+            convertView.setTag(holder);
         } else {
             holder = (MenusItemChargesAdapter.ViewHolder) convertView.getTag();
         }
-        try
-        {
+        try {
             holder.textViewMenusItemChargeName.setText(taxes.get(position).getKey());
             holder.textViewMenusItemChargeValue.setText(context.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(taxes.get(position).getValue())));
+
+            if(taxes.get(position).getValue() > 0){
+                holder.textViewMenusItemChargeValue.setTextColor(context.getResources().getColor(R.color.text_color));
+            } else {
+                holder.textViewMenusItemChargeValue.setText(context.getString(R.string.free));
+                holder.textViewMenusItemChargeValue.setTextColor(context.getResources().getColor(R.color.green));
+            }
+
             holder.imageViewSep1.setVisibility((position) == getCount()-1 ? View.GONE : View.VISIBLE );
         } catch (Exception e) {
             e.printStackTrace();

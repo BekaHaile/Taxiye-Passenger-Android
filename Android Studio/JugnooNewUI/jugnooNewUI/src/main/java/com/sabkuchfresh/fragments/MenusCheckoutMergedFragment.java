@@ -225,6 +225,10 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             for (Category category : activity.getProductsResponse().getCategories()) {
                 for (SubItem subItem : category.getSubItems()) {
                     if (subItem.getSubItemQuantitySelected() > 0) {
+                       /* ArrayList<SubItem.Tax> taxList = new ArrayList<>();
+                        taxList.add(subItem.new Tax("pc",5.0));
+                        taxList.add(subItem.new Tax("dc",5.0));
+                        subItem.setTaxes(taxList);*/
                         activity.subItemsInCart.add(subItem);
                     }
                 }
@@ -558,11 +562,36 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         if (promoAmount > 0) {
             taxList.add(subItemTemp.new Tax(getString(R.string.discount), promoAmount));
         }
+        /*activity.getProductsResponse().getCharges().clear();
+        ProductsResponse.Charges charges = activity.getProductsResponse().new Charges();
+        charges.setId(0);
+        charges.setIsPercent(0);
+        charges.setText("Packing Charges");
+        charges.setValue("pc");
+        charges.setType(1);
+        List<Integer> includedValues = new ArrayList<>();
+        charges.setIncludeValue(includedValues);
+        activity.getProductsResponse().getCharges().add(charges);
 
+
+        ProductsResponse.Charges charges2 = activity.getProductsResponse().new Charges();
+        charges2.setId(1);
+        charges2.setIsPercent(1);
+        charges2.setText("Delivery Charges");
+        charges2.setType(1);
+        charges2.setValue("dc");
+        List<Integer> includedValues2 = new ArrayList<>();
+        includedValues2.add(charges.getId());
+        charges2.setIncludeValue(includedValues2);
+        activity.getProductsResponse().getCharges().add(charges2);
+
+*/
         totalTaxAmount = 0d;
-        for(ProductsResponse.Charges charges : activity.getProductsResponse().getCharges()){
-            SubItem.Tax tax = subItemTemp.new Tax(charges.getText(), getCalculatedCharges(subTotalAmount, charges, activity.getProductsResponse().getCharges()));
-            taxList.add(tax);
+        for(ProductsResponse.Charges charges1 : activity.getProductsResponse().getCharges()){
+            SubItem.Tax tax = subItemTemp.new Tax(charges1.getText(), getCalculatedCharges(subTotalAmount, charges1, activity.getProductsResponse().getCharges()));
+            if(tax.getValue() > 0 || charges1.getForceShow() == 1) {
+                taxList.add(tax);
+            }
             totalTaxAmount = totalTaxAmount + tax.getValue();
         }
 
