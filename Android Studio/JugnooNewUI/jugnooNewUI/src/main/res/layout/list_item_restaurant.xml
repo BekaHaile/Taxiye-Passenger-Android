@@ -19,8 +19,7 @@
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="8px"
         app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true"
-        >
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,6 +43,12 @@
                     android:src="@drawable/ic_meal_place_holder"
                     android:tag="mwar"
                     android:visibility="visible"/>
+
+                <View
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="60px"
+                    android:background="@drawable/shadow_up_menu_item" />
 
                 <TextView
                     android:id="@+id/textViewClosed"
@@ -131,7 +136,7 @@
 
 
                 <LinearLayout
-                    android:layout_width="400px"
+                    android:layout_width="390px"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginLeft="20px"
@@ -188,6 +193,7 @@
                         android:layout_marginTop="12px"
                        />
                 </LinearLayout>
+
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

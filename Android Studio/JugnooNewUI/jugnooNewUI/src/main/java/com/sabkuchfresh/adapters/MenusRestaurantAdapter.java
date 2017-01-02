@@ -85,8 +85,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         Runnable timerRunnable = new Runnable() {
                 @Override
                 public void run() {
-                        notifyDataSetChanged();
-                        timerHandler.postDelayed(this, 60000); //run every minute
+                    applyFilter();
+                    timerHandler.postDelayed(this, 60000); //run every minute
                     }
             };
 
@@ -119,6 +119,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void applyFilter(){
         vendors.clear();
+        DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         for(MenusResponse.Vendor vendor : vendorsComplete){
             boolean cuisineMatched = false, moMatched = false, dtMatched = false;
             for(String cuisine : activity.getCuisinesSelected()){
@@ -146,6 +147,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     break;
                 }
             }
+
+            String currentSystemTime = dateFormat.format(new Date()).toString();
+            long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()) , currentSystemTime);
+            long minutes =  ((timeDiff1 / (1000l*60l)));
+            if(minutes <= 0){
+                vendor.setIsClosed(1);
+            }
+
             if(cuisineMatched && moMatched && dtMatched && qfMatched){
                 vendors.add(vendor);
             }
@@ -299,10 +308,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                 DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
                 String currentSystemTime = dateFormat.format(new Date()).toString();
-
-
                 long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()) , currentSystemTime);
-
                 long minutes =  ((timeDiff1 / (1000l*60l)));
 
     //            long timeDiff = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()) , formattedDate) / (60 * 1000);
@@ -319,7 +325,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 mHolder.textViewRestaurantCloseTime.setText("Closes in "+minutes+" min");
                 } else {
                 mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.GONE);
-                vendor.setIsClosed(1);
                 }
                 mHolder.textViewClosed.setVisibility(((vendor.getIsClosed() == 1)||(vendor.getIsAvailable()==0)) ? View.VISIBLE : View.GONE);
 
