@@ -1405,5 +1405,8 @@
     <string name="membership_expires_on">Membership expires on</string>
     <string name="i_dont_want_star"><u>I don\'t want to be a Star anymore</u></string>
     <string name="no">No</string>
+    <string name="did_you_know">Did you know?</string>
+    <string name="star_description">You can now avail unlimited FREE delivery, special discounts and much more!</string>
+    <string name="click_to_find">Click to find out how…</string>
 
 </resources>

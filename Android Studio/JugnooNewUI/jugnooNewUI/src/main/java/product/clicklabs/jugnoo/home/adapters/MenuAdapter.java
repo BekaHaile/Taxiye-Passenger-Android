@@ -210,7 +210,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_star_selector);
-                    if(Data.userData.getHasSubscription() == 1){
+                    if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
                         hideLayout(holder.relative);
                     }
                 } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(menuInfo.getTag())){
@@ -251,7 +251,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.textViewCategories.setText(R.string.categories);
             holder.imageViewArrow.setVisibility(View.VISIBLE);
             try {
-                if(Data.userData.getHasSubscription() == 1){
+                if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
                     holder.tvJugnooStar.setVisibility(View.VISIBLE);
                     holder.viewStarIcon.setVisibility(View.VISIBLE);
                 } else{

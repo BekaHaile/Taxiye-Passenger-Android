@@ -525,21 +525,29 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private void updateCartUI() {
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
 
-        if (promoAmount > 0) {
+        if (getTotalPromoAmount() > 0) {
             relativeLayoutDiscount.setVisibility(View.VISIBLE);
-            textViewDiscountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(promoAmount)));
+
+            textViewDiscountValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(getTotalPromoAmount())));
         } else {
             relativeLayoutDiscount.setVisibility(View.GONE);
         }
 
         relativeLayoutDeliveryCharges.setVisibility(View.VISIBLE);
-        if (deliveryCharges() > 0) {
+        if(activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() != null
+                && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() > 0){
             textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
-            String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(deliveryCharges()));
+            String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges()));
             textViewDeliveryChargesValue.setText(deliveryCharge);
         } else {
-            textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.green_rupee));
-            textViewDeliveryChargesValue.setText(R.string.free);
+            if (deliveryCharges() > 0) {
+                textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
+                String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(deliveryCharges()));
+                textViewDeliveryChargesValue.setText(deliveryCharge);
+            } else {
+                textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.green_rupee));
+                textViewDeliveryChargesValue.setText(R.string.free);
+            }
         }
 
         if (packagingCharges() > 0) {
@@ -625,7 +633,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
-        if(promoAmount > 0){
+        if(getTotalPromoAmount() > 0){
             textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
             textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
                     Utils.getMoneyDecimalFormat().format(totalUndiscounted())));
@@ -1012,7 +1020,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                 chargeDetails.put("Payment mode", ""+activity.getPaymentOption());
                 chargeDetails.put(Events.TOTAL_AMOUNT, ""+subTotalAmount);
-                chargeDetails.put(Events.DISCOUNT_AMOUNT, "" + promoAmount);
+                chargeDetails.put(Events.DISCOUNT_AMOUNT, "" + getTotalPromoAmount());
                 if(type != AppConstant.ApplicationType.MENUS) {
                     chargeDetails.put(Events.START_TIME, "" + String.valueOf(activity.getSlotSelected().getStartTime()));
                     chargeDetails.put(Events.END_TIME, "" + String.valueOf(activity.getSlotSelected().getEndTime()));
@@ -1146,7 +1154,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             activity.orderComplete();
                                         }
                                     }).show(String.valueOf(placeOrderResponse.getOrderId()),
-                                            deliverySlot, deliveryDay, showDeliverySlot, restaurantName);
+                                            deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
+                                            placeOrderResponse);
                                     activity.setSelectedPromoCoupon(noSelectionCoupon);
 
 
@@ -1495,7 +1504,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
             promoAmount = 0;
         }
+    }
 
+    private double getTotalPromoAmount(){
+        if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getSubscription() != null) {
+            return promoAmount + activity.getUserCheckoutResponse().getSubscription().getDiscount();
+        } else {
+            return promoAmount;
+        }
     }
 
 
@@ -1977,11 +1993,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private double totalUndiscounted(){
-        return totalAmount() + promoAmount;
+        return totalAmount() + getTotalPromoAmount() + activity.getUserCheckoutResponse().getSubscription().getDiscount();
     }
 
     private double totalAmount(){
-        double totalAmount = netAmountWOTaxes() + serviceTax() + vat() + deliveryCharges() - promoAmount;
+        double totalAmount = netAmountWOTaxes() + serviceTax() + vat() + deliveryCharges() - getTotalPromoAmount();
         if(totalAmount < 0) {
             totalAmount = 0;
         }

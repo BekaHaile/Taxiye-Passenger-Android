@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.adapters.StarMembershipAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
@@ -128,6 +129,8 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_SUB_ID, String.valueOf(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getId()));
+            params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
+            params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
 
             new HomeUtil().putDefaultParams(params);
             RestClient.getApiService().cancelSubscription(params, new retrofit.Callback<SettleUserDebt>() {
@@ -145,7 +148,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
                             DialogPopup.alertPopupWithListener(JugnooStarSubscribedActivity.this, "", message, getResources().getString(R.string.ok), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Data.userData.setHasSubscription(0);
+                                    Data.userData.getSubscriptionData().setUserSubscriptions(new ArrayList<SubscriptionData.UserSubscription>());
                                     finish();
                                     overridePendingTransition(R.anim.left_in, R.anim.left_out);
                                 }

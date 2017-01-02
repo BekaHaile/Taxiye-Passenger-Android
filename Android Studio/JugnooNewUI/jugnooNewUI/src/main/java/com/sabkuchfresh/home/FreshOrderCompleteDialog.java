@@ -3,6 +3,7 @@ package com.sabkuchfresh.home;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
@@ -13,10 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 import product.clicklabs.jugnoo.R;
@@ -38,7 +41,7 @@ public class FreshOrderCompleteDialog {
 		this.callback = callback;
 	}
 
-	public Dialog show(String orderId, String deliverySlot, String deliveryDay, boolean showDeliverySlot, String restaurantName) {
+	public Dialog show(String orderId, String deliverySlot, String deliveryDay, boolean showDeliverySlot, String restaurantName, PlaceOrderResponse placeOrderResponse) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -55,6 +58,20 @@ public class FreshOrderCompleteDialog {
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			TextView textView = (TextView) dialog.findViewById(R.id.textViewThankYou); textView.setTypeface(Fonts.mavenRegular(activity));
+			RelativeLayout rlStarContainer = (RelativeLayout) dialog.findViewById(R.id.rlStarContainer);
+			TextView tvDidYou = (TextView) dialog.findViewById(R.id.tvDidYou); tvDidYou.setTypeface(Fonts.mavenRegular(activity));
+			TextView tvDescription = (TextView) dialog.findViewById(R.id.tvDescription); tvDescription.setTypeface(Fonts.avenirNext(activity));
+			TextView tvClickToFindOut = (TextView) dialog.findViewById(R.id.tvClickToFindOut); tvClickToFindOut.setTypeface(Fonts.avenirMedium(activity));
+
+			if(Data.userData.getShowSubscriptionData() == 1 && placeOrderResponse.getSubscriptionMessage() != null){
+				rlStarContainer.setVisibility(View.VISIBLE);
+				tvDidYou.setText(placeOrderResponse.getSubscriptionMessage().getHeading());
+				tvDescription.setText(placeOrderResponse.getSubscriptionMessage().getContent());
+				tvClickToFindOut.setText(placeOrderResponse.getSubscriptionMessage().getLinkText());
+			} else{
+				rlStarContainer.setVisibility(View.GONE);
+			}
+
 
 			int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
 			if(type == AppConstant.ApplicationType.MEALS)
@@ -102,6 +119,15 @@ public class FreshOrderCompleteDialog {
 			linearLayoutInner.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+				}
+			});
+
+			rlStarContainer.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+					activity.startActivity(new Intent(activity, JugnooStarActivity.class));
+					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
 			});
 

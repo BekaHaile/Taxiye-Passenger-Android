@@ -41,10 +41,12 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -552,12 +554,20 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     @Override
     public PromoCoupon getSelectedCoupon() {
-        return null;
+        return getSelectedPromoCoupon();
     }
 
     @Override
     public void setSelectedCoupon(int position) {
-
+        PromoCoupon promoCoupon;
+        if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
+            promoCoupon = promoCoupons.get(position);
+        } else {
+            promoCoupon = noSelectionCoupon;
+        }
+        if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, getPaymentOption().getOrdinal(), promoCoupon)) {
+            setSelectedPromoCoupon(promoCoupon);
+        }
     }
 
     private void apiPurchaseSubscription() {
@@ -567,6 +577,16 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_SUB_ID, String.valueOf(subscription.getSubId()));
             params.put(Constants.KEY_PAYMENT_PREFERENCE, String.valueOf(getPaymentOption().getOrdinal()));
+            params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
+            params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+            if(getSelectedPromoCoupon() != null && getSelectedPromoCoupon().getId() > -1){
+                if(getSelectedPromoCoupon() instanceof CouponInfo){
+                    params.put(Constants.KEY_ACCOUNT_ID, String.valueOf(getSelectedPromoCoupon().getId()));
+                } else if(getSelectedPromoCoupon() instanceof PromotionInfo){
+                    params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(getSelectedPromoCoupon().getId()));
+                }
+                params.put(Constants.KEY_MASTER_COUPON, String.valueOf(getSelectedPromoCoupon().getMasterCoupon()));
+            }
 
             new HomeUtil().putDefaultParams(params);
             RestClient.getApiService().purchaseSubscription(params, new retrofit.Callback<PurchaseSubscriptionResponse>() {
@@ -583,7 +603,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             DialogPopup.alertPopupWithListener(activity, "", message, getResources().getString(R.string.ok), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Data.userData.setHasSubscription(1);
                                     Data.userData.getSubscriptionData().setUserSubscriptions(purchaseSubscriptionResponse.getUserSubscriptions());
                                     activity.finish();
                                     activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -631,4 +650,15 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
                 });
     }
+
+    private PromoCoupon selectedPromoCoupon;
+    private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
+    public PromoCoupon getSelectedPromoCoupon() {
+        return selectedPromoCoupon;
+    }
+
+    public void setSelectedPromoCoupon(PromoCoupon selectedPromoCoupon) {
+        this.selectedPromoCoupon = selectedPromoCoupon;
+    }
+
 }

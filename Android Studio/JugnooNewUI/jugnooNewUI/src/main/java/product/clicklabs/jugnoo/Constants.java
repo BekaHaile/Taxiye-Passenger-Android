@@ -567,7 +567,7 @@ public interface Constants {
 	String KEY_MENU_LONGITUDE = "menu_longitude";
 
 	String SHOW_HOME_SCREEN = "show_home_screen";
-	String HAS_SUBSCRIPTION = "has_subscription";
+	String SHOW_SUBSCRIPTION_DATA = "show_subscription_data";
 	String KEY_SUB_ID = "sub_id";
 
 	String KEY_PAYMENT_PREFERENCE = "payment_preference";

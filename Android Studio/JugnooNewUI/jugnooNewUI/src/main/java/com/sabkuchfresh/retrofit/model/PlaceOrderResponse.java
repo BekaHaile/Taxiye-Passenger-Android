@@ -27,6 +27,10 @@ public class PlaceOrderResponse {
 	@Expose
 	private String message;
 
+	@SerializedName("subscription_message")
+	@Expose
+	private SubscriptionMessage subscriptionMessage;
+
 	/**
 	 *
 	 * @return
@@ -133,6 +137,52 @@ public class PlaceOrderResponse {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public SubscriptionMessage getSubscriptionMessage() {
+		return subscriptionMessage;
+	}
+
+	public void setSubscriptionMessage(SubscriptionMessage subscriptionMessage) {
+		this.subscriptionMessage = subscriptionMessage;
+	}
+
+	public class SubscriptionMessage {
+
+		@SerializedName("heading")
+		@Expose
+		private String heading;
+		@SerializedName("content")
+		@Expose
+		private String content;
+		@SerializedName("link_text")
+		@Expose
+		private String linkText;
+
+		public String getHeading() {
+			return heading;
+		}
+
+		public void setHeading(String heading) {
+			this.heading = heading;
+		}
+
+		public String getContent() {
+			return content;
+		}
+
+		public void setContent(String content) {
+			this.content = content;
+		}
+
+		public String getLinkText() {
+			return linkText;
+		}
+
+		public void setLinkText(String linkText) {
+			this.linkText = linkText;
+		}
+
 	}
 
 }

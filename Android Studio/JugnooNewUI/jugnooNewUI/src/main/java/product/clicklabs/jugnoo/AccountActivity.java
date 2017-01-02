@@ -787,7 +787,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
         try {
             HomeActivity.checkForAccessTokenChange(this);
 
-            if(Data.userData.getHasSubscription() == 1){
+            if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
                 rlJugnooStar.setVisibility(View.VISIBLE);
             } else{
                 rlJugnooStar.setVisibility(View.GONE);

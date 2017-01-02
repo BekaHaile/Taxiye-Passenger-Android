@@ -79,7 +79,7 @@ public class UserData {
 	private ArrayList<SearchResult> searchResults = new ArrayList<>();
 	private ArrayList<SearchResult> searchResultsRecent = new ArrayList<>();
 
-	private int showHomeScreen, hasSubscription;
+	private int showHomeScreen, showSubscriptionData;
 	private SubscriptionData subscriptionData;
 
 
@@ -99,7 +99,7 @@ public class UserData {
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
 					int inviteFriendButton, String defaultClientId,
-					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int hasSubscription){
+					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -172,7 +172,7 @@ public class UserData {
 		this.topupCardEnabled = topupCardEnabled;
 
 		this.showHomeScreen = showHomeScreen;
-		this.hasSubscription = hasSubscription;
+		this.showSubscriptionData = showSubscriptionData;
 	}
 
 	private void checkUserImage(){
@@ -906,20 +906,20 @@ public class UserData {
 		this.showHomeScreen = showHomeScreen;
 	}
 
-	public int getHasSubscription() {
-		return hasSubscription;
-	}
-
-	public void setHasSubscription(int hasSubscription) {
-		this.hasSubscription = hasSubscription;
-	}
-
 	public SubscriptionData getSubscriptionData() {
 		return subscriptionData;
 	}
 
 	public void setSubscriptionData(SubscriptionData subscriptionData) {
 		this.subscriptionData = subscriptionData;
+	}
+
+	public int getShowSubscriptionData() {
+		return showSubscriptionData;
+	}
+
+	public void setShowSubscriptionData(int showSubscriptionData) {
+		this.showSubscriptionData = showSubscriptionData;
 	}
 
 	//	"meals_enabled": 1,

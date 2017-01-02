@@ -30,6 +30,10 @@ public class UserCheckoutResponse{
 	@Expose
 	private List<CouponInfo> coupons = new ArrayList<>();
 
+	@SerializedName("subscription")
+	@Expose
+	private Subscription subscription;
+
 	/**
 	 *
 	 * @return
@@ -99,5 +103,54 @@ public class UserCheckoutResponse{
 
 	public void setCoupons(List<CouponInfo> coupons) {
 		this.coupons = coupons;
+	}
+
+	public Subscription getSubscription() {
+		return subscription;
+	}
+
+	public void setSubscription(Subscription subscription) {
+		this.subscription = subscription;
+	}
+
+	public class Subscription {
+
+		@SerializedName("discount")
+		@Expose
+		private Double discount;
+		@SerializedName("minimum_order_amount")
+		@Expose
+		private Double minimumOrderAmount;
+		@SerializedName("delivery_charges")
+		@Expose
+		private Double deliveryCharges;
+
+		public Double getDiscount() {
+			if(discount == null){
+				return 0d;
+			}
+			return discount;
+		}
+
+		public void setDiscount(Double discount) {
+			this.discount = discount;
+		}
+
+		public Double getMinimumOrderAmount() {
+			return minimumOrderAmount;
+		}
+
+		public void setMinimumOrderAmount(Double minimumOrderAmount) {
+			this.minimumOrderAmount = minimumOrderAmount;
+		}
+
+		public Double getDeliveryCharges() {
+			return deliveryCharges;
+		}
+
+		public void setDeliveryCharges(Double deliveryCharges) {
+			this.deliveryCharges = deliveryCharges;
+		}
+
 	}
 }
