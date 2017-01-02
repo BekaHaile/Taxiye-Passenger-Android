@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -65,13 +66,13 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         imageViewBack.setOnClickListener(this);
 
-        ((TextView) findViewById(R.id.tvCurrentPlan)).setTypeface(Fonts.avenirMedium(this));
-        ((TextView) findViewById(R.id.tvExpiresOn)).setTypeface(Fonts.avenirMedium(this));
+        ((TextView) findViewById(R.id.tvCurrentPlan)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView) findViewById(R.id.tvExpiresOn)).setTypeface(Fonts.mavenMedium(this));
 
         tvCurrentPlanValue = (TextView) findViewById(R.id.tvCurrentPlanValue);
-        tvCurrentPlanValue.setTypeface(Fonts.mavenMedium(this));
+        tvCurrentPlanValue.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
         tvExpiresOnValue = (TextView) findViewById(R.id.tvExpiresOnValue);
-        tvExpiresOnValue.setTypeface(Fonts.mavenMedium(this));
+        tvExpiresOnValue.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
         rvBenefits = (RecyclerView) findViewById(R.id.rvBenefits);
         rvBenefits.setLayoutManager(new LinearLayoutManager(this));
         rvBenefits.setItemAnimator(new DefaultItemAnimator());

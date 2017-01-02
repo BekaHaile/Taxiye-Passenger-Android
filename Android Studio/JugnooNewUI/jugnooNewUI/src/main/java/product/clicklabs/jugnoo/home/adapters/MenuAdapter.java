@@ -252,7 +252,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.imageViewArrow.setVisibility(View.VISIBLE);
             try {
                 if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
-                    holder.tvJugnooStar.setVisibility(View.VISIBLE);
+                    holder.tvJugnooStar.setVisibility(View.GONE);
                     holder.viewStarIcon.setVisibility(View.VISIBLE);
                 } else{
                     holder.tvJugnooStar.setVisibility(View.GONE);

@@ -446,6 +446,9 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 				params.put("access_token", Data.userData.accessToken);
 				params.put("reasons", reasons);
 				params.put("addn_reason", addtionalReason);
+				if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0) {
+					params.put(Constants.KEY_AUTOS_BENEFIT_ID, String.valueOf(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getBenefitIdAutos()));
+				}
 
 				new HomeUtil().putDefaultParams(params);
 				RestClient.getApiService().cancelRideByCustomer(params, new Callback<SettleUserDebt>() {

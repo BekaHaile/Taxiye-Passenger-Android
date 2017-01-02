@@ -61,10 +61,10 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
 
         textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR);
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
-        bJoinNow = (Button) findViewById(R.id.bJoinNow); bJoinNow.setTypeface(Fonts.avenirNext(this)); bJoinNow.setOnClickListener(this);
+        bJoinNow = (Button) findViewById(R.id.bJoinNow); bJoinNow.setTypeface(Fonts.mavenMedium(this)); bJoinNow.setOnClickListener(this);
 
         rlFragment = (RelativeLayout) findViewById(R.id.rlFragment);
-        tvSubTitle = (TextView) findViewById(R.id.tvSubTitle); tvSubTitle.setTypeface(Fonts.avenirMedium(this));
+        tvSubTitle = (TextView) findViewById(R.id.tvSubTitle); tvSubTitle.setTypeface(Fonts.mavenMedium(this));
         rlPlan1 = (RelativeLayout) findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(this); rlPlan1.setVisibility(View.GONE);
         rlPlan2 = (RelativeLayout) findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(this); rlPlan2.setVisibility(View.GONE);
         ivRadio1 = (ImageView) findViewById(R.id.ivRadio1);
@@ -123,13 +123,13 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
     }
 
     private void selectedPlan(RelativeLayout rlPlan, ImageView ivRadio, int subId){
-        rlPlan1.setBackgroundResource(R.drawable.capsule_white_stroke);
-        rlPlan2.setBackgroundResource(R.drawable.capsule_white_stroke);
+        //rlPlan1.setBackgroundResource(R.drawable.capsule_white_stroke);
+        //rlPlan2.setBackgroundResource(R.drawable.capsule_white_stroke);
         ivRadio1.setImageResource(R.drawable.ic_radio_button_normal);
         ivRadio2.setImageResource(R.drawable.ic_radio_button_normal);
 
-        rlPlan.setBackgroundResource(R.drawable.capsule_white_theme_stroke);
-        ivRadio.setImageResource(R.drawable.ic_radio_button_selected);
+        //rlPlan.setBackgroundResource(R.drawable.capsule_white_theme_stroke);
+        ivRadio.setImageResource(R.drawable.ic_order_status_green);
         subscription = Data.userData.getSubscriptionData().getSubscriptions().get(subId);
         selectedSubId = new Gson().toJson(subscription);
     }

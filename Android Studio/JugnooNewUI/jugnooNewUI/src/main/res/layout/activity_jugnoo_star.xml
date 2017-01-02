@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:text="@string/jugnoo_Star_title"
             android:textSize="@dimen/text_size_34"
+            android:textColor="@color/text_color"
             android:layout_marginLeft="@dimen/px_40"
             android:layout_marginRight="@dimen/px_40"
             android:layout_marginTop="@dimen/px_30"
@@ -56,12 +57,12 @@
                 android:id="@+id/rlPlan1"
                 android:layout_width="@dimen/px_270"
                 android:layout_height="@dimen/px_135"
-                android:background="@drawable/capsule_white_stroke">
+                android:background="@color/transparent">
 
                 <ImageView
                     android:id="@+id/ivRadio1"
-                    android:layout_width="35px"
-                    android:layout_height="34px"
+                    android:layout_width="@dimen/px_50"
+                    android:layout_height="@dimen/px_50"
                     android:tag="mwar"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/px_25"
@@ -111,17 +112,24 @@
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="@dimen/px_2"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/px_30"
+                android:layout_marginBottom="@dimen/px_30"
+                android:background="@color/search_view_radius"/>
+
             <RelativeLayout
                 android:id="@+id/rlPlan2"
                 android:layout_width="@dimen/px_270"
                 android:layout_height="@dimen/px_135"
                 android:layout_marginLeft="@dimen/px_20"
-                android:background="@drawable/capsule_white_stroke">
+                android:background="@color/transparent">
 
                 <ImageView
                     android:id="@+id/ivRadio2"
-                    android:layout_width="35px"
-                    android:layout_height="34px"
+                    android:layout_width="@dimen/px_50"
+                    android:layout_height="@dimen/px_50"
                     android:tag="mwar"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/px_25"

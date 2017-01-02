@@ -26,7 +26,7 @@
             android:text="@string/jugnoo_star"
             android:textColor="@color/white"
             android:layout_marginTop="@dimen/px_28"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_gravity="center_horizontal"
             android:layout_centerHorizontal="true"
             android:textSize="@dimen/text_size_22"/>
@@ -55,10 +55,10 @@
 
             <View
                 android:id="@+id/viewStarIcon"
-                android:layout_width="@dimen/px_45"
-                android:layout_height="@dimen/px_45"
+                android:layout_width="@dimen/px_64"
+                android:layout_height="@dimen/px_64"
                 android:background="@drawable/star"
-                android:layout_marginBottom="10px"
+                android:layout_marginBottom="5px"
                 android:tag="mwar"
                 android:visibility="gone"
                 android:layout_alignParentBottom="true"

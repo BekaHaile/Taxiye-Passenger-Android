@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,15 +64,15 @@ public class StarMembershipAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 		if (benefits == null || benefits.size() == 0) {
 			return 0;
 		} else {
-			return benefits.size() + 1;
+			return benefits.size();
 		}
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		if (isPositionFooter(position)) {
+		/*if (isPositionFooter(position)) {
 			return TYPE_FOOTER;
-		}
+		}*/
 		return TYPE_ITEM;
 	}
 
@@ -110,7 +111,7 @@ public class StarMembershipAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 		public ViewHolder(View itemView, Context context) {
 			super(itemView);
-			tvOffering = (TextView) itemView.findViewById(R.id.tvOffering); tvOffering.setTypeface(Fonts.mavenMedium(context));
+			tvOffering = (TextView) itemView.findViewById(R.id.tvOffering); tvOffering.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
 			tvBenefitName = (TextView) itemView.findViewById(R.id.tvBenefitName);tvBenefitName.setTypeface(Fonts.mavenMedium(context));
 			divider = (View) itemView.findViewById(R.id.divider);
 		}
