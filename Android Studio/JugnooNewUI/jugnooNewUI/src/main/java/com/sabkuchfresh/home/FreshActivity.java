@@ -2588,7 +2588,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             if(searchResultLocality != null && !TextUtils.isEmpty(searchResultLocality.getAddress())){
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {
-                SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(), 100, false);
+                SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
+                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
                 if(searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())){
                     setSearchResultToActVarsAndFetchData(searchResult, appType);
                 } else {

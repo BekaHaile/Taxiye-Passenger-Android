@@ -2,26 +2,20 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.graphics.Typeface;
-import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.models.Region;
-import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 5/2/16.
@@ -65,7 +59,7 @@ public class SavedAddressPickupDialog {
 			Button btnYes = (Button) dialog.findViewById(R.id.btnYes); btnYes.setTypeface(Fonts.mavenMedium(activity));
 			Button btnNo = (Button) dialog.findViewById(R.id.btnNo);btnNo.setTypeface(Fonts.mavenMedium(activity));
 
-			if(searchResult.getName().equalsIgnoreCase("") || searchResult.getName().equalsIgnoreCase(Constants.TYPE_USED)){
+			if(TextUtils.isEmpty(searchResult.getName())){
 				textViewSearchName.setVisibility(View.GONE);
 			} else{
 				textViewSearchName.setVisibility(View.VISIBLE);

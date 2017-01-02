@@ -2514,6 +2514,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         return lastLocationSavedList;
     }
 
+    private void snapPickupLocToNearbyAddress(SearchResult searchResult){
+        Data.autoData.setPickupLatLng(searchResult.getLatLng());
+        if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+            findDriversETACall(true, false, true);
+        } else {
+            requestRideDriverCheck();
+        }
+    }
+
     private void requestRideClick(){
         try{
             try {
@@ -2532,27 +2541,32 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (callRequestRide) {
                                 promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
-                                SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), CHOOSE_SAVED_PICKUP_ADDRESS, true);
-                                if(searchResult != null) {
-                                    new SavedAddressPickupDialog(HomeActivity.this, searchResult, new SavedAddressPickupDialog.Callback() {
-                                        @Override
-                                        public void onDialogDismiss() {
-                                            requestRideDriverCheck();
-                                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup ignored");
-                                        }
+                                if(Data.autoData.getUseRecentLocAtRequest() == 1) {
+                                    SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), CHOOSE_SAVED_PICKUP_ADDRESS, true);
+                                    if (searchResult != null) {
+                                        if(MapUtils.distance(Data.autoData.getPickupLatLng(), searchResult.getLatLng())
+                                                <= Data.autoData.getUseRecentLocAutoSnapMinDistance()){
+                                            snapPickupLocToNearbyAddress(searchResult);
+                                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup automatically snapped");
+                                        } else {
+                                            new SavedAddressPickupDialog(HomeActivity.this, searchResult, new SavedAddressPickupDialog.Callback() {
+                                                @Override
+                                                public void onDialogDismiss() {
+                                                    requestRideDriverCheck();
+                                                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup ignored");
+                                                }
 
-                                        @Override
-                                        public void yesClicked(SearchResult searchResult) {
-                                            Data.autoData.setPickupLatLng(searchResult.getLatLng());
-                                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup choosed");
-                                            if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                                                findDriversETACall(true, false, true);
-                                            } else {
-                                                requestRideDriverCheck();
-                                            }
+                                                @Override
+                                                public void yesClicked(SearchResult searchResult) {
+                                                    snapPickupLocToNearbyAddress(searchResult);
+                                                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Home screen request ride", "Saved Address pickup choosed");
+                                                }
+                                            }).show();
                                         }
-                                    }).show();
-                                } else{
+                                    } else {
+                                        callAnAutoPopup(HomeActivity.this);
+                                    }
+                                } else {
                                     callAnAutoPopup(HomeActivity.this);
                                 }
                                 //callAnAutoPopup(HomeActivity.this);
@@ -4801,8 +4815,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void continueRequestRide(boolean confirmedScreenOpened, boolean savedAddressUsed) {
                             if(savedAddressUsed){
                                 requestRideDriverCheck();
-                            }
-                            else if(confirmedScreenOpened){
+                            } else if(confirmedScreenOpened){
                                 requestRideClick();
                             } else {
                                 imageViewRideNowPoolCheck();
@@ -5315,7 +5328,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                         textView.setHint(getResources().getString(R.string.set_pickup_location));
                                         textView.setText(address);
                                         Data.autoData.setPickupAddress(address);
-                                        SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng, 100, false);
+                                        SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
+                                                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
                                         if(searchResult != null) {
                                             textView.setText(searchResult.getName());
                                             Data.autoData.setPickupAddress(searchResult.getAddress());

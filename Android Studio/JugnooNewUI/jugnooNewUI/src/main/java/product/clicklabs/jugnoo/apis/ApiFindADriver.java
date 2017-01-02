@@ -99,24 +99,25 @@ public class ApiFindADriver {
 							callback.onCompleteFindADriver();
 						}
 
-						if(beforeRequestRide && !savedAddressUsed){
-							Region newRegion = null;
-							for (Region region : Data.autoData.getRegions()) {
-								if(region.getRegionId().equals(ApiFindADriver.this.regionSelected.getRegionId())){
-									newRegion = region;
+						if(beforeRequestRide){
+							if(savedAddressUsed){
+								callback.continueRequestRide(false, savedAddressUsed);
+							} else {
+								Region newRegion = null;
+								for (Region region : Data.autoData.getRegions()) {
+									if (region.getRegionId().equals(ApiFindADriver.this.regionSelected.getRegionId())) {
+										newRegion = region;
+									}
+								}
+								if (newRegion != null
+										&& (Utils.compareDouble(fareFactorOld, newRegion.getCustomerFareFactor()) != 0
+										|| Utils.compareDouble(driverFareFactorOld, newRegion.getDriverFareFactor()) != 0)) {
+									callback.stopRequestRide(confirmedScreenOpened);
+								} else {
+									callback.continueRequestRide(confirmedScreenOpened, false);
 								}
 							}
-							if(newRegion != null
-									&& (Utils.compareDouble(fareFactorOld, newRegion.getCustomerFareFactor()) != 0
-									|| Utils.compareDouble(driverFareFactorOld, newRegion.getDriverFareFactor()) != 0)){
-								callback.stopRequestRide(confirmedScreenOpened);
-							} else{
-								callback.continueRequestRide(confirmedScreenOpened, false);
-							}
-						} else {
-							callback.continueRequestRide(false, savedAddressUsed);
 						}
-
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

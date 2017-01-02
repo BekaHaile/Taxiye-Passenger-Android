@@ -517,7 +517,6 @@ public interface Constants {
 	String KEY_TYPE = "type";
 	String TYPE_HOME = "home";
 	String TYPE_WORK = "work";
-	String TYPE_USED = "used";
 	String KEY_ADDRESS = "address";
 	String KEY_PLACEID = "placeId";
 	String KEY_GOOGLE_PLACE_ID = "google_place_id";
@@ -576,4 +575,6 @@ public interface Constants {
 	String OFFERSDISCOUNT = "Offers Discount";
 	String PUREVEGETARIAN = "Pure Vegetarian";
 	String FREEDELIVERY = "Free Delivery";
+
+	double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 100d;
 }
