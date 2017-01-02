@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.retrofit;
 
+import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
+
 import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
@@ -513,5 +515,10 @@ public interface ApiService {
     @POST("/cancel_subscription")
     void cancelSubscription(@FieldMap Map<String, String> params,
                                   Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/purchase_subscription")
+    void purchaseSubscription(@FieldMap Map<String, String> params,
+                            Callback<PurchaseSubscriptionResponse> callback);
 
 }

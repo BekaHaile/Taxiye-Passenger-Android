@@ -569,4 +569,7 @@ public interface Constants {
 	String SHOW_HOME_SCREEN = "show_home_screen";
 	String HAS_SUBSCRIPTION = "has_subscription";
 	String KEY_SUB_ID = "sub_id";
+
+	String KEY_PAYMENT_PREFERENCE = "payment_preference";
+	String KEY_AUTOS_BENEFIT_ID = "autos_benefit_id";
 }

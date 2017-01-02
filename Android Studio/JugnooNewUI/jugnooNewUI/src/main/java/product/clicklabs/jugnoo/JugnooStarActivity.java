@@ -89,7 +89,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                         rlPlan1.setVisibility(View.VISIBLE);
                         if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() != null && Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() !=0){
                             tvActualAmount1.setVisibility(View.VISIBLE);
-                            tvActualAmount1.setText(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount());
+                            tvActualAmount1.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount()));
                             tvActualAmount1.setPaintFlags(tvActualAmount1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         }
                         tvAmount1.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),

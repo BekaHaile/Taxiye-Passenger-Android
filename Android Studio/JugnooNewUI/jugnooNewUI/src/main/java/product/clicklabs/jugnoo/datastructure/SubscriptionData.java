@@ -111,6 +111,8 @@ public class SubscriptionData {
         private String planString;
 
         public Integer getBenefitIdAutos() {
+            if(benefitIdAutos == null)
+                benefitIdAutos = 0;
             return benefitIdAutos;
         }
 

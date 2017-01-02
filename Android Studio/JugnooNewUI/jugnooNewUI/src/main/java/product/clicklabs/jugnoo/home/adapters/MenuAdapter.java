@@ -251,6 +251,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.textViewCategories.setText(R.string.categories);
             holder.imageViewArrow.setVisibility(View.VISIBLE);
             try {
+                if(Data.userData.getHasSubscription() == 1){
+                    holder.tvJugnooStar.setVisibility(View.VISIBLE);
+                    holder.viewStarIcon.setVisibility(View.VISIBLE);
+                } else{
+                    holder.tvJugnooStar.setVisibility(View.GONE);
+                    holder.viewStarIcon.setVisibility(View.GONE);
+                }
                 holder.textViewUserName.setText(Data.userData.userName);
                 holder.textViewViewPhone.setText(Data.userData.phoneNo);
                 float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
@@ -705,6 +712,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public TextView textViewMenu, textViewNew, textViewValue;
         public ImageView imageViewMenuIcon;
         public RelativeLayout relative;
+
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
             textViewMenu = (TextView) convertView.findViewById(R.id.textViewMenu); textViewMenu.setTypeface(Fonts.mavenRegular(context));
@@ -720,9 +728,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public RelativeLayout relative;
         public ImageView imageViewProfile, imageViewArrow;
         public TextView textViewUserName, textViewViewPhone, textViewCategories, textViewAutos, textViewFresh, textViewMeals, textViewDelivery,
-                textViewGrocery, textViewMenus, textViewPay;
+                textViewGrocery, textViewMenus, textViewPay, tvJugnooStar;
         public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubDelivery, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos,
             linearLayoutSubGrocery, linearLayoutSubMenus, linearLayoutSubPay;
+        public View viewStarIcon;
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
@@ -747,6 +756,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             linearLayoutSubGrocery = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubGrocery);
             linearLayoutSubMenus = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubMenus);
             linearLayoutSubPay = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubPay);
+            tvJugnooStar = (TextView) convertView.findViewById(R.id.tvJugnooStar); tvJugnooStar.setTypeface(Fonts.mavenRegular(context));
+            viewStarIcon = (View) convertView.findViewById(R.id.viewStarIcon);
         }
     }
 
