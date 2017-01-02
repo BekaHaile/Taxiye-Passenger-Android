@@ -494,43 +494,43 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
 
-    private Double getCalculatedChargesSubItem(SubItem subItem, ProductsResponse.Charges charges, List<ProductsResponse.Charges> chargesList, double value){
-        if (charges.getIsPercent() == 1) {
-            double percentVal = (subItem.getPrice() * (double) subItem.getSubItemQuantitySelected());
-            for (Integer pos : charges.getIncludeValue()) {
-                try {
-                    ProductsResponse.Charges chargesPos = chargesList.get(chargesList.indexOf(activity.getProductsResponse().new Charges(pos)));
-                    double valuePos = 0d;
-                    for (SubItem.Tax tax : subItem.getTaxes()) {
-                        if (tax.getKey().equalsIgnoreCase(chargesPos.getValue())) {
-                            valuePos = tax.getValue();
-                            break;
-                        }
-                    }
-                    percentVal = percentVal + getCalculatedChargesSubItem(subItem, chargesPos, chargesList, valuePos);
-                } catch (Exception e) {
-                }
-            }
-            return (percentVal * (value / 100d));
-        } else {
-            return ((double) subItem.getSubItemQuantitySelected() * value);
-        }
-    }
+//    private Double getCalculatedChargesSubItem(SubItem subItem, ProductsResponse.Charges charges, List<ProductsResponse.Charges> chargesList, double value){
+//        if (charges.getIsPercent() == 1) {
+//            double percentVal = (subItem.getPrice() * (double) subItem.getSubItemQuantitySelected());
+//            for (Integer pos : charges.getIncludeValue()) {
+//                try {
+//                    ProductsResponse.Charges chargesPos = chargesList.get(chargesList.indexOf(activity.getProductsResponse().new Charges(pos)));
+//                    double valuePos = 0d;
+//                    for (SubItem.Tax tax : subItem.getTaxes()) {
+//                        if (tax.getKey().equalsIgnoreCase(chargesPos.getValue())) {
+//                            valuePos = tax.getValue();
+//                            break;
+//                        }
+//                    }
+//                    percentVal = percentVal + getCalculatedChargesSubItem(subItem, chargesPos, chargesList, valuePos);
+//                } catch (Exception e) {
+//                }
+//            }
+//            return (percentVal * (value / 100d));
+//        } else {
+//            return ((double) subItem.getSubItemQuantitySelected() * value);
+//        }
+//    }
 
     private Double getCalculatedCharges(double amount, ProductsResponse.Charges charges, List<ProductsResponse.Charges> chargesList){
+        double includedTaxValue = 0d;
+        for (Integer pos : charges.getIncludeValue()) {
+            try {
+                ProductsResponse.Charges chargesPos = chargesList.get(chargesList.indexOf(activity.getProductsResponse().new Charges(pos)));
+                includedTaxValue = includedTaxValue + getCalculatedCharges(amount, chargesPos, chargesList);
+            } catch (Exception e) {
+            }
+        }
         if(charges.getType() == ProductsResponse.ChargeType.SUBTOTAL_LEVEL.getOrdinal()) {
             if (charges.getIsPercent() == 1) {
-                double percentVal = amount;
-                for (Integer pos : charges.getIncludeValue()) {
-                    try {
-                        ProductsResponse.Charges chargesPos = chargesList.get(chargesList.indexOf(activity.getProductsResponse().new Charges(pos)));
-                        percentVal = percentVal + getCalculatedCharges(amount, chargesPos, chargesList);
-                    } catch (Exception e) {
-                    }
-                }
-                return (percentVal * (Double.parseDouble(charges.getValue()) / 100d));
+                return ((amount + includedTaxValue) * (Double.parseDouble(charges.getValue()) / 100d));
             } else {
-                return (Double.parseDouble(charges.getValue()));
+                return (Double.parseDouble(charges.getValue()) + includedTaxValue);
             }
         } else if(charges.getType() == ProductsResponse.ChargeType.ITEM_LEVEL.getOrdinal()) {
             double totalCharge = 0d;
@@ -543,8 +543,18 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                     }
                 }
                 if (taxMatched != null) {
-                    totalCharge = totalCharge + getCalculatedChargesSubItem(subItem, charges, chargesList, taxMatched.getValue());
+                    if (charges.getIsPercent() == 1) {
+                        totalCharge = totalCharge +
+                                ((subItem.getPrice() * (double) subItem.getSubItemQuantitySelected()) * (taxMatched.getValue() / 100d));
+                    } else {
+                        totalCharge = totalCharge + ((double) subItem.getSubItemQuantitySelected() * taxMatched.getValue());
+                    }
                 }
+            }
+            if (charges.getIsPercent() == 1) {
+                totalCharge = totalCharge + (includedTaxValue * (charges.getDefaultVal() / 100d));
+            } else {
+                totalCharge = totalCharge + includedTaxValue;
             }
             return totalCharge;
         } else {
@@ -607,8 +617,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             linearLayoutCartDetails.setVisibility(View.GONE);
             imageViewCartSep.setVisibility(View.VISIBLE);
         }
-        textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
-                Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
+        textViewCartTotal.setText(activity.getString(R.string.rupees_value_format, Math.round(payableAmount())));
         if(promoAmount > 0){
             textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
             textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
@@ -1884,8 +1893,8 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private void updateCartTopBarView(Pair<Double, Integer> pair){
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
-        textViewCartTotal.setText(activity.getString(R.string.rupees_value_format_without_space,
-                Utils.getMoneyDecimalFormatWithoutFloat().format(pair.first)));
+//        textViewCartTotal.setText(activity.getString(R.string.rupees_value_format_without_space,
+//                Utils.getMoneyDecimalFormatWithoutFloat().format(pair.first)));
         /*textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));*/
     }

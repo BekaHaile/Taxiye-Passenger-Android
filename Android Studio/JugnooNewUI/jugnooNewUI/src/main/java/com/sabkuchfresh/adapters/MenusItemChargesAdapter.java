@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,6 +17,7 @@ import com.sabkuchfresh.utils.Utils;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
@@ -56,6 +59,10 @@ public class MenusItemChargesAdapter extends BaseAdapter
             holder.imageViewSep1 = (ImageView) convertView.findViewById(R.id.imageViewSep1);
             holder.textViewMenusItemChargeName = (TextView) convertView.findViewById(R.id.textViewMenusItemChargeName); holder.textViewMenusItemChargeName.setTypeface(Fonts.mavenMedium(context));
             holder.textViewMenusItemChargeValue = (TextView) convertView.findViewById(R.id.textViewMenusItemChargeValue); holder.textViewMenusItemChargeValue.setTypeface(Fonts.mavenRegular(context));
+            holder.llMenusItemCharges = (LinearLayout) convertView.findViewById(R.id.llMenusItemCharges);
+
+            holder.llMenusItemCharges.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ASSL.DoMagic(holder.llMenusItemCharges);
 
             convertView.setTag(holder);
         } else {
@@ -83,6 +90,7 @@ public class MenusItemChargesAdapter extends BaseAdapter
         public RelativeLayout relativeLayoutMenusItemCharges;
         public ImageView imageViewSep1;
         public TextView textViewMenusItemChargeName, textViewMenusItemChargeValue;
+        public LinearLayout llMenusItemCharges;
 
     }
 }

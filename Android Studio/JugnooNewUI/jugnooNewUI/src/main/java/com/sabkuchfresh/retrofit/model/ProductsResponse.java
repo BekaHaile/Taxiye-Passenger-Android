@@ -164,6 +164,9 @@ public class ProductsResponse {
 		@SerializedName("force_show")
 		@Expose
 		private Integer forceShow;
+		@SerializedName("default")
+		@Expose
+		private Double defaultVal;
 
 
 		public Charges(){}
@@ -241,6 +244,14 @@ public class ProductsResponse {
 
 		public void setForceShow(Integer forceShow) {
 			this.forceShow = forceShow;
+		}
+
+		public Double getDefaultVal() {
+			return defaultVal;
+		}
+
+		public void setDefaultVal(Double defaultVal) {
+			this.defaultVal = defaultVal;
 		}
 	}
 
