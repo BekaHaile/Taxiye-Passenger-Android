@@ -1722,6 +1722,7 @@ public class JSONParser implements Constants {
             if(addressResponse.getAddresses() != null) {
                 Data.userData.getSearchResults().clear();
                 Data.userData.getSearchResultsRecent().clear();
+                Data.userData.getSearchResultsAdditional().clear();
                 Prefs.with(context).save(SPLabels.ADD_HOME, "");
                 Prefs.with(context).save(SPLabels.ADD_WORK, "");
                 boolean homeSaved = false, workSaved = false;
@@ -1761,7 +1762,7 @@ public class JSONParser implements Constants {
                         SearchResult searchResult = new SearchResult("", address.getAddr(), address.getPlaceId(),
                                 address.getLat(), address.getLng(), address.getId(), address.getIsConfirmed(), address.getFreq());
                         searchResult.setType(SearchResult.Type.RECENT);
-                        Data.userData.getSearchResultsRecent().add(searchResult);
+                        Data.userData.getSearchResultsAdditional().add(searchResult);
                     }
                 }
             }

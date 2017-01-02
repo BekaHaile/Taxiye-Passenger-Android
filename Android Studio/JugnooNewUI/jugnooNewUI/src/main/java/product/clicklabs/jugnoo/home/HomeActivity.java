@@ -2515,11 +2515,16 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     private void snapPickupLocToNearbyAddress(SearchResult searchResult){
-        Data.autoData.setPickupLatLng(searchResult.getLatLng());
-        if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-            findDriversETACall(true, false, true);
-        } else {
-            requestRideDriverCheck();
+        try {
+            Data.autoData.setPickupLatLng(searchResult.getLatLng());
+            map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
+            if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+				findDriversETACall(true, false, true);
+			} else {
+				requestRideDriverCheck();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -2542,7 +2547,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
                                 if(Data.autoData.getUseRecentLocAtRequest() == 1) {
-                                    SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), CHOOSE_SAVED_PICKUP_ADDRESS, true);
+                                    SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
+                                            CHOOSE_SAVED_PICKUP_ADDRESS, true);
                                     if (searchResult != null) {
                                         if(MapUtils.distance(Data.autoData.getPickupLatLng(), searchResult.getLatLng())
                                                 <= Data.autoData.getUseRecentLocAutoSnapMinDistance()){

@@ -96,9 +96,12 @@ public class HomeUtil {
 				searchResults.add(searchResult);
 			}
 			searchResults.addAll(Data.userData.getSearchResults());
-			if(includeRecent && Data.autoData.getUseRecentLocAtRequest() == 1) {
+			if(includeRecent) {
 				searchResults.addAll(Data.userData.getSearchResultsRecent());
-				compareDistance = Data.autoData.getUseRecentLocAutoSnapMaxDistance();
+				if(Data.autoData.getUseRecentLocAtRequest() == 1){
+					compareDistance = Data.autoData.getUseRecentLocAutoSnapMaxDistance();
+					searchResults.addAll(Data.userData.getSearchResultsAdditional());
+				}
 			}
 
 			double distance = Double.MAX_VALUE;
@@ -222,6 +225,11 @@ public class HomeUtil {
 				}
 				for(SearchResult searchResult : Data.userData.getSearchResultsRecent()){
 					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+				}
+				if(Data.autoData.getUseRecentLocAtRequest() == 1){
+					for(SearchResult searchResult : Data.userData.getSearchResultsAdditional()){
+						markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+					}
 				}
 			}
 		} catch (Exception e) {

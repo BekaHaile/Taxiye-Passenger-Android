@@ -74,6 +74,7 @@ public class UserData {
 
 	private ArrayList<SearchResult> searchResults = new ArrayList<>();
 	private ArrayList<SearchResult> searchResultsRecent = new ArrayList<>();
+	private ArrayList<SearchResult> searchResultsAdditional = new ArrayList<>();
 
 	private int showHomeScreen;
 
@@ -899,6 +900,13 @@ public class UserData {
 		this.showHomeScreen = showHomeScreen;
 	}
 
+	public ArrayList<SearchResult> getSearchResultsAdditional() {
+		return searchResultsAdditional;
+	}
+
+	public void setSearchResultsAdditional(ArrayList<SearchResult> searchResultsAdditional) {
+		this.searchResultsAdditional = searchResultsAdditional;
+	}
 
 
 	//	"meals_enabled": 1,
