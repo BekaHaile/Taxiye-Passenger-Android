@@ -2517,6 +2517,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     private void snapPickupLocToNearbyAddress(SearchResult searchResult){
         try {
             Data.autoData.setPickupLatLng(searchResult.getLatLng());
+            Data.autoData.setPickupAddress(searchResult.getAddress());
             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
             if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
 				findDriversETACall(true, false, true);
@@ -7947,6 +7948,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                     map.addPolyline(poolPolylineOption);
 
+                    try{pickupLocationMarker.remove();}catch(Exception e){}
                     MarkerOptions poolMarkerOptionStart = new MarkerOptions();
                     poolMarkerOptionStart.title("Start");
                     poolMarkerOptionStart.position(Data.autoData.getPickupLatLng());
@@ -7957,7 +7959,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             .getTextAssignBitmap(HomeActivity.this, assl,
                                     slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
                                     getResources().getDimensionPixelSize(R.dimen.text_size_24))));
-                    map.addMarker(poolMarkerOptionStart);
+                    pickupLocationMarker = map.addMarker(poolMarkerOptionStart);
 
                     MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
                     poolMarkerOptionEnd.title("End");
