@@ -22,8 +22,8 @@ import product.clicklabs.jugnoo.utils.ASSL;
  */
 public class MenuBar {
 
-	Activity activity;
-	DrawerLayout drawerLayout;
+	private Activity activity;
+	private DrawerLayout drawerLayout;
 
 	public LinearLayout menuLayout;
 
@@ -122,6 +122,10 @@ public class MenuBar {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Activity getActivity(){
+		return activity;
 	}
 
 }

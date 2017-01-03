@@ -1,6 +1,10 @@
 package product.clicklabs.jugnoo.home;
 
+import android.content.Intent;
+
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 
@@ -75,6 +79,13 @@ public class DeepLinkAction {
 				if(Data.userData.getPayEnabled() == 1) {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.PAY.getTag());
 				}
+			}
+			else if(AppLinkIndex.JUGNOO_STAR.getOrdinal() == Data.deepLinkIndex){
+				menuBar.getActivity().startActivity(new Intent(menuBar.getActivity(), JugnooStarSubscribedActivity.class));
+				menuBar.getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+			else if(AppLinkIndex.SUBSCRIPTION_PLAN_OPTION_SCREEN.getOrdinal() == Data.deepLinkIndex){
+				menuBar.menuAdapter.onClickAction(MenuInfoTags.JUGNOO_STAR.getTag());
 			}
 
 		} catch(Exception e){
