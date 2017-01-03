@@ -153,7 +153,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/star_description"
-                        android:textSize="@dimen/text_size_20"
+                        android:textSize="@dimen/text_size_24"
                         android:layout_marginTop="@dimen/px_6"
                         android:textColor="@color/text_color"/>
 

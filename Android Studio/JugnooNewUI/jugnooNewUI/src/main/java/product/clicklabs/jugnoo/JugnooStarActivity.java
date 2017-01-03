@@ -109,7 +109,9 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                 }
             }
 
-            String tempStr = Data.userData.getSubscriptionData().getSubTextAutos()+";;;"+Data.userData.getSubscriptionData().getSubTextFresh()+";;;"+Data.userData.getSubscriptionData().getSubTextMeals();
+            String tempStr = Data.userData.getSubscriptionData().getSubTextAutos()+";;;"+Data.userData.getSubscriptionData().getSubTextFresh()+";;;"+
+                    Data.userData.getSubscriptionData().getSubTextMeals()+";;;"+Data.userData.getSubscriptionData().getSubTextMenus()+";;;"+
+                    Data.userData.getSubscriptionData().getSubTextGrocery();
             String[] strArray = tempStr.split(";;;");
             ArrayList<String> benefits = new ArrayList<>(Arrays.asList(strArray));
 

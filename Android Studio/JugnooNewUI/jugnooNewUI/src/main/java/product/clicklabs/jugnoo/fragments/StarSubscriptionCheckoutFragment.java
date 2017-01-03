@@ -190,8 +190,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 Bundle bundle = new Bundle();
                 switch (v.getId()){
                     case R.id.bPlaceOrder:
-                        if(paymentOption.getOrdinal() != 0 || paymentOption.getOrdinal() != 1) {
-
+                        if(paymentOption.getOrdinal() != 0 && paymentOption.getOrdinal() != 1) {
                             placeOrder();
                         } else{
                             Utils.showToast(activity, "Please select payment option");
