@@ -320,6 +320,9 @@ public class JSONParser implements Constants {
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
                     , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2);
 
+            Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
+            Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
+            Data.autoData.setUseRecentLocAutoSnapMaxDistance(autosData.getUseRecentLocAutoSnapMaxDistance());
 
             if(Data.autoData.getPromoCoupons() == null){
                 Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
@@ -1723,15 +1726,13 @@ public class JSONParser implements Constants {
             if(addressResponse.getAddresses() != null) {
                 Data.userData.getSearchResults().clear();
                 Data.userData.getSearchResultsRecent().clear();
+                Data.userData.getSearchResultsAdditional().clear();
                 Prefs.with(context).save(SPLabels.ADD_HOME, "");
                 Prefs.with(context).save(SPLabels.ADD_WORK, "");
                 boolean homeSaved = false, workSaved = false;
                 Gson gson = new Gson();
                 for (int i = 0; i < addressResponse.getAddresses().size(); i++) {
                     FetchUserAddressResponse.Address address = addressResponse.getAddresses().get(i);
-                    if(address.getType().equalsIgnoreCase("")){
-                        address.setType(TYPE_USED);
-                    }
                     SearchResult searchResult = new SearchResult(address.getType(), address.getAddr(), address.getPlaceId(),
                             address.getLat(), address.getLng(), address.getId(), address.getIsConfirmed(), address.getFreq());
 
@@ -1760,11 +1761,13 @@ public class JSONParser implements Constants {
                     }
                 }
 
-                for(int i=0; i<addressResponse.getAdditionalAddresses().size(); i++){
-                    FetchUserAddressResponse.Address address = addressResponse.getAdditionalAddresses().get(i);
-                    SearchResult searchResult = new SearchResult(TYPE_USED, address.getAddr(), address.getPlaceId(),
-                            address.getLat(), address.getLng(), address.getId(), address.getIsConfirmed(), address.getFreq());
-                    Data.userData.getSearchResultsRecent().add(searchResult);
+                if(Data.autoData.getUseRecentLocAtRequest() == 1) {
+                    for (FetchUserAddressResponse.Address address : addressResponse.getAdditionalAddresses()) {
+                        SearchResult searchResult = new SearchResult("", address.getAddr(), address.getPlaceId(),
+                                address.getLat(), address.getLng(), address.getId(), address.getIsConfirmed(), address.getFreq());
+                        searchResult.setType(SearchResult.Type.RECENT);
+                        Data.userData.getSearchResultsAdditional().add(searchResult);
+                    }
                 }
             }
         } catch (Exception e) {

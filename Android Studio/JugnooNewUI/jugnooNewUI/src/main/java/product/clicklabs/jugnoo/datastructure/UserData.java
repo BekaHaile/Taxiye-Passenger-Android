@@ -74,6 +74,7 @@ public class UserData {
 
 	private ArrayList<SearchResult> searchResults = new ArrayList<>();
 	private ArrayList<SearchResult> searchResultsRecent = new ArrayList<>();
+	private ArrayList<SearchResult> searchResultsAdditional = new ArrayList<>();
 
 	private int showHomeScreen, showSubscriptionData;
 	private SubscriptionData subscriptionData;
@@ -920,6 +921,15 @@ public class UserData {
 	public void setShowSubscriptionData(int showSubscriptionData) {
 		this.showSubscriptionData = showSubscriptionData;
 	}
+
+	public ArrayList<SearchResult> getSearchResultsAdditional() {
+		return searchResultsAdditional;
+	}
+
+	public void setSearchResultsAdditional(ArrayList<SearchResult> searchResultsAdditional) {
+		this.searchResultsAdditional = searchResultsAdditional;
+	}
+
 
 	//	"meals_enabled": 1,
 //			"fresh_enabled": 1,

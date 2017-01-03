@@ -98,13 +98,17 @@ public class HomeUtil {
 			searchResults.addAll(Data.userData.getSearchResults());
 			if(includeRecent) {
 				searchResults.addAll(Data.userData.getSearchResultsRecent());
+				if(Data.autoData.getUseRecentLocAtRequest() == 1){
+					compareDistance = Data.autoData.getUseRecentLocAutoSnapMaxDistance();
+					searchResults.addAll(Data.userData.getSearchResultsAdditional());
+				}
 			}
 
 			double distance = Double.MAX_VALUE;
 			SearchResult selectedNearByAddress = null;
 			for(int i=0; i<searchResults.size(); i++){
 				double fetchedDistance = MapUtils.distance(latLng, searchResults.get(i).getLatLng());
-				if ((fetchedDistance < compareDistance) && (fetchedDistance < distance)) {
+				if ((fetchedDistance <= compareDistance) && (fetchedDistance < distance)) {
 					distance = fetchedDistance;
 					selectedNearByAddress = searchResults.get(i);
 				}
@@ -171,17 +175,6 @@ public class HomeUtil {
 		MarkerOptions markerOptions = new MarkerOptions();
 		markerOptions.title(TextUtils.isEmpty(searchResult.getName()) ? "recent" : searchResult.getName());
 
-		StringBuilder address = new StringBuilder();
-		String arr[] = searchResult.getAddress().split(",");
-		for(String arri : arr){
-			address.append(arri).append(",");
-		}
-		String addressStr = "";
-		if(address.length() > 0){
-			addressStr = address.toString();
-			addressStr = addressStr.substring(0, addressStr.length()-1);
-		}
-
 		String addressName = "";
 		int drawable = R.drawable.ic_saved_address_used;
 		if(searchResult.getName() != null && !searchResult.getName().equalsIgnoreCase("")){
@@ -191,22 +184,18 @@ public class HomeUtil {
 				drawable = R.drawable.ic_saved_address_home;
 			} else if(addressName.equalsIgnoreCase(Constants.TYPE_WORK)){
 				drawable = R.drawable.ic_saved_address_work;
-			} else if(addressName.equalsIgnoreCase(Constants.TYPE_USED)){
+			} else if(TextUtils.isEmpty(addressName)){
 				drawable = R.drawable.ic_saved_address_used;
 			} else{
 				drawable = R.drawable.ic_saved_address_other;
 			}
 		}
 
-		if(addressName.equalsIgnoreCase(Constants.TYPE_USED)){
-			addressName = "";
-		}
-
 		if(!showAddress){
 			addressName = "";
 		}
 
-		markerOptions.snippet(addressStr);
+		markerOptions.snippet(searchResult.getAddress());
 		markerOptions.position(searchResult.getLatLng());
 		markerOptions.anchor(0.1f, 1f);
 		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
@@ -215,7 +204,6 @@ public class HomeUtil {
 	}
 
 	private ArrayList<Marker> markersSavedAddresses = new ArrayList<>();
-
 	public void displaySavedAddressesAsFlags(Activity activity, ASSL assl, GoogleMap map, boolean showAddress){
 		try {
 			if(map != null){
@@ -237,6 +225,11 @@ public class HomeUtil {
 				}
 				for(SearchResult searchResult : Data.userData.getSearchResultsRecent()){
 					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+				}
+				if(Data.autoData.getUseRecentLocAtRequest() == 1){
+					for(SearchResult searchResult : Data.userData.getSearchResultsAdditional()){
+						markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+					}
 				}
 			}
 		} catch (Exception e) {

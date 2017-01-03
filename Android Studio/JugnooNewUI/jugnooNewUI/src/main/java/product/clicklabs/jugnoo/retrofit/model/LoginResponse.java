@@ -471,6 +471,15 @@ public class LoginResponse {
 		@SerializedName("nearbyPickupRegions")
 		@Expose
 		private NearbyPickupRegions nearbyPickupRegions;
+		@SerializedName("use_recent_loc_at_request")
+		@Expose
+		private Integer useRecentLocAtRequest;
+		@SerializedName("use_recent_loc_auto_snap_min_distance")
+		@Expose
+		private Double useRecentLocAutoSnapMinDistance;
+		@SerializedName("use_recent_loc_auto_snap_max_distance")
+		@Expose
+		private Double useRecentLocAutoSnapMaxDistance;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -582,6 +591,33 @@ public class LoginResponse {
 
 		public void setNearbyPickupRegions(NearbyPickupRegions nearbyPickupRegions) {
 			this.nearbyPickupRegions = nearbyPickupRegions;
+		}
+
+		public Integer getUseRecentLocAtRequest() {
+			if(useRecentLocAtRequest == null){
+				return 0;
+			}
+			return useRecentLocAtRequest;
+		}
+
+		public void setUseRecentLocAtRequest(Integer useRecentLocAtRequest) {
+			this.useRecentLocAtRequest = useRecentLocAtRequest;
+		}
+
+		public Double getUseRecentLocAutoSnapMinDistance() {
+			return useRecentLocAutoSnapMinDistance;
+		}
+
+		public void setUseRecentLocAutoSnapMinDistance(Double useRecentLocAutoSnapMinDistance) {
+			this.useRecentLocAutoSnapMinDistance = useRecentLocAutoSnapMinDistance;
+		}
+
+		public Double getUseRecentLocAutoSnapMaxDistance() {
+			return useRecentLocAutoSnapMaxDistance;
+		}
+
+		public void setUseRecentLocAutoSnapMaxDistance(Double useRecentLocAutoSnapMaxDistance) {
+			this.useRecentLocAutoSnapMaxDistance = useRecentLocAutoSnapMaxDistance;
 		}
 	}
 

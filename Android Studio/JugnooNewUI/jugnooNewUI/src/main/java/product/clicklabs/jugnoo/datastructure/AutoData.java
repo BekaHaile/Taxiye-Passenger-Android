@@ -43,6 +43,10 @@ public class AutoData {
 
     private ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
 
+    private Integer useRecentLocAtRequest;
+    private Double useRecentLocAutoSnapMinDistance;
+    private Double useRecentLocAutoSnapMaxDistance;
+
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
                     String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String confirmScreenFareEstimateEnable,
@@ -434,5 +438,29 @@ public class AutoData {
 
     public void setRideStartInviteTextDeepIndexV2(int rideStartInviteTextDeepIndexV2) {
         this.rideStartInviteTextDeepIndexV2 = rideStartInviteTextDeepIndexV2;
+    }
+
+    public Integer getUseRecentLocAtRequest() {
+        return useRecentLocAtRequest;
+    }
+
+    public void setUseRecentLocAtRequest(Integer useRecentLocAtRequest) {
+        this.useRecentLocAtRequest = useRecentLocAtRequest;
+    }
+
+    public Double getUseRecentLocAutoSnapMinDistance() {
+        return useRecentLocAutoSnapMinDistance;
+    }
+
+    public void setUseRecentLocAutoSnapMinDistance(Double useRecentLocAutoSnapMinDistance) {
+        this.useRecentLocAutoSnapMinDistance = useRecentLocAutoSnapMinDistance;
+    }
+
+    public Double getUseRecentLocAutoSnapMaxDistance() {
+        return useRecentLocAutoSnapMaxDistance;
+    }
+
+    public void setUseRecentLocAutoSnapMaxDistance(Double useRecentLocAutoSnapMaxDistance) {
+        this.useRecentLocAutoSnapMaxDistance = useRecentLocAutoSnapMaxDistance;
     }
 }

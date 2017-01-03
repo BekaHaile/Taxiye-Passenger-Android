@@ -194,7 +194,7 @@ public class SearchResult {
 	}
 
 	public enum Type{
-		SEARCHED, LAST_SAVED, HOME, WORK, SAVED, RECENT;
+		SEARCHED, LAST_SAVED, HOME, WORK, SAVED, RECENT, USED;
 	}
 
 	public boolean isRecentAddress(){
