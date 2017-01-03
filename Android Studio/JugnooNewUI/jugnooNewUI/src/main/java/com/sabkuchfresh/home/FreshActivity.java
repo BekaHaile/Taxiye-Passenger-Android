@@ -1273,6 +1273,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 if(getProductsResponse() != null) {
                     textViewMinOrder.setText(getString(R.string.fresh_min_order_value, Utils.getMoneyDecimalFormatWithoutFloat()
                             .format(getProductsResponse().getDeliveryInfo().getMinAmount())));
+                    double leftAmount = getProductsResponse().getDeliveryInfo().getMinAmount() - totalPrice;
+                    textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
+                            Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
                 }
             }
         }catch (Exception e){

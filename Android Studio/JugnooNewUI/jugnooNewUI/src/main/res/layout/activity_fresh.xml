@@ -70,10 +70,10 @@
                 android:id="@+id/textViewMinOrder"
                 android:layout_width="match_parent"
                 android:layout_height="68px"
-                android:background="@drawable/background_white_below_line"
+                android:background="@color/text_color"
                 android:gravity="center"
                 android:text="@string/minimum_order"
-                android:textColor="@color/theme_color"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_size_28"
                 android:visibility="visible" />
 

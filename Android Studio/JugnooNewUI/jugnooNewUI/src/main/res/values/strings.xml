@@ -1438,5 +1438,6 @@
     <string name="did_you_know">Did you know?</string>
     <string name="star_description">You can now avail unlimited FREE delivery, special discounts and much more!</string>
     <string name="click_to_find">Click to find out how…</string>
+    <string name="fresh_min_order_value_format">Just \u20B9%s away from FREE delivery</string>
 
 </resources>
