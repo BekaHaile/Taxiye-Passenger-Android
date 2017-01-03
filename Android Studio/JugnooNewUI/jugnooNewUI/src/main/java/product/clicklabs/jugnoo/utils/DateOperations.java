@@ -342,6 +342,19 @@ public class DateOperations {
 		return 60000;
 	}
 
+	public static long getTimeDifferenceInHHMM(String time1, String time2){
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("hh:mm a");
+			Date date1 = format.parse(time1);
+			Date date2 = format.parse(time2);
+			long millis = date1.getTime() - date2.getTime();
+			return millis;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return 60000;
+	}
+
 	/*public static long getTimeInMillis(String time){
 		long millis;
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

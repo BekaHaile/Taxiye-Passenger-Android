@@ -53,6 +53,7 @@ import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.GroceryFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MealFragment;
+import com.sabkuchfresh.fragments.MenusCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
@@ -211,7 +212,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 //                Data.userData.setShowHomeScreen(0);
 //            }
 
-            Log.e("", "");
             Data.currentActivity = FreshActivity.class.getName();
             drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
             new ASSL(this, drawerLayout, 1134, 720, false);
@@ -729,6 +729,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         return (FreshCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutMergedFragment.class.getName());
     }
 
+    private MenusCheckoutMergedFragment getMenusCheckoutMergedFragment() {
+        return (MenusCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(MenusCheckoutMergedFragment.class.getName());
+    }
+
     public DeliveryAddressesFragment getDeliveryAddressesFragment() {
         return (DeliveryAddressesFragment) getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName());
     }
@@ -825,7 +829,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 }
                 if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null)
                 {
-                    if (getFreshCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount())
+                    if (getMenusCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount())
                     {
                         textViewMinOrder.setVisibility(View.VISIBLE);
                     }
@@ -1130,7 +1134,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
                 topBar.textViewReset.setVisibility(View.GONE);
             }
-            else if (fragment instanceof FreshCheckoutMergedFragment) {
+            else if (fragment instanceof FreshCheckoutMergedFragment || fragment instanceof MenusCheckoutMergedFragment) {
                 resetToolbar();
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -1320,6 +1324,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         Fragment frag = getFreshCheckoutMergedFragment();
                         if (frag != null) {
                             ((FreshCheckoutMergedFragment)frag).deleteCart();
+                        } else if(getMenusCheckoutMergedFragment() != null){
+                            getMenusCheckoutMergedFragment().deleteCart();
                         } else {
                             frag = getMealAddonItemsFragment();
                             if(frag != null){
@@ -1802,6 +1808,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 FlurryEventLogger.event(FlurryEventNames.MEALS_FRAGMENT, action, label);
             } else if (getTopFragment() instanceof GroceryFragment) {
                 FlurryEventLogger.event(FlurryEventNames.GROCERY_FRAGMENT, action, label);
+            } else if (getTopFragment() instanceof MenusFragment) {
+                FlurryEventLogger.event(FlurryEventNames.MENUS_FRAGMENT, action, label);
             }
         } else {
             FlurryEventLogger.event(category, action, label);
@@ -2061,7 +2069,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                             }
                         }
                         try {
-                            getFreshCheckoutMergedFragment().updateAddressView();
+                            if(getFreshCheckoutMergedFragment() != null) {
+                                getFreshCheckoutMergedFragment().updateAddressView();
+                            } else if(getMenusCheckoutMergedFragment() != null){
+                                getMenusCheckoutMergedFragment().updateAddressView();
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -2210,6 +2222,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             Fragment frag = getFreshCheckoutMergedFragment();
             if (frag != null) {
                 ((FreshCheckoutMergedFragment)frag).deleteCart();
+            } else if(getMenusCheckoutMergedFragment() != null){
+                getMenusCheckoutMergedFragment().deleteCart();
             } else {
                 frag = getMealAddonItemsFragment();
                 if (frag != null) {
@@ -2258,7 +2272,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     private void openCart(int appType){
         if(appType == AppConstant.ApplicationType.MENUS && getVendorOpened() != null) {
-            getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
+            getTransactionUtils().openMenusCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         } else {
             getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
         }
@@ -2357,6 +2371,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private MenusFilterFragment.MinOrder moSelected = MenusFilterFragment.MinOrder.NONE;
     private MenusFilterFragment.DeliveryTime dtSelected = MenusFilterFragment.DeliveryTime.NONE;
     private ArrayList<String> cuisinesSelected = new ArrayList<>();
+    private ArrayList<String> quickFilterSelected = new ArrayList<>();
 
     public MenusFilterFragment.SortType getSortBySelected() {
         return sortBySelected;
@@ -2385,17 +2400,21 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public ArrayList<String> getCuisinesSelected() {
         return cuisinesSelected;
     }
-
     public void setCuisinesSelected(ArrayList<String> cuisinesSelected) {
         this.cuisinesSelected = cuisinesSelected;
     }
 
+    public ArrayList<String> getQuickFilterSelected() {
+        return quickFilterSelected;
+    }
+    public void setQuickFilterSelected(ArrayList<String> quickFilterSelected) {
+        this.quickFilterSelected = quickFilterSelected;
+    }
 
     private ArrayList<FilterCuisine> filterCuisinesLocal = new ArrayList<>();
     public ArrayList<FilterCuisine> getFilterCuisinesLocal() {
         return filterCuisinesLocal;
     }
-
     public void setFilterCuisinesLocal(ArrayList<FilterCuisine> filterCuisinesLocal) {
         this.filterCuisinesLocal = filterCuisinesLocal;
     }
@@ -2522,7 +2541,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26f * ASSL.Xscale());
 
             getTopBar().textViewLocationValue.setText(address);
-            if(getFreshCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
+            if(getFreshCheckoutMergedFragment() == null && getMenusCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
                 if (appType == AppConstant.ApplicationType.FRESH && getFreshFragment() != null) {
                     getFreshFragment().getAllProducts(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.MEALS && getMealFragment() != null) {

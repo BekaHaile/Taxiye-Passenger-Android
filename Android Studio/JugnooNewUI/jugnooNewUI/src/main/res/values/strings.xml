@@ -1418,4 +1418,15 @@
     <string name="requested_in_caps">REQUESTED</string>
 
 
+    <string name="no_menus_available_with_these_filters">Sorry, no results found. Try again with fewer filters.</string>
+    <string name="no_menus_available_your_location">Sorry, online ordering isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
+    <string name="no_menus_available_with_this_name">No Restaurant found with this name.</string>
+    <string name="quick_filters">Quick Filters</string>
+    <string name="offers_discount">Offers Discount</string>
+    <string name="pure_veg">Pure Vegetarian</string>
+    <string name="free_delivery">Free Delivery</string>
+
+    <string name="delivers_in_format">Delivers in %s mins</string>
+    <string name="minimum_order_rupee_format">Minimum Order \u20B9%s</string>
+
 </resources>

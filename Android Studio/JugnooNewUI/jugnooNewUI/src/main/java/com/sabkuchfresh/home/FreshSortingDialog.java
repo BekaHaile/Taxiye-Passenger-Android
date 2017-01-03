@@ -117,7 +117,7 @@ public class FreshSortingDialog implements FlurryEventNames {
                 @Override
                 public void onSlotSelected(int position, SortResponseModel slot) {
 //                    activity.setSlotToSelect(slot);
-                    pos = position;
+                    pos = slot.id;
                     activity.setSlotSelected(activity.getSlotSelected());
                     sortDialogCallback.onOkClicked(pos);
                     dialog.dismiss();
