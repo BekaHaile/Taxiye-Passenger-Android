@@ -617,7 +617,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             linearLayoutCartDetails.setVisibility(View.GONE);
             imageViewCartSep.setVisibility(View.VISIBLE);
         }
-        textViewCartTotal.setText(activity.getString(R.string.rupees_value_format, Math.round(payableAmount())));
+        textViewCartTotal.setText(activity.getString(R.string.rupees_value_format, String.valueOf(Math.round(payableAmount()))));
         if(promoAmount > 0){
             textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
             textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
