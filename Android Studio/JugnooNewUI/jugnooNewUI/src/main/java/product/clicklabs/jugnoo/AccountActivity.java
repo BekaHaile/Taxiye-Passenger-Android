@@ -92,7 +92,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutSave, linearLayoutPasswordSave;
 
-    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer;
+    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer, rlJugnooStar;
     NonScrollListView listViewSavedLocations;
     RelativeLayout relativeLayoutAddNewAddress;
     SavedPlacesAdapter savedPlacesAdapter;
@@ -232,6 +232,9 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
         relativeLayoutAddressBook = (RelativeLayout) findViewById(R.id.relativeLayoutAddressBook);
         ((TextView)findViewById(R.id.textViewAddressBook)).setTypeface(Fonts.mavenMedium(this));
+
+        rlJugnooStar = (RelativeLayout) findViewById(R.id.rlJugnooStar);
+        ((TextView)findViewById(R.id.tvJugnooStar)).setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
@@ -638,6 +641,14 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
             }
         });
 
+        rlJugnooStar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this, JugnooStarSubscribedActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
+
 
 
 		linearLayoutLogout.setOnClickListener(new View.OnClickListener() {
@@ -773,19 +784,29 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 //            }
 //        }
 
-		HomeActivity.checkForAccessTokenChange(this);
-
         try {
-            reloadProfileAPI(this);
-            textViewEmergencyContact.setText(getResources()
-					.getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
-							R.string.emergency_contacts : R.string.add_emergency_contacts));
+            HomeActivity.checkForAccessTokenChange(this);
+
+            if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
+                rlJugnooStar.setVisibility(View.VISIBLE);
+            } else{
+                rlJugnooStar.setVisibility(View.GONE);
+            }
+
+            try {
+                reloadProfileAPI(this);
+                textViewEmergencyContact.setText(getResources()
+                        .getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
+                                R.string.emergency_contacts : R.string.add_emergency_contacts));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            scrollView.scrollTo(0, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        scrollView.scrollTo(0, 0);
-	}
+    }
 
 	@Override
 	protected void onPause() {

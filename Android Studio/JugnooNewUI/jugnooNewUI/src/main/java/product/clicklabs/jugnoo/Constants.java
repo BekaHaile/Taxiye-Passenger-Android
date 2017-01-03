@@ -576,4 +576,9 @@ public interface Constants {
 	String OFFERSDISCOUNT = "Offers Discount";
 	String PUREVEGETARIAN = "Pure Vegetarian";
 	String FREEDELIVERY = "Free Delivery";
+	String SHOW_SUBSCRIPTION_DATA = "show_subscription_data";
+	String KEY_SUB_ID = "sub_id";
+
+	String KEY_PAYMENT_PREFERENCE = "payment_preference";
+	String KEY_AUTOS_BENEFIT_ID = "autos_benefit_id";
 }

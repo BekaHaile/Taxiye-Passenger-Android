@@ -8,6 +8,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
@@ -643,6 +644,10 @@ public class LoginResponse {
 		@Expose
 		private JeanieIntroDialogContent jeanieIntroDialogContent;
 
+		@SerializedName("subscription_data")
+		@Expose
+		private SubscriptionData subscriptionData;
+
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
 		}
@@ -793,6 +798,14 @@ public class LoginResponse {
 
 		public void setSharingOgTitle(String sharingOgTitle) {
 			this.sharingOgTitle = sharingOgTitle;
+		}
+
+		public SubscriptionData getSubscriptionData() {
+			return subscriptionData;
+		}
+
+		public void setSubscriptionData(SubscriptionData subscriptionData) {
+			this.subscriptionData = subscriptionData;
 		}
 	}
 

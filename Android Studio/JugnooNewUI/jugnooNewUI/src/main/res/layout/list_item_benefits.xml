@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/px_30"
+        android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="@dimen/px_34"
+        android:layout_height="@dimen/px_34"
+        android:layout_marginLeft="@dimen/px_40"
+        android:src="@drawable/ic_order_status_green"/>
+
+        <TextView
+            android:id="@+id/tvBenefitName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/px_25"
+            android:text="Unlimited Free Deliveries"
+            android:textSize="@dimen/text_size_30"
+            android:textColor="@color/text_color"/>
+
+        </LinearLayout>
+
+</LinearLayout>

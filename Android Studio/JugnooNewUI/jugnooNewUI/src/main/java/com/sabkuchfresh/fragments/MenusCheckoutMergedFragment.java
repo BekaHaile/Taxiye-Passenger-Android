@@ -1134,7 +1134,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                                             activity.orderComplete();
                                         }
                                     }).show(String.valueOf(placeOrderResponse.getOrderId()),
-                                            deliverySlot, deliveryDay, showDeliverySlot, restaurantName);
+                                            deliverySlot, deliveryDay, showDeliverySlot, restaurantName, placeOrderResponse);
                                     activity.setSelectedPromoCoupon(noSelectionCoupon);
 
 

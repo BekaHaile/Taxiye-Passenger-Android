@@ -98,7 +98,9 @@ public class MenuBar {
                     MyApplication.getInstance().ACTIVITY_NAME_SUPPORT = Data.userData.getMenuInfoList().get(i).getName();
                 } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.ABOUT.getTag())){
                     MyApplication.getInstance().ACTIVITY_NAME_ABOUT = Data.userData.getMenuInfoList().get(i).getName();
-                }
+                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())){
+					MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR = Data.userData.getMenuInfoList().get(i).getName();
+				}
             }
 		} catch (Exception e) {
 			e.printStackTrace();

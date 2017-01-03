@@ -220,6 +220,8 @@ public class JSONParser implements Constants {
         int topupCardEnabled = userData.optInt(KEY_TOPUP_CARD_ENABLED, 0);
 
         int showHomeScreen = userData.optInt(SHOW_HOME_SCREEN, 0);
+        int showSubscriptionData = userData.optInt(SHOW_SUBSCRIPTION_DATA, 0);
+
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
                 userImage, referralCode, phoneNo, jugnooBalance,
@@ -234,8 +236,9 @@ public class JSONParser implements Constants {
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled,
                 inviteFriendButton, defaultClientId, integratedJugnooEnabled,
-                topupCardEnabled, showHomeScreen);
+                topupCardEnabled, showHomeScreen, showSubscriptionData);
 
+        Data.userData.setSubscriptionData(loginUserData.getSubscriptionData());
 
         Data.userData.updateWalletBalances(userData.optJSONObject(KEY_WALLET_BALANCE), true);
 
@@ -270,6 +273,8 @@ public class JSONParser implements Constants {
 //            } else {
 //                Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, "");
 //            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1008,6 +1013,9 @@ public class JSONParser implements Constants {
             nameValuePairs.put(KEY_ACCESS_TOKEN, accessToken);
             nameValuePairs.put(KEY_LATITUDE, String.valueOf(latLng.latitude));
             nameValuePairs.put(KEY_LONGITUDE, String.valueOf(latLng.longitude));
+            if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0) {
+                nameValuePairs.put(Constants.KEY_AUTOS_BENEFIT_ID, String.valueOf(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getBenefitIdAutos()));
+            }
             new HomeUtil().putDefaultParams(nameValuePairs);
             Response response = RestClient.getApiService().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -1424,10 +1432,6 @@ public class JSONParser implements Constants {
         }
         return emergencyContactsList;
     }
-
-
-
-
 
 
 

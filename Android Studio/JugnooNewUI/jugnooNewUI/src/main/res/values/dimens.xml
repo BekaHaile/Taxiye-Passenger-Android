@@ -225,7 +225,7 @@
     <dimen name="px_25">25px</dimen>
     <dimen name="px_48">48px</dimen>
     <dimen name="px_124">124px</dimen>
-    <dimen name="px_50">25px</dimen>
+    <dimen name="px_50">50px</dimen>
     <dimen name="px_30">30px</dimen>
     <dimen name="px_05">5px</dimen>
     <dimen name="px_10">10px</dimen>
@@ -328,5 +328,12 @@
     <dimen name="px_404">404px</dimen>
     <dimen name="px_22">22px</dimen>
     <dimen name="px_17">17px</dimen>
+    <dimen name="px_270">270px</dimen>
+    <dimen name="px_135">135px</dimen>
+    <dimen name="px_28">28px</dimen>
+    <dimen name="px_75">75px</dimen>
+    <dimen name="px_45">45px</dimen>
+    <dimen name="px_52">52px</dimen>
+    <dimen name="px_64">64px</dimen>
 
 </resources>

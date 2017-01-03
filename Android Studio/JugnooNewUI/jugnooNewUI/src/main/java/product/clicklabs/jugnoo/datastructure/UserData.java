@@ -2,9 +2,13 @@ package product.clicklabs.jugnoo.datastructure;
 
 import android.content.Context;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -75,7 +79,9 @@ public class UserData {
 	private ArrayList<SearchResult> searchResults = new ArrayList<>();
 	private ArrayList<SearchResult> searchResultsRecent = new ArrayList<>();
 
-	private int showHomeScreen;
+	private int showHomeScreen, showSubscriptionData;
+	private SubscriptionData subscriptionData;
+
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -93,7 +99,7 @@ public class UserData {
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
 					int inviteFriendButton, String defaultClientId,
-					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen){
+					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -166,6 +172,7 @@ public class UserData {
 		this.topupCardEnabled = topupCardEnabled;
 
 		this.showHomeScreen = showHomeScreen;
+		this.showSubscriptionData = showSubscriptionData;
 	}
 
 	private void checkUserImage(){
@@ -899,7 +906,21 @@ public class UserData {
 		this.showHomeScreen = showHomeScreen;
 	}
 
+	public SubscriptionData getSubscriptionData() {
+		return subscriptionData;
+	}
 
+	public void setSubscriptionData(SubscriptionData subscriptionData) {
+		this.subscriptionData = subscriptionData;
+	}
+
+	public int getShowSubscriptionData() {
+		return showSubscriptionData;
+	}
+
+	public void setShowSubscriptionData(int showSubscriptionData) {
+		this.showSubscriptionData = showSubscriptionData;
+	}
 
 	//	"meals_enabled": 1,
 //			"fresh_enabled": 1,
