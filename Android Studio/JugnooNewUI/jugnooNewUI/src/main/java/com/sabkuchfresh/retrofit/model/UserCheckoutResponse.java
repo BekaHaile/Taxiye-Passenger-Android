@@ -106,6 +106,9 @@ public class UserCheckoutResponse{
 	}
 
 	public Subscription getSubscription() {
+		if(subscription == null){
+			subscription = new Subscription();
+		}
 		return subscription;
 	}
 
