@@ -1,5 +1,6 @@
 package com.sabkuchfresh.apis;
 
+import com.jugnoo.pay.models.SendMoneyCallbackResponse;
 import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
@@ -53,5 +54,10 @@ public interface MenusApiService {
 	@POST("/v1/customer/submit_feedback")
 	void orderFeedback(@FieldMap Map<String, String> params,
 					   Callback<OrderHistoryResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/place_order_callback")
+	void placeOrderCallback(@FieldMap Map<String, String> params,
+							Callback<SendMoneyCallbackResponse> callback);
 
 }

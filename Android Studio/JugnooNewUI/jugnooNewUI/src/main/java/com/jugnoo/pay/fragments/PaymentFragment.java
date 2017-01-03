@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -55,7 +57,8 @@ public class PaymentFragment extends Fragment {
     private RecyclerView rvPaymentAddress;
     private LinearLayout llPlaceHolder;
     private PaymentAddressAdapter paymentAddressAdapter;
-    private TextView tvTitle;
+    private TextView tvTitle, tvNoMatchFound;
+    ImageView ivAddVPA;
     private ArrayList<FetchPaymentAddressResponse.VpaList> fetchList = new ArrayList<>();
 
     @Nullable
@@ -67,11 +70,13 @@ public class PaymentFragment extends Fragment {
         llPlaceHolder = (LinearLayout) rootView.findViewById(R.id.llPlaceHolder);
         tvTitle = (TextView) rootView.findViewById(R.id.tvTitle); tvTitle.setTypeface(Fonts.mavenRegular(getActivity()));
 
+        tvNoMatchFound = (TextView) rootView.findViewById(R.id.tvNoMatchFound);
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         rvPaymentAddress.setLayoutManager(mLayoutManager);
         rvPaymentAddress.setItemAnimator(new DefaultItemAnimator());
 
-        paymentAddressAdapter = new PaymentAddressAdapter(getActivity(), fetchList, new PaymentAddressAdapter.Callback() {
+        paymentAddressAdapter = new PaymentAddressAdapter((SelectContactActivity) getActivity(), fetchList, new PaymentAddressAdapter.Callback() {
             @Override
             public void recyclerViewListClicked(int position) {
                 SelectUser data = new SelectUser();
@@ -108,7 +113,8 @@ public class PaymentFragment extends Fragment {
         });
         rvPaymentAddress.setAdapter(paymentAddressAdapter);
 
-        (((SelectContactActivity)getActivity()).getIvToolbarAddVPA()).setOnClickListener(new View.OnClickListener() {
+        ivAddVPA = (FloatingActionButton) rootView.findViewById(R.id.fabAddVPA);
+        ivAddVPA.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), AddPaymentAddressActivity.class));
@@ -116,14 +122,28 @@ public class PaymentFragment extends Fragment {
             }
         });
 
-
-
+        // (((SelectContactActivity)getActivity()).getIvToolbarAddVPA()).setOnClickListener(new View.OnClickListener() {
+//        (((SelectContactActivity)getActivity()).getIvAddVPA()).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(getActivity(), AddPaymentAddressActivity.class));
+//                getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//            }
+//        });
 
         return rootView;
     }
 
     public PaymentAddressAdapter getPaymentAddressAdapter() {
         return paymentAddressAdapter;
+    }
+
+    public TextView getTvNoMatchFound() {
+        return tvNoMatchFound;
+    }
+
+    public RecyclerView getRvPaymentAddress() {
+        return rvPaymentAddress;
     }
 
     @Override

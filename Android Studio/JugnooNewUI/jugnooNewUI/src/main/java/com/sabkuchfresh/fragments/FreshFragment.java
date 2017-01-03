@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,9 +27,9 @@ import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.home.FreshNoDeliveriesDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -83,9 +82,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
-//    private ImageView imageViewNoItem;
-
-    private RelativeLayout searchLayout;
 
     private FreshSortingDialog freshSortingDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
@@ -144,7 +140,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         relativeLayoutNoMenus.setVisibility(View.GONE);
         rootView.findViewById(R.id.imageViewShadow).setVisibility(View.VISIBLE);
 
-        searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
 //        imageViewNoItem = (ImageView) rootView.findViewById(R.id.imageViewNoItem);
@@ -207,13 +202,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         });
 
 
-        searchLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.searchItem();
-            }
-        });
-
         setSortingList();
 
 		activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
@@ -251,6 +239,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	@Override
 	public void onResume() {
 		super.onResume();
+        activity.resetToolbarWithScroll();
 		if(!isHidden() && resumed) {
 			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 			activity.setRefreshCart(false);
@@ -370,6 +359,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+                                    activity.getSearchLayout().setVisibility(View.GONE);
+									activity.resetToolbar();
                                     mainLayout.setVisibility(View.GONE);
                                     activity.showBottomBar(false);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?

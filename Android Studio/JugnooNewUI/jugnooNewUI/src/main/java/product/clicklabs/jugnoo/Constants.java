@@ -517,6 +517,7 @@ public interface Constants {
 	String KEY_TYPE = "type";
 	String TYPE_HOME = "home";
 	String TYPE_WORK = "work";
+	String TYPE_USED = "used";
 	String KEY_ADDRESS = "address";
 	String KEY_PLACEID = "placeId";
 	String KEY_GOOGLE_PLACE_ID = "google_place_id";
@@ -567,4 +568,8 @@ public interface Constants {
 	String KEY_MENU_LONGITUDE = "menu_longitude";
 
 	String SHOW_HOME_SCREEN = "show_home_screen";
+
+	String KEY_GO_BACK = "go_back";
+	String KEY_PAYMENT_OBJECT = "payment_object";
+	String KEY_PAY_ORDER_ID = "pay_order_id";
 }

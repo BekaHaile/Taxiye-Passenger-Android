@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -39,7 +40,6 @@ import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
-import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -396,6 +396,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
         } else if(activity instanceof FreshActivity){
             latLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+        } else if(activity instanceof MainActivity){
+            latLng = ((MainActivity)activity).getCurrentPlaceLatLng();
         }
         return latLng;
     }
@@ -548,6 +550,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if(activity instanceof FreshActivity){
                     currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
                 }
+                else if(activity instanceof MainActivity)
+                {
+                    currLatLng = ((MainActivity)activity).getCurrentPlaceLatLng();
+                }
+
+
                 if (currLatLng != null) {
                     Data.latitude = currLatLng.latitude;
                     Data.longitude = currLatLng.longitude;

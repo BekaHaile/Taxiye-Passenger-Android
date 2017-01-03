@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:tag="DontTouchMe"
     android:background="@color/transparent"
-    android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
     android:visibility="visible">
 

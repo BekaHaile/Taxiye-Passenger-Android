@@ -30,6 +30,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
+import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.adapters.PendingTrnscAdapater;
 import com.jugnoo.pay.models.AccountManagementResponse;
 import com.jugnoo.pay.models.AccountMgmtCallbackRequest;
@@ -42,6 +43,7 @@ import com.jugnoo.pay.models.VerifyRegisterResponse;
 import com.jugnoo.pay.models.VerifyUserRequest;
 import com.jugnoo.pay.utils.CallProgressWheel;
 import com.jugnoo.pay.utils.CommonMethods;
+import com.jugnoo.pay.utils.PrefManager;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.sabkuchfresh.utils.AppConstant;
 import com.yesbank.AddAccount;
@@ -177,6 +179,10 @@ public class MainActivity extends BaseActivity {
     private FetchPayDataResponse fetchPayDataResponse;
     private CallbackManager callbackManager;
 
+    private LatLng selectedLatLng;
+    private int goBack = 0;
+    private PrefManager prefManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,8 +197,36 @@ public class MainActivity extends BaseActivity {
 
             callbackManager = CallbackManager.Factory.create();
 
+            try {
+                if(com.sabkuchfresh.utils.Utils.compareDouble(Data.latitude, 0) == 0 && com.sabkuchfresh.utils.Utils.compareDouble(Data.longitude, 0) == 0){
+                    Data.latitude = Data.loginLatitude;
+                    Data.longitude = Data.loginLongitude;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             toggle.syncState();
             userDetails = Prefs.with(MainActivity.this).getObject(SharedPreferencesName.APP_USER, CommonResponse.class);
+
+
+            if(getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)){
+                setSelectedLatLng(new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude),
+                        getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude)));
+            }
+
+            prefManager = new PrefManager(MainActivity.this);
+            int comingFromPayment =  getIntent().getIntExtra("comingFromPayment", 0);
+            goBack = getIntent().getIntExtra(Constants.KEY_GO_BACK, 0);
+            if(goBack == 1 && comingFromPayment == 0 && prefManager.isFirstTimeLaunch()){
+                Intent intent = new Intent(MainActivity.this, PayTutorial.class);
+                intent.putExtra(Constants.KEY_GO_BACK, 1);
+                intent.putExtra("comingFromPayment", 1);
+
+                startActivity(intent);
+                finish();
+                return;
+            }
 
             menuBar = new MenuBar(this, drawer);
             imageButtonBack = (ImageButton) findViewById(R.id.back_btn);
@@ -286,6 +320,23 @@ public class MainActivity extends BaseActivity {
 
         firstTimeApi();
     }
+
+    public LatLng getSelectedLatLng() {
+        if(selectedLatLng != null){
+            return selectedLatLng;
+        } else {
+            return new LatLng(Data.latitude, Data.longitude);
+        }
+    }
+
+    public void setSelectedLatLng(LatLng selectedLatLng) {
+        this.selectedLatLng = selectedLatLng;
+    }
+
+    public LatLng getCurrentPlaceLatLng() {
+        return getSelectedLatLng();
+    }
+
 
     private void firstTimeApi(){
         try {
@@ -491,6 +542,14 @@ public class MainActivity extends BaseActivity {
                         if (flag == 401) {
                             updateTransactions(fetchPayDataResponse);
                             Data.getPayData().getPay().setHasVpa(1);
+
+                            // set First time launch false in prefManager
+                            prefManager.setFirstTimeLaunch(false);
+                            if(goBack == 1){
+                                finish();
+                                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                            }
+
                         } else if (flag == 403) {
 //                            logoutFunc(MainActivity.this, tokenGeneratedResponse.getMessage());
 
@@ -534,6 +593,11 @@ public class MainActivity extends BaseActivity {
                         try{
                             if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == fetchPayDataResponse.getFlag()){
                                 updateTransactions(fetchPayDataResponse);
+
+                                // set isFirstTimeAppLaunch to false
+                                PrefManager prefManager = new PrefManager(MainActivity.this);
+                                prefManager.setFirstTimeLaunch(false);
+
                             } else {
                                 DialogPopup.alertPopup(MainActivity.this, "", fetchPayDataResponse.getMessage());
                             }
@@ -988,7 +1052,7 @@ public class MainActivity extends BaseActivity {
                             //callBankSetMPINApi(sendMoneyResponse.getTxnDetails());
 
                         } else {
-                            DialogPopup.alertPopup(MainActivity.this, "", commonResponse.getMessage());
+                            // DialogPopup.alertPopup(MainActivity.this, "", commonResponse.getMessage());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1003,6 +1067,5 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
-
 
 }

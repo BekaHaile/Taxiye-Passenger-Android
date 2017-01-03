@@ -11,6 +11,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.home.FreshActivity;
 
@@ -19,7 +20,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -127,53 +127,7 @@ public class FABViewTest {
 
         createCustomAnimation();
 
-        /*menuLabelsRightTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(menuLabelsRightTest.isOpened()){
-                    menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_autos);
-                    if(activity instanceof HomeActivity){
-                        ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.GONE);
-                        ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
-                    } else{
-                        menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_meals);
-                        if(activity instanceof HomeActivity){
-                            ((HomeActivity)activity).getViewSlidingExtra().setVisibility(View.VISIBLE);
-                            ((HomeActivity)activity).getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(false);
-                        }
-                    }
-                }
-            }
-        });*/
 
-
-
-
-        /*fabExtra.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (menuLabelsRight.isOpened()) {
-                    menuLabelsRight.close(true);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            fabExtra.setVisibility(View.GONE);
-                            //setRelativeLayoutFABVisibility(null);
-                            if(activity instanceof HomeActivity){
-                                setRelativeLayoutFABVisibility(HomeActivity.passengerScreenMode);
-                            } else if(activity instanceof FreshActivity){
-                                setRelativeLayoutFABVisibility(null);
-                            }
-                            setFABMenuDrawable();
-                        }
-                    }, 300);
-                } else {
-                    //menuLabelsRight.open(true);
-                    //fabExtra.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });*/
     }
 
     private void createCustomAnimation() {
@@ -317,6 +271,8 @@ public class FABViewTest {
                 latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
             } else if(activity instanceof FreshActivity){
                 latLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+            } else if(activity instanceof MainActivity){
+                latLng = ((MainActivity)activity).getCurrentPlaceLatLng();
             }
             final LatLng finalLatLng = latLng;
             menuLabelsRightTest.close(true);

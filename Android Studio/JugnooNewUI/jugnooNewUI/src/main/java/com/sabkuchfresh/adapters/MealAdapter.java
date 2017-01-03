@@ -322,11 +322,17 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 .error(R.drawable.ic_meal_place_holder)
                                 .into(mHolder.imageViewMmeals);
                     } else {
-                        mHolder.imageViewMmeals.setImageResource(R.drawable.ic_meal_place_holder);
+                        throw new Exception();
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Picasso.with(activity).load(R.drawable.ic_meal_place_holder)
+                            .placeholder(R.drawable.ic_meal_place_holder)
+                            .fit()
+                            .centerCrop()
+                            .error(R.drawable.ic_meal_place_holder)
+                            .into(mHolder.imageViewMmeals);
                 }
             } else if (holder instanceof ViewTitleHolder) {
                 ViewTitleHolder titleholder = ((ViewTitleHolder) holder);

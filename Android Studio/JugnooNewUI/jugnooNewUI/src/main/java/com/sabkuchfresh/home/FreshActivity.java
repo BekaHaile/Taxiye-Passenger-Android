@@ -9,6 +9,8 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,10 +18,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,6 +33,8 @@ import android.widget.TextView;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.jugnoo.pay.activities.PaySDKUtils;
+import com.jugnoo.pay.models.MessageRequest;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressAdded;
@@ -72,7 +79,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -117,7 +123,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseFragmentActivity implements LocationUpdate, FlurryEventNames {
+public class FreshActivity extends AppCompatActivity implements LocationUpdate, FlurryEventNames {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -171,6 +177,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     public int freshSort = -1;
     public int mealSort = -1;
 
+    private AppBarLayout appBarLayout;
+    private RelativeLayout searchLayout;
+    private Toolbar toolbar;
+
     public void openNotification() {
         menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
     }
@@ -180,6 +190,13 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_fresh);
+
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            toolbar.setTitle("");
+
+            appBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
+
 
 //            if(Data.userData.getShowHomeScreen() == 1)
 //            {
@@ -201,6 +218,14 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             scale = getResources().getDisplayMetrics().density;
 
             relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
+            searchLayout = (RelativeLayout) findViewById(R.id.searchLayout);
+            ((TextView) findViewById(R.id.textViewSearch)).setTypeface(Fonts.mavenMedium(this));
+            searchLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    searchItem();
+                }
+            });
 
             try {
                 mBus = ((MyApplication) getApplication()).getBus();
@@ -253,6 +278,39 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             menuBar = new MenuBar(this, drawerLayout);
             topBar = new TopBar(this, drawerLayout);
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
+
+            appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                @Override
+                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                    if(verticalOffset == 0){
+                        if(fabViewTest.getMenuLabelsRightTest().getVisibility() == View.GONE) {
+                            fabViewTest.getMenuLabelsRightTest().setVisibility(View.VISIBLE);
+                            fabViewTest.getMenuLabelsRightTest().startAnimation(AnimationUtils.loadAnimation(FreshActivity.this, R.anim.fade_in_slow_fab));
+                            /*new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    fabViewTest.getMenuLabelsRightTest().setVisibility(View.VISIBLE);
+                                    fabViewTest.getMenuLabelsRightTest().startAnimation(AnimationUtils.loadAnimation(FreshActivity.this, R.anim.fade_in_slow_fab));
+                                }
+                            }, 1000);*/
+                        }
+                    } else{
+                        if(verticalOffset < -100) {
+                            if(fabViewTest.getMenuLabelsRightTest().getVisibility() == View.VISIBLE) {
+                                fabViewTest.getMenuLabelsRightTest().setVisibility(View.GONE);
+                                fabViewTest.getMenuLabelsRightTest().startAnimation(AnimationUtils.loadAnimation(FreshActivity.this, R.anim.fade_out_slow_fab));
+                                /*new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        fabViewTest.getMenuLabelsRightTest().setVisibility(View.GONE);
+                                        fabViewTest.getMenuLabelsRightTest().startAnimation(AnimationUtils.loadAnimation(FreshActivity.this, R.anim.fade_out_slow_fab));
+                                    }
+                                }, 1000);*/
+                            }
+                        }
+                    }
+                }
+            });
 
 
             View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -830,6 +888,10 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //        }
     }
 
+    public RelativeLayout getSearchLayout() {
+        return searchLayout;
+    }
+
     public void fragmentUISetup(Fragment fragment) {
         try {
             int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
@@ -850,17 +912,21 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
 //        Utils.hideViewByScale(relativeLayoutCartRound);
 //        relativeLayoutCartRound.hide();
             topView.setVisibility(View.VISIBLE);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
-            params.setMargins(0, (int)(ASSL.Yscale() * 96f), 0, 0);
-            relativeLayoutContainer.setLayoutParams(params);
+
+            CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+            lp.height = CoordinatorLayout.LayoutParams.WRAP_CONTENT;
+            appBarLayout.setLayoutParams(lp);
 
             fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
             //imageViewFabFake.setVisibility(View.GONE);
             topBar.editTextDeliveryAddress.setVisibility(View.GONE);
 
             relativeLayoutLeft.setVisibility(View.VISIBLE);
+            searchLayout.setVisibility(View.GONE);
+            resetToolbar();
 
             if (fragment instanceof FreshFragment) {
+                resetToolbarWithScroll();
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
 				topBar.below_shadow.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -894,6 +960,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 setRelativeLayoutLocalityClick();
                 setMinOrderAmountText();
                 setNoItemsView(fragment);
+                searchLayout.setVisibility(View.VISIBLE);
 
             } else if(fragment instanceof MealFragment){
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -926,6 +993,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 setNoItemsView(fragment);
 			}
             else if (fragment instanceof GroceryFragment) {
+                resetToolbarWithScroll();
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.below_shadow.setVisibility(View.GONE);
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -958,6 +1026,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 setRelativeLayoutLocalityClick();
                 setMinOrderAmountText();
                 setNoItemsView(fragment);
+                searchLayout.setVisibility(View.VISIBLE);
 
             } else if (fragment instanceof MenusFragment) {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -1017,6 +1086,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                     textViewMinOrder.setText(getString(R.string.minimum_order) + " "
                             + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
                 }
+                searchLayout.setVisibility(View.VISIBLE);
             }
             else if (fragment instanceof MenusFilterFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1061,6 +1131,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
                 topBar.textViewReset.setVisibility(View.GONE);
             }
             else if (fragment instanceof FreshCheckoutMergedFragment) {
+                resetToolbar();
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -1113,9 +1184,9 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             }
             else if (fragment instanceof FreshSearchFragment) {
 				topView.setVisibility(View.GONE);
-                RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) relativeLayoutContainer.getLayoutParams();
-                params1.setMargins(0, 0, 0, 0);
-                relativeLayoutContainer.setLayoutParams(params1);
+                CoordinatorLayout.LayoutParams lp1 = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+                lp.height = 0;
+                appBarLayout.setLayoutParams(lp1);
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -1224,6 +1295,8 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             e.printStackTrace();
         }
     }
+
+
 
     public void searchItem() {
         getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer);
@@ -2496,7 +2569,7 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
             if(searchResultLocality != null && !TextUtils.isEmpty(searchResultLocality.getAddress())){
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {
-                SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng());
+                SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(), 100, false);
                 if(searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())){
                     setSearchResultToActVarsAndFetchData(searchResult, appType);
                 } else {
@@ -2546,5 +2619,51 @@ public class FreshActivity extends BaseFragmentActivity implements LocationUpdat
     }
     public void setMenuRefreshLatLng(LatLng menuRefreshLatLng) {
         this.menuRefreshLatLng = menuRefreshLatLng;
+    }
+
+
+    private PaySDKUtils paySDKUtils;
+    public PaySDKUtils getPaySDKUtils(){
+        if(paySDKUtils == null){
+            paySDKUtils = new PaySDKUtils();
+        }
+        return paySDKUtils;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (requestCode == PaySDKUtils.REQUEST_CODE_SEND_MONEY && resultCode == Activity.RESULT_OK && data != null) {
+                MessageRequest messageRequest = getPaySDKUtils().parseSendMoneyData(data);
+                getFreshCheckoutMergedFragment().apiPlaceOrderPayCallback(messageRequest);
+            } else {
+                if (data == null) {
+                    getFreshCheckoutMergedFragment().apiPlaceOrderPayCallback(null);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void resetToolbar() {
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(0);
+
+        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        layoutParams.height = (int)(96f * ASSL.Yscale());
+        toolbar.setLayoutParams(layoutParams);
+    }
+
+    public void resetToolbarWithScroll(){
+        AppBarLayout.LayoutParams params =
+                (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+                | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+
+        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        layoutParams.height = (int)(164f * ASSL.Yscale());
+        toolbar.setLayoutParams(layoutParams);
     }
 }
