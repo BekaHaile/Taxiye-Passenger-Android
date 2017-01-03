@@ -146,6 +146,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this);
             listViewOffers.setAdapter(promoCouponsAdapter);
 
+            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+
             fetchWalletBalance();
             updateCouponsDataView();
 
@@ -393,7 +395,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     @Override
                     public void onSuccess() {
                         try {
-                            setPaymentOption(getSavedPaymentOption());
+//                            setPaymentOption(getPaymentOption());
                             orderPaymentModes();
                             setPaymentOptionUI();
                             //activity.updateMenu();
@@ -405,7 +407,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     @Override
                     public void onFailure() {
                         try {
-                            setPaymentOption(getSavedPaymentOption());
+//                            setPaymentOption(getPaymentOption());
                             orderPaymentModes();
                             setPaymentOptionUI();
                             //activity.updateMenu();
@@ -433,9 +435,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
     }
 
-    private PaymentOption getSavedPaymentOption(){
-            return MyApplication.getInstance().getWalletCore().getDefaultPaymentOption();
-    }
 
     private void orderPaymentModes(){
         try{
@@ -468,7 +467,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
         @Override
         public void onWalletAdd(PaymentOption paymentOption) {
-            setPaymentOption(paymentOption);
         }
     };
 

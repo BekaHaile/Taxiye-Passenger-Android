@@ -8,13 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,8 +21,6 @@ import product.clicklabs.jugnoo.adapters.StarBenefitsAdapter;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -43,6 +39,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
     private String selectedSubId;
     private RelativeLayout rlFragment;
     private Button bJoinNow;
+    private View divider;
     private SubscriptionData.Subscription subscription;
 
 
@@ -75,6 +72,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         tvAmount2 = (TextView) findViewById(R.id.tvAmount2); tvAmount2.setTypeface(Fonts.avenirNext(this));
         tvPeriod1 = (TextView) findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.avenirMedium(this));
         tvPeriod2 = (TextView) findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.avenirMedium(this));
+        divider = (View) findViewById(R.id.divider);
         rvBenefits = (RecyclerView) findViewById(R.id.rvBenefits);
         rvBenefits.setLayoutManager(new LinearLayoutManager(this));
         rvBenefits.setItemAnimator(new DefaultItemAnimator());
@@ -95,6 +93,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                         tvAmount1.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
                                 String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getAmount())));
                         tvPeriod1.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getPlanString()));
+                        divider.setVisibility(View.GONE);
                     } else if (i == 1) {
                         rlPlan2.setVisibility(View.VISIBLE);
                         if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() != null && Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() !=0){
@@ -105,6 +104,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                         tvAmount2.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
                                 String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getAmount())));
                         tvPeriod2.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getPlanString()));
+                        divider.setVisibility(View.VISIBLE);
                     }
                 }
             }
