@@ -14,7 +14,7 @@ public class MenuInfo {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("isNew")
+    @SerializedName("is_new")
     @Expose
     private int isNew;
     @SerializedName("icon")

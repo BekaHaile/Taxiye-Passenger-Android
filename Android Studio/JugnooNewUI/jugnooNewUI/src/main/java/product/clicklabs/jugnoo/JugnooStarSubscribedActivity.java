@@ -79,7 +79,9 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
         rvBenefits.setHasFixedSize(false);
 
         try {
-            String tempStr = Data.userData.getSubscriptionData().getSubTextAutos() + ";;;" + Data.userData.getSubscriptionData().getSubTextFresh() + ";;;" + Data.userData.getSubscriptionData().getSubTextMeals();
+            String tempStr = Data.userData.getSubscriptionData().getSubTextAutos() + ";;;" + Data.userData.getSubscriptionData().getSubTextFresh() + ";;;" +
+                    Data.userData.getSubscriptionData().getSubTextMeals()+";;;"+Data.userData.getSubscriptionData().getSubTextMenus()+";;;"+
+                    Data.userData.getSubscriptionData().getSubTextGrocery();
             String[] strArray = tempStr.split(";;;");
             ArrayList<String> benefits = new ArrayList<>(Arrays.asList(strArray));
 
@@ -93,8 +95,12 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
                 benefitOffering.add("Fresh");
             }
             String[] strArray3 = Data.userData.getSubscriptionData().getSubTextMeals().split(";;;");
-            for (int i = 0; i < strArray2.length; i++) {
+            for (int i = 0; i < strArray3.length; i++) {
                 benefitOffering.add("Meals");
+            }
+            String[] strArray4 = Data.userData.getSubscriptionData().getSubTextMenus().split(";;;");
+            for (int i = 0; i < strArray4.length; i++) {
+                benefitOffering.add("Menus");
             }
 
 

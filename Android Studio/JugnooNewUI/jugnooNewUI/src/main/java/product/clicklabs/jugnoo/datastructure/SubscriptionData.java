@@ -31,6 +31,12 @@ public class SubscriptionData {
     @SerializedName("sub_text_fresh")
     @Expose
     private String subTextFresh;
+    @SerializedName("sub_text_menus")
+    @Expose
+    private String subTextMenus;
+    @SerializedName("sub_text_grocery")
+    @Expose
+    private String subTextGrocery;
 
     public List<UserSubscription> getUserSubscriptions() {
         return userSubscriptions;
@@ -49,6 +55,8 @@ public class SubscriptionData {
     }
 
     public String getSubTextAutos() {
+        if(subTextAutos == null)
+            subTextAutos = "";
         return subTextAutos;
     }
 
@@ -65,6 +73,8 @@ public class SubscriptionData {
     }
 
     public String getSubTextMeals() {
+        if(subTextMeals == null)
+            subTextMeals = "";
         return subTextMeals;
     }
 
@@ -73,11 +83,33 @@ public class SubscriptionData {
     }
 
     public String getSubTextFresh() {
+        if(subTextFresh == null)
+            subTextFresh = "";
         return subTextFresh;
     }
 
     public void setSubTextFresh(String subTextFresh) {
         this.subTextFresh = subTextFresh;
+    }
+
+    public String getSubTextMenus() {
+        if(subTextMenus == null)
+            subTextMenus = "";
+        return subTextMenus;
+    }
+
+    public void setSubTextMenus(String subTextMenus) {
+        this.subTextMenus = subTextMenus;
+    }
+
+    public String getSubTextGrocery() {
+        if(subTextGrocery == null)
+            subTextGrocery = "";
+        return subTextGrocery;
+    }
+
+    public void setSubTextGrocery(String subTextGrocery) {
+        this.subTextGrocery = subTextGrocery;
     }
 
     public class UserSubscription {

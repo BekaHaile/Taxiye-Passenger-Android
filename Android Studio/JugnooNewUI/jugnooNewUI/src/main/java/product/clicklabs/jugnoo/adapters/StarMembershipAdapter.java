@@ -49,7 +49,7 @@ public class StarMembershipAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			ASSL.DoMagic(v);
 			return new ViewFooterHolder(v, context);
 		} else {
-			View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_membership, parent, false);
+			View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_benefits, parent, false);
 
 			RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(720, RecyclerView.LayoutParams.WRAP_CONTENT);
 			v.setLayoutParams(layoutParams);
@@ -86,12 +86,7 @@ public class StarMembershipAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 			final ViewHolder viewHolder = ((ViewHolder)holder);
 
 			viewHolder.tvBenefitName.setText(benefits.get(position).toString());
-			viewHolder.tvOffering.setText(benefitsOfferings.get(position).toString());
-			if(position == benefits.size()-1){
-				viewHolder.divider.setVisibility(View.GONE);
-			} else{
-				viewHolder.divider.setVisibility(View.VISIBLE);
-			}
+
 		} else if (holder instanceof ViewFooterHolder) {
 			ViewFooterHolder viewHolder = (ViewFooterHolder) holder;
 			((ViewFooterHolder) holder).tvUnsubscribe.setOnClickListener(new View.OnClickListener() {
@@ -106,14 +101,11 @@ public class StarMembershipAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
 	static class ViewHolder extends RecyclerView.ViewHolder {
-		public TextView tvOffering, tvBenefitName;
-		public View divider;
+		public TextView tvBenefitName;
 
 		public ViewHolder(View itemView, Context context) {
 			super(itemView);
-			tvOffering = (TextView) itemView.findViewById(R.id.tvOffering); tvOffering.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
 			tvBenefitName = (TextView) itemView.findViewById(R.id.tvBenefitName);tvBenefitName.setTypeface(Fonts.mavenMedium(context));
-			divider = (View) itemView.findViewById(R.id.divider);
 		}
 	}
 
