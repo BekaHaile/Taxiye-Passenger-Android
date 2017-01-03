@@ -49,6 +49,7 @@ public class SavedAddressPickupDialog {
 			dialog.setCancelable(true);
 			dialog.setCanceledOnTouchOutside(true);
 
+			RelativeLayout rlInner = (RelativeLayout) dialog.findViewById(R.id.rlInner);
 			RelativeLayout rlAdressItem = (RelativeLayout) dialog.findViewById(R.id.relative);
 			((TextView) dialog.findViewById(R.id.textHead)).setTypeface(Fonts.mavenRegular(activity));
 			ImageView imageViewType = (ImageView) dialog.findViewById(R.id.imageViewType);
@@ -87,6 +88,13 @@ public class SavedAddressPickupDialog {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
+				}
+			});
+
+			rlInner.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+
 				}
 			});
 
