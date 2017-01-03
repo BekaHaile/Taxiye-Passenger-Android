@@ -455,13 +455,14 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         checkoutSaveData = activity.getCheckoutSaveData();
         activity.setSplInstr(checkoutSaveData.getSpecialInstructions());
 
+/*
         Collections.sort(activity.getProductsResponse().getCharges(), new Comparator<ProductsResponse.Charges>() {
             @Override
             public int compare(ProductsResponse.Charges lhs, ProductsResponse.Charges rhs) {
                 return lhs.getIncludeValue().size() - rhs.getIncludeValue().size();
             }
         });
-
+*/
         updateAddressView();
 
         updateCartDataView();
