@@ -2,13 +2,9 @@ package product.clicklabs.jugnoo.datastructure;
 
 import android.content.Context;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -907,6 +903,9 @@ public class UserData {
 	}
 
 	public SubscriptionData getSubscriptionData() {
+		if(subscriptionData == null){
+			subscriptionData = new SubscriptionData();
+		}
 		return subscriptionData;
 	}
 
