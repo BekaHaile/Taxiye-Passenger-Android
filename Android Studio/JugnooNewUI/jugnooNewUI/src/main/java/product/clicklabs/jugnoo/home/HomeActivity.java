@@ -2547,7 +2547,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if (callRequestRide) {
                                 promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
-                                if(Data.autoData.getUseRecentLocAtRequest() == 1) {
+                                if(!specialPickupScreenOpened && Data.autoData.getUseRecentLocAtRequest() == 1) {
                                     SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
                                             CHOOSE_SAVED_PICKUP_ADDRESS, true);
                                     if (searchResult != null) {
