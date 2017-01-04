@@ -208,25 +208,24 @@ public class HomeUtil {
 		try {
 			if(map != null){
 				removeSavedAddress(map);
-
-				if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
-					String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
-					SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
-					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
-
-				}
-				if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
-					String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
-					SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
-					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
-				}
-				for(SearchResult searchResult : Data.userData.getSearchResults()){
-					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
-				}
-				for(SearchResult searchResult : Data.userData.getSearchResultsRecent()){
-					markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
-				}
 				if(Data.autoData.getUseRecentLocAtRequest() == 1){
+					if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
+						String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
+						SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
+						markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+
+					}
+					if (!Prefs.with(activity).getString(SPLabels.ADD_WORK, "").equalsIgnoreCase("")) {
+						String workString = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
+						SearchResult searchResult = new Gson().fromJson(workString, SearchResult.class);
+						markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+					}
+					for(SearchResult searchResult : Data.userData.getSearchResults()){
+						markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+					}
+					for(SearchResult searchResult : Data.userData.getSearchResultsRecent()){
+						markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
+					}
 					for(SearchResult searchResult : Data.userData.getSearchResultsAdditional()){
 						markersSavedAddresses.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, showAddress)));
 					}
