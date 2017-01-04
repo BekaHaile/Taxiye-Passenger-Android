@@ -1399,7 +1399,7 @@
     <string name="pay_from_your_bank">Pay from your bank\nin seconds</string>
     <string name="no_loading_money">No loading of money in wallets</string>
     <string name="bank_grade_security">Bank grade security</string>
-    <string name="make_payment_with_mpin">Make payments with your MPIN on \nsecure NPCI plateform</string>
+    <string name="make_payment_with_mpin">Make payments with your MPIN on \nsecure NPCI platform</string>
     <string name="phone_number_registered_with_jugnoo">The phone number registered \nwith Jugnoo should be linked to \nyour bank account.</string>
     <string name="registered_number_should_be">The registered number should be \nthe default/preferred sim for SMS \nand calls for regular updates</string>
     <string name="GotIt">Got It</string>
