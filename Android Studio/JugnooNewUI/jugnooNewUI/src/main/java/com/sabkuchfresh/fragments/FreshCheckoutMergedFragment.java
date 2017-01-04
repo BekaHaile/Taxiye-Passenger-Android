@@ -549,7 +549,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
         relativeLayoutDeliveryCharges.setVisibility(View.VISIBLE);
-        if(activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() != null
+        if(activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() != null
                 && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() > 0){
             textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
             String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges()));
