@@ -18,6 +18,12 @@ public class PurchaseSubscriptionResponse {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("cancellation_charges_popup_text_line1")
+    @Expose
+    private String cancellationChargesPopupTextLine1;
+    @SerializedName("cancellation_charges_popup_text_line2")
+    @Expose
+    private String cancellationChargesPopupTextLine2;
     @SerializedName("user_subscriptions")
     @Expose
     private List<SubscriptionData.UserSubscription> userSubscriptions = null;
@@ -36,6 +42,22 @@ public class PurchaseSubscriptionResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getCancellationChargesPopupTextLine1() {
+        return cancellationChargesPopupTextLine1;
+    }
+
+    public void setCancellationChargesPopupTextLine1(String cancellationChargesPopupTextLine1) {
+        this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
+    }
+
+    public String getCancellationChargesPopupTextLine2() {
+        return cancellationChargesPopupTextLine2;
+    }
+
+    public void setCancellationChargesPopupTextLine2(String cancellationChargesPopupTextLine2) {
+        this.cancellationChargesPopupTextLine2 = cancellationChargesPopupTextLine2;
     }
 
     public List<SubscriptionData.UserSubscription> getUserSubscriptions() {

@@ -3028,6 +3028,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
+                        if(Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")){
+                            textViewCancellation.setVisibility(View.GONE);
+                        }
+
                         textViewFindingDriver.setText("Finding a Jugnoo driver...");
                         initialCancelRideBtn.setVisibility(View.GONE);
                         try {

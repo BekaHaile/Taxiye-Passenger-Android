@@ -591,6 +591,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                 @Override
                                 public void onClick(View v) {
                                     Data.userData.getSubscriptionData().setUserSubscriptions(purchaseSubscriptionResponse.getUserSubscriptions());
+                                    Data.autoData.setCancellationChargesPopupTextLine1(purchaseSubscriptionResponse.getCancellationChargesPopupTextLine1());
+                                    Data.autoData.setCancellationChargesPopupTextLine2(purchaseSubscriptionResponse.getCancellationChargesPopupTextLine2());
                                     activity.finish();
                                     activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                                 }
