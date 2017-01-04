@@ -407,7 +407,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="40px"
                     android:gravity="center"
-                    android:text="@string/jugnoo_star_details"
+                    android:text="@string/jugnoo_star"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_28" />
