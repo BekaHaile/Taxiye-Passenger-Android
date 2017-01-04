@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.adapters.StarBenefitsAdapter;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -161,6 +162,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                 selectedPlan(rlPlan2, ivRadio2, 1);
                 break;
             case R.id.bJoinNow:
+                FlurryEventLogger.eventGA("Star Screen", "Join", "Join clicked");
                 openStarCheckoutFragment(JugnooStarActivity.this, rlFragment);
                 break;
         }

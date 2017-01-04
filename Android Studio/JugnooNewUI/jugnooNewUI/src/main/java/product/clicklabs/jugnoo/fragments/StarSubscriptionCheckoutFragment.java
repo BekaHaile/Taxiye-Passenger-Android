@@ -193,6 +193,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 switch (v.getId()){
                     case R.id.bPlaceOrder:
                         if(paymentOption.getOrdinal() != 0 && paymentOption.getOrdinal() != 1) {
+                            product.clicklabs.jugnoo.utils.FlurryEventLogger.eventGA("Star Checkout", "Wallet", String.valueOf(getPaymentOption()));
                             placeOrder();
                         } else{
                             Utils.showToast(activity, "Please select payment option");
@@ -573,6 +574,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(getSelectedPromoCoupon().getId()));
                 }
                 params.put(Constants.KEY_MASTER_COUPON, String.valueOf(getSelectedPromoCoupon().getMasterCoupon()));
+                product.clicklabs.jugnoo.utils.FlurryEventLogger.eventGA("Star Checkout", "Offers", getSelectedPromoCoupon().getTitle());
             }
 
             new HomeUtil().putDefaultParams(params);

@@ -20,6 +20,7 @@ import com.sabkuchfresh.utils.AppConstant;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JugnooStarActivity;
+import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 import product.clicklabs.jugnoo.R;
@@ -125,6 +126,15 @@ public class FreshOrderCompleteDialog {
 			rlStarContainer.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+					String offering = "";
+					if(type == AppConstant.ApplicationType.MEALS)
+						offering = "Meals";
+					else if(type == AppConstant.ApplicationType.GROCERY)
+						offering = "Grocery";
+					else if(type == AppConstant.ApplicationType.FRESH)
+						offering = "Fresh";
+					FlurryEventLogger.eventGA(Constants.REVENUE+Constants.SLASH+Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Star Thank You Popup", offering);
 					dialog.dismiss();
 					activity.startActivity(new Intent(activity, JugnooStarActivity.class));
 					activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
