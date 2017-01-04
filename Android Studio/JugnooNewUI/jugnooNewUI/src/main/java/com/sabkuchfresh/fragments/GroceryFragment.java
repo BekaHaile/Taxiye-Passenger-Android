@@ -306,7 +306,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					activity.setMinOrderAmountText();
+					activity.setMinOrderAmountText(GroceryFragment.this);
 					if(activity.isRefreshCart()){
 						activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
 					}
@@ -370,7 +370,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 }
                                 else {
                                     activity.setProductsResponse(productsResponse);
-                                    activity.setMinOrderAmountText();
+                                    activity.setMinOrderAmountText(GroceryFragment.this);
 									activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
                                     setSortingList();
                                     if(activity.freshSort == -1) {

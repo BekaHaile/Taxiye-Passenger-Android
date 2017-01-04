@@ -302,7 +302,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    activity.setMinOrderAmountText();
+                    activity.setMinOrderAmountText(FreshFragment.this);
 					if(activity.isRefreshCart()){
 						activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 					}
@@ -368,7 +368,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                 }
                                 else {
                                     activity.setProductsResponse(productsResponse);
-                                    activity.setMinOrderAmountText();
+                                    activity.setMinOrderAmountText(FreshFragment.this);
 									activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
                                     setSortingList();
                                     if(activity.freshSort == -1) {

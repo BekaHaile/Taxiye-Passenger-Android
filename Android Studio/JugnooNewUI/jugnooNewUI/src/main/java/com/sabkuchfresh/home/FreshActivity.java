@@ -837,8 +837,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         textViewMinOrder.setVisibility(View.GONE);
                     }
                 }
-                else if((getFreshFragment() != null || getGroceryFragment() != null)) {
-                    setMinOrderAmountText();
+                else if(getFreshFragment() != null) {
+                    setMinOrderAmountText(getFreshFragment());
+                }
+                else if(getGroceryFragment() != null) {
+                    setMinOrderAmountText(getGroceryFragment());
                 }
             }
         } catch (Exception e) {
@@ -962,7 +965,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
                 topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
                 setRelativeLayoutLocalityClick();
-                setMinOrderAmountText();
+                setMinOrderAmountText(fragment);
                 setNoItemsView(fragment);
                 searchLayout.setVisibility(View.VISIBLE);
 
@@ -1028,7 +1031,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
                 topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
                 setRelativeLayoutLocalityClick();
-                setMinOrderAmountText();
+                setMinOrderAmountText(fragment);
                 setNoItemsView(fragment);
                 searchLayout.setVisibility(View.VISIBLE);
 
@@ -1217,12 +1220,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
                 topBar.title.setVisibility(View.VISIBLE);
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setMinOrderAmountText();
-                    }
-                }, 200);
+                setMinOrderAmountText(fragment);
 
 			} else if(fragment instanceof FeedbackFragment) {
                 topBar.below_shadow.setVisibility(View.GONE);
@@ -1260,10 +1258,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         }
     }
 
-    public void setMinOrderAmountText(){
+    public void setMinOrderAmountText(Fragment fragment){
         try {
             if(getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
-                if (totalQuantity > 0 && getFreshCheckoutMergedFragment() == null && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()
+                if (totalQuantity > 0
+                        && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)
+                        && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()
                         && (relativeLayoutCheckoutBar.getVisibility() == View.VISIBLE)) {
                     textViewMinOrder.setVisibility(View.VISIBLE);
                 }
