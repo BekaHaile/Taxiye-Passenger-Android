@@ -75,17 +75,29 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	private AnimationDrawable jugnooAnimation;
 	private int pay = 0;
 
+	public static WalletTransactionsFragment newInstance(int pay){
+		WalletTransactionsFragment fragment = new WalletTransactionsFragment();
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_PAY, pay);
+		fragment.setArguments(bundle);
+		return fragment;
+	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
         HomeActivity.checkForAccessTokenChange(paymentActivity);
 	}
 
+	private void parseArguments(){
+		pay = getArguments().getInt(Constants.KEY_PAY, 0);
+	}
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_wallet_transactions, container, false);
 
-		pay = getArguments().getInt(Constants.KEY_PAY, 0);
+		parseArguments();
 
         paymentActivity = (PaymentActivity) getActivity();
 

@@ -2,11 +2,14 @@ package product.clicklabs.jugnoo.home;
 
 import android.content.Intent;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 
 /**
  * Created by shankar on 8/31/16.
@@ -86,6 +89,14 @@ public class DeepLinkAction {
 			}
 			else if(AppLinkIndex.SUBSCRIPTION_PLAN_OPTION_SCREEN.getOrdinal() == Data.deepLinkIndex){
 				menuBar.menuAdapter.onClickAction(MenuInfoTags.JUGNOO_STAR.getTag());
+			}
+			else if(AppLinkIndex.WALLET_TRANSACTIONS.getOrdinal() == Data.deepLinkIndex){
+				Intent intent = new Intent();
+				intent.setClass(menuBar.getActivity(), PaymentActivity.class);
+				intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
+				intent.putExtra(Constants.KEY_WALLET_TRANSACTIONS, 1);
+				menuBar.getActivity().startActivity(intent);
+				menuBar.getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 
 		} catch(Exception e){
