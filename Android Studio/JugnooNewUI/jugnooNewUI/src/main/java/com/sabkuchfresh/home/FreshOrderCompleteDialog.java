@@ -60,9 +60,9 @@ public class FreshOrderCompleteDialog {
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			TextView textView = (TextView) dialog.findViewById(R.id.textViewThankYou); textView.setTypeface(Fonts.mavenRegular(activity));
 			RelativeLayout rlStarContainer = (RelativeLayout) dialog.findViewById(R.id.rlStarContainer);
-			TextView tvDidYou = (TextView) dialog.findViewById(R.id.tvDidYou); tvDidYou.setTypeface(Fonts.mavenRegular(activity));
-			TextView tvDescription = (TextView) dialog.findViewById(R.id.tvDescription); tvDescription.setTypeface(Fonts.avenirNext(activity));
-			TextView tvClickToFindOut = (TextView) dialog.findViewById(R.id.tvClickToFindOut); tvClickToFindOut.setTypeface(Fonts.avenirMedium(activity));
+			TextView tvDidYou = (TextView) dialog.findViewById(R.id.tvDidYou); tvDidYou.setTypeface(Fonts.mavenMedium(activity));
+			TextView tvDescription = (TextView) dialog.findViewById(R.id.tvDescription); tvDescription.setTypeface(Fonts.mavenRegular(activity));
+			TextView tvClickToFindOut = (TextView) dialog.findViewById(R.id.tvClickToFindOut); tvClickToFindOut.setTypeface(Fonts.mavenMedium(activity));
 
 			if(Data.userData.getShowSubscriptionData() == 1 && placeOrderResponse.getSubscriptionMessage() != null){
 				rlStarContainer.setVisibility(View.VISIBLE);
