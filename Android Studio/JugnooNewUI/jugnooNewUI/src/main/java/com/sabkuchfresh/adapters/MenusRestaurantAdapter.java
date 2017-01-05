@@ -148,12 +148,18 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
             }
 
-            String currentSystemTime = dateFormat.format(new Date()).toString();
-            long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()) , currentSystemTime);
-            long minutes =  ((timeDiff1 / (1000l*60l)));
-            if(minutes <= 0){
-                vendor.setIsClosed(1);
+
+            if(DateOperations.getTimeDifferenceInHHmmss(vendor.getCloseIn(), vendor.getOpensAt()) >= 0){
+                String currentSystemTime = dateFormat.format(new Date()).toString();
+                long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()) , currentSystemTime);
+                long minutes =  ((timeDiff1 / (1000l*60l)));
+                if(minutes <= 0){
+                    vendor.setIsClosed(1);
+                }
             }
+
+
+
 
             if(cuisineMatched && moMatched && dtMatched && qfMatched){
                 vendors.add(vendor);

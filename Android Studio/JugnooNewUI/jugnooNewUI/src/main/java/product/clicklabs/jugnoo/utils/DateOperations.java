@@ -9,6 +9,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import product.clicklabs.jugnoo.Constants;
+
 /**
  * date and time related operations functions
  * @author shankar
@@ -498,6 +500,19 @@ public class DateOperations {
 			e1.printStackTrace();
 			return dateTime;
 		}
+	}
+
+	public static long getTimeDifferenceInHHmmss(String time1, String time2){
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			Date date1 = format.parse(time1);
+			Date date2 = format.parse(time2);
+			long millis = date1.getTime() - date2.getTime();
+			return millis;
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return 60000;
 	}
 
 	public static int getCurrentDayInt(){
