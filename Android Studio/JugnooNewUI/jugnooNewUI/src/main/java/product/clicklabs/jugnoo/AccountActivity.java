@@ -95,6 +95,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
     RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer, rlJugnooStar;
     NonScrollListView listViewSavedLocations;
     RelativeLayout relativeLayoutAddNewAddress;
+    View viewStarIcon;
     SavedPlacesAdapter savedPlacesAdapter;
 
     private boolean setJeanieState;
@@ -147,6 +148,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
         imaveViewNewPasswordVisibility = (ImageView) findViewById(R.id.imaveViewNewPasswordVisibility);
         imaveViewRetypePasswordVisibility = (ImageView) findViewById(R.id.imaveViewRetypePasswordVisibility);
         linearLayoutPasswordChange.setVisibility(View.GONE);
+        viewStarIcon = (View) findViewById(R.id.viewStarIcon); viewStarIcon.setVisibility(View.GONE);
         //imageViewChangePassword.setRotation(270f);
 
 
@@ -789,8 +791,10 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
             if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
                 rlJugnooStar.setVisibility(View.VISIBLE);
+                viewStarIcon.setVisibility(View.VISIBLE);
             } else{
                 rlJugnooStar.setVisibility(View.GONE);
+                viewStarIcon.setVisibility(View.GONE);
             }
 
             try {

@@ -71,8 +71,8 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         tvActualAmount2 = (TextView) findViewById(R.id.tvActualAmount2); tvActualAmount2.setTypeface(Fonts.mavenMedium(this));
         tvAmount1 = (TextView) findViewById(R.id.tvAmount1); tvAmount1.setTypeface(Fonts.avenirNext(this));
         tvAmount2 = (TextView) findViewById(R.id.tvAmount2); tvAmount2.setTypeface(Fonts.avenirNext(this));
-        tvPeriod1 = (TextView) findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.avenirMedium(this));
-        tvPeriod2 = (TextView) findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.avenirMedium(this));
+        tvPeriod1 = (TextView) findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.mavenMedium(this));
+        tvPeriod2 = (TextView) findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.mavenMedium(this));
         divider = (View) findViewById(R.id.divider);
         rvBenefits = (RecyclerView) findViewById(R.id.rvBenefits);
         rvBenefits.setLayoutManager(new LinearLayoutManager(this));
@@ -88,7 +88,8 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                         rlPlan1.setVisibility(View.VISIBLE);
                         if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() != null && Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() !=0){
                             tvActualAmount1.setVisibility(View.VISIBLE);
-                            tvActualAmount1.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount()));
+                            tvActualAmount1.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
+                                    String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount())));
                             tvActualAmount1.setPaintFlags(tvActualAmount1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         }
                         tvAmount1.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
@@ -99,7 +100,8 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                         rlPlan2.setVisibility(View.VISIBLE);
                         if(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() != null && Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount() !=0){
                             tvActualAmount2.setVisibility(View.VISIBLE);
-                            tvActualAmount2.setText(String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount()));
+                            tvActualAmount2.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),
+                                    String.valueOf(Data.userData.getSubscriptionData().getSubscriptions().get(i).getInitialAmount())));
                             tvActualAmount2.setPaintFlags(tvActualAmount2.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                         }
                         tvAmount2.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space),

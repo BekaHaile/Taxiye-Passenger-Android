@@ -121,6 +121,17 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10px"
                         android:tag="mwar" />
+
+                    <View
+                        android:id="@+id/viewStarIcon"
+                        android:layout_width="@dimen/px_64"
+                        android:layout_height="@dimen/px_64"
+                        android:background="@drawable/star"
+                        android:layout_marginBottom="0px"
+                        android:tag="mwar"
+                        android:visibility="visible"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"/>
                 </RelativeLayout>
 
                 <EditText
