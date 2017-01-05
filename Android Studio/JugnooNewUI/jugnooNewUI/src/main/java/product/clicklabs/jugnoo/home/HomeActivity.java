@@ -968,8 +968,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getDeepindex() == -1
-							|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts()
+                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex() == -1
+							|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
 							.getDeepindex() == AppLinkIndex.OPEN_COUPONS_DIALOG.getOrdinal()){
 						if(Data.autoData.getRegions().size() == 1){
 							slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
@@ -978,8 +978,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 									Data.userData.getCoupons(ProductType.AUTO));
 							FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.TAP_ON_OFFER_STRIP);
 						}
-					} else {
-						Data.deepLinkIndex = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getDeepindex();
+					} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
+						Data.deepLinkIndex = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex();
 						deepLinkAction.openDeepLink(menuBar);
 					}
                 } catch (Exception e) {

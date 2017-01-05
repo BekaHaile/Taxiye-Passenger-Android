@@ -56,6 +56,9 @@ public class Region {
 	@SerializedName("eta")
 	@Expose
 	private String eta;
+	@SerializedName("deepindex")
+	@Expose
+	private Integer deepindex;
 
 	private boolean isDefault = false;
 
@@ -91,9 +94,6 @@ public class Region {
 		@SerializedName("text2")
 		@Expose
 		private String text2;
-		@SerializedName("deepindex")
-		@Expose
-		private Integer deepindex;
 
 		/**
 		 *
@@ -131,16 +131,6 @@ public class Region {
 			this.text2 = text2;
 		}
 
-		public Integer getDeepindex() {
-			if(deepindex == null){
-				return -1;
-			}
-			return deepindex;
-		}
-
-		public void setDeepindex(Integer deepindex) {
-			this.deepindex = deepindex;
-		}
 	}
 
 	public class Images {
@@ -338,5 +328,16 @@ public class Region {
 
 	public void setDestinationMandatory(Integer destinationMandatory) {
 		this.destinationMandatory = destinationMandatory;
+	}
+
+	public Integer getDeepindex() {
+		if(deepindex == null){
+			return -1;
+		}
+		return deepindex;
+	}
+
+	public void setDeepindex(Integer deepindex) {
+		this.deepindex = deepindex;
 	}
 }
