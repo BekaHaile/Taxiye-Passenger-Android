@@ -138,6 +138,7 @@ import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
@@ -966,12 +967,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewPoolInfo1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Data.autoData.getRegions().size() == 1){
-                    slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
-                } else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
-                    slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
-                            Data.userData.getCoupons(ProductType.AUTO));
-                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.TAP_ON_OFFER_STRIP);
+                try {
+                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getDeepindex() == -1
+							|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts()
+							.getDeepindex() == AppLinkIndex.OPEN_COUPONS_DIALOG.getOrdinal()){
+						if(Data.autoData.getRegions().size() == 1){
+							slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
+						} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
+							slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
+									Data.userData.getCoupons(ProductType.AUTO));
+							FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.TAP_ON_OFFER_STRIP);
+						}
+					} else {
+						Data.deepLinkIndex = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getDeepindex();
+						deepLinkAction.openDeepLink(menuBar);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -8850,7 +8862,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             } else{
                 viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
                 setFabMarginInitial(false);
-
             }
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                     && !specialPickupScreenOpened && !confirmedScreenOpened) {
