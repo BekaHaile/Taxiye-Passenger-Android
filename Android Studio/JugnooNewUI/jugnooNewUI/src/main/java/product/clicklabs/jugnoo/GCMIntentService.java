@@ -25,6 +25,7 @@ import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.widget.TextView;
 
 import com.clevertap.android.sdk.CleverTapAPI;
@@ -38,6 +39,7 @@ import com.squareup.picasso.Target;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
@@ -46,8 +48,11 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.LocationUpdateService;
 import product.clicklabs.jugnoo.home.SyncIntentService;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -57,6 +62,8 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class GCMIntentService extends FirebaseMessagingService implements Constants {
 
@@ -543,6 +550,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 
 							Prefs.with(this).save(SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
+
+							try{int campaignId = jObj.optInt(Constants.KEY_CAMPAIGN_ID, 0);
+							if(campaignId > 0){
+								apiTrackPush(campaignId);
+							}} catch (Exception e){}
+
 						}
 
 						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
@@ -859,5 +872,30 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 	}
 
 
+
+	private void apiTrackPush(int campaignId) {
+		try {
+			Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(this);
+			if(!TextUtils.isEmpty(pair.first)) {
+				HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, pair.first);
+				params.put(Constants.KEY_CAMPAIGN_ID, String.valueOf(campaignId));
+				Log.i("params", "=" + params.toString());
+
+				new HomeUtil().putDefaultParams(params);
+				RestClient.getApiService().trackPushCampaign(params, new retrofit.Callback<SettleUserDebt>() {
+					@Override
+					public void success(SettleUserDebt settleUserDebt, Response response) {
+					}
+
+					@Override
+					public void failure(RetrofitError error) {
+					}
+				});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.retrofit.model.ChatApiService;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -59,19 +60,25 @@ public class RestClient {
         return builder.build();
     }
 
+    private static RestAdapter.Log getLogger(){
+        RestAdapter.Log fooLog = new RestAdapter.Log() {
+            @Override
+            public void log(String message) {
+                if(BuildConfig.DEBUG_MODE) {
+                    System.out.println(message);
+                }
+            }
+        };
+        return fooLog;
+    }
+
 
     public static void setupRestClient() {
         if(API_SERVICES == null) {
-            RestAdapter.Log fooLog = new RestAdapter.Log() {
-                @Override
-                public void log(String message) {
-                }
-            };
-
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+                    .setLog(getLogger())
                     .setErrorHandler(new ErrorHandler() {
                         @Override
                         public Throwable handleError(RetrofitError cause) {
@@ -116,17 +123,11 @@ public class RestClient {
 
 
     public static StringAPIService getStringRestClient() {
-        RestAdapter.Log fooLog = new RestAdapter.Log() {
-            @Override
-            public void log(String message) {
-            }
-        };
-
         RestAdapter.Builder builder = new RestAdapter.Builder()
                 .setEndpoint(Config.getServerUrl())
                 .setClient(new Ok3Client(getOkHttpClient()))
                 .setConverter(new StringConverter())
-                .setLog(fooLog)
+                .setLog(getLogger())
                 .setLogLevel(RestAdapter.LogLevel.FULL);
 
         RestAdapter restAdapter = builder.build();
@@ -162,16 +163,10 @@ public class RestClient {
 
     public static void setupFreshApiRestClient() {
         if(FRESH_API_SERVICE == null) {
-            RestAdapter.Log fooLog = new RestAdapter.Log() {
-                @Override
-                public void log(String message) {
-                }
-            };
-
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getFreshServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+                    .setLog(getLogger())
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();
@@ -187,15 +182,10 @@ public class RestClient {
 
     public static void setupChatApiRestClient() {
         if(CHAT_API_SERVICE == null) {
-            RestAdapter.Log fooLog = new RestAdapter.Log() {
-                @Override
-                public void log(String message) {
-                }
-            };
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getChatServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+                    .setLog(getLogger())
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();
@@ -211,15 +201,10 @@ public class RestClient {
 
     public static void setupMenusApiRestClient() {
         if(MENUS_API_SERVICE == null) {
-            RestAdapter.Log fooLog = new RestAdapter.Log() {
-                @Override
-                public void log(String message) {
-                }
-            };
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getMenusServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+                    .setLog(getLogger())
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();
@@ -236,15 +221,10 @@ public class RestClient {
 
     public static void setupPayApiRestClient() {
         if(PAY_API_SERVICE == null) {
-            RestAdapter.Log fooLog = new RestAdapter.Log() {
-                @Override
-                public void log(String message) {
-                }
-            };
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getPayServerUrl())
                     .setClient(new Ok3Client(getOkHttpClient()))
-                    .setLog(fooLog)
+                    .setLog(getLogger())
                     .setLogLevel(RestAdapter.LogLevel.FULL);
 
             RestAdapter restAdapter = builder.build();
