@@ -51,7 +51,7 @@ public class SavedAddressPickupDialog {
 
 			RelativeLayout rlInner = (RelativeLayout) dialog.findViewById(R.id.rlInner);
 			RelativeLayout rlAdressItem = (RelativeLayout) dialog.findViewById(R.id.relative);
-			((TextView) dialog.findViewById(R.id.textHead)).setTypeface(Fonts.mavenRegular(activity));
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead); textHead.setTypeface(Fonts.mavenRegular(activity));
 			ImageView imageViewType = (ImageView) dialog.findViewById(R.id.imageViewType);
 			TextView textViewSearchName = (TextView) dialog.findViewById(R.id.textViewSearchName); textViewSearchName.setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewSearchAddress = (TextView) dialog.findViewById(R.id.textViewSearchAddress); textViewSearchAddress.setTypeface(Fonts.mavenRegular(activity));
@@ -59,6 +59,7 @@ public class SavedAddressPickupDialog {
 			ImageView imageViewSep = (ImageView) dialog.findViewById(R.id.imageViewSep); imageViewSep.setVisibility(View.GONE);
 			Button btnYes = (Button) dialog.findViewById(R.id.btnYes); btnYes.setTypeface(Fonts.mavenMedium(activity));
 			Button btnNo = (Button) dialog.findViewById(R.id.btnNo);btnNo.setTypeface(Fonts.mavenMedium(activity));
+			View viewSep = dialog.findViewById(R.id.viewSep);
 
 			if(TextUtils.isEmpty(searchResult.getName())){
 				textViewSearchName.setVisibility(View.GONE);
@@ -69,6 +70,12 @@ public class SavedAddressPickupDialog {
 			textViewSearchName.setText(searchResult.getName());
 			textViewSearchAddress.setText(searchResult.getAddress());
 
+			if(TextUtils.isEmpty(searchResult.getAddress())){
+				viewSep.setVisibility(View.GONE);
+				rlAdressItem.setVisibility(View.GONE);
+				textHead.setText(R.string.close_to_point_of_interest);
+			}
+
 			if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_HOME)){
 				imageViewType.setImageResource(R.drawable.ic_home);
 			} else if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_WORK)){
@@ -76,13 +83,6 @@ public class SavedAddressPickupDialog {
 			} else {
 				imageViewType.setImageResource(R.drawable.ic_loc_other);
 			}
-
-			rlAdressItem.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-
-				}
-			});
 
 			relative.setOnClickListener(new View.OnClickListener() {
 				@Override

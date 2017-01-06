@@ -31,9 +31,10 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
-import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
+import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 
@@ -101,6 +102,10 @@ public class HomeUtil {
 				if(Data.autoData.getUseRecentLocAtRequest() == 1){
 					compareDistance = Data.autoData.getUseRecentLocAutoSnapMaxDistance();
 					searchResults.addAll(Data.userData.getSearchResultsAdditional());
+					for (FetchUserAddressResponse.Address address : Data.userData.getPointsOfInterestAddresses()) {
+						SearchResult searchResult = new SearchResult("", "", "", address.getLat(), address.getLng());
+						searchResults.add(searchResult);
+					}
 				}
 			}
 
@@ -174,6 +179,7 @@ public class HomeUtil {
 	public MarkerOptions getMarkerOptionsForSavedAddress(Activity activity, ASSL assl, SearchResult searchResult, boolean showAddress){
 		MarkerOptions markerOptions = new MarkerOptions();
 		markerOptions.title(TextUtils.isEmpty(searchResult.getName()) ? "recent" : searchResult.getName());
+		markerOptions.title(TextUtils.isEmpty(searchResult.getAddress()) ? "poi" : markerOptions.getTitle());
 
 		String addressName = "";
 		int drawable = R.drawable.ic_saved_address_used;
@@ -197,9 +203,14 @@ public class HomeUtil {
 
 		markerOptions.snippet(searchResult.getAddress());
 		markerOptions.position(searchResult.getLatLng());
-		markerOptions.anchor(0.1f, 1f);
-		markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-				.getSavedAddressBitmap(activity, assl, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_28), drawable)));
+		if (!TextUtils.isEmpty(searchResult.getAddress())) {
+			markerOptions.anchor(0.1f, 1f);
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+					.getSavedAddressBitmap(activity, assl, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_28), drawable)));
+		} else {
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+					.createMarkerBitmapForResource(activity, assl, R.drawable.ic_point_of_interest_marker, 42f, 49f)));
+		}
 		return markerOptions;
 	}
 
@@ -261,6 +272,33 @@ public class HomeUtil {
 
 		public int getOrdinal() {
 			return ordinal;
+		}
+	}
+
+
+	private ArrayList<Marker> markersPointsOfInterest = new ArrayList<>();
+	public void displayPointOfInterestMarkers(Activity activity, ASSL assl, GoogleMap map){
+		try {
+			if (map != null) {
+				removeMarkersPointsOfInterest(map);
+				if (Data.autoData.getUseRecentLocAtRequest() == 1) {
+					for (FetchUserAddressResponse.Address address : Data.userData.getPointsOfInterestAddresses()) {
+						SearchResult searchResult = new SearchResult("", "", "", address.getLat(), address.getLng());
+						markersPointsOfInterest.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, false)));
+					}
+				}
+			}
+		} catch (Exception e){}
+	}
+
+	public void removeMarkersPointsOfInterest(GoogleMap map){
+		if(map != null) {
+			if (markersPointsOfInterest != null) {
+				for (Marker marker : markersPointsOfInterest) {
+					marker.remove();
+				}
+				markersPointsOfInterest.clear();
+			}
 		}
 	}
 

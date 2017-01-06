@@ -50,6 +50,7 @@
                     android:splitMotionEvents="false">
 
                     <View
+                        android:id="@+id/viewSep"
                         android:layout_width="match_parent"
                         android:layout_height="2px"
                         android:layout_marginLeft="@dimen/px_46"
