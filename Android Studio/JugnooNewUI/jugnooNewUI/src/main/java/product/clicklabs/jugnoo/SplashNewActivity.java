@@ -28,6 +28,7 @@ import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.EditorInfo;
@@ -115,12 +116,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	ImageView viewInitJugnoo, viewInitLS, viewInitSplashJugnoo;
 	RelativeLayout relativeLayoutJugnooLogo;
 	ImageView imageViewBack, imageViewJugnooLogo;
-	ImageView imageViewDebug1, imageViewDebug2, imageViewDebug3;
+	ImageView imageViewDebug1, imageViewDebug2, imageViewDebug3, ivBottom, ivBottom1;
 
 	RelativeLayout relativeLayoutLS;
 	LinearLayout linearLayoutLoginSignupButtons;
 	Button buttonLogin, buttonRegister;
-	TextView textViewTerms;
 	LinearLayout linearLayoutNoNet;
 	TextView textViewNoNet;
 	Button buttonNoNetCall, buttonRefresh;
@@ -129,13 +129,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	AutoCompleteTextView editTextEmail;
 	EditText editTextPassword;
 	TextView textViewEmailRequired, textViewPasswordRequired, textViewForgotPassword;
-	Button buttonEmailLogin, buttonFacebookLogin, buttonGoogleLogin;
+	Button buttonEmailLogin;
 
-	RelativeLayout relativeLayoutSignup, relativeLayoutScrollStop;
+	RelativeLayout relativeLayoutSignup, relativeLayoutScrollStop, buttonFacebookLogin, buttonGoogleLogin;
 	EditText editTextSName, editTextSEmail, editTextSPhone, editTextSPassword, editTextSPromo;
 	TextView textViewSNameRequired, textViewSEmailRequired, textViewSPhoneRequired, textViewSPasswordRequired;
-	Button buttonEmailSignup, buttonFacebookSignup, buttonGoogleSignup;
+	Button buttonEmailSignup;
 	TextView textViewSTerms;
+	RelativeLayout buttonFacebookSignup, buttonGoogleSignup;
 
 	LinearLayout linearLayoutWalletContainer, linearLayoutWalletContainerInner,
 			linearLayoutPaytm, linearLayoutMobikwik, linearLayoutFreeCharge, linearLayoutNone;
@@ -391,8 +392,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			buttonLogin.setTypeface(Fonts.mavenRegular(this));
 			buttonRegister = (Button) findViewById(R.id.buttonRegister);
 			buttonRegister.setTypeface(Fonts.mavenRegular(this));
-			textViewTerms = (TextView) findViewById(R.id.textViewTerms);
-			textViewTerms.setTypeface(Fonts.mavenMedium(this));
 			((TextView) findViewById(R.id.textViewAlreadyHaveAccount)).setTypeface(Fonts.mavenMedium(this));
 
 			linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
@@ -433,10 +432,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			textViewForgotPassword.setTypeface(Fonts.mavenRegular(this));
 			buttonEmailLogin = (Button) findViewById(R.id.buttonEmailLogin);
 			buttonEmailLogin.setTypeface(Fonts.mavenRegular(this));
-			buttonFacebookLogin = (Button) findViewById(R.id.buttonFacebookLogin);
-			buttonFacebookLogin.setTypeface(Fonts.mavenRegular(this));
-			buttonGoogleLogin = (Button) findViewById(R.id.buttonGoogleLogin);
-			buttonGoogleLogin.setTypeface(Fonts.mavenRegular(this));
+			buttonFacebookLogin = (RelativeLayout) findViewById(R.id.buttonFacebookLogin);
+			buttonGoogleLogin = (RelativeLayout) findViewById(R.id.buttonGoogleLogin);
 
 
 			relativeLayoutSignup = (RelativeLayout) findViewById(R.id.relativeLayoutSignup);
@@ -463,10 +460,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			((TextView) findViewById(R.id.textViewSPhone91)).setTypeface(Fonts.mavenMedium(this));
 			buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup);
 			buttonEmailSignup.setTypeface(Fonts.mavenRegular(this));
-			buttonFacebookSignup = (Button) findViewById(R.id.buttonFacebookSignup);
-			buttonFacebookSignup.setTypeface(Fonts.mavenRegular(this));
-			buttonGoogleSignup = (Button) findViewById(R.id.buttonGoogleSignup);
-			buttonGoogleSignup.setTypeface(Fonts.mavenRegular(this));
+			buttonFacebookSignup = (RelativeLayout) findViewById(R.id.buttonFacebookSignup);
+			buttonGoogleSignup = (RelativeLayout) findViewById(R.id.buttonGoogleSignup);
 			textViewSTerms = (TextView) findViewById(R.id.textViewSTerms);
 			textViewSTerms.setTypeface(Fonts.mavenMedium(this));
 
@@ -482,6 +477,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			imageViewRadioMobikwik = (ImageView) findViewById(R.id.imageViewRadioMobikwik);
 			imageViewRadioFreeCharge = (ImageView) findViewById(R.id.imageViewRadioFreeCharge);
 			imageViewRadioNone = (ImageView) findViewById(R.id.imageViewRadioNone);
+			ivBottom = (ImageView) findViewById(R.id.ivBottom);
+			ivBottom1 = (ImageView) findViewById(R.id.ivBottom1);
 
 			linearLayoutWalletOption = (LinearLayout) findViewById(R.id.linearLayoutWalletOption);
 			imageViewWalletOptionCheck = (ImageView) findViewById(R.id.imageViewWalletOptionCheck);
@@ -591,18 +588,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					} else{
 						clickCount = clickCount + 1;
 					}
-				}
-			});
-
-			textViewTerms.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-	//				try {
-	//					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
-	//					startActivity(browserIntent);
-	//				} catch (Exception e) {
-	//					e.printStackTrace();
-	//				}
 				}
 			});
 
@@ -1043,7 +1028,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			startService(new Intent(this, PushPendingCallsService.class));
 			showLocationEnableDialog();
 
-			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+			getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
 
 			try {
@@ -1114,6 +1099,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
 
+				ivBottom.setVisibility(View.VISIBLE);
+				ivBottom1.setVisibility(View.GONE);
+
 				linearLayoutLogin.setVisibility(View.VISIBLE);
 				relativeLayoutSignup.setVisibility(View.VISIBLE);
 				break;
@@ -1129,6 +1117,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				relativeLayoutLS.setVisibility(View.VISIBLE);
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
+
+				ivBottom.setVisibility(View.VISIBLE);
+				ivBottom1.setVisibility(View.GONE);
+
+				if(this.state == State.SPLASH_INIT) {
+					ScaleAnimation animation = new ScaleAnimation(1.0f, 0.8f, 1.0f, 0.8f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+					animation.setDuration(200);
+					animation.setFillAfter(true);
+					imageViewJugnooLogo.setAnimation(animation);
+				}
 
 				linearLayoutLogin.setVisibility(View.VISIBLE);
 				relativeLayoutSignup.setVisibility(View.VISIBLE);
@@ -1162,6 +1160,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
 
+				ivBottom.setVisibility(View.GONE);
+				ivBottom1.setVisibility(View.VISIBLE);
+
 				linearLayoutLogin.setVisibility(View.VISIBLE);
 				relativeLayoutSignup.setVisibility(View.VISIBLE);
 				break;
@@ -1178,6 +1179,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				relativeLayoutLS.setVisibility(View.GONE);
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
+
+				ivBottom.setVisibility(View.GONE);
+				ivBottom1.setVisibility(View.VISIBLE);
 
 				linearLayoutLogin.setVisibility(View.GONE);
 				relativeLayoutScrollStop.setVisibility(View.GONE);

@@ -98,7 +98,6 @@
     <string name="from">From: </string>
     <string name="to">To: </string>
 
-    <string name="rides">Rides</string>
     <string name="no_rides_currently">No rides currently.</string>
 
     <string name="history">History</string>
@@ -819,6 +818,7 @@
     <string name="auto">Auto</string>
     <string name="bike">Bike</string>
     <string name="autos">Autos</string>
+    <string name="rides">Rides</string>
     <string name="waiting_for_location">Waiting for location&#8230;</string>
     <string name="get_a_ride">Get a Ride</string>
     <string name="get_ride">Get Ride</string>

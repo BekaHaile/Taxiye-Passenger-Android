@@ -7612,7 +7612,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 localModeEnabled = modeEnabled;
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-                topBar.textViewTitle.setText(getResources().getString(R.string.autos));
+                topBar.textViewTitle.setText(getResources().getString(R.string.rides));
                 if(confirmedScreenOpened){
                     topBar.textViewTitle.setText(getResources().getString(R.string.confirmation));
                 }

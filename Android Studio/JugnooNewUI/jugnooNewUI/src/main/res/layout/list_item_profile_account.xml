@@ -193,7 +193,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/menu_text_margin_offerings"
-                android:text="@string/autos"
+                android:text="@string/rides"
                 android:textColor="@color/text_color_white_theme_selector"
                 android:textSize="@dimen/text_size_38"/>
 

@@ -16,7 +16,7 @@
             android:id="@+id/tvOffering"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Autos"
+            android:text="Rides"
             android:textColor="@color/theme_color"
             android:textSize="@dimen/text_size_30" />
 

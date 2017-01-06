@@ -4,8 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@drawable/bg_img"
+    android:background="@color/white"
     android:splitMotionEvents="false">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:tag="mwar"
+        android:src="@drawable/splash_top_bg"/>
 
     <LinearLayout
         android:id="@+id/linearLayoutMain"
@@ -25,7 +31,7 @@
         <ImageView
             android:id="@+id/viewInitSplashJugnoo"
             android:layout_width="match_parent"
-            android:layout_height="200px"
+            android:layout_height="150px"
             android:visibility="gone" />
 
         <!-- Jugnoo Logo layout-->
@@ -34,15 +40,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="100px"
+            android:layout_marginTop="50px"
             android:visibility="visible">
 
             <ImageView
                 android:id="@+id/imageViewJugnooLogo"
-                android:layout_width="380px"
-                android:layout_height="301px"
+                android:layout_width="300px"
+                android:layout_height="316px"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/jugnoo_logo_big_white"
+                android:background="@drawable/logo_big"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:tag="mhar"
@@ -85,7 +91,8 @@
             android:id="@+id/relativeLayoutLS"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="150px"
+            android:layout_marginTop="50px"
+            android:layout_marginBottom="250px"
             android:animateLayoutChanges="true"
             android:visibility="visible">
 
@@ -97,13 +104,13 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:splitMotionEvents="false"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <Button
                     android:id="@+id/buttonRegister"
                     android:layout_width="@dimen/splash_button_width"
                     android:layout_height="@dimen/splash_button_height"
-                    android:background="@drawable/button_white_selector"
+                    android:background="@drawable/button_capsule_theme_selector"
                     android:text="@string/sign_up"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_theme_alpha_selector"
@@ -116,7 +123,7 @@
                     android:layout_marginBottom="30px"
                     android:layout_marginTop="30px"
                     android:text="@string/nl_splash_already_have_account"
-                    android:textColor="@color/white"
+                    android:textColor="@color/theme_color"
                     android:textSize="@dimen/text_size_26" />
 
 
@@ -124,20 +131,12 @@
                     android:id="@+id/buttonLogin"
                     android:layout_width="@dimen/splash_button_width"
                     android:layout_height="@dimen/splash_button_height"
-                    android:background="@drawable/button_theme_alpha_white_stroke_selector"
+                    android:background="@drawable/button_capsule_theme_selector"
                     android:text="@string/nl_log_in"
                     android:textAllCaps="true"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
+                    android:textColor="@color/text_color_theme_alpha_selector"
                     android:textSize="@dimen/text_size_34" />
 
-                <TextView
-                    android:id="@+id/textViewTerms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="60px"
-                    android:text=""
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_26" />
 
             </LinearLayout>
 
@@ -231,6 +230,30 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-10px"
+        android:animateLayoutChanges="true"
+        android:layout_alignParentBottom="true">
+        <ImageView
+            android:id="@+id/ivBottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_160"
+            android:src="@drawable/splash_bottom_building_bg"
+            android:tag="mwar"/>
+        <ImageView
+            android:id="@+id/ivBottom1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_160"
+            android:src="@drawable/splash_bottom_green_bg"
+            android:visibility="gone"
+            android:tag="mwar"/>
+
+    </RelativeLayout>
+
 
 
     <ImageView
