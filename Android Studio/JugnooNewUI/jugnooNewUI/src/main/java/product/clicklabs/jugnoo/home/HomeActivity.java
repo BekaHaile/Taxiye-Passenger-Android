@@ -8815,6 +8815,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void showPoolInforBar(){
         try {
             float mapBottomPadding = 0f;
+            String textToShow = "";
+            if(!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")){
+                textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1();
+            } else if(!TextUtils.isEmpty(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2())){
+                textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2();
+            }
             if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
@@ -8827,12 +8833,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 //setGoogleMapPadding(70);
             } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) &&
+                    (!TextUtils.isEmpty(textToShow)) &&
                     (Data.autoData.getRegions().size() > 1)){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(false);
 
-                textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1()+" - ");
+                textViewPoolInfo1.setText(textToShow+" - ");
                 relativeLayoutPoolInfoBar.setBackgroundColor(getResources().getColor(R.color.text_color));
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.white));
 
@@ -8844,12 +8850,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 //setGoogleMapPadding(70);
             } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) &&
+                    (!TextUtils.isEmpty(textToShow)) &&
                     (Data.autoData.getRegions().size() == 1)){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(true);
 
-                textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1()+" - ");
+                textViewPoolInfo1.setText(textToShow+" - ");
                 relativeLayoutPoolInfoBar.setBackgroundColor(getResources().getColor(R.color.text_color));
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.white));
 

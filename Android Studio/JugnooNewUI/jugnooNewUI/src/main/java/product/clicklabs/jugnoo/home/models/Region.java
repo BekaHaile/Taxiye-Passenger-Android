@@ -119,6 +119,9 @@ public class Region {
 		 * The text2
 		 */
 		public String getText2() {
+			if(text2 == null){
+				return "";
+			}
 			return text2;
 		}
 
