@@ -206,10 +206,16 @@ public class HomeUtil {
 		if (!TextUtils.isEmpty(searchResult.getAddress())) {
 			markerOptions.anchor(0.1f, 1f);
 			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-					.getSavedAddressBitmap(activity, assl, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_28), drawable)));
+					.getSavedAddressBitmap(activity, assl, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_28),
+							drawable, R.color.text_color)));
 		} else {
+			if(searchResult.getFreq() != null){
+				addressName = String.valueOf(searchResult.getFreq());
+			}
+			markerOptions.anchor(0.1f, 1f);
 			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-					.createMarkerBitmapForResource(activity, assl, R.drawable.ic_point_of_interest_marker, 42f, 49f)));
+					.getSavedAddressBitmap(activity, assl, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_24),
+							R.drawable.ic_point_of_interest_marker, R.color.red_dark_alpha)));
 		}
 		return markerOptions;
 	}
@@ -284,6 +290,7 @@ public class HomeUtil {
 				if (Data.autoData.getUseRecentLocAtRequest() == 1) {
 					for (FetchUserAddressResponse.Address address : Data.userData.getPointsOfInterestAddresses()) {
 						SearchResult searchResult = new SearchResult("", "", "", address.getLat(), address.getLng());
+						searchResult.setFreq(address.getFreq());
 						markersPointsOfInterest.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, false)));
 					}
 				}

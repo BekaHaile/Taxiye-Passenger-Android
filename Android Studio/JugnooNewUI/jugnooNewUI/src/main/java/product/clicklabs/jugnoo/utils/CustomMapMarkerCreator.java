@@ -121,7 +121,8 @@ public class CustomMapMarkerCreator {
 		return bmpText;
 	}
 
-	public static Bitmap getSavedAddressBitmap(final Context context, ASSL assl, String text, final int fontSize, int icon) {
+	public static Bitmap getSavedAddressBitmap(final Context context, ASSL assl, String text, final int fontSize, int icon,
+											   int colorResId) {
 // ic_centre_pin_big
 		float scale = Math.min(assl.Xscale(), assl.Yscale());
 		final TextView textView = new TextView(context);
@@ -140,8 +141,8 @@ public class CustomMapMarkerCreator {
 
 		final Paint paint = textView.getPaint();
 		paint.getTextBounds(text, 0, textView.length(), boundsText);
-		paint.setTextAlign(Paint.Align.RIGHT);
-		paint.setColor(context.getResources().getColor(R.color.text_color));
+		paint.setTextAlign(Paint.Align.LEFT);
+		paint.setColor(context.getResources().getColor(colorResId));
 
 		final Canvas canvasText = new Canvas(bmpText);
 
@@ -149,7 +150,7 @@ public class CustomMapMarkerCreator {
 		shape.setBounds(0, 0, (int)(42.0f * scale), bmpText.getHeight());
 		shape.draw(canvasText);
 
-		canvasText.drawText(text, (canvasText.getWidth() / 2)+5, (31f*assl.Yscale()), paint);
+		canvasText.drawText(text, (assl.Xscale() * 42f), (31f*assl.Yscale()), paint);
 		//canvasText.drawText("MIN", canvasText.getWidth() / 2, (int)(37f*assl.Yscale()) + boundsText.height(), paint);
 
 
