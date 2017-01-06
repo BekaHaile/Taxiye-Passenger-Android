@@ -45,7 +45,7 @@
                 android:id="@+id/tvCurrentPlan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/current_membership_plan"
+                android:text="@string/membership_plan"
                 android:textSize="@dimen/text_size_30"
                 android:textColor="@color/text_color"/>
 
@@ -76,7 +76,7 @@
                 android:id="@+id/tvExpiresOn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/membership_expires_on"
+                android:text="@string/expires_on"
                 android:textSize="@dimen/text_size_30"
                 android:textColor="@color/text_color"/>
 
@@ -95,11 +95,46 @@
 
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/llContainer"
-        android:background="@color/grey_lb_list">
+        android:background="@color/grey_lb_list"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/tvSavingsMeter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/savings_meter"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="62px"
+            android:layout_marginBottom="20px"
+            />
+
+        <LinearLayout
+            android:id="@+id/llSavingsValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvSavingsFrom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/savings_from"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="82px"
+            />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvBenefits"
@@ -108,7 +143,7 @@
             android:paddingBottom="@dimen/px_20"
             android:paddingTop="@dimen/px_20"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"

@@ -2,12 +2,13 @@ package product.clicklabs.jugnoo;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,15 +18,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import product.clicklabs.jugnoo.adapters.StarBenefitsAdapter;
 import product.clicklabs.jugnoo.adapters.StarMembershipAdapter;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -48,6 +46,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
     private TextView textViewTitle;
     private ImageView imageViewBack;
     private TextView tvCurrentPlanValue, tvExpiresOnValue;
+    private LinearLayout llSavingsValue;
     private RecyclerView rvBenefits;
     private StarMembershipAdapter starMembershipAdapter;
     private ArrayList<String> benefits = new ArrayList<>();
@@ -77,6 +76,12 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
         rvBenefits.setLayoutManager(new LinearLayoutManager(this));
         rvBenefits.setItemAnimator(new DefaultItemAnimator());
         rvBenefits.setHasFixedSize(false);
+
+        ((TextView) findViewById(R.id.tvSavingsMeter)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView) findViewById(R.id.tvSavingsFrom)).setTypeface(Fonts.mavenMedium(this));
+        llSavingsValue = (LinearLayout) findViewById(R.id.llSavingsValue);
+
+        setTotalSavingsValueText(llSavingsValue, 123);
 
         try {
             String tempStr = Data.userData.getSubscriptionData().getSubTextAutos() + ";;;" + Data.userData.getSubscriptionData().getSubTextFresh() + ";;;" +
@@ -217,4 +222,31 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
                 break;
         }
     }
+
+    private TextView getDigitTextView(String digit, boolean rupeeIcon){
+        TextView textView = new TextView(this);
+        float ratio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+        textView.setPadding((int) (ratio * 11f), (int) (ratio * 8f), (int) (ratio * 11f), (int) (ratio * 8f));
+        textView.setTextColor(getResources().getColor(R.color.text_color));
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, ratio * 82f);
+        textView.setTypeface(Fonts.avenirNext(this));
+        if(!rupeeIcon){
+            textView.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+        }
+        textView.setText(digit);
+        return textView;
+    }
+
+    private void setTotalSavingsValueText(LinearLayout llSavingsValue, int savingValue){
+        llSavingsValue.removeAllViews();
+        char[] digits = String.valueOf(savingValue).toCharArray();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.setMargins((int)(ASSL.Xscale()*3f), 0, (int)(ASSL.Xscale()*5f), 0);
+        llSavingsValue.addView(getDigitTextView(getString(R.string.rupee), true), params);
+        for(char digit : digits){
+            llSavingsValue.addView(getDigitTextView(String.valueOf(digit), false), params);
+        }
+    }
+
 }
