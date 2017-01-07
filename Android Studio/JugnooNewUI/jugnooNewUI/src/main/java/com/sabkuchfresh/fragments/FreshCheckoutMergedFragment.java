@@ -563,9 +563,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges()));
             textViewDeliveryChargesValue.setText(deliveryCharge);
         } else {
-            if (deliveryCharges() > 0) {
+            double deliveryCharges = deliveryCharges();
+            if (deliveryCharges > 0) {
                 textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
-                String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(deliveryCharges()));
+                String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(deliveryCharges));
                 textViewDeliveryChargesValue.setText(deliveryCharge);
             } else {
                 textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.green_rupee));
@@ -1608,7 +1609,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private double getTotalPromoAmount(){
         if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getSubscription() != null) {
-            return promoAmount + activity.getUserCheckoutResponse().getSubscription().getDiscount(totalAmount());
+            return promoAmount + activity.getUserCheckoutResponse().getSubscription().getDiscount(totalUndiscounted());
         } else {
             return promoAmount;
         }
@@ -2093,11 +2094,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private double totalUndiscounted(){
-        return totalAmount() + getTotalPromoAmount();
+        return netAmountWOTaxes() + serviceTax() + vat() + deliveryCharges();
     }
 
     private double totalAmount(){
-        double totalAmount = netAmountWOTaxes() + serviceTax() + vat() + deliveryCharges() - getTotalPromoAmount();
+        double totalAmount = totalUndiscounted() - getTotalPromoAmount();
         if(totalAmount < 0) {
             totalAmount = 0;
         }
