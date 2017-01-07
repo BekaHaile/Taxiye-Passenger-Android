@@ -1093,6 +1093,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     textViewMinOrder.setText(getString(R.string.minimum_order) + " "
                             + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
                 }
+                resetToolbarWithScroll();
                 searchLayout.setVisibility(View.VISIBLE);
             }
             else if (fragment instanceof MenusFilterFragment) {
