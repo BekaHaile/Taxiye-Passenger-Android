@@ -314,6 +314,8 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
         }
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        performBackPressed();
+    }
 }

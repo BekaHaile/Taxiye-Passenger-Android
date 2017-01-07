@@ -72,6 +72,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             textViewPriorityTipValue;
     private RelativeLayout relativeLayoutPriorityTipMS;
 
+    private LinearLayout llRideDetailsOptions, llStarSavings;
+    private TextView tvStarSavings;
+
     private VehiclesTabAdapter vehiclesTabAdapter;
 
     private Region regionSelected = null;
@@ -149,6 +152,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        llRideDetailsOptions = (LinearLayout) rootView.findViewById(R.id.llRideDetailsOptions);
+        llStarSavings = (LinearLayout) rootView.findViewById(R.id.llStarSavings); llStarSavings.setVisibility(View.GONE);
+        tvStarSavings = (TextView) rootView.findViewById(R.id.tvStarSavings); tvStarSavings.setTypeface(Fonts.mavenMedium(activity));
 
 
         linearLayoutPaymentMode.setOnClickListener(onClickListenerRequestOptions);
@@ -320,6 +327,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
 
         }
         updateFareFactorUI();
+
+        updateSubscriptionMessage();
     }
 
 
@@ -582,5 +591,27 @@ public class RequestRideOptionsFragment extends Fragment implements Constants{
             activity.getSlidingBottomPanel().getImageViewSurgeOverSlidingBottom().setVisibility(View.GONE);
         }
     }
+
+    public void updateSubscriptionMessage(){
+        if(Data.userData != null && Data.userData.isSubscriptionActive()){
+            llStarSavings.setVisibility(View.VISIBLE);
+            LinearLayout.LayoutParams paramsll = (LinearLayout.LayoutParams) llRideDetailsOptions.getLayoutParams();
+            paramsll.height = (int) (ASSL.Yscale() * 90f);
+            llRideDetailsOptions.setLayoutParams(paramsll);
+            LinearLayout.LayoutParams paramstv = (LinearLayout.LayoutParams) textVieGetFareEstimateMS.getLayoutParams();
+            paramstv.height = (int) (ASSL.Yscale() * 90f);
+            textVieGetFareEstimateMS.setLayoutParams(paramstv);
+        }
+        else {
+            llStarSavings.setVisibility(View.GONE);
+            LinearLayout.LayoutParams paramsll = (LinearLayout.LayoutParams) llRideDetailsOptions.getLayoutParams();
+            paramsll.height = (int) (ASSL.Yscale() * 100f);
+            llRideDetailsOptions.setLayoutParams(paramsll);
+            LinearLayout.LayoutParams paramstv = (LinearLayout.LayoutParams) textVieGetFareEstimateMS.getLayoutParams();
+            paramstv.height = (int) (ASSL.Yscale() * 100f);
+            textVieGetFareEstimateMS.setLayoutParams(paramstv);
+        }
+    }
+
 
 }
