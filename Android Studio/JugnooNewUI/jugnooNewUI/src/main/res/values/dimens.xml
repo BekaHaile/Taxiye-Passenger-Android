@@ -336,5 +336,10 @@
     <dimen name="px_52">52px</dimen>
     <dimen name="px_64">64px</dimen>
     <dimen name="px_160">160px</dimen>
+    <dimen name="px_150">150px</dimen>
+    <dimen name="px_170">170px</dimen>
+    <dimen name="px_300">300px</dimen>
+    <dimen name="px_280">280px</dimen>
+    <dimen name="px_290">290px</dimen>
 
 </resources>
