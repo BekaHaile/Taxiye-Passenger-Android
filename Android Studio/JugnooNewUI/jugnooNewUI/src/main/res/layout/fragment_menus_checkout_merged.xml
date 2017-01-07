@@ -19,9 +19,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include
-                layout="@layout/layout_menus_cart"
-                />
+            <include layout="@layout/layout_fresh_star_saving"/>
+
+            <include layout="@layout/layout_menus_cart"/>
 
             <LinearLayout
                 android:id="@+id/linearLayoutDeliveryAddress"

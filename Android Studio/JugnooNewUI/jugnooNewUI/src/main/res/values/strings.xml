@@ -1445,5 +1445,7 @@
     <string name="expires_on">Expires on</string>
     <string name="savings_meter">Savings Meter</string>
     <string name="savings_from">Savings from</string>
+    <string name="star_savings">Star Savings</string>
+    <string name="you_will_receive_cashback_on_order">You\’ll receive \u20B9%s cashback on this order</string>
 
 </resources>

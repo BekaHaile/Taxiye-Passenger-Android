@@ -38,6 +38,9 @@ public class ProductsResponse {
 	@SerializedName("charges")
 	@Expose
 	private List<Charges> charges = new ArrayList<Charges>();
+	@SerializedName("subscription_message")
+	@Expose
+	private String subscriptionMessage;
 
 	/**
 	 *
@@ -139,6 +142,14 @@ public class ProductsResponse {
 
 	public void setCharges(List<Charges> charges) {
 		this.charges = charges;
+	}
+
+	public String getSubscriptionMessage() {
+		return subscriptionMessage;
+	}
+
+	public void setSubscriptionMessage(String subscriptionMessage) {
+		this.subscriptionMessage = subscriptionMessage;
 	}
 
 	public class Charges
