@@ -336,6 +336,7 @@
     <string name="type_bottom">to confirm your fare multiplier</string>
 
     <string name="retry">Retry</string>
+    <string name="retry_underline"><u>Retry</u></string>
 
     <string name="insert_sd_card">Please insert SD Card to use this app</string>
 
