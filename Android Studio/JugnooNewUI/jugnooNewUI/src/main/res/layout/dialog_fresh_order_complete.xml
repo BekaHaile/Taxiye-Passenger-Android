@@ -110,6 +110,76 @@
                 android:layout_marginBottom="40px"
                 android:text="@string/ok"/>
 
+            <RelativeLayout
+                android:id="@+id/rlStarContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/menu_item_selector_color_F7">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/px_2"
+                    android:background="@color/stroke_light_grey_alpha"/>
+
+                <ImageView
+                    android:id="@+id/ivStar"
+                    android:layout_width="94px"
+                    android:layout_height="94px"
+                    android:tag="mwar"
+                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_star_place_order"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/ivStar"
+                    android:layout_toLeftOf="@+id/ivArrow"
+                    android:layout_marginTop="@dimen/px_20"
+                    android:layout_marginBottom="@dimen/px_20"
+                    android:layout_marginLeft="@dimen/px_20"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvDidYou"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/did_you_know"
+                        android:textSize="@dimen/text_size_36"
+                        android:textColor="@color/text_color"/>
+
+                    <TextView
+                        android:id="@+id/tvDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/star_description"
+                        android:textSize="@dimen/text_size_24"
+                        android:layout_marginTop="@dimen/px_6"
+                        android:textColor="@color/text_color"/>
+
+                    <TextView
+                        android:id="@+id/tvClickToFindOut"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/click_to_find"
+                        android:layout_marginTop="@dimen/px_10"
+                        android:textSize="@dimen/text_size_20"
+                        android:textColor="@color/text_color"/>
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/ivArrow"
+                    android:layout_width="12px"
+                    android:layout_height="21px"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/px_20"
+                    android:rotation="180"
+                    android:background="@drawable/ic_back_selector"/>
+
+            </RelativeLayout>
+
 
         </LinearLayout>
 

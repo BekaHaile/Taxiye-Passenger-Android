@@ -52,7 +52,8 @@ public class ApiFindADriver {
 	}
 
 	public void hit(String accessToken, final LatLng latLng, final int showAllDrivers, int showDriverInfo,
-					Region regionSelected, final boolean beforeRequestRide, final boolean confirmedScreenOpened){
+					Region regionSelected, final boolean beforeRequestRide, final boolean confirmedScreenOpened,
+					final boolean savedAddressUsed){
 		this.regionSelected = regionSelected;
 		try {
 			if(callback != null) {
@@ -63,6 +64,9 @@ public class ApiFindADriver {
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 			params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
 			params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
+			if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0) {
+				params.put(Constants.KEY_AUTOS_BENEFIT_ID, String.valueOf(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getBenefitIdAutos()));
+			}
 
 			if (1 == showAllDrivers) {
 				params.put("show_all", "1");
@@ -99,21 +103,24 @@ public class ApiFindADriver {
 						}
 
 						if(beforeRequestRide){
-							Region newRegion = null;
-							for (Region region : Data.autoData.getRegions()) {
-								if(region.getRegionId() == ApiFindADriver.this.regionSelected.getRegionId()){
-									newRegion = region;
+							if(savedAddressUsed){
+								callback.continueRequestRide(false, savedAddressUsed);
+							} else {
+								Region newRegion = null;
+								for (Region region : Data.autoData.getRegions()) {
+									if (region.getRegionId().equals(ApiFindADriver.this.regionSelected.getRegionId())) {
+										newRegion = region;
+									}
+								}
+								if (newRegion != null
+										&& (Utils.compareDouble(fareFactorOld, newRegion.getCustomerFareFactor()) != 0
+										|| Utils.compareDouble(driverFareFactorOld, newRegion.getDriverFareFactor()) != 0)) {
+									callback.stopRequestRide(confirmedScreenOpened);
+								} else {
+									callback.continueRequestRide(confirmedScreenOpened, false);
 								}
 							}
-							if(newRegion != null
-									&& (Utils.compareDouble(fareFactorOld, newRegion.getCustomerFareFactor()) != 0
-									|| Utils.compareDouble(driverFareFactorOld, newRegion.getDriverFareFactor()) != 0)){
-								callback.stopRequestRide(confirmedScreenOpened);
-							} else{
-								callback.continueRequestRide(confirmedScreenOpened);
-							}
 						}
-
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -430,7 +437,7 @@ public class ApiFindADriver {
 		void onPre();
 		void onFailure();
 		void onCompleteFindADriver();
-		void continueRequestRide(boolean confirmedScreenOpened);
+		void continueRequestRide(boolean confirmedScreenOpened, boolean savedAddressUsed);
 		void stopRequestRide(boolean confirmedScreenOpened);
 		void onFinish();
 	}

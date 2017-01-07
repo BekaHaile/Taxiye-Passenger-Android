@@ -130,6 +130,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
         tvAmountPayable = (TextView) rootView.findViewById(R.id.tvAmountPayable); tvAmountPayable.setTypeface(Fonts.mavenMedium(activity));
         tvAmountPayableVal = (TextView) rootView.findViewById(R.id.tvAmountPayableVal); tvAmountPayableVal.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
         llFinalAmount = (LinearLayout) rootView.findViewById(R.id.llFinalAmount);
+        llFinalAmount.setVisibility(View.GONE);
         tvPaymentMethod = (TextView) rootView.findViewById(R.id.tvPaymentMethod); tvPaymentMethod.setTypeface(Fonts.mavenRegular(activity));
         ivPaymentMethodVal = (ImageView) rootView.findViewById(R.id.ivPaymentMethodVal);
         tvPaymentMethodCash = (TextView) rootView.findViewById(R.id.tvPaymentMethodCash); tvPaymentMethodCash.setTypeface(Fonts.mavenMedium(activity));
@@ -698,6 +699,10 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 ivPaymentMethodVal.setImageResource(R.drawable.ic_mobikwik_small);
             } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()){
                 ivPaymentMethodVal.setImageResource(R.drawable.ic_freecharge_small);
+            } else if(historyResponse.getData().get(0).getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()){
+                ivPaymentMethodVal.setImageResource(R.drawable.ic_fab_pay);
+                tvPaymentMethodCash.setVisibility(View.VISIBLE);
+                tvPaymentMethodCash.setText(activity.getString(R.string.jugnoo_pay));
             } else{
                 ivPaymentMethodVal.setVisibility(View.GONE);
                 tvPaymentMethodCash.setVisibility(View.VISIBLE);

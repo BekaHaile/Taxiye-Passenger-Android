@@ -1,5 +1,6 @@
 package com.sabkuchfresh.home;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Typeface;
 import android.view.View;
@@ -20,11 +21,11 @@ import product.clicklabs.jugnoo.utils.Fonts;
 public class FreshWalletBalanceLowDialog {
 
 	private final String TAG = FreshWalletBalanceLowDialog.class.getSimpleName();
-	private FreshActivity activity;
+	private Activity activity;
 	private Callback callback;
 	private Dialog dialog;
 
-	public FreshWalletBalanceLowDialog(FreshActivity activity, Callback callback) {
+	public FreshWalletBalanceLowDialog(Activity activity, Callback callback) {
 		this.activity = activity;
 		this.callback = callback;
 	}

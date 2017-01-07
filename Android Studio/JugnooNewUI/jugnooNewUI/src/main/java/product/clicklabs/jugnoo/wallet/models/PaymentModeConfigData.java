@@ -28,6 +28,9 @@ public class PaymentModeConfigData {
 		else if(Constants.KEY_JUGNOO_CASH.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.CASH.getOrdinal();
 		}
+		else if(Constants.KEY_JUGNOO_PAY.equalsIgnoreCase(name)){
+			paymentOption = PaymentOption.JUGNOO_PAY.getOrdinal();
+		}
 		this.priority = 0;
 	}
 

@@ -36,7 +36,11 @@ public enum AppLinkIndex {
 
 	MENUS_PAGE(16), // open Menus Screen
 
-	PAY_PAGE(17) // open Pay Screen
+	PAY_PAGE(17), // open Pay Screen
+
+	SUBSCRIPTION_PLAN_OPTION_SCREEN(18), //18 Subscription_Plan_Option_Screen
+
+	JUGNOO_STAR(19) //19 Jugnoo_Star_Screen
 
 	;
 

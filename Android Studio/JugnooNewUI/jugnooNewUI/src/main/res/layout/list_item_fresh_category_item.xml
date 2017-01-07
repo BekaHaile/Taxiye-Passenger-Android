@@ -198,7 +198,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/relativeLayoutMain"
         android:animateLayoutChanges="true"
-        android:gravity="center_vertical"
         android:orientation="vertical"
         >
 
@@ -207,6 +206,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60px"
             android:gravity="center"
             android:text="Out\nof\nStock"
             android:textColor="@color/off_text"

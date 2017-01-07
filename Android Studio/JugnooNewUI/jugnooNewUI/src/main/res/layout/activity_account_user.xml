@@ -121,6 +121,17 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="10px"
                         android:tag="mwar" />
+
+                    <View
+                        android:id="@+id/viewStarIcon"
+                        android:layout_width="@dimen/px_64"
+                        android:layout_height="@dimen/px_64"
+                        android:background="@drawable/star"
+                        android:layout_marginBottom="0px"
+                        android:tag="mwar"
+                        android:visibility="visible"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"/>
                 </RelativeLayout>
 
                 <EditText
@@ -380,6 +391,34 @@
                     android:layout_marginLeft="40px"
                     android:gravity="center"
                     android:text="@string/address_book"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_light_selector"
+                    android:textSize="@dimen/text_size_28" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlJugnooStar"
+                android:layout_width="match_parent"
+                android:layout_height="110px"
+                android:visibility="gone"
+                android:background="@color/white">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="40px"
+                    android:background="@color/stroke_color_light" />
+
+                <TextView
+                    android:id="@+id/tvJugnooStar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40px"
+                    android:gravity="center"
+                    android:text="@string/jugnoo_star"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_28" />

@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.home.FreshActivity;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -32,6 +33,7 @@ import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
@@ -39,7 +41,6 @@ import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
-import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -207,6 +208,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
 
+                } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_star_selector);
+                    if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
+                        hideLayout(holder.relative);
+                    }
                 } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_refer_a_driver_selector);
                    /* try {
@@ -245,6 +251,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.textViewCategories.setText(R.string.categories);
             holder.imageViewArrow.setVisibility(View.VISIBLE);
             try {
+                if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
+                    holder.tvJugnooStar.setVisibility(View.GONE);
+                    holder.viewStarIcon.setVisibility(View.VISIBLE);
+                } else{
+                    holder.tvJugnooStar.setVisibility(View.GONE);
+                    holder.viewStarIcon.setVisibility(View.GONE);
+                }
                 holder.textViewUserName.setText(Data.userData.userName);
                 holder.textViewViewPhone.setText(Data.userData.phoneNo);
                 float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
@@ -396,6 +409,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
         } else if(activity instanceof FreshActivity){
             latLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+        } else if(activity instanceof MainActivity){
+            latLng = ((MainActivity)activity).getCurrentPlaceLatLng();
         }
         return latLng;
     }
@@ -548,6 +563,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 } else if(activity instanceof FreshActivity){
                     currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
                 }
+                else if(activity instanceof MainActivity)
+                {
+                    currLatLng = ((MainActivity)activity).getCurrentPlaceLatLng();
+                }
+
+
                 if (currLatLng != null) {
                     Data.latitude = currLatLng.latitude;
                     Data.longitude = currLatLng.longitude;
@@ -603,6 +624,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.ABOUT, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "About");
+            } else if(MenuInfoTags.JUGNOO_STAR.getTag().equalsIgnoreCase(tag)){
+                activity.startActivity(new Intent(activity, JugnooStarActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.JUGNOO_STAR, bundle);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Jugnoo star");
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -693,6 +720,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public TextView textViewMenu, textViewNew, textViewValue;
         public ImageView imageViewMenuIcon;
         public RelativeLayout relative;
+
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
             textViewMenu = (TextView) convertView.findViewById(R.id.textViewMenu); textViewMenu.setTypeface(Fonts.mavenRegular(context));
@@ -708,9 +736,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public RelativeLayout relative;
         public ImageView imageViewProfile, imageViewArrow;
         public TextView textViewUserName, textViewViewPhone, textViewCategories, textViewAutos, textViewFresh, textViewMeals, textViewDelivery,
-                textViewGrocery, textViewMenus, textViewPay;
+                textViewGrocery, textViewMenus, textViewPay, tvJugnooStar;
         public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubDelivery, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos,
             linearLayoutSubGrocery, linearLayoutSubMenus, linearLayoutSubPay;
+        public View viewStarIcon;
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
@@ -735,6 +764,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             linearLayoutSubGrocery = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubGrocery);
             linearLayoutSubMenus = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubMenus);
             linearLayoutSubPay = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubPay);
+            tvJugnooStar = (TextView) convertView.findViewById(R.id.tvJugnooStar); tvJugnooStar.setTypeface(Fonts.mavenRegular(context));
+            viewStarIcon = (View) convertView.findViewById(R.id.viewStarIcon);
         }
     }
 

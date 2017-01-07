@@ -137,9 +137,11 @@ public class PriorityTipDialog {
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     if (s.toString().equals(part1)) {
                         editTextValue1.setTextColor(activity.getResources().getColor(R.color.theme_color));
+                        editTextValue2.setEnabled(true);
                         editTextValue2.requestFocus();
                     } else {
                         editTextValue1.setTextColor(activity.getResources().getColor(R.color.red));
+                        editTextValue2.setEnabled(false);
                     }
                 }
 
@@ -149,6 +151,7 @@ public class PriorityTipDialog {
                 }
             });
 
+            editTextValue2.setEnabled(false);
             editTextValue2.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -158,7 +161,7 @@ public class PriorityTipDialog {
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     Log.v("character is", "--> " + s.toString());
-                    if (s.toString().equals(part2)) {
+                    if (editTextValue1.getText().toString().equals(part1) && s.toString().equals(part2)) {
                         Log.v("code matched", "code matched");
                         editTextValue1.setTextColor(activity.getResources().getColor(R.color.theme_color));
                         callback.onConfirmed(true);

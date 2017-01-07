@@ -21,14 +21,14 @@ import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JugnooStarActivity;
+import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.NotificationData;
-import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -284,7 +284,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             else if(AppLinkIndex.PAY_PAGE.getOrdinal() == deepInt){
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getPayClientId(), new LatLng(Data.latitude, Data.longitude), true);
             }
-
+            else if(AppLinkIndex.JUGNOO_STAR.getOrdinal() == deepInt){
+                activity.startActivity(new Intent(activity, JugnooStarSubscribedActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+            else if(AppLinkIndex.SUBSCRIPTION_PLAN_OPTION_SCREEN.getOrdinal() == deepInt){
+                activity.startActivity(new Intent(activity, JugnooStarActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                Bundle bundle = new Bundle();
+                MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.JUGNOO_STAR, bundle);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Notification screen", "Jugnoo star");
+            }
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch(Exception e){
             e.printStackTrace();

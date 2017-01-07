@@ -411,7 +411,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="92px"
-                        android:background="@color/rank_1">
+                        >
 
                         <View
                             android:layout_width="match_parent"
@@ -443,7 +443,6 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/rank_1"
                         android:layout_marginTop="-10px">
 
                         <TextView
@@ -480,7 +479,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="92px"
                         android:layout_marginTop="20px"
-                        android:background="@color/rank_1">
+                        >
 
                         <View
                             android:layout_width="match_parent"
@@ -540,8 +539,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="26px"
                         android:orientation="vertical">
-
-
                     </LinearLayout>
 
                     <RelativeLayout
@@ -549,7 +546,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="92px"
                         android:layout_marginTop="20px"
-                        android:background="@color/rank_1">
+                        >
 
                         <View
                             android:layout_width="match_parent"
@@ -593,7 +590,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="92px"
-                        android:background="@color/rank_1">
+                        >
 
                         <TextView
                             android:id="@+id/tvPaymentMethod"
@@ -605,27 +602,32 @@
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_30" />
 
-                        <ImageView
-                            android:id="@+id/ivPaymentMethodVal"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:orientation="horizontal"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="30px"
-                            android:tag="mwar" />
+                            android:gravity="center_vertical"
+                            >
+                            <ImageView
+                                android:id="@+id/ivPaymentMethodVal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:tag="mwar"
+                                />
 
-                        <TextView
-                            android:id="@+id/tvPaymentMethodCash"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="30px"
-                            android:text="@string/cash"
-                            android:textAllCaps="true"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_32"
-                            android:visibility="gone" />
+                            <TextView
+                                android:id="@+id/tvPaymentMethodCash"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/cash"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                android:visibility="visible" />
+                        </LinearLayout>
 
                     </RelativeLayout>
 
@@ -646,7 +648,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="30px"
-                            android:background="@color/rank_1">
+                            >
 
                             <TextView
                                 android:id="@+id/tvBilledAmount"
@@ -675,7 +677,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="30px"
-                            android:background="@color/rank_1">
+                            >
 
                             <TextView
                                 android:id="@+id/tvRefund"

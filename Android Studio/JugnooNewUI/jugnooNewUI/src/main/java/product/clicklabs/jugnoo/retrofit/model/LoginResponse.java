@@ -8,6 +8,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
@@ -470,6 +471,15 @@ public class LoginResponse {
 		@SerializedName("nearbyPickupRegions")
 		@Expose
 		private NearbyPickupRegions nearbyPickupRegions;
+		@SerializedName("use_recent_loc_at_request")
+		@Expose
+		private Integer useRecentLocAtRequest;
+		@SerializedName("use_recent_loc_auto_snap_min_distance")
+		@Expose
+		private Double useRecentLocAutoSnapMinDistance;
+		@SerializedName("use_recent_loc_auto_snap_max_distance")
+		@Expose
+		private Double useRecentLocAutoSnapMaxDistance;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -582,6 +592,33 @@ public class LoginResponse {
 		public void setNearbyPickupRegions(NearbyPickupRegions nearbyPickupRegions) {
 			this.nearbyPickupRegions = nearbyPickupRegions;
 		}
+
+		public Integer getUseRecentLocAtRequest() {
+			if(useRecentLocAtRequest == null){
+				return 0;
+			}
+			return useRecentLocAtRequest;
+		}
+
+		public void setUseRecentLocAtRequest(Integer useRecentLocAtRequest) {
+			this.useRecentLocAtRequest = useRecentLocAtRequest;
+		}
+
+		public Double getUseRecentLocAutoSnapMinDistance() {
+			return useRecentLocAutoSnapMinDistance;
+		}
+
+		public void setUseRecentLocAutoSnapMinDistance(Double useRecentLocAutoSnapMinDistance) {
+			this.useRecentLocAutoSnapMinDistance = useRecentLocAutoSnapMinDistance;
+		}
+
+		public Double getUseRecentLocAutoSnapMaxDistance() {
+			return useRecentLocAutoSnapMaxDistance;
+		}
+
+		public void setUseRecentLocAutoSnapMaxDistance(Double useRecentLocAutoSnapMaxDistance) {
+			this.useRecentLocAutoSnapMaxDistance = useRecentLocAutoSnapMaxDistance;
+		}
 	}
 
 	public class UserData{
@@ -642,6 +679,10 @@ public class LoginResponse {
 		@SerializedName("jeanie_intro_dialog_content")
 		@Expose
 		private JeanieIntroDialogContent jeanieIntroDialogContent;
+
+		@SerializedName("subscription_data")
+		@Expose
+		private SubscriptionData subscriptionData;
 
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
@@ -793,6 +834,14 @@ public class LoginResponse {
 
 		public void setSharingOgTitle(String sharingOgTitle) {
 			this.sharingOgTitle = sharingOgTitle;
+		}
+
+		public SubscriptionData getSubscriptionData() {
+			return subscriptionData;
+		}
+
+		public void setSubscriptionData(SubscriptionData subscriptionData) {
+			this.subscriptionData = subscriptionData;
 		}
 	}
 

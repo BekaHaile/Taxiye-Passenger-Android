@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.jugnoo.pay.activities.MainActivity;
 
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -80,16 +79,13 @@ public class AboutActivity extends BaseActivity implements FlurryEventNames, Fir
 
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(Intent.ACTION_VIEW);
-//                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
-//                startActivity(intent);
-//                FlurryEventLogger.event(RATING_ON_PLAYSTORE_ABOUT);
-//                bundle = new Bundle();
-//                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+PLAYSTORE_RATING, bundle);
-//                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Playstore rating");
-
-                startActivity(new Intent(AboutActivity.this, MainActivity.class));
-
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
+                startActivity(intent);
+                FlurryEventLogger.event(RATING_ON_PLAYSTORE_ABOUT);
+                bundle = new Bundle();
+                MyApplication.getInstance().logEvent(INFORMATIVE+"_"+ABOUT+"_"+PLAYSTORE_RATING, bundle);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, "Playstore rating");
             }
         });
 

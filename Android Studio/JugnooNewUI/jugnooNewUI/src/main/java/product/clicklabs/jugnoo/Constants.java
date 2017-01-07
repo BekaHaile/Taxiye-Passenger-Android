@@ -567,4 +567,19 @@ public interface Constants {
 	String KEY_MENU_LONGITUDE = "menu_longitude";
 
 	String SHOW_HOME_SCREEN = "show_home_screen";
+
+	String KEY_GO_BACK = "go_back";
+	String KEY_PAYMENT_OBJECT = "payment_object";
+	String KEY_PAY_ORDER_ID = "pay_order_id";
+	String ACCEPTONLINE = "Accept Online Payment";
+	String OFFERSDISCOUNT = "Offers Discount";
+	String PUREVEGETARIAN = "Pure Vegetarian";
+	String FREEDELIVERY = "Free Delivery";
+	String SHOW_SUBSCRIPTION_DATA = "show_subscription_data";
+	String KEY_SUB_ID = "sub_id";
+
+	String KEY_PAYMENT_PREFERENCE = "payment_preference";
+	String KEY_AUTOS_BENEFIT_ID = "autos_benefit_id";
+
+	double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 100d;
 }

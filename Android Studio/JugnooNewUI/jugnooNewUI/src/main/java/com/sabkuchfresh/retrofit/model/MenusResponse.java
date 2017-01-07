@@ -32,6 +32,8 @@ public class MenusResponse {
 	@SerializedName("recent_orders_possible_status")
 	@Expose
 	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
+
+
 	/**
 	 *
 	 * @return
@@ -185,8 +187,32 @@ public class MenusResponse {
 		@SerializedName("packing_charges")
 		@Expose
 		private Double packingCharges;
+		@SerializedName("packing_charges_percent")
+		@Expose
+		private Double packagingChargesInPercent;
 
 
+		@SerializedName("pure_veg")
+		@Expose
+		private Integer pureVegetarian;
+		@SerializedName("offer_discount")
+		@Expose
+		private Integer offersDiscounts;
+		@SerializedName("free_delivery")
+		@Expose
+		private Integer freeDelivery;
+
+		@SerializedName("close_at")
+		@Expose
+		private String closeIn;
+		@SerializedName("display_address")
+		@Expose
+		private String restaurantAdd;
+
+//		@SerializedName("buffer_time")
+		@SerializedName("close_in_buffer")
+		@Expose
+		private Long bufferTime;
 
 		/**
 		 *
@@ -399,6 +425,77 @@ public class MenusResponse {
 		public void setPackingCharges(Double packingCharges) {
 			this.packingCharges = packingCharges;
 		}
+
+		public Double getPackagingChargesInPercent() {
+			return packagingChargesInPercent;
+		}
+
+		public void setPackagingChargesInPercent(Double packagingChargesInPercent) {
+			this.packagingChargesInPercent = packagingChargesInPercent;
+		}
+
+
+		public Integer getPureVegetarian() {
+			if(pureVegetarian != null) {
+				return pureVegetarian;
+			} else {
+				return 0;
+			}
+		//	return pureVegetarian;
+		}
+
+		public void setPureVegetarian(Integer pureVegetarian) {
+			this.pureVegetarian = pureVegetarian;
+		}
+
+		public Integer getOffersDiscounts() {
+			if(offersDiscounts != null) {
+				return offersDiscounts;
+			} else {
+				return 0;
+			}
+		//	return offersDiscounts;
+		}
+
+		public void setOffersDiscounts(Integer offersDiscounts) {
+			this.offersDiscounts = offersDiscounts;
+		}
+
+		public Integer getFreeDelivery() {
+			if(freeDelivery != null) {
+				return freeDelivery;
+			} else {
+				return 0;
+			}
+		}
+
+		public void setFreeDelivery(Integer freeDelivery) {
+			this.freeDelivery = freeDelivery;
+		}
+
+		public String getRestaurantAddress() {
+			return restaurantAdd;
+		}
+
+		public void setRestaurantAddress(String restaurantAdd) {
+			this.restaurantAdd = restaurantAdd;
+		}
+
+		public String getCloseIn() {
+			return closeIn;
+		}
+
+		public void setCloseIn(String closeIn) {
+			this.closeIn = closeIn;
+		}
+
+		public Long getBufferTime() {
+			return bufferTime;
+		}
+
+		public void setBufferTime(Long bufferTime) {
+			this.bufferTime = bufferTime;
+		}
 	}
 
 
@@ -472,5 +569,4 @@ public class MenusResponse {
 			this.distance = distance;
 		}
 	}
-
 }

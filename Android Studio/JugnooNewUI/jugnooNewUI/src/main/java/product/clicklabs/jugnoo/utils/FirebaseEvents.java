@@ -75,6 +75,7 @@ public interface FirebaseEvents {
     String GAME = "game";
     String GET_A_RIDE = "Get_a_Ride";
     String ABOUT = "About";
+    String JUGNOO_STAR = "Jugnoo_star";
 
     String LOGOUT = "Logout";
     String ADD_HOME = "Add_Home";

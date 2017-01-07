@@ -44,8 +44,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private FreshActivity activity;
     private boolean tabClickFlag = false;
 
-    private RelativeLayout searchLayout;
-
     private FreshSortingDialog freshSortingDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     public VendorMenuFragment(){}
@@ -83,7 +81,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 			e.printStackTrace();
 		}
 
-        searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
 
@@ -119,13 +116,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             }
         });
 
-
-        searchLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.searchItem();
-            }
-        });
 
 		success(activity.getProductsResponse());
 
@@ -250,19 +240,23 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 
 	public FreshSortingDialog getFreshSortingDialog() {
-
-		if (freshSortingDialog == null) {
-			setSortingList();
-			slots.get(activity.freshSort).setCheck(true);
-			activity.onSortEvent(new SortSelection(activity.freshSort));
-			freshSortingDialog = new FreshSortingDialog(activity, slots,
-					new FreshSortingDialog.FreshDeliverySortDialogCallback() {
-						@Override
-						public void onOkClicked(int position) {
-							activity.freshSort = position;
-							activity.getBus().post(new SortSelection(position));
-						}
-					});
+		try {
+			if (freshSortingDialog == null) {
+				setSortingList();
+				slots.get(1).check = true;
+				activity.freshSort = slots.get(1).id;
+				activity.onSortEvent(new SortSelection(activity.freshSort));
+				freshSortingDialog = new FreshSortingDialog(activity, slots,
+						new FreshSortingDialog.FreshDeliverySortDialogCallback() {
+							@Override
+							public void onOkClicked(int position) {
+								activity.freshSort = position;
+								activity.getBus().post(new SortSelection(position));
+							}
+						});
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return freshSortingDialog;
 	}
@@ -270,7 +264,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 	private void setSortingList() {
 		slots.clear();
 		slots.add(new SortResponseModel(0, "A-Z", false));
-		slots.add(new SortResponseModel(1, "Popularity", false));
+//		slots.add(new SortResponseModel(1, "Popularity", false));
 		slots.add(new SortResponseModel(2, "Price: Low to High", false));
 		slots.add(new SortResponseModel(3, "Price: High to Low", false));
 	}

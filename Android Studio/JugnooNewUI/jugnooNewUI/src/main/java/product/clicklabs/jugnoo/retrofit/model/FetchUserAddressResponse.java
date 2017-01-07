@@ -21,6 +21,9 @@ public class FetchUserAddressResponse {
 	@SerializedName("addresses")
 	@Expose
 	private List<Address> addresses = new ArrayList<Address>();
+	@SerializedName("additional_addresses")
+	@Expose
+	private List<Address> additionalAddresses = new ArrayList<Address>();
 
 	/**
 	 *
@@ -76,6 +79,14 @@ public class FetchUserAddressResponse {
 		this.addresses = addresses;
 	}
 
+	public List<Address> getAdditionalAddresses() {
+		return additionalAddresses;
+	}
+
+	public void setAdditionalAddresses(List<Address> additionalAddresses) {
+		this.additionalAddresses = additionalAddresses;
+	}
+
 	public class Address {
 
 		@SerializedName("addr")
@@ -96,7 +107,7 @@ public class FetchUserAddressResponse {
 		@SerializedName("id")
 		@Expose
 		private Integer id = 0;
-		@SerializedName("place_id")
+		@SerializedName("google_place_id")
 		@Expose
 		private String placeId;
 		@SerializedName("is_confirmed")

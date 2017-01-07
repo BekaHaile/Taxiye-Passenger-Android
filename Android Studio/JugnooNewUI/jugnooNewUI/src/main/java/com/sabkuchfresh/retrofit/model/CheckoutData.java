@@ -123,4 +123,6 @@ public class CheckoutData {
 	public void setLastAddressType(String lastAddressType) {
 		this.lastAddressType = lastAddressType;
 	}
+
+
 }

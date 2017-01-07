@@ -3,6 +3,9 @@ package com.sabkuchfresh.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by shankar on 4/6/16.
  */
@@ -79,6 +82,9 @@ public class SubItem {
     @SerializedName("can_order")
     @Expose
     private Integer canOrder;
+    @SerializedName("taxes")
+    @Expose
+    private List<Tax> taxes;
 
     private Integer subItemQuantitySelected;
 
@@ -518,5 +524,48 @@ public class SubItem {
 
     public void setDeliveryTimeText(String deliveryTimeText) {
         this.deliveryTimeText = deliveryTimeText;
+    }
+
+    public List<Tax> getTaxes() {
+        if(taxes == null){
+            taxes = new ArrayList<>();
+        }
+        return taxes;
+    }
+
+    public void setTaxes(List<Tax> taxes) {
+        this.taxes = taxes;
+    }
+
+
+    public class Tax {
+        public Tax(){}
+        public Tax(String key, Double value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        @SerializedName("key")
+        @Expose
+        private String key;
+        @SerializedName("value")
+        @Expose
+        private Double value;
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public Double getValue() {
+            return value;
+        }
+
+        public void setValue(Double value) {
+            this.value = value;
+        }
     }
 }

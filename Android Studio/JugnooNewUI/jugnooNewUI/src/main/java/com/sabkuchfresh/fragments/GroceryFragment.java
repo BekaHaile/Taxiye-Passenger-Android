@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -28,9 +27,9 @@ import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.home.FreshNoDeliveriesDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -83,9 +82,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 	private View rootView;
     private FreshActivity activity;
     private boolean tabClickFlag = false;
-//    private ImageView imageViewNoItem;
 
-    private RelativeLayout searchLayout;
 
     private FreshSortingDialog freshSortingDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
@@ -147,10 +144,8 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			e.printStackTrace();
 		}
 
-        searchLayout = (RelativeLayout) rootView.findViewById(R.id.searchLayout);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
-//        imageViewNoItem = (ImageView) rootView.findViewById(R.id.imageViewNoItem);
 
 		viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
@@ -209,13 +204,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
             }
         });
 
-
-        searchLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.searchItem();
-            }
-        });
 
         setSortingList();
 
@@ -318,7 +306,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					activity.setMinOrderAmountText();
+					activity.setMinOrderAmountText(GroceryFragment.this);
 					if(activity.isRefreshCart()){
 						activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
 					}
@@ -373,6 +361,8 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+									activity.getSearchLayout().setVisibility(View.GONE);
+									activity.resetToolbar();
                                     mainLayout.setVisibility(View.GONE);
                                     activity.showBottomBar(false);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
@@ -380,7 +370,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 }
                                 else {
                                     activity.setProductsResponse(productsResponse);
-                                    activity.setMinOrderAmountText();
+                                    activity.setMinOrderAmountText(GroceryFragment.this);
 									activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
                                     setSortingList();
                                     if(activity.freshSort == -1) {

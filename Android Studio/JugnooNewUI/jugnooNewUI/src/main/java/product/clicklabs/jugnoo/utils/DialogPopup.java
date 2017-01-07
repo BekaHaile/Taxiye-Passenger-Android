@@ -764,6 +764,49 @@ public class DialogPopup {
         }
     }
 
+	public static ProgressDialog showLoadingDialogNewInstanceCard(Context context, String message, boolean showMessage) {
+		try {
+			if (context instanceof Activity) {
+				Activity activity = (Activity) context;
+				if (activity.isFinishing()) {
+					return null;
+				}
+			}
+
+			ProgressDialog progressDialog = new ProgressDialog(context, android.R.style.Theme_Translucent_NoTitleBar);
+			progressDialog.show();
+			WindowManager.LayoutParams layoutParams = progressDialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			progressDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			progressDialog.setCancelable(false);
+			progressDialog.setContentView(R.layout.dialog_loading_with_text);
+			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
+			new ASSL((Activity) context, frameLayout, 1134, 720, false);
+			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
+			animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
+			animImageView.post(new Runnable() {
+				@Override
+				public void run() {
+					AnimationDrawable frameAnimation =
+							(AnimationDrawable) animImageView.getBackground();
+					frameAnimation.start();
+				}
+			});
+
+			if(showMessage){
+				TextView textViewMessage = (TextView) progressDialog.findViewById(R.id.textViewMessage);
+				textViewMessage.setTypeface(Fonts.mavenMedium(context));
+				textViewMessage.setVisibility(View.VISIBLE);
+				textViewMessage.setText(message);
+			}
+
+			return progressDialog;
+		} catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 
 	/**
 	 * @param context

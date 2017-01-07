@@ -1,5 +1,6 @@
 package com.sabkuchfresh.apis;
 
+import com.jugnoo.pay.models.SendMoneyCallbackResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
@@ -60,5 +61,10 @@ public interface FreshApiService {
     @POST("/validate_promo_code")
     void applyPromo(@FieldMap Map<String, String> params,
                     Callback<PlaceOrderResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/place_order_callback")
+	void placeOrderCallback(@FieldMap Map<String, String> params,
+							Callback<SendMoneyCallbackResponse> callback);
 
 }

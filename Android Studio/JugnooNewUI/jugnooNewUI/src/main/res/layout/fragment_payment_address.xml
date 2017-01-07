@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:background="@color/menu_item_selector_color"
     android:orientation="vertical">
 
@@ -37,11 +38,64 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvNoMatchFound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sorry_no_match_found"
+            android:gravity="center"
+            android:textSize="15sp"
+            android:textColor="@color/text_color"
+            android:layout_margin="@dimen/px_20"
+            android:visibility="visible"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvPaymentAddress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent">
+
+            <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
+                android:id="@+id/fabAddVPA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="40px"
+                android:layout_marginBottom="70px"
+                android:src="@drawable/add_payment_address"
+                fab:fab_shadowXOffset="1dp"
+                fab:fab_shadowYOffset="2dp"
+                fab:fab_shadowColor="@color/leaderboard_activity_text_color"
+                fab:fab_colorNormal="@color/white"
+                fab:fab_colorPressed="@color/grey_light"
+                fab:fab_colorRipple="@color/grey_light_alpha"
+                />
+
+
+        </RelativeLayout>
+
+        <!--<product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton-->
+
+            <!--android:id="@+id/fabAddPaymentAddress"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/add_payment_address"-->
+            <!--fab:fab_size="normal"-->
+            <!--android:tag="DontTouchMe"-->
+            <!--fab:fab_shadowXOffset="1dp"-->
+            <!--fab:fab_shadowYOffset="2dp"-->
+            <!--fab:fab_shadowColor="@color/leaderboard_activity_text_color"-->
+            <!--fab:fab_colorNormal="@color/white"-->
+            <!--fab:fab_colorPressed="@color/grey_light"-->
+            <!--fab:fab_colorRipple="@color/grey_light_alpha"-->
+            <!--fab:fab_label="@string/pay"-->
+            <!--android:layout_margin="@dimen/px_30"/>-->
+
     </android.support.v7.widget.CardView>
 
-</LinearLayout>
+</RelativeLayout>

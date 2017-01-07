@@ -2,6 +2,7 @@ package com.sabkuchfresh.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.jugnoo.pay.models.SendMoneyResponse;
 
 /**
  * Created by shankar on 4/11/16.
@@ -26,6 +27,17 @@ public class PlaceOrderResponse {
 	@SerializedName("message")
 	@Expose
 	private String message;
+//	@SerializedName("payment_object")
+//	@Expose
+//	private Integer orderId;
+
+	@SerializedName("payment_object")
+	@Expose
+	private SendMoneyResponse.TxnDetails paymentObject;
+
+	@SerializedName("subscription_message")
+	@Expose
+	private SubscriptionMessage subscriptionMessage;
 
 	/**
 	 *
@@ -133,6 +145,60 @@ public class PlaceOrderResponse {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public SendMoneyResponse.TxnDetails getPaymentObject() {
+		return paymentObject;
+	}
+
+	public void setPaymentObject(SendMoneyResponse.TxnDetails paymentObject) {
+		this.paymentObject = paymentObject;
+	}
+
+	public SubscriptionMessage getSubscriptionMessage() {
+		return subscriptionMessage;
+	}
+
+	public void setSubscriptionMessage(SubscriptionMessage subscriptionMessage) {
+		this.subscriptionMessage = subscriptionMessage;
+	}
+
+	public class SubscriptionMessage {
+
+		@SerializedName("heading")
+		@Expose
+		private String heading;
+		@SerializedName("content")
+		@Expose
+		private String content;
+		@SerializedName("link_text")
+		@Expose
+		private String linkText;
+
+		public String getHeading() {
+			return heading;
+		}
+
+		public void setHeading(String heading) {
+			this.heading = heading;
+		}
+
+		public String getContent() {
+			return content;
+		}
+
+		public void setContent(String content) {
+			this.content = content;
+		}
+
+		public String getLinkText() {
+			return linkText;
+		}
+
+		public void setLinkText(String linkText) {
+			this.linkText = linkText;
+		}
+
 	}
 
 }

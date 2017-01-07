@@ -129,7 +129,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         swipeRefreshLayout.setEnabled(true);
 
-        menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors,recentOrder,status, new MenusRestaurantAdapter.Callback() {
+        menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder,status, new MenusRestaurantAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int position, MenusResponse.Vendor vendor) {
                 getVendorMenu(vendor);
@@ -261,7 +261,6 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                     status.clear();
                                     status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
-
                                     menusRestaurantAdapter.setList(vendors);
                                     menusRestaurantAdapter.applyFilter();
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
@@ -359,6 +358,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                     activity.setProductsResponse(productsResponse);
                                     if(activity.freshSort == -1) {
                                         activity.freshSort = jObj.getInt(Constants.SORTED_BY);
+                                    }
+                                    if(vendor.getIsClosed()==1) {
+                                        activity.clearMenusCart();
                                     }
                                     activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
                                 } else {
