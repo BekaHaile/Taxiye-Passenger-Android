@@ -215,7 +215,7 @@ public class HomeUtil {
 			markerOptions.anchor(0.1f, 1f);
 			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
 					.getSavedAddressBitmap(activity, assl, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_24),
-							R.drawable.ic_point_of_interest_marker, R.color.red_dark_alpha)));
+							R.drawable.ic_point_of_interest_marker, R.color.brown_marker_text)));
 		}
 		return markerOptions;
 	}
