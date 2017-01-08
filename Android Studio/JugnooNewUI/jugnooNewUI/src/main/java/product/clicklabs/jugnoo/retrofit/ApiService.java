@@ -521,8 +521,8 @@ public interface ApiService {
                             Callback<PurchaseSubscriptionResponse> callback);
 
     @FormUrlEncoded
-    @POST("/track_push_campaign")
-    void trackPushCampaign(@FieldMap Map<String, String> params,
+    @POST("/push_tracking")
+    void pushTracking(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
 
 }

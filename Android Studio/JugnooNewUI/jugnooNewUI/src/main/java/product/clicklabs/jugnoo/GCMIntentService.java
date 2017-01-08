@@ -551,10 +551,16 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 							Prefs.with(this).save(SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
 
-							try{int campaignId = jObj.optInt(Constants.KEY_CAMPAIGN_ID, 0);
-							if(campaignId > 0){
-								apiTrackPush(campaignId);
-							}} catch (Exception e){}
+							try {
+								int campaignId = jObj.optInt(Constants.KEY_CAMPAIGN_ID, 0);
+								int notificationId = jObj.optInt(KEY_NOTIFICATION_ID, 0);
+								if (campaignId > 0) {
+									apiTrackPush(campaignId);
+								} else if (notificationId > 0) {
+									apiTrackPush(notificationId);
+								}
+							} catch (Exception e) {
+							}
 
 						}
 
@@ -883,7 +889,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				Log.i("params", "=" + params.toString());
 
 				new HomeUtil().putDefaultParams(params);
-				RestClient.getApiService().trackPushCampaign(params, new retrofit.Callback<SettleUserDebt>() {
+				RestClient.getApiService().pushTracking(params, new retrofit.Callback<SettleUserDebt>() {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 					}
