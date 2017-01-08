@@ -1446,7 +1446,7 @@
     <string name="savings_meter">Savings Meter</string>
     <string name="savings_from">Savings from</string>
     <string name="star_savings">Star Savings</string>
-    <string name="you_will_receive_cashback_on_order">You\’ll receive \u20B9%s cashback on this order</string>
+    <string name="you_will_receive_cashback_on_order">You’ll receive \u20B9%s cashback on this order</string>
     <string name="star_savings_no_priority_tip">Star Savings: No Priority Tip on this ride</string>
 
 </resources>
