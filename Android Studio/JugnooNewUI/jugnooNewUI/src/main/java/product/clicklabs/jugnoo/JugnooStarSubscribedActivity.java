@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.adapters.StarMembershipAdapter;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
@@ -81,7 +83,6 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
         rvBenefits.setHasFixedSize(false);
 
         ((TextView) findViewById(R.id.tvSavingsMeter)).setTypeface(Fonts.mavenMedium(this));
-        ((TextView) findViewById(R.id.tvSavingsFrom)).setTypeface(Fonts.mavenMedium(this));
         llSavingsValue = (LinearLayout) findViewById(R.id.llSavingsValue);
         progressWheel = (ProgressWheel) findViewById(R.id.progressWheel);
         tvSavingsMeterRetry = (TextView) findViewById(R.id.tvSavingsMeterRetry);
@@ -118,6 +119,35 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
             String[] strArray4 = Data.userData.getSubscriptionData().getSubTextMenus().split(";;;");
             for (int i = 0; i < strArray4.length; i++) {
                 benefitOffering.add("Menus");
+            }
+
+
+            benefits.clear();
+            benefitOffering.clear();
+
+            if(!TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextAutos())) {
+                benefitOffering.add(Config.getAutosClientId());
+                benefits.add(Data.userData.getSubscriptionData().getSubTextAutos());
+            }
+            if(Data.userData.getFreshEnabled() == 1
+                    && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextFresh())){
+                benefitOffering.add(Config.getFreshClientId());
+                benefits.add(Data.userData.getSubscriptionData().getSubTextFresh());
+            }
+            if(Data.userData.getMealsEnabled() == 1
+                    && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextMeals())){
+                benefitOffering.add(Config.getMealsClientId());
+                benefits.add(Data.userData.getSubscriptionData().getSubTextMeals());
+            }
+            if(Data.userData.getGroceryEnabled() == 1
+                    && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextGrocery())){
+                benefitOffering.add(Config.getGroceryClientId());
+                benefits.add(Data.userData.getSubscriptionData().getSubTextGrocery());
+            }
+            if(Data.userData.getMenusEnabled() == 1
+                    && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextMenus())){
+                benefitOffering.add(Config.getMenusClientId());
+                benefits.add(Data.userData.getSubscriptionData().getSubTextMenus());
             }
 
 

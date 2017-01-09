@@ -134,6 +134,8 @@ public class FreshOrderCompleteDialog {
 						offering = "Grocery";
 					else if(type == AppConstant.ApplicationType.FRESH)
 						offering = "Fresh";
+					else if(type == AppConstant.ApplicationType.MENUS)
+						offering = "Menus";
 					FlurryEventLogger.eventGA(Constants.REVENUE+Constants.SLASH+Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Star Thank You Popup", offering);
 					dialog.dismiss();
 					activity.startActivity(new Intent(activity, JugnooStarActivity.class));

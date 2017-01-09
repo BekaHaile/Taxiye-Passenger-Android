@@ -677,11 +677,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 cvStarSavings.setVisibility(View.VISIBLE);
                 String cashbackText = TextUtils.isEmpty(activity.getUserCheckoutResponse().getSubscription().getCashbackText())
                         ?
-                        activity.getString(R.string.you_will_receive_cashback_on_order, Utils.getMoneyDecimalFormat().format(cashbackValue))
+                        activity.getString(R.string.you_will_receive_cashback_on_order, Utils.getMoneyDecimalFormatWithoutFloat().format(cashbackValue))
                         :
                         activity.getUserCheckoutResponse().getSubscription().getCashbackText()
                                 .replace("{{{cashback_value}}}", activity.getString(R.string.rupees_value_format,
-                                        Utils.getMoneyDecimalFormat().format(cashbackValue)));
+                                        Utils.getMoneyDecimalFormatWithoutFloat().format(cashbackValue)));
                 tvStarSavingsValue.setText(cashbackText);
             }
         }
