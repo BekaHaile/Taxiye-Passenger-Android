@@ -42,7 +42,9 @@ public enum AppLinkIndex {
 
 	JUGNOO_STAR(19), //19 Jugnoo_Star_Screen
 
-	WALLET_TRANSACTIONS(20) //20 Jugnoo_Star_Screen
+	WALLET_TRANSACTIONS(20), //20 Jugnoo_Star_Screen
+
+	OPEN_COUPONS_DIALOG(21) //open coupons dialog
 
 	;
 
