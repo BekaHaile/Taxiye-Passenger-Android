@@ -553,11 +553,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 							try {
 								int campaignId = jObj.optInt(Constants.KEY_CAMPAIGN_ID, 0);
-								int notificationId = jObj.optInt(KEY_NOTIFICATION_ID, 0);
 								if (campaignId > 0) {
 									apiTrackPush(campaignId);
-								} else if (notificationId > 0) {
-									apiTrackPush(notificationId);
 								}
 							} catch (Exception e) {
 							}
