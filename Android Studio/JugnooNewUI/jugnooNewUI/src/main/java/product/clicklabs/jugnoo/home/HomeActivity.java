@@ -2475,6 +2475,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+PRIORITY_TIP_POP_UP+"_"+CANCEL, bundle);
                                 FlurryEventLogger.eventGA(CAMPAIGNS, "priority tip pop up", "cancel");
                                 FlurryEventLogger.event(HomeActivity.this, SURGE_NOT_ACCEPTED);
+
+                                specialPickupScreenOpened = false;
+                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                switchPassengerScreen(passengerScreenMode);
                             }
                         }).showDialog();
             } else{
