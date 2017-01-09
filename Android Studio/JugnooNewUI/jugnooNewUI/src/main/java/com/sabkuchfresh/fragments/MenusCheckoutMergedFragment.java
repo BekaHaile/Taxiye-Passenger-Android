@@ -638,8 +638,8 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                 && activity.getUserCheckoutResponse().getSubscription() != null){
             double totalUndiscounted = totalUndiscounted();
             double cashbackValue = activity.getUserCheckoutResponse().getSubscription().getCashback(totalUndiscounted);
-            cashbackValue = totalUndiscounted - Math.round(totalUndiscounted - cashbackValue);
             if(cashbackValue > 0d) {
+                cashbackValue = totalUndiscounted - Math.round(totalUndiscounted - cashbackValue);
                 cvStarSavings.setVisibility(View.VISIBLE);
                 String cashbackText = TextUtils.isEmpty(activity.getUserCheckoutResponse().getSubscription().getCashbackText())
                         ?

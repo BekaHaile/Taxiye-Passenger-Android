@@ -338,7 +338,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="70px"
                 android:layout_marginTop="32px"
-                android:text="@string/place_order"
+                android:text="@string/pay_now"
                 android:textSize="@dimen/text_size_34"
                 />
 
