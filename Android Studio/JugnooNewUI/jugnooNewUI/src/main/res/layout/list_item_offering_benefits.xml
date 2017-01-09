@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <LinearLayout android:id="@+id/llMain"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="98px"
+            android:layout_height="98px"
+            android:layout_marginBottom="20px"
+            android:layout_marginLeft="28px"
+            android:layout_marginTop="20px"
+            android:background="@drawable/circle_white_stroke_grey"
+            android:tag="mwar"
+            >
+
+            <ImageView
+                android:id="@+id/ivOfferring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_fab_autos"
+                android:tag="DontTouchMe"
+                />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="20px"
+            android:layout_marginLeft="16px"
+            android:layout_marginRight="20px"
+            android:layout_marginTop="20px"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/tvOfferingName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/autos"
+                android:textAllCaps="true"
+                android:textColor="@color/theme_color"
+                android:textSize="@dimen/text_size_24"/>
+
+            <TextView
+                android:id="@+id/tvOfferingBenefits"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10px"
+                android:text="ajhdjkas\njkdask\ndjhsj\ndsjhj\nakdlaskd\njdkasjkdj\ndajskdjk\"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_24"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/ivSep"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:background="@color/divider_color"
+        android:layout_below="@+id/llMain"
+        />
+
+</RelativeLayout>
