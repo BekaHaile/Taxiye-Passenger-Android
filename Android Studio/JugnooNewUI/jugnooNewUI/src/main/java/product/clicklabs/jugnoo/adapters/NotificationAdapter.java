@@ -295,6 +295,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.JUGNOO_STAR, bundle);
                 FlurryEventLogger.eventGA(Constants.INFORMATIVE, "Notification screen", "Jugnoo star");
             }
+            else if(AppLinkIndex.WALLET_TRANSACTIONS.getOrdinal() == deepInt){
+                intent.setClass(activity, PaymentActivity.class);
+                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
+                intent.putExtra(Constants.KEY_WALLET_TRANSACTIONS, 1);
+                activity.startActivity(intent);
+            }
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch(Exception e){
             e.printStackTrace();
