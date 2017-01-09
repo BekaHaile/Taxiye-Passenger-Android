@@ -136,6 +136,9 @@ public class UserCheckoutResponse{
 		@SerializedName("cashback_is_percent")
 		@Expose
 		private Integer cashbackIsPercent;
+		@SerializedName("cashback_text")
+		@Expose
+		private String cashbackText;
 
 		public Double getDiscount(Double totalAmount) {
 			if(discount == null){
@@ -197,6 +200,14 @@ public class UserCheckoutResponse{
 
 		public void setCashbackIsPercent(Integer cashbackIsPercent) {
 			this.cashbackIsPercent = cashbackIsPercent;
+		}
+
+		public String getCashbackText() {
+			return cashbackText;
+		}
+
+		public void setCashbackText(String cashbackText) {
+			this.cashbackText = cashbackText;
 		}
 	}
 }

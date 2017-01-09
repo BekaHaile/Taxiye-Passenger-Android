@@ -636,11 +636,19 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         if(Data.userData != null && Data.userData.isSubscriptionActive()
                 && activity.getUserCheckoutResponse() != null
                 && activity.getUserCheckoutResponse().getSubscription() != null){
-            double cashbackValue = activity.getUserCheckoutResponse().getSubscription().getCashback(totalAmount());
+            double totalUndiscounted = totalUndiscounted();
+            double cashbackValue = activity.getUserCheckoutResponse().getSubscription().getCashback(totalUndiscounted);
+            cashbackValue = totalUndiscounted - Math.round(totalUndiscounted - cashbackValue);
             if(cashbackValue > 0d) {
                 cvStarSavings.setVisibility(View.VISIBLE);
-                tvStarSavingsValue.setText(activity.getString(R.string.you_will_receive_cashback_on_order,
-                        Utils.getMoneyDecimalFormat().format(cashbackValue)));
+                String cashbackText = TextUtils.isEmpty(activity.getUserCheckoutResponse().getSubscription().getCashbackText())
+                        ?
+                        activity.getString(R.string.you_will_receive_cashback_on_order, Utils.getMoneyDecimalFormat().format(cashbackValue))
+                        :
+                        activity.getUserCheckoutResponse().getSubscription().getCashbackText()
+                                .replace("{{{cashback_value}}}", activity.getString(R.string.rupees_value_format,
+                                        Utils.getMoneyDecimalFormat().format(cashbackValue)));
+                tvStarSavingsValue.setText(cashbackText);
             }
         }
     }
@@ -1937,11 +1945,11 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
     private double totalUndiscounted(){
-        return totalAmount() + promoAmount;
+        return subTotalAmount + totalTaxAmount;
     }
 
     private double totalAmount(){
-        double totalAmount = subTotalAmount + totalTaxAmount - promoAmount;
+        double totalAmount = totalUndiscounted() - promoAmount;
         if(totalAmount < 0) {
             totalAmount = 0;
         }

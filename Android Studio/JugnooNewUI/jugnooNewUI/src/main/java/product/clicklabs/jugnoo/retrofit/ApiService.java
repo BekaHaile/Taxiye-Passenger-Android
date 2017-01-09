@@ -522,8 +522,8 @@ public interface ApiService {
                             Callback<PurchaseSubscriptionResponse> callback);
 
     @FormUrlEncoded
-    @POST("/fetch_subscription_savings")
-    void fetchSubscriptionSavings(@FieldMap Map<String, String> params,
+    @POST("/get_savings_meter_reading")
+    void getSavingsMeterReading(@FieldMap Map<String, String> params,
                             Callback<FetchSubscriptionSavingsResponse> callback);
 
 }

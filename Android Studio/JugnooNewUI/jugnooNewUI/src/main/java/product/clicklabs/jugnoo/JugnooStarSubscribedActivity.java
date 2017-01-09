@@ -276,7 +276,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
                 new HomeUtil().putDefaultParams(params);
-                RestClient.getApiService().fetchSubscriptionSavings(params, new retrofit.Callback<FetchSubscriptionSavingsResponse>() {
+                RestClient.getApiService().getSavingsMeterReading(params, new retrofit.Callback<FetchSubscriptionSavingsResponse>() {
                     @Override
                     public void success(FetchSubscriptionSavingsResponse savingsResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());

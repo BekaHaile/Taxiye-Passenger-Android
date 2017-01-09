@@ -14,7 +14,7 @@ public class FetchSubscriptionSavingsResponse {
 	@SerializedName("message")
 	@Expose
 	private String message;
-	@SerializedName("total_savings")
+	@SerializedName("savings")
 	@Expose
 	private Integer totalSavings;
 

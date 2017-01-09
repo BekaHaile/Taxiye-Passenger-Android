@@ -670,11 +670,19 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         if(type == AppConstant.ApplicationType.MEALS && Data.userData != null && Data.userData.isSubscriptionActive()
                 && activity.getUserCheckoutResponse() != null
                 && activity.getUserCheckoutResponse().getSubscription() != null){
-            double cashbackValue = activity.getUserCheckoutResponse().getSubscription().getCashback(totalAmount());
+            double totalUndiscounted = totalUndiscounted();
+            double cashbackValue = activity.getUserCheckoutResponse().getSubscription().getCashback(totalUndiscounted);
+            cashbackValue = totalUndiscounted - Math.round(totalUndiscounted - cashbackValue);
             if(cashbackValue > 0d) {
                 cvStarSavings.setVisibility(View.VISIBLE);
-                tvStarSavingsValue.setText(activity.getString(R.string.you_will_receive_cashback_on_order,
-                        Utils.getMoneyDecimalFormat().format(cashbackValue)));
+                String cashbackText = TextUtils.isEmpty(activity.getUserCheckoutResponse().getSubscription().getCashbackText())
+                        ?
+                        activity.getString(R.string.you_will_receive_cashback_on_order, Utils.getMoneyDecimalFormat().format(cashbackValue))
+                        :
+                        activity.getUserCheckoutResponse().getSubscription().getCashbackText()
+                                .replace("{{{cashback_value}}}", activity.getString(R.string.rupees_value_format,
+                                        Utils.getMoneyDecimalFormat().format(cashbackValue)));
+                tvStarSavingsValue.setText(cashbackText);
             }
         }
     }
