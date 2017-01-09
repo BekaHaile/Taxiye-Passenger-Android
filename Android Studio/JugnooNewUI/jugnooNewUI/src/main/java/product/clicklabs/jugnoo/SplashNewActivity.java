@@ -1318,7 +1318,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					root.setBackgroundResource(R.drawable.bg_img);
+					root.setBackgroundColor(getResources().getColor(R.color.white));
 				}
 			}, 200);
 			hold1 = false;
