@@ -789,13 +789,15 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
         try {
             HomeActivity.checkForAccessTokenChange(this);
 
-            if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
-                rlJugnooStar.setVisibility(View.VISIBLE);
-                viewStarIcon.setVisibility(View.VISIBLE);
-            } else{
-                rlJugnooStar.setVisibility(View.GONE);
-                viewStarIcon.setVisibility(View.GONE);
-            }
+//            if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0){
+//                rlJugnooStar.setVisibility(View.VISIBLE);
+//                viewStarIcon.setVisibility(View.VISIBLE);
+//            } else{
+//                rlJugnooStar.setVisibility(View.GONE);
+//                viewStarIcon.setVisibility(View.GONE);
+//            }
+            rlJugnooStar.setVisibility(View.GONE);
+            viewStarIcon.setVisibility(View.GONE);
 
             try {
                 reloadProfileAPI(this);
