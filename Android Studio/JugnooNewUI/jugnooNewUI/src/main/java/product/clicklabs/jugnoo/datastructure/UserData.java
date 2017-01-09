@@ -13,6 +13,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
+import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
@@ -75,6 +76,7 @@ public class UserData {
 	private ArrayList<SearchResult> searchResults = new ArrayList<>();
 	private ArrayList<SearchResult> searchResultsRecent = new ArrayList<>();
 	private ArrayList<SearchResult> searchResultsAdditional = new ArrayList<>();
+	private ArrayList<FetchUserAddressResponse.Address> pointsOfInterestAddresses = new ArrayList<>();
 
 	private int showHomeScreen, showSubscriptionData;
 	private SubscriptionData subscriptionData;
@@ -929,6 +931,19 @@ public class UserData {
 	public void setSearchResultsAdditional(ArrayList<SearchResult> searchResultsAdditional) {
 		this.searchResultsAdditional = searchResultsAdditional;
 	}
+
+	/**
+	 * From find_a_driver api, used for showing famous request locations on map
+	 * @return ArrayList of FetchUserAddressResponse.Address
+	 */
+	public ArrayList<FetchUserAddressResponse.Address> getPointsOfInterestAddresses() {
+		return pointsOfInterestAddresses;
+	}
+
+	public void setPointsOfInterestAddresses(ArrayList<FetchUserAddressResponse.Address> pointsOfInterestAddresses) {
+		this.pointsOfInterestAddresses = pointsOfInterestAddresses;
+	}
+
 
 
 	//	"meals_enabled": 1,

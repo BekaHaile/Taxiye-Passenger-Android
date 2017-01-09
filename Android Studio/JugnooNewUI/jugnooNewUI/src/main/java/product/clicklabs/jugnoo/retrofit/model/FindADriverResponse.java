@@ -134,6 +134,9 @@ public class FindADriverResponse {
     @SerializedName("pay_coupons")
     @Expose
     private List<CouponInfo> payCoupons = new ArrayList<>();
+    @SerializedName("points_of_interest")
+    @Expose
+    private List<FetchUserAddressResponse.Address> pointsOfInterestAddresses = new ArrayList<FetchUserAddressResponse.Address>();
 
     public List<CouponInfo> getDeliveryCoupons() {
         return deliveryCoupons;
@@ -504,5 +507,14 @@ public class FindADriverResponse {
 
     public void setPayCoupons(List<CouponInfo> payCoupons) {
         this.payCoupons = payCoupons;
+    }
+
+
+    public List<FetchUserAddressResponse.Address> getPointsOfInterestAddresses() {
+        return pointsOfInterestAddresses;
+    }
+
+    public void setPointsOfInterestAddresses(List<FetchUserAddressResponse.Address> pointsOfInterestAddresses) {
+        this.pointsOfInterestAddresses = pointsOfInterestAddresses;
     }
 }

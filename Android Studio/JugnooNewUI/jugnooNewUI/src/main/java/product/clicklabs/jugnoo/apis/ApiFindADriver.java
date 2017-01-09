@@ -419,6 +419,14 @@ public class ApiFindADriver {
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
+
+
+		try{
+			if(findADriverResponse.getPointsOfInterestAddresses() != null){
+				Data.userData.getPointsOfInterestAddresses().clear();
+				Data.userData.getPointsOfInterestAddresses().addAll(findADriverResponse.getPointsOfInterestAddresses());
+			}
+		} catch (Exception e){}
 	}
 
 	public boolean findADriverNeeded(LatLng pickupLatLng){

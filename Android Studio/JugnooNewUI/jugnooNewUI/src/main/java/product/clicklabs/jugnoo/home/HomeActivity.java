@@ -1946,12 +1946,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if ((savedAddressState != HomeUtil.SavedAddressState.MARKER_WITH_TEXT) && cameraPosition.zoom > 15f) {
                             homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, true);
                             savedAddressState = HomeUtil.SavedAddressState.MARKER_WITH_TEXT;
+                            homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
                         } else if ((savedAddressState != HomeUtil.SavedAddressState.MARKER) && (cameraPosition.zoom < 15f) && (cameraPosition.zoom > 10f)) {
                             homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, false);
                             savedAddressState = HomeUtil.SavedAddressState.MARKER;
+                            homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
                         } else if (cameraPosition.zoom < 10f) {
                             homeUtil.removeSavedAddress(map);
                             savedAddressState = HomeUtil.SavedAddressState.BLANK;
+                            homeUtil.removeMarkersPointsOfInterest(map);
                         }
                     }
                     previousZoomLevel = cameraPosition.zoom;
@@ -4879,6 +4882,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
                     showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+                    homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
                     dontCallRefreshDriver = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -9228,6 +9232,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             pokestopHelper.mapCleared();
             pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
             homeUtil.displaySavedAddressesAsFlags(this, assl, map, true);
+            homeUtil.displayPointOfInterestMarkers(this, assl, map);
         } catch (Exception e) {
             e.printStackTrace();
         }
