@@ -121,18 +121,30 @@ public class UserCheckoutResponse{
 		@SerializedName("discount")
 		@Expose
 		private Double discount;
+		@SerializedName("discount_is_percent")
+		@Expose
+		private Integer discountIsPercent;
 		@SerializedName("minimum_order_amount")
 		@Expose
 		private Double minimumOrderAmount;
 		@SerializedName("delivery_charges")
 		@Expose
 		private Double deliveryCharges;
+		@SerializedName("cashback")
+		@Expose
+		private Double cashback;
+		@SerializedName("cashback_is_percent")
+		@Expose
+		private Integer cashbackIsPercent;
+		@SerializedName("cashback_text")
+		@Expose
+		private String cashbackText;
 
-		public Double getDiscount() {
+		public Double getDiscount(Double totalAmount) {
 			if(discount == null){
-				return 0d;
+				discount = 0d;
 			}
-			return discount;
+			return getDiscountIsPercent().equals(0) ? discount : (totalAmount * (discount / 100d));
 		}
 
 		public void setDiscount(Double discount) {
@@ -155,5 +167,47 @@ public class UserCheckoutResponse{
 			this.deliveryCharges = deliveryCharges;
 		}
 
+		public Integer getDiscountIsPercent() {
+			if(discountIsPercent == null){
+				return 0;
+			}
+			return discountIsPercent;
+		}
+
+		public void setDiscountIsPercent(Integer discountIsPercent) {
+			this.discountIsPercent = discountIsPercent;
+		}
+
+
+		public Double getCashback(Double totalAmount) {
+			if(cashback == null){
+				cashback = 0d;
+			}
+			return getCashbackIsPercent().equals(0) ? cashback : (totalAmount * (cashback / 100d));
+		}
+
+
+		public void setCashback(Double cashback) {
+			this.cashback = cashback;
+		}
+
+		public Integer getCashbackIsPercent() {
+			if(cashbackIsPercent == null){
+				return 1;
+			}
+			return cashbackIsPercent;
+		}
+
+		public void setCashbackIsPercent(Integer cashbackIsPercent) {
+			this.cashbackIsPercent = cashbackIsPercent;
+		}
+
+		public String getCashbackText() {
+			return cashbackText;
+		}
+
+		public void setCashbackText(String cashbackText) {
+			this.cashbackText = cashbackText;
+		}
 	}
 }

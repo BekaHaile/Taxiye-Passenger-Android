@@ -827,10 +827,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     textViewCartItemsCountNew.setVisibility(View.GONE);
                     imageViewCartNew.setImageResource(R.drawable.ic_cart_empty);
                 }
-                if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null)
-                {
-                    if (getMenusCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount())
-                    {
+                if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
+                    if (getMenusCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
                     }
                     else {
@@ -1262,21 +1260,21 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void setMinOrderAmountText(Fragment fragment){
         try {
             if(getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
-                if (totalQuantity > 0
+                if (getProductsResponse() != null && totalQuantity > 0
                         && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)
-                        && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()
                         && (relativeLayoutCheckoutBar.getVisibility() == View.VISIBLE)) {
-                    textViewMinOrder.setVisibility(View.VISIBLE);
-                }
-                else {
+                    if(Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())){
+                        textViewMinOrder.setVisibility(View.VISIBLE);
+                        textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
+                    }
+                    else if(totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+                        textViewMinOrder.setVisibility(View.VISIBLE);
+                        double leftAmount = getProductsResponse().getDeliveryInfo().getMinAmount() - totalPrice;
+                        textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
+                                Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
+                    }
+                } else {
                     textViewMinOrder.setVisibility(View.GONE);
-                }
-                if(getProductsResponse() != null) {
-                    textViewMinOrder.setText(getString(R.string.fresh_min_order_value, Utils.getMoneyDecimalFormatWithoutFloat()
-                            .format(getProductsResponse().getDeliveryInfo().getMinAmount())));
-                    double leftAmount = getProductsResponse().getDeliveryInfo().getMinAmount() - totalPrice;
-                    textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
-                            Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
                 }
             }
         }catch (Exception e){

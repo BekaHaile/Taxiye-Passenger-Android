@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -160,6 +161,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private TextView textViewDeliveryInstructionsText;
 
+    private CardView cvStarSavings;
+    private TextView tvStarSavingsValue;
 
 
 
@@ -396,6 +399,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
         textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 
+        cvStarSavings = (CardView) rootView.findViewById(R.id.cvStarSavings); cvStarSavings.setVisibility(View.GONE);
+        ((TextView)rootView.findViewById(R.id.tvStarSavings)).setTypeface(Fonts.mavenMedium(activity));
+        tvStarSavingsValue = (TextView)rootView.findViewById(R.id.tvStarSavingsValue); tvStarSavingsValue.setTypeface(Fonts.mavenMedium(activity));
+
 
         relativeLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -556,9 +563,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges()));
             textViewDeliveryChargesValue.setText(deliveryCharge);
         } else {
-            if (deliveryCharges() > 0) {
+            double deliveryCharges = deliveryCharges();
+            if (deliveryCharges > 0) {
                 textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
-                String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(deliveryCharges()));
+                String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(deliveryCharges));
                 textViewDeliveryChargesValue.setText(deliveryCharge);
             } else {
                 textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.green_rupee));
@@ -656,6 +664,26 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             textViewCartTotalUndiscount.setPaintFlags(textViewCartTotalUndiscount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else{
             textViewCartTotalUndiscount.setVisibility(View.GONE);
+        }
+
+
+        if(type == AppConstant.ApplicationType.MEALS && Data.userData != null && Data.userData.isSubscriptionActive()
+                && activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getSubscription() != null){
+            double totalUndiscounted = totalUndiscounted();
+            double cashbackValue = activity.getUserCheckoutResponse().getSubscription().getCashback(totalUndiscounted);
+            cashbackValue = totalUndiscounted - Math.round(totalUndiscounted - cashbackValue);
+            if(cashbackValue > 0d) {
+                cvStarSavings.setVisibility(View.VISIBLE);
+                String cashbackText = TextUtils.isEmpty(activity.getUserCheckoutResponse().getSubscription().getCashbackText())
+                        ?
+                        activity.getString(R.string.you_will_receive_cashback_on_order, Utils.getMoneyDecimalFormat().format(cashbackValue))
+                        :
+                        activity.getUserCheckoutResponse().getSubscription().getCashbackText()
+                                .replace("{{{cashback_value}}}", activity.getString(R.string.rupees_value_format,
+                                        Utils.getMoneyDecimalFormat().format(cashbackValue)));
+                tvStarSavingsValue.setText(cashbackText);
+            }
         }
     }
 
@@ -1589,7 +1617,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private double getTotalPromoAmount(){
         if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getSubscription() != null) {
-            return promoAmount + activity.getUserCheckoutResponse().getSubscription().getDiscount();
+            return promoAmount + activity.getUserCheckoutResponse().getSubscription().getDiscount(totalUndiscounted());
         } else {
             return promoAmount;
         }
@@ -2074,11 +2102,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private double totalUndiscounted(){
-        return totalAmount() + getTotalPromoAmount() + activity.getUserCheckoutResponse().getSubscription().getDiscount();
+        return netAmountWOTaxes() + serviceTax() + vat() + deliveryCharges();
     }
 
     private double totalAmount(){
-        double totalAmount = netAmountWOTaxes() + serviceTax() + vat() + deliveryCharges() - getTotalPromoAmount();
+        double totalAmount = totalUndiscounted() - getTotalPromoAmount();
         if(totalAmount < 0) {
             totalAmount = 0;
         }

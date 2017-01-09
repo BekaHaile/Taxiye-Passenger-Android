@@ -7,6 +7,7 @@ import java.util.Map;
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
+import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
@@ -524,5 +525,10 @@ public interface ApiService {
     @POST("/push_tracking")
     void pushTracking(@FieldMap Map<String, String> params,
                         Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/get_savings_meter_reading")
+    void getSavingsMeterReading(@FieldMap Map<String, String> params,
+                            Callback<FetchSubscriptionSavingsResponse> callback);
 
 }

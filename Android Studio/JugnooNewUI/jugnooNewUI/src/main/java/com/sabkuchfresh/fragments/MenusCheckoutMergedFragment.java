@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -141,6 +142,9 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     private TextView textViewScroll;
 
     private TextView textViewDeliveryInstructionsText;
+
+    private CardView cvStarSavings;
+    private TextView tvStarSavingsValue;
 
 
 
@@ -344,6 +348,9 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         linearLayoutMain = (LinearLayout) rootView.findViewById(R.id.linearLayoutMain);
         textViewScroll = (TextView) rootView.findViewById(R.id.textViewScroll);
 
+        cvStarSavings = (CardView) rootView.findViewById(R.id.cvStarSavings); cvStarSavings.setVisibility(View.GONE);
+        ((TextView)rootView.findViewById(R.id.tvStarSavings)).setTypeface(Fonts.mavenMedium(activity));
+        tvStarSavingsValue = (TextView)rootView.findViewById(R.id.tvStarSavingsValue); tvStarSavingsValue.setTypeface(Fonts.mavenMedium(activity));
 
         relativeLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -624,6 +631,25 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             textViewCartTotalUndiscount.setPaintFlags(textViewCartTotalUndiscount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else{
             textViewCartTotalUndiscount.setVisibility(View.GONE);
+        }
+
+        if(Data.userData != null && Data.userData.isSubscriptionActive()
+                && activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getSubscription() != null){
+            double totalUndiscounted = totalUndiscounted();
+            double cashbackValue = activity.getUserCheckoutResponse().getSubscription().getCashback(totalUndiscounted);
+            cashbackValue = totalUndiscounted - Math.round(totalUndiscounted - cashbackValue);
+            if(cashbackValue > 0d) {
+                cvStarSavings.setVisibility(View.VISIBLE);
+                String cashbackText = TextUtils.isEmpty(activity.getUserCheckoutResponse().getSubscription().getCashbackText())
+                        ?
+                        activity.getString(R.string.you_will_receive_cashback_on_order, Utils.getMoneyDecimalFormat().format(cashbackValue))
+                        :
+                        activity.getUserCheckoutResponse().getSubscription().getCashbackText()
+                                .replace("{{{cashback_value}}}", activity.getString(R.string.rupees_value_format,
+                                        Utils.getMoneyDecimalFormat().format(cashbackValue)));
+                tvStarSavingsValue.setText(cashbackText);
+            }
         }
     }
 
@@ -1919,11 +1945,11 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
     private double totalUndiscounted(){
-        return totalAmount() + promoAmount;
+        return subTotalAmount + totalTaxAmount;
     }
 
     private double totalAmount(){
-        double totalAmount = subTotalAmount + totalTaxAmount - promoAmount;
+        double totalAmount = totalUndiscounted() - promoAmount;
         if(totalAmount < 0) {
             totalAmount = 0;
         }

@@ -905,6 +905,10 @@ public class UserData {
 		this.showHomeScreen = showHomeScreen;
 	}
 
+	public boolean isSubscriptionActive(){
+		return getSubscriptionData().getUserSubscriptions() != null && getSubscriptionData().getUserSubscriptions().size() > 0;
+	}
+
 	public SubscriptionData getSubscriptionData() {
 		if(subscriptionData == null){
 			subscriptionData = new SubscriptionData();
