@@ -638,8 +638,9 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                 && activity.getUserCheckoutResponse().getSubscription() != null){
             double totalUndiscounted = subTotalAmount;
             double cashbackValue = activity.getUserCheckoutResponse().getSubscription().getCashback(totalUndiscounted);
+            cashbackValue = Math.round(cashbackValue);
             if(cashbackValue > 0d) {
-                cashbackValue = totalUndiscounted - Math.round(totalUndiscounted - cashbackValue);
+//                cashbackValue = Math.round(totalUndiscounted - Math.round(totalUndiscounted - cashbackValue));
                 cvStarSavings.setVisibility(View.VISIBLE);
                 String cashbackText = TextUtils.isEmpty(activity.getUserCheckoutResponse().getSubscription().getCashbackText())
                         ?
@@ -649,7 +650,11 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                                 .replace("{{{cashback_value}}}", activity.getString(R.string.rupees_value_format,
                                         Utils.getMoneyDecimalFormatWithoutFloat().format(cashbackValue)));
                 tvStarSavingsValue.setText(cashbackText);
+            } else {
+                cvStarSavings.setVisibility(View.GONE);
             }
+        } else {
+            cvStarSavings.setVisibility(View.GONE);
         }
     }
 
