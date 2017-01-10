@@ -5,18 +5,17 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <ImageView
         android:id="@+id/imageViewFabFakeAssigning"
         android:layout_width="68dp"
         android:layout_height="68dp"
-        android:tag="DontTouchMe"
-        android:layout_marginLeft="20dp"
         android:layout_alignParentBottom="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"
-        />
+        android:layout_marginLeft="20dp"
+        android:tag="DontTouchMe"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,14 +27,11 @@
             android:id="@+id/imageViewPokemonOnOffAssigning"
             android:layout_width="90px"
             android:layout_height="90px"
+            android:layout_marginBottom="36px"
+            android:layout_marginLeft="56px"
             android:src="@drawable/ic_poke_on_off_button"
             android:tag="mwar"
-            android:layout_marginLeft="56px"
-            android:layout_marginBottom="36px"
-            android:visibility="visible"
-            />
-
-
+            android:visibility="visible" />
 
 
         <RelativeLayout
@@ -46,8 +42,7 @@
             android:background="@color/white"
             android:splitMotionEvents="false">
 
-            <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-                xmlns:android="http://schemas.android.com/apk/res/android"
+            <fr.castorflex.android.smoothprogressbar.SmoothProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/progressBarFindingDriver"
                 android:layout_width="match_parent"

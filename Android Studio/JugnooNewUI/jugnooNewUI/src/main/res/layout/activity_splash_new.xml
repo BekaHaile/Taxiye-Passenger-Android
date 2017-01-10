@@ -3,7 +3,6 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     android:background="@color/white"
     android:splitMotionEvents="false">
 
@@ -22,6 +21,9 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:visibility="visible">
+
+            <!-- splash with logo-->
+            <include layout="@layout/layout_splash_logo"/>
 
             <!-- splash buttons -->
             <include layout="@layout/layout_splash_ls" />
@@ -43,60 +45,7 @@
 
     </LinearLayout>
 
-    <!-- Jugnoo Logo layout-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:animateLayoutChanges="true"
-        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutJugnooLogo"
-            android:layout_width="720px"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
-
-            <ImageView
-                android:id="@+id/imageViewJugnooLogo"
-                android:layout_width="300px"
-                android:layout_height="316px"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/logo_big"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:tag="mhar"
-                android:visibility="visible" />
-
-            <ImageView
-                android:id="@+id/imageViewDebug1"
-                android:layout_width="180px"
-                android:layout_height="120px"
-                android:layout_marginTop="170px" />
-
-            <ImageView
-                android:id="@+id/imageViewDebug2"
-                android:layout_width="180px"
-                android:layout_height="120px"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="170px" />
-
-            <ImageView
-                android:id="@+id/imageViewDebug3"
-                android:layout_width="120px"
-                android:layout_height="120px"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="60px" />
-
-        </RelativeLayout>
-
-        <View
-            android:id="@+id/extra"
-            android:layout_width="match_parent"
-            android:layout_height="600px"
-            android:visibility="visible" />
-
-    </LinearLayout>
 
     <ImageView
         android:id="@+id/imageViewBack"
@@ -104,5 +53,6 @@
         android:layout_centerVertical="false"
         android:layout_marginTop="10px"
         android:visibility="gone" />
+
 
 </RelativeLayout>

@@ -46,6 +46,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
@@ -111,7 +112,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	//adding drop location
 
-	RelativeLayout root;
+	RelativeLayout root, rlSplashLogo;
 	LinearLayout linearLayoutMain;
 	TextView textViewScroll;
 
@@ -134,7 +135,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	TextView textViewEmailRequired, textViewPasswordRequired, textViewForgotPassword;
 	Button buttonEmailLogin;
 
-	RelativeLayout relativeLayoutSignup, relativeLayoutScrollStop, buttonFacebookLogin, buttonGoogleLogin;
+	RelativeLayout relativeLayoutSignup, buttonFacebookLogin, buttonGoogleLogin;
 	EditText editTextSName, editTextSEmail, editTextSPhone, editTextSPassword, editTextSPromo;
 	TextView textViewSNameRequired, textViewSEmailRequired, textViewSPhoneRequired, textViewSPasswordRequired;
 	Button buttonEmailSignup;
@@ -146,7 +147,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	ImageView imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, imageViewRadioNone;
 	LinearLayout linearLayoutWalletOption;
 	ImageView imageViewWalletOptionCheck;
-	TextView textViewWalletOptionMessage;
+	TextView textViewWalletOptionMessage, tvScroll;
 	View extra;
 
 
@@ -169,6 +170,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	private String enteredEmail = "", fbVerifiedNumber = "";
 	public static boolean phoneNoLogin = false;
 	private static final int GOOGLE_SIGNIN_REQ_CODE_LOGIN = 1124;
+	private LinearLayout llSignupMain;
 
 	public void resetFlags() {
 		loginDataFetched = false;
@@ -393,6 +395,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			buttonRegister.setTypeface(Fonts.mavenRegular(this));
 			((TextView) findViewById(R.id.textViewAlreadyHaveAccount)).setTypeface(Fonts.mavenMedium(this));
 
+			rlSplashLogo = (RelativeLayout) findViewById(R.id.rlSplashLogo); rlSplashLogo.setVisibility(View.VISIBLE);
 			linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
 			textViewNoNet = (TextView) findViewById(R.id.textViewNoNet);
 			textViewNoNet.setTypeface(Fonts.mavenMedium(this));
@@ -437,7 +440,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
 			relativeLayoutSignup = (RelativeLayout) findViewById(R.id.relativeLayoutSignup);
-			relativeLayoutScrollStop = (RelativeLayout) findViewById(R.id.relativeLayoutScrollStop);
 			editTextSName = (EditText) findViewById(R.id.editTextSName);
 			editTextSName.setTypeface(Fonts.mavenMedium(this));
 			editTextSEmail = (EditText) findViewById(R.id.editTextSEmail);
@@ -485,6 +487,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			textViewWalletOptionMessage = (TextView) findViewById(R.id.textViewWalletOptionMessage);
 			textViewWalletOptionMessage.setTypeface(Fonts.mavenMedium(this));
 			extra = (View) findViewById(R.id.extra);
+
+			tvScroll = (TextView) findViewById(R.id.tvScroll);
+			llSignupMain = (LinearLayout) findViewById(R.id.llSignupMain);
 
 			root.setOnClickListener(onClickListenerKeybordHide);
 
@@ -1017,13 +1022,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					}
 				}
 			});
-			relativeLayoutScrollStop.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-				}
-			});
-
-
 
 			initiateDeviceInfoVariables();
 			startService(new Intent(this, PushPendingCallsService.class));
@@ -1077,6 +1075,18 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverDeviceToken,
 				new IntentFilter(INTENT_ACTION_DEVICE_TOKEN_UPDATE));
 
+		llSignupMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llSignupMain, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+			@Override
+			public void keyboardOpened() {
+
+			}
+
+			@Override
+			public void keyBoardClosed() {
+
+			}
+		}));
+
 	}
 
 	private void moveViewToScreenCenter(final View view){
@@ -1122,22 +1132,23 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	private void changeUIState(State state) {
 		imageViewJugnooLogo.requestFocus();
-		relativeLayoutScrollStop.setVisibility(View.VISIBLE);
 		llContainer.setVisibility(View.GONE);
+		int duration = 500;
 		switch (state) {
 			case SPLASH_INIT:
 				imageViewBack.setVisibility(View.GONE);
 				extra.setVisibility(View.GONE);
 
-				relativeLayoutLS.setVisibility(View.VISIBLE);
+				relativeLayoutLS.setVisibility(View.GONE);
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
 
 				ivBottom.setVisibility(View.VISIBLE);
 
-				llContainer.setVisibility(View.GONE);
-				linearLayoutLogin.setVisibility(View.VISIBLE);
-				relativeLayoutSignup.setVisibility(View.VISIBLE);
+				llContainer.setVisibility(View.VISIBLE);
+				rlSplashLogo.setVisibility(View.VISIBLE);
+				linearLayoutLogin.setVisibility(View.GONE);
+				relativeLayoutSignup.setVisibility(View.GONE);
 				break;
 
 			case SPLASH_LS:
@@ -1145,12 +1156,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
-				extra.setVisibility(View.VISIBLE);
+				//extra.setVisibility(View.VISIBLE);
 
 				if(this.state == State.SPLASH_INIT) {
-					ScaleAnimation animation = new ScaleAnimation(1.0f, 0.8f, 1.0f, 0.8f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-					animation.setDuration(200);
-					animation.setFillAfter(false);
+					/*ScaleAnimation animation = new ScaleAnimation(1.0f, 0.8f, 1.0f, 0.8f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+					animation.setDuration(500);
+					animation.setFillAfter(true);
 
 					//moveViewToScreenCenter(relativeLayoutJugnooLogo);
 					animation.setAnimationListener(new Animation.AnimationListener() {
@@ -1161,8 +1172,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 						@Override
 						public void onAnimationEnd(Animation animation) {
-							relativeLayoutJugnooLogo.setScaleX(0.8f);
-							relativeLayoutJugnooLogo.setScaleY(0.8f);
+							//relativeLayoutJugnooLogo.setScaleX(0.8f);
+							//relativeLayoutJugnooLogo.setScaleY(0.8f);
 							relativeLayoutLS.setVisibility(View.VISIBLE);
 						}
 
@@ -1171,28 +1182,45 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 						}
 					});
-					relativeLayoutJugnooLogo.setAnimation(animation);
+					relativeLayoutJugnooLogo.setAnimation(animation);*/
 
+					relativeLayoutLS.setVisibility(View.VISIBLE);
+					Animation animation8 = AnimationUtils.loadAnimation(this, R.anim.right_in);
+					animation8.setFillAfter(true);
+					animation8.setDuration(duration);
+					relativeLayoutLS.startAnimation(animation8);
+
+					Animation animation9 = AnimationUtils.loadAnimation(this, R.anim.right_out);
+					animation9.setFillAfter(false);
+					animation9.setDuration(duration);
+					rlSplashLogo.startAnimation(animation9);
+					rlSplashLogo.setVisibility(View.GONE);
 
 				}
 
 				if(this.state == State.LOGIN) {
 					relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
+					relativeLayoutLS.setVisibility(View.VISIBLE);
 					Animation animation4 = AnimationUtils.loadAnimation(this, R.anim.left_out);
 					animation4.setFillAfter(false);
+					animation4.setDuration(duration);
 					linearLayoutLogin.startAnimation(animation4);
 
 					Animation animation5 = AnimationUtils.loadAnimation(this, R.anim.left_in);
 					animation5.setFillAfter(true);
+					animation5.setDuration(duration);
 					relativeLayoutLS.startAnimation(animation5);
+
 				} else if(this.state == State.SIGNUP) {
 					relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
 					Animation animation6 = AnimationUtils.loadAnimation(this, R.anim.left_out);
 					animation6.setFillAfter(false);
+					animation6.setDuration(duration);
 					relativeLayoutSignup.startAnimation(animation6);
 
 					Animation animation7 = AnimationUtils.loadAnimation(this, R.anim.left_in);
 					animation7.setFillAfter(true);
+					animation7.setDuration(duration);
 					relativeLayoutLS.startAnimation(animation7);
 
 					animation6.setAnimationListener(new Animation.AnimationListener() {
@@ -1225,7 +1253,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			case SPLASH_NO_NET:
 				imageViewBack.setVisibility(View.GONE);
 				relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
-				extra.setVisibility(View.VISIBLE);
+				//extra.setVisibility(View.VISIBLE);
 
 				relativeLayoutLS.setVisibility(View.VISIBLE);
 				linearLayoutLoginSignupButtons.setVisibility(View.GONE);
@@ -1239,19 +1267,25 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			case LOGIN:
 				imageViewBack.setVisibility(View.VISIBLE);
 				relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
-				extra.setVisibility(View.VISIBLE);
+				linearLayoutLogin.setVisibility(View.VISIBLE);
+				//extra.setVisibility(View.VISIBLE);
 
-				Animation animation = AnimationUtils.loadAnimation(this, R.anim.right_in);
-				animation.setFillAfter(true);
-				linearLayoutLogin.startAnimation(animation);
+				if(this.state == State.SPLASH_LS) {
+					Animation animation = AnimationUtils.loadAnimation(this, R.anim.right_in);
+					animation.setFillAfter(true);
+					animation.setDuration(duration);
+					linearLayoutLogin.startAnimation(animation);
 
-				Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.right_out);
-				animation1.setFillAfter(false);
-				relativeLayoutLS.startAnimation(animation1);
+					Animation animation1 = AnimationUtils.loadAnimation(this, R.anim.right_out);
+					animation1.setFillAfter(false);
+					animation1.setDuration(duration);
+					relativeLayoutLS.startAnimation(animation1);
+				}
 
 				llContainer.setVisibility(View.VISIBLE);
 				linearLayoutLogin.setVisibility(View.VISIBLE);
 				relativeLayoutSignup.setVisibility(View.VISIBLE);
+				rlSplashLogo.setVisibility(View.GONE);
 				relativeLayoutLS.setVisibility(View.GONE);
 				break;
 
@@ -1265,17 +1299,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				Animation animation2 = AnimationUtils.loadAnimation(this, R.anim.right_in);
 				animation2.setFillAfter(true);
+				animation2.setDuration(duration);
 				relativeLayoutSignup.startAnimation(animation2);
 
 				Animation animation3 = AnimationUtils.loadAnimation(this, R.anim.right_out);
 				animation3.setFillAfter(false);
+				animation3.setDuration(duration);
 				relativeLayoutLS.startAnimation(animation3);
 
 				llContainer.setVisibility(View.VISIBLE);
 				linearLayoutLogin.setVisibility(View.GONE);
-				relativeLayoutScrollStop.setVisibility(View.GONE);
 				relativeLayoutSignup.setVisibility(View.VISIBLE);
 				relativeLayoutLS.setVisibility(View.GONE);
+				rlSplashLogo.setVisibility(View.GONE);
 				getAllowedAuthChannels(SplashNewActivity.this);
 				break;
 
@@ -1590,14 +1626,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	public void getAllowedAuthChannels(Activity activity){
 		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
 
-			DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
+			//DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 			HashMap<String, String> params = new HashMap<>();
 
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().getAllowedAuthChannels(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
-					DialogPopup.dismissLoadingDialog();
+					//DialogPopup.dismissLoadingDialog();
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 					Log.i(TAG, "Auth channel response = " + responseStr);
 					try {
@@ -1705,7 +1741,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 				@Override
 				public void failure(RetrofitError error) {
-					DialogPopup.dismissLoadingDialog();
+					//DialogPopup.dismissLoadingDialog();
 				}
 			});
 

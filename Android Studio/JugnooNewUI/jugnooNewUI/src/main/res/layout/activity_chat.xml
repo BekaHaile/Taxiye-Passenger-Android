@@ -39,6 +39,7 @@
             android:layout_marginRight="@dimen/px_32"/>
     </RelativeLayout>
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewChat"
         android:layout_width="match_parent"

@@ -7,6 +7,8 @@
     android:splitMotionEvents="false"
     android:visibility="visible">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,8 +17,10 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="@dimen/px_160"
-            android:src="@drawable/bg_top_2"
+            android:src="@drawable/splash_top_bg"
             android:tag="mwar" />
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,7 +28,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
-            android:layout_marginTop="@dimen/px_290"
+            android:layout_marginTop="250px"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -239,10 +243,22 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/imageViewJugnooLogo"
+        android:layout_width="240px"
+        android:layout_height="252px"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/logo_big"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_marginTop="120px"
+        android:tag="mhar"
+        android:visibility="visible" />
+
+    <ImageView
         android:id="@+id/ivBottom1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
-        android:src="@drawable/splash_bottom_building_bg2"
+        android:src="@drawable/splash_bottom_building_bg1"
         android:layout_alignParentBottom="true"
         android:tag="mwar"
         android:visibility="visible" />

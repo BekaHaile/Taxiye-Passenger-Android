@@ -8,7 +8,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
-        android:src="@drawable/splash_top_bg"
+        android:src="@drawable/bg_top_2"
         android:tag="mwar" />
 
     <LinearLayout
@@ -17,10 +17,49 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:gravity="center_horizontal"
-        android:layout_marginTop="@dimen/px_500"
+        android:layout_marginTop="@dimen/px_150"
         android:orientation="vertical"
         android:splitMotionEvents="false"
         android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="720px"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/imageViewJugnooLogo"
+                android:layout_width="300px"
+                android:layout_height="316px"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/logo_big"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:tag="mhar"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imageViewDebug1"
+                android:layout_width="180px"
+                android:layout_height="120px"
+                android:layout_marginTop="170px" />
+
+            <ImageView
+                android:id="@+id/imageViewDebug2"
+                android:layout_width="180px"
+                android:layout_height="120px"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="170px" />
+
+            <ImageView
+                android:id="@+id/imageViewDebug3"
+                android:layout_width="120px"
+                android:layout_height="120px"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="60px" />
+
+        </RelativeLayout>
+
 
         <Button
             android:id="@+id/buttonRegister"
@@ -28,6 +67,7 @@
             android:layout_height="@dimen/splash_button_height"
             android:background="@drawable/button_capsule_theme_selector"
             android:text="@string/sign_up"
+            android:layout_marginTop="@dimen/px_100"
             android:textAllCaps="true"
             android:textColor="@color/text_color_theme_alpha_selector"
             android:textSize="@dimen/text_size_34" />
@@ -132,7 +172,7 @@
         android:id="@+id/ivBottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
-        android:src="@drawable/splash_bottom_building_bg1"
+        android:src="@drawable/splash_bottom_building_bg2"
         android:layout_alignParentBottom="true"
         android:tag="mwar" />
 

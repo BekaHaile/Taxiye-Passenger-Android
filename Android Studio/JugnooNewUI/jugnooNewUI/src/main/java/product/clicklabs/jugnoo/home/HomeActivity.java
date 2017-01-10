@@ -23,6 +23,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
@@ -825,8 +826,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         bSpecialPicupConfirmRequest = (Button) findViewById(R.id.bSpecialPicupConfirmRequest); bSpecialPicupConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         specialPickupItemsAdapter = new SpecialPickupItemsAdapter(HomeActivity.this, specialPickups);
         try {
-            spin.setDropDownWidth((int)(ASSL.Xscale()*550));
-            spin.setDropDownVerticalOffset((int)(ASSL.Xscale()*1));
+            int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+            if (currentapiVersion > Build.VERSION_CODES.JELLY_BEAN){
+                spin.setDropDownWidth((int)(ASSL.Xscale()*550));
+                spin.setDropDownVerticalOffset((int)(ASSL.Xscale()*1));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -7607,7 +7612,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         EmergencyDisableDialog emergencyDisableDialog = new EmergencyDisableDialog(HomeActivity.this);
                         emergencyDisableDialog.show();
                     }
-                    topBar.textViewTitle.setText(getResources().getString(R.string.autos));
+                    topBar.textViewTitle.setText(getResources().getString(R.string.rides));
                 }
                 localModeEnabled = modeEnabled;
             } else{
