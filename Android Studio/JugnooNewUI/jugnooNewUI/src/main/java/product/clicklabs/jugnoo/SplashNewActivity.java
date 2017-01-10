@@ -1302,10 +1302,17 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				animation2.setDuration(duration);
 				relativeLayoutSignup.startAnimation(animation2);
 
-				Animation animation3 = AnimationUtils.loadAnimation(this, R.anim.right_out);
-				animation3.setFillAfter(false);
-				animation3.setDuration(duration);
-				relativeLayoutLS.startAnimation(animation3);
+				if(this.state == State.LOGIN) {
+					Animation animation3 = AnimationUtils.loadAnimation(this, R.anim.right_out);
+					animation3.setFillAfter(false);
+					animation3.setDuration(duration);
+					linearLayoutLogin.startAnimation(animation3);
+				} else {
+					Animation animation3 = AnimationUtils.loadAnimation(this, R.anim.right_out);
+					animation3.setFillAfter(false);
+					animation3.setDuration(duration);
+					relativeLayoutLS.startAnimation(animation3);
+				}
 
 				llContainer.setVisibility(View.VISIBLE);
 				linearLayoutLogin.setVisibility(View.GONE);
