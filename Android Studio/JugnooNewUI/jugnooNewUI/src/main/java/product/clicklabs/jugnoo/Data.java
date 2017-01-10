@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.apis.ApiTrackPush;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoData;
@@ -305,6 +306,11 @@ public class Data {
 			Uri data = intent.getData();
 			Log.e("action", "=" + action);
 			Log.e("data", "=" + data);
+
+			if(intent.getIntExtra(Constants.KEY_CAMPAIGN_ID, 0) > 0){
+				int campaignId = intent.getIntExtra(Constants.KEY_CAMPAIGN_ID, 0);
+				new ApiTrackPush().hit(context, campaignId, ApiTrackPush.Status.OPENED);
+			}
 
 			if(data.getQueryParameter(Constants.KEY_REFERRAL_CODE) != null){
 				Data.deepLinkReferralCode = data.getQueryParameter(Constants.KEY_REFERRAL_CODE);
