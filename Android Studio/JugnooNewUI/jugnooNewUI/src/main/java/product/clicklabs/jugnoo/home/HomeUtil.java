@@ -16,6 +16,8 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -288,7 +290,24 @@ public class HomeUtil {
 			if (map != null) {
 				removeMarkersPointsOfInterest(map);
 				if (Data.autoData.getUseRecentLocAtRequest() == 1) {
-					for (FetchUserAddressResponse.Address address : Data.userData.getPointsOfInterestAddresses()) {
+					final LatLng mapTarget = map.getCameraPosition().target;
+					Collections.sort(Data.userData.getPointsOfInterestAddresses(), new Comparator<FetchUserAddressResponse.Address>() {
+						@Override
+						public int compare(FetchUserAddressResponse.Address lhs, FetchUserAddressResponse.Address rhs) {
+							try {
+								LatLng lhsLatLng = new LatLng(lhs.getLat(), lhs.getLng());
+								LatLng rhsLatLng = new LatLng(rhs.getLat(), rhs.getLng());
+								double distanceLhs = MapUtils.distance(mapTarget, lhsLatLng);
+								double distanceRhs = MapUtils.distance(mapTarget, rhsLatLng);
+								return (int) (distanceLhs - distanceRhs);
+							} catch (Exception e) {
+							}
+							return 0;
+						}
+					});
+					int size = Math.min(5, Data.userData.getPointsOfInterestAddresses().size());
+					for (int i = 0; i < size; i++) {
+						FetchUserAddressResponse.Address address = Data.userData.getPointsOfInterestAddresses().get(i);
 						SearchResult searchResult = new SearchResult("", "", "", address.getLat(), address.getLng());
 						searchResult.setFreq(address.getFreq());
 						markersPointsOfInterest.add(map.addMarker(getMarkerOptionsForSavedAddress(activity, assl, searchResult, false)));
