@@ -191,7 +191,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
                 RestClient.getApiService().notificationInbox(params, new Callback<NotificationInboxResponse>() {
                     @Override
                     public void success(final NotificationInboxResponse notificationInboxResponse, Response response) {
-                        DialogPopup.dismissLoadingDialog();
+                        //DialogPopup.dismissLoadingDialog();
 
                         try {
                             swipeRefreshLayout.setRefreshing(false);
