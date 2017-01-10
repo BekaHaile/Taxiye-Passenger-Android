@@ -20,6 +20,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.fragments.AddWalletFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletRechargeFragment;
+import product.clicklabs.jugnoo.wallet.fragments.WalletTransactionsFragment;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 
@@ -46,10 +47,20 @@ public class PaymentActivity extends BaseFragmentActivity{
 				.getIntExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
 
 		if(PaymentActivityPath.WALLET.getOrdinal() == paymentActivityPathInt){
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragLayout, new WalletFragment(), WalletFragment.class.getName())
-					.addToBackStack(WalletFragment.class.getName())
-					.commitAllowingStateLoss();
+			int openWalletTransactions = getIntent().getIntExtra(Constants.KEY_WALLET_TRANSACTIONS, 0);
+			if(openWalletTransactions == 1){
+				newIntentReceived = true;
+				getSupportFragmentManager().beginTransaction()
+						.add(R.id.fragLayout, WalletTransactionsFragment.newInstance(0), WalletTransactionsFragment.class.getName())
+						.addToBackStack(WalletTransactionsFragment.class.getName())
+						.commit();
+			} else {
+				getSupportFragmentManager().beginTransaction()
+						.add(R.id.fragLayout, WalletFragment.newInstance(), WalletFragment.class.getName())
+						.addToBackStack(WalletFragment.class.getName())
+						.commitAllowingStateLoss();
+			}
+
 		}
 		else if(PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal() == paymentActivityPathInt){
 			if(getIntent().hasExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE)){

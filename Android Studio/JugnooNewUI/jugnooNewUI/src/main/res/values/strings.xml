@@ -336,6 +336,7 @@
     <string name="type_bottom">to confirm your fare multiplier</string>
 
     <string name="retry">Retry</string>
+    <string name="retry_underline"><u>Retry</u></string>
 
     <string name="insert_sd_card">Please insert SD Card to use this app</string>
 
@@ -1406,6 +1407,7 @@
 
     <string name="accept_online_payment">Accept Online Payment</string>
     <string name="close_to_saved_location">We noticed your request location is very close to a saved location.\nDo you want to request\npickup there?</string>
+    <string name="close_to_point_of_interest">We noticed your request location is very close to a point of interest.\nDo you want to request\npickup there?</string>
     <string name="yes_update_pickup_location">Yes, update pickup location</string>
     <string name="no_continue_with_current_pickup">No, continue with current pickup</string>
 
@@ -1440,5 +1442,12 @@
     <string name="click_to_find">Click to find out how…</string>
     <string name="fresh_min_order_value_format">Just \u20B9%s away from FREE delivery</string>
     <string name="jugnoo_star_details">Jugnoo star details</string>
+    <string name="membership_plan">Membership plan</string>
+    <string name="expires_on">Expires on</string>
+    <string name="savings_meter">Savings Meter</string>
+    <string name="savings_from">Savings from</string>
+    <string name="star_savings">Star Savings</string>
+    <string name="you_will_receive_cashback_on_order">You’ll receive \u20B9%s cashback on this order</string>
+    <string name="star_savings_no_priority_tip">Star Savings: No Priority Tip on this ride</string>
 
 </resources>

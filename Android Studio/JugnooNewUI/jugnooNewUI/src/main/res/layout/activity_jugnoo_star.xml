@@ -202,8 +202,10 @@
             android:id="@+id/rvBenefits"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="@dimen/px_20"
-            android:paddingBottom="@dimen/px_20"/>
+            android:paddingTop="@dimen/px_15"
+            android:fadeScrollbars="true"
+            android:scrollbars="vertical"
+            />
     </RelativeLayout>
 
     <ImageView

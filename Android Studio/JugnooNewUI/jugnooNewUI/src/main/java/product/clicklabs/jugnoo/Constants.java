@@ -390,6 +390,7 @@ public interface Constants {
 	String KEY_ADD_MONEY_URL = "add_money_url";
 	String KEY_PAYTM_ENABLED = "paytm_enabled";
 	String KEY_WALLET_BALANCE = "wallet_balance";
+	String KEY_WALLET_TRANSACTIONS = "wallet_transactions";
 	String KEY_PAID_USING_MOBIKWIK = "paid_using_mobikwik";
 	String KEY_PAYMENT_MODE_CONFIG_DATA = "payment_mode_config_data";
 	String KEY_ENABLED = "enabled";

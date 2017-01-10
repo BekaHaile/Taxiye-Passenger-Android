@@ -276,29 +276,38 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
             if (goAhead) {
                 bPlaceOrder.setEnabled(false);
-                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-                        activity.getResources().getString(R.string.place_order_confirmation),
-                        activity.getResources().getString(R.string.ok),
-                        activity.getResources().getString(R.string.cancel),
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (getPaymentOption().getOrdinal() == 1) {
-                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
-                                } else {
-                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
-                                }
+//                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+//                        activity.getResources().getString(R.string.place_order_confirmation),
+//                        activity.getResources().getString(R.string.ok),
+//                        activity.getResources().getString(R.string.cancel),
+//                        new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                if (getPaymentOption().getOrdinal() == 1) {
+//                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
+//                                } else {
+//                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
+//                                }
+//
+//                                apiPurchaseSubscription();
+//                            }
+//                        },
+//                        new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                bPlaceOrder.setEnabled(true);
+//                            }
+//                        }, false, false);
 
-                                apiPurchaseSubscription();
-                            }
-                        },
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                bPlaceOrder.setEnabled(true);
-                            }
-                        }, false, false);
+                if (getPaymentOption().getOrdinal() == 1) {
+                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
+                } else {
+                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
+                }
+
+                apiPurchaseSubscription();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

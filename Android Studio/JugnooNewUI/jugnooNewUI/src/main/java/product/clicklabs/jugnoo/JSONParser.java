@@ -710,6 +710,10 @@ public class JSONParser implements Constants {
 			}
 
             Data.autoData.setCampaigns(autos.getCampaigns());
+
+            if(autos.getCityId() != null){
+                Data.userData.setCurrentCity(autos.getCityId());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -780,6 +784,13 @@ public class JSONParser implements Constants {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try{
+            if(autos.getPointsOfInterestAddresses() != null){
+                Data.userData.getPointsOfInterestAddresses().clear();
+                Data.userData.getPointsOfInterestAddresses().addAll(autos.getPointsOfInterestAddresses());
+            }
+        } catch (Exception e){}
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){

@@ -138,6 +138,7 @@ import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
@@ -966,12 +967,23 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         textViewPoolInfo1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Data.autoData.getRegions().size() == 1){
-                    slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
-                } else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
-                    slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
-                            Data.userData.getCoupons(ProductType.AUTO));
-                    FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.TAP_ON_OFFER_STRIP);
+                try {
+                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex() == -1
+							|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+							.getDeepindex() == AppLinkIndex.OPEN_COUPONS_DIALOG.getOrdinal()){
+						if(Data.autoData.getRegions().size() == 1){
+							slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
+						} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
+							slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
+									Data.userData.getCoupons(ProductType.AUTO));
+							FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.TAP_ON_OFFER_STRIP);
+						}
+					} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
+						Data.deepLinkIndex = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex();
+						deepLinkAction.openDeepLink(menuBar);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -1946,12 +1958,15 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         if ((savedAddressState != HomeUtil.SavedAddressState.MARKER_WITH_TEXT) && cameraPosition.zoom > 15f) {
                             homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, true);
                             savedAddressState = HomeUtil.SavedAddressState.MARKER_WITH_TEXT;
+                            homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
                         } else if ((savedAddressState != HomeUtil.SavedAddressState.MARKER) && (cameraPosition.zoom < 15f) && (cameraPosition.zoom > 10f)) {
                             homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, false);
                             savedAddressState = HomeUtil.SavedAddressState.MARKER;
+                            homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
                         } else if (cameraPosition.zoom < 10f) {
                             homeUtil.removeSavedAddress(map);
                             savedAddressState = HomeUtil.SavedAddressState.BLANK;
+                            homeUtil.removeMarkersPointsOfInterest(map);
                         }
                     }
                     previousZoomLevel = cameraPosition.zoom;
@@ -2460,6 +2475,10 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+PRIORITY_TIP_POP_UP+"_"+CANCEL, bundle);
                                 FlurryEventLogger.eventGA(CAMPAIGNS, "priority tip pop up", "cancel");
                                 FlurryEventLogger.event(HomeActivity.this, SURGE_NOT_ACCEPTED);
+
+                                specialPickupScreenOpened = false;
+                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                switchPassengerScreen(passengerScreenMode);
                             }
                         }).showDialog();
             } else{
@@ -4879,6 +4898,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
                     showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+                    homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
                     dontCallRefreshDriver = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -8803,6 +8823,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void showPoolInforBar(){
         try {
             float mapBottomPadding = 0f;
+            String textToShow = "";
+            if(!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")){
+                textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1();
+            } else if(!TextUtils.isEmpty(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2())){
+                textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2();
+            }
             if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
@@ -8815,12 +8841,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 //setGoogleMapPadding(70);
             } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) &&
+                    (!TextUtils.isEmpty(textToShow)) &&
                     (Data.autoData.getRegions().size() > 1)){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(false);
 
-                textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1()+" - ");
+                textViewPoolInfo1.setText(textToShow+" - ");
                 relativeLayoutPoolInfoBar.setBackgroundColor(getResources().getColor(R.color.text_color));
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.white));
 
@@ -8832,12 +8858,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 //setGoogleMapPadding(70);
             } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) &&
+                    (!TextUtils.isEmpty(textToShow)) &&
                     (Data.autoData.getRegions().size() == 1)){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(true);
 
-                textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1()+" - ");
+                textViewPoolInfo1.setText(textToShow+" - ");
                 relativeLayoutPoolInfoBar.setBackgroundColor(getResources().getColor(R.color.text_color));
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.white));
 
@@ -8850,7 +8876,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             } else{
                 viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
                 setFabMarginInitial(false);
-
             }
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                     && !specialPickupScreenOpened && !confirmedScreenOpened) {
@@ -9228,6 +9253,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             pokestopHelper.mapCleared();
             pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
             homeUtil.displaySavedAddressesAsFlags(this, assl, map, true);
+            homeUtil.displayPointOfInterestMarkers(this, assl, map);
         } catch (Exception e) {
             e.printStackTrace();
         }
