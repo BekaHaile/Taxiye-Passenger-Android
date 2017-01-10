@@ -94,7 +94,7 @@ public class TopBar implements FirebaseEvents {
 
         if (activity instanceof HomeActivity) {
             imageViewSearchIcon.setVisibility(View.GONE);
-            textViewTitle.setText(activity.getResources().getString(R.string.autos));
+            textViewTitle.setText(activity.getResources().getString(R.string.rides));
         }
 
 
@@ -229,7 +229,7 @@ public class TopBar implements FirebaseEvents {
             imageViewHelp.setVisibility(View.VISIBLE);
         }
         imageViewBack.setVisibility(View.GONE);
-        textViewTitle.setText(activity.getResources().getString(R.string.autos));
+        textViewTitle.setText(activity.getResources().getString(R.string.rides));
         textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
 
         if (!defaultState) {

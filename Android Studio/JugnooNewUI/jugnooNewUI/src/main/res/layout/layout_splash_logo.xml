@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlSplashLogo"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:src="@drawable/splash_top_bg"
+        android:tag="mwar" />
+
+    <!-- Jugnoo Logo layout-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutJugnooLogo"
+            android:layout_width="720px"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/imageViewJugnooLogo"
+                android:layout_width="300px"
+                android:layout_height="316px"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/logo_big"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:tag="mhar"
+                android:visibility="visible" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/extra"
+            android:layout_width="match_parent"
+            android:layout_height="600px"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+
+
+    <ImageView
+        android:id="@+id/ivBottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:src="@drawable/splash_bottom_building_bg1"
+        android:layout_alignParentBottom="true"
+        android:tag="mwar" />
+
+</RelativeLayout>

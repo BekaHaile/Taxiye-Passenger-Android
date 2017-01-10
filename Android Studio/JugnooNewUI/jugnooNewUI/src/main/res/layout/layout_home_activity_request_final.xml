@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
@@ -509,7 +509,7 @@
             android:layout_alignParentRight="true"
             android:contentDescription="@string/call_driver"
             android:layout_marginTop="0px"
-            android:visibility="visible"
+            android:visibility="gone"
             android:background="@drawable/ic_ride_call_selector"
             android:tag="mwar" />
 

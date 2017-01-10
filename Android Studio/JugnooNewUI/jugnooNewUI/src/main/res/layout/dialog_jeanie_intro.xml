@@ -82,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_centerHorizontal="true"
-                        android:text="@string/autos"
+                        android:text="@string/rides"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_34" />

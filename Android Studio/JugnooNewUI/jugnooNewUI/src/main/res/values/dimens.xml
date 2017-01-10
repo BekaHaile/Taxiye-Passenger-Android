@@ -182,7 +182,7 @@
 
     <!-- NL splash screen-->
     <dimen name="splash_button_width">473px</dimen>
-    <dimen name="splash_button_height">100px</dimen>
+    <dimen name="splash_button_height">96px</dimen>
 
     <dimen name="jugnoo_anim_loading_width">198px</dimen>
     <dimen name="jugnoo_anim_loading_height">92px</dimen>
@@ -335,5 +335,12 @@
     <dimen name="px_45">45px</dimen>
     <dimen name="px_52">52px</dimen>
     <dimen name="px_64">64px</dimen>
+    <dimen name="px_160">160px</dimen>
+    <dimen name="px_150">150px</dimen>
+    <dimen name="px_170">170px</dimen>
+    <dimen name="px_300">300px</dimen>
+    <dimen name="px_280">280px</dimen>
+    <dimen name="px_290">290px</dimen>
+    <dimen name="px_5">5px</dimen>
 
 </resources>

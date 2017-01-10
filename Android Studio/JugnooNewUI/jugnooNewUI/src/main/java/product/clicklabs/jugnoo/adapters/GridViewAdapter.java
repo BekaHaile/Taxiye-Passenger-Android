@@ -96,7 +96,7 @@ public class GridViewAdapter extends BaseAdapter
                     holder.linearLayoutGridViewScreen.setVisibility(View.VISIBLE);
                     holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_auto_selector);
                     holder.imageViewGridScreen.setImageResource(R.drawable.home_switcher_auto);
-                    holder.textViewGridScreen.setText(R.string.autos);
+                    holder.textViewGridScreen.setText(R.string.rides);
 
                     if (gridList.get(position).equalsIgnoreCase(Config.getMealsClientId())) {
                         holder.cardViewGridScreen.setBackgroundResource(R.drawable.circle_border_meals_selector);
