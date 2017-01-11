@@ -1600,6 +1600,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				@Override
 				public void success(String clientId) {
 					loginDataFetched = true;
+					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
+					DialogPopup.dismissLoadingDialog();
 				}
 
 				@Override
@@ -2312,11 +2314,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									DialogPopup.showLoadingDialog(activity, "Loading...");
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
-
+									DialogPopup.dismissLoadingDialog();
 								}
 							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
