@@ -1441,7 +1441,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					e.printStackTrace();
 				}
 				if ("".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, ""))) {
-					DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
+//					DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
 					getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
 					getHandlerGoToAccessToken().postDelayed(getRunnableGoToAccessToken(), 5000);
 				} else {
