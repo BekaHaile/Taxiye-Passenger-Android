@@ -47,11 +47,13 @@ public class ApiLoginUsingAccessToken {
 	}
 
 
-	public void hit(String accessToken, final double latitude, final double longitude, String specificClientId, final Callback callback){
+	public void hit(String accessToken, final double latitude, final double longitude, String specificClientId, boolean showDialog, final Callback callback){
 
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 
-			DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
+			if(showDialog) {
+				DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
+			}
 
 			if (Data.locationFetcher != null) {
 				Data.loginLatitude = Data.locationFetcher.getLatitude();

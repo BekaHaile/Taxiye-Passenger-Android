@@ -2881,6 +2881,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         fabViewTest = new FABViewTest(this, fabViewIntial);
                         GCMIntentService.clearNotifications(HomeActivity.this);
+                        Prefs.with(HomeActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
 
                         if(!dropLocationSet) {
                             Data.autoData.setDropLatLng(null);

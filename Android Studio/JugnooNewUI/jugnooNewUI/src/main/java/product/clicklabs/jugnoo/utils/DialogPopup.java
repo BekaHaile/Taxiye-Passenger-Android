@@ -753,12 +753,12 @@ public class DialogPopup {
             RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
             new ASSL((Activity) context, frameLayout, 1134, 720, false);
 			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(animImageView);
+			/*GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(animImageView);
 			Glide.with(context)
 					.load(R.drawable.jugnoo_logo)
 					.placeholder(R.drawable.jugnoo_logo)
-					.into(imageViewTarget);
-			/*animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
+					.into(imageViewTarget);*/
+			animImageView.setBackgroundResource(R.drawable.loader_new_frame_anim);
 			animImageView.post(new Runnable() {
 				@Override
 				public void run() {
@@ -766,7 +766,7 @@ public class DialogPopup {
 							(AnimationDrawable) animImageView.getBackground();
 					frameAnimation.start();
 				}
-			});*/
+			});
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -791,7 +791,7 @@ public class DialogPopup {
 			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
 			new ASSL((Activity) context, frameLayout, 1134, 720, false);
 			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
+			animImageView.setBackgroundResource(R.drawable.loader_new_frame_anim);
 			animImageView.post(new Runnable() {
 				@Override
 				public void run() {
@@ -845,7 +845,7 @@ public class DialogPopup {
 			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
 			new ASSL((Activity) context, frameLayout, 1134, 720, false);
 			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
+			animImageView.setBackgroundResource(R.drawable.loader_new_frame_anim);
 			animImageView.post(new Runnable() {
 				@Override
 				public void run() {
@@ -904,7 +904,7 @@ public class DialogPopup {
 			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
 			new ASSL((Activity) context, frameLayout, 1134, 720, false);
 			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			animImageView.setBackgroundResource(R.drawable.auto_loading_frame_anim);
+			animImageView.setBackgroundResource(R.drawable.loader_new_frame_anim);
 			animImageView.post(new Runnable() {
 				@Override
 				public void run() {

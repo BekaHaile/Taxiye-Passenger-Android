@@ -1591,7 +1591,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				Data.loginLongitude = Data.locationFetcher.getLongitude();
 			}
 			getApiLoginUsingAccessToken().hit(accessToken, Data.loginLatitude, Data.loginLongitude, null,
-					new ApiLoginUsingAccessToken.Callback() {
+					false, new ApiLoginUsingAccessToken.Callback() {
 				@Override
 				public void noNet() {
 					changeUIState(State.SPLASH_NO_NET);

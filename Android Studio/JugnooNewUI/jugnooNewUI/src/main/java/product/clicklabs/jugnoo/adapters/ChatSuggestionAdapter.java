@@ -68,7 +68,7 @@ public class ChatSuggestionAdapter extends RecyclerView.Adapter<ChatSuggestionAd
 	public infoTileViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 		View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item_chat_suggestion, viewGroup, false);
 
-		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, 116);
+		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, 100);
 		itemView.setLayoutParams(layoutParams);
 		ASSL.DoMagic(itemView);
 

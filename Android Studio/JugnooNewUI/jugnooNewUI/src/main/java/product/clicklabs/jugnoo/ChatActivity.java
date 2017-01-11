@@ -290,6 +290,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 					@Override
 					public void success(FetchChatResponse fetchChat, Response response) {
 						try {
+							Prefs.with(ChatActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
 							String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
 							//Log.e("Shared rides jsonString", "=" + jsonString);
 							JSONObject jObj;

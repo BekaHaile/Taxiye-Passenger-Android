@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/ivAnimation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/px_150"
+        android:layout_height="@dimen/px_150"
         android:layout_marginBottom="150px"
         android:tag="mwar"
         android:contentDescription="Animation" />
