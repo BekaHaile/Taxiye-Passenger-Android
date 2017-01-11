@@ -25,6 +25,7 @@ import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 
 import com.clevertap.android.sdk.CleverTapAPI;
@@ -105,6 +106,20 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			}
 
             Notification notification = builder.build();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				int smallIconViewId = getResources().getIdentifier("right_icon", "id", android.R.class.getPackage().getName());
+
+				if (smallIconViewId != 0) {
+					if (notification.contentIntent != null)
+						notification.contentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.headsUpContentView != null)
+						notification.headsUpContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.bigContentView != null)
+						notification.bigContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+				}
+			}
             notificationManager.notify(NOTIFICATION_ID, notification);
 
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -208,6 +223,20 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 			} else{
 				Notification notification = builder.build();
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					int smallIconViewId = getResources().getIdentifier("right_icon", "id", android.R.class.getPackage().getName());
+
+					if (smallIconViewId != 0) {
+						if (notification.contentIntent != null)
+							notification.contentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+						if (notification.headsUpContentView != null)
+							notification.headsUpContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+						if (notification.bigContentView != null)
+							notification.bigContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+					}
+				}
 				notificationManager.notify(notificationId, notification);
 
 				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -284,6 +313,20 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			}
 
 			Notification notification = builder.build();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				int smallIconViewId = getResources().getIdentifier("right_icon", "id", android.R.class.getPackage().getName());
+
+				if (smallIconViewId != 0) {
+					if (notification.contentIntent != null)
+						notification.contentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.headsUpContentView != null)
+						notification.headsUpContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.bigContentView != null)
+						notification.bigContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+				}
+			}
 			notificationManager.notify(notificationId, notification);
 
 			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -331,11 +374,29 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
-			if(Build.VERSION.SDK_INT >= 16){
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
 				builder.setPriority(Notification.PRIORITY_HIGH);
 			}
 
+
+
             Notification notification = builder.build();
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				int smallIconViewId = getResources().getIdentifier("right_icon", "id", android.R.class.getPackage().getName());
+
+				if (smallIconViewId != 0) {
+					if (notification.contentIntent != null)
+						notification.contentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.headsUpContentView != null)
+						notification.headsUpContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.bigContentView != null)
+						notification.bigContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+				}
+			}
+
             notificationManager.notify(notificationId, notification);
 
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
