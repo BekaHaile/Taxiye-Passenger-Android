@@ -347,7 +347,14 @@ public class WalletFragment extends Fragment implements FlurryEventNames, Fireba
 			e.printStackTrace();
 		}
 		try{
-			relativeLayoutPayTransactions.setVisibility((Data.userData.getPayEnabled() == 1) ? View.VISIBLE : View.GONE);
+			if(Data.userData.getPayEnabled() == 1
+					&& Data.getPayData() != null
+					&& Data.getPayData().getPay() != null
+					&& Data.getPayData().getPay().getHasVpa() == 1){
+				relativeLayoutPayTransactions.setVisibility(View.VISIBLE);
+			} else {
+				relativeLayoutPayTransactions.setVisibility(View.GONE);
+			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
