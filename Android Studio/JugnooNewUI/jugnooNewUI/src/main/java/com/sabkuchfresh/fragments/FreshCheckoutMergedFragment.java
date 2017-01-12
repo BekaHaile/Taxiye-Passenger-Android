@@ -117,7 +117,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         FreshCartItemsAdapter.Callback, PromoCouponsAdapter.Callback {
 
     private final String TAG = FreshCheckoutMergedFragment.class.getSimpleName();
-    private LinearLayout linearLayoutRoot;
+    private RelativeLayout linearLayoutRoot;
 
     private RelativeLayout relativeLayoutCartTop;
     private TextView textViewCartItems, textViewCartTotalUndiscount, textViewCartTotal;
@@ -217,7 +217,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
 
-        linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+        linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
         try {
             if (linearLayoutRoot != null) {
                 new ASSL(activity, linearLayoutRoot, 1134, 720, false);
@@ -487,7 +487,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     imageViewCartArrow.setRotation(180f);
                 } else {
                     linearLayoutCartExpansion.setVisibility(View.VISIBLE);
-                    imageViewDeleteCart.setVisibility(View.VISIBLE);
+                    imageViewDeleteCart.setVisibility(View.GONE);
                     imageViewCartArrow.setRotation(0f);
                 }
             }
@@ -523,9 +523,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.PAYMENT, activity.productList);
         fetchWalletBalance();
 
-        linearLayoutCartExpansion.setVisibility(View.GONE);
+        linearLayoutCartExpansion.setVisibility(View.VISIBLE);
         imageViewDeleteCart.setVisibility(View.GONE);
-        imageViewCartArrow.setRotation(180f);
+        //imageViewCartArrow.setRotation(180f);
 
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override

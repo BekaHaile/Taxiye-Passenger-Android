@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     android:id="@+id/relativeLayoutCart"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20px"
+    android:layout_marginTop="@dimen/px_30"
     android:orientation="vertical"
     android:visibility="visible"
     >
@@ -416,7 +415,7 @@
         android:layout_marginTop="-60px"
         android:src="@drawable/ic_checkout_delete_cart_selector"
         android:tag="mwar"
-        android:visibility="visible"
+        android:visibility="gone"
         />
 
 </RelativeLayout>
