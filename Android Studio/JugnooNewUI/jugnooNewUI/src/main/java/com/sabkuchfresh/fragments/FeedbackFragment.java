@@ -50,7 +50,6 @@ import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
-import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -324,7 +323,9 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         linearLayoutRSViewInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getOrderData();
+//                getOrderData();
+                new TransactionUtils().openOrderStatusFragment(activity,
+                        activity.getRelativeLayoutContainer(), Integer.parseInt(orderId), productType.getOrdinal());
             }
         });
 
@@ -696,20 +697,6 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
 
-
-    /**
-     * Method used to open
-     */
-    private void openSupportFragment() {
-
-        Intent intent = new Intent(activity, SupportActivity.class);
-        intent.putExtra(Constants.INTENT_KEY_FROM_BAD, 1);
-        intent.putExtra(Constants.KEY_ORDER_ID, Integer.parseInt(orderId));
-        intent.putExtra(Constants.KEY_PRODUCT_TYPE, productType.getOrdinal());
-        activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-        backPressed(false);
-    }
 
     private void backPressed(boolean goodRating) {
         activity.setRefreshCart(true);
