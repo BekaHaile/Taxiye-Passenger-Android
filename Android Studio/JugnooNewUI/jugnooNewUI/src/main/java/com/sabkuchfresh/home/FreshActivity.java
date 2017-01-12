@@ -86,6 +86,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -1232,7 +1233,21 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.title.setVisibility(View.VISIBLE);
 				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                resetToolbar();
 			}
+            else if(fragment instanceof OrderStatusActivity) {
+                topBar.below_shadow.setVisibility(View.VISIBLE);
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.imageViewDelete.setVisibility(View.GONE);
+                textViewCheckout.setVisibility(View.GONE);
+                relativeLayoutCheckoutBar.setVisibility(View.GONE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                resetToolbar();
+            }
             else if (fragment instanceof MealAddonItemsFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);
