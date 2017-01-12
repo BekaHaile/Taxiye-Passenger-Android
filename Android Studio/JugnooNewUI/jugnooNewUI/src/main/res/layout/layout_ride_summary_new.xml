@@ -9,7 +9,7 @@
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
     android:animateLayoutChanges="true"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <LinearLayout
         android:id="@+id/linearLayoutRideSummaryContainer"
@@ -25,6 +25,7 @@
         android:id="@+id/scrollViewRideSummary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/menu_item_selector_color"
         android:layout_below="@+id/linearLayoutRideSummaryContainer"
         >
 
@@ -46,8 +47,8 @@
                 >
                 <ImageView
                     android:id="@+id/ivEndRideType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="49px"
+                    android:layout_height="36px"
                     android:tag="mwar"
                     android:src="@drawable/ic_support_auto_big"
                     android:layout_gravity="center_vertical"
@@ -73,7 +74,7 @@
                 android:layout_marginTop="40px"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
-                android:background="@drawable/bg_menu_item_selector_color_rb"
+                android:background="@drawable/background_white_rounded_bordered"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -164,7 +165,7 @@
                     android:textAllCaps="true"
                     android:text="@string/view_invoice"
                     android:textColor="@color/text_color_theme_selector"
-                    android:textSize="@dimen/text_size_32"
+                    android:textSize="@dimen/text_size_30"
                     />
 
             </LinearLayout>

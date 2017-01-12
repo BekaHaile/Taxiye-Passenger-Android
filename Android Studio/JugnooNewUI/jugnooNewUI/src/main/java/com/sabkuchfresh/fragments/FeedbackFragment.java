@@ -334,7 +334,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             public void onClick(View v) {
                 //sendQuery(0, "");
                 try {
-                imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down_pressed);
+                imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down_active);
                 if((Data.getMealsData().getNegativeFeedbackReasons() != null)
                         && (Data.getMealsData().getNegativeFeedbackReasons().length() > 0)){
                     llBadReason.setVisibility(View.VISIBLE);
