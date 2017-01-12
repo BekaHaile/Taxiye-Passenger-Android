@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -34,6 +36,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
@@ -52,7 +55,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
     private TextView tvCurrentPlanValue, tvExpiresOnValue, tvSavingsMeterRetry, tvBenefits;
     private LinearLayout llSavingsValue;
     private ProgressWheel progressWheel;
-    private RecyclerView rvBenefits;
+    private NonScrollListView rvBenefits;
     private StarMembershipAdapter starMembershipAdapter;
     private ArrayList<String> benefits = new ArrayList<>();
 
@@ -78,10 +81,10 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
         tvExpiresOnValue = (TextView) findViewById(R.id.tvExpiresOnValue);
         tvExpiresOnValue.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
         tvBenefits = (TextView) findViewById(R.id.tvBenefits); tvBenefits.setTypeface(Fonts.mavenMedium(this));
-        rvBenefits = (RecyclerView) findViewById(R.id.rvBenefits);
-        rvBenefits.setLayoutManager(new LinearLayoutManager(this));
+        rvBenefits = (NonScrollListView) findViewById(R.id.rvBenefits);
+        /*rvBenefits.setLayoutManager(new LinearLayoutManager(this));
         rvBenefits.setItemAnimator(new DefaultItemAnimator());
-        rvBenefits.setHasFixedSize(false);
+        rvBenefits.setHasFixedSize(false);*/
 
         ((TextView) findViewById(R.id.tvSavingsMeter)).setTypeface(Fonts.mavenMedium(this));
         llSavingsValue = (LinearLayout) findViewById(R.id.llSavingsValue);
@@ -152,6 +155,8 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
             }
 
 
+
+
             starMembershipAdapter = new StarMembershipAdapter(JugnooStarSubscribedActivity.this, benefits, benefitOffering, new StarMembershipAdapter.Callback() {
                 @Override
                 public void onUnsubscribe() {
@@ -170,6 +175,13 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
                 }
             });
             rvBenefits.setAdapter(starMembershipAdapter);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ((ScrollView)findViewById(R.id.scroll)).scrollTo(0, 0);
+                }
+            }, 200);
 
             tvCurrentPlanValue.setText(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getPlanString());
             tvExpiresOnValue.setText(DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getValidTill())));

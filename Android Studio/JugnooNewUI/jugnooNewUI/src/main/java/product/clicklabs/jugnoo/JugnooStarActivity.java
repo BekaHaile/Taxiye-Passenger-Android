@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo;
 
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -25,6 +27,7 @@ import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -37,7 +40,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
     private TextView textViewTitle, tvSubTitle;
     private ImageView imageViewBack, ivRadio1, ivRadio2;
     private TextView tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2;
-    private RecyclerView rvBenefits;
+    private NonScrollListView rvBenefits;
 //    private StarBenefitsAdapter starBenefitsAdapter;
     private StarMembershipAdapter starMembershipAdapter;
     private String selectedSubId;
@@ -77,10 +80,10 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         tvPeriod1 = (TextView) findViewById(R.id.tvPeriod1); tvPeriod1.setTypeface(Fonts.mavenMedium(this));
         tvPeriod2 = (TextView) findViewById(R.id.tvPeriod2); tvPeriod2.setTypeface(Fonts.mavenMedium(this));
         divider = (View) findViewById(R.id.divider);
-        rvBenefits = (RecyclerView) findViewById(R.id.rvBenefits);
-        rvBenefits.setLayoutManager(new LinearLayoutManager(this));
+        rvBenefits = (NonScrollListView) findViewById(R.id.rvBenefits);
+        /*rvBenefits.setLayoutManager(new LinearLayoutManager(this));
         rvBenefits.setItemAnimator(new DefaultItemAnimator());
-        rvBenefits.setHasFixedSize(false);
+        rvBenefits.setHasFixedSize(false);*/
 
 
         try {
@@ -152,6 +155,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
             }
 
 
+
             starMembershipAdapter = new StarMembershipAdapter(JugnooStarActivity.this, benefits, benefitOffering, new StarMembershipAdapter.Callback() {
                 @Override
                 public void onUnsubscribe() {
@@ -159,6 +163,13 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
             });
 
             rvBenefits.setAdapter(starMembershipAdapter);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ((ScrollView)findViewById(R.id.scroll)).scrollTo(0, 0);
+                }
+            }, 200);
         } catch (Exception e) {
             e.printStackTrace();
         }
