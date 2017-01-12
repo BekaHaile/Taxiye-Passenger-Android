@@ -49,7 +49,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
     private RelativeLayout relative;
     private TextView textViewTitle;
     private ImageView imageViewBack;
-    private TextView tvCurrentPlanValue, tvExpiresOnValue, tvSavingsMeterRetry;
+    private TextView tvCurrentPlanValue, tvExpiresOnValue, tvSavingsMeterRetry, tvBenefits;
     private LinearLayout llSavingsValue;
     private ProgressWheel progressWheel;
     private RecyclerView rvBenefits;
@@ -77,6 +77,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
         tvCurrentPlanValue.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
         tvExpiresOnValue = (TextView) findViewById(R.id.tvExpiresOnValue);
         tvExpiresOnValue.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+        tvBenefits = (TextView) findViewById(R.id.tvBenefits); tvBenefits.setTypeface(Fonts.mavenMedium(this));
         rvBenefits = (RecyclerView) findViewById(R.id.rvBenefits);
         rvBenefits.setLayoutManager(new LinearLayoutManager(this));
         rvBenefits.setItemAnimator(new DefaultItemAnimator());

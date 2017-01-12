@@ -5044,7 +5044,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
                 textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
-                initialMyLocationBtn.setVisibility(View.GONE);
+                initialMyLocationBtn.setVisibility(View.VISIBLE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
@@ -6835,7 +6835,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     initializeHighSpeedAccuracyFusedLocationFetcher();
                 }
             } else{
-                initialMyLocationBtn.setVisibility(View.GONE);
+                initialMyLocationBtn.setVisibility(View.VISIBLE);
                 customerInRideMyLocationBtn.setVisibility(View.GONE);
                 destroyHighSpeedAccuracyFusedLocationFetcher();
             }

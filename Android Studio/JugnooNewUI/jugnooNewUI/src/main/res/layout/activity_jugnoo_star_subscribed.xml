@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/relative"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/menu_item_selector_color">
+    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relative"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/menu_item_selector_color">
 
     <RelativeLayout
         android:id="@+id/topBar"
@@ -16,8 +16,8 @@
             android:id="@+id/textViewTitle"
             style="@style/title"
             android:layout_width="wrap_content"
-            android:gravity="center"
             android:layout_centerInParent="true"
+            android:gravity="center"
             android:text="@string/jugnoo_star" />
 
         <ImageView
@@ -26,29 +26,35 @@
 
     </RelativeLayout>
 
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/px_26"
+        android:layout_below="@+id/topBar">
+
     <LinearLayout
         android:id="@+id/llContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/px_40"
-        android:layout_below="@+id/topBar"
-        android:background="@color/white">
+        android:paddingBottom="@dimen/px_40">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/px_42"
             android:layout_marginLeft="@dimen/px_28"
-            android:layout_marginRight="@dimen/px_28">
+            android:layout_marginRight="@dimen/px_28"
+            android:layout_marginTop="@dimen/px_42">
 
             <TextView
                 android:id="@+id/tvCurrentPlan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/membership_plan"
-                android:textSize="@dimen/text_size_30"
-                android:textColor="@color/text_color"/>
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30" />
 
             <TextView
                 android:id="@+id/tvCurrentPlanValue"
@@ -56,30 +62,30 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="999/- month"
-                android:textSize="@dimen/text_size_30"
-                android:textColor="@color/text_color"/>
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2px"
             android:layout_marginTop="@dimen/px_30"
-            android:background="@color/menu_item_selector_color"/>
+            android:background="@color/menu_item_selector_color" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/px_42"
             android:layout_marginLeft="@dimen/px_28"
-            android:layout_marginRight="@dimen/px_28">
+            android:layout_marginRight="@dimen/px_28"
+            android:layout_marginTop="@dimen/px_42">
 
             <TextView
                 android:id="@+id/tvExpiresOn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/expires_on"
-                android:textSize="@dimen/text_size_30"
-                android:textColor="@color/text_color"/>
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30" />
 
             <TextView
                 android:id="@+id/tvExpiresOnValue"
@@ -87,42 +93,38 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="12/12/2016"
-                android:textSize="@dimen/text_size_30"
-                android:textColor="@color/text_color"/>
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30" />
         </RelativeLayout>
 
 
     </LinearLayout>
 
-
+    </android.support.v7.widget.CardView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/llContainer"
-        android:background="@color/grey_lb_list"
-        android:orientation="vertical"
-        >
+        android:layout_below="@+id/cvContainer"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvSavingsMeter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/px_20"
             android:text="@string/savings_meter"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="62px"
-            android:layout_marginBottom="20px"
-            />
+            android:textSize="@dimen/text_size_34" />
 
         <LinearLayout
             android:id="@+id/llSavingsValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center"
-            >
+            android:orientation="horizontal">
+
             <product.clicklabs.jugnoo.utils.ProgressWheel
                 android:id="@+id/progressWheel"
                 android:layout_width="60px"
@@ -132,10 +134,9 @@
                 android:layout_centerVertical="true"
                 android:tag="mwar"
                 wheel:matProg_barColor="@color/colorPrimary"
-                wheel:matProg_fillRadius="true"
-                wheel:matProg_progressIndeterminate="false"
                 wheel:matProg_barWidth="3dp"
-                />
+                wheel:matProg_fillRadius="true"
+                wheel:matProg_progressIndeterminate="false" />
 
             <TextView
                 android:id="@+id/tvSavingsMeterRetry"
@@ -145,30 +146,30 @@
                 android:text="@string/retry_underline"
                 android:textColor="@color/text_color_selector"
                 android:textSize="@dimen/text_size_30"
-                android:visibility="visible"
-                />
+                android:visibility="visible" />
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tvBenefits"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px_40"
+            android:text="Benefits"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"
+            android:gravity="center"/>
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvBenefits"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/px_10"
             android:fadeScrollbars="true"
-            android:scrollbars="vertical"
-            android:layout_marginTop="40px"
-            />
+            android:scrollbars="vertical" />
 
     </LinearLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:layout_below="@+id/llContainer"
-        android:background="@drawable/shadow_down" />
-
 
     <ImageView
         android:layout_width="match_parent"
