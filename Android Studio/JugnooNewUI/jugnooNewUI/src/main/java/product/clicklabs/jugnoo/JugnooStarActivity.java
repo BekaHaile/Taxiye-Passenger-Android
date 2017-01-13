@@ -48,6 +48,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
     private Button bJoinNow;
     private View divider;
     private SubscriptionData.Subscription subscription;
+    private boolean fromFreshCheckout;
 
 
     @Override
@@ -58,6 +59,8 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         relative = (RelativeLayout) findViewById(R.id.relative);
         new ASSL(JugnooStarActivity.this, relative, 1134, 720, false);
 
+        rlFragment = (RelativeLayout) findViewById(R.id.rlFragment);
+
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
@@ -67,7 +70,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         bJoinNow = (Button) findViewById(R.id.bJoinNow); bJoinNow.setTypeface(Fonts.mavenMedium(this)); bJoinNow.setOnClickListener(this);
 
-        rlFragment = (RelativeLayout) findViewById(R.id.rlFragment);
+
         tvSubTitle = (TextView) findViewById(R.id.tvSubTitle); tvSubTitle.setTypeface(Fonts.mavenMedium(this));
         rlPlan1 = (RelativeLayout) findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(this); rlPlan1.setVisibility(View.GONE);
         rlPlan2 = (RelativeLayout) findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(this); rlPlan2.setVisibility(View.GONE);
@@ -85,6 +88,12 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         rvBenefits.setItemAnimator(new DefaultItemAnimator());
         rvBenefits.setHasFixedSize(false);*/
 
+        if(getIntent().hasExtra("checkout_fragment")){
+            fromFreshCheckout = true;
+            selectedSubId = getIntent().getStringExtra("checkout_fragment");
+            subscription = new Gson().fromJson(selectedSubId, SubscriptionData.Subscription.class);
+            bJoinNow.performClick();
+        }
 
         try {
             tvSubTitle.setText(Data.userData.getSubscriptionData().getSubscriptionTitle());
@@ -190,14 +199,19 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
     }
 
     public void performBackPressed() {
-        if(getSupportFragmentManager().getBackStackEntryCount() > 0){
-            if(getSupportFragmentManager().getBackStackEntryCount() == 1){
-                rlFragment.setVisibility(View.GONE);
-            }
-            super.onBackPressed();
-        } else {
+        if(fromFreshCheckout){
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        } else {
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                    rlFragment.setVisibility(View.GONE);
+                }
+                super.onBackPressed();
+            } else {
+                finish();
+                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            }
         }
     }
 

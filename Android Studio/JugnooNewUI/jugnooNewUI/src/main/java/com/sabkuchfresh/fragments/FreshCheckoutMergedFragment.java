@@ -22,6 +22,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,11 +35,13 @@ import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.jugnoo.pay.activities.MainActivity;
 import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
+import com.sabkuchfresh.adapters.BecomeStarAdapter;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -76,6 +79,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -90,8 +94,10 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
+import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -107,6 +113,7 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
+import product.clicklabs.jugnoo.widgets.MySpinner;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -161,7 +168,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private TextView textViewDeliveryInstructionsText;
 
-    private CardView cvStarSavings;
+    private CardView cvStarSavings, cvBecomeStar;
     private TextView tvStarSavingsValue;
 
 
@@ -181,6 +188,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private int currentGroupId = 1;
     private boolean orderPlaced = false;
     private boolean cartChangedRefreshCheckout = false;
+    private MySpinner spin;
 
     public FreshCheckoutMergedFragment() {
     }
@@ -190,6 +198,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private CheckoutSaveData checkoutSaveData;
     private int type;
+    private BecomeStarAdapter becomeStarAdapter;
+    private Button btnAddStar;
+    private String selectedSubId;
 
     @Override
     public void onStart() {
@@ -325,6 +336,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         ((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewPackagingCharges)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewJugnooCash)).setTypeface(Fonts.mavenMedium(activity));
+        ((TextView)rootView.findViewById(R.id.tvBecomeStar)).setTypeface(Fonts.mavenMedium(activity));
+        ((TextView)rootView.findViewById(R.id.tvStarOffer)).setTypeface(Fonts.mavenMedium(activity));
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
         freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, true, this);
         listViewCart.setAdapter(freshCartItemsAdapter);
@@ -402,6 +415,38 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         cvStarSavings = (CardView) rootView.findViewById(R.id.cvStarSavings); cvStarSavings.setVisibility(View.GONE);
         ((TextView)rootView.findViewById(R.id.tvStarSavings)).setTypeface(Fonts.mavenMedium(activity));
         tvStarSavingsValue = (TextView)rootView.findViewById(R.id.tvStarSavingsValue); tvStarSavingsValue.setTypeface(Fonts.mavenMedium(activity));
+
+        cvBecomeStar = (CardView) rootView.findViewById(R.id.cvBecomeStar); cvBecomeStar.setVisibility(View.GONE);
+        spin = (MySpinner) rootView.findViewById(R.id.simpleSpinner);
+        btnAddStar = (Button) rootView.findViewById(R.id.btnAddStar);
+
+        if(!Data.userData.isSubscriptionActive()) {
+            cvBecomeStar.setVisibility(View.VISIBLE);
+            becomeStarAdapter = new BecomeStarAdapter(getActivity(), Data.userData.getSubscriptionData().getSubscriptions());
+            spin.setAdapter(becomeStarAdapter);
+            selectedSubId = new Gson().toJson(Data.userData.getSubscriptionData().getSubscriptions().get(0));
+
+            spin.setOnItemSelectedEvenIfUnchangedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    selectedSubId = new Gson().toJson(Data.userData.getSubscriptionData().getSubscriptions().get(position));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+
+        btnAddStar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), JugnooStarActivity.class);
+                intent.putExtra("checkout_fragment", selectedSubId);
+                getActivity().startActivity(intent);
+            }
+        });
 
 
         relativeLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -518,7 +563,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         updateCartDataView();
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.CHECKOUT, activity.productList);
-        getCheckoutDataAPI();
+
 
         FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.PAYMENT, activity.productList);
         fetchWalletBalance();
@@ -666,7 +711,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             textViewCartTotalUndiscount.setVisibility(View.GONE);
         }
 
+        updateStarLayout();
 
+    }
+
+    private void updateStarLayout(){
         if(type == AppConstant.ApplicationType.MEALS && Data.userData != null && Data.userData.isSubscriptionActive()
                 && activity.getUserCheckoutResponse() != null
                 && activity.getUserCheckoutResponse().getSubscription() != null){
@@ -764,6 +813,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         activity.resetToolbar();
         orderPaymentModes();
         setPaymentOptionUI();
+        if(Data.userData.isSubscriptionActive()) {
+            cvBecomeStar.setVisibility(View.GONE);
+        }
+
+        getCheckoutDataAPI();
     }
 
     private BroadcastReceiver broadcastReceiverWalletUpdate = new BroadcastReceiver() {

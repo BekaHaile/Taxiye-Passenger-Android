@@ -1449,5 +1449,7 @@
     <string name="star_savings">Star Savings</string>
     <string name="you_will_receive_cashback_on_order">You’ll receive \u20B9%s cashback on this order</string>
     <string name="star_savings_no_priority_tip">Star Savings: No Priority Tip on this ride</string>
+    <string name="become_a_jugnoo_star">Become a jugnoo star</string>
+    <string name="add_to_avail_unlimited_free_deliveries">Add to avail unlimited free deliveries</string>
 
 </resources>

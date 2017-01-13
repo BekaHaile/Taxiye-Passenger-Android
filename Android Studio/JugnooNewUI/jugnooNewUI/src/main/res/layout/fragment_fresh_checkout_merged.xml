@@ -171,6 +171,9 @@
             <!-- Star Saving view-->
             <include layout="@layout/layout_fresh_star_saving" />
 
+            <!-- Become a jugnoo star-->
+            <include layout="@layout/layout_fresh_become_star"/>
+
             <!-- Payment view-->
             <LinearLayout
                 android:id="@+id/linearLayoutPayment"
