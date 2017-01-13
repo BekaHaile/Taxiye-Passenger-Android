@@ -345,5 +345,6 @@
     <dimen name="px_130">130px</dimen>
     <dimen name="px_88">88px</dimen>
     <dimen name="px_4">4px</dimen>
+    <dimen name="px_108">108px</dimen>
 
 </resources>

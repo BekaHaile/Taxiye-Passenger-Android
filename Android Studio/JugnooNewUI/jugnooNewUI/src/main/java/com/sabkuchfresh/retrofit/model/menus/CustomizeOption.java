@@ -26,6 +26,11 @@ public class CustomizeOption {
 	@Expose
 	private Integer additionalCost;
 
+	private Integer isCustomizeItem;
+	private Integer customizeItemPos;
+	private Integer isItem;
+	private Integer isMultiSelect;
+
 	public String getCustomizeOptionName() {
 		return customizeOptionName;
 	}
@@ -73,5 +78,49 @@ public class CustomizeOption {
 		} else {
 			return false;
 		}
+	}
+
+	public Integer getIsCustomizeItem() {
+		if(isCustomizeItem == null){
+			isCustomizeItem = 0;
+		}
+		return isCustomizeItem;
+	}
+
+	public void setIsCustomizeItem(Integer isCustomizeItem) {
+		this.isCustomizeItem = isCustomizeItem;
+	}
+
+	public Integer getIsItem() {
+		if(isItem == null){
+			isItem = 0;
+		}
+		return isItem;
+	}
+
+	public void setIsItem(Integer isItem) {
+		this.isItem = isItem;
+	}
+
+	public Integer getIsMultiSelect() {
+		if(isMultiSelect == null){
+			isMultiSelect = 0;
+		}
+		return isMultiSelect;
+	}
+
+	public void setIsMultiSelect(Integer isMultiSelect) {
+		this.isMultiSelect = isMultiSelect;
+	}
+
+	public Integer getCustomizeItemPos() {
+		if(customizeItemPos == null){
+			customizeItemPos = 0;
+		}
+		return customizeItemPos;
+	}
+
+	public void setCustomizeItemPos(Integer customizeItemPos) {
+		this.customizeItemPos = customizeItemPos;
 	}
 }

@@ -104,7 +104,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		cardViewRideShortInfo = (CardView) rootView.findViewById(R.id.cardViewRideShortInfo);
 		rideOrderShortView = new RideOrderShortView(activity, rootView, true);
 
-		cardViewRecycler = (CardView) root.findViewById(R.id.cardViewRecycler);
+		cardViewRecycler = (CardView) root.findViewById(R.id.cvRoot);
 		recyclerViewSupportFaq = (RecyclerView)rootView.findViewById(R.id.recyclerViewSupportFaq);
 		recyclerViewSupportFaq.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
 		recyclerViewSupportFaq.setItemAnimator(new DefaultItemAnimator());

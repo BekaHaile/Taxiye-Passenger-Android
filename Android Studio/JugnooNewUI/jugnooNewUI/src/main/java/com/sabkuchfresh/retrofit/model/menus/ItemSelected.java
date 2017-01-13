@@ -18,6 +18,9 @@ public class ItemSelected {
 	@Expose
 	private List<CustomizeItemSelected> customizeItemSelectedList;
 
+	private Integer quantity;
+	private Double totalPrice;
+
 	public Integer getRestaurantItemId() {
 		return restaurantItemId;
 	}
@@ -44,5 +47,21 @@ public class ItemSelected {
 		} else {
 			return false;
 		}
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public Double getTotalPriceWithQuantity() {
+		return totalPrice * ((double) quantity);
+	}
+
+	public void setTotalPrice(Double totalPrice) {
+		this.totalPrice = totalPrice;
 	}
 }

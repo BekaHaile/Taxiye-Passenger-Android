@@ -43,7 +43,7 @@ public class Item {
 	@Expose
 	private String itemDetails;
 
-	private Integer isSubCategory;
+	private Integer isSubCategory, subCategroyPos, itemPos;
 	private List<ItemSelected> itemSelectedList;
 
 	public Integer getIsActive() {
@@ -87,6 +87,9 @@ public class Item {
 	}
 
 	public List<CustomizeItem> getCustomizeItem() {
+		if(customizeItem == null){
+			customizeItem = new ArrayList<>();
+		}
 		return customizeItem;
 	}
 
@@ -147,5 +150,29 @@ public class Item {
 		} else {
 			return false;
 		}
+	}
+
+	public Integer getSubCategroyPos() {
+		return subCategroyPos;
+	}
+
+	public void setSubCategroyPos(Integer subCategroyPos) {
+		this.subCategroyPos = subCategroyPos;
+	}
+
+	public Integer getItemPos() {
+		return itemPos;
+	}
+
+	public void setItemPos(Integer itemPos) {
+		this.itemPos = itemPos;
+	}
+
+	public Integer getTotalQuantity(){
+		int total = 0;
+		for (ItemSelected itemSelected : getItemSelectedList()) {
+			total = total + itemSelected.getQuantity();
+		}
+		return total;
 	}
 }

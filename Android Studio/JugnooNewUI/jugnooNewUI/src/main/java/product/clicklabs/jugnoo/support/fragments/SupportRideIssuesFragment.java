@@ -145,7 +145,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 		linearLayoutRideShortInfo = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideShortInfo);
 		rideOrderShortView = new RideOrderShortView(activity, rootView, false);
 
-		cardViewRecycler = (CardView) root.findViewById(R.id.cardViewRecycler);
+		cardViewRecycler = (CardView) root.findViewById(R.id.cvRoot);
 		recyclerViewSupportFaq = (RecyclerView) rootView.findViewById(R.id.recyclerViewSupportFaq);
 		recyclerViewSupportFaq.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
 		recyclerViewSupportFaq.setItemAnimator(new DefaultItemAnimator());

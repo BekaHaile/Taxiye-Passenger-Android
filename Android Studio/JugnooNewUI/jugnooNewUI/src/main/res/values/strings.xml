@@ -1458,5 +1458,10 @@
     <string name="customize_choose_item_value">You can choose upto %s items.</string>
     <string name="customize_choose_option_value">You can choose 1 option</string>
     <string name="onwards">- Onwards</string>
+    <string name="add_to_cart">Add to Cart</string>
+    <string name="cannot_add_more_than_50">Can\'t add more than 50 items</string>
+    <string name="required_bracket">(Required)</string>
+    <string name="optional_bracket">(Optional)</string>
+    <string name="you_have_to_decrease_quantity_from_checkout">You have to decrease quantity from checkout page</string>
 
 </resources>

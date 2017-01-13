@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textViewSubCategoryName"
+        android:id="@+id/tvSubCategoryName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="CLASSIC PIZZA"
@@ -13,6 +13,5 @@
         android:layout_marginTop="24px"
         android:layout_marginLeft="33px"
         android:layout_marginBottom="10px"
-        android:textAllCaps="true"
         android:textColor="@color/dotted_color"/>
 </RelativeLayout>

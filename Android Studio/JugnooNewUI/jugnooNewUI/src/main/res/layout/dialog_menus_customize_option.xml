@@ -47,7 +47,7 @@
 
 
         <RelativeLayout
-            android:id="@+id/relativeLayoutCustomizeOptionItem"
+            android:id="@+id/rlCustomizeOptionItem"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

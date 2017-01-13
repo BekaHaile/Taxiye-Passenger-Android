@@ -57,10 +57,10 @@ import com.sabkuchfresh.fragments.MenusCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
+import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
-import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -68,6 +68,7 @@ import com.sabkuchfresh.retrofit.model.SubItemCompare;
 import com.sabkuchfresh.retrofit.model.SubItemComparePrice;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceRev;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
@@ -1098,6 +1099,24 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 }
                 resetToolbarWithScroll();
                 searchLayout.setVisibility(View.VISIBLE);
+            }
+            else if(fragment instanceof MenusItemCustomizeFragment){
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.below_shadow.setVisibility(View.VISIBLE);
+                topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.imageViewDelete.setVisibility(View.GONE);
+                relativeLayoutCheckoutBar.setVisibility(View.GONE);
+
+
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getString(R.string.customize_item));
+                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
+                resetToolbar();
+                searchLayout.setVisibility(View.GONE);
             }
             else if (fragment instanceof MenusFilterFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -2718,4 +2737,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         layoutParams.height = (int)(164f * ASSL.Yscale());
         toolbar.setLayoutParams(layoutParams);
     }
+
+    public void openMenusItemCustomizeFragment(int categoryPos, int subCategoryPos, int itemPos){
+        getTransactionUtils().openMenusItemCustomizeFragment(this, getRelativeLayoutContainer(), categoryPos, subCategoryPos, itemPos);
+    }
+
 }

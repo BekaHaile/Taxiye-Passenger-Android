@@ -162,25 +162,28 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     @Subscribe
     public void onUpdateListEvent(UpdateMainList event) {
 
-        if(event.flag) {
-            // Update pager adapter
+		if (event.flag) {
+			// Update pager adapter
 
-                for (int i = 0; i < viewPager.getChildCount(); i++) {
-                    Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + i);
-                    if (page != null) {
-                        ((FreshCategoryItemsFragment) page).updateDetail();
-                    }
-                }
-                try {
-                    menusCategoryFragmentsAdapter.notifyDataSetChanged();
-					tabs.notifyDataSetChanged();
-                }catch(Exception e) {
-                    e.printStackTrace();
+			try {
+				for (int i = 0; i < viewPager.getChildCount(); i++) {
+					Fragment page = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + i);
+					if (page != null) {
+						((MenusCategoryItemsFragment) page).updateDetail();
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				menusCategoryFragmentsAdapter.notifyDataSetChanged();
+				tabs.notifyDataSetChanged();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
-                }
-
-        }
-    }
+		}
+	}
 
     @Subscribe
     public void onSwipe(SwipeCheckout swipe) {

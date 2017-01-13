@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/linearLayoutQuantitySelector"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    >
+
+    <TextView
+        android:id="@+id/textViewMinus"
+        android:layout_width="65px"
+        android:layout_height="65px"
+        android:background="@drawable/circle_white_stroke_theme"
+        android:gravity="center"
+        android:rotation="90"
+        android:tag="mwar"
+        android:text="I"
+        android:textColor="@color/text_color_theme_alpha_selector"
+        android:textSize="@dimen/text_size_36"
+        />
+
+    <TextView
+        android:id="@+id/textViewQuantity"
+        android:layout_width="70px"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="998"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_32"/>
+
+    <TextView
+        android:id="@+id/textViewPlus"
+        android:layout_width="65px"
+        android:layout_height="65px"
+        android:background="@drawable/circle_white_stroke_theme"
+        android:gravity="center"
+        android:tag="mwar"
+        android:text="+"
+        android:textColor="@color/text_color_theme_alpha_selector"
+        android:textSize="@dimen/text_size_40"
+        />
+</LinearLayout>

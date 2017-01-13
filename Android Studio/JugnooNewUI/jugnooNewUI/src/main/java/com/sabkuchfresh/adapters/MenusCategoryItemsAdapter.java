@@ -1,5 +1,6 @@
 package com.sabkuchfresh.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -19,9 +20,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.dialogs.MenusCustomizeItemDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -40,16 +42,16 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     private Context context;
     private List<Item> subItems;
-    private Callback callback;
+    private int categoryPos;
 
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
     private static final int SUB_CATEGORY_ITEM = 2;
 
-    public MenusCategoryItemsAdapter(Context context, ArrayList<Subcategory> subcategories, Callback callback) {
+    public MenusCategoryItemsAdapter(Context context, int categoryPos, ArrayList<Subcategory> subcategories) {
         this.context = context;
+        this.categoryPos = categoryPos;
         setSubItems(subcategories);
-        this.callback = callback;
     }
 
     public synchronized void setResults(ArrayList<Subcategory> subcategories){
@@ -59,12 +61,18 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void setSubItems(ArrayList<Subcategory> subcategories){
         subItems = new ArrayList<>();
-        for(Subcategory subcategory : subcategories){
+        for(int i=0; i<subcategories.size(); i++){
+            Subcategory subcategory = subcategories.get(i);
             Item item = new Item();
             item.setItemName(subcategory.getSubcategoryName());
             item.setIsSubCategory(1);
             subItems.add(item);
-            subItems.addAll(subcategory.getItems());
+            for(int j=0; j<subcategory.getItems().size(); j++){
+                Item item1 = subcategory.getItems().get(j);
+                item1.setSubCategroyPos(i);
+                item1.setItemPos(j);
+                subItems.add(item1);
+            }
         }
     }
 
@@ -81,7 +89,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             ASSL.DoMagic(v);
             return new SubCategoryViewHolder(v, context);
         } else if (viewType == MAIN_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_category_desc, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_item, parent, false);
 
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
@@ -148,10 +156,11 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             .append(" ").append(context.getString(R.string.onwards));
             mHolder.textViewItemCategoryName.setText(sb);
 
-            if(item.getItemSelectedList().size() > 0){
+            int total = item.getTotalQuantity();
+            if(total > 0){
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
                 mHolder.addButton.setVisibility(View.GONE);
-                mHolder.textViewQuantity.setText(String.valueOf(item.getItemSelectedList().size()));
+                mHolder.textViewQuantity.setText(String.valueOf(total));
             } else {
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
                 mHolder.addButton.setVisibility(View.VISIBLE);
@@ -182,14 +191,23 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     try {
                         int pos = (int) v.getTag();
                         Item item1 = subItems.get(pos);
-                        if (item1.getCustomizeItem().size() > 0) {
-
-                            new MenusCustomizeItemDialog((FreshActivity) context, new MenusCustomizeItemDialog.Callback() {
-                                @Override
-                                public void onDismiss() {
+                        if(item1.getTotalQuantity() < 50) {
+                            if (item1.getCustomizeItem().size() > 0) {
+                                ((FreshActivity) context).openMenusItemCustomizeFragment(categoryPos, item1.getSubCategroyPos(), item1.getItemPos());
+                            } else {
+                                if(item1.getItemSelectedList().size() > 0){
+                                    item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
+                                } else {
+                                    ItemSelected itemSelected = new ItemSelected();
+                                    itemSelected.setRestaurantItemId(item1.getRestaurantItemId());
+                                    itemSelected.setQuantity(1);
+                                    itemSelected.setTotalPrice(item1.getPrice());
+                                    item1.getItemSelectedList().add(itemSelected);
                                 }
-                            }, MenusCategoryItemsAdapter.this).show(item1);
-                            notifyDataSetChanged();
+                                notifyDataSetChanged();
+                            }
+                        } else {
+                            Utils.showToast(context, context.getString(R.string.cannot_add_more_than_50));
                         }
                     }catch (Exception e) {
                         e.printStackTrace();
@@ -200,129 +218,30 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.addButton.setOnClickListener(plusClick);
             mHolder.textViewPlus.setOnClickListener(plusClick);
 
-
-           /* mHolder.addButton.setOnClickListener(new View.OnClickListener() {
+            mHolder.textViewMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
+                    try{
                         int pos = (int) v.getTag();
-                        if(callback.checkForAdd(pos, subItems.get(pos))) {
-                            if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-                                subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
-                            } else {
-//                                Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
+                        Item item1 = subItems.get(pos);
+                        if (item1.getCustomizeItem().size() > 0) {
+                            DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.you_have_to_decrease_quantity_from_checkout));
+                        } else {
+                            if(item1.getItemSelectedList().size() > 0){
+                                item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() - 1);
+                                notifyDataSetChanged();
                             }
-                            callback.onPlusClicked(pos, subItems.get(pos));
-                            notifyDataSetChanged();
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });*/
-
-
-          /*  mHolder.textViewMinus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        int pos = (int) v.getTag();
-                        if(callback.checkForMinus(pos, subItems.get(pos))) {
-
-                            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
-                                    subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
-                            callback.onMinusClicked(pos, subItems.get(pos));
-
-                            notifyDataSetChanged();
-                        } else{
-                            callback.minusNotDone(pos, subItems.get(pos));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    } catch (Exception e){}
                 }
             });
-
-
-            mHolder.textViewPlus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        int pos = (int) v.getTag();
-//                        subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock() ?
-//                                subItems.get(pos).getSubItemQuantitySelected() + 1 : subItems.get(pos).getStock());
-                        if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-                            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
-                        } else {
-                            Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
-                        }
-
-                        callback.onPlusClicked(pos, subItems.get(pos));
-                        FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-                        notifyDataSetChanged();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });*/
-
-
-         /*   mHolder.textViewMinus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        int pos = (int) v.getTag();
-                        if(callback.checkForMinus(pos, subItems.get(pos))) {
-
-                            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
-                                    subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
-                            callback.onMinusClicked(pos, subItems.get(pos));
-
-                            notifyDataSetChanged();
-                            int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
-                            if(appType == AppConstant.ApplicationType.FRESH){
-                                FlurryEventLogger.event(FRESH_FRAGMENT, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
-                            } else if(appType == AppConstant.ApplicationType.GROCERY){
-                                FlurryEventLogger.event(FlurryEventNames.GROCERY_FRAGMENT, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
-                            }
-                        } else{
-                            callback.minusNotDone(pos, subItems.get(pos));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            mHolder.textViewPlus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        int pos = (int) v.getTag();
-//                        subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock() ?
-//                                subItems.get(pos).getSubItemQuantitySelected() + 1 : subItems.get(pos).getStock());
-                        if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-                            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
-                        } else {
-                            Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
-                        }
-
-                        callback.onPlusClicked(pos, subItems.get(pos));
-                        FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-                        notifyDataSetChanged();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });*/
-
 
         } else if(holder instanceof ViewHolderBlank) {
             ViewHolderBlank titleholder = ((ViewHolderBlank) holder);
             titleholder.relative.setVisibility(View.VISIBLE);
         } else if(holder instanceof SubCategoryViewHolder) {
             SubCategoryViewHolder subCategoryHolder = ((SubCategoryViewHolder) holder);
-            subCategoryHolder.textViewSubCategoryName.setText(subItems.get(position).getItemName());
+            subCategoryHolder.textViewSubCategoryName.setText(subItems.get(position).getItemName().toUpperCase());
         }
 
 	}
@@ -339,12 +258,12 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         public RelativeLayout relativeLayoutItem, relativeLayoutQuantitySel ;
         public LinearLayout linearLayoutQuantitySelector;
         private ImageView imageViewFoodType, saperatorImage;
-        public TextView textViewItemCategoryName, textViewOutOfStock, textViewAboutItemDescription, textViewQuantity, textViewMinus, textViewPlus;
+        public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity, textViewMinus, textViewPlus;
         public Button addButton;
 
         public MainViewHolder(View itemView, Context context) {
             super(itemView);
-            cardViewRecycler = (CardView) itemView.findViewById(R.id.cardViewRecycler);
+            cardViewRecycler = (CardView) itemView.findViewById(R.id.cvRoot);
             relativeLayoutItem = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutItem);
             relativeLayoutQuantitySel = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutQuantitySel);
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
@@ -354,7 +273,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             textViewPlus = (TextView) itemView.findViewById(R.id.textViewPlus);
 
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
-            textViewOutOfStock = (TextView)itemView.findViewById(R.id.textViewOutOfStock); textViewOutOfStock.setTypeface(Fonts.mavenRegular(context));
             textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenRegular(context));
             textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenRegular(context));
 
@@ -376,7 +294,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         public TextView textViewSubCategoryName;
         public SubCategoryViewHolder(View itemView, Context context) {
             super(itemView);
-            textViewSubCategoryName = (TextView) itemView.findViewById(R.id.textViewSubCategoryName);textViewSubCategoryName.setTypeface(Fonts.mavenRegular(context));
+            textViewSubCategoryName = (TextView) itemView.findViewById(R.id.tvSubCategoryName);textViewSubCategoryName.setTypeface(Fonts.mavenRegular(context));
 
         }
     }
