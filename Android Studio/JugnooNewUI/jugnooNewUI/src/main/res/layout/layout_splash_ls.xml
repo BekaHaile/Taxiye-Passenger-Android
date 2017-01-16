@@ -60,6 +60,14 @@
 
         </RelativeLayout>
 
+        <LinearLayout
+            android:id="@+id/llLoginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:visibility="visible"
+            android:orientation="vertical">
+
 
         <Button
             android:id="@+id/buttonRegister"
@@ -93,6 +101,8 @@
             android:textColor="@color/text_color_theme_alpha_selector"
             android:textSize="@dimen/text_size_34" />
 
+        </LinearLayout>
+
 
     </LinearLayout>
 
@@ -103,6 +113,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_below="@+id/linearLayoutLoginSignupButtons"
+        android:layout_marginTop="@dimen/px_180"
         android:orientation="vertical"
         android:splitMotionEvents="false"
         android:visibility="gone">
@@ -122,7 +134,7 @@
             android:layout_marginTop="20px"
             android:gravity="center"
             android:text="@string/no_internet_connection"
-            android:textColor="@color/white"
+            android:textColor="@color/theme_color"
             android:textSize="@dimen/text_size_30" />
 
         <LinearLayout
@@ -157,7 +169,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="40px"
                 android:layout_marginRight="40px"
-                android:background="@drawable/button_white_selector"
+                android:background="@drawable/button_capsule_theme_selector"
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="@string/refresh"

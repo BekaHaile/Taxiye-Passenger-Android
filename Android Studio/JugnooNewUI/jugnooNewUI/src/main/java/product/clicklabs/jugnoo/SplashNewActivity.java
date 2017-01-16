@@ -125,7 +125,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	RelativeLayout relativeLayoutLS;
 	LinearLayout linearLayoutLoginSignupButtons;
 	Button buttonLogin, buttonRegister;
-	LinearLayout linearLayoutNoNet;
+	LinearLayout linearLayoutNoNet, llLoginBtn;
 	TextView textViewNoNet;
 	Button buttonNoNetCall, buttonRefresh;
 
@@ -485,6 +485,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			linearLayoutWalletOption = (LinearLayout) findViewById(R.id.linearLayoutWalletOption);
 			imageViewWalletOptionCheck = (ImageView) findViewById(R.id.imageViewWalletOptionCheck);
 			textViewWalletOptionMessage = (TextView) findViewById(R.id.textViewWalletOptionMessage);
+			llLoginBtn = (LinearLayout) findViewById(R.id.llLoginBtn);
 			textViewWalletOptionMessage.setTypeface(Fonts.mavenMedium(this));
 			extra = (View) findViewById(R.id.extra);
 
@@ -1153,36 +1154,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			case SPLASH_LS:
 				imageViewBack.setVisibility(View.GONE);
-
+				llLoginBtn.setVisibility(View.VISIBLE);
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
+
 				//extra.setVisibility(View.VISIBLE);
 
 				if(this.state == State.SPLASH_INIT) {
-					/*ScaleAnimation animation = new ScaleAnimation(1.0f, 0.8f, 1.0f, 0.8f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-					animation.setDuration(500);
-					animation.setFillAfter(true);
-
-					//moveViewToScreenCenter(relativeLayoutJugnooLogo);
-					animation.setAnimationListener(new Animation.AnimationListener() {
-						@Override
-						public void onAnimationStart(Animation animation) {
-
-						}
-
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							//relativeLayoutJugnooLogo.setScaleX(0.8f);
-							//relativeLayoutJugnooLogo.setScaleY(0.8f);
-							relativeLayoutLS.setVisibility(View.VISIBLE);
-						}
-
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-
-						}
-					});
-					relativeLayoutJugnooLogo.setAnimation(animation);*/
 
 					relativeLayoutLS.setVisibility(View.VISIBLE);
 					Animation animation8 = AnimationUtils.loadAnimation(this, R.anim.right_in);
@@ -1251,17 +1229,19 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				break;
 
 			case SPLASH_NO_NET:
+				llContainer.setVisibility(View.VISIBLE);
 				imageViewBack.setVisibility(View.GONE);
-				relativeLayoutJugnooLogo.setVisibility(View.VISIBLE);
-				//extra.setVisibility(View.VISIBLE);
+				relativeLayoutJugnooLogo.setVisibility(View.GONE);
+				llLoginBtn.setVisibility(View.GONE);
+				rlSplashLogo.setVisibility(View.GONE);
 
 				relativeLayoutLS.setVisibility(View.VISIBLE);
-				linearLayoutLoginSignupButtons.setVisibility(View.GONE);
+				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.VISIBLE);
 
-				relativeLayoutLS.setVisibility(View.VISIBLE);
-				linearLayoutLogin.setVisibility(View.VISIBLE);
-				relativeLayoutSignup.setVisibility(View.VISIBLE);
+				linearLayoutLogin.setVisibility(View.GONE);
+				relativeLayoutSignup.setVisibility(View.GONE);
+
 				break;
 
 			case LOGIN:
