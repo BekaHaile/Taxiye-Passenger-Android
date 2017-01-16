@@ -5,10 +5,12 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
@@ -43,33 +46,41 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     private Context context;
     private List<Item> subItems;
     private int categoryPos;
+    private Callback callback;
 
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
     private static final int SUB_CATEGORY_ITEM = 2;
 
-    public MenusCategoryItemsAdapter(Context context, int categoryPos, ArrayList<Subcategory> subcategories) {
+    public MenusCategoryItemsAdapter(Context context, int categoryPos, Category category, Callback callback) {
         this.context = context;
+        this.callback = callback;
         this.categoryPos = categoryPos;
-        setSubItems(subcategories);
+        setSubItems(category);
     }
 
-    public synchronized void setResults(ArrayList<Subcategory> subcategories){
-        setSubItems(subcategories);
-        notifyDataSetChanged();
-    }
-
-    private void setSubItems(ArrayList<Subcategory> subcategories){
+    private void setSubItems(Category category){
         subItems = new ArrayList<>();
-        for(int i=0; i<subcategories.size(); i++){
-            Subcategory subcategory = subcategories.get(i);
-            Item item = new Item();
-            item.setItemName(subcategory.getSubcategoryName());
-            item.setIsSubCategory(1);
-            subItems.add(item);
-            for(int j=0; j<subcategory.getItems().size(); j++){
-                Item item1 = subcategory.getItems().get(j);
-                item1.setSubCategroyPos(i);
+        if(category.getSubcategories() != null){
+            List<Subcategory> subcategories = category.getSubcategories();
+            for(int i=0; i<subcategories.size(); i++){
+                Subcategory subcategory = subcategories.get(i);
+                Item item = new Item();
+                item.setItemName(subcategory.getSubcategoryName());
+                item.setIsSubCategory(1);
+                subItems.add(item);
+                for(int j=0; j<subcategory.getItems().size(); j++){
+                    Item item1 = subcategory.getItems().get(j);
+                    item1.setSubCategoryPos(i);
+                    item1.setItemPos(j);
+                    subItems.add(item1);
+                }
+            }
+        } else if(category.getItems() != null){
+            List<Item> items = category.getItems();
+            for(int j=0; j<items.size(); j++){
+                Item item1 = items.get(j);
+                item1.setSubCategoryPos(-1);
                 item1.setItemPos(j);
                 subItems.add(item1);
             }
@@ -127,22 +138,27 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             MainViewHolder mHolder = ((MainViewHolder) holder);
             Item item = subItems.get(position);
 
-            Item itemUp = subItems.get(position - 1);
+            Item itemUp = position == 0 ? null : subItems.get(position - 1);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mHolder.cardViewRecycler.getLayoutParams();
             int topMargin, bottomMargin;
-            if(itemUp.getIsSubCategory() == 1){
+            if(itemUp == null){
+                topMargin = (int)(25.0f*ASSL.Yscale());
+            } else if(itemUp.getIsSubCategory() == 1){
                 topMargin = (int)(6.0f*ASSL.Yscale());
             } else{
                 topMargin = (int)(-6.0f*ASSL.Yscale());
             }
 
             Item itemDown = (position < (subItems.size()-1)) ? subItems.get(position + 1) : null;
-            if(itemDown == null || itemDown.getIsSubCategory() == 1){
+            if(itemDown == null){
+                mHolder.saperatorImage.setVisibility(View.GONE);
+                bottomMargin = (int)(25.0f*ASSL.Yscale());
+            } else if(itemDown.getIsSubCategory() == 1){
                 mHolder.saperatorImage.setVisibility(View.GONE);
                 bottomMargin = (int)(6.0f*ASSL.Yscale());
             } else{
                 mHolder.saperatorImage.setVisibility(View.VISIBLE);
-                bottomMargin = (int)(-6.0f*ASSL.Yscale());
+                bottomMargin = (int)(-8.0f*ASSL.Yscale());
             }
             layoutParams.setMargins((int) (25.0f*ASSL.Xscale()), topMargin, (int)(25.0f*ASSL.Xscale()), bottomMargin);
             mHolder.cardViewRecycler.setLayoutParams(layoutParams);
@@ -152,8 +168,10 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             StringBuilder sb = new StringBuilder();
             sb.append(item.getItemName())
             .append("\n")
-            .append(context.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(item.getPrice())))
-            .append(" ").append(context.getString(R.string.onwards));
+            .append(context.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(item.getPrice())));
+            if(item.getCustomizeItem().size() > 0) {
+                sb.append(" ").append(context.getString(R.string.onwards));
+            }
             mHolder.textViewItemCategoryName.setText(sb);
 
             int total = item.getTotalQuantity();
@@ -169,7 +187,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.textViewAboutItemDescription.setVisibility(item.getItemDetails() != null ? View.VISIBLE : View.GONE);
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
 
-            makeTextViewResizable(mHolder.textViewAboutItemDescription, 2, "View More", true);
+            makeTextViewResizable(mHolder.textViewAboutItemDescription, 2, context.getString(R.string.view_more), true);
 
 
             mHolder.relativeLayoutQuantitySel.setVisibility(View.VISIBLE);
@@ -191,23 +209,26 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     try {
                         int pos = (int) v.getTag();
                         Item item1 = subItems.get(pos);
-                        if(item1.getTotalQuantity() < 50) {
-                            if (item1.getCustomizeItem().size() > 0) {
-                                ((FreshActivity) context).openMenusItemCustomizeFragment(categoryPos, item1.getSubCategroyPos(), item1.getItemPos());
-                            } else {
-                                if(item1.getItemSelectedList().size() > 0){
-                                    item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
+                        if(callback.checkForAdd(pos, item1)) {
+                            if (item1.getTotalQuantity() < 50) {
+                                if (item1.getCustomizeItem().size() > 0) {
+                                    ((FreshActivity) context).openMenusItemCustomizeFragment(categoryPos, item1.getSubCategoryPos(), item1.getItemPos());
                                 } else {
-                                    ItemSelected itemSelected = new ItemSelected();
-                                    itemSelected.setRestaurantItemId(item1.getRestaurantItemId());
-                                    itemSelected.setQuantity(1);
-                                    itemSelected.setTotalPrice(item1.getPrice());
-                                    item1.getItemSelectedList().add(itemSelected);
+                                    if (item1.getItemSelectedList().size() > 0) {
+                                        item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
+                                    } else {
+                                        ItemSelected itemSelected = new ItemSelected();
+                                        itemSelected.setRestaurantItemId(item1.getRestaurantItemId());
+                                        itemSelected.setQuantity(1);
+                                        itemSelected.setTotalPrice(item1.getPrice());
+                                        item1.getItemSelectedList().add(itemSelected);
+                                    }
+                                    notifyItemChanged(pos);
+                                    callback.onPlusClicked(pos, item1);
                                 }
-                                notifyDataSetChanged();
+                            } else {
+                                Utils.showToast(context, context.getString(R.string.cannot_add_more_than_50));
                             }
-                        } else {
-                            Utils.showToast(context, context.getString(R.string.cannot_add_more_than_50));
                         }
                     }catch (Exception e) {
                         e.printStackTrace();
@@ -229,7 +250,8 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         } else {
                             if(item1.getItemSelectedList().size() > 0){
                                 item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() - 1);
-                                notifyDataSetChanged();
+                                notifyItemChanged(pos);
+                                callback.onMinusClicked(pos, item1);
                             }
                         }
                     } catch (Exception e){}
@@ -300,15 +322,13 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     public interface Callback{
-        boolean checkForAdd(int position, Item subItem);
-        void onPlusClicked(int position, Item subItem);
-        void onMinusClicked(int position, Item subItem);
-        boolean checkForMinus(int position, Item subItem);
-        void minusNotDone(int position, Item subItem);
+        boolean checkForAdd(int position, Item item);
+        void onPlusClicked(int position, Item item);
+        void onMinusClicked(int position, Item item);
     }
 
 
-    public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
+    public void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore) {
 
         if (tv.getTag() == null) {
             tv.setTag(tv.getText());
@@ -351,7 +371,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     }
 
-    private static SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,
+    private SpannableStringBuilder addClickablePartTextViewResizable(final Spanned strSpanned, final TextView tv,
                                                                             final int maxLine, final String spanableText, final boolean viewMore) {
         String str = strSpanned.toString();
         SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
@@ -364,20 +384,21 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, -1, "View Less", false);
+                        makeTextViewResizable(tv, -1, context.getString(R.string.view_less), false);
                     } else {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, 2, "View More", true);
+                        makeTextViewResizable(tv, 2, context.getString(R.string.view_more), true);
                     }
 
                 }
             }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);
+            ssb.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.theme_color)),
+                    str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return ssb;
     }
-
-
 
 }

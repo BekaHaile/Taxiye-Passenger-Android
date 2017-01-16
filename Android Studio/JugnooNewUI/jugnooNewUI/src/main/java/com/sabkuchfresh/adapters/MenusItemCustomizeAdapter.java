@@ -5,7 +5,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -166,8 +165,8 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.textViewAboutItemDescription.setVisibility(item.getItemDetails() != null ? View.VISIBLE : View.GONE);
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
-            mHolder.textViewAboutItemDescription.setMaxLines(2);
-            mHolder.textViewAboutItemDescription.setEllipsize(TextUtils.TruncateAt.END);
+//            mHolder.textViewAboutItemDescription.setMaxLines(2);
+//            mHolder.textViewAboutItemDescription.setEllipsize(TextUtils.TruncateAt.END);
 
 
             mHolder.relativeLayoutQuantitySel.setVisibility(View.VISIBLE);
@@ -245,7 +244,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 bottomMargin = (int)(6.0f*ASSL.Yscale());
             } else{
                 mHolder.vSep.setVisibility(View.VISIBLE);
-                bottomMargin = (int)(-6.0f*ASSL.Yscale());
+                bottomMargin = (int)(-8.0f*ASSL.Yscale());
             }
             layoutParams.setMargins((int) (25.0f*ASSL.Xscale()), topMargin, (int)(25.0f*ASSL.Xscale()), bottomMargin);
             mHolder.cvRoot.setLayoutParams(layoutParams);

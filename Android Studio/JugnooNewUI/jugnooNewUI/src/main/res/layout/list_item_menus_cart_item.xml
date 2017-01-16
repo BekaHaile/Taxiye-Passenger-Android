@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutItemImage"
+            android:layout_width="wrap_content"
+            android:layout_height="120px"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="20px"
+            android:layout_marginLeft="30px"
+            android:layout_marginTop="20px"
+            >
+
+            <ImageView
+                android:id="@+id/imageViewItemImage"
+                android:layout_width="120px"
+                android:layout_height="120px"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_fresh_item_placeholder"
+                android:tag="mwar"
+                android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/imageViewFoodType"
+                android:layout_width="41px"
+                android:layout_height="41px"
+                android:layout_marginLeft="2px"
+                android:layout_marginTop="2px"
+                android:src="@drawable/veg"
+                android:tag="mwar"
+                android:visibility="gone"
+
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutContent"
+            android:layout_width="580px"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="34px"
+            android:layout_marginLeft="35px"
+            android:layout_marginTop="34px"
+            android:layout_toRightOf="@+id/relativeLayoutItemImage"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewItemName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10px"
+                android:maxLines="2"
+                android:text="Orange\nba\ndjsak"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_34"
+                />
+
+            <TextView
+                android:id="@+id/textViewItemCustomizeText"
+                android:layout_width="420px"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10px"
+                android:maxLines="2"
+                android:text="@string/rupee_0"
+                android:textColor="@color/text_color_light"
+                android:textSize="@dimen/text_size_28"
+                />
+
+            <TextView
+                android:id="@+id/textViewItemPrice"
+                android:layout_width="420px"
+                android:layout_height="match_parent"
+                android:maxLines="2"
+                android:text="@string/rupee_0"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_28"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageViewSep"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20px"
+        android:layout_marginRight="20px"
+        >
+
+        <include
+            layout="@layout/layout_item_quantity_selector"
+            />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageViewSep"
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_below="@+id/relativeLayoutMain"
+        android:layout_marginLeft="140px"
+        android:layout_marginRight="34px"
+        android:background="@color/stroke_light_grey_alpha"/>
+
+</RelativeLayout>

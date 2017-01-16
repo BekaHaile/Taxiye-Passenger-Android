@@ -178,6 +178,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 			try {
 				menusCategoryFragmentsAdapter.notifyDataSetChanged();
 				tabs.notifyDataSetChanged();
+				activity.updateCartValuesGetTotalPrice();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

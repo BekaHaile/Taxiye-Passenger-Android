@@ -15,11 +15,9 @@ public class Item {
 	@SerializedName("price")
 	@Expose
 	private Double price;
-
 	@SerializedName("taxes")
 	@Expose
 	private List<Taxes> taxes = null;
-
 	@SerializedName("is_active")
 	@Expose
 	private Integer isActive;
@@ -38,12 +36,20 @@ public class Item {
 	@SerializedName("customize_item")
 	@Expose
 	private List<CustomizeItem> customizeItem = null;
-
 	@SerializedName("item_details")
 	@Expose
 	private String itemDetails;
-
-	private Integer isSubCategory, subCategroyPos, itemPos;
+	@SerializedName("isSubCategory")
+	@Expose
+	private Integer isSubCategory;
+	@SerializedName("subCategoryPos")
+	@Expose
+	private Integer subCategoryPos;
+	@SerializedName("itemPos")
+	@Expose
+	private Integer itemPos;
+	@SerializedName("itemSelectedList")
+	@Expose
 	private List<ItemSelected> itemSelectedList;
 
 	public Integer getIsActive() {
@@ -152,12 +158,15 @@ public class Item {
 		}
 	}
 
-	public Integer getSubCategroyPos() {
-		return subCategroyPos;
+	public Integer getSubCategoryPos() {
+		if(subCategoryPos == null){
+			subCategoryPos = -1;
+		}
+		return subCategoryPos;
 	}
 
-	public void setSubCategroyPos(Integer subCategroyPos) {
-		this.subCategroyPos = subCategroyPos;
+	public void setSubCategoryPos(Integer subCategoryPos) {
+		this.subCategoryPos = subCategoryPos;
 	}
 
 	public Integer getItemPos() {

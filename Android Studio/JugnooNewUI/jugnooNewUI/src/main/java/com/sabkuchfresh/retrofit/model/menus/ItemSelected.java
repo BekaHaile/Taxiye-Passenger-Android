@@ -17,8 +17,11 @@ public class ItemSelected {
 	@SerializedName("customize_items")
 	@Expose
 	private List<CustomizeItemSelected> customizeItemSelectedList;
-
+	@SerializedName("quantity")
+	@Expose
 	private Integer quantity;
+	@SerializedName("totalPrice")
+	@Expose
 	private Double totalPrice;
 
 	public Integer getRestaurantItemId() {
@@ -43,13 +46,26 @@ public class ItemSelected {
 	@Override
 	public boolean equals(Object o) {
 		if(o instanceof ItemSelected){
-			return ((ItemSelected)o).restaurantItemId.equals(restaurantItemId);
+			ItemSelected io = (ItemSelected)o;
+			if(io.restaurantItemId.equals(restaurantItemId)){
+				for(CustomizeItemSelected customizeItemSelected : io.getCustomizeItemSelectedList()){
+					if(!getCustomizeItemSelectedList().contains(customizeItemSelected)){
+						return false;
+					}
+				}
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
 	}
 
 	public Integer getQuantity() {
+		if(quantity == null){
+			quantity = 0;
+		}
 		return quantity;
 	}
 
@@ -63,5 +79,9 @@ public class ItemSelected {
 
 	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public Double getTotalPrice() {
+		return totalPrice;
 	}
 }

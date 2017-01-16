@@ -44,7 +44,17 @@ public class CustomizeItemSelected{
 	@Override
 	public boolean equals(Object o) {
 		if(o instanceof CustomizeItemSelected){
-			return ((CustomizeItemSelected)o).customizeId.equals(customizeId);
+			CustomizeItemSelected cso = (CustomizeItemSelected)o;
+			if(cso.customizeId.equals(customizeId)){
+				for(Integer option : cso.getCustomizeOptions()){
+					if(!getCustomizeOptions().contains(option)){
+						return false;
+					}
+				}
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}

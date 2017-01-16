@@ -142,7 +142,7 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 
 							@Override
 							public boolean checkForAdd(int position, SubItem subItem) {
-								return activity.checkForAdd(position, subItem);
+								return activity.checkForAdd();
 							}
 						} ,AppConstant.ListType.HOME, FlurryEventNames.HOME_SCREEN, 1);
 				recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);

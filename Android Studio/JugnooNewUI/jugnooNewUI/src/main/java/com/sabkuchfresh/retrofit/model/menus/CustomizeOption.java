@@ -12,7 +12,6 @@ public class CustomizeOption {
 	@SerializedName("customize_option_id")
 	@Expose
 	private Integer customizeOptionId;
-
 	@SerializedName("customize_option_name")
 	@Expose
 	private String customizeOptionName;
@@ -25,10 +24,17 @@ public class CustomizeOption {
 	@SerializedName("additional_cost")
 	@Expose
 	private Integer additionalCost;
-
+	@SerializedName("isCustomizeItem")
+	@Expose
 	private Integer isCustomizeItem;
+	@SerializedName("customizeItemPos")
+	@Expose
 	private Integer customizeItemPos;
+	@SerializedName("isItem")
+	@Expose
 	private Integer isItem;
+	@SerializedName("isMultiSelect")
+	@Expose
 	private Integer isMultiSelect;
 
 	public String getCustomizeOptionName() {

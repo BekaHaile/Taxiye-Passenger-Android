@@ -54,8 +54,7 @@ public class CustomizeItem {
 	}
 
 	public Integer getIsCheckBox() {
-		if(isCheckBox == null)
-		{
+		if(isCheckBox == null) {
 			return 0;
 		}
 		return isCheckBox;

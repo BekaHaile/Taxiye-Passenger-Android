@@ -16,12 +16,10 @@ import android.widget.RelativeLayout;
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.menus.Subcategory;
+import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -76,7 +74,6 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
 			Bundle bundle = getArguments();
 			if(bundle.containsKey(Constants.KEY_CATEGORY_POSITION)) {
 				int position = bundle.getInt(Constants.KEY_CATEGORY_POSITION);
-				int isVendorMenu = bundle.getInt(Constants.KEY_IS_VENDOR_MENU);
 
 				activity = (FreshActivity) getActivity();
                 mBus = (activity).getBus();
@@ -111,7 +108,23 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
 				}
 
 				menusCategoryItemsAdapter = new MenusCategoryItemsAdapter(activity, position,
-						(ArrayList<Subcategory>)activity.getMenuProductsResponse().getCategories().get(position).getSubcategories());
+						activity.getMenuProductsResponse().getCategories().get(position),
+						new MenusCategoryItemsAdapter.Callback() {
+							@Override
+							public boolean checkForAdd(int position, Item item) {
+								return activity.checkForAdd();
+							}
+
+							@Override
+							public void onPlusClicked(int position, Item item) {
+								activity.updateCartValuesGetTotalPrice();
+							}
+
+							@Override
+							public void onMinusClicked(int position, Item item) {
+								activity.updateCartValuesGetTotalPrice();
+							}
+						});
 				recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
 			}
 		} catch (Exception e) {

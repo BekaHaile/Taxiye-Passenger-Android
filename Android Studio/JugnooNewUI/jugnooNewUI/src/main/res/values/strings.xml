@@ -1463,5 +1463,7 @@
     <string name="required_bracket">(Required)</string>
     <string name="optional_bracket">(Optional)</string>
     <string name="you_have_to_decrease_quantity_from_checkout">You have to decrease quantity from checkout page</string>
+    <string name="view_more">View more</string>
+    <string name="view_less">View less</string>
 
 </resources>

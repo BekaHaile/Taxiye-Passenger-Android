@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
+import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
 import com.sabkuchfresh.adapters.MenusItemChargesAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -43,14 +44,16 @@ import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
-import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
-import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.menus.Category;
+import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
+import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
@@ -118,7 +121,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     private NonScrollListView listViewCart;
     private NonScrollListView listViewMenusCharges;
     private MenusItemChargesAdapter menusItemChargesAdapter;
-    private FreshCartItemsAdapter freshCartItemsAdapter;
+    private MenusCartItemsAdapter menusCartItemsAdapter;
 
     private RelativeLayout relativeLayoutDeliveryAddress;
     private ImageView imageViewAddressType, imageViewDeliveryAddressForward;
@@ -176,6 +179,8 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     private CheckoutSaveData checkoutSaveData;
     private int type;
 
+    private ArrayList<Item> itemsInCart = new ArrayList<>();
+
     @Override
     public void onStart() {
         LocalBroadcastManager.getInstance(activity).registerReceiver(broadcastReceiverWalletUpdate,
@@ -216,35 +221,38 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         orderPlaced = false;
         checkoutSaveData = new CheckoutSaveData();
 
-        if(activity.subItemsInCart == null) {
-            activity.subItemsInCart = new ArrayList<>();
+        if(itemsInCart == null) {
+            itemsInCart = new ArrayList<>();
         }
-        activity.subItemsInCart.clear();
+        itemsInCart.clear();
 
 
-        if(activity.getProductsResponse() != null
-                && activity.getProductsResponse().getCategories() != null) {
-            for (Category category : activity.getProductsResponse().getCategories()) {
-                for (SubItem subItem : category.getSubItems()) {
-                    if (subItem.getSubItemQuantitySelected() > 0) {
-                       /* ArrayList<SubItem.Tax> taxList = new ArrayList<>();
-                        taxList.add(subItem.new Tax("pc",5.0));
-                        taxList.add(subItem.new Tax("dc",5.0));
-                        subItem.setTaxes(taxList);*/
-                        activity.subItemsInCart.add(subItem);
+        if(activity.getMenusResponse() != null
+                && activity.getMenuProductsResponse().getCategories() != null) {
+            for (Category category : activity.getMenuProductsResponse().getCategories()) {
+                if(category.getSubcategories() != null){
+                    for(Subcategory subcategory : category.getSubcategories()){
+                        for(Item item : subcategory.getItems()){
+                            if(item.getItemSelectedList().size() > 0){
+                                itemsInCart.add(item);
+                            }
+                        }
                     }
-                }
-                if(Data.AppType == AppConstant.ApplicationType.MEALS) {
-                    currentGroupId = category.getCurrentGroupId();
+                } else if(category.getItems() != null){
+                    for(Item item : category.getItems()){
+                        if(item.getItemSelectedList().size() > 0){
+                            itemsInCart.add(item);
+                        }
+                    }
                 }
             }
         }
 
         try {
-            for (int i = 0; i < activity.subItemsInCart.size(); i++) {
-                MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
-                        activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(),
-                        activity.subItemsInCart.get(i).getPrice(),
+            for (int i = 0; i < itemsInCart.size(); i++) {
+                MyApplication.getInstance().getCleverTapUtils().addToCart(itemsInCart.get(i).getItemName(),
+                        itemsInCart.get(i).getRestaurantItemId(), itemsInCart.get(i).getTotalQuantity(),
+                        itemsInCart.get(i).getPrice(),
                         Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
                         Data.userData.getCity());
             }
@@ -252,24 +260,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
         }
 
-        try {
-            if(Data.getDatumToReOrder() != null){
-				activity.setSelectedAddress(Data.getDatumToReOrder().getDeliveryAddress());
-				activity.setSelectedLatLng(new LatLng(Data.getDatumToReOrder().getDeliveryLatitude(), Data.getDatumToReOrder().getDeliveryLongitude()));
-                ArrayList<SearchResult> searchResults = new HomeUtil().getSavedPlacesWithHomeWork(activity);
-                for(SearchResult searchResult : searchResults){
-                    if(Data.getDatumToReOrder().getAddressId().equals(searchResult.getId())){
-                        activity.setSelectedAddressId(Data.getDatumToReOrder().getAddressId());
-                        activity.setSelectedAddressType(Data.getDatumToReOrder().getDeliveryAddressType());
-                        break;
-                    }
-                }
-                activity.setRefreshCart(true);
-			}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Data.setDatumToReOrder(null);
 
         activity.setMenuRefreshLatLng(new LatLng(activity.getSelectedLatLng().latitude, activity.getSelectedLatLng().longitude));
 
@@ -293,8 +283,8 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         menusItemChargesAdapter = new MenusItemChargesAdapter(activity, taxList);
         listViewMenusCharges.setAdapter(menusItemChargesAdapter);
 
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, true, this);
-        listViewCart.setAdapter(freshCartItemsAdapter);
+        menusCartItemsAdapter = new MenusCartItemsAdapter(activity, itemsInCart, true, this);
+        listViewCart.setAdapter(menusCartItemsAdapter);
 
 
         textViewDeliveryInstructionsText = ((TextView)rootView.findViewById(R.id.textViewDeliveryInstructions));

@@ -104,7 +104,14 @@ public class MenusItemCustomizeFragment extends Fragment {
 					rlAddToCart.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							menusItemCustomizeAdapter.getItem().getItemSelectedList().add(menusItemCustomizeAdapter.getItemSelected());
+							int index = menusItemCustomizeAdapter.getItem().getItemSelectedList().indexOf(menusItemCustomizeAdapter.getItemSelected());
+							if(index > -1){
+								menusItemCustomizeAdapter.getItem().getItemSelectedList().get(index).setQuantity(
+										menusItemCustomizeAdapter.getItem().getItemSelectedList().get(index).getQuantity()
+												+ menusItemCustomizeAdapter.getItemSelected().getQuantity());
+							} else {
+								menusItemCustomizeAdapter.getItem().getItemSelectedList().add(menusItemCustomizeAdapter.getItemSelected());
+							}
 							activity.performBackPressed();
 							activity.getVendorMenuFragment().onUpdateListEvent(new UpdateMainList(true));
 						}
