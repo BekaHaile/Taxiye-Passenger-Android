@@ -336,6 +336,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         ((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewPackagingCharges)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewJugnooCash)).setTypeface(Fonts.mavenMedium(activity));
+        ((TextView)rootView.findViewById(R.id.tvTotal)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.tvBecomeStar)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.tvStarOffer)).setTypeface(Fonts.mavenMedium(activity));
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
@@ -575,7 +576,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                scrollView.scrollTo(0, buttonPlaceOrder.getBottom());
+                scrollView.scrollTo(0, editTextDeliveryInstructions.getBottom());
             }
 
             @Override
@@ -650,7 +651,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             relativeLayoutJugnooCash.setVisibility(View.GONE);
         }
 
-        if(relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
+        /*if(relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
                 || relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
                 || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
                 || relativeLayoutVAT.getVisibility() == View.VISIBLE
@@ -658,15 +659,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             imageViewSep1.setVisibility(View.VISIBLE);
         } else{
             imageViewSep1.setVisibility(View.GONE);
-        }
-        if(relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
+        }*/
+        /*if(relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
                 || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
                 || relativeLayoutVAT.getVisibility() == View.VISIBLE
                 || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
             imageViewSep2.setVisibility(View.VISIBLE);
         } else{
             imageViewSep2.setVisibility(View.GONE);
-        }
+        }*/
         if(relativeLayoutServiceTax.getVisibility() == View.VISIBLE
                 || relativeLayoutVAT.getVisibility() == View.VISIBLE
                 || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
@@ -709,6 +710,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             textViewCartTotalUndiscount.setPaintFlags(textViewCartTotalUndiscount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else{
             textViewCartTotalUndiscount.setVisibility(View.GONE);
+        }
+
+        if(payableAmount() > 0) {
+            buttonPlaceOrder.setText("PAY "+activity.getString(R.string.rupees_value_format,
+                    Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
+        } else{
+            buttonPlaceOrder.setText(activity.getResources().getString(R.string.place_order));
         }
 
         updateStarLayout();

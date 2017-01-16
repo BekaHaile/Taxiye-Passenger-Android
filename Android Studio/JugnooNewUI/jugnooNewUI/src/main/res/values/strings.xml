@@ -1451,5 +1451,6 @@
     <string name="star_savings_no_priority_tip">Star Savings: No Priority Tip on this ride</string>
     <string name="become_a_jugnoo_star">Become a jugnoo star</string>
     <string name="add_to_avail_unlimited_free_deliveries">Add to avail unlimited free deliveries</string>
+    <string name="total">Total</string>
 
 </resources>

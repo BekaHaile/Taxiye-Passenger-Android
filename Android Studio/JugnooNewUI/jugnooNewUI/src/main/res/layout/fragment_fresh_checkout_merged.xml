@@ -578,13 +578,14 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_88"
         android:layout_gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
         android:text="@string/place_order"
         android:background="@drawable/button_theme"
         android:layout_marginLeft="-6px"
         android:layout_marginRight="-6px"
         android:textColor="@color/white"
         android:textAllCaps="true"
-        android:textSize="@dimen/text_size_34" />
+        android:textSize="@dimen/text_size_34"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
