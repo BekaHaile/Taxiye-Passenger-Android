@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.retrofit.model.menus.Tax;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
@@ -28,9 +28,9 @@ public class MenusItemChargesAdapter extends BaseAdapter
 {
     private Context context;
     LayoutInflater menusItemChargesLayout;
-    ArrayList<SubItem.Tax> taxes;
+    ArrayList<Tax> taxes;
 
-    public MenusItemChargesAdapter(Context context, ArrayList<SubItem.Tax> taxes) {
+    public MenusItemChargesAdapter(Context context, ArrayList<Tax> taxes) {
         this.context = context;
         this.taxes = taxes;
         this.menusItemChargesLayout = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

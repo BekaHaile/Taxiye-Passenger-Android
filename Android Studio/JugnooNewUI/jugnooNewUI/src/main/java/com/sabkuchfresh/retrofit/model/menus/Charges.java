@@ -9,7 +9,7 @@ import java.util.List;
  * Created by shankar on 1/12/17.
  */
 
-public class Charge {
+public class Charges {
 
 	@SerializedName("id")
 	@Expose
@@ -100,12 +100,32 @@ public class Charge {
 		this.defaultValue = defaultValue;
 	}
 
+	public Charges(){}
+	public Charges(Integer id){
+		this.id = id;
+	}
+
 	@Override
 	public boolean equals(Object o) {
-		if(o instanceof Charge){
-			return ((Charge)o).id.equals(id);
+		if(o instanceof Charges){
+			return ((Charges)o).getId().equals(getId());
 		} else {
 			return false;
+		}
+	}
+
+	public enum ChargeType{
+		SUBTOTAL_LEVEL(0),
+		ITEM_LEVEL(1)
+		;
+
+		private int ordinal;
+		ChargeType(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
 		}
 	}
 }

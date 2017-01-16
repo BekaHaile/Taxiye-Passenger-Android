@@ -35,9 +35,6 @@ public class ProductsResponse {
 	@SerializedName("recent_orders_possible_status")
 	@Expose
 	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
-	@SerializedName("charges")
-	@Expose
-	private List<Charges> charges = new ArrayList<Charges>();
 	@SerializedName("subscription_message")
 	@Expose
 	private String subscriptionMessage;
@@ -136,150 +133,12 @@ public class ProductsResponse {
 		this.recentOrdersPossibleStatus = recentOrdersPossibleStatus;
 	}
 
-	public List<Charges> getCharges() {
-		return charges;
-	}
-
-	public void setCharges(List<Charges> charges) {
-		this.charges = charges;
-	}
-
 	public String getSubscriptionMessage() {
 		return subscriptionMessage;
 	}
 
 	public void setSubscriptionMessage(String subscriptionMessage) {
 		this.subscriptionMessage = subscriptionMessage;
-	}
-
-	public class Charges
-	{
-		@SerializedName("id")
-		@Expose
-		private Integer id;
-		@SerializedName("text")
-		@Expose
-		private String text;
-		@SerializedName("type")
-		@Expose
-		private Integer type;
-		@SerializedName("is_percent")
-		@Expose
-		private Integer isPercent;
-		@SerializedName("value")
-		@Expose
-		private String value;
-		@SerializedName("included_values")
-		@Expose
-		private List<Integer> includeValue = new ArrayList<Integer>();
-		@SerializedName("force_show")
-		@Expose
-		private Integer forceShow;
-		@SerializedName("default")
-		@Expose
-		private Double defaultVal;
-
-
-		public Charges(){}
-		public Charges(Integer id){
-			this.id = id;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if(o instanceof Charges){
-				return ((Charges)o).getId().equals(getId());
-			} else {
-				return false;
-			}
-		}
-
-		public Integer getId() {
-			return id;
-		}
-
-		public void setId(Integer id) {
-			this.id = id;
-		}
-
-		public String getText() {
-			return text;
-		}
-
-		public void setText(String text) {
-			this.text = text;
-		}
-
-		public Integer getType() {
-			if(type == null){
-				return 0;
-			}
-			return type;
-		}
-
-		public void setType(Integer type) {
-			this.type = type;
-		}
-
-		public Integer getIsPercent() {
-			return isPercent;
-		}
-
-		public void setIsPercent(Integer isPercent) {
-			this.isPercent = isPercent;
-		}
-
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
-
-		public List<Integer> getIncludeValue() {
-			if(includeValue == null){
-				includeValue = new ArrayList<>();
-			}
-			return includeValue;
-		}
-
-		public void setIncludeValue(List<Integer> includeValue){
-			this.includeValue = includeValue;
-		}
-
-		public Integer getForceShow() {
-			return forceShow;
-		}
-
-		public void setForceShow(Integer forceShow) {
-			this.forceShow = forceShow;
-		}
-
-		public Double getDefaultVal() {
-			return defaultVal;
-		}
-
-		public void setDefaultVal(Double defaultVal) {
-			this.defaultVal = defaultVal;
-		}
-	}
-
-
-	public enum ChargeType{
-		SUBTOTAL_LEVEL(0),
-		ITEM_LEVEL(1)
-		;
-
-		private int ordinal;
-		ChargeType(int ordinal){
-			this.ordinal = ordinal;
-		}
-
-		public int getOrdinal() {
-			return ordinal;
-		}
 	}
 
 }

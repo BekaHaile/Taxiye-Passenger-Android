@@ -7,7 +7,12 @@ import com.google.gson.annotations.SerializedName;
  * Created by shankar on 1/12/17.
  */
 
-public class Taxes {
+public class Tax {
+	public Tax(){}
+	public Tax(String key, Double value) {
+		this.key = key;
+		this.value = value;
+	}
 
 	@SerializedName("key")
 	@Expose

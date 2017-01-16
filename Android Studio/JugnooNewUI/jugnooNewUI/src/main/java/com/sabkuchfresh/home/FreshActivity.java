@@ -1401,10 +1401,35 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     }
 
     public void orderComplete() {
-        clearCart();
-        for (Category category : productsResponse.getCategories()) {
-            for (SubItem subItem : category.getSubItems()) {
-                subItem.setSubItemQuantitySelected(0);
+        int type = getAppType();
+        if(type == AppConstant.ApplicationType.FRESH) {
+            clearCart();
+        } else if(type == AppConstant.ApplicationType.GROCERY){
+            clearGroceryCart();
+        } else if(type == AppConstant.ApplicationType.MENUS){
+            clearMenusCart();
+        } else{
+            clearMealCart();
+        }
+        if(type == AppConstant.ApplicationType.MENUS){
+            for(com.sabkuchfresh.retrofit.model.menus.Category category : getMenuProductsResponse().getCategories()){
+                if(category.getSubcategories() != null){
+                    for(Subcategory subcategory : category.getSubcategories()){
+                        for(Item item : subcategory.getItems()){
+                            item.getItemSelectedList().clear();
+                        }
+                    }
+                } else if(category.getItems() != null){
+                    for(Item item : category.getItems()){
+                        item.getItemSelectedList().clear();
+                    }
+                }
+            }
+        } else {
+            for (Category category : productsResponse.getCategories()) {
+                for (SubItem subItem : category.getSubItems()) {
+                    subItem.setSubItemQuantitySelected(0);
+                }
             }
         }
         splInstr = "";

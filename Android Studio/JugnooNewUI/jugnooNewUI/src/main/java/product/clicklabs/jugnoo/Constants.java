@@ -587,4 +587,6 @@ public interface Constants {
 	String KEY_AUTOS_BENEFIT_ID = "autos_benefit_id";
 
 	double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 100d;
+	String KEY_OPTIONS = "options";
+	String KEY_CUSTOMISATIONS = "customisations";
 }

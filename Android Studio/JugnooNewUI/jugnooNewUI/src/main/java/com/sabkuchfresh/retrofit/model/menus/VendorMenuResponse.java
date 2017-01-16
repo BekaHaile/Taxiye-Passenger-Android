@@ -35,7 +35,7 @@ public class VendorMenuResponse {
 
     @SerializedName("charges")
     @Expose
-    private List<Charge> charges = null;
+    private List<Charges> charges = null;
 
     public Integer getFlag() {
         return flag;
@@ -93,11 +93,11 @@ public class VendorMenuResponse {
         this.showMessage = showMessage;
     }
 
-    public List<Charge> getCharges() {
+    public List<Charges> getCharges() {
         return charges;
     }
 
-    public void setCharges(List<Charge> charges) {
+    public void setCharges(List<Charges> charges) {
         this.charges = charges;
     }
 

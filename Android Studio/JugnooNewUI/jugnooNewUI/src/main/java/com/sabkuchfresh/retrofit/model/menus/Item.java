@@ -17,7 +17,7 @@ public class Item {
 	private Double price;
 	@SerializedName("taxes")
 	@Expose
-	private List<Taxes> taxes = null;
+	private List<Tax> taxes = null;
 	@SerializedName("is_active")
 	@Expose
 	private Integer isActive;
@@ -133,11 +133,11 @@ public class Item {
 		this.price = price;
 	}
 
-	public List<Taxes> getTaxes() {
+	public List<Tax> getTaxes() {
 		return taxes;
 	}
 
-	public void setTaxes(List<Taxes> taxes) {
+	public void setTaxes(List<Tax> taxes) {
 		this.taxes = taxes;
 	}
 
@@ -181,6 +181,14 @@ public class Item {
 		int total = 0;
 		for (ItemSelected itemSelected : getItemSelectedList()) {
 			total = total + itemSelected.getQuantity();
+		}
+		return total;
+	}
+
+	public Double getSuperTotalPrice(){
+		double total = 0;
+		for (ItemSelected itemSelected : getItemSelectedList()) {
+			total = total + itemSelected.getTotalPriceWithQuantity();
 		}
 		return total;
 	}
