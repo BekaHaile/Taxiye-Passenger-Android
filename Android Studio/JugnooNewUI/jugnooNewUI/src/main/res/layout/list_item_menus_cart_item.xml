@@ -9,19 +9,21 @@
     >
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/relativeLayoutMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        >
 
         <RelativeLayout
             android:id="@+id/relativeLayoutItemImage"
             android:layout_width="wrap_content"
             android:layout_height="120px"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="20px"
-            android:layout_marginLeft="30px"
-            android:layout_marginTop="20px"
+            android:layout_marginBottom="34px"
+            android:layout_marginLeft="20px"
+            android:layout_marginTop="34px"
             >
 
             <ImageView
@@ -43,7 +45,7 @@
                 android:layout_marginTop="2px"
                 android:src="@drawable/veg"
                 android:tag="mwar"
-                android:visibility="gone"
+                android:visibility="visible"
 
                 />
 
@@ -51,9 +53,8 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutContent"
-            android:layout_width="580px"
+            android:layout_width="560px"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginBottom="34px"
             android:layout_marginLeft="35px"
             android:layout_marginTop="34px"
@@ -73,19 +74,19 @@
 
             <TextView
                 android:id="@+id/textViewItemCustomizeText"
-                android:layout_width="420px"
+                android:layout_width="380px"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10px"
-                android:maxLines="2"
-                android:text="@string/rupee_0"
+                android:text="ah\nah\nah\ndhjas"
                 android:textColor="@color/text_color_light"
-                android:textSize="@dimen/text_size_28"
+                android:textSize="@dimen/text_size_24"
                 />
 
             <TextView
                 android:id="@+id/textViewItemPrice"
-                android:layout_width="420px"
+                android:layout_width="380px"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="10px"
                 android:maxLines="2"
                 android:text="@string/rupee_0"
                 android:textColor="@color/text_color"
@@ -94,7 +95,7 @@
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"

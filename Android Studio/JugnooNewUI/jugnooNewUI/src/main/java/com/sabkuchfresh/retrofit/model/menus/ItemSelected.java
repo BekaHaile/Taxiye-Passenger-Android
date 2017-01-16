@@ -23,6 +23,9 @@ public class ItemSelected {
 	@SerializedName("totalPrice")
 	@Expose
 	private Double totalPrice;
+	@SerializedName("customizeText")
+	@Expose
+	private String customizeText;
 
 	public Integer getRestaurantItemId() {
 		return restaurantItemId;
@@ -48,6 +51,9 @@ public class ItemSelected {
 		if(o instanceof ItemSelected){
 			ItemSelected io = (ItemSelected)o;
 			if(io.restaurantItemId.equals(restaurantItemId)){
+				if(io.getCustomizeItemSelectedList().size() != getCustomizeItemSelectedList().size()){
+					return false;
+				}
 				for(CustomizeItemSelected customizeItemSelected : io.getCustomizeItemSelectedList()){
 					if(!getCustomizeItemSelectedList().contains(customizeItemSelected)){
 						return false;
@@ -83,5 +89,13 @@ public class ItemSelected {
 
 	public Double getTotalPrice() {
 		return totalPrice;
+	}
+
+	public String getCustomizeText() {
+		return customizeText;
+	}
+
+	public void setCustomizeText(String customizeText) {
+		this.customizeText = customizeText;
 	}
 }

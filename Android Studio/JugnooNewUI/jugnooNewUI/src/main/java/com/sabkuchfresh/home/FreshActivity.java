@@ -832,7 +832,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                             for(Item item : subcategory.getItems()){
                                 for(ItemSelected itemSelected : item.getItemSelectedList()){
                                     if(itemSelected.getQuantity() > 0){
-                                        totalQuantity++;
+                                        totalQuantity = totalQuantity + itemSelected.getQuantity();
                                         totalPrice = totalPrice + itemSelected.getTotalPriceWithQuantity();
                                     }
                                 }
@@ -842,7 +842,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         for(Item item : category.getItems()){
                             for(ItemSelected itemSelected : item.getItemSelectedList()){
                                 if(itemSelected.getQuantity() > 0){
-                                    totalQuantity++;
+                                    totalQuantity = totalQuantity + itemSelected.getQuantity();
                                     totalPrice = totalPrice + itemSelected.getTotalPriceWithQuantity();
                                 }
                             }
@@ -1891,7 +1891,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                                 if(jsonArrayItem != null && jsonArrayItem.length() > 0){
                                     for(int i=0; i<jsonArrayItem.length(); i++){
                                         try {ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
-                                            item.getItemSelectedList().add(itemSelected);} catch (Exception e) {}
+                                            if(itemSelected.getQuantity() > 0) {
+                                                item.getItemSelectedList().add(itemSelected);
+                                            }} catch (Exception e) {}
                                     }
                                 }
                             }
@@ -1903,7 +1905,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                             if(jsonArrayItem != null && jsonArrayItem.length() > 0){
                                 for(int i=0; i<jsonArrayItem.length(); i++){
                                     try {ItemSelected itemSelected = gson.fromJson(jsonArrayItem.getString(i), ItemSelected.class);
-                                        item.getItemSelectedList().add(itemSelected);} catch (Exception e) {}
+                                        if(itemSelected.getQuantity() > 0) {
+                                            item.getItemSelectedList().add(itemSelected);
+                                        }} catch (Exception e) {}
                                 }
                             }
                         }

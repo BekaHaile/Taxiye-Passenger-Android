@@ -45,15 +45,22 @@ public class CustomizeItemSelected{
 	public boolean equals(Object o) {
 		if(o instanceof CustomizeItemSelected){
 			CustomizeItemSelected cso = (CustomizeItemSelected)o;
-			if(cso.customizeId.equals(customizeId)){
-				for(Integer option : cso.getCustomizeOptions()){
-					if(!getCustomizeOptions().contains(option)){
+			if(customizeOptions == null || cso.customizeOptions == null){
+				return cso.customizeId.equals(customizeId);
+			} else {
+				if (cso.customizeId.equals(customizeId)) {
+					if(cso.getCustomizeOptions().size() != getCustomizeOptions().size()){
 						return false;
 					}
+					for (Integer option : cso.getCustomizeOptions()) {
+						if (!getCustomizeOptions().contains(option)) {
+							return false;
+						}
+					}
+					return true;
+				} else {
+					return false;
 				}
-				return true;
-			} else {
-				return false;
 			}
 		} else {
 			return false;

@@ -233,14 +233,14 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                 if(category.getSubcategories() != null){
                     for(Subcategory subcategory : category.getSubcategories()){
                         for(Item item : subcategory.getItems()){
-                            if(item.getItemSelectedList().size() > 0){
+                            if(item.getTotalQuantity() > 0){
                                 itemsInCart.add(item);
                             }
                         }
                     }
                 } else if(category.getItems() != null){
                     for(Item item : category.getItems()){
-                        if(item.getItemSelectedList().size() > 0){
+                        if(item.getTotalQuantity() > 0){
                             itemsInCart.add(item);
                         }
                     }

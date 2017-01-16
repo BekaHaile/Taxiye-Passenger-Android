@@ -4,16 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.retrofit.model.menus.CustomizeItem;
+import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
+import com.sabkuchfresh.retrofit.model.menus.CustomizeOption;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 import com.sabkuchfresh.utils.AppConstant;
@@ -58,7 +62,11 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 	public int getCount() {
 		int count = 0;
 		for(Item item : items){
-			count  = count + item.getItemSelectedList().size();
+			for(ItemSelected itemSelected : item.getItemSelectedList()){
+				if(itemSelected.getQuantity() > 0){
+					count++;
+				}
+			}
 		}
 		return count;
 	}
@@ -72,10 +80,41 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			for(int j=0; j<item.getItemSelectedList().size(); j++){
 				if(count == position){
 					ItemSelected itemSelected = item.getItemSelectedList().get(j);
+					if(TextUtils.isEmpty(itemSelected.getCustomizeText())
+							&& itemSelected.getCustomizeItemSelectedList().size() > 0){
+						StringBuilder sb = new StringBuilder();
+						for(CustomizeItemSelected customizeItemSelected : itemSelected.getCustomizeItemSelectedList()){
+							CustomizeItem customizeItem = new CustomizeItem();
+							customizeItem.setCustomizeId(customizeItemSelected.getCustomizeId());
+							int index = item.getCustomizeItem().indexOf(customizeItem);
+							if(index > -1){
+								customizeItem = item.getCustomizeItem().get(index);
+								StringBuilder sbOp = new StringBuilder();
+								for(Integer option : customizeItemSelected.getCustomizeOptions()){
+									CustomizeOption customizeOption = new CustomizeOption();
+									customizeOption.setCustomizeOptionId(option);
+									int index1 = customizeItem.getCustomizeOptions().indexOf(customizeOption);
+									if(index1 > -1){
+										customizeOption = customizeItem.getCustomizeOptions().get(index1);
+										if(sbOp.length() > 0){
+											sbOp.append(", ");
+										}
+										sbOp.append(customizeOption.getCustomizeOptionName());
+									}
+								}
+								if(sb.length() > 0){
+									sb.append("\n");
+								}
+								sb.append(customizeItem.getCustomizeItemName()).append(": ").append(sbOp);
+							}
+						}
+						itemSelected.setCustomizeText(sb.toString());
+					}
 					mcv.setName(item.getItemName());
 					mcv.setIsVeg(item.getIsVeg());
 					mcv.setPrice(itemSelected.getTotalPrice());
 					mcv.setQuantity(itemSelected.getQuantity());
+					mcv.setCustomizeText(itemSelected.getCustomizeText());
 					return mcv;
 				}
 				count++;
@@ -100,6 +139,9 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 					} else {
 						if(item.getTotalQuantity() > 0) {
 							itemSelected.setQuantity(itemSelected.getQuantity() - 1);
+							if(itemSelected.getQuantity() == 0){
+								item.getItemSelectedList().remove(j);
+							}
 						}
 					}
 					return new Pair<>(i, item.getTotalQuantity());
@@ -122,7 +164,8 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			convertView = mInflater.inflate(R.layout.list_item_menus_cart_item, null);
 			holder = new MainViewHolder(convertView, context);
 
-			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
+			holder.relative.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT,
+					AbsListView.LayoutParams.WRAP_CONTENT));
 			ASSL.DoMagic(holder.relative);
 
 			convertView.setTag(holder);
@@ -145,6 +188,12 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
 				Utils.getMoneyDecimalFormat().format(mcv.getPrice())));
 		mHolder.textViewQuantity.setText(String.valueOf(mcv.getQuantity()));
+		if(TextUtils.isEmpty(mcv.getCustomizeText())){
+			mHolder.textViewItemCustomizeText.setVisibility(View.GONE);
+		} else {
+			mHolder.textViewItemCustomizeText.setVisibility(View.VISIBLE);
+			mHolder.textViewItemCustomizeText.setText(mcv.getCustomizeText());
+		}
 
 		if(position == getCount()-1){
 			mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.transparent));
@@ -157,7 +206,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		mHolder.imageViewFoodType.setVisibility(appType == AppConstant.ApplicationType.MENUS ? View.VISIBLE : View.GONE);
 		mHolder.imageViewFoodType.setImageResource(mcv.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
 		RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
-		RelativeLayout.LayoutParams paramsLLC = (RelativeLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
+		LinearLayout.LayoutParams paramsLLC = (LinearLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
 		if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
 			paramsFT.setMargins(0, (int)(ASSL.Yscale()*25f), 0, 0);
 			paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
@@ -293,6 +342,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		private Integer isVeg;
 		private Double price;
 		private Integer quantity;
+		private String customizeText;
 
 		public String getName() {
 			return name;
@@ -326,6 +376,13 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			this.quantity = quantity;
 		}
 
+		public String getCustomizeText() {
+			return customizeText;
+		}
+
+		public void setCustomizeText(String customizeText) {
+			this.customizeText = customizeText;
+		}
 	}
 
 }
