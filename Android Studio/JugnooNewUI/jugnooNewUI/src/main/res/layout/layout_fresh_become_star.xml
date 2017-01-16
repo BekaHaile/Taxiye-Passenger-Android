@@ -19,7 +19,7 @@
             android:id="@+id/ivStar"
             android:layout_width="@dimen/px_50"
             android:layout_height="@dimen/px_50"
-            android:layout_marginTop="@dimen/px_30"
+            android:layout_marginTop="@dimen/px_22"
             android:layout_marginLeft="14px"
             android:src="@drawable/star" />
 
@@ -66,6 +66,7 @@
             android:layout_marginRight="@dimen/px_15"
             android:layout_marginTop="@dimen/px_20"
             android:visibility="visible"
+            android:padding="@dimen/px_5"
             android:background="@drawable/background_white_rounded_bordered">
 
             <product.clicklabs.jugnoo.widgets.MySpinner
@@ -74,6 +75,7 @@
                 android:layout_height="94px"
                 android:spinnerMode="dropdown"
                 android:tag="mwar"
+                android:popupBackground="@color/white"
                 android:background="@color/transparent"
                 android:layout_centerHorizontal="true" />
 
@@ -85,7 +87,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/px_48"
-                android:rotation="0"
+                android:rotation="180"
                 android:src="@drawable/triangle_grey"
                 android:tag="mwar" />
 

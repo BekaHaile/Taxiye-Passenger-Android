@@ -420,7 +420,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         spin = (MySpinner) rootView.findViewById(R.id.simpleSpinner);
         btnAddStar = (Button) rootView.findViewById(R.id.btnAddStar);
 
-        if(!Data.userData.isSubscriptionActive()) {
+        if(Data.userData.getShowSubscriptionData() == 1 && !Data.userData.isSubscriptionActive()) {
             cvBecomeStar.setVisibility(View.VISIBLE);
             becomeStarAdapter = new BecomeStarAdapter(getActivity(), Data.userData.getSubscriptionData().getSubscriptions());
             spin.setAdapter(becomeStarAdapter);

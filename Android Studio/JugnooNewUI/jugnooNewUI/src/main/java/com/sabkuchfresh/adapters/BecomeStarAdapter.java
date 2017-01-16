@@ -62,7 +62,7 @@ public class BecomeStarAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		MainViewHolder holder;
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.list_item_special_pickup, null);
+			convertView = mInflater.inflate(R.layout.list_item_star_dropdown, null);
 			holder = new MainViewHolder(convertView, context);
 
 			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, 100));
