@@ -4,7 +4,7 @@
     android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="50px"
-    android:background="@color/white"
+    android:background="@color/menu_item_selector_color_F7"
     android:orientation="vertical">
 
     <TextView

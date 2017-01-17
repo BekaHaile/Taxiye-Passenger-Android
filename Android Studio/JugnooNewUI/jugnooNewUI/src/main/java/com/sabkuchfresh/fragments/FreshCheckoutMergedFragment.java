@@ -136,7 +136,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             relativeLayoutJugnooCash;
     private TextView textViewDiscountValue, textViewDeliveryChargesValue,
             textViewServiceTax, textViewServiceTaxValue, textViewVAT, textViewVATValue, textViewPackagingChargesValue,
-            textViewJugnooCashValue;
+            textViewJugnooCashValue, tvSubTotalVal;
     private NonScrollListView listViewCart;
     private FreshCartItemsAdapter freshCartItemsAdapter;
 
@@ -332,6 +332,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         textViewVAT = (TextView) rootView.findViewById(R.id.textViewVAT); textViewVAT.setTypeface(Fonts.mavenMedium(activity));
         textViewVATValue = (TextView) rootView.findViewById(R.id.textViewVATValue); textViewVATValue.setTypeface(Fonts.mavenMedium(activity));
         textViewJugnooCashValue = (TextView) rootView.findViewById(R.id.textViewJugnooCashValue); textViewJugnooCashValue.setTypeface(Fonts.mavenMedium(activity));
+        tvSubTotalVal = (TextView) rootView.findViewById(R.id.tvSubTotalVal); tvSubTotalVal.setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDiscount)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewDeliveryCharges)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewPackagingCharges)).setTypeface(Fonts.mavenMedium(activity));
@@ -339,6 +340,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         ((TextView)rootView.findViewById(R.id.tvTotal)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.tvBecomeStar)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.tvStarOffer)).setTypeface(Fonts.mavenMedium(activity));
+        ((TextView)rootView.findViewById(R.id.tvSubTotal)).setTypeface(Fonts.mavenMedium(activity));
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
         freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, true, this);
         listViewCart.setAdapter(freshCartItemsAdapter);
@@ -576,7 +578,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                scrollView.scrollTo(0, editTextDeliveryInstructions.getBottom());
+                //scrollView.scrollTo(0, editTextDeliveryInstructions.getBottom());
             }
 
             @Override
@@ -704,7 +706,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
         if(getTotalPromoAmount() > 0){
-            textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
+            textViewCartTotalUndiscount.setVisibility(View.GONE);
             textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
                     Utils.getMoneyDecimalFormat().format(totalUndiscounted())));
             textViewCartTotalUndiscount.setPaintFlags(textViewCartTotalUndiscount.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -2138,6 +2140,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
     private void updateCartTopBarView(Pair<Double, Integer> pair){
+        tvSubTotalVal.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(subTotalAmount)));
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format_without_space,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(pair.first)));

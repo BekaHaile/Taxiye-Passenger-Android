@@ -123,6 +123,50 @@
                         >
 
                         <RelativeLayout
+                            android:id="@+id/rlSubTotal"
+                            android:layout_width="match_parent"
+                            android:layout_height="82px">
+
+                            <TextView
+                                android:id="@+id/tvSubTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/sub_total"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/tvSubTotalVal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36"
+                                />
+
+                            <ImageView
+                                android:id="@+id/imageViewSep7"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginLeft="0px"
+                                android:layout_marginRight="0px"
+                                android:src="@color/stroke_color_light"
+                                />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
                             android:id="@+id/relativeLayoutDiscount"
                             android:layout_width="match_parent"
                             android:layout_height="82px">
