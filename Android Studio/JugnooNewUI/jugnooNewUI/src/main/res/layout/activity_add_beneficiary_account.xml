@@ -65,6 +65,7 @@
                     android:paddingLeft="8dp"
                     android:inputType="textCapWords"
                     android:lines="1"
+                    android:textCursorDrawable="@drawable/cursor_black"
                     android:maxLines="1"/>
 
             </RelativeLayout>
@@ -106,6 +107,7 @@
                     android:textColorHint="@color/text_color_hint"
                     android:paddingLeft="8dp"
                     android:inputType="textCapWords"
+                    android:textCursorDrawable="@drawable/cursor_black"
                     android:lines="1"
                     android:maxLines="1"/>
 
@@ -128,6 +130,7 @@
                     android:textColorHint="@color/text_color_hint"
                     android:paddingLeft="8dp"
                     android:inputType="textCapWords"
+                    android:textCursorDrawable="@drawable/cursor_black"
                     android:lines="1"
                     android:maxLines="1"/>
 
@@ -150,6 +153,7 @@
                     android:textColorHint="@color/text_color_hint"
                     android:paddingLeft="8dp"
                     android:inputType="textCapWords"
+                    android:textCursorDrawable="@drawable/cursor_black"
                     android:lines="1"
                     android:maxLines="1"/>
 

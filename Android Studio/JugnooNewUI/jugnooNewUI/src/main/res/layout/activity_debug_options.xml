@@ -341,6 +341,7 @@
                         android:text=""
                         android:hint="Custom URL Auto"
                         android:textColor="@color/grey_dark"
+                        android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="30px" />
 
                     <ImageView
@@ -467,6 +468,7 @@
                         android:text=""
                         android:hint="Custom URL Fresh"
                         android:textColor="@color/grey_dark"
+                        android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="30px" />
 
                     <ImageView

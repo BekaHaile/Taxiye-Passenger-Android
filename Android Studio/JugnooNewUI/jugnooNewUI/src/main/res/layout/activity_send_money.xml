@@ -210,6 +210,7 @@
                     android:textColorHint="@color/text_color_light"
                     android:textSize="@dimen/sp_15"
                     android:visibility="gone"
+                    android:textCursorDrawable="@drawable/cursor_black"
                     />
 
                 <EditText

@@ -15,6 +15,9 @@ public class Item {
 	@SerializedName("price")
 	@Expose
 	private Double price;
+	@SerializedName("display_price")
+	@Expose
+	private String displayPrice;
 	@SerializedName("taxes")
 	@Expose
 	private List<Tax> taxes = null;
@@ -45,6 +48,9 @@ public class Item {
 	@SerializedName("subCategoryPos")
 	@Expose
 	private Integer subCategoryPos;
+	@SerializedName("categoryPos")
+	@Expose
+	private Integer categoryPos;
 	@SerializedName("itemPos")
 	@Expose
 	private Integer itemPos;
@@ -201,5 +207,21 @@ public class Item {
 
 	public void setExpanded(Boolean expanded) {
 		this.expanded = expanded;
+	}
+
+	public Integer getCategoryPos() {
+		return categoryPos;
+	}
+
+	public void setCategoryPos(Integer categoryPos) {
+		this.categoryPos = categoryPos;
+	}
+
+	public String getDisplayPrice() {
+		return displayPrice;
+	}
+
+	public void setDisplayPrice(String displayPrice) {
+		this.displayPrice = displayPrice;
 	}
 }

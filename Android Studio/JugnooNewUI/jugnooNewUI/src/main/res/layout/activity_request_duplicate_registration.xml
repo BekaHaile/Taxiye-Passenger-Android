@@ -166,6 +166,7 @@
                     android:scrollbars="vertical"
                     android:textSize="@dimen/text_size_26"
                     android:textColor="@color/text_color"
+                    android:textCursorDrawable="@drawable/cursor_black"
                     android:textColorHint="@color/text_color_hint"
                     />
 

@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 
@@ -123,6 +124,24 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
 							@Override
 							public void onMinusClicked(int position, Item item) {
 								activity.updateCartValuesGetTotalPrice();
+							}
+
+							@Override
+							public void onMinusFailed(int position, Item item) {
+								DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+										activity.getString(R.string.you_have_to_decrease_quantity_from_checkout),
+										activity.getString(R.string.view_cart), activity.getString(R.string.cancel),
+										new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												activity.getRelativeLayoutCheckoutBar().performClick();
+											}
+										}, new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+
+											}
+										}, true, false);
 							}
 						});
 				recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);

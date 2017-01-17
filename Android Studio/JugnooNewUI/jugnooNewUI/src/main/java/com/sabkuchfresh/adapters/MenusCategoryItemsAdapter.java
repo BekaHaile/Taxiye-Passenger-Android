@@ -1,6 +1,5 @@
 package com.sabkuchfresh.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +33,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -86,6 +84,14 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 subItems.add(item1);
             }
         }
+    }
+
+
+    public MenusCategoryItemsAdapter(Context context, ArrayList<Item> items, Callback callback) {
+        this.context = context;
+        this.callback = callback;
+        this.categoryPos = -1;
+        subItems = items;
     }
 
 
@@ -168,11 +174,13 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             StringBuilder sb = new StringBuilder();
             sb.append(item.getItemName())
-            .append("\n")
-            .append(context.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(item.getPrice())));
-            if(item.getCustomizeItem().size() > 0) {
-                sb.append(" ").append(context.getString(R.string.onwards));
+            .append("\n");
+            if(!TextUtils.isEmpty(item.getDisplayPrice())){
+                sb.append(item.getDisplayPrice());
+            } else {
+                sb.append(context.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(item.getPrice())));
             }
+
             mHolder.textViewItemCategoryName.setText(sb);
 
             int total = item.getTotalQuantity();
@@ -215,7 +223,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         Item item1 = subItems.get(pos);
                         TextView tv = (TextView) v;
                         if(item1.getItemDetails().length() > 80) {
-                            if (tv.getText().toString().length() > 86) {
+                            if (tv.getText().toString().length() > 85) {
                                 item1.setExpanded(false);
                             } else {
                                 item1.setExpanded(true);
@@ -243,8 +251,8 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
 
 
-            mHolder.textViewMinus.setTag(position);
-            mHolder.textViewPlus.setTag(position);
+            mHolder.imageViewMinus.setTag(position);
+            mHolder.imageViewPlus.setTag(position);
             mHolder.addButton.setTag(position);
 
             View.OnClickListener plusClick = new View.OnClickListener() {
@@ -256,7 +264,11 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         if(callback.checkForAdd(pos, item1)) {
                             if (item1.getTotalQuantity() < 50) {
                                 if (item1.getCustomizeItem().size() > 0) {
-                                    ((FreshActivity) context).openMenusItemCustomizeFragment(categoryPos, item1.getSubCategoryPos(), item1.getItemPos());
+                                    if(categoryPos > -1){
+                                        ((FreshActivity) context).openMenusItemCustomizeFragment(categoryPos, item1.getSubCategoryPos(), item1.getItemPos());
+                                    } else {
+                                        ((FreshActivity) context).openMenusItemCustomizeFragment(item1.getCategoryPos(), item1.getSubCategoryPos(), item1.getItemPos());
+                                    }
                                 } else {
                                     if (item1.getItemSelectedList().size() > 0) {
                                         item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
@@ -281,16 +293,22 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             };
 
             mHolder.addButton.setOnClickListener(plusClick);
-            mHolder.textViewPlus.setOnClickListener(plusClick);
+            mHolder.imageViewPlus.setOnClickListener(plusClick);
 
-            mHolder.textViewMinus.setOnClickListener(new View.OnClickListener() {
+            mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try{
                         int pos = (int) v.getTag();
                         Item item1 = subItems.get(pos);
                         if (item1.getCustomizeItem().size() > 0) {
-                            DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.you_have_to_decrease_quantity_from_checkout));
+                            if(item1.getItemSelectedList().size() == 1){
+                                item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() - 1);
+                                notifyItemChanged(pos);
+                                callback.onMinusClicked(pos, item1);
+                            } else {
+                                callback.onMinusFailed(pos, item1);
+                            }
                         } else {
                             if(item1.getItemSelectedList().size() > 0){
                                 item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() - 1);
@@ -323,8 +341,8 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         public CardView cardViewRecycler;
         public RelativeLayout relativeLayoutItem, relativeLayoutQuantitySel ;
         public LinearLayout linearLayoutQuantitySelector;
-        private ImageView imageViewFoodType, saperatorImage;
-        public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity, textViewMinus, textViewPlus;
+        private ImageView imageViewFoodType, saperatorImage, imageViewMinus, imageViewPlus;
+        public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity;
         public Button addButton;
 
         public MainViewHolder(View itemView, Context context) {
@@ -335,14 +353,14 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             saperatorImage = (ImageView) itemView.findViewById(R.id.saperatorImage);
-            textViewMinus = (TextView) itemView.findViewById(R.id.textViewMinus);
-            textViewPlus = (TextView) itemView.findViewById(R.id.textViewPlus);
+            imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
+            imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
 
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
             textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenRegular(context));
             textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenRegular(context));
 
-            addButton = (Button) itemView.findViewById(R.id.add_button);
+            addButton = (Button) itemView.findViewById(R.id.add_button); addButton.setTypeface(Fonts.mavenRegular(context));
         }
     }
 
@@ -369,6 +387,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         boolean checkForAdd(int position, Item item);
         void onPlusClicked(int position, Item item);
         void onMinusClicked(int position, Item item);
+        void onMinusFailed(int position, Item item);
     }
 
 

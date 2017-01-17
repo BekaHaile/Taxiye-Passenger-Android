@@ -174,8 +174,8 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
 
-            mHolder.textViewMinus.setTag(position);
-            mHolder.textViewPlus.setTag(position);
+            mHolder.imageViewMinus.setTag(position);
+            mHolder.imageViewPlus.setTag(position);
             mHolder.addButton.setTag(position);
 
             View.OnClickListener plusClick = new View.OnClickListener() {
@@ -194,8 +194,8 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             };
 
             mHolder.addButton.setOnClickListener(plusClick);
-            mHolder.textViewPlus.setOnClickListener(plusClick);
-            mHolder.textViewMinus.setOnClickListener(new View.OnClickListener() {
+            mHolder.imageViewPlus.setOnClickListener(plusClick);
+            mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try{
@@ -248,8 +248,13 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.tvCustomizeOptionItemName.setText(customizeOption.getCustomizeOptionName());
 
-            mHolder.tvCustomizeOptionItemPrice.setText(context.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormat().format(customizeOption.getCustomizePrice())));
+            if(customizeOption.getCustomizePrice() > 0){
+                mHolder.tvCustomizeOptionItemPrice.setText(context.getString(R.string.rupees_value_format,
+                        Utils.getMoneyDecimalFormat().format(customizeOption.getCustomizePrice())));
+            } else {
+                mHolder.tvCustomizeOptionItemPrice.setText("");
+            }
+
 
             if(getCustomizeItemSelected(getCustomizeItem(customizeOption), false).getCustomizeOptions().contains(customizeOption.getCustomizeOptionId())){
                 mHolder.ivCustomizeOptionItem.setImageResource(customizeOption.getIsMultiSelect() == 1 ? R.drawable.checkbox_signup_checked : R.drawable.ic_radio_button_selected);
@@ -331,8 +336,8 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
         public CardView cardViewRecycler;
         public RelativeLayout relativeLayoutItem, relativeLayoutQuantitySel ;
         public LinearLayout linearLayoutQuantitySelector;
-        private ImageView imageViewFoodType, saperatorImage;
-        public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity, textViewMinus, textViewPlus;
+        private ImageView imageViewFoodType, saperatorImage, imageViewMinus, imageViewPlus;
+        public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity;
         public Button addButton;
 
         public ViewHolderItem(View itemView, Context context) {
@@ -344,14 +349,14 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             saperatorImage = (ImageView) itemView.findViewById(R.id.saperatorImage);
             saperatorImage.setVisibility(View.GONE);
-            textViewMinus = (TextView) itemView.findViewById(R.id.textViewMinus);
-            textViewPlus = (TextView) itemView.findViewById(R.id.textViewPlus);
+            imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
+            imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
 
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
             textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenRegular(context));
             textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenRegular(context));
 
-            addButton = (Button) itemView.findViewById(R.id.add_button);
+            addButton = (Button) itemView.findViewById(R.id.add_button); addButton.setTypeface(Fonts.mavenRegular(context));
         }
     }
 

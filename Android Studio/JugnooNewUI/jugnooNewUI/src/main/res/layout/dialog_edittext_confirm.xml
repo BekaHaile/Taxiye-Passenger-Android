@@ -68,7 +68,7 @@
                 android:paddingLeft="30px"
                 android:paddingRight="30px"
                 android:textColor="@color/black"
-                android:textCursorDrawable="@null"
+                android:textCursorDrawable="@drawable/cursor_black"
                 android:textSize="38px" />
             <ImageView
                 android:layout_width="480px"

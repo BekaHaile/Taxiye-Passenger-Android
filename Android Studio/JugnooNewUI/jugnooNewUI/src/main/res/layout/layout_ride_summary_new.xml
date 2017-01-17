@@ -319,6 +319,7 @@
                 android:scrollbars="vertical"
                 android:textColor="@color/grey_dark_more"
                 android:textSize="28px"
+                android:textCursorDrawable="@drawable/cursor_black"
                 />
 
             <LinearLayout

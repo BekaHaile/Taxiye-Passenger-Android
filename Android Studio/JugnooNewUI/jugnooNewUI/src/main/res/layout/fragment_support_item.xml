@@ -58,6 +58,7 @@
             android:textSize="@dimen/text_size_28"
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
+            android:textCursorDrawable="@drawable/cursor_black"
             />
 
         <TextView

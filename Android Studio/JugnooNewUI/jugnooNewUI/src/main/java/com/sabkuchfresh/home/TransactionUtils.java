@@ -15,6 +15,7 @@ import com.sabkuchfresh.fragments.MenusCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
+import com.sabkuchfresh.fragments.MenusSearchFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 
 import product.clicklabs.jugnoo.R;
@@ -115,6 +116,19 @@ public class TransactionUtils {
 					.addToBackStack(FreshSearchFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public void openMenusSearchFragment(FragmentActivity activity, View container) {
+		if(!checkIfFragmentAdded(activity, MenusSearchFragment.class.getName())) {
+			activity.getSupportFragmentManager().beginTransaction()
+					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+					.add(container.getId(), new MenusSearchFragment(),
+							MenusSearchFragment.class.getName())
+					.addToBackStack(MenusSearchFragment.class.getName())
+					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+							.getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 					.commitAllowingStateLoss();
 		}
 	}

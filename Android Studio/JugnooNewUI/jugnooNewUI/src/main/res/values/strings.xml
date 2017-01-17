@@ -1462,8 +1462,9 @@
     <string name="cannot_add_more_than_50">Can\'t add more than 50 items</string>
     <string name="required_bracket">(Required)</string>
     <string name="optional_bracket">(Optional)</string>
-    <string name="you_have_to_decrease_quantity_from_checkout">You have to decrease quantity from checkout page</string>
+    <string name="you_have_to_decrease_quantity_from_checkout">Not here! Please remove your items individually in the cart on the checkout page</string>
     <string name="more">More</string>
     <string name="less">Less</string>
+    <string name="view_cart">View Cart</string>
 
 </resources>

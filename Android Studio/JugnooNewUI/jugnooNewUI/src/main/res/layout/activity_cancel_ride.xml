@@ -109,6 +109,7 @@
                 android:minHeight="160px"
                 android:padding="20px"
                 android:textSize="30px"
+                android:textCursorDrawable="@drawable/cursor_black"
                 />
 
             <RelativeLayout

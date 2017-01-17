@@ -210,10 +210,10 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		mHolder.imageViewFoodType.setVisibility(appType == AppConstant.ApplicationType.MENUS ? View.VISIBLE : View.GONE);
 		mHolder.imageViewFoodType.setImageResource(mcv.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
 
-		mHolder.textViewMinus.setTag(position);
-		mHolder.textViewPlus.setTag(position);
+		mHolder.imageViewMinus.setTag(position);
+		mHolder.imageViewPlus.setTag(position);
 
-		mHolder.textViewMinus.setOnClickListener(new View.OnClickListener() {
+		mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
@@ -245,7 +245,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			}
 		});
 
-		mHolder.textViewPlus.setOnClickListener(new View.OnClickListener() {
+		mHolder.imageViewPlus.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
@@ -300,9 +300,8 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		public int id;
 		public RelativeLayout relative;
 		public LinearLayout linearLayoutContent;
-		private ImageView imageViewItemImage, imageViewSep, imageViewFoodType;
-		public TextView textViewItemName, textViewItemPrice, textViewQuantity, textViewItemCustomizeText,
-				textViewMinus, textViewPlus;
+		private ImageView imageViewItemImage, imageViewSep, imageViewFoodType, imageViewMinus, imageViewPlus;
+		public TextView textViewItemName, textViewItemPrice, textViewQuantity, textViewItemCustomizeText;
 
 		public MainViewHolder(View itemView, Context context) {
 			super(itemView);
@@ -311,8 +310,8 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			imageViewItemImage = (ImageView) itemView.findViewById(R.id.imageViewItemImage);
 			imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
 			imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
-			textViewMinus = (TextView) itemView.findViewById(R.id.textViewMinus);
-			textViewPlus = (TextView) itemView.findViewById(R.id.textViewPlus);
+			imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
+			imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
 
 			textViewItemName = (TextView) itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenMedium(context));
 			textViewItemPrice = (TextView) itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenMedium(context));

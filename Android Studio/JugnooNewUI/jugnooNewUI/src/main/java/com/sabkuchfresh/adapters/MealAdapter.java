@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -76,7 +75,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //    @Override
 //    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 //
-//        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout_meals, parent, false);
+//        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_meal, parent, false);
 //        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
 //        v.setLayoutParams(layoutParams);
 //        ASSL.DoMagic(v);
@@ -96,7 +95,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return new ViewTitleStatus(v, activity);
         }
         else if (viewType == MAIN_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout_meals, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_meal, parent, false);
 
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);

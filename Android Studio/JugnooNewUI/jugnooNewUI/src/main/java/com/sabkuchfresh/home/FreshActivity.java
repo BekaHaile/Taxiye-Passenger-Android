@@ -57,6 +57,7 @@ import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
+import com.sabkuchfresh.fragments.MenusSearchFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
@@ -307,7 +308,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             });
 
 
-            View.OnClickListener onClickListener = new View.OnClickListener() {
+            View.OnClickListener checkoutOnClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Utils.hideSoftKeyboard(FreshActivity.this, textViewCartItemsCountNew);
@@ -324,7 +325,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                             if (appType == AppConstant.ApplicationType.MEALS) {
                                 MyApplication.getInstance().logEvent(FirebaseEvents.M_CART, null);
                             } else {
-                                if ((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())) {
+                                if ((getFreshSearchFragment() != null && !getFreshSearchFragment().isHidden())
+                                        || (getMenusSearchFragment() != null && !getMenusSearchFragment().isHidden())) {
                                     if (appType == AppConstant.ApplicationType.GROCERY) {
                                         MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_GO, null);
                                     } else if (appType == AppConstant.ApplicationType.MENUS) {
@@ -350,9 +352,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             };
 
 
-            relativeLayoutCheckoutBar.setOnClickListener(onClickListener);
-            linearLayoutCheckout.setOnClickListener(onClickListener);
-            relativeLayoutCartNew.setOnClickListener(onClickListener);
+            relativeLayoutCheckoutBar.setOnClickListener(checkoutOnClickListener);
+            linearLayoutCheckout.setOnClickListener(checkoutOnClickListener);
+            relativeLayoutCartNew.setOnClickListener(checkoutOnClickListener);
 
             relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -370,7 +372,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                             Utils.showToast(FreshActivity.this, getResources().getString(R.string.your_cart_is_empty));
                         }
 
-                        if((getFreshSearchFragment() != null) && (!getFreshSearchFragment().isHidden())){
+                        if((getFreshSearchFragment() != null && !getFreshSearchFragment().isHidden())
+                                || (getMenusSearchFragment() != null && !getMenusSearchFragment().isHidden())){
                             int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                             if(appType == AppConstant.ApplicationType.GROCERY){
                                 MyApplication.getInstance().logEvent(FirebaseEvents.G_SEARCH_CART, null);
@@ -1057,7 +1060,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 relativeLayoutCart.setVisibility(View.GONE);
                 linearLayoutCheckout.setVisibility(View.GONE);
-                relativeLayoutSort.setVisibility(View.VISIBLE);
+                relativeLayoutSort.setVisibility(View.GONE);
+                relativeLayoutLeft.setVisibility(View.GONE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(vendorOpened.getName());
@@ -1074,8 +1078,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     textViewMinOrder.setText(getString(R.string.minimum_order) + " "
                             + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
                 }
-                resetToolbarWithScroll();
-                searchLayout.setVisibility(View.VISIBLE);
+                resetToolbarWithScroll(96f);
+                searchLayout.setVisibility(View.GONE);
             }
             else if(fragment instanceof MenusItemCustomizeFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1189,7 +1193,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.editTextDeliveryAddress.requestFocus();
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
-            else if (fragment instanceof FreshSearchFragment) {
+            else if (fragment instanceof FreshSearchFragment || fragment instanceof MenusSearchFragment) {
 				topView.setVisibility(View.GONE);
                 CoordinatorLayout.LayoutParams lp1 = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
                 lp.height = 0;
@@ -1322,11 +1326,19 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 
     public void searchItem() {
-        getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer);
+        if(getAppType() == AppConstant.ApplicationType.MENUS){
+            getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
+        } else {
+            getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer);
+        }
     }
 
     private FreshSearchFragment getFreshSearchFragment() {
         return (FreshSearchFragment) getSupportFragmentManager().findFragmentByTag(FreshSearchFragment.class.getName());
+    }
+
+    private MenusSearchFragment getMenusSearchFragment() {
+        return (MenusSearchFragment) getSupportFragmentManager().findFragmentByTag(MenusSearchFragment.class.getName());
     }
 
     public void deleteCart() {
@@ -1550,6 +1562,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             }
             if(getFreshSearchFragment() != null){
                 getFreshSearchFragment().clearArrays();
+            } else if(getMenusSearchFragment() != null){
+                getMenusSearchFragment().clearArrays();
             }
 
             super.onBackPressed();
@@ -2769,6 +2783,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     }
 
     public void resetToolbarWithScroll(){
+        resetToolbarWithScroll(164f);
+    }
+    public void resetToolbarWithScroll(float height){
         AppBarLayout.LayoutParams params =
                 (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
         params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
@@ -2776,7 +2793,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
 
         AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-        layoutParams.height = (int)(164f * ASSL.Yscale());
+        layoutParams.height = (int)(height * ASSL.Yscale());
         toolbar.setLayoutParams(layoutParams);
     }
 
@@ -2786,6 +2803,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public int getAppType(){
         return Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+    }
+
+    public RelativeLayout getRelativeLayoutCheckoutBar(){
+        return relativeLayoutCheckoutBar;
     }
 
 }

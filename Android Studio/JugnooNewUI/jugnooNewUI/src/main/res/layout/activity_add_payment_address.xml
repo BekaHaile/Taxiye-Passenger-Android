@@ -57,6 +57,7 @@
                 android:inputType="textCapWords"
                 android:lines="1"
                 android:maxLines="1"
+                android:textCursorDrawable="@drawable/cursor_black"
                 android:layout_toLeftOf="@+id/ivContacts"/>
 
             <ImageView
@@ -84,6 +85,7 @@
             android:lines="1"
             android:maxLines="1"
             android:ellipsize="end"
+            android:textCursorDrawable="@drawable/cursor_black"
             android:background="@drawable/background_white_rounded_bordered"/>
 
         <Button
