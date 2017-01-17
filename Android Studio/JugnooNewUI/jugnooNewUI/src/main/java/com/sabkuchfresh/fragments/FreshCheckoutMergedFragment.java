@@ -1919,11 +1919,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
     private void updateDeliverySlot(UserCheckoutResponse.DeliveryInfo deliveryInfo){
-        for(DeliverySlot slot : activity.getUserCheckoutResponse().getCheckoutData().getDeliverySlots()){
-            for(Slot slot1 : slot.getSlots()){
-                if(slot1.getDeliverySlotId().equals(deliveryInfo.getSelectedSlot())){
-                    activity.setSlotSelected(slot1);
-                    return;
+        if(deliveryInfo != null) {
+            for (DeliverySlot slot : activity.getUserCheckoutResponse().getCheckoutData().getDeliverySlots()) {
+                for (Slot slot1 : slot.getSlots()) {
+                    if (slot1.getDeliverySlotId().equals(deliveryInfo.getSelectedSlot())) {
+                        activity.setSlotSelected(slot1);
+                        return;
+                    }
                 }
             }
         }
