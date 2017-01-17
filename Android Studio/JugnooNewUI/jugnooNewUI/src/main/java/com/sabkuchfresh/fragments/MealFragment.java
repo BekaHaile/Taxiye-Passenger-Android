@@ -451,7 +451,9 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             case 0:
                 Collections.sort(mealsData, new SubItemCompare());
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.A_Z);
-                mealAdapter.notifyDataSetChanged();
+                mealAdapter = null;
+                mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
+                recyclerViewCategoryItems.setAdapter(mealAdapter);
                 break;
             case 1:
                 Collections.sort(mealsData, new Comparator<SubItem>() {
@@ -462,17 +464,24 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
                 });
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
-                mealAdapter.notifyDataSetChanged();
+                mealAdapter = null;
+                mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
+                recyclerViewCategoryItems.setAdapter(mealAdapter);
                 break;
             case 2:
                 Collections.sort(mealsData, new SubItemComparePrice());
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-                mealAdapter.notifyDataSetChanged();
+                //mealAdapter.notifyDataSetChanged();
+                mealAdapter = null;
+                mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
+                recyclerViewCategoryItems.setAdapter(mealAdapter);
                 break;
             case 3:
                 Collections.sort(mealsData, new SubItemComparePriceRev());
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-                mealAdapter.notifyDataSetChanged();
+                mealAdapter = null;
+                mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
+                recyclerViewCategoryItems.setAdapter(mealAdapter);
                 break;
             default:
                 // should not happened

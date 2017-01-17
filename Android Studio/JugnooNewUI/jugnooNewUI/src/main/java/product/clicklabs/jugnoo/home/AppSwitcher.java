@@ -85,7 +85,7 @@ public class AppSwitcher {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				final Intent intent = new Intent();
 				if(clearActivityStack) {
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				}
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);

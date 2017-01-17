@@ -1,7 +1,6 @@
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawerLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/sliding_bottom_bg_color">
@@ -15,24 +14,22 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:elevation="0dp"
-            >
+            app:elevation="0dp">
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentInsetStart="0dp"
+                android:background="@color/transparent"
                 android:contentInsetLeft="0dp"
+                android:contentInsetStart="0dp"
                 app:contentInsetLeft="0dp"
                 app:contentInsetStart="0dp"
-                android:background="@color/transparent"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
-                >
+                app:layout_scrollFlags="scroll|enterAlways|snap">
                 <!-- top bar layout -->
                 <include
                     android:id="@+id/topBarMain"
-                    layout="@layout/layout_top_bar_fresh"
-                    />
+                    layout="@layout/layout_top_bar_fresh" />
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
@@ -42,29 +39,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/linearLayoutCheckoutContainer"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <ImageView
             android:id="@+id/below_shadow"
             android:layout_width="match_parent"
             android:layout_height="6px"
             android:layout_marginTop="@dimen/px_96"
-            android:src="@drawable/shadow_down"
-            />
+            android:src="@drawable/shadow_down" />
 
         <LinearLayout
             android:id="@+id/linearLayoutCheckoutContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:splitMotionEvents="false"
+            android:layout_gravity="bottom"
             android:orientation="vertical"
-            android:layout_gravity="bottom">
+            android:splitMotionEvents="false">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="6px"
-                android:src="@drawable/shadow_up"/>
+                android:src="@drawable/shadow_up" />
 
             <TextView
                 android:id="@+id/textViewMinOrder"
@@ -81,8 +77,8 @@
                 android:id="@+id/relativeLayoutCheckoutBar"
                 android:layout_width="match_parent"
                 android:layout_height="110px"
-                android:splitMotionEvents="false"
-                android:background="@color/white">
+                android:background="@color/white"
+                android:splitMotionEvents="false">
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutLeft"
@@ -153,8 +149,7 @@
                             android:padding="8px"
                             android:text="0"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_24"
-                            />
+                            android:textSize="@dimen/text_size_24" />
 
                     </RelativeLayout>
 
@@ -165,16 +160,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/relativeLayoutLeft"
-                    android:layout_toLeftOf="@+id/relativeRight"
-                    android:gravity="center_horizontal"
                     android:layout_marginTop="6px"
+                    android:layout_toLeftOf="@+id/relativeRight"
+                    android:layout_toRightOf="@+id/relativeLayoutLeft"
+                    android:gravity="center_horizontal"
                     android:singleLine="true"
                     android:text=""
                     android:textColor="@color/cart_price"
-                    android:textSize="@dimen/text_size_38"
-
-                    />
+                    android:textSize="@dimen/text_size_38"/>
 
 
                 <RelativeLayout
@@ -182,8 +175,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="6px"
-                    android:layout_centerVertical="true">
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="6px">
 
                     <RelativeLayout
                         android:id="@+id/relativeLayoutCartNew"
@@ -206,9 +199,8 @@
                             android:layout_height="36px"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="40px"
-                            android:tag="mwar"
                             android:src="@drawable/ic_cart_empty"
-                            />
+                            android:tag="mwar" />
 
                         <TextView
                             android:id="@+id/textViewCartItemsCountNew"
@@ -229,13 +221,13 @@
                     </RelativeLayout>
 
                     <LinearLayout
-                        android:visibility="gone"
                         android:id="@+id/linearLayoutCheckout"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:background="@drawable/background_white_grey_light_selector"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <View
                             android:layout_width="2px"
@@ -272,11 +264,11 @@
             </RelativeLayout>
         </LinearLayout>
 
-        <include layout="@layout/layout_home_activity_fab_test"/>
+        <include layout="@layout/layout_home_activity_fab_test" />
 
     </android.support.design.widget.CoordinatorLayout>
 
     <!-- menu layout -->
-    <include layout="@layout/layout_home_activity_menu"/>
+    <include layout="@layout/layout_home_activity_menu" />
 
 </android.support.v4.widget.DrawerLayout>
