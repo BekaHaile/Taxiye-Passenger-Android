@@ -32,6 +32,7 @@
                 android:layout_marginRight="15px"
                 android:layout_marginTop="25px"
                 android:tag="mwar"
+                android:src="@drawable/veg"
                 />
 
             <RelativeLayout
@@ -39,6 +40,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5px"
+                android:layout_marginTop="10px"
+                android:layout_marginBottom="10px"
                 android:layout_toRightOf="@id/imageViewFoodType">
 
                 <TextView
@@ -46,10 +49,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="10px"
-                    android:layout_marginTop="15px"
                     android:layout_toLeftOf="@+id/relativeLayoutQuantitySel"
                     android:lineSpacingExtra="2px"
-                    android:text="Margherita Pizza\nPrice 10 Onwards"
+                    android:layout_centerVertical="true"
+                    android:text="Margherita Pizza"
                     android:textColor="@color/lightBlackTxtColor"
                     android:textSize="32px"/>
 
@@ -59,7 +62,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20px"
-                    android:layout_marginTop="20px">
+                    android:layout_centerVertical="true"
+                    >
 
                     <include
                         layout="@layout/layout_item_quantity_selector"
@@ -86,11 +90,11 @@
                 android:layout_marginBottom="10px"
                 android:layout_marginLeft="5px"
                 android:layout_marginRight="20px"
-                android:layout_marginTop="10px"
                 android:layout_toRightOf="@id/imageViewFoodType"
-                android:text="Onion \nand capsicum, \ncapsicum and paneer, \nomatoes and onions, ajalapenos"
+                android:text="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
                 android:textColor="@color/color_menu_item_desc"
-                android:textSize="24px"/>
+                android:textSize="24px"
+                />
 
             <ImageView
                 android:id="@+id/saperatorImage"

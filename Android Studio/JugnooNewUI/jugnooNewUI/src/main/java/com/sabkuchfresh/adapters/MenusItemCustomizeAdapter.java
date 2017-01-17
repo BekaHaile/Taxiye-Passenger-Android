@@ -5,6 +5,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,11 +84,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 customizeOptions.add(customizeOption);
                 if(customizeItemSelected != null){
                     double optionPrice = 0d;
-                    if(customizeItem.getIsCheckBox() == 0 && customizeOption.getIsDefault() == 1
-                            && customizeItemSelected.getCustomizeOptions().size() == 0){
-                        customizeItemSelected.getCustomizeOptions().add(customizeOption.getCustomizeOptionId());
-                        optionPrice = customizeOption.getCustomizePrice();
-                    } else if(customizeItem.getIsCheckBox() == 1 && customizeOption.getIsDefault() == 1){
+                    if(customizeItem.getIsCheckBox() == 0 && customizeItemSelected.getCustomizeOptions().size() == 0){
                         customizeItemSelected.getCustomizeOptions().add(customizeOption.getCustomizeOptionId());
                         optionPrice = customizeOption.getCustomizePrice();
                     }
@@ -163,7 +160,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 mHolder.addButton.setVisibility(View.VISIBLE);
             }
 
-            mHolder.textViewAboutItemDescription.setVisibility(item.getItemDetails() != null ? View.VISIBLE : View.GONE);
+            mHolder.textViewAboutItemDescription.setVisibility(!TextUtils.isEmpty(item.getItemDetails()) ? View.VISIBLE : View.GONE);
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
 //            mHolder.textViewAboutItemDescription.setMaxLines(2);
 //            mHolder.textViewAboutItemDescription.setEllipsize(TextUtils.TruncateAt.END);

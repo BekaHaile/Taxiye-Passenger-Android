@@ -1121,6 +1121,9 @@ public class HistoryResponse {
         @SerializedName("item_cancelled")
         @Expose
         private Integer itemCancelled;
+        @SerializedName("customisations")
+        @Expose
+        private String customisations;
         /**
          * @return The subItemId
          */
@@ -1230,6 +1233,14 @@ public class HistoryResponse {
 
         public void setUnitAmount(Double unitAmount) {
             this.unitAmount = unitAmount;
+        }
+
+        public String getCustomisations() {
+            return customisations;
+        }
+
+        public void setCustomisations(String customisations) {
+            this.customisations = customisations;
         }
     }
 }

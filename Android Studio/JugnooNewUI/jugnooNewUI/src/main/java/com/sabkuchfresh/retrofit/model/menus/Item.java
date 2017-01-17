@@ -52,6 +52,8 @@ public class Item {
 	@Expose
 	private List<ItemSelected> itemSelectedList;
 
+	private Boolean expanded = false;
+
 	public Integer getIsActive() {
 		return isActive;
 	}
@@ -191,5 +193,13 @@ public class Item {
 			total = total + itemSelected.getTotalPriceWithQuantity();
 		}
 		return total;
+	}
+
+	public Boolean getExpanded() {
+		return expanded;
+	}
+
+	public void setExpanded(Boolean expanded) {
+		this.expanded = expanded;
 	}
 }

@@ -8,6 +8,7 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -186,11 +187,54 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.textViewAboutItemDescription.setVisibility(item.getItemDetails() != null ? View.VISIBLE : View.GONE);
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
+            mHolder.textViewAboutItemDescription.setTag(position);
 
-            makeTextViewResizable(mHolder.textViewAboutItemDescription, 2, context.getString(R.string.view_more), true);
+            if(!TextUtils.isEmpty(item.getItemDetails())){
+                if(item.getItemDetails().length() > 80){
+                    SpannableStringBuilder ssb;
+                    int end;
+                    if(item.getExpanded()){
+                        ssb = new SpannableStringBuilder(context.getString(R.string.less));
+                        end = item.getItemDetails().length();
+                    } else {
+                        ssb = new SpannableStringBuilder(context.getString(R.string.more));
+                        end = 80;
+                    }
+                    mHolder.textViewAboutItemDescription.setText(item.getItemDetails().substring(0, end));
+                    ssb.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.theme_color)),
+                            0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    mHolder.textViewAboutItemDescription.append(" ");
+                    mHolder.textViewAboutItemDescription.append(ssb);
+                }
+            }
+            mHolder.textViewAboutItemDescription.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int pos = (int) v.getTag();
+                        Item item1 = subItems.get(pos);
+                        TextView tv = (TextView) v;
+                        if(item1.getItemDetails().length() > 80) {
+                            if (tv.getText().toString().length() > 86) {
+                                item1.setExpanded(false);
+                            } else {
+                                item1.setExpanded(true);
+                            }
+                            notifyItemChanged(pos);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
+//            makeTextViewResizable(mHolder.textViewAboutItemDescription, 2, context.getString(R.string.more), true);
+
 
 
             mHolder.relativeLayoutQuantitySel.setVisibility(View.VISIBLE);
+
             if(context instanceof FreshActivity
                     && ((FreshActivity)context).getVendorOpened() != null
                     && (1 == ((FreshActivity)context).getVendorOpened().getIsClosed() || 0 == ((FreshActivity)context).getVendorOpened().getIsAvailable())){
@@ -384,12 +428,12 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, -1, context.getString(R.string.view_less), false);
+                        makeTextViewResizable(tv, -1, context.getString(R.string.less), false);
                     } else {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, 2, context.getString(R.string.view_more), true);
+                        makeTextViewResizable(tv, 2, context.getString(R.string.more), true);
                     }
 
                 }

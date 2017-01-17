@@ -188,12 +188,16 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
 				Utils.getMoneyDecimalFormat().format(mcv.getPrice())));
 		mHolder.textViewQuantity.setText(String.valueOf(mcv.getQuantity()));
+		LinearLayout.LayoutParams paramsName = (LinearLayout.LayoutParams) mHolder.textViewItemName.getLayoutParams();
 		if(TextUtils.isEmpty(mcv.getCustomizeText())){
 			mHolder.textViewItemCustomizeText.setVisibility(View.GONE);
+			paramsName.setMargins(0, 0, 0, (int)(ASSL.Yscale() * 25.0f));
 		} else {
 			mHolder.textViewItemCustomizeText.setVisibility(View.VISIBLE);
 			mHolder.textViewItemCustomizeText.setText(mcv.getCustomizeText());
+			paramsName.setMargins(0, 0, 0, (int)(ASSL.Yscale() * 10.0f));
 		}
+		mHolder.textViewItemName.setLayoutParams(paramsName);
 
 		if(position == getCount()-1){
 			mHolder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.transparent));
@@ -205,18 +209,6 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 
 		mHolder.imageViewFoodType.setVisibility(appType == AppConstant.ApplicationType.MENUS ? View.VISIBLE : View.GONE);
 		mHolder.imageViewFoodType.setImageResource(mcv.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
-		RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
-		LinearLayout.LayoutParams paramsLLC = (LinearLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
-		if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
-			paramsFT.setMargins(0, (int)(ASSL.Yscale()*25f), 0, 0);
-			paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
-		} else {
-			paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
-			paramsLLC.setMargins((int)(ASSL.Xscale()*30f), 0, 0, 0);
-		}
-		mHolder.imageViewFoodType.setLayoutParams(paramsFT);
-		mHolder.linearLayoutContent.setLayoutParams(paramsLLC);
-
 
 		mHolder.textViewMinus.setTag(position);
 		mHolder.textViewPlus.setTag(position);

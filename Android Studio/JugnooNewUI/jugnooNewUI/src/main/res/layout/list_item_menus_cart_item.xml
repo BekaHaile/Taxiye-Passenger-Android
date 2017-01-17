@@ -8,19 +8,17 @@
     android:orientation="vertical"
     >
 
-
     <LinearLayout
-        android:id="@+id/relativeLayoutMain"
+        android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
         >
 
         <RelativeLayout
             android:id="@+id/relativeLayoutItemImage"
             android:layout_width="wrap_content"
-            android:layout_height="120px"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="34px"
             android:layout_marginLeft="20px"
             android:layout_marginTop="34px"
@@ -55,9 +53,9 @@
             android:id="@+id/linearLayoutContent"
             android:layout_width="560px"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="34px"
-            android:layout_marginLeft="35px"
-            android:layout_marginTop="34px"
+            android:layout_marginBottom="30px"
+            android:layout_marginLeft="30px"
+            android:layout_marginTop="30px"
             android:layout_toRightOf="@+id/relativeLayoutItemImage"
             android:orientation="vertical">
 
@@ -67,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10px"
                 android:maxLines="2"
-                android:text="Orange\nba\ndjsak"
+                android:text="Orange opdoapsjkhkjh djkhakjsh djjjjj"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_34"
                 />
@@ -80,13 +78,13 @@
                 android:text="ah\nah\nah\ndhjas"
                 android:textColor="@color/text_color_light"
                 android:textSize="@dimen/text_size_24"
+                android:visibility="gone"
                 />
 
             <TextView
                 android:id="@+id/textViewItemPrice"
                 android:layout_width="380px"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10px"
                 android:maxLines="2"
                 android:text="@string/rupee_0"
                 android:textColor="@color/text_color"
@@ -96,6 +94,9 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
+
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -116,7 +117,7 @@
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_below="@+id/relativeLayoutMain"
+        android:layout_below="@+id/llMain"
         android:layout_marginLeft="140px"
         android:layout_marginRight="34px"
         android:background="@color/stroke_light_grey_alpha"/>
