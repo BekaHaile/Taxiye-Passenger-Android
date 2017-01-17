@@ -549,6 +549,7 @@ public interface Constants {
 	String KEY_RESTAURANT_ID = "restaurant_id";
 	String KEY_RESTAURANT_NAME = "restaurant_name";
 	String KEY_RESTAURANT_DATA = "restaurant_data";
+	String KEY_USER_SELECTED_SLOT = "user_selected_slot";
 
 	String KEY_ITEM_ID = "item_id";
 	String SP_FRESH_LAST_ADDRESS_OBJ = "sp_fresh_last_address_obj";

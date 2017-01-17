@@ -22,6 +22,9 @@ public class DeliveryInfo {
 	@SerializedName("minimum_order_amount")
 	@Expose
 	private Double minimumOrderAmount;
+	@SerializedName("dynamic_delivery_charges")
+	@Expose
+	private Integer dynamicDeliveryCharges;
 
 	/**
 	 *
@@ -75,6 +78,16 @@ public class DeliveryInfo {
 		this.minimumOrderAmount = minimumOrderAmount;
 	}
 
+	public Integer getDynamicDeliveryCharges() {
+		if(dynamicDeliveryCharges == null){
+			dynamicDeliveryCharges = 0;
+		}
+		return dynamicDeliveryCharges;
+	}
+
+	public void setDynamicDeliveryCharges(Integer dynamicDeliveryCharges) {
+		this.dynamicDeliveryCharges = dynamicDeliveryCharges;
+	}
 
 	public Double getApplicableDeliveryCharges(int type, double subTotalAmount){
 		double charges = 0;

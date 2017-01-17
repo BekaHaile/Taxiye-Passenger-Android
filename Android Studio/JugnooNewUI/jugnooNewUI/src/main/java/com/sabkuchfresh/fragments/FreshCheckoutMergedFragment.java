@@ -197,7 +197,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
     private CheckoutSaveData checkoutSaveData;
-    private int type;
+    private int type, selectedSlot = -1;
     private BecomeStarAdapter becomeStarAdapter;
     private Button btnAddStar;
     private String selectedSubId;
@@ -604,11 +604,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
         relativeLayoutDeliveryCharges.setVisibility(View.VISIBLE);
+
         if(activity.getUserCheckoutResponse() != null
                 && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() != null
                 && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() > 0){
             textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
             String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges()));
+            textViewDeliveryChargesValue.setText(deliveryCharge);
+        } else if(activity.getUserCheckoutResponse().getDeliveryInfo() != null
+                && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() != null
+                && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() > 0){
+            textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
+            String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges()));
             textViewDeliveryChargesValue.setText(deliveryCharge);
         } else {
             double deliveryCharges = deliveryCharges();
@@ -1695,8 +1702,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onSlotSelected(int position, Slot slot) {
         FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
-        activity.setSlotSelected(slot);
-        recyclerViewDeliverySlots.scrollToPosition(position);
+        if(activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1
+                && type == AppConstant.ApplicationType.MEALS){
+            selectedSlot = slot.getDeliverySlotId();
+            getCheckoutDataAPI();
+        } else{
+            activity.setSlotSelected(slot);
+            recyclerViewDeliverySlots.scrollToPosition(position);
+        }
+
+
     }
 
 
@@ -1776,6 +1791,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
                 params.put(Constants.INTERATED, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                if(selectedSlot != -1) {
+                    params.put(Constants.KEY_USER_SELECTED_SLOT, String.valueOf(selectedSlot));
+                }
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
                 Callback<UserCheckoutResponse> callback = new Callback<UserCheckoutResponse>() {
@@ -1795,7 +1813,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                                     setActivityLastAddressFromResponse(userCheckoutResponse);
                                     updateCartDataView();
-
+                                    updateDeliverySlot(userCheckoutResponse.getDeliveryInfo());
                                     setDeliverySlotsDataUI();
 
                                     updateAddressView();
@@ -1847,6 +1865,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         }
                                     }
                                     updateCouponsDataView();
+
                                     try {
                                         if(cartChangedRefreshCheckout){
 											setSelectedCoupon(promoCoupons.indexOf(activity.getSelectedPromoCoupon()));
@@ -1896,6 +1915,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
         }
 
+    }
+
+
+    private void updateDeliverySlot(UserCheckoutResponse.DeliveryInfo deliveryInfo){
+        for(DeliverySlot slot : activity.getUserCheckoutResponse().getCheckoutData().getDeliverySlots()){
+            for(Slot slot1 : slot.getSlots()){
+                if(slot1.getDeliverySlotId().equals(deliveryInfo.getSelectedSlot())){
+                    activity.setSlotSelected(slot1);
+                    return;
+                }
+            }
+        }
     }
 
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
@@ -2056,6 +2087,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
         cartChangedRefreshCheckout = true;
+        if(activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1
+                && type == AppConstant.ApplicationType.MEALS){
+            getCheckoutDataAPI();
+        }
         updateCartDataView();
     }
 
@@ -2066,6 +2101,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         if(subItem.getSubItemQuantitySelected() == 0){
             activity.subItemsInCart.remove(position);
             checkIfEmpty();
+        }
+
+        if(activity.subItemsInCart.size() > 0
+                && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1
+                && type == AppConstant.ApplicationType.MEALS){
+            getCheckoutDataAPI();
         }
     }
 
