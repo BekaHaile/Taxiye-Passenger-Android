@@ -697,7 +697,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
 
-        if(relativeLayoutDiscount.getVisibility() == View.VISIBLE
+        /*if(relativeLayoutDiscount.getVisibility() == View.VISIBLE
                 || relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
                 || relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
                 || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
@@ -708,7 +708,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         } else {
             linearLayoutCartDetails.setVisibility(View.GONE);
             imageViewCartSep.setVisibility(View.VISIBLE);
-        }
+        }*/
 
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));

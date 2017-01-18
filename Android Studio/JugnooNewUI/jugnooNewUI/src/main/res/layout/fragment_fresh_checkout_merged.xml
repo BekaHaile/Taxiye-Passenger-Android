@@ -552,6 +552,7 @@
                         android:gravity="left"
                         android:hint="@string/add_special_notes"
                         android:inputType="textCapSentences|textMultiLine"
+                        android:textCursorDrawable="@drawable/cursor_black"
                         android:paddingBottom="10px"
                         android:paddingTop="10px"
                         android:textColor="@color/text_color"

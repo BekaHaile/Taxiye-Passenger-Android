@@ -80,7 +80,6 @@
                         />
 
 
-
                 </RelativeLayout>
 
                 <LinearLayout
@@ -89,9 +88,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     >
-
-
-
 
                     <ImageView
                         android:id="@+id/imageViewCartSep"
