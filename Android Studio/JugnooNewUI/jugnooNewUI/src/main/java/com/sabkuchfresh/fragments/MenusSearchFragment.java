@@ -121,8 +121,8 @@ public class MenusSearchFragment extends Fragment {
 		menusCategoryItemsAdapter = new MenusCategoryItemsAdapter(activity, itemsInSearch,
 				new MenusCategoryItemsAdapter.Callback() {
 					@Override
-					public boolean checkForAdd(int position, Item item) {
-						return activity.checkForAdd();
+					public boolean checkForAdd(int position, Item item, MenusCategoryItemsAdapter.CallbackCheckForAdd callbackCheckForAdd) {
+						return activity.checkForAdd(position, item, callbackCheckForAdd);
 					}
 
 					@Override

@@ -115,6 +115,7 @@
                         android:layout_marginLeft="24px"
                         android:layout_marginRight="24px"
                         android:src="@drawable/check_box_unchecked"
+                        android:tag="mwar"
                         />
 
                     <View
@@ -157,6 +158,7 @@
                         android:layout_marginLeft="24px"
                         android:layout_marginRight="24px"
                         android:src="@drawable/check_box_unchecked"
+                        android:tag="mwar"
                         />
 
                     <View
@@ -199,6 +201,7 @@
                         android:layout_marginLeft="24px"
                         android:layout_marginRight="24px"
                         android:src="@drawable/check_box_unchecked"
+                        android:tag="mwar"
                         />
 
                 </RelativeLayout>

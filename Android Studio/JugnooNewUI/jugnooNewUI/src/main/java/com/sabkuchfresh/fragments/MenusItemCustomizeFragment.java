@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.adapters.MenusItemCustomizeAdapter;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 
@@ -104,6 +105,14 @@ public class MenusItemCustomizeFragment extends Fragment {
 					rlAddToCart.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
+							for(int i=0; i<menusItemCustomizeAdapter.getItemSelected().getCustomizeItemSelectedList().size(); i++){
+								CustomizeItemSelected customizeItemSelected = menusItemCustomizeAdapter.getItemSelected().getCustomizeItemSelectedList().get(i);
+								if(customizeItemSelected.getCustomizeOptions(false) == null || customizeItemSelected.getCustomizeOptions(false).size() == 0){
+									menusItemCustomizeAdapter.getItemSelected().getCustomizeItemSelectedList().remove(i);
+									i--;
+								}
+							}
+
 							int index = menusItemCustomizeAdapter.getItem().getItemSelectedList().indexOf(menusItemCustomizeAdapter.getItemSelected());
 							if(index > -1){
 								menusItemCustomizeAdapter.getItem().getItemSelectedList().get(index).setQuantity(

@@ -21,8 +21,8 @@ import android.widget.TextView;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -334,7 +334,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 mHolder.textViewClosed.setVisibility(((vendor.getIsClosed() == 1)||(vendor.getIsAvailable()==0)) ? View.VISIBLE : View.GONE);
 
                 mHolder.textViewDelivery.setVisibility(((vendor.getMinimumOrderAmount() != null)) ? View.VISIBLE : View.GONE);
-                mHolder.textViewDelivery.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
+                if(vendor.getMinimumOrderAmount() != null){
+                    if(vendor.getMinimumOrderAmount() > 0){
+                        mHolder.textViewDelivery.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
+                    } else {
+                        mHolder.textViewDelivery.setText(activity.getString(R.string.no_minimum_order));
+                    }
+                }
 
                 mHolder.imageViewAddressLine.setVisibility(((vendor.getRestaurantAddress() != null)) ? View.VISIBLE : View.GONE);
                 mHolder.textViewAddressLine.setVisibility(((vendor.getRestaurantAddress() != null)) ? View.VISIBLE : View.GONE);

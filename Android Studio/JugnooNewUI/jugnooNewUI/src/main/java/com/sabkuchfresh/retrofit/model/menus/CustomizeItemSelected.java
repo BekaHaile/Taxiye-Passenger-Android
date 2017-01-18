@@ -31,7 +31,11 @@ public class CustomizeItemSelected{
 	}
 
 	public List<Integer> getCustomizeOptions() {
-		if(customizeOptions == null){
+		return getCustomizeOptions(true);
+	}
+
+	public List<Integer> getCustomizeOptions(boolean createNew) {
+		if(createNew && customizeOptions == null){
 			customizeOptions = new ArrayList<>();
 		}
 		return customizeOptions;

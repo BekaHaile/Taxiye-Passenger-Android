@@ -112,8 +112,8 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
 						activity.getMenuProductsResponse().getCategories().get(position),
 						new MenusCategoryItemsAdapter.Callback() {
 							@Override
-							public boolean checkForAdd(int position, Item item) {
-								return activity.checkForAdd();
+							public boolean checkForAdd(int position, Item item, MenusCategoryItemsAdapter.CallbackCheckForAdd callbackCheckForAdd) {
+								return activity.checkForAdd(position, item, callbackCheckForAdd);
 							}
 
 							@Override

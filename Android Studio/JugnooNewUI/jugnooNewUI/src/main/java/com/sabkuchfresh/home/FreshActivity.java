@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.jugnoo.pay.activities.PaySDKUtils;
 import com.jugnoo.pay.models.MessageRequest;
+import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressAdded;
@@ -2527,41 +2528,47 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         this.filterCuisinesLocal = filterCuisinesLocal;
     }
 
-    public boolean checkForAdd() {
-        int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
-        if(appType == AppConstant.ApplicationType.MENUS){
-            try {
-                JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
-                if(getVendorOpened() != null
-						&& !getVendorOpened().getRestaurantId().equals(jsonSavedCart
-						.optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))){
-                    String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
-                    DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
-                            getString(R.string.previous_vendor_cart_message_format, oldRestaurantName),
-                            getString(R.string.ok), getString(R.string.cancel),
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    clearMenusCart();
-                                    getVendorMenuFragment().getMenusCategoryFragmentsAdapter().notifyDataSetChanged();
-                                    updateCartValuesGetTotalPrice();
-                                }
-                            },
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+    public boolean checkForAdd(){
+        if(getAppType() == AppConstant.ApplicationType.MENUS){
+            return checkForAdd(-1, null, null);
+        } else {
+            return true;
+        }
+    }
 
+    public boolean checkForAdd(final int position, final Item item, final MenusCategoryItemsAdapter.CallbackCheckForAdd callbackCheckForAdd) {
+        try {
+            JSONObject jsonSavedCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
+            if (getVendorOpened() != null
+                    && !getVendorOpened().getRestaurantId().equals(jsonSavedCart
+                    .optInt(Constants.KEY_RESTAURANT_ID, getVendorOpened().getRestaurantId()))) {
+                String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
+                DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+                        getString(R.string.previous_vendor_cart_message_format, oldRestaurantName),
+                        getString(R.string.ok), getString(R.string.cancel),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                clearMenusCart();
+                                if (callbackCheckForAdd != null) {
+                                    callbackCheckForAdd.addConfirmed(position, item);
                                 }
-                            }, false, false);
-					return false;
-				} else {
-					return true;
-				}
-            } catch (Exception e) {
-                e.printStackTrace();
+                                getVendorMenuFragment().onUpdateListEvent(new UpdateMainList(true));
+                                updateCartValuesGetTotalPrice();
+                            }
+                        },
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }, false, false);
+                return false;
+            } else {
                 return true;
             }
-        } else {
+        } catch (Exception e) {
+            e.printStackTrace();
             return true;
         }
     }
