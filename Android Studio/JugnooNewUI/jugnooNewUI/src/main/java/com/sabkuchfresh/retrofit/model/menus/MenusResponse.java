@@ -157,7 +157,7 @@ public class MenusResponse {
 
 		@SerializedName("distance")
 		@Expose
-		private Integer distance;
+		private Double distance;
 		@SerializedName("cuisines")
 		@Expose
 		private List<String> cuisines = new ArrayList<String>();
@@ -324,7 +324,7 @@ public class MenusResponse {
 		 * @return
 		 * The distance
 		 */
-		public Integer getDistance() {
+		public Double getDistance() {
 			return distance;
 		}
 
@@ -333,7 +333,7 @@ public class MenusResponse {
 		 * @param distance
 		 * The distance
 		 */
-		public void setDistance(Integer distance) {
+		public void setDistance(Double distance) {
 			this.distance = distance;
 		}
 
@@ -516,7 +516,7 @@ public class MenusResponse {
 		private List<Integer> isClosed = new ArrayList<Integer>();
 		@SerializedName("distance")
 		@Expose
-		private List<Integer> distance = new ArrayList<Integer>();
+		private List<Double> distance = new ArrayList<Double>();
 		@SerializedName("cuisines")
 		@Expose
 		private List<String> cuisines = new ArrayList<String>();
@@ -562,11 +562,11 @@ public class MenusResponse {
 			this.isClosed = isClosed;
 		}
 
-		public List<Integer> getDistance() {
+		public List<Double> getDistance() {
 			return distance;
 		}
 
-		public void setDistance(List<Integer> distance) {
+		public void setDistance(List<Double> distance) {
 			this.distance = distance;
 		}
 	}

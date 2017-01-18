@@ -20,10 +20,10 @@ public class CustomizeOption {
 	private Integer isDefault;
 	@SerializedName("customize_price")
 	@Expose
-	private Integer customizePrice;
+	private Double customizePrice;
 	@SerializedName("additional_cost")
 	@Expose
-	private Integer additionalCost;
+	private Double additionalCost;
 	@SerializedName("isCustomizeItem")
 	@Expose
 	private Integer isCustomizeItem;
@@ -53,19 +53,19 @@ public class CustomizeOption {
 		this.isDefault = isDefault;
 	}
 
-	public Integer getCustomizePrice() {
+	public Double getCustomizePrice() {
 		return customizePrice;
 	}
 
-	public void setCustomizePrice(Integer customizePrice) {
+	public void setCustomizePrice(Double customizePrice) {
 		this.customizePrice = customizePrice;
 	}
 
-	public Integer getAdditionalCost() {
+	public Double getAdditionalCost() {
 		return additionalCost;
 	}
 
-	public void setAdditionalCost(Integer additionalCost) {
+	public void setAdditionalCost(Double additionalCost) {
 		this.additionalCost = additionalCost;
 	}
 

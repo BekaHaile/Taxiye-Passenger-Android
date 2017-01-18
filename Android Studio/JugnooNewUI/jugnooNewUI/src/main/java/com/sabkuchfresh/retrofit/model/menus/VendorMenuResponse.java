@@ -106,35 +106,35 @@ public class VendorMenuResponse {
 
         @SerializedName("delivery_charges_before_threshold")
         @Expose
-        private Integer deliveryChargesBeforeThreshold;
+        private Double deliveryChargesBeforeThreshold;
         @SerializedName("delivery_charges_after_threshold")
         @Expose
-        private Integer deliveryChargesAfterThreshold;
+        private Double deliveryChargesAfterThreshold;
         @SerializedName("minimum_order_amount")
         @Expose
-        private Integer minimumOrderAmount;
+        private Double minimumOrderAmount;
 
-        public Integer getDeliveryChargesBeforeThreshold() {
+        public Double getDeliveryChargesBeforeThreshold() {
             return deliveryChargesBeforeThreshold;
         }
 
-        public void setDeliveryChargesBeforeThreshold(Integer deliveryChargesBeforeThreshold) {
+        public void setDeliveryChargesBeforeThreshold(Double deliveryChargesBeforeThreshold) {
             this.deliveryChargesBeforeThreshold = deliveryChargesBeforeThreshold;
         }
 
-        public Integer getDeliveryChargesAfterThreshold() {
+        public Double getDeliveryChargesAfterThreshold() {
             return deliveryChargesAfterThreshold;
         }
 
-        public void setDeliveryChargesAfterThreshold(Integer deliveryChargesAfterThreshold) {
+        public void setDeliveryChargesAfterThreshold(Double deliveryChargesAfterThreshold) {
             this.deliveryChargesAfterThreshold = deliveryChargesAfterThreshold;
         }
 
-        public Integer getMinimumOrderAmount() {
+        public Double getMinimumOrderAmount() {
             return minimumOrderAmount;
         }
 
-        public void setMinimumOrderAmount(Integer minimumOrderAmount) {
+        public void setMinimumOrderAmount(Double minimumOrderAmount) {
             this.minimumOrderAmount = minimumOrderAmount;
         }
 

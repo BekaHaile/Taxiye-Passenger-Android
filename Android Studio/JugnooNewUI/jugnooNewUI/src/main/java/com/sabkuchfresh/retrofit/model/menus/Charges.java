@@ -34,7 +34,7 @@ public class Charges {
 	private Integer forceShow;
 	@SerializedName("default")
 	@Expose
-	private Integer defaultValue;
+	private Double defaultValue;
 
 	public Integer getId() {
 		return id;
@@ -92,11 +92,11 @@ public class Charges {
 		this.forceShow = forceShow;
 	}
 
-	public Integer getDefault() {
+	public Double getDefault() {
 		return defaultValue;
 	}
 
-	public void setDefault(Integer defaultValue) {
+	public void setDefault(Double defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 

@@ -198,7 +198,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
                 else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE)
                 {
-                    point = -(rhs.getDistance() - lhs.getDistance());
+                    point = -(int)(rhs.getDistance() - lhs.getDistance());
                 }
                 else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE)
                 {
