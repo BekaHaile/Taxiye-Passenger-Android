@@ -20,7 +20,7 @@
             android:layout_width="@dimen/px_50"
             android:layout_height="@dimen/px_50"
             android:layout_marginTop="@dimen/px_22"
-            android:layout_marginLeft="14px"
+            android:layout_marginLeft="@dimen/px_40"
             android:src="@drawable/star" />
 
         <LinearLayout

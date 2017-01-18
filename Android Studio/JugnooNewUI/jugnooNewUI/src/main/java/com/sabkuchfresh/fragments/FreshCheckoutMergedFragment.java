@@ -1888,8 +1888,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                     buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.connection_lost_try_again));
                                 }
                             }
-                            editTextDeliveryInstructions.clearFocus();
-                            scrollView.scrollTo(0, 0);
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             retryDialog(DialogErrorType.SERVER_ERROR);
@@ -2096,6 +2094,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             getCheckoutDataAPI();
         }
         updateCartDataView();
+        editTextDeliveryInstructions.clearFocus();
+        scrollView.scrollTo(0, 0);
     }
 
     @Override
