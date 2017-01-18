@@ -480,6 +480,12 @@ public class LoginResponse {
 		@SerializedName("use_recent_loc_auto_snap_max_distance")
 		@Expose
 		private Double useRecentLocAutoSnapMaxDistance;
+		@SerializedName("city_id")
+		@Expose
+		private Integer cityId;
+		@SerializedName("points_of_interest")
+		@Expose
+		private List<FetchUserAddressResponse.Address> pointsOfInterestAddresses = new ArrayList<FetchUserAddressResponse.Address>();
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -618,6 +624,22 @@ public class LoginResponse {
 
 		public void setUseRecentLocAutoSnapMaxDistance(Double useRecentLocAutoSnapMaxDistance) {
 			this.useRecentLocAutoSnapMaxDistance = useRecentLocAutoSnapMaxDistance;
+		}
+
+		public Integer getCityId() {
+			return cityId;
+		}
+
+		public void setCityId(Integer cityId) {
+			this.cityId = cityId;
+		}
+
+		public List<FetchUserAddressResponse.Address> getPointsOfInterestAddresses() {
+			return pointsOfInterestAddresses;
+		}
+
+		public void setPointsOfInterestAddresses(List<FetchUserAddressResponse.Address> pointsOfInterestAddresses) {
+			this.pointsOfInterestAddresses = pointsOfInterestAddresses;
 		}
 	}
 

@@ -39,6 +39,7 @@
             android:layout_marginRight="@dimen/px_32"/>
     </RelativeLayout>
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewChat"
         android:layout_width="match_parent"
@@ -50,7 +51,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewChatOptions"
         android:layout_width="match_parent"
-        android:layout_height="116px"
+        android:layout_height="100px"
         android:layout_above="@+id/rlInput"
         android:splitMotionEvents="false"
         android:visibility="gone" />

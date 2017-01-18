@@ -52,7 +52,7 @@ public class WebActivity extends BaseActivity {
 
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
-        imageViewProgressBar.setBackgroundResource(R.drawable.auto_loading_frame_anim);
+        imageViewProgressBar.setBackgroundResource(R.drawable.loader_new_frame_anim);
         imageViewProgressBar.post(new Runnable() {
             @Override
             public void run() {

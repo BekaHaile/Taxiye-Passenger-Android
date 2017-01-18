@@ -99,6 +99,10 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
         activity = getActivity();
 
+        if(activity instanceof FreshActivity){
+            ((FreshActivity)activity).fragmentUISetup(this);
+        }
+
         new ASSL(activity, relative, 1134, 720, false);
 
 
@@ -234,6 +238,9 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(!hidden){
+            if(activity instanceof FreshActivity){
+                ((FreshActivity)activity).fragmentUISetup(this);
+            }
             setFragTitle();
             if (orderHistory.getCancellable() == 1) {
                 orderCancel.setVisibility(View.VISIBLE);
@@ -291,6 +298,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
             ((RideTransactionsActivity) activity).setTitle("Order #" + orderId);
         } else if(activity instanceof SupportActivity) {
             ((SupportActivity) activity).setTitle("Order #" + orderId);
+        } else if(activity instanceof FreshActivity){
+            ((FreshActivity) activity).getTopBar().title.setText("Order #" + orderId);
         }
     }
 

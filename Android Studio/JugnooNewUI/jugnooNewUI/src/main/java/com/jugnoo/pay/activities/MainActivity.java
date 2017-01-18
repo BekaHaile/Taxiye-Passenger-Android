@@ -228,7 +228,10 @@ public class MainActivity extends BaseActivity {
                 return;
             }
 
+            new ASSL(this, 1134, 720, false);
             menuBar = new MenuBar(this, drawer);
+//            ASSL.DoMagic(menuBar.menuLayout);
+
             imageButtonBack = (ImageButton) findViewById(R.id.back_btn);
             imageButtonBack.setImageResource(R.drawable.icon_menu);
             textViewToolbarTitle = (TextView) findViewById(R.id.toolbar_title); textViewToolbarTitle.setTypeface(Fonts.avenirNext(this));

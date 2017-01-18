@@ -264,6 +264,7 @@
     <color name="text_color_red">#DE5B5B</color>
 
     <color name="stroke_light_grey_alpha">#33979797</color>
+    <color name="no_internet_text_color">#979797</color>
     <color name="order_history_status_color">#1fbd2a</color>
 
     <color name="green_rupee">#1fbd2a</color>
@@ -279,5 +280,7 @@
     <color name="color_pay_border">#cf9df6</color>
 
     <color name="color_restaurant_close_time">#d9f5a523</color>
+
+    <color name="brown_marker_text">#8D6E63</color>
 
 </resources>

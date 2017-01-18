@@ -183,6 +183,7 @@
                 android:layout_height="117px"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="60px"
+                android:visibility="gone"
                 android:background="@drawable/mylocation_btn_selector"
                 android:tag="mwar" />
 
@@ -190,7 +191,7 @@
             <LinearLayout
                 android:id="@+id/linearlayoutChangeLocalityInner"
                 android:layout_width="match_parent"
-                android:layout_height="224px"
+                android:layout_height="180px"
                 android:layout_alignParentBottom="true"
                 android:background="@color/sliding_bottom_bg_color"
                 android:gravity="center"

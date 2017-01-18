@@ -85,7 +85,7 @@ public class AppSwitcher {
 			if (AppStatus.getInstance(activity).isOnline(activity)) {
 				final Intent intent = new Intent();
 				if(clearActivityStack) {
-					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+					//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				}
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
@@ -142,7 +142,7 @@ public class AppSwitcher {
 					if (clientId.equalsIgnoreCase(Config.getAutosClientId()) && !(activity instanceof HomeActivity)) {
 						if (Data.autoData == null) {
 							new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-									new ApiLoginUsingAccessToken.Callback() {
+									true, new ApiLoginUsingAccessToken.Callback() {
 										@Override
 										public void noNet() {
 											DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
@@ -185,7 +185,7 @@ public class AppSwitcher {
 					} else if (clientId.equalsIgnoreCase(Config.getFreshClientId()) && !(activity instanceof FreshActivity)) {
 						if (Data.getFreshData() == null) {
 							new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-									callback);
+									true, callback);
 						} else {
 							intent.setClass(activity, FreshActivity.class);
 							activity.startActivity(intent);
@@ -198,7 +198,7 @@ public class AppSwitcher {
 					} else if (clientId.equalsIgnoreCase(Config.getMealsClientId()) && !(activity instanceof FreshActivity)) {
 						if (Data.getMealsData() == null) {
 							new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-									callback);
+									true, callback);
 						} else {
 							intent.setClass(activity, FreshActivity.class);
 							activity.startActivity(intent);
@@ -211,7 +211,7 @@ public class AppSwitcher {
 					} else if (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && !(activity instanceof FreshActivity)) {
 						if (Data.getGroceryData() == null) {
 							new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-									callback);
+									true, callback);
 						} else {
 							intent.setClass(activity, FreshActivity.class);
 							activity.startActivity(intent);
@@ -224,7 +224,7 @@ public class AppSwitcher {
 				} else if (clientId.equalsIgnoreCase(Config.getMenusClientId()) && !(activity instanceof FreshActivity)) {
 					if (Data.getMenusData() == null) {
 						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-								callback);
+								true, callback);
 					} else {
 						intent.setClass(activity, FreshActivity.class);
 						activity.startActivity(intent);
@@ -238,7 +238,7 @@ public class AppSwitcher {
 				else if (clientId.equalsIgnoreCase(Config.getPayClientId()) && !(activity instanceof MainActivity)) {
 					if (Data.getPayData() == null) {
 						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-								new ApiLoginUsingAccessToken.Callback() {
+								true, new ApiLoginUsingAccessToken.Callback() {
 									@Override
 									public void noNet() {
 										DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
@@ -296,7 +296,7 @@ public class AppSwitcher {
 							|| (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null)
 							|| (clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null)) {
 						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-								callback);
+								true, callback);
 					} else {
 							intent.setClass(activity, FreshActivity.class);
 							activity.startActivity(intent);

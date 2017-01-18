@@ -86,6 +86,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.OrderStatusActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -827,10 +828,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     textViewCartItemsCountNew.setVisibility(View.GONE);
                     imageViewCartNew.setImageResource(R.drawable.ic_cart_empty);
                 }
-                if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null)
-                {
-                    if (getMenusCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount())
-                    {
+                if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
+                    if (getMenusCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
                     }
                     else {
@@ -1234,7 +1233,21 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.title.setVisibility(View.VISIBLE);
 				topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                resetToolbar();
 			}
+            else if(fragment instanceof OrderStatusActivity) {
+                topBar.below_shadow.setVisibility(View.VISIBLE);
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.relativeLayoutNotification.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.imageViewDelete.setVisibility(View.GONE);
+                textViewCheckout.setVisibility(View.GONE);
+                relativeLayoutCheckoutBar.setVisibility(View.GONE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                resetToolbar();
+            }
             else if (fragment instanceof MealAddonItemsFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -1262,21 +1275,23 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void setMinOrderAmountText(Fragment fragment){
         try {
             if(getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
-                if (totalQuantity > 0
+                if (getProductsResponse() != null && totalQuantity > 0
                         && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)
-                        && totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()
                         && (relativeLayoutCheckoutBar.getVisibility() == View.VISIBLE)) {
-                    textViewMinOrder.setVisibility(View.VISIBLE);
-                }
-                else {
+                    if(Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())){
+                        textViewMinOrder.setVisibility(View.VISIBLE);
+                        textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
+                    }
+                    else if(totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+                        textViewMinOrder.setVisibility(View.VISIBLE);
+                        double leftAmount = getProductsResponse().getDeliveryInfo().getMinAmount() - totalPrice;
+                        textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
+                                Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
+                    } else {
+                        textViewMinOrder.setVisibility(View.GONE);
+                    }
+                } else {
                     textViewMinOrder.setVisibility(View.GONE);
-                }
-                if(getProductsResponse() != null) {
-                    textViewMinOrder.setText(getString(R.string.fresh_min_order_value, Utils.getMoneyDecimalFormatWithoutFloat()
-                            .format(getProductsResponse().getDeliveryInfo().getMinAmount())));
-                    double leftAmount = getProductsResponse().getDeliveryInfo().getMinAmount() - totalPrice;
-                    textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
-                            Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
                 }
             }
         }catch (Exception e){

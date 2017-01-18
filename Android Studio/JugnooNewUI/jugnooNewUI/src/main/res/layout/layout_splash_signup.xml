@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relativeLayoutSignup"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:visibility="gone">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:src="@drawable/splash_top_bg"
+        android:tag="mwar" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/splash_bottom_building_bg1"
+        android:tag="mwar"
+        android:visibility="visible" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="match_parent">
+
         <LinearLayout
+            android:id="@+id/llSignupMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -23,7 +38,6 @@
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
                 android:layout_marginTop="90px"
-                android:background="@drawable/background_white_shadow"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -37,7 +51,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_user_email"
-                        android:tag="mhar"/>
+                        android:tag="mhar" />
 
                     <EditText
                         android:id="@+id/editTextSName"
@@ -58,8 +72,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"
-                        />
+                        android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:id="@+id/textViewSNameRequired"
@@ -70,15 +83,16 @@
                         android:layout_marginRight="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_22" />
 
                 </RelativeLayout>
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:layout_margin="2px"
-                    android:src="@color/grey_light"/>
+                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginRight="@dimen/px_20"
+                    android:src="@color/grey_light" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -91,7 +105,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_email"
-                        android:tag="mhar"/>
+                        android:tag="mhar" />
 
                     <EditText
                         android:id="@+id/editTextSEmail"
@@ -110,7 +124,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:id="@+id/textViewSEmailRequired"
@@ -121,15 +135,16 @@
                         android:layout_marginRight="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_22" />
 
                 </RelativeLayout>
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:layout_margin="2px"
-                    android:src="@color/grey_light"/>
+                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginRight="@dimen/px_20"
+                    android:src="@color/grey_light" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -142,7 +157,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_phone"
-                        android:tag="mhar"/>
+                        android:tag="mhar" />
 
                     <TextView
                         android:id="@+id/textViewSPhone91"
@@ -153,7 +168,7 @@
                         android:gravity="center_vertical"
                         android:text="@string/nl_signup_plus91"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34" />
 
                     <EditText
                         android:id="@+id/editTextSPhone"
@@ -173,7 +188,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:id="@+id/textViewSPhoneRequired"
@@ -184,15 +199,16 @@
                         android:layout_marginRight="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_22" />
 
                 </RelativeLayout>
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:layout_margin="2px"
-                    android:src="@color/grey_light"/>
+                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginRight="@dimen/px_20"
+                    android:src="@color/grey_light" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -205,7 +221,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_password"
-                        android:tag="mhar"/>
+                        android:tag="mhar" />
 
                     <EditText
                         android:id="@+id/editTextSPassword"
@@ -225,7 +241,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:id="@+id/textViewSPasswordRequired"
@@ -236,15 +252,16 @@
                         android:layout_marginRight="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22"/>
+                        android:textSize="@dimen/text_size_22" />
 
                 </RelativeLayout>
 
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:layout_margin="2px"
-                    android:src="@color/grey_light"/>
+                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginRight="@dimen/px_20"
+                    android:src="@color/grey_light" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -257,7 +274,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="36px"
                         android:src="@drawable/ic_promocode"
-                        android:tag="mhar"/>
+                        android:tag="mhar" />
 
                     <EditText
                         android:id="@+id/editTextSPromo"
@@ -278,7 +295,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34" />
 
                 </RelativeLayout>
 
@@ -293,8 +310,7 @@
                 android:layout_marginTop="20px"
                 android:background="@drawable/background_white_shadow"
                 android:orientation="vertical"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textViewLinkWalletMessage"
@@ -304,8 +320,7 @@
                     android:layout_marginTop="30px"
                     android:text="@string/link_mobile_wallet_message"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_26"
-                    />
+                    android:textSize="@dimen/text_size_26" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -319,8 +334,7 @@
                         android:id="@+id/linearLayoutWalletContainerInner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        >
+                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:id="@+id/linearLayoutPaytm"
@@ -328,20 +342,19 @@
                             android:layout_height="70px"
                             android:layout_marginRight="10px"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            >
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:id="@+id/imageViewRadioPaytm"
                                 android:layout_width="33px"
                                 android:layout_height="33px"
                                 android:src="@drawable/ic_radio_button_normal"
-                                android:tag="mwar"/>
+                                android:tag="mwar" />
 
                             <ImageView
                                 style="@style/payment_option_icon_small"
                                 android:layout_marginLeft="0px"
-                                android:src="@drawable/ic_paytm_small"/>
+                                android:src="@drawable/ic_paytm_small" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -350,20 +363,19 @@
                             android:layout_height="70px"
                             android:layout_marginRight="10px"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            >
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:id="@+id/imageViewRadioMobikwik"
                                 android:layout_width="33px"
                                 android:layout_height="33px"
                                 android:src="@drawable/ic_radio_button_normal"
-                                android:tag="mwar"/>
+                                android:tag="mwar" />
 
                             <ImageView
                                 style="@style/payment_option_icon_small"
                                 android:layout_marginLeft="0px"
-                                android:src="@drawable/ic_mobikwik_small"/>
+                                android:src="@drawable/ic_mobikwik_small" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -372,20 +384,19 @@
                             android:layout_height="70px"
                             android:layout_marginRight="10px"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            >
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:id="@+id/imageViewRadioFreeCharge"
                                 android:layout_width="33px"
                                 android:layout_height="33px"
                                 android:src="@drawable/ic_radio_button_normal"
-                                android:tag="mwar"/>
+                                android:tag="mwar" />
 
                             <ImageView
                                 style="@style/payment_option_icon_small"
                                 android:layout_marginLeft="0px"
-                                android:src="@drawable/ic_freecharge_small"/>
+                                android:src="@drawable/ic_freecharge_small" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -394,15 +405,14 @@
                             android:layout_height="70px"
                             android:layout_marginRight="10px"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            >
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:id="@+id/imageViewRadioNone"
                                 android:layout_width="33px"
                                 android:layout_height="33px"
                                 android:src="@drawable/ic_radio_button_normal"
-                                android:tag="mwar"/>
+                                android:tag="mwar" />
 
                             <TextView
                                 android:id="@+id/textViewNone"
@@ -411,8 +421,7 @@
                                 android:layout_marginLeft="10px"
                                 android:text="@string/none"
                                 android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26"
-                                />
+                                android:textSize="@dimen/text_size_26" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -426,20 +435,17 @@
                 android:layout_height="90px"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
-                android:layout_marginTop="20px"
-                android:background="@drawable/background_white_shadow"
-                android:orientation="horizontal"
+                android:background="@drawable/background_white_rounded_white_dark_bordered"
                 android:gravity="center_vertical"
-                >
+                android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/imageViewWalletOptionCheck"
                     android:layout_width="40px"
                     android:layout_height="40px"
-                    android:src="@drawable/checkbox_signup_checked"
-                    android:tag="mwar"
                     android:layout_marginLeft="30px"
-                    />
+                    android:src="@drawable/checkbox_signup_checked"
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewWalletOptionMessage"
@@ -448,8 +454,7 @@
                     android:layout_marginLeft="20px"
                     android:text="@string/use_mobile_wallet_powered_by_format"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_28"
-                    />
+                    android:textSize="@dimen/text_size_28" />
 
 
             </LinearLayout>
@@ -460,16 +465,16 @@
                 android:layout_height="@dimen/splash_button_height"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40px"
-                android:background="@drawable/button_theme_alpha_white_stroke_selector"
+                android:background="@drawable/button_capsule_theme_selector"
                 android:text="@string/sign_up"
                 android:textAllCaps="true"
-                android:textColor="@drawable/text_color_white_alpha_selector"
-                android:textSize="@dimen/text_size_34"/>
+                android:textColor="@color/text_color_theme_alpha_selector"
+                android:textSize="@dimen/text_size_34" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20px"
+                android:layout_margin="10px"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -477,7 +482,7 @@
                     android:layout_width="200px"
                     android:layout_height="2px"
                     android:layout_marginRight="25px"
-                    android:src="@color/white"/>
+                    android:src="@color/grey_light" />
 
                 <TextView
                     android:id="@+id/textViewSignupOr"
@@ -485,14 +490,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/or"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_26"/>
+                    android:textColor="@color/grey_light"
+                    android:textSize="@dimen/text_size_26" />
 
                 <ImageView
                     android:layout_width="200px"
                     android:layout_height="2px"
                     android:layout_marginLeft="20px"
-                    android:src="@color/white"/>
+                    android:src="@color/grey_light" />
 
             </LinearLayout>
 
@@ -502,29 +507,47 @@
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
-                <Button
+                <RelativeLayout
                     android:id="@+id/buttonFacebookSignup"
                     android:layout_width="222px"
                     android:layout_height="@dimen/splash_button_height"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/button_blue"
-                    android:text="@string/nl_login_facebook"
-                    android:textAllCaps="true"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/text_size_34"/>
+                    android:background="@drawable/capsule_white_blue_border_selector">
 
-                <Button
+                    <Button
+                        android:layout_width="22px"
+                        android:layout_height="42px"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/ic_f"
+                        android:clickable="false"
+                        android:duplicateParentState="true"
+                        android:textAllCaps="true"
+                        android:textColor="@drawable/text_color_white_alpha_selector"
+                        android:textSize="@dimen/text_size_34" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/buttonGoogleSignup"
                     android:layout_width="222px"
                     android:layout_height="@dimen/splash_button_height"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginTop="28px"
-                    android:background="@drawable/button_red_google"
-                    android:text="@string/nl_login_google"
-                    android:textAllCaps="true"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/text_size_34"/>
+                    android:layout_marginLeft="@dimen/px_40"
+                    android:background="@drawable/capsule_white_red_border_selector">
+
+                    <Button
+                        android:layout_width="42px"
+                        android:layout_height="41px"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/ic_g"
+                        android:clickable="false"
+                        android:duplicateParentState="true"
+                        android:textAllCaps="true"
+                        android:textColor="@drawable/text_color_white_alpha_selector"
+                        android:textSize="@dimen/text_size_34" />
+
+                </RelativeLayout>
+
 
             </LinearLayout>
 
@@ -535,18 +558,16 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20px"
                 android:text="@string/nl_splash_terms"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_26"/>
+                android:textColor="@color/services_name_txt_color"
+                android:textSize="@dimen/text_size_26" />
+
+            <TextView
+                android:id="@+id/tvScroll"
+                android:layout_width="1px"
+                android:layout_height="1px" />
 
         </LinearLayout>
 
     </ScrollView>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayoutScrollStop"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        ></RelativeLayout>
 
 </RelativeLayout>

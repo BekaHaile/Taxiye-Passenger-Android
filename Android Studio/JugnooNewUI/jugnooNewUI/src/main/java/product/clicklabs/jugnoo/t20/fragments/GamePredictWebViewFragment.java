@@ -86,7 +86,7 @@ public class GamePredictWebViewFragment extends Fragment implements FlurryEventN
 			webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
 
 			imageViewProgressBar = (ImageView) rootView.findViewById(R.id.imageViewProgressBar);
-			imageViewProgressBar.setBackgroundResource(R.drawable.auto_loading_frame_anim);
+			imageViewProgressBar.setBackgroundResource(R.drawable.loader_new_frame_anim);
 			imageViewProgressBar.post(new Runnable() {
 				@Override
 				public void run() {

@@ -3,227 +3,40 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="@drawable/bg_img"
+    android:background="@color/white"
     android:splitMotionEvents="false">
 
+    <!-- Main View -->
     <LinearLayout
         android:id="@+id/linearLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
         android:orientation="vertical"
         android:splitMotionEvents="false">
 
-
-        <ImageView
-            android:id="@+id/viewInitJugnoo"
+        <!-- layout container -->
+        <LinearLayout
+            android:id="@+id/llContainer"
             android:layout_width="match_parent"
-            android:layout_height="140px"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/viewInitSplashJugnoo"
-            android:layout_width="match_parent"
-            android:layout_height="200px"
-            android:visibility="gone" />
-
-        <!-- Jugnoo Logo layout-->
-        <RelativeLayout
-            android:id="@+id/relativeLayoutJugnooLogo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="100px"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
             android:visibility="visible">
 
-            <ImageView
-                android:id="@+id/imageViewJugnooLogo"
-                android:layout_width="380px"
-                android:layout_height="301px"
-                android:layout_centerHorizontal="true"
-                android:background="@drawable/jugnoo_logo_big_white"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:tag="mhar"
-                android:visibility="visible" />
+            <!-- splash with logo-->
+            <include layout="@layout/layout_splash_logo"/>
 
-            <ImageView
-                android:id="@+id/imageViewDebug1"
-                android:layout_width="180px"
-                android:layout_height="120px"
-                android:layout_marginTop="170px" />
-
-            <ImageView
-                android:id="@+id/imageViewDebug2"
-                android:layout_width="180px"
-                android:layout_height="120px"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="170px"
-
-                />
-
-            <ImageView
-                android:id="@+id/imageViewDebug3"
-                android:layout_width="120px"
-                android:layout_height="120px"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="60px"
-
-                />
-
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/viewInitLS"
-            android:layout_width="match_parent"
-            android:layout_height="300px"
-            android:visibility="gone" />
-
-        <!-- splash buttons -->
-        <RelativeLayout
-            android:id="@+id/relativeLayoutLS"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="150px"
-            android:animateLayoutChanges="true"
-            android:visibility="visible">
-
-            <LinearLayout
-                android:id="@+id/linearLayoutLoginSignupButtons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:splitMotionEvents="false"
-                android:visibility="gone">
-
-                <Button
-                    android:id="@+id/buttonRegister"
-                    android:layout_width="@dimen/splash_button_width"
-                    android:layout_height="@dimen/splash_button_height"
-                    android:background="@drawable/button_white_selector"
-                    android:text="@string/sign_up"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_theme_alpha_selector"
-                    android:textSize="@dimen/text_size_34" />
-
-                <TextView
-                    android:id="@+id/textViewAlreadyHaveAccount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="30px"
-                    android:layout_marginTop="30px"
-                    android:text="@string/nl_splash_already_have_account"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_26" />
+            <!-- splash buttons -->
+            <include layout="@layout/layout_splash_ls" />
 
 
-                <Button
-                    android:id="@+id/buttonLogin"
-                    android:layout_width="@dimen/splash_button_width"
-                    android:layout_height="@dimen/splash_button_height"
-                    android:background="@drawable/button_theme_alpha_white_stroke_selector"
-                    android:text="@string/nl_log_in"
-                    android:textAllCaps="true"
-                    android:textColor="@drawable/text_color_white_alpha_selector"
-                    android:textSize="@dimen/text_size_34" />
-
-                <TextView
-                    android:id="@+id/textViewTerms"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="60px"
-                    android:text=""
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_26" />
-
-            </LinearLayout>
+            <!-- login buttons -->
+            <include layout="@layout/layout_splash_login" />
 
 
-            <!-- No Internet Layout -->
-            <LinearLayout
-                android:id="@+id/linearLayoutNoNet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:orientation="vertical"
-                android:splitMotionEvents="false"
-                android:visibility="gone">
+            <!-- Signup layout-->
+            <include layout="@layout/layout_splash_signup" />
 
-                <ImageView
-                    android:layout_width="90px"
-                    android:layout_height="80px"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/no_internet_icon"
-                    android:tag="mhar" />
-
-                <TextView
-                    android:id="@+id/textViewNoNet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20px"
-                    android:gravity="center"
-                    android:text="@string/no_internet_connection"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_30" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="80px"
-                    android:layout_marginTop="40px"
-                    android:splitMotionEvents="false"
-                    android:visibility="visible"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    >
-
-                    <Button
-                        android:id="@+id/buttonNoNetCall"
-                        android:layout_width="300px"
-                        android:layout_height="@dimen/splash_button_height"
-                        android:layout_marginLeft="40px"
-                        android:background="@drawable/button_theme_alpha_white_stroke_selector"
-                        android:gravity="center"
-                        android:singleLine="true"
-                        android:text="@string/call_to_book"
-                        android:textAllCaps="true"
-                        android:textColor="@drawable/text_color_white_alpha_selector"
-                        android:textSize="@dimen/text_size_34"
-                        android:visibility="gone"
-                        />
-
-                    <Button
-                        android:id="@+id/buttonRefresh"
-                        android:layout_width="300px"
-                        android:layout_height="@dimen/splash_button_height"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="40px"
-                        android:layout_marginRight="40px"
-                        android:background="@drawable/button_white_selector"
-                        android:gravity="center"
-                        android:singleLine="true"
-                        android:text="@string/refresh"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_color_theme_alpha_selector"
-                        android:textSize="@dimen/text_size_34" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-
-        <!-- login buttons -->
-        <include layout="@layout/layout_splash_login" />
-
-
-        <!-- Signup layout-->
-        <include layout="@layout/layout_splash_signup" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textViewScroll"
@@ -233,12 +46,13 @@
     </LinearLayout>
 
 
+
     <ImageView
         android:id="@+id/imageViewBack"
         style="@style/back_image"
-        android:visibility="gone"
         android:layout_centerVertical="false"
         android:layout_marginTop="10px"
-        />
+        android:visibility="gone" />
+
 
 </RelativeLayout>

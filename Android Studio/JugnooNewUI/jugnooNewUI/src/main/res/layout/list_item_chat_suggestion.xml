@@ -2,9 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="wrap_content"
-    android:layout_height="116px"
-    android:orientation="vertical"
-    android:gravity="center_vertical"
+    android:layout_height="100px"
     android:splitMotionEvents="false">
 
     <LinearLayout
@@ -14,8 +12,9 @@
         android:paddingLeft="30px"
         android:paddingRight="30px"
         android:layout_marginLeft="20px"
+        android:layout_marginTop="5px"
         android:gravity="center"
-        android:background="@drawable/background_white_more_rounded_black_bordered"
+        android:background="@drawable/capsule_text_color_light_less"
         android:splitMotionEvents="false">
 
         <TextView
@@ -24,7 +23,7 @@
             android:layout_height="wrap_content"
             android:text="yes"
             android:layout_gravity="center"
-            android:textColor="@color/text_color"
+            android:textColor="@color/white"
             android:textSize="@dimen/text_size_30" />
     </LinearLayout>
 

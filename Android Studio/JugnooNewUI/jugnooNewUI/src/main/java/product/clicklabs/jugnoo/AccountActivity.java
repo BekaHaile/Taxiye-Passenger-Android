@@ -796,6 +796,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
                 rlJugnooStar.setVisibility(View.GONE);
                 viewStarIcon.setVisibility(View.GONE);
             }
+            rlJugnooStar.setVisibility(View.GONE);
 
             try {
                 reloadProfileAPI(this);

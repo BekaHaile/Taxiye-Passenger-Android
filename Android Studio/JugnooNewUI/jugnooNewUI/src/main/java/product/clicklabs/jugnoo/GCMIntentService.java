@@ -25,6 +25,7 @@ import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 
 import com.clevertap.android.sdk.CleverTapAPI;
@@ -40,6 +41,7 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
+import product.clicklabs.jugnoo.apis.ApiTrackPush;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProductType;
@@ -104,6 +106,20 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			}
 
             Notification notification = builder.build();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				int smallIconViewId = getResources().getIdentifier("right_icon", "id", android.R.class.getPackage().getName());
+
+				if (smallIconViewId != 0) {
+					if (notification.contentIntent != null)
+						notification.contentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.headsUpContentView != null)
+						notification.headsUpContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.bigContentView != null)
+						notification.bigContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+				}
+			}
             notificationManager.notify(NOTIFICATION_ID, notification);
 
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -128,13 +144,28 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 	private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
 											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag){
 		notificationManagerCustomID(context, title, message, notificationId, deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag,
-				0, ProductType.AUTO.getOrdinal());
+				0, ProductType.AUTO.getOrdinal(), 0);
+	}
+
+	private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag,
+											 int orderId, int productType){
+		notificationManagerCustomID(context, title, message, notificationId, deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag,
+				orderId, productType, 0);
+	}
+
+	private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
+											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag,
+											 int campaignId) {
+		notificationManagerCustomID(context, title, message, notificationId, deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag,
+				0, ProductType.AUTO.getOrdinal(), campaignId);
+
 	}
 
     @SuppressWarnings("deprecation")
     private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
 											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag,
-											 int orderId, int productType) {
+											 int orderId, int productType, int campaignId) {
 
         try {
             long when = System.currentTimeMillis();
@@ -152,6 +183,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				notificationIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
 				notificationIntent.putExtra(Constants.KEY_ORDER_ID, orderId);
 				notificationIntent.putExtra(Constants.KEY_PRODUCT_TYPE, productType);
+				notificationIntent.putExtra(Constants.KEY_CAMPAIGN_ID, campaignId);
 			} else{
 				notificationIntent.setData(Uri.parse(url));
 			}
@@ -191,6 +223,20 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 			} else{
 				Notification notification = builder.build();
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+					int smallIconViewId = getResources().getIdentifier("right_icon", "id", android.R.class.getPackage().getName());
+
+					if (smallIconViewId != 0) {
+						if (notification.contentIntent != null)
+							notification.contentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+						if (notification.headsUpContentView != null)
+							notification.headsUpContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+						if (notification.bigContentView != null)
+							notification.bigContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+					}
+				}
 				notificationManager.notify(notificationId, notification);
 
 				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -267,6 +313,20 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			}
 
 			Notification notification = builder.build();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				int smallIconViewId = getResources().getIdentifier("right_icon", "id", android.R.class.getPackage().getName());
+
+				if (smallIconViewId != 0) {
+					if (notification.contentIntent != null)
+						notification.contentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.headsUpContentView != null)
+						notification.headsUpContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.bigContentView != null)
+						notification.bigContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+				}
+			}
 			notificationManager.notify(notificationId, notification);
 
 			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -314,11 +374,29 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
             builder.setSmallIcon(R.drawable.notification_icon);
             builder.setContentIntent(intent);
-			if(Build.VERSION.SDK_INT >= 16){
+			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
 				builder.setPriority(Notification.PRIORITY_HIGH);
 			}
 
+
+
             Notification notification = builder.build();
+
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				int smallIconViewId = getResources().getIdentifier("right_icon", "id", android.R.class.getPackage().getName());
+
+				if (smallIconViewId != 0) {
+					if (notification.contentIntent != null)
+						notification.contentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.headsUpContentView != null)
+						notification.headsUpContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+
+					if (notification.bigContentView != null)
+						notification.bigContentView.setViewVisibility(smallIconViewId, View.INVISIBLE);
+				}
+			}
+
             notificationManager.notify(notificationId, notification);
 
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -515,6 +593,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 						else {
 							String picture = jObj.optString(KEY_PICTURE, "");
+							int campaignId = jObj.optInt(Constants.KEY_CAMPAIGN_ID, 0);
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString(KEY_IMAGE, "");
 							}
@@ -524,12 +603,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 							if(!"".equalsIgnoreCase(picture)){
 								deepindex = jObj.optInt(KEY_DEEPINDEX, AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
-								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush, tabIndex, flag);
+								bigImageNotifAsync(title, message1, deepindex, picture, url, playSound, showDialog, showPush,
+										tabIndex, flag, campaignId);
 							}
 							else{
 								deepindex = jObj.optInt(KEY_DEEPINDEX, -1);
 								notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
-										null, url, playSound, showDialog, showPush, tabIndex, flag);
+										null, url, playSound, showDialog, showPush, tabIndex, flag, campaignId);
 							}
 
 							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
@@ -543,6 +623,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 
 							Prefs.with(this).save(SP_LAST_PUSH_RECEIVED_TIME, System.currentTimeMillis());
+
+							try {
+								if (campaignId > 0) {
+									new ApiTrackPush().hit(GCMIntentService.this, campaignId, ApiTrackPush.Status.RECEIVED);
+								}
+							} catch (Exception e) {
+							}
+
 						}
 
 						if(deepindex == AppLinkIndex.INVITE_AND_EARN.getOrdinal()){
@@ -775,7 +863,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 	public void bigImageNotifAsync(final String title, final String message, final int deepindex,
 								   final String picture, final String url, final int playSound,
-								   final int showDialog, final int showPush, final int tabIndex, final int flag){
+								   final int showDialog, final int showPush, final int tabIndex, final int flag,
+								   final int campaignId){
 		try {
 			RequestCreator requestCreator = Picasso.with(GCMIntentService.this).load(picture);
 			Target target = new Target() {
@@ -783,11 +872,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
 					try {
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID,
-								deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag);
+								deepindex, bitmap, url, playSound, showDialog, showPush, tabIndex, flag, campaignId);
 					} catch (Exception e) {
 						e.printStackTrace();
 						notificationManagerCustomID(GCMIntentService.this, title, message, PROMOTION_NOTIFICATION_ID, deepindex,
-								null, url, playSound, showDialog, showPush, tabIndex, flag);
+								null, url, playSound, showDialog, showPush, tabIndex, flag, campaignId);
 					}
 				}
 
@@ -857,7 +946,5 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 		return bitmap;
 	}
-
-
 
 }

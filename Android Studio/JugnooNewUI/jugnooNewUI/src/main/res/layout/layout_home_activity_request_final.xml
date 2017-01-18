@@ -509,7 +509,7 @@
             android:layout_alignParentRight="true"
             android:contentDescription="@string/call_driver"
             android:layout_marginTop="0px"
-            android:visibility="visible"
+            android:visibility="gone"
             android:background="@drawable/ic_ride_call_selector"
             android:tag="mwar" />
 

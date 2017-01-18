@@ -56,6 +56,9 @@ public class Region {
 	@SerializedName("eta")
 	@Expose
 	private String eta;
+	@SerializedName("deepindex")
+	@Expose
+	private Integer deepindex;
 
 	private boolean isDefault = false;
 
@@ -116,6 +119,9 @@ public class Region {
 		 * The text2
 		 */
 		public String getText2() {
+			if(text2 == null){
+				return "";
+			}
 			return text2;
 		}
 
@@ -325,5 +331,16 @@ public class Region {
 
 	public void setDestinationMandatory(Integer destinationMandatory) {
 		this.destinationMandatory = destinationMandatory;
+	}
+
+	public Integer getDeepindex() {
+		if(deepindex == null){
+			return -1;
+		}
+		return deepindex;
+	}
+
+	public void setDeepindex(Integer deepindex) {
+		this.deepindex = deepindex;
 	}
 }

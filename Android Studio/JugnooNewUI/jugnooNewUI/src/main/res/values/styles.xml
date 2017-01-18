@@ -93,6 +93,15 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="ButtonThemeBordered" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">@dimen/button_width</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:background">@drawable/button_capsule_theme_selector</item>
+        <item name="android:textColor">@color/theme_color</item>
+        <item name="android:textSize">@dimen/text_size_34</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
 
     <style name="back_image">
         <item name="android:layout_width">60.7px</item>

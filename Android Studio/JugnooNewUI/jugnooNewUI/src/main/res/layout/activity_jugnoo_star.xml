@@ -15,8 +15,8 @@
             android:id="@+id/textViewTitle"
             style="@style/title"
             android:layout_width="wrap_content"
-            android:gravity="center"
             android:layout_centerInParent="true"
+            android:gravity="center"
             android:text="@string/jugnoo_star" />
 
         <ImageView
@@ -25,199 +25,212 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/llContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/px_60"
-        android:layout_below="@+id/topBar"
-        android:background="@color/white">
-
-        <TextView
-            android:id="@+id/tvSubTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/jugnoo_Star_title"
-            android:textSize="@dimen/text_size_34"
-            android:textColor="@color/text_color"
-            android:layout_marginLeft="@dimen/px_40"
-            android:layout_marginRight="@dimen/px_40"
-            android:layout_marginTop="@dimen/px_30"
-            android:gravity="center"/>
-        
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/px_46"
-            android:orientation="horizontal">
-            
-            <RelativeLayout
-                android:id="@+id/rlPlan1"
-                android:layout_width="@dimen/px_270"
-                android:layout_height="@dimen/px_135"
-                android:background="@color/transparent">
-
-                <ImageView
-                    android:id="@+id/ivRadio1"
-                    android:layout_width="@dimen/px_50"
-                    android:layout_height="@dimen/px_50"
-                    android:tag="mwar"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/px_25"
-                    android:src="@drawable/ic_radio_button_normal"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/ivRadio1"
-                    android:layout_marginLeft="@dimen/px_24"
-                    android:layout_centerVertical="true"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvActualAmount1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2388"
-                        android:maxLines="1"
-                        android:visibility="gone"
-                        android:layout_marginBottom="-10px"
-                        android:textColor="@color/text_color"
-                        android:ellipsize="end"
-                        android:textSize="@dimen/text_size_24"/>
-
-                    <TextView
-                        android:id="@+id/tvAmount1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="199"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_54"/>
-
-                    <TextView
-                        android:id="@+id/tvPeriod1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1 Month"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:layout_marginTop="-10px"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_24"/>
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="@dimen/px_2"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/px_30"
-                android:layout_marginBottom="@dimen/px_30"
-                android:background="@color/search_view_radius"/>
-
-            <RelativeLayout
-                android:id="@+id/rlPlan2"
-                android:layout_width="@dimen/px_270"
-                android:layout_height="@dimen/px_135"
-                android:layout_marginLeft="@dimen/px_20"
-                android:background="@color/transparent">
-
-                <ImageView
-                    android:id="@+id/ivRadio2"
-                    android:layout_width="@dimen/px_50"
-                    android:layout_height="@dimen/px_50"
-                    android:tag="mwar"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/px_25"
-                    android:src="@drawable/ic_radio_button_normal"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/ivRadio2"
-                    android:layout_marginLeft="@dimen/px_24"
-                    android:layout_centerVertical="true"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tvActualAmount2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2388"
-                        android:maxLines="1"
-                        android:layout_marginBottom="-10px"
-                        android:textColor="@color/text_color"
-                        android:ellipsize="end"
-                        android:textSize="@dimen/text_size_24"/>
-
-                    <TextView
-                        android:id="@+id/tvAmount2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="199"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_54"/>
-
-                    <TextView
-                        android:id="@+id/tvPeriod2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1 Month"
-                        android:maxLines="1"
-                        android:layout_marginTop="-10px"
-                        android:textColor="@color/text_color"
-                        android:ellipsize="end"
-                        android:textSize="@dimen/text_size_24"/>
-                </LinearLayout>
-
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <Button
-            style="@style/ButtonTheme"
-            android:id="@+id/bJoinNow"
-            android:layout_marginTop="@dimen/px_46"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/join_now"/>
-
-    </LinearLayout>
-
-
-
-    <RelativeLayout
+    <ScrollView
+        android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/llContainer"
-        android:background="@color/grey_lb_list">
+        android:layout_below="@+id/topBar">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvBenefits"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="@dimen/px_20"
-            android:paddingBottom="@dimen/px_20"/>
-    </RelativeLayout>
+            android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:layout_below="@+id/llContainer"
-        android:background="@drawable/shadow_down" />
+            <LinearLayout
+                android:id="@+id/llContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/px_60">
+
+                <TextView
+                    android:id="@+id/tvSubTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/px_40"
+                    android:layout_marginRight="@dimen/px_40"
+                    android:layout_marginTop="@dimen/px_30"
+                    android:gravity="center"
+                    android:text="@string/jugnoo_Star_title"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_34" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px_46"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/rlPlan1"
+                        android:layout_width="@dimen/px_270"
+                        android:layout_height="@dimen/px_135"
+                        android:background="@color/transparent">
+
+                        <ImageView
+                            android:id="@+id/ivRadio1"
+                            android:layout_width="@dimen/px_50"
+                            android:layout_height="@dimen/px_50"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_25"
+                            android:src="@drawable/ic_radio_button_normal"
+                            android:tag="mwar" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_24"
+                            android:layout_toRightOf="@+id/ivRadio1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvActualAmount1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="-10px"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="2388"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_24"
+                                android:visibility="gone" />
+
+                            <TextView
+                                android:id="@+id/tvAmount1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="199"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_54" />
+
+                            <TextView
+                                android:id="@+id/tvPeriod1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-10px"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="1 Month"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_24" />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                    <View
+                        android:id="@+id/divider"
+                        android:layout_width="@dimen/px_2"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/px_30"
+                        android:layout_marginTop="@dimen/px_30"
+                        android:background="@color/search_view_radius" />
+
+                    <RelativeLayout
+                        android:id="@+id/rlPlan2"
+                        android:layout_width="@dimen/px_270"
+                        android:layout_height="@dimen/px_135"
+                        android:layout_marginLeft="@dimen/px_20"
+                        android:background="@color/transparent">
+
+                        <ImageView
+                            android:id="@+id/ivRadio2"
+                            android:layout_width="@dimen/px_50"
+                            android:layout_height="@dimen/px_50"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_25"
+                            android:src="@drawable/ic_radio_button_normal"
+                            android:tag="mwar" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/px_24"
+                            android:layout_toRightOf="@+id/ivRadio2"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvActualAmount2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="-10px"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="2388"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_24" />
+
+                            <TextView
+                                android:id="@+id/tvAmount2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="199"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_54" />
+
+                            <TextView
+                                android:id="@+id/tvPeriod2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="-10px"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="1 Month"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_24" />
+                        </LinearLayout>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/bJoinNow"
+                    style="@style/ButtonTheme"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/px_46"
+                    android:text="@string/join_now" />
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/llContainer"
+                android:background="@color/grey_lb_list">
+
+                <product.clicklabs.jugnoo.utils.NonScrollListView
+                    android:id="@+id/rvBenefits"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fadeScrollbars="true"
+                    android:paddingTop="@dimen/px_15"
+                    android:scrollbars="vertical" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="6px"
+                android:layout_below="@+id/llContainer"
+                android:background="@drawable/shadow_down" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
     <RelativeLayout
         android:id="@+id/rlFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:layout_below="@id/topBar"/>
+        android:layout_below="@id/topBar"
+        android:visibility="gone" />
 
 
     <ImageView

@@ -118,7 +118,7 @@
             fab:fab_colorNormal="@color/white"
             fab:fab_colorPressed="@color/grey_light"
             fab:fab_colorRipple="@color/grey_light_alpha"
-            fab:fab_label="Autos" />
+            fab:fab_label="Rides" />
 
 
     </product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu>

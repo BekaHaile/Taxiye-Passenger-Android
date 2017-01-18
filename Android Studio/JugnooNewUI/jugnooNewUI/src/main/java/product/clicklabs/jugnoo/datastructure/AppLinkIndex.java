@@ -40,7 +40,11 @@ public enum AppLinkIndex {
 
 	SUBSCRIPTION_PLAN_OPTION_SCREEN(18), //18 Subscription_Plan_Option_Screen
 
-	JUGNOO_STAR(19) //19 Jugnoo_Star_Screen
+	JUGNOO_STAR(19), //19 Jugnoo_Star_Screen
+
+	WALLET_TRANSACTIONS(20), //20 Jugnoo_Star_Screen
+
+	OPEN_COUPONS_DIALOG(21) //open coupons dialog
 
 	;
 
