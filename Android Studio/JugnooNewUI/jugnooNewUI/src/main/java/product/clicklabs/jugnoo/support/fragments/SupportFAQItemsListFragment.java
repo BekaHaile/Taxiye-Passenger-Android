@@ -104,7 +104,7 @@ public class SupportFAQItemsListFragment extends Fragment implements FlurryEvent
 			e.printStackTrace();
 		}
 
-		cardViewRecycler = (CardView)rootView.findViewById(R.id.cardViewRecycler);
+		cardViewRecycler = (CardView)rootView.findViewById(R.id.cvRoot);
 		recyclerViewItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewItems);
 		recyclerViewItems.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity));
 		recyclerViewItems.setItemAnimator(new DefaultItemAnimator());

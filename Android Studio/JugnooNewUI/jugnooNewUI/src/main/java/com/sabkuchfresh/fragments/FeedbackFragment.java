@@ -191,7 +191,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         textViewThanks = (TextView) rootView.findViewById(R.id.textViewThanks);
         textViewRSTotalFare = (TextView) rootView.findViewById(R.id.textViewRSTotalFare);
         textViewRSData = (TextView) rootView.findViewById(R.id.textViewRSData);
-        tvItems = (TextView) rootView.findViewById(R.id.tvItems); tvItems.setTypeface(Fonts.avenirMedium(activity));
+        tvItems = (TextView) rootView.findViewById(R.id.tvItems); tvItems.setTypeface(Fonts.avenirNext(activity));
         textViewRSCashPaidValue = (TextView) rootView.findViewById(R.id.textViewRSCashPaidValue);
         textViewRSInvoice = (TextView) rootView.findViewById(R.id.textViewRSInvoice);
         textViewRSRateYourRide = (TextView) rootView.findViewById(R.id.textViewRSRateYourRide);

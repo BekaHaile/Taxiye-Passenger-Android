@@ -2,6 +2,7 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,13 +104,27 @@ public class OrderItemsAdapter extends BaseAdapter {
 		else {
 			mHolder.textViewItemCancelled.setVisibility(View.VISIBLE);
 		}
+
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewItemImage.getLayoutParams();
+		if(TextUtils.isEmpty(subItem.getCustomisations())){
+			mHolder.textViewItemCustomizeText.setVisibility(View.GONE);
+			params.addRule(RelativeLayout.CENTER_VERTICAL);
+			params.setMargins((int)(30.0f * ASSL.Xscale()), 0, 0, 0);
+		} else {
+			mHolder.textViewItemCustomizeText.setVisibility(View.VISIBLE);
+			mHolder.textViewItemCustomizeText.setText(subItem.getCustomisations());
+			params.addRule(RelativeLayout.CENTER_VERTICAL, 0);
+			params.setMargins((int)(30.0f * ASSL.Xscale()), (int) (30.0f * ASSL.Yscale()), 0, 0);
+		}
+		mHolder.imageViewItemImage.setLayoutParams(params);
 	}
 
 	static class MainViewHolder extends RecyclerView.ViewHolder {
 		public int id;
 		public RelativeLayout relative;
 		private ImageView imageViewItemImage, imageViewSep;
-		public TextView textViewItemName, textViewItemPrice, textViewItemQuantity, textViewItemTotalPrice ,textViewItemCancelled;
+		public TextView textViewItemName, textViewItemPrice, textViewItemQuantity, textViewItemTotalPrice,
+				textViewItemCancelled, textViewItemCustomizeText;
 
 		public MainViewHolder(View itemView, Context context) {
 			super(itemView);
@@ -122,6 +137,7 @@ public class OrderItemsAdapter extends BaseAdapter {
 			textViewItemQuantity = (TextView) itemView.findViewById(R.id.textViewItemQuantity); textViewItemQuantity.setTypeface(Fonts.mavenMedium(context));
 			textViewItemTotalPrice = (TextView) itemView.findViewById(R.id.textViewItemTotalPrice); textViewItemTotalPrice.setTypeface(Fonts.mavenMedium(context));
 			textViewItemCancelled = (TextView) itemView.findViewById(R.id.textViewItemCancelled); textViewItemCancelled.setTypeface(Fonts.mavenMedium(context));
+			textViewItemCustomizeText = (TextView) itemView.findViewById(R.id.textViewItemCustomizeText); textViewItemCustomizeText.setTypeface(Fonts.mavenMedium(context));
 
 			RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewSep.getLayoutParams();
 			layoutParams.setMargins(55, 0, 34, 0);

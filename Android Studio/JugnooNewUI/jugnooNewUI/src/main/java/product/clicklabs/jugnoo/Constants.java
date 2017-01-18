@@ -49,6 +49,9 @@ public interface Constants {
 	String SP_GROCERY_CART= "grocery_cart";
 	String SP_MENUS_CART= "menus_cart";
 	String KEY_CATEGORY_POSITION = "category_position";
+	String KEY_SUBCATEGORY_POSITION = "subcategory_position";
+	String KEY_ITEM_POSITION = "item_position";
+	String KEY_IS_VENDOR_MENU = "is_vendor_menu";
 
 
 
@@ -549,6 +552,7 @@ public interface Constants {
 	String KEY_RESTAURANT_ID = "restaurant_id";
 	String KEY_RESTAURANT_NAME = "restaurant_name";
 	String KEY_RESTAURANT_DATA = "restaurant_data";
+	String KEY_USER_SELECTED_SLOT = "user_selected_slot";
 
 	String KEY_ITEM_ID = "item_id";
 	String SP_FRESH_LAST_ADDRESS_OBJ = "sp_fresh_last_address_obj";
@@ -583,4 +587,6 @@ public interface Constants {
 	String KEY_AUTOS_BENEFIT_ID = "autos_benefit_id";
 
 	double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 100d;
+	String KEY_OPTIONS = "options";
+	String KEY_CUSTOMISATIONS = "customisations";
 }

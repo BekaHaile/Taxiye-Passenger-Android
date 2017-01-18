@@ -41,10 +41,10 @@
                     android:background="@color/transparent"
                     android:hint="@string/type_delivery_address"
                     android:textColor="@color/text_color"
-                    android:textCursorDrawable="@drawable/blue_color_cursor"
                     android:textSize="@dimen/text_size_30"
                     android:singleLine="true"
                     android:layout_marginRight="10px"
+                    android:textCursorDrawable="@drawable/cursor_black"
                     android:layout_toLeftOf="@+id/imageViewSearchCross"
                     />
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical">
@@ -11,23 +10,21 @@
         android:id="@+id/linearLayoutInner"
         android:layout_width="644px"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:background="@drawable/background_grey_rounded_bordered"
         android:orientation="vertical"
-        android:splitMotionEvents="false"
-        android:layout_centerInParent="true"
-        >
+        android:splitMotionEvents="false">
 
         <TextView
             android:id="@+id/textViewSelectDeliverySlot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/dialog_sort"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
             android:layout_marginBottom="30px"
             android:layout_marginTop="30px"
             android:gravity="center"
-            />
+            android:text="@string/dialog_sort"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34" />
 
 
         <ImageView
@@ -35,46 +32,45 @@
             android:layout_height="2px"
             android:layout_marginLeft="2px"
             android:layout_marginRight="2px"
-            android:background="@color/text_color_hint"/>
+            android:background="@color/text_color_hint" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewDeliverySlots"
             android:layout_width="match_parent"
-            android:layout_height="300px"
-            android:splitMotionEvents="false"
-            android:background="@color/white"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="2px"
             android:layout_marginRight="2px"
+            android:background="@color/white"
+            android:fadeScrollbars="true"
             android:paddingTop="20px"
             android:scrollbars="vertical"
-            android:fadeScrollbars="true"
-            >
-        </android.support.v7.widget.RecyclerView>
+            android:splitMotionEvents="false"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="100px"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="2px"
             android:layout_marginLeft="2px"
             android:layout_marginRight="2px"
-            android:orientation="horizontal"
-            android:splitMotionEvents="false"
             android:background="@color/white"
-            >
+            android:orientation="horizontal"
+            android:splitMotionEvents="false">
 
 
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="322px"
                 android:layout_height="80px"
+                android:layout_centerHorizontal="true"
                 android:background="@drawable/button_theme_round_selector"
                 android:singleLine="true"
+                android:layout_marginTop="@dimen/px_20"
+                android:layout_marginBottom="@dimen/px_40"
                 android:text="@string/cancel"
-                android:layout_centerInParent="true"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_36"/>
+                android:textSize="@dimen/text_size_36" />
 
         </RelativeLayout>
 

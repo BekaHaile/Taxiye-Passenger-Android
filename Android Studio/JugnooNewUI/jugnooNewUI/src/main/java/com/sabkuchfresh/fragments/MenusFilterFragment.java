@@ -20,11 +20,9 @@ import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 
 import static product.clicklabs.jugnoo.Constants.ACCEPTONLINE;
 import static product.clicklabs.jugnoo.Constants.FREEDELIVERY;
@@ -234,7 +232,7 @@ public class MenusFilterFragment extends Fragment{
 				} else {
 					quickFilterLocal.add(ACCEPTONLINE);
 				}
-				imageViewAcceptOnline.setImageResource(quickFilterLocal.contains(ACCEPTONLINE)  ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+				imageViewAcceptOnline.setImageResource(quickFilterLocal.contains(ACCEPTONLINE)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
 			}
 		});
 
@@ -247,7 +245,7 @@ public class MenusFilterFragment extends Fragment{
 				} else {
 					quickFilterLocal.add(OFFERSDISCOUNT);
 				}
-				imageViewOffersDiscount.setImageResource(quickFilterLocal.contains(OFFERSDISCOUNT)  ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+				imageViewOffersDiscount.setImageResource(quickFilterLocal.contains(OFFERSDISCOUNT)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
 			}
 		});
 
@@ -261,7 +259,7 @@ public class MenusFilterFragment extends Fragment{
 				} else {
 					quickFilterLocal.add(PUREVEGETARIAN);
 				}
-				imageViewPureVeg.setImageResource(quickFilterLocal.contains(PUREVEGETARIAN)  ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+				imageViewPureVeg.setImageResource(quickFilterLocal.contains(PUREVEGETARIAN)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
 			}
 		});
 
@@ -274,7 +272,7 @@ public class MenusFilterFragment extends Fragment{
 				} else {
 					quickFilterLocal.add(FREEDELIVERY);
 				}
-				imageViewFreeDelivery.setImageResource(quickFilterLocal.contains(FREEDELIVERY)  ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+				imageViewFreeDelivery.setImageResource(quickFilterLocal.contains(FREEDELIVERY)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
 			}
 		});
 
@@ -412,10 +410,10 @@ public class MenusFilterFragment extends Fragment{
 
 	private void updateQuickFilterUI()
 	{
-		imageViewAcceptOnline.setImageResource(quickFilterLocal.contains(ACCEPTONLINE)  ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
-		imageViewOffersDiscount.setImageResource(quickFilterLocal.contains(OFFERSDISCOUNT) ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
-		imageViewPureVeg.setImageResource(quickFilterLocal.contains(PUREVEGETARIAN) ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
-		imageViewFreeDelivery.setImageResource(quickFilterLocal.contains(FREEDELIVERY) ? R.drawable.ic_check_selected : R.drawable.check_box_unchecked);
+		imageViewAcceptOnline.setImageResource(quickFilterLocal.contains(ACCEPTONLINE)  ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
+		imageViewOffersDiscount.setImageResource(quickFilterLocal.contains(OFFERSDISCOUNT) ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
+		imageViewPureVeg.setImageResource(quickFilterLocal.contains(PUREVEGETARIAN) ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
+		imageViewFreeDelivery.setImageResource(quickFilterLocal.contains(FREEDELIVERY) ? R.drawable.checkbox_signup_checked : R.drawable.check_box_unchecked);
 	}
 
 

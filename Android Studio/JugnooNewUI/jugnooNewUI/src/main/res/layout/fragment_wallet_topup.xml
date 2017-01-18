@@ -182,7 +182,8 @@
                         android:imeOptions="actionSend"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_32" />
+                        android:textSize="@dimen/text_size_32"
+                        android:textCursorDrawable="@drawable/cursor_black" />
 
                     <ImageView
                         android:layout_width="480px"

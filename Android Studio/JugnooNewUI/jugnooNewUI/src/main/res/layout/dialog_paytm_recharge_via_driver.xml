@@ -148,7 +148,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textSize="@dimen/text_size_68"
-                        android:textCursorDrawable="@null"
+                        android:textCursorDrawable="@drawable/cursor_black"
 
                         />
 

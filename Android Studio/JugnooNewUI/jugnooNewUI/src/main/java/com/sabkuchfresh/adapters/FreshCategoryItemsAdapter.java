@@ -463,7 +463,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             imageViewDelete = (ImageView) itemView.findViewById(R.id.imageViewDelete);
             imageViewMoreInfoSeprator = (ImageView)itemView.findViewById(R.id.imageViewMoreInfoSeprator);
             bannerBg = (ImageView) itemView.findViewById(R.id.banner_bg);
-            mAddButton = (Button) itemView.findViewById(R.id.add_button);
+            mAddButton = (Button) itemView.findViewById(R.id.add_button); mAddButton.setTypeface(Fonts.mavenRegular(context));
             textViewMoreInfo = (TextView)itemView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenRegular(context));
 
             unavilableView = (TextView) itemView.findViewById(R.id.unavilable_view); unavilableView.setTypeface(Fonts.mavenRegular(context));

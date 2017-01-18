@@ -194,12 +194,12 @@
 
                         <TextView
                             android:id="@+id/textViewQuantity"
-                            android:layout_width="50px"
+                            android:layout_width="70px"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:singleLine="true"
                             android:text="99"
-                            android:textColor="@color/text_color"
+                            android:textColor="@color/theme_color"
                             android:textSize="@dimen/text_size_34" />
 
                         <ImageView

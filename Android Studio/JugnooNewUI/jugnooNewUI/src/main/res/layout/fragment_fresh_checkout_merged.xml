@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayoutRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,67 +15,10 @@
             android:id="@+id/linearLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/px_150"
             android:orientation="vertical">
 
-            <include layout="@layout/layout_fresh_star_saving"/>
-
-            <include layout="@layout/layout_fresh_cart" />
-
-            <LinearLayout
-                android:id="@+id/linearLayoutDeliverySlot"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40px"
-                android:orientation="vertical"
-                android:visibility="visible">
-
-                <TextView
-                    android:id="@+id/textViewDeliverySlot"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="26px"
-                    android:text="@string/delivery_slot"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_26"
-                    android:visibility="visible" />
-
-
-                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8px"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
-                    android:layout_marginTop="14px"
-                    card_view:cardBackgroundColor="@color/white"
-                    card_view:cardCornerRadius="4px">
-
-                    <TextView
-                        android:id="@+id/textViewNoDeliverySlot"
-                        android:layout_width="wrap_content"
-                        android:layout_height="95px"
-                        android:layout_gravity="center"
-                        android:gravity="center_vertical"
-                        android:text="@string/no_delivery_slot"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26"
-                        android:visibility="gone" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recyclerViewDeliverySlots"
-                        android:layout_width="match_parent"
-                        android:layout_height="95px"
-                        android:splitMotionEvents="false"
-                        android:visibility="visible" />
-
-                </android.support.v7.widget.CardView>
-
-            </LinearLayout>
-
-
+            <!-- Delivery Address view -->
             <LinearLayout
                 android:id="@+id/linearLayoutDeliveryAddress"
                 android:layout_width="match_parent"
@@ -97,7 +40,8 @@
                     android:visibility="visible" />
 
 
-                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <android.support.v7.widget.CardView
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8px"
@@ -166,7 +110,71 @@
 
             </LinearLayout>
 
+            <!-- Delivery Slot view-->
+            <LinearLayout
+                android:id="@+id/linearLayoutDeliverySlot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px_40"
+                android:orientation="vertical"
+                android:visibility="visible">
 
+                <TextView
+                    android:id="@+id/textViewDeliverySlot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="26px"
+                    android:text="@string/delivery_slot"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26"
+                    android:visibility="visible" />
+
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8px"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="20px"
+                    android:layout_marginTop="14px"
+                    card_view:cardBackgroundColor="@color/white"
+                    card_view:cardCornerRadius="4px">
+
+                    <TextView
+                        android:id="@+id/textViewNoDeliverySlot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="95px"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:text="@string/no_delivery_slot"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26"
+                        android:visibility="gone" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerViewDeliverySlots"
+                        android:layout_width="match_parent"
+                        android:layout_height="95px"
+                        android:splitMotionEvents="false"
+                        android:visibility="visible" />
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+            <!-- Cart view-->
+            <include layout="@layout/layout_fresh_cart" />
+
+            <!-- Star Saving view-->
+            <include layout="@layout/layout_fresh_star_saving" />
+
+            <!-- Become a jugnoo star-->
+            <include layout="@layout/layout_fresh_become_star"/>
+
+            <!-- Payment view-->
             <LinearLayout
                 android:id="@+id/linearLayoutPayment"
                 android:layout_width="match_parent"
@@ -381,7 +389,7 @@
                                 <ImageView
                                     android:id="@+id/imageViewRadioJugnooPay"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="30px"/>
+                                    android:layout_marginLeft="30px" />
 
                                 <ImageView
                                     android:layout_width="47px"
@@ -397,7 +405,7 @@
                                     android:layout_marginLeft="16px"
                                     android:text="@string/jugnoo_pay"
                                     android:textColor="@color/text_color"
-                                    android:textSize="@dimen/text_size_34"/>
+                                    android:textSize="@dimen/text_size_34" />
 
                             </LinearLayout>
 
@@ -409,8 +417,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="30px"
                                 android:src="@drawable/ic_add_checkout"
-                                android:tag="mwar"
-                                />
+                                android:tag="mwar" />
 
                         </RelativeLayout>
 
@@ -458,7 +465,7 @@
 
             </LinearLayout>
 
-
+            <!-- Offer view-->
             <LinearLayout
                 android:id="@+id/linearLayoutOffers"
                 android:layout_width="match_parent"
@@ -503,7 +510,7 @@
 
             </LinearLayout>
 
-
+            <!-- Instruction view-->
             <LinearLayout
                 android:id="@+id/linearLayoutDeliveryInstructions"
                 android:layout_width="match_parent"
@@ -545,6 +552,7 @@
                         android:gravity="left"
                         android:hint="@string/add_special_notes"
                         android:inputType="textCapSentences|textMultiLine"
+                        android:textCursorDrawable="@drawable/cursor_black"
                         android:paddingBottom="10px"
                         android:paddingTop="10px"
                         android:textColor="@color/text_color"
@@ -555,14 +563,6 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/buttonPlaceOrder"
-                style="@style/ButtonTheme"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="70px"
-                android:layout_marginTop="32px"
-                android:text="@string/place_order"
-                android:textSize="@dimen/text_size_34" />
 
             <TextView
                 android:id="@+id/textViewScroll"
@@ -574,4 +574,19 @@
 
     </ScrollView>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/buttonPlaceOrder"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_88"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/place_order"
+        android:background="@drawable/button_theme"
+        android:layout_marginLeft="-6px"
+        android:layout_marginRight="-6px"
+        android:textColor="@color/white"
+        android:textAllCaps="true"
+        android:textSize="@dimen/text_size_34"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

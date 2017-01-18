@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     android:id="@+id/relativeLayoutCart"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20px"
+    android:layout_marginTop="@dimen/px_30"
     android:orientation="vertical"
     android:visibility="visible"
     >
@@ -70,28 +69,14 @@
                         android:id="@+id/textViewCartTotalUndiscount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15px"
-                        android:layout_toLeftOf="@+id/textViewCartTotal"
-                        android:gravity="center_vertical"
-                        android:text="@string/rupee_0"
-                        android:textAllCaps="true"
-                        android:textColor="@color/text_color_light"
-                        android:textSize="@dimen/text_size_32"
-                        />
-
-                    <TextView
-                        android:id="@+id/textViewCartTotal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="30px"
                         android:gravity="center_vertical"
                         android:text="@string/rupee_0"
                         android:textAllCaps="true"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_44"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="@dimen/text_size_32"
                         />
 
 
@@ -103,282 +88,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     >
-
-                    <LinearLayout
-                        android:id="@+id/linearLayoutCartDetails"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20px"
-                        android:layout_marginLeft="30px"
-                        android:layout_marginRight="30px"
-                        android:background="@drawable/background_sliding_botton_bg_color_dashed_b"
-                        android:orientation="vertical"
-                        >
-
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutDiscount"
-                            android:layout_width="match_parent"
-                            android:layout_height="82px">
-
-                            <TextView
-                                android:id="@+id/textViewDiscount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/discount"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_30"
-                                />
-
-
-                            <TextView
-                                android:id="@+id/textViewDiscountValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/rupee_0"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_36"
-                                />
-
-                            <ImageView
-                                android:id="@+id/imageViewSep1"
-                                android:layout_width="match_parent"
-                                android:layout_height="2px"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginLeft="20px"
-                                android:layout_marginRight="20px"
-                                android:src="@color/stroke_color_light"
-                                />
-
-                        </RelativeLayout>
-
-
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutDeliveryCharges"
-                            android:layout_width="match_parent"
-                            android:layout_height="82px">
-
-
-                            <TextView
-                                android:id="@+id/textViewDeliveryCharges"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/delivery_charges"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_30"
-                                />
-
-
-                            <TextView
-                                android:id="@+id/textViewDeliveryChargesValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/rupee_0"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_36"
-                                />
-
-                            <ImageView
-                                android:id="@+id/imageViewSep2"
-                                android:layout_width="match_parent"
-                                android:layout_height="2px"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginLeft="20px"
-                                android:layout_marginRight="20px"
-                                android:src="@color/stroke_color_light"
-                                />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutPackagingCharges"
-                            android:layout_width="match_parent"
-                            android:layout_height="82px">
-
-
-                            <TextView
-                                android:id="@+id/textViewPackagingCharges"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/packaging_charges"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_30"
-                                />
-
-
-                            <TextView
-                                android:id="@+id/textViewPackagingChargesValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/rupee_0"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_36"
-                                />
-
-                            <ImageView
-                                android:id="@+id/imageViewSep3"
-                                android:layout_width="match_parent"
-                                android:layout_height="2px"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginLeft="20px"
-                                android:layout_marginRight="20px"
-                                android:src="@color/stroke_color_light"
-                                />
-
-                        </RelativeLayout>
-
-
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutServiceTax"
-                            android:layout_width="match_parent"
-                            android:layout_height="82px">
-
-
-                            <TextView
-                                android:id="@+id/textViewServiceTax"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/service_tax"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_30"
-                                />
-
-
-                            <TextView
-                                android:id="@+id/textViewServiceTaxValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/rupee_0"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_36"
-                                />
-
-                            <ImageView
-                                android:id="@+id/imageViewSep4"
-                                android:layout_width="match_parent"
-                                android:layout_height="2px"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginLeft="20px"
-                                android:layout_marginRight="20px"
-                                android:src="@color/stroke_color_light"
-                                />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutVAT"
-                            android:layout_width="match_parent"
-                            android:layout_height="82px">
-
-
-                            <TextView
-                                android:id="@+id/textViewVAT"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/vat"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_30"
-                                />
-
-
-                            <TextView
-                                android:id="@+id/textViewVATValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/rupee_0"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_36"
-                                />
-
-                            <ImageView
-                                android:id="@+id/imageViewSep5"
-                                android:layout_width="match_parent"
-                                android:layout_height="2px"
-                                android:layout_alignParentBottom="true"
-                                android:layout_marginLeft="20px"
-                                android:layout_marginRight="20px"
-                                android:src="@color/stroke_color_light"
-                                />
-
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutJugnooCash"
-                            android:layout_width="match_parent"
-                            android:layout_height="82px">
-
-
-                            <TextView
-                                android:id="@+id/textViewJugnooCash"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/jugnoo_cash"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_30"
-                                />
-
-
-                            <TextView
-                                android:id="@+id/textViewJugnooCashValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/rupee_0"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_36"
-                                />
-
-                        </RelativeLayout>
-
-
-                    </LinearLayout>
-
 
                     <ImageView
                         android:id="@+id/imageViewCartSep"
@@ -397,8 +106,371 @@
                         android:divider="@color/transparent"
                         android:dividerHeight="0dp"
                         android:splitMotionEvents="false"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayoutCartDetails"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20px"
+                        android:layout_marginLeft="30px"
+                        android:layout_marginRight="30px"
+                        android:orientation="vertical"
                         >
-                    </product.clicklabs.jugnoo.utils.NonScrollListView>
+
+                        <RelativeLayout
+                            android:id="@+id/rlSubTotal"
+                            android:layout_width="match_parent"
+                            android:layout_height="82px">
+
+                            <TextView
+                                android:id="@+id/tvSubTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/sub_total"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/tvSubTotalVal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36"
+                                />
+
+                            <ImageView
+                                android:id="@+id/imageViewSep7"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginLeft="0px"
+                                android:layout_marginRight="0px"
+                                android:src="@color/stroke_color_light"
+                                />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutDiscount"
+                            android:layout_width="match_parent"
+                            android:layout_height="82px">
+
+                            <TextView
+                                android:id="@+id/textViewDiscount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/discount"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/textViewDiscountValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36"
+                                />
+
+                            <ImageView
+                                android:id="@+id/imageViewSep1"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginLeft="0px"
+                                android:layout_marginRight="0px"
+                                android:src="@color/stroke_color_light"
+                                />
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutDeliveryCharges"
+                            android:layout_width="match_parent"
+                            android:layout_height="82px">
+
+
+                            <TextView
+                                android:id="@+id/textViewDeliveryCharges"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/delivery_charges"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/textViewDeliveryChargesValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36"
+                                />
+
+                            <ImageView
+                                android:id="@+id/imageViewSep2"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginLeft="0px"
+                                android:layout_marginRight="0px"
+                                android:src="@color/stroke_color_light"
+                                />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutPackagingCharges"
+                            android:layout_width="match_parent"
+                            android:layout_height="82px">
+
+
+                            <TextView
+                                android:id="@+id/textViewPackagingCharges"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/packaging_charges"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/textViewPackagingChargesValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36"
+                                />
+
+                            <ImageView
+                                android:id="@+id/imageViewSep3"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginLeft="0px"
+                                android:layout_marginRight="0px"
+                                android:src="@color/stroke_color_light"
+                                />
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutServiceTax"
+                            android:layout_width="match_parent"
+                            android:layout_height="82px">
+
+
+                            <TextView
+                                android:id="@+id/textViewServiceTax"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/service_tax"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/textViewServiceTaxValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36"
+                                />
+
+                            <ImageView
+                                android:id="@+id/imageViewSep4"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginLeft="0px"
+                                android:layout_marginRight="0px"
+                                android:src="@color/stroke_color_light"
+                                />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutVAT"
+                            android:layout_width="match_parent"
+                            android:layout_height="82px">
+
+
+                            <TextView
+                                android:id="@+id/textViewVAT"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/vat"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/textViewVATValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36"
+                                />
+
+                            <ImageView
+                                android:id="@+id/imageViewSep5"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginLeft="0px"
+                                android:layout_marginRight="0px"
+                                android:src="@color/stroke_color_light"
+                                />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutJugnooCash"
+                            android:layout_width="match_parent"
+                            android:layout_height="82px">
+
+
+                            <TextView
+                                android:id="@+id/textViewJugnooCash"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/jugnoo_cash"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/textViewJugnooCashValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36"
+                                />
+
+                            <ImageView
+                                android:id="@+id/imageViewSep6"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginLeft="0px"
+                                android:layout_marginRight="0px"
+                                android:src="@color/stroke_color_light"
+                                />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlTotal"
+                            android:layout_width="match_parent"
+                            android:layout_height="82px">
+
+
+                            <TextView
+                                android:id="@+id/tvTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/total"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/textViewCartTotal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="0px"
+                                android:gravity="center_vertical"
+                                android:text="@string/rupee_0"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_36"
+                                />
+
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>
@@ -416,7 +488,7 @@
         android:layout_marginTop="-60px"
         android:src="@drawable/ic_checkout_delete_cart_selector"
         android:tag="mwar"
-        android:visibility="visible"
+        android:visibility="gone"
         />
 
 </RelativeLayout>

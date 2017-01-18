@@ -1,0 +1,183 @@
+package com.sabkuchfresh.fragments;
+
+import android.annotation.SuppressLint;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
+import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
+import com.sabkuchfresh.bus.SwipeCheckout;
+import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.utils.AppConstant;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Prefs;
+
+
+@SuppressLint("ValidFragment")
+public class MenusCategoryItemsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+
+	private RelativeLayout linearLayoutRoot;
+
+	private RecyclerView recyclerViewCategoryItems;
+	private MenusCategoryItemsAdapter menusCategoryItemsAdapter;
+
+	private View rootView;
+    private FreshActivity activity;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+	private ImageView noMealsView;
+
+
+    protected Bus mBus;
+
+	public static MenusCategoryItemsFragment newInstance(int position, int isVendorMenu){
+		MenusCategoryItemsFragment frag = new MenusCategoryItemsFragment();
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_CATEGORY_POSITION, position);
+		bundle.putInt(Constants.KEY_IS_VENDOR_MENU, isVendorMenu);
+		frag.setArguments(bundle);
+		return frag;
+	}
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mBus.register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mBus.unregister(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_fresh_category_items, container, false);
+
+		try {
+			Bundle bundle = getArguments();
+			if(bundle.containsKey(Constants.KEY_CATEGORY_POSITION)) {
+				int position = bundle.getInt(Constants.KEY_CATEGORY_POSITION);
+
+				activity = (FreshActivity) getActivity();
+                mBus = (activity).getBus();
+				linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+				try {
+					if (linearLayoutRoot != null) {
+						new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				noMealsView = (ImageView) rootView.findViewById(R.id.noMealsView);
+				noMealsView.setVisibility(View.GONE);
+
+				recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
+				recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
+				recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
+				recyclerViewCategoryItems.setHasFixedSize(false);
+
+                mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+                mSwipeRefreshLayout.setOnRefreshListener(this);
+                mSwipeRefreshLayout.setColorSchemeResources(R.color.white);
+                mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+                mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
+
+				int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+				if(type == AppConstant.ApplicationType.MENUS) {
+					mSwipeRefreshLayout.setEnabled(false);
+				} else {
+					mSwipeRefreshLayout.setEnabled(true);
+				}
+
+				menusCategoryItemsAdapter = new MenusCategoryItemsAdapter(activity, position,
+						activity.getMenuProductsResponse().getCategories().get(position),
+						new MenusCategoryItemsAdapter.Callback() {
+							@Override
+							public boolean checkForAdd(int position, Item item, MenusCategoryItemsAdapter.CallbackCheckForAdd callbackCheckForAdd) {
+								return activity.checkForAdd(position, item, callbackCheckForAdd);
+							}
+
+							@Override
+							public void onPlusClicked(int position, Item item) {
+								activity.updateCartValuesGetTotalPrice();
+							}
+
+							@Override
+							public void onMinusClicked(int position, Item item) {
+								activity.updateCartValuesGetTotalPrice();
+							}
+
+							@Override
+							public void onMinusFailed(int position, Item item) {
+								DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+										activity.getString(R.string.you_have_to_decrease_quantity_from_checkout),
+										activity.getString(R.string.view_cart), activity.getString(R.string.cancel),
+										new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												activity.getRelativeLayoutCheckoutBar().performClick();
+											}
+										}, new View.OnClickListener() {
+											@Override
+											public void onClick(View v) {
+
+											}
+										}, true, false);
+							}
+						});
+				recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+		return rootView;
+	}
+
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+        ASSL.closeActivity(linearLayoutRoot);
+        System.gc();
+	}
+
+    /**
+     * Method used to update list data
+     */
+    public void updateDetail() {
+		menusCategoryItemsAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRefresh() {
+        mBus.post(new SwipeCheckout(0));
+    }
+
+    @Subscribe
+    public void updateSwipe(SwipeCheckout swipe) {
+        if(swipe.flag == 1) {
+            mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+}

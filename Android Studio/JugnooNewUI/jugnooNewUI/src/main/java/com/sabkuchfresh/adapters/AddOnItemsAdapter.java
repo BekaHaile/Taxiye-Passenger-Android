@@ -216,7 +216,7 @@ public class AddOnItemsAdapter extends BaseAdapter {
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
             imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
-            mAddButton = (Button) itemView.findViewById(R.id.add_button);
+            mAddButton = (Button) itemView.findViewById(R.id.add_button); mAddButton.setTypeface(Fonts.mavenRegular(context));
 
             textViewItemName = (TextView)itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenRegular(context));
             textViewItemUnit = (TextView)itemView.findViewById(R.id.textViewItemUnit); textViewItemUnit.setTypeface(Fonts.mavenRegular(context));

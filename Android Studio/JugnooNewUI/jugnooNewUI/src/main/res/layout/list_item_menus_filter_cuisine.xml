@@ -19,7 +19,7 @@
             android:layout_height="32px"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="24px"
-            android:src="@drawable/ic_check_selected"
+            android:src="@drawable/checkbox_signup_checked"
             android:tag="mwar"
 
             />

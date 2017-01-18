@@ -32,7 +32,7 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
-import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
+import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
 import com.sabkuchfresh.adapters.MenusItemChargesAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -43,14 +43,18 @@ import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
-import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
-import com.sabkuchfresh.retrofit.model.MenusResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
-import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
-import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.menus.Category;
+import com.sabkuchfresh.retrofit.model.menus.Charges;
+import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
+import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
+import com.sabkuchfresh.retrofit.model.menus.Subcategory;
+import com.sabkuchfresh.retrofit.model.menus.Tax;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
@@ -81,7 +85,6 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -106,7 +109,7 @@ import retrofit.mime.TypedByteArray;
 
 
 public class MenusCheckoutMergedFragment extends Fragment implements FlurryEventNames, DeliverySlotsAdapter.Callback,
-        FreshCartItemsAdapter.Callback, PromoCouponsAdapter.Callback {
+        MenusCartItemsAdapter.Callback, PromoCouponsAdapter.Callback {
 
     private final String TAG = MenusCheckoutMergedFragment.class.getSimpleName();
     private LinearLayout linearLayoutRoot;
@@ -118,7 +121,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     private NonScrollListView listViewCart;
     private NonScrollListView listViewMenusCharges;
     private MenusItemChargesAdapter menusItemChargesAdapter;
-    private FreshCartItemsAdapter freshCartItemsAdapter;
+    private MenusCartItemsAdapter menusCartItemsAdapter;
 
     private RelativeLayout relativeLayoutDeliveryAddress;
     private ImageView imageViewAddressType, imageViewDeliveryAddressForward;
@@ -171,10 +174,12 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     private List<Product> productList = new ArrayList<>();
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
-    private ArrayList<SubItem.Tax> taxList = new ArrayList<>();
+    private ArrayList<Tax> taxList = new ArrayList<>();
 
     private CheckoutSaveData checkoutSaveData;
     private int type;
+
+    private ArrayList<Item> itemsInCart = new ArrayList<>();
 
     @Override
     public void onStart() {
@@ -216,35 +221,38 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         orderPlaced = false;
         checkoutSaveData = new CheckoutSaveData();
 
-        if(activity.subItemsInCart == null) {
-            activity.subItemsInCart = new ArrayList<>();
+        if(itemsInCart == null) {
+            itemsInCart = new ArrayList<>();
         }
-        activity.subItemsInCart.clear();
+        itemsInCart.clear();
 
 
-        if(activity.getProductsResponse() != null
-                && activity.getProductsResponse().getCategories() != null) {
-            for (Category category : activity.getProductsResponse().getCategories()) {
-                for (SubItem subItem : category.getSubItems()) {
-                    if (subItem.getSubItemQuantitySelected() > 0) {
-                       /* ArrayList<SubItem.Tax> taxList = new ArrayList<>();
-                        taxList.add(subItem.new Tax("pc",5.0));
-                        taxList.add(subItem.new Tax("dc",5.0));
-                        subItem.setTaxes(taxList);*/
-                        activity.subItemsInCart.add(subItem);
+        if(activity.getMenusResponse() != null
+                && activity.getMenuProductsResponse().getCategories() != null) {
+            for (Category category : activity.getMenuProductsResponse().getCategories()) {
+                if(category.getSubcategories() != null){
+                    for(Subcategory subcategory : category.getSubcategories()){
+                        for(Item item : subcategory.getItems()){
+                            if(item.getTotalQuantity() > 0){
+                                itemsInCart.add(item);
+                            }
+                        }
                     }
-                }
-                if(Data.AppType == AppConstant.ApplicationType.MEALS) {
-                    currentGroupId = category.getCurrentGroupId();
+                } else if(category.getItems() != null){
+                    for(Item item : category.getItems()){
+                        if(item.getTotalQuantity() > 0){
+                            itemsInCart.add(item);
+                        }
+                    }
                 }
             }
         }
 
         try {
-            for (int i = 0; i < activity.subItemsInCart.size(); i++) {
-                MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
-                        activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(),
-                        activity.subItemsInCart.get(i).getPrice(),
+            for (int i = 0; i < itemsInCart.size(); i++) {
+                MyApplication.getInstance().getCleverTapUtils().addToCart(itemsInCart.get(i).getItemName(),
+                        itemsInCart.get(i).getRestaurantItemId(), itemsInCart.get(i).getTotalQuantity(),
+                        itemsInCart.get(i).getPrice(),
                         Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
                         Data.userData.getCity());
             }
@@ -252,24 +260,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
         }
 
-        try {
-            if(Data.getDatumToReOrder() != null){
-				activity.setSelectedAddress(Data.getDatumToReOrder().getDeliveryAddress());
-				activity.setSelectedLatLng(new LatLng(Data.getDatumToReOrder().getDeliveryLatitude(), Data.getDatumToReOrder().getDeliveryLongitude()));
-                ArrayList<SearchResult> searchResults = new HomeUtil().getSavedPlacesWithHomeWork(activity);
-                for(SearchResult searchResult : searchResults){
-                    if(Data.getDatumToReOrder().getAddressId().equals(searchResult.getId())){
-                        activity.setSelectedAddressId(Data.getDatumToReOrder().getAddressId());
-                        activity.setSelectedAddressType(Data.getDatumToReOrder().getDeliveryAddressType());
-                        break;
-                    }
-                }
-                activity.setRefreshCart(true);
-			}
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Data.setDatumToReOrder(null);
 
         activity.setMenuRefreshLatLng(new LatLng(activity.getSelectedLatLng().latitude, activity.getSelectedLatLng().longitude));
 
@@ -293,8 +283,8 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         menusItemChargesAdapter = new MenusItemChargesAdapter(activity, taxList);
         listViewMenusCharges.setAdapter(menusItemChargesAdapter);
 
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, true, this);
-        listViewCart.setAdapter(freshCartItemsAdapter);
+        menusCartItemsAdapter = new MenusCartItemsAdapter(activity, itemsInCart, true, this);
+        listViewCart.setAdapter(menusCartItemsAdapter);
 
 
         textViewDeliveryInstructionsText = ((TextView)rootView.findViewById(R.id.textViewDeliveryInstructions));
@@ -386,10 +376,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                     Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
                             Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getVendorOpened().getMinimumOrderAmount())));
                 }
-//                else if((((type == AppConstant.ApplicationType.GROCERY) || (type == AppConstant.ApplicationType.FRESH)) && subTotalAmount < activity.getProductsResponse().getDeliveryInfo().getMinAmount())) {
-//                    Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
-//                            Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getProductsResponse().getDeliveryInfo().getMinAmount())));
-//                }
                 else if (buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
                     getCheckoutDataAPI();
                 } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
@@ -460,22 +446,12 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         checkoutSaveData = activity.getCheckoutSaveData();
         activity.setSplInstr(checkoutSaveData.getSpecialInstructions());
 
-/*
-        Collections.sort(activity.getProductsResponse().getCharges(), new Comparator<ProductsResponse.Charges>() {
-            @Override
-            public int compare(ProductsResponse.Charges lhs, ProductsResponse.Charges rhs) {
-                return lhs.getIncludeValue().size() - rhs.getIncludeValue().size();
-            }
-        });
-*/
         updateAddressView();
 
         updateCartDataView();
 
-        FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.CHECKOUT, activity.productList);
         getCheckoutDataAPI();
 
-        FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.PAYMENT, activity.productList);
         fetchWalletBalance();
 
         linearLayoutCartExpansion.setVisibility(View.GONE);
@@ -500,49 +476,27 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
 
-//    private Double getCalculatedChargesSubItem(SubItem subItem, ProductsResponse.Charges charges, List<ProductsResponse.Charges> chargesList, double value){
-//        if (charges.getIsPercent() == 1) {
-//            double percentVal = (subItem.getPrice() * (double) subItem.getSubItemQuantitySelected());
-//            for (Integer pos : charges.getIncludeValue()) {
-//                try {
-//                    ProductsResponse.Charges chargesPos = chargesList.get(chargesList.indexOf(activity.getProductsResponse().new Charges(pos)));
-//                    double valuePos = 0d;
-//                    for (SubItem.Tax tax : subItem.getTaxes()) {
-//                        if (tax.getKey().equalsIgnoreCase(chargesPos.getValue())) {
-//                            valuePos = tax.getValue();
-//                            break;
-//                        }
-//                    }
-//                    percentVal = percentVal + getCalculatedChargesSubItem(subItem, chargesPos, chargesList, valuePos);
-//                } catch (Exception e) {
-//                }
-//            }
-//            return (percentVal * (value / 100d));
-//        } else {
-//            return ((double) subItem.getSubItemQuantitySelected() * value);
-//        }
-//    }
 
-    private Double getCalculatedCharges(double amount, ProductsResponse.Charges charges, List<ProductsResponse.Charges> chargesList){
+    private Double getCalculatedCharges(double amount, Charges charges, List<Charges> chargesList){
         double includedTaxValue = 0d;
-        for (Integer pos : charges.getIncludeValue()) {
+        for (Integer pos : charges.getIncludedValues()) {
             try {
-                ProductsResponse.Charges chargesPos = chargesList.get(chargesList.indexOf(activity.getProductsResponse().new Charges(pos)));
+                Charges chargesPos = chargesList.get(chargesList.indexOf(new Charges(pos)));
                 includedTaxValue = includedTaxValue + getCalculatedCharges(amount, chargesPos, chargesList);
             } catch (Exception e) {
             }
         }
-        if(charges.getType() == ProductsResponse.ChargeType.SUBTOTAL_LEVEL.getOrdinal()) {
+        if(charges.getType() == Charges.ChargeType.SUBTOTAL_LEVEL.getOrdinal()) {
             if (charges.getIsPercent() == 1) {
                 return ((amount + includedTaxValue) * (Double.parseDouble(charges.getValue()) / 100d));
             } else {
                 return (Double.parseDouble(charges.getValue()) + includedTaxValue);
             }
-        } else if(charges.getType() == ProductsResponse.ChargeType.ITEM_LEVEL.getOrdinal()) {
+        } else if(charges.getType() == Charges.ChargeType.ITEM_LEVEL.getOrdinal()) {
             double totalCharge = 0d;
-            for (SubItem subItem : activity.subItemsInCart) {
-                SubItem.Tax taxMatched = null;
-                for (SubItem.Tax tax : subItem.getTaxes()) {
+            for (Item item : itemsInCart) {
+                Tax taxMatched = null;
+                for (Tax tax : item.getTaxes()) {
                     if (tax.getKey().equalsIgnoreCase(charges.getValue())) {
                         taxMatched = tax;
                         break;
@@ -551,14 +505,14 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                 if (taxMatched != null) {
                     if (charges.getIsPercent() == 1) {
                         totalCharge = totalCharge +
-                                ((subItem.getPrice() * (double) subItem.getSubItemQuantitySelected()) * (taxMatched.getValue() / 100d));
+                                (item.getSuperTotalPrice() * (taxMatched.getValue() / 100d));
                     } else {
-                        totalCharge = totalCharge + ((double) subItem.getSubItemQuantitySelected() * taxMatched.getValue());
+                        totalCharge = totalCharge + ((double) item.getTotalQuantity() * taxMatched.getValue());
                     }
                 }
             }
             if (charges.getIsPercent() == 1) {
-                totalCharge = totalCharge + (includedTaxValue * (charges.getDefaultVal() / 100d));
+                totalCharge = totalCharge + (includedTaxValue * (charges.getDefault() / 100d));
             } else {
                 totalCharge = totalCharge + includedTaxValue;
             }
@@ -574,37 +528,12 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
 
-        SubItem subItemTemp = new SubItem();
         if (promoAmount > 0) {
-            taxList.add(subItemTemp.new Tax(getString(R.string.discount), promoAmount));
+            taxList.add(new Tax(getString(R.string.discount), promoAmount));
         }
-        /*activity.getProductsResponse().getCharges().clear();
-        ProductsResponse.Charges charges = activity.getProductsResponse().new Charges();
-        charges.setId(0);
-        charges.setIsPercent(0);
-        charges.setText("Packing Charges");
-        charges.setValue("pc");
-        charges.setType(1);
-        List<Integer> includedValues = new ArrayList<>();
-        charges.setIncludeValue(includedValues);
-        activity.getProductsResponse().getCharges().add(charges);
-
-
-        ProductsResponse.Charges charges2 = activity.getProductsResponse().new Charges();
-        charges2.setId(1);
-        charges2.setIsPercent(1);
-        charges2.setText("Delivery Charges");
-        charges2.setType(1);
-        charges2.setValue("dc");
-        List<Integer> includedValues2 = new ArrayList<>();
-        includedValues2.add(charges.getId());
-        charges2.setIncludeValue(includedValues2);
-        activity.getProductsResponse().getCharges().add(charges2);
-
-*/
         totalTaxAmount = 0d;
-        for(ProductsResponse.Charges charges1 : activity.getProductsResponse().getCharges()){
-            SubItem.Tax tax = subItemTemp.new Tax(charges1.getText(), getCalculatedCharges(subTotalAmount, charges1, activity.getProductsResponse().getCharges()));
+        for(Charges charges1 : activity.getMenuProductsResponse().getCharges()){
+            Tax tax = new Tax(charges1.getText(), getCalculatedCharges(subTotalAmount, charges1, activity.getMenuProductsResponse().getCharges()));
             if(tax.getValue() > 0 || charges1.getForceShow() == 1) {
                 taxList.add(tax);
             }
@@ -612,7 +541,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
         if (totalAmount() > 0 && jcUsed() > 0) {
-            taxList.add(subItemTemp.new Tax(getString(R.string.jugnoo_cash), jcUsed()));
+            taxList.add(new Tax(getString(R.string.jugnoo_cash), jcUsed()));
         }
         menusItemChargesAdapter.notifyDataSetChanged();
 
@@ -953,61 +882,50 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
 
-    private String cartItems(int type){
-        String idKey = Constants.KEY_SUB_ITEM_ID;
-        if(type == AppConstant.ApplicationType.MENUS){
-            idKey = Constants.KEY_ITEM_ID;
-        }
-        JSONArray jCart = new JSONArray();
-        if (activity.getProductsResponse() != null
-                && activity.getProductsResponse().getCategories() != null) {
-            for (Category category : activity.getProductsResponse().getCategories()) {
-                Log.d(TAG, "" + category.getCategoryName());
-                for (SubItem subItem : category.getSubItems()) {
-                    if (subItem.getSubItemQuantitySelected() > 0) {
-                        try {
-                            JSONObject jItem = new JSONObject();
-                            //subItem.getSubItemName();
-                            jItem.put(idKey, subItem.getSubItemId());
-                            jItem.put(Constants.KEY_QUANTITY, subItem.getSubItemQuantitySelected());
-                            jCart.put(jItem);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return "";
+    private void iterateItems(List<Item> items, JSONArray jCart){
+        for(Item item : items){
+            if(item.getItemSelectedList().size() > 0){
+                for(ItemSelected itemSelected : item.getItemSelectedList()){
+                    try {
+                        JSONObject jItem = new JSONObject();
+                        jItem.put(Constants.KEY_ITEM_ID, itemSelected.getRestaurantItemId());
+                        jItem.put(Constants.KEY_QUANTITY, itemSelected.getQuantity());
+                        JSONArray jCustomisations = new JSONArray();
+                        for(CustomizeItemSelected customizeItemSelected : itemSelected.getCustomizeItemSelectedList()){
+                            JSONObject jCustomisation = new JSONObject();
+                            jCustomisation.put(Constants.KEY_ID, customizeItemSelected.getCustomizeId());
+                            JSONArray jOptions = new JSONArray();
+                            for(Integer option : customizeItemSelected.getCustomizeOptions()){
+                                JSONObject jOption = new JSONObject();
+                                jOption.put(Constants.KEY_ID, option);
+                                jOptions.put(jOption);
+                            }
+                            jCustomisation.put(Constants.KEY_OPTIONS, jOptions);
+                            jCustomisations.put(jCustomisation);
                         }
-
-                        try {
-                            String categoryName = "", itemName = "";
-                            double price = 0.0;
-                            int qty = 0, itemId = 0;
-
-                            qty = subItem.getSubItemQuantitySelected();
-                            categoryName = category.getCategoryName();
-                            itemId = subItem.getSubItemId();
-                            itemName = subItem.getSubItemName();
-                            price = subItem.getPrice();
-
-                            Product product = new Product()
-                                    .setCategory(categoryName)
-                                    .setId("" + itemId)
-                                    .setName(itemName)
-                                    .setPrice(price)
-                                    .setQuantity(qty);
-//                                                                .setPosition(4);
-                            productList.add(product);
-
-                            HashMap<String, Object> item = new HashMap<>();
-                            item.put(Events.PRODUCT_NAME, itemName);
-                            item.put(Events.PRODUCT_ID, itemId);
-                            item.put(Events.QUANTITY, qty);
-                            items.add(item);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return "";
+                        if(jCustomisations.length() > 0){
+                            jItem.put(Constants.KEY_CUSTOMISATIONS, jCustomisations);
                         }
+                        jCart.put(jItem);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                }
+            }
+        }
+    }
+
+    private String cartItems(){
+        JSONArray jCart = new JSONArray();
+        if (activity.getMenuProductsResponse() != null
+                && activity.getMenuProductsResponse().getCategories() != null) {
+            for (Category category : activity.getMenuProductsResponse().getCategories()) {
+                if(category.getSubcategories() != null){
+                    for(Subcategory subcategory : category.getSubcategories()){
+                        iterateItems(subcategory.getItems(), jCart);
+                    }
+                } else if(category.getItems() != null){
+                    iterateItems(category.getItems(), jCart);
                 }
             }
         }
@@ -1059,7 +977,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
                 params.put(Constants.KEY_DELIVERY_NOTES, String.valueOf(activity.getSpecialInst()));
                 params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
-                params.put(Constants.KEY_CART, cartItems(type));
+                params.put(Constants.KEY_CART, cartItems());
                 if(activity.getSelectedPromoCoupon() != null && activity.getSelectedPromoCoupon().getId() > -1){
                     if(activity.getSelectedPromoCoupon() instanceof CouponInfo){
                         params.put(Constants.KEY_ACCOUNT_ID, String.valueOf(activity.getSelectedPromoCoupon().getId()));
@@ -1075,16 +993,8 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
 
 
-                if(type == AppConstant.ApplicationType.MEALS) {
-                    params.put("store_id", "2");
-                    params.put("group_id", ""+activity.getProductsResponse().getCategories().get(0).getSubItems().get(0).getGroupId());
-                    chargeDetails.put(Events.TYPE, "Meals");
-                } else if(type == AppConstant.ApplicationType.GROCERY) {
-                    chargeDetails.put(Events.TYPE, "Grocery");
-                } else if(type == AppConstant.ApplicationType.MENUS) {
+                if(type == AppConstant.ApplicationType.MENUS) {
                     chargeDetails.put(Events.TYPE, "Menus");
-                } else {
-                    chargeDetails.put(Events.TYPE, "Fresh");
                 }
                 params.put(Constants.INTERATED, "1");
 
@@ -1244,7 +1154,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                             exception.printStackTrace();
                             retryDialog(DialogErrorType.SERVER_ERROR, 1);
                         }
-//                        123
                         DialogPopup.dismissLoadingDialog();
                     }
 
@@ -1252,7 +1161,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                     public void failure(RetrofitError error) {
                         Log.e(TAG, "paytmAuthenticateRecharge error " + error.toString());
                         DialogPopup.dismissLoadingDialog();
-//                        123
                         retryDialog(DialogErrorType.CONNECTION_LOST, 1);
                     }
                 };
@@ -1516,63 +1424,12 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                 params.put(Constants.KEY_CURRENT_LATITUDE, String.valueOf(Data.latitude));
                 params.put(Constants.KEY_CURRENT_LONGITUDE, String.valueOf(Data.longitude));
 
-                final int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                String idKey = Constants.KEY_SUB_ITEM_ID;
-                if(type == AppConstant.ApplicationType.MENUS){
-                    idKey = Constants.KEY_ITEM_ID;
-                }
-
                 JSONArray jCart = new JSONArray();
-                if (activity.getProductsResponse() != null
-                        && activity.getProductsResponse().getCategories() != null) {
-                    for (Category category : activity.getProductsResponse().getCategories()) {
-                        Log.d(TAG, "" + category.getCategoryName());
-                        for (SubItem subItem : category.getSubItems()) {
-                            if (subItem.getSubItemQuantitySelected() > 0) {
-                                try {
-                                    JSONObject jItem = new JSONObject();
-                                    //subItem.getSubItemName();
-                                    jItem.put(idKey, subItem.getSubItemId());
-                                    jItem.put(Constants.KEY_QUANTITY, subItem.getSubItemQuantitySelected());
-                                    jCart.put(jItem);
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                try {
-                                    String categoryName = "", itemName = "";
-                                    double price = 0.0;
-                                    int qty = 0, itemId = 0;
-
-                                    qty = subItem.getSubItemQuantitySelected();
-                                    categoryName = category.getCategoryName();
-                                    itemId = subItem.getSubItemId();
-                                    itemName = subItem.getSubItemName();
-                                    price = subItem.getPrice();
-
-                                    Product product = new Product()
-                                            .setCategory(categoryName)
-                                            .setId("" + itemId)
-                                            .setName(itemName)
-                                            .setPrice(price)
-                                            .setQuantity(qty);
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                }
-                params.put(Constants.KEY_CART, jCart.toString());
+                params.put(Constants.KEY_CART, cartItems());
                 params.put(Constants.ORDER_AMOUNT, Utils.getMoneyDecimalFormat().format(subTotalAmount));
 
 
-                if(type == AppConstant.ApplicationType.MEALS) {
-                    params.put(Constants.STORE_ID, ""+ Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType));
-                    params.put(Constants.GROUP_ID, ""+activity.getProductsResponse().getCategories().get(0).getCurrentGroupId());
-                } else if(type == AppConstant.ApplicationType.MENUS){
+                if(type == AppConstant.ApplicationType.MENUS){
                     params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
                     String data = new Gson().toJson(activity.getVendorOpened(), MenusResponse.Vendor.class);
                     params.put(Constants.KEY_RESTAURANT_DATA, data);
@@ -1687,11 +1544,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                     }
                 };
                 new HomeUtil().putDefaultParams(params);
-                if(type == AppConstant.ApplicationType.MENUS){
-                    RestClient.getMenusApiService().userCheckoutData(params, callback);
-                } else {
-                    RestClient.getFreshApiService().userCheckoutData(params, callback);
-                }
+                RestClient.getMenusApiService().userCheckoutData(params, callback);
             } else {
                 retryDialog(DialogErrorType.NO_NET);
             }
@@ -1728,14 +1581,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
 
-//            if(type != AppConstant.ApplicationType.MENUS) {
-//                if (!checkoutSaveData.isDefault()) {
-//                    activity.setSelectedAddress(checkoutSaveData.getAddress());
-//                    activity.setSelectedAddressType(checkoutSaveData.getAddressType());
-//                    activity.setSelectedAddressId(checkoutSaveData.getAddressId());
-//                    activity.setSelectedLatLng(new LatLng(checkoutSaveData.getLatitude(), checkoutSaveData.getLongitude()));
-//                }
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1836,50 +1681,36 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
     @Override
-    public void onPlusClicked(int position, SubItem subItem) {
+    public void onPlusClicked(int position, int itemTotalQuantity) {
         cartChangedRefreshCheckout = true;
         updateCartDataView();
     }
 
     @Override
-    public void onMinusClicked(int position, SubItem subItem) {
+    public void onMinusClicked(int position, int itemTotalQuantity) {
         cartChangedRefreshCheckout = true;
         updateCartDataView();
-        if(subItem.getSubItemQuantitySelected() == 0){
-            activity.subItemsInCart.remove(position);
+        if(itemTotalQuantity == 0){
+            itemsInCart.remove(position);
             checkIfEmpty();
         }
     }
 
 
-    @Override
-    public boolean checkForMinus(int position, SubItem subItem) {
-        return activity.checkForMinus(position, subItem);
-    }
-
-    @Override
-    public void minusNotDone(int position, SubItem subItem) {
-        activity.clearMealsCartIfNoMainMeal();
-    }
-
-
 
     public void deleteCart() {
-        for(SubItem subItem : activity.subItemsInCart){
-            subItem.setSubItemQuantitySelected(0);
+        for(Item item : itemsInCart){
+            item.getItemSelectedList().clear();
         }
         updateCartDataView();
-        activity.subItemsInCart.clear();
-        freshCartItemsAdapter.notifyDataSetChanged();
+        itemsInCart.clear();
+        menusCartItemsAdapter.notifyDataSetChanged();
         checkIfEmpty();
 
     }
 
     private void checkIfEmpty(){
-        if(activity.subItemsInCart.size() == 0){
-            if(activity.isMealAddonItemsAvailable()){
-                activity.performBackPressed();
-            }
+        if(itemsInCart.size() == 0){
             activity.performBackPressed();
         }
     }
@@ -1923,10 +1754,6 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private void updateCartTopBarView(Pair<Double, Integer> pair){
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
-//        textViewCartTotal.setText(activity.getString(R.string.rupees_value_format_without_space,
-//                Utils.getMoneyDecimalFormatWithoutFloat().format(pair.first)));
-        /*textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
-                Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));*/
     }
 
     private void updateCartDataView(){

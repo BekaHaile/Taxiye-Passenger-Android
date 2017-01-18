@@ -2,7 +2,6 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -18,7 +17,6 @@ import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
 
 import java.util.List;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -46,11 +44,7 @@ public class FreshCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 
 	@Override
 	public Fragment getItem(int position) {
-		FreshCategoryItemsFragment frag = new FreshCategoryItemsFragment();
-		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.KEY_CATEGORY_POSITION, position);
-		frag.setArguments(bundle);
-		return frag;
+		return FreshCategoryItemsFragment.newInstance(position, 0);
 	}
 
 	@Override
