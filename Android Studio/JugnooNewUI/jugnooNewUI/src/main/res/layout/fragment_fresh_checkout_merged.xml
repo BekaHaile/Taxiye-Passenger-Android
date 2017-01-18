@@ -556,7 +556,6 @@
                         android:paddingBottom="10px"
                         android:paddingTop="10px"
                         android:textColor="@color/text_color"
-                        android:textCursorDrawable="@drawable/cursor_black"
                         android:textColorHint="@color/text_color_hint"
                         android:textSize="@dimen/text_size_30" />
 
