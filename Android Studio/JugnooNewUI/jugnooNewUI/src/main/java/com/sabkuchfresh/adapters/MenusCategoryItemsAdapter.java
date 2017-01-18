@@ -288,6 +288,9 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         if (item1.getCustomizeItem().size() > 0) {
                             if(item1.getItemSelectedList().size() == 1){
                                 item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() - 1);
+                                if(item1.getItemSelectedList().get(0).getQuantity() == 0){
+                                    item1.getItemSelectedList().clear();
+                                }
                                 notifyItemChanged(pos);
                                 callback.onMinusClicked(pos, item1);
                             } else {
