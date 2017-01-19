@@ -72,16 +72,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
-//    @Override
-//    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//
-//        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_meal, parent, false);
-//        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-//        v.setLayoutParams(layoutParams);
-//        ASSL.DoMagic(v);
-//        return new ViewHolderSlot(v, activity);
-//
-//    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -103,7 +93,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return new ViewHolderSlot(v, activity);
         } else if (viewType == BLANK_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, 194);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, 246);
             v.setLayoutParams(layoutParams);
 
             ASSL.DoMagic(v);

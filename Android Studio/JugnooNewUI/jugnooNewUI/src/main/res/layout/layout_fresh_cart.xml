@@ -112,7 +112,7 @@
                         android:id="@+id/linearLayoutCartDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20px"
+                        android:layout_marginBottom="5px"
                         android:layout_marginLeft="30px"
                         android:layout_marginRight="30px"
                         android:orientation="vertical"

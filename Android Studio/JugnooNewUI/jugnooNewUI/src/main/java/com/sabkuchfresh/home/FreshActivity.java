@@ -714,6 +714,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         return (DeliveryAddressesFragment) getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName());
     }
 
+    public AddToAddressBookFragment getAddToAddressBookFragmentDirect() {
+        return (AddToAddressBookFragment) getSupportFragmentManager().findFragmentByTag(AddToAddressBookFragment.class.getName());
+    }
+
     public TopBar getTopBar() {
         return topBar;
     }
@@ -2743,6 +2747,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
                 setAddressAndFetchOfferingData(appType);
                 saveOfferingLastAddress(appType);
+                if(getFreshCheckoutMergedFragment() != null
+                        && (getDeliveryAddressesFragment() != null || getAddToAddressBookFragmentDirect() != null)){
+                    getFreshCheckoutMergedFragment().setDeliveryAddressUpdated(true);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

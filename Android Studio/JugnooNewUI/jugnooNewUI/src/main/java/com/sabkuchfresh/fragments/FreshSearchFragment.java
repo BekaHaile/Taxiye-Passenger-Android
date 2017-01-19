@@ -152,7 +152,7 @@ public class FreshSearchFragment extends Fragment {
 					public boolean checkForAdd(int position, SubItem subItem) {
 						return activity.checkForAdd();
 					}
-				}, AppConstant.ListType.OTHER, FlurryEventNames.SEARCH_SCREEN, currentGroupId);
+				}, AppConstant.ListType.HOME, FlurryEventNames.SEARCH_SCREEN, currentGroupId);
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -461,12 +462,21 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                scrollView.scrollTo(0, buttonPlaceOrder.getBottom());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            scrollView.scrollTo(0, rootView.findViewById(R.id.linearLayoutDeliveryInstructions).getBottom());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 100);
             }
 
             @Override
             public void keyBoardClosed() {
-
+                editTextDeliveryInstructions.clearFocus();
             }
         });
         keyboardLayoutListener.setResizeTextView(false);
@@ -1682,12 +1692,14 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     @Override
     public void onPlusClicked(int position, int itemTotalQuantity) {
+        editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
         updateCartDataView();
     }
 
     @Override
     public void onMinusClicked(int position, int itemTotalQuantity) {
+        editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
         updateCartDataView();
         if(itemTotalQuantity == 0){

@@ -51,7 +51,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
     TextView textViewInfo;
     WebView webview;
 
-    public static HelpSection helpSection = HelpSection.FARE_DETAILS;
+    public static HelpSection helpSection = HelpSection.ABOUT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
