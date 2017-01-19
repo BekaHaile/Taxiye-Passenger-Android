@@ -1274,7 +1274,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.title.setText(getResources().getString(R.string.pick_addons));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 topBar.textViewSkip.setVisibility(View.VISIBLE);
+            }
 
+            if(topBar.imageViewMenu.getVisibility() == View.VISIBLE){
+                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
+            } else if(topBar.imageViewBack.getVisibility() == View.VISIBLE){
+                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
