@@ -241,8 +241,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		super.onResume();
 		if(!isHidden() && resumed) {
 			activity.resetToolbarWithScroll();
-			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
-			activity.setRefreshCart(false);
+//			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
+//			activity.setRefreshCart(false);
 		}
 		resumed = true;
 	}
