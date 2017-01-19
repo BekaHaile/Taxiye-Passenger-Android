@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,12 +37,13 @@ public class TopBar implements FlurryEventNames {
 	public TextView title;
 	public Button buttonCheckServer;
 	public RelativeLayout relativeLayoutNotification;
-	public TextView textViewNotificationValue, textViewSkip;
+	public TextView textViewNotificationValue, textViewSkip, tvLocation;
 	public ImageView imageViewBack, imageViewDelete, imageViewNotification, imageViewShadow, imageViewSearchCross;//, imageViewSearch;
 	public EditText editTextDeliveryAddress;
 
-	public RelativeLayout relativeLayoutLocality;
-	public TextView textViewLocationValue, textViewReset;
+	public RelativeLayout relativeLayoutLocality, searchLayout;
+	public TextView textViewLocationValue, textViewReset, tvDeliveryAddress, tvCartAmount;
+	private LinearLayout llLocation, llCartAmount, llSearchCartContainer;
 
 
 
@@ -55,7 +57,7 @@ public class TopBar implements FlurryEventNames {
 		topRl = (RelativeLayout) drawerLayout.findViewById(R.id.topRl);
 		imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
 		imageViewSearchCancel = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchCancel);
-		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.mavenRegular(activity));
+		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.avenirNext(activity));
 
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
 		relativeLayoutNotification = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutNotification);
@@ -64,6 +66,12 @@ public class TopBar implements FlurryEventNames {
 		textViewNotificationValue.setVisibility(View.GONE);
 		textViewSkip = (TextView) drawerLayout.findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.mavenMedium(activity));
 		textViewSkip.setVisibility(View.GONE);
+		searchLayout = (RelativeLayout) drawerLayout.findViewById(R.id.searchLayout);
+		llLocation = (LinearLayout) drawerLayout.findViewById(R.id.llLocation);
+		tvDeliveryAddress = (TextView) drawerLayout.findViewById(R.id.tvDeliveryAddress); tvDeliveryAddress.setTypeface(Fonts.mavenMedium(activity));
+		llCartAmount = (LinearLayout) drawerLayout.findViewById(R.id.llCartAmount);
+		tvCartAmount = (TextView) drawerLayout.findViewById(R.id.tvCartAmount); tvCartAmount.setTypeface(Fonts.mavenRegular(activity));
+		llSearchCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
 
 		below_shadow = (ImageView) drawerLayout.findViewById(R.id.below_shadow);
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
@@ -73,6 +81,8 @@ public class TopBar implements FlurryEventNames {
 		editTextDeliveryAddress.setTypeface(Fonts.mavenLight(activity));
 		imageViewSearchCross = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchCross);
 //		imageViewSearch = (ImageView)drawerLayout.findViewById(R.id.imageViewSearch);
+
+		tvLocation = (TextView) drawerLayout.findViewById(R.id.tvLocation); tvLocation.setTypeface(Fonts.mavenMedium(activity));
 
 		relativeLayoutLocality = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutLocality);
 		((TextView)drawerLayout.findViewById(R.id.textViewLocation)).setTypeface(Fonts.mavenRegular(activity));
@@ -126,6 +136,23 @@ public class TopBar implements FlurryEventNames {
 //	public ImageView getImageViewSearch() {
 //		return imageViewSearch;
 //	}
+
+
+	public LinearLayout getLlLocation() {
+		return llLocation;
+	}
+
+	public LinearLayout getLlCartAmount() {
+		return llCartAmount;
+	}
+
+	public TextView getTvCartAmount() {
+		return tvCartAmount;
+	}
+
+	public LinearLayout getLlSearchCartContainer() {
+		return llSearchCartContainer;
+	}
 
 	public View.OnClickListener topBarOnClickListener = new View.OnClickListener() {
 		@Override

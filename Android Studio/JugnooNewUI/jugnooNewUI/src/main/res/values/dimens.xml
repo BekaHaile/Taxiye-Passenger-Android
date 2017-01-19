@@ -346,8 +346,9 @@
     <dimen name="px_88">88px</dimen>
     <dimen name="px_4">4px</dimen>
     <dimen name="px_108">108px</dimen>
-    <dimen name="px_94">
-        94px
-    </dimen>
+    <dimen name="px_94">94px</dimen>
+    <dimen name="px_38">38px</dimen>
+    <dimen name="px_62">62px</dimen>
+    <dimen name="px_18">18px</dimen>
 
 </resources>

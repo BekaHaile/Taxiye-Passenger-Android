@@ -22,11 +22,12 @@
 
             <ImageView
                 android:id="@+id/imageViewMenu"
-                android:layout_width="70px"
-                android:layout_height="70px"
+                android:layout_width="65px"
+                android:layout_height="50px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
-                android:src="@drawable/ic_menu_selector"
+                android:padding="@dimen/px_15"
+                android:src="@drawable/ic_menu_new_selector"
                 android:tag="mwar"/>
 
             <Button
@@ -52,8 +53,8 @@
                 android:gravity="center_vertical"
                 android:text="@string/app_name"
                 android:textAllCaps="true"
-                android:textColor="@color/theme_color"
-                android:textSize="@dimen/text_size_40"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_30"
                 android:layout_marginLeft="20px"
                 />
 
@@ -110,6 +111,7 @@
                     android:layout_width="80px"
                     android:layout_height="70px"
                     android:layout_marginLeft="10px"
+                    android:visibility="gone"
                     android:layout_gravity="center_vertical"
                     >
 
@@ -181,6 +183,69 @@
 
                 />
 
+            <LinearLayout
+                android:id="@+id/llSearchCartContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/px_38">
+
+                <ImageView
+                    android:id="@+id/ivSearch"
+                    android:layout_width="62px"
+                    android:layout_height="62px"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_search_new_selector"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/px_62"
+                android:orientation="horizontal"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="36px"
+                android:gravity="center_vertical"
+                android:tag="mwar"
+                android:background="@drawable/capsule_cart_color">
+
+                <ImageView
+                    android:layout_width="@dimen/px_26"
+                    android:layout_height="@dimen/px_26"
+                    android:src="@drawable/ic_cart_new"
+                    android:layout_marginLeft="@dimen/px_18"
+                    android:layout_marginRight="@dimen/px_18"
+                    android:tag="mwar"/>
+
+                <LinearLayout
+                    android:id="@+id/llCartAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:visibility="gone"
+                    android:layout_marginRight="@dimen/px_18">
+
+                <TextView
+                    android:id="@+id/tvCartAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_26"
+                    android:text="240"
+                    android:textColor="@color/white"
+                    android:layout_marginRight="@dimen/px_18"/>
+
+                <ImageView
+                    android:layout_width="13px"
+                    android:layout_height="23px"
+                    android:src="@drawable/back_arrow_white"
+                    android:tag="mwar"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutLocality"
@@ -188,7 +253,7 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:visibility="visible"
+                android:visibility="gone"
                 >
 
                 <LinearLayout
@@ -258,6 +323,7 @@
             android:id="@+id/searchLayout"
             android:layout_width="match_parent"
             android:layout_height="68px"
+            android:visibility="gone"
             android:background="@color/white"
             android:layout_below="@+id/topRl"
             >
@@ -286,6 +352,65 @@
                 android:src="@drawable/search_icon"/>
 
         </RelativeLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="15px"
+            android:layout_below="@+id/topBar"
+            android:layout_marginLeft="@dimen/px_30"
+            android:layout_marginRight="@dimen/px_30"
+            android:src="@drawable/shadow_down_new" />
+
+        <LinearLayout
+            android:id="@+id/llLocation"
+            android:layout_width="match_parent"
+            android:layout_height="105px"
+            android:layout_below="@+id/topBar"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25px"
+                android:layout_height="34px"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/px_42"
+                android:src="@drawable/ic_new_fresh_location" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_marginLeft="@dimen/px_22"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvDeliveryAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delivery_address"
+                    android:textColor="@color/location_text_color"
+                    android:textSize="@dimen/text_size_10"/>
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px_6"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="asdf"
+                android:textColor="@color/location_text_color"
+                android:textSize="@dimen/text_size_28" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="15px"
+            android:layout_below="@+id/llLocation"
+            android:src="@drawable/shadow_down_new" />
 
     </LinearLayout>
 
