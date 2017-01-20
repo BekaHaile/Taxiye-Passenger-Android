@@ -350,5 +350,23 @@
     <dimen name="px_38">38px</dimen>
     <dimen name="px_62">62px</dimen>
     <dimen name="px_18">18px</dimen>
+    <dimen name="px_384">
+        384px
+    </dimen>
+    <dimen name="px_210">
+        210px
+    </dimen>
+    <dimen name="px_0">
+        0px
+    </dimen>
+    <dimen name="px_900">
+        900px
+    </dimen>
+    <dimen name="px_908">
+        908px
+    </dimen>
+    <dimen name="px_80">
+        80px
+    </dimen>
 
 </resources>

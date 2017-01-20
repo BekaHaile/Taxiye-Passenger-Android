@@ -1,22 +1,23 @@
 package com.sabkuchfresh.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import com.sabkuchfresh.adapters.FreshSuperCategoriesAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.Fonts;
 
 /**
  * Created by ankit on 19/01/17.
@@ -24,16 +25,16 @@ import product.clicklabs.jugnoo.utils.Fonts;
 
 public class FreshHomeFragment extends Fragment {
 
-    private View root;
+    private View rootView;
     private RelativeLayout relative;
     private FreshActivity activity;
-    private ImageView ivFresh;
+    RecyclerView rvFreshSuper;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_fresh_home, container, false);
-        relative = (RelativeLayout) root.findViewById(R.id.relative);
+        rootView = inflater.inflate(R.layout.fragment_fresh_home, container, false);
+        relative = (RelativeLayout) rootView.findViewById(R.id.relative);
         try {
             activity = (FreshActivity) getActivity();
             if (relative != null) {
@@ -43,19 +44,25 @@ public class FreshHomeFragment extends Fragment {
             e.printStackTrace();
         }
         activity.getTopBar().searchLayout.setVisibility(View.GONE);
-
-        ivFresh = (ImageView) root.findViewById(R.id.ivFresh);
         activity.fragmentUISetup(this);
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
-        ivFresh.setOnClickListener(new View.OnClickListener() {
+
+        rvFreshSuper = (RecyclerView) rootView.findViewById(R.id.rvFreshSuper);
+        rvFreshSuper.setItemAnimator(new DefaultItemAnimator());
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, GridLayoutManager.HORIZONTAL, false);
+        rvFreshSuper.setLayoutManager(gridLayoutManager);
+        FreshSuperCategoriesAdapter adapter = new FreshSuperCategoriesAdapter(activity, new FreshSuperCategoriesAdapter.Callback() {
             @Override
-            public void onClick(View v) {
+            public void onItemClick(int pos) {
+                Toast.makeText(activity, "Position =" + pos, Toast.LENGTH_SHORT).show();
                 activity.getTransactionUtils().addFreshFragment(activity, activity.getRelativeLayoutContainer());
             }
         });
 
+        rvFreshSuper.setAdapter(adapter);
 
-        return root;
+
+        return rootView;
     }
 
     @Override

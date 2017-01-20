@@ -4,10 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/ivFresh"
-        android:layout_width="@dimen/px_300"
-        android:layout_height="@dimen/px_300"
-        android:src="@color/address_stoke"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvFreshSuper"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_908"
+        android:fadeScrollbars="true"
+        ></android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

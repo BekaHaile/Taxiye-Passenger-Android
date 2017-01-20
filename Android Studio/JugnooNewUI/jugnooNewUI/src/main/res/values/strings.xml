@@ -1467,5 +1467,6 @@
     <string name="less">Less</string>
     <string name="view_cart">View Cart</string>
     <string name="no_minimum_order">No minimum order</string>
+    <string name="produce">Produce</string>
 
 </resources>
