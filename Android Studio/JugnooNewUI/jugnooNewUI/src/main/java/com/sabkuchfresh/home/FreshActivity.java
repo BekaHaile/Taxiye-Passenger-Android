@@ -371,7 +371,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             relativeLayoutCheckoutBar.setOnClickListener(checkoutOnClickListener);
             linearLayoutCheckout.setOnClickListener(checkoutOnClickListener);
             relativeLayoutCartNew.setOnClickListener(checkoutOnClickListener);
-            topBar.getLlCartAmount().setOnClickListener(checkoutOnClickListener);
+            topBar.getLlCartContainer().setOnClickListener(checkoutOnClickListener);
 
             relativeLayoutCart.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -936,7 +936,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
             textViewMinOrder.setVisibility(View.GONE);
 
-            topBar.below_shadow.setVisibility(View.VISIBLE);
+            topBar.below_shadow.setVisibility(View.GONE);
             relativeLayoutCartNew.setVisibility(View.GONE);
             linearLayoutCheckout.setVisibility(View.VISIBLE);
             topBar.textViewSkip.setVisibility(View.GONE);
@@ -961,7 +961,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             resetToolbar();
 
             if(fragment instanceof FreshHomeFragment){
-                resetToolbarWithScroll(231f);
+                resetToolbarWithScroll(226f);
                 topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.below_shadow.setVisibility(View.GONE);
@@ -971,6 +971,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.searchLayout.setVisibility(View.GONE);
                 topBar.getLlLocation().setVisibility(View.VISIBLE);
                 topBar.relativeLayoutLocality.setVisibility(View.GONE);
+                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
+                ivSearch.setVisibility(View.VISIBLE);
                 textViewCheckout.setVisibility(View.GONE);
 
 
@@ -1008,6 +1010,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
 				topBar.imageViewDelete.setVisibility(View.GONE);
 				textViewCheckout.setVisibility(View.GONE);
+                ivSearch.setVisibility(View.VISIBLE);
+                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
 				if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
                     relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 
@@ -1037,12 +1041,17 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.getLlLocation().setVisibility(View.GONE);
 
             } else if(fragment instanceof MealFragment){
+                resetToolbarWithScroll(226f);
+                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
 				topBar.relativeLayoutNotification.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.GONE);
 				topBar.imageViewDelete.setVisibility(View.GONE);
 				textViewCheckout.setVisibility(View.GONE);
 				relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+                topBar.relativeLayoutLocality.setVisibility(View.GONE);
+                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
+                ivSearch.setVisibility(View.GONE);
 
 				relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 relativeLayoutCart.setVisibility(View.GONE);
@@ -1060,13 +1069,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
-                topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
                 setRelativeLayoutLocalityClick();
                 setNoItemsView(fragment);
 			}
             else if (fragment instanceof GroceryFragment) {
                 topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
-                resetToolbarWithScroll();
+                resetToolbarWithScroll(111f);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.below_shadow.setVisibility(View.GONE);
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -1093,19 +1101,23 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
-                topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
+                topBar.relativeLayoutLocality.setVisibility(View.GONE);
                 setRelativeLayoutLocalityClick();
                 setMinOrderAmountText(fragment);
                 setNoItemsView(fragment);
-                searchLayout.setVisibility(View.VISIBLE);
+                searchLayout.setVisibility(View.GONE);
 
             } else if (fragment instanceof MenusFragment) {
+                resetToolbarWithScroll(226f);
+                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                ivSearch.setVisibility(View.GONE);
                 topBar.relativeLayoutNotification.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.imageViewDelete.setVisibility(View.GONE);
                 textViewCheckout.setVisibility(View.GONE);
                 relativeLayoutCheckoutBar.setVisibility(View.GONE);
+                topBar.getLlCartContainer().setVisibility(View.GONE);
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
@@ -1122,7 +1134,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
-                topBar.relativeLayoutLocality.setVisibility(View.VISIBLE);
+                topBar.relativeLayoutLocality.setVisibility(View.GONE);
                 setRelativeLayoutLocalityClick();
 
             }
@@ -1133,6 +1145,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.imageViewDelete.setVisibility(View.GONE);
                 textViewCheckout.setVisibility(View.GONE);
+                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
                 if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
                     relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
 
@@ -2555,7 +2568,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 
     private void setRelativeLayoutLocalityClick(){
-        topBar.relativeLayoutLocality.setOnClickListener(new View.OnClickListener() {
+        topBar.getLlLocation().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());

@@ -43,7 +43,7 @@ public class TopBar implements FlurryEventNames {
 
 	public RelativeLayout relativeLayoutLocality, searchLayout;
 	public TextView textViewLocationValue, textViewReset, tvDeliveryAddress, tvCartAmount;
-	private LinearLayout llLocation, llCartAmount, llSearchCartContainer;
+	private LinearLayout llLocation, llCartAmount, llSearchCartContainer, llCartContainer;
 
 
 
@@ -69,6 +69,7 @@ public class TopBar implements FlurryEventNames {
 		searchLayout = (RelativeLayout) drawerLayout.findViewById(R.id.searchLayout);
 		llLocation = (LinearLayout) drawerLayout.findViewById(R.id.llLocation);
 		tvDeliveryAddress = (TextView) drawerLayout.findViewById(R.id.tvDeliveryAddress); tvDeliveryAddress.setTypeface(Fonts.mavenMedium(activity));
+		llCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llCartContainer);
 		llCartAmount = (LinearLayout) drawerLayout.findViewById(R.id.llCartAmount);
 		tvCartAmount = (TextView) drawerLayout.findViewById(R.id.tvCartAmount); tvCartAmount.setTypeface(Fonts.mavenRegular(activity));
 		llSearchCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
@@ -152,6 +153,10 @@ public class TopBar implements FlurryEventNames {
 
 	public LinearLayout getLlSearchCartContainer() {
 		return llSearchCartContainer;
+	}
+
+	public LinearLayout getLlCartContainer() {
+		return llCartContainer;
 	}
 
 	public View.OnClickListener topBarOnClickListener = new View.OnClickListener() {

@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        >
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
         <RelativeLayout
             android:id="@+id/topRl"
             android:layout_width="match_parent"
@@ -200,6 +202,7 @@
                     android:src="@drawable/ic_search_new_selector"/>
 
             <LinearLayout
+                android:id="@+id/llCartContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/px_62"
                 android:orientation="horizontal"
@@ -364,7 +367,7 @@
         <LinearLayout
             android:id="@+id/llLocation"
             android:layout_width="match_parent"
-            android:layout_height="105px"
+            android:layout_height="100px"
             android:layout_below="@+id/topBar"
             android:orientation="horizontal">
 
@@ -388,7 +391,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/delivery_address"
                     android:textColor="@color/location_text_color"
-                    android:textSize="@dimen/text_size_10"/>
+                    android:textSize="@dimen/text_size_20"/>
 
             <TextView
                 android:id="@+id/tvLocation"
