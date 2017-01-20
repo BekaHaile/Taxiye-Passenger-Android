@@ -18,12 +18,19 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -34,6 +41,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.jugnoo.pay.activities.PaySDKUtils;
 import com.jugnoo.pay.models.MessageRequest;
+import com.sabkuchfresh.adapters.FreshSortingAdapter;
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
@@ -65,6 +73,7 @@ import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
+import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SubItemCompareAtoZ;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceHighToLow;
@@ -168,6 +177,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     private List<DeliveryAddress> deliveryAddresses;
     public ArrayList<SubItem> subItemsInCart;
+    private ArrayList<SortResponseModel> slots = new ArrayList<>();
 
     public String mContactNo = "";
 
@@ -195,9 +205,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private VendorMenuResponse vendorMenuResponse;
 
     private AppBarLayout appBarLayout;
-    private RelativeLayout searchLayout;
-    private ImageView ivSearch;
+    private RelativeLayout searchLayout, rlSort, rlSortBg, rlSortContainer;
+    private View viewSortFake, viewSortFake1;
+    private ImageView ivSearch, ivSort;
     private Toolbar toolbar;
+    private RecyclerView rvDeliverySlots;
+    private FreshSortingAdapter sortingAdapter;
+    private int pos = 102;
 
     public void openNotification() {
         menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
@@ -296,13 +310,23 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             textViewCheckout.setTypeface(Fonts.mavenRegular(this));
             textViewMinOrder = (TextView) findViewById(R.id.textViewMinOrder);
             textViewMinOrder.setTypeface(Fonts.mavenRegular(this));
-
+            rlSort = (RelativeLayout) findViewById(R.id.rlSort);
+            rlSortBg = (RelativeLayout) findViewById(R.id.rlSortBg);
+            ivSort = (ImageView) findViewById(R.id.ivSort);
+            viewSortFake = (View) findViewById(R.id.viewSortFake);
+            viewSortFake1 = (View) findViewById(R.id.viewSortFake1);
+            rlSortContainer = (RelativeLayout) findViewById(R.id.rlSortContainer);
+            rvDeliverySlots = (RecyclerView) findViewById(R.id.rvDeliverySlots);
+            rvDeliverySlots.setLayoutManager(new LinearLayoutManager(this));
+            rvDeliverySlots.setItemAnimator(new DefaultItemAnimator());
+            rvDeliverySlots.setHasFixedSize(false);
 
             topView = (View) findViewById(R.id.topBarMain);
 
             menuBar = new MenuBar(this, drawerLayout);
             topBar = new TopBar(this, drawerLayout);
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
+
 
             appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 @Override
@@ -322,6 +346,33 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     }
                 }
             });
+
+            setSortingList();
+            sortingAdapter = new FreshSortingAdapter(FreshActivity.this, slots, new FreshSortingAdapter.Callback() {
+                @Override
+                public void onSlotSelected(int position, SortResponseModel slot) {
+                    pos = slot.id;
+                    setSlotSelected(getSlotSelected());
+
+                    int type = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                    if(type == AppConstant.ApplicationType.MEALS){
+                        mealSort = position;
+                        MyApplication.getInstance().logEvent(FirebaseEvents.M_SORT+"_"+slot.name, null);
+                    } else if(type == AppConstant.ApplicationType.GROCERY){
+                        freshSort = position;
+                        MyApplication.getInstance().logEvent(FirebaseEvents.G_SORT+"_"+slot.name, null);
+                    } else if(type == AppConstant.ApplicationType.MENUS){
+                        menusSort = position;
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_SORT+"_"+slot.name, null);
+                    } else{
+                        freshSort = position;
+                        MyApplication.getInstance().logEvent(FirebaseEvents.F_SORT+"_"+slot.name, null);
+                    }
+                    getBus().post(new SortSelection(position));
+                    ivSort.performClick();
+                }
+            });
+            rvDeliverySlots.setAdapter(sortingAdapter);
 
 
             View.OnClickListener checkoutOnClickListener = new View.OnClickListener() {
@@ -427,6 +478,30 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             });
 
 
+            ivSort.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(viewSortFake.getVisibility() == View.GONE){
+                        viewSortFake.setVisibility(View.VISIBLE);
+                        viewSortFake1.setVisibility(View.VISIBLE);
+                        rlSortContainer.setVisibility(View.GONE);
+                        //rlSort.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    } else{
+                        viewSortFake.setVisibility(View.GONE);
+                        viewSortFake1.setVisibility(View.GONE);
+                        rlSortContainer.setVisibility(View.VISIBLE);
+                        //rlSort.setBackgroundColor(getResources().getColor(R.color.black_translucent_less));
+                    }
+                }
+            });
+
+            rlSortContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ivSort.performClick();
+                }
+            });
+
 
 
             try {
@@ -481,6 +556,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     }
 
+    private void setSortingList() {
+        slots.clear();
+        slots.add(new SortResponseModel(0, "A-Z", false));
+        slots.add(new SortResponseModel(1, "Popularity", false));
+        slots.add(new SortResponseModel(2, "Price: Low to High", false));
+        slots.add(new SortResponseModel(3, "Price: High to Low", false));
+    }
 
 
     public void intentToShareActivity(){
@@ -740,7 +822,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public void showBottomBar(boolean flag) {
         if(flag && (getFeedbackFragment() == null || !getFeedbackFragment().isVisible())) {
-            relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+            relativeLayoutCheckoutBar.setVisibility(View.GONE);
         }else {
             relativeLayoutCheckoutBar.setVisibility(View.GONE);
             textViewMinOrder.setVisibility(View.GONE);
@@ -958,6 +1040,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
             relativeLayoutLeft.setVisibility(View.VISIBLE);
             searchLayout.setVisibility(View.GONE);
+            rlSort.setVisibility(View.GONE);
             resetToolbar();
 
             if(fragment instanceof FreshHomeFragment){
@@ -1012,8 +1095,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				textViewCheckout.setVisibility(View.GONE);
                 ivSearch.setVisibility(View.VISIBLE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
-				if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
-                    relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);
+                rlSort.setVisibility(View.VISIBLE);
+
+				/*if(relativeLayoutCheckoutBar.getVisibility() != View.VISIBLE)
+                    relativeLayoutCheckoutBar.setVisibility(View.VISIBLE);*/
 
 				/*if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     float marginBottom = 85f;
@@ -1022,11 +1107,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
 				}*/
 
-				relativeLayoutCartNew.setVisibility(View.VISIBLE);
+				relativeLayoutCartNew.setVisibility(View.GONE);
                 relativeLayoutCart.setVisibility(View.GONE);
 				linearLayoutCheckout.setVisibility(View.GONE);
 
-				relativeLayoutSort.setVisibility(View.VISIBLE);
+				relativeLayoutSort.setVisibility(View.GONE);
 				topBar.title.setVisibility(View.VISIBLE);
 				topBar.title.setText(getResources().getString(R.string.fresh));
 				//topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));

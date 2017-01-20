@@ -283,8 +283,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         slots.add(new SortResponseModel(1, "Popularity", false));
         slots.add(new SortResponseModel(2, "Price: Low to High", false));
         slots.add(new SortResponseModel(3, "Price: High to Low", false));
-
-
     }
 
     @Override

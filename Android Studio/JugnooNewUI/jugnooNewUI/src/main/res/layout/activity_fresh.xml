@@ -48,6 +48,8 @@
             android:layout_marginTop="@dimen/px_96"
             android:src="@drawable/shadow_down" />
 
+
+
         <LinearLayout
             android:id="@+id/linearLayoutCheckoutContainer"
             android:layout_width="match_parent"
@@ -263,6 +265,9 @@
 
             </RelativeLayout>
         </LinearLayout>
+
+        <!-- Sort layout-->
+        <include layout="@layout/layout_fresh_activity_sort"/>
 
         <include layout="@layout/layout_home_activity_fab_test" />
 

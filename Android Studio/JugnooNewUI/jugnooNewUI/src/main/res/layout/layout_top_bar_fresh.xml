@@ -210,6 +210,7 @@
                 android:layout_marginLeft="36px"
                 android:gravity="center_vertical"
                 android:tag="mwar"
+                android:animateLayoutChanges="true"
                 android:background="@drawable/capsule_cart_color">
 
                 <ImageView
