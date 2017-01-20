@@ -364,17 +364,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 		float lineLeft = currentTab.getLeft();
 		float lineRight = currentTab.getRight();
 
-//		for (int i = 0; i < tabCount; i++) {
-//			View v = tabsContainer.getChildAt(i);
-//			TextView textView = (TextView) v.findViewById(R.id.textView);
-//			if (textView instanceof TextView) {
-//				if(i == currentPosition) {
-//					textView.setTextColor(tabTextColor);
-//				} else {
-//					textView.setTextColor(tabTextColorUnSelected);
-//				}
-//			}
-//		}ail
 
 		// if there is an offset, start interpolating left and right coordinates between current and next tab
 		if (currentPositionOffset > 0f && currentPosition < tabCount - 1) {
@@ -407,8 +396,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			if (textView instanceof TextView) {
 				if(i == currentPosition) {
 					((TextView)textView).setTextColor(tabTextColor);
+					((TextView)textView).setTypeface(getLocalTypeface(), Typeface.BOLD);
 				} else {
 					((TextView)textView).setTextColor(tabTextColorUnSelected);
+					((TextView)textView).setTypeface(getLocalTypeface());
 				}
 			}
 		}
@@ -418,8 +409,10 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
 			if (textView instanceof TextView) {
 				if(tabCount - 1 == currentPosition) {
 					((TextView)textView).setTextColor(tabTextColor);
+					((TextView)textView).setTypeface(getLocalTypeface(), Typeface.BOLD);
 				} else {
 					((TextView)textView).setTextColor(tabTextColorUnSelected);
+					((TextView)textView).setTypeface(getLocalTypeface());
 				}
 			}
 		} catch (Exception e) {

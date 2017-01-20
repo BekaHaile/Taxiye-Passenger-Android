@@ -149,8 +149,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		viewPager.setAdapter(freshCategoryFragmentsAdapter);
 
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
-		tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
+		tabs.setTextColorResource(R.color.text_color_dark_1, R.color.text_color);
 		tabs.setBackgroundColor(activity.getResources().getColor(R.color.transparent));
+		tabs.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
         tabs.setOnMyTabClickListener(this);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
