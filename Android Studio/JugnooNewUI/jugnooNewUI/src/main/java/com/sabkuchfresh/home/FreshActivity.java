@@ -65,11 +65,15 @@ import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SubItem;
-import com.sabkuchfresh.retrofit.model.SubItemCompare;
-import com.sabkuchfresh.retrofit.model.SubItemComparePrice;
-import com.sabkuchfresh.retrofit.model.SubItemComparePriceRev;
+import com.sabkuchfresh.retrofit.model.SubItemCompareAtoZ;
+import com.sabkuchfresh.retrofit.model.SubItemComparePriceHighToLow;
+import com.sabkuchfresh.retrofit.model.SubItemComparePriceLowToHigh;
+import com.sabkuchfresh.retrofit.model.SubItemComparePriority;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.retrofit.model.menus.ItemCompareAtoZ;
+import com.sabkuchfresh.retrofit.model.menus.ItemComparePriceHighToLow;
+import com.sabkuchfresh.retrofit.model.menus.ItemComparePriceLowToHigh;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
@@ -710,6 +714,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         return (DeliveryAddressesFragment) getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName());
     }
 
+    public AddToAddressBookFragment getAddToAddressBookFragmentDirect() {
+        return (AddToAddressBookFragment) getSupportFragmentManager().findFragmentByTag(AddToAddressBookFragment.class.getName());
+    }
+
     public TopBar getTopBar() {
         return topBar;
     }
@@ -1061,8 +1069,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 relativeLayoutCart.setVisibility(View.GONE);
                 linearLayoutCheckout.setVisibility(View.GONE);
-                relativeLayoutSort.setVisibility(View.GONE);
-                relativeLayoutLeft.setVisibility(View.GONE);
+                relativeLayoutSort.setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(vendorOpened.getName());
@@ -1079,8 +1086,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     textViewMinOrder.setText(getString(R.string.minimum_order) + " "
                             + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
                 }
-                resetToolbarWithScroll(96f);
-                searchLayout.setVisibility(View.GONE);
+                resetToolbarWithScroll();
+                searchLayout.setVisibility(View.VISIBLE);
             }
             else if(fragment instanceof MenusItemCustomizeFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1267,7 +1274,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.title.setText(getResources().getString(R.string.pick_addons));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 topBar.textViewSkip.setVisibility(View.VISIBLE);
+            }
 
+            if(topBar.imageViewMenu.getVisibility() == View.VISIBLE){
+                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
+            } else if(topBar.imageViewBack.getVisibility() == View.VISIBLE){
+                titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+                titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
@@ -1974,62 +1988,71 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     @Subscribe
     public void onSortEvent(SortSelection event) {
         try {
-            switch(event.postion){
-				case 0:
-					for (Category category : productsResponse.getCategories()) {
-						Collections.sort(category.getSubItems(), new SubItemCompare());
-					}
-                    gaEvents("", FlurryEventNames.SORT, FlurryEventNames.A_Z);
-					try {
-						mBus.post(new UpdateMainList(true));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					break;
-				case 1:
-					for (Category category : productsResponse.getCategories()) {
-						Collections.sort(category.getSubItems(), new Comparator<SubItem>() {
-							@Override
-							public int compare(SubItem p1, SubItem p2) {
-								return p1.getPriorityId()- p2.getPriorityId();
-							}
+            Comparator comparator = null;
+            if(getAppType() == AppConstant.ApplicationType.MENUS){
+                switch (event.postion) {
+                    case 0:
+                        comparator = new ItemCompareAtoZ();
+                        gaEvents("", FlurryEventNames.SORT, FlurryEventNames.A_Z);
+                        break;
+                    case 2:
+                        comparator = new ItemComparePriceLowToHigh();
+                        gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
+                        break;
+                    case 3:
+                        comparator = new ItemComparePriceHighToLow();
+                        gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_HIGH_TO_LOW);
+                        break;
+                    default:
+                        break;
+                }
+                try {
+                    if (comparator != null) {
+                        for (com.sabkuchfresh.retrofit.model.menus.Category category : getMenuProductsResponse().getCategories()) {
+                            if(category.getSubcategories() != null){
+                                for(Subcategory subcategory : category.getSubcategories()){
+                                    Collections.sort(subcategory.getItems(), comparator);
+                                }
+                            } else if(category.getItems() != null){
+                                Collections.sort(category.getItems(), comparator);
+                            }
+                        }
+                        mBus.post(new UpdateMainList(true));
+                    }
+                } catch (Exception e) {
+                }
+            } else {
+                switch (event.postion) {
+                    case 0:
+                        comparator = new SubItemCompareAtoZ();
+                        gaEvents("", FlurryEventNames.SORT, FlurryEventNames.A_Z);
+                        break;
+                    case 1:
+                        comparator = new SubItemComparePriority();
+                        gaEvents("", FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
+                        break;
+                    case 2:
+                        comparator = new SubItemComparePriceLowToHigh();
+                        gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
+                        break;
+                    case 3:
+                        comparator = new SubItemComparePriceHighToLow();
+                        gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_HIGH_TO_LOW);
+                        break;
+                    default:
+                        break;
+                }
+                try {
+                    if (comparator != null) {
+                        for (Category category : productsResponse.getCategories()) {
+                            Collections.sort(category.getSubItems(), comparator);
+                        }
+                        mBus.post(new UpdateMainList(true));
+                    }
+                } catch (Exception e) {
+                }
+            }
 
-						});
-	//                    Collections.sort(category.getSubItems(), new SubItemComparePriority());
-					}
-                    gaEvents("", FlurryEventNames.SORT, FlurryEventNames.POPULARITY);
-					try {
-						mBus.post(new UpdateMainList(true));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					break;
-				case 2:
-					for (Category category : productsResponse.getCategories()) {
-						Collections.sort(category.getSubItems(), new SubItemComparePrice());
-					}
-                    gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-					try {
-						mBus.post(new UpdateMainList(true));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					break;
-				case 3:
-					for (Category category : productsResponse.getCategories()) {
-						Collections.sort(category.getSubItems(), new SubItemComparePriceRev());
-					}
-                    gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
-					try {
-						mBus.post(new UpdateMainList(true));
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					break;
-				default:
-					// should not happened
-					break;
-			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2731,6 +2754,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
                 setAddressAndFetchOfferingData(appType);
                 saveOfferingLastAddress(appType);
+                if(getFreshCheckoutMergedFragment() != null
+                        && (getDeliveryAddressesFragment() != null || getAddToAddressBookFragmentDirect() != null)){
+                    getFreshCheckoutMergedFragment().setDeliveryAddressUpdated(true);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

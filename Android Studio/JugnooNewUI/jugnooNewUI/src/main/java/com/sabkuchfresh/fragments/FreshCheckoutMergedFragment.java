@@ -35,7 +35,6 @@ import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.jugnoo.pay.activities.MainActivity;
@@ -56,12 +55,12 @@ import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.home.OrderCheckoutFailureDialog;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
-import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
 import com.sabkuchfresh.retrofit.model.SlotViewType;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
@@ -94,10 +93,8 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
-import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -238,6 +235,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
         activity.resetToolbar();
+        deliveryAddressUpdated = false;
 
         type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
         mBus = (activity).getBus();
@@ -578,12 +576,22 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                //scrollView.scrollTo(0, editTextDeliveryInstructions.getBottom());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            scrollView.scrollTo(0, rootView.findViewById(R.id.linearLayoutDeliveryInstructions).getBottom());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, 100);
+
             }
 
             @Override
             public void keyBoardClosed() {
-
+                editTextDeliveryInstructions.clearFocus();
             }
         });
         keyboardLayoutListener.setResizeTextView(false);
@@ -1723,8 +1731,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getMenuRefreshLatLng().latitude));
-                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getMenuRefreshLatLng().longitude));
+                if(deliveryAddressUpdated){
+                    params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+                    params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+                } else {
+                    params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getMenuRefreshLatLng().latitude));
+                    params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getMenuRefreshLatLng().longitude));
+                }
+
                 params.put(Constants.KEY_CURRENT_LATITUDE, String.valueOf(Data.latitude));
                 params.put(Constants.KEY_CURRENT_LONGITUDE, String.valueOf(Data.longitude));
 
@@ -2088,18 +2102,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
+        editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
         if(activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1
                 && type == AppConstant.ApplicationType.MEALS){
             getCheckoutDataAPI();
         }
         updateCartDataView();
-        editTextDeliveryInstructions.clearFocus();
-        scrollView.scrollTo(0, 0);
     }
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
+        editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
         updateCartDataView();
         if(subItem.getSubItemQuantitySelected() == 0){
@@ -2382,6 +2396,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     public void negativeClick(View view) {
                     }
                 });
+    }
+
+    private boolean deliveryAddressUpdated = false;
+    public void setDeliveryAddressUpdated(boolean deliveryAddressUpdated){
+        this.deliveryAddressUpdated = deliveryAddressUpdated;
     }
 
 }

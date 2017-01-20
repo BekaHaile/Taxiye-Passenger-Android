@@ -52,7 +52,7 @@ public class ApiLoginUsingAccessToken {
 		if (AppStatus.getInstance(activity).isOnline(activity)) {
 
 			if(showDialog) {
-				DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, "Loading...");
 			}
 
 			if (Data.locationFetcher != null) {

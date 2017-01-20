@@ -29,9 +29,9 @@ import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.SubItem;
-import com.sabkuchfresh.retrofit.model.SubItemCompare;
-import com.sabkuchfresh.retrofit.model.SubItemComparePrice;
-import com.sabkuchfresh.retrofit.model.SubItemComparePriceRev;
+import com.sabkuchfresh.retrofit.model.SubItemCompareAtoZ;
+import com.sabkuchfresh.retrofit.model.SubItemComparePriceLowToHigh;
+import com.sabkuchfresh.retrofit.model.SubItemComparePriceHighToLow;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 
@@ -449,7 +449,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     public void onSortEvent(int postion) {
         switch (postion) {
             case 0:
-                Collections.sort(mealsData, new SubItemCompare());
+                Collections.sort(mealsData, new SubItemCompareAtoZ());
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.A_Z);
                 mealAdapter = null;
                 mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
@@ -469,7 +469,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 recyclerViewCategoryItems.setAdapter(mealAdapter);
                 break;
             case 2:
-                Collections.sort(mealsData, new SubItemComparePrice());
+                Collections.sort(mealsData, new SubItemComparePriceLowToHigh());
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
                 //mealAdapter.notifyDataSetChanged();
                 mealAdapter = null;
@@ -477,7 +477,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 recyclerViewCategoryItems.setAdapter(mealAdapter);
                 break;
             case 3:
-                Collections.sort(mealsData, new SubItemComparePriceRev());
+                Collections.sort(mealsData, new SubItemComparePriceHighToLow());
                 FlurryEventLogger.event(FlurryEventNames.HOME_SCREEN, FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
                 mealAdapter = null;
                 mealAdapter = new MealAdapter(activity, mealsData, recentOrder, status, this);
