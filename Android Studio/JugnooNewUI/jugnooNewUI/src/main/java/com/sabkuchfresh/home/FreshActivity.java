@@ -95,6 +95,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
@@ -172,7 +173,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private PaymentOption paymentOption;
 
     private List<DeliveryAddress> deliveryAddresses;
-    public ArrayList<SubItem> subItemsInCart;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
 
     public String mContactNo = "";
@@ -846,21 +846,32 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         }
     }
 
-    private Pair<Double, Integer> updateCartValuesGetTotalPriceFMG() {
+    public Pair<Double, Integer> getSubItemInCartTotalPrice(){
         Pair<Double, Integer> pair;
         totalPrice = 0;
         totalQuantity = 0;
         try {
+            ArrayList<SubItem> subItemsInCart = fetchCartList();
+            for(SubItem subItem : subItemsInCart){
+				if(subItem.getSubItemQuantitySelected() > 0){
+					totalQuantity++;
+					totalPrice = totalPrice + (((double) subItem.getSubItemQuantitySelected()) * subItem.getPrice());
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        pair = new Pair<>(totalPrice, totalQuantity);
+        return pair;
+    }
+
+    private Pair<Double, Integer> updateCartValuesGetTotalPriceFMG() {
+        saveCartToSP();
+        Pair<Double, Integer> pair = getSubItemInCartTotalPrice();
+        try {
             if (getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
-                for (Category category : getProductsResponse().getCategories()) {
-                    for (SubItem subItem : category.getSubItems()) {
-                        if (subItem.getSubItemQuantitySelected() > 0) {
-                            totalQuantity++;
-                            totalPrice = totalPrice + (((double) subItem.getSubItemQuantitySelected()) * subItem.getPrice());
-                        }
-                    }
-                }
+
                 textViewTotalPrice.setText(String.format(getResources().getString(R.string.rupees_value_format),
                         Utils.getMoneyDecimalFormat().format(totalPrice)));
                 if(totalPrice > 0){
@@ -895,11 +906,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        saveCartToSP();
-        if (totalQuantity > 0) {
-        }
-        pair = new Pair<>(totalPrice, totalQuantity);
         return pair;
     }
 
@@ -1824,7 +1830,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     protected void onPause() {
         super.onPause();
         saveCartToSP();
-        Log.e(TAG, "cart saved=" + Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
 
         if (locationFetcher != null) {
             locationFetcher.destroy();
@@ -1843,13 +1848,27 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private void saveCartToSPFMG() {
         try {
             JSONObject jCart = new JSONObject();
+            if(getAppType() == AppConstant.ApplicationType.FRESH) {
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+            } else if(getAppType() == AppConstant.ApplicationType.GROCERY){
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+            } else{
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+            }
+            Gson gson = new Gson();
             if (getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
                         if (subItem.getSubItemQuantitySelected() > 0) {
                             try {
-                                jCart.put(String.valueOf(subItem.getSubItemId()), (int) subItem.getSubItemQuantitySelected());
+                                jCart.put(String.valueOf(subItem.getSubItemId()), gson.toJson(subItem, SubItem.class));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                jCart.remove(String.valueOf(subItem.getSubItemId()));
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -1933,7 +1952,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private void updateCartFromSPFMG() {
         try {
             JSONObject jCart;
-            int type = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
+            int type = getAppType();
             if(type == AppConstant.ApplicationType.FRESH) {
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
             } else if(type == AppConstant.ApplicationType.GROCERY){
@@ -1941,6 +1960,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             } else{
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
             }
+            Gson gson = new Gson();
             if (getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
                 boolean cartUpdated = false;
@@ -1948,13 +1968,15 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     for (SubItem subItem : category.getSubItems()) {
                         subItem.setSubItemQuantitySelected(0);
                         try {
-                            int savedQuant = jCart.optInt(String.valueOf(subItem.getSubItemId()),
-                                    (int) subItem.getSubItemQuantitySelected());
-                            if(subItem.getStock() < savedQuant){
-                                savedQuant = subItem.getStock();
-                                cartUpdated = true;
+                            String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
+                            if(!TextUtils.isEmpty(jItem)){
+                               SubItem subItemSaved =  gson.fromJson(jItem, SubItem.class);
+                                if(subItem.getStock() < subItemSaved.getSubItemQuantitySelected()){
+                                    subItemSaved.setSubItemQuantitySelected(subItem.getStock());
+                                    cartUpdated = true;
+                                }
+                                subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
                             }
-                            subItem.setSubItemQuantitySelected(savedQuant);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -2909,6 +2931,71 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public RelativeLayout getRelativeLayoutCheckoutBar(){
         return relativeLayoutCheckoutBar;
+    }
+
+    public ArrayList<SubItem> fetchCartList(){
+        ArrayList<SubItem> subItemsInCart = new ArrayList<>();
+        try {
+            JSONObject jCart = new JSONObject();
+            if(getAppType() == AppConstant.ApplicationType.FRESH) {
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+            } else if(getAppType() == AppConstant.ApplicationType.GROCERY){
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+            } else{
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+            }
+
+            Gson gson = new Gson();
+            Iterator<String> itemIds = jCart.keys();
+            while(itemIds.hasNext()){
+                String itemId = itemIds.next();
+                String jItem = jCart.optString(itemId, "");
+                if(!TextUtils.isEmpty(jItem)){
+                    SubItem subItemSaved =  gson.fromJson(jItem, SubItem.class);
+                    if(subItemSaved.getSubItemQuantitySelected() > 0){
+                        subItemsInCart.add(subItemSaved);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return subItemsInCart;
+    }
+
+
+    public void saveCartList(ArrayList<SubItem> subItems){
+        try {
+            JSONObject jCart = new JSONObject();
+            Gson gson = new Gson();
+            for (SubItem subItem : subItems) {
+                if (subItem.getSubItemQuantitySelected() > 0) {
+                    try {
+                        jCart.put(String.valueOf(subItem.getSubItemId()), gson.toJson(subItem, SubItem.class));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            int type = getAppType();
+            if(type == AppConstant.ApplicationType.FRESH) {
+                Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
+            } else if(type == AppConstant.ApplicationType.GROCERY){
+                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
+            } else{
+                Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean cartChangedAtCheckout = false;
+    public boolean getCartChangedAtCheckout(){
+        return cartChangedAtCheckout;
+    }
+    public void setCartChangedAtCheckout(boolean cartChangedAtCheckout){
+        this.cartChangedAtCheckout = cartChangedAtCheckout;
     }
 
 }

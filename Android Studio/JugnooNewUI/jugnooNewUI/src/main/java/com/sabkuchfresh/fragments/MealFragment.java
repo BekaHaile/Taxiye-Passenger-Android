@@ -184,6 +184,12 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.showBottomBar(false);
             }
+            if(activity.getCartChangedAtCheckout()){
+                activity.updateCartFromSP();
+                mealAdapter.notifyDataSetChanged();
+                activity.updateCartValuesGetTotalPrice();
+            }
+            activity.setCartChangedAtCheckout(false);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {

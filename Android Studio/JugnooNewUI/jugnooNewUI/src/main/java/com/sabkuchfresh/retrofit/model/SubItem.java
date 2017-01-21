@@ -79,18 +79,9 @@ public class SubItem {
     @SerializedName("can_order")
     @Expose
     private Integer canOrder;
-
+    @SerializedName("subItemQuantitySelected")
+    @Expose
     private Integer subItemQuantitySelected;
-
-    public boolean isExpanded() {
-        return isExpanded;
-    }
-
-    public void setExpanded(boolean expanded) {
-        isExpanded = expanded;
-    }
-
-    private boolean isExpanded;
 
     /**
      *
@@ -519,4 +510,5 @@ public class SubItem {
     public void setDeliveryTimeText(String deliveryTimeText) {
         this.deliveryTimeText = deliveryTimeText;
     }
+
 }
