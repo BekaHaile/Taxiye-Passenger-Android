@@ -15,8 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,7 +34,6 @@ import java.util.Locale;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.ProgressWheel;
 
 
 @SuppressLint("ValidFragment")
@@ -46,9 +43,6 @@ public class FreshSearchFragment extends Fragment {
 
 	private RecyclerView recyclerViewCategoryItems;
 	private FreshCategoryItemsAdapter freshCategoryItemsAdapter;
-	private EditText editTextSearch;
-	private ProgressWheel progressBarSearch;
-	private ImageView imageViewSearchCross, imageViewBack;
 	private TextView textViewPlaceholder;
 
 	private View rootView;
@@ -90,30 +84,21 @@ public class FreshSearchFragment extends Fragment {
 		recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewCategoryItems.setHasFixedSize(false);
 
-		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
-		editTextSearch.setTypeface(Fonts.mavenLight(activity));
-		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch);
-		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.imageViewSearchCross);
 		textViewPlaceholder = (TextView) rootView.findViewById(R.id.textViewPlaceholder); textViewPlaceholder.setTypeface(Fonts.mavenRegular(activity));
-		progressBarSearch.setVisibility(View.GONE);
-		imageViewSearchCross.setVisibility(View.GONE);
 		textViewPlaceholder.setVisibility(View.GONE);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 				try {
-					editTextSearch.requestFocus();
+					activity.getTopBar().etSearch.requestFocus();
 					InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-					mgr.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+					mgr.showSoftInput(activity.getTopBar().etSearch, InputMethodManager.SHOW_IMPLICIT);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
         }, 3);
-
-
-        imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 
 		if(subItemsInSearch == null) {
 			subItemsInSearch = new ArrayList<>();
@@ -156,7 +141,7 @@ public class FreshSearchFragment extends Fragment {
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
-		editTextSearch.addTextChangedListener(new TextWatcher() {
+		activity.getTopBar().etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -171,10 +156,8 @@ public class FreshSearchFragment extends Fragment {
             public void afterTextChanged(Editable s) {
 				try {
 					if (s.length() > 0) {
-						imageViewSearchCross.setVisibility(View.VISIBLE);
 						new SubItemsSearchAsync().execute(s.toString());
 					} else {
-						imageViewSearchCross.setVisibility(View.GONE);
 						clearArrays();
 						freshCategoryItemsAdapter.notifyDataSetChanged();
 					}
@@ -184,17 +167,10 @@ public class FreshSearchFragment extends Fragment {
 			}
         });
 
-		imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
+		activity.getTopBar().ivSearchCross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editTextSearch.setText("");
-            }
-        });
-
-        imageViewBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.performBackPressed();
+				activity.getTopBar().etSearch.setText("");
             }
         });
 
@@ -215,7 +191,6 @@ public class FreshSearchFragment extends Fragment {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			progressBarSearch.setVisibility(View.VISIBLE);
 		}
 
 		@Override
@@ -261,7 +236,6 @@ public class FreshSearchFragment extends Fragment {
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 			try {
-				progressBarSearch.setVisibility(View.GONE);
 				freshCategoryItemsAdapter.notifyDataSetChanged();
 				if(subItemsInSearch.size() > 0){
 					textViewPlaceholder.setVisibility(View.GONE);
@@ -320,15 +294,15 @@ public class FreshSearchFragment extends Fragment {
                 @Override
                 public void run() {
                     try {
-                        editTextSearch.requestFocus();
+						activity.getTopBar().etSearch.requestFocus();
                         InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        mgr.showSoftInput(editTextSearch, InputMethodManager.SHOW_IMPLICIT);
+                        mgr.showSoftInput(activity.getTopBar().etSearch, InputMethodManager.SHOW_IMPLICIT);
                     } catch(Exception e){}
                 }
             }, 700);
 			activity.fragmentUISetup(this);
-			if(editTextSearch.getText().toString().trim().length() > 0){
-				new SubItemsSearchAsync().execute(editTextSearch.getText().toString().trim());
+			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
+				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
 			}
 		}
 	}

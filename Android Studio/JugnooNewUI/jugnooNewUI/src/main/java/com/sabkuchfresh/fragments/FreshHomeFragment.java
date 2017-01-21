@@ -43,7 +43,6 @@ public class FreshHomeFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        activity.getTopBar().searchLayout.setVisibility(View.GONE);
         activity.fragmentUISetup(this);
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 

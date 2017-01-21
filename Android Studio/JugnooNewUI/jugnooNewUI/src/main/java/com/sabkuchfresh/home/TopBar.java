@@ -17,9 +17,8 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -33,15 +32,18 @@ public class TopBar implements FlurryEventNames {
 
 	//Top RL
 	public RelativeLayout topRl;
-	public ImageView imageViewMenu, imageViewSearchCancel, below_shadow;
+	public ImageView imageViewMenu, below_shadow;
 	public TextView title;
 	public Button buttonCheckServer;
-	public RelativeLayout relativeLayoutNotification;
-	public TextView textViewNotificationValue, textViewSkip, tvLocation;
-	public ImageView imageViewBack, imageViewDelete, imageViewNotification, imageViewShadow, imageViewSearchCross;//, imageViewSearch;
+	public TextView textViewSkip, tvLocation;
+	public ImageView imageViewBack, ivDeliveryAddressCross, imageViewDelete;
 	public EditText editTextDeliveryAddress;
 
-	public RelativeLayout relativeLayoutLocality, searchLayout;
+	public LinearLayout llSearchContainer;
+	public EditText etSearch;
+	public ImageView ivSearchCross;
+
+	public RelativeLayout relativeLayoutLocality;
 	public TextView textViewLocationValue, textViewReset, tvDeliveryAddress, tvCartAmount;
 	private LinearLayout llLocation, llCartAmount, llSearchCartContainer, llCartContainer;
 
@@ -56,17 +58,11 @@ public class TopBar implements FlurryEventNames {
 	private void setupTopBar(){
 		topRl = (RelativeLayout) drawerLayout.findViewById(R.id.topRl);
 		imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
-		imageViewSearchCancel = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchCancel);
 		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.avenirNext(activity));
 
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
-		relativeLayoutNotification = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutNotification);
-		textViewNotificationValue = (TextView) drawerLayout.findViewById(R.id.textViewNotificationValue);
-		textViewNotificationValue.setTypeface(Fonts.latoRegular(activity));
-		textViewNotificationValue.setVisibility(View.GONE);
 		textViewSkip = (TextView) drawerLayout.findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.mavenMedium(activity));
 		textViewSkip.setVisibility(View.GONE);
-		searchLayout = (RelativeLayout) drawerLayout.findViewById(R.id.searchLayout);
 		llLocation = (LinearLayout) drawerLayout.findViewById(R.id.llLocation);
 		tvDeliveryAddress = (TextView) drawerLayout.findViewById(R.id.tvDeliveryAddress); tvDeliveryAddress.setTypeface(Fonts.mavenMedium(activity));
 		llCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llCartContainer);
@@ -76,12 +72,10 @@ public class TopBar implements FlurryEventNames {
 
 		below_shadow = (ImageView) drawerLayout.findViewById(R.id.below_shadow);
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
-		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
-        imageViewNotification = (ImageView) drawerLayout.findViewById(R.id.imageViewNotification);
 		editTextDeliveryAddress = (EditText) drawerLayout.findViewById(R.id.editTextDeliveryAddress);
 		editTextDeliveryAddress.setTypeface(Fonts.mavenLight(activity));
-		imageViewSearchCross = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchCross);
-//		imageViewSearch = (ImageView)drawerLayout.findViewById(R.id.imageViewSearch);
+		ivDeliveryAddressCross = (ImageView) drawerLayout.findViewById(R.id.ivDeliveryAddressCross);
+		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
 
 		tvLocation = (TextView) drawerLayout.findViewById(R.id.tvLocation); tvLocation.setTypeface(Fonts.mavenMedium(activity));
 
@@ -90,11 +84,17 @@ public class TopBar implements FlurryEventNames {
 		textViewLocationValue = (TextView) drawerLayout.findViewById(R.id.textViewLocationValue); textViewLocationValue.setTypeface(Fonts.mavenMedium(activity));
 		textViewReset = (TextView) drawerLayout.findViewById(R.id.textViewReset); textViewReset.setTypeface(Fonts.mavenMedium(activity));
 
-		//Top bar events
+		llSearchContainer = (LinearLayout) drawerLayout.findViewById(R.id.llSearchContainer);
+		etSearch = (EditText) drawerLayout.findViewById(R.id.etSearch); etSearch.setTypeface(Fonts.mavenMedium(activity));
+		ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
+		setSearchVisibility(View.GONE);
+
+
 		topRl.setOnClickListener(topBarOnClickListener);
 		imageViewMenu.setOnClickListener(topBarOnClickListener);
 		buttonCheckServer.setOnClickListener(topBarOnClickListener);
-//		imageViewSearch.setOnClickListener(topBarOnClickListener);
+		llSearchContainer.setOnClickListener(topBarOnClickListener);
+		imageViewBack.setOnClickListener(topBarOnClickListener);
 
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
@@ -108,35 +108,10 @@ public class TopBar implements FlurryEventNames {
 			}
 		});
 
-		imageViewSearchCancel.setOnClickListener(topBarOnClickListener);
-		relativeLayoutNotification.setOnClickListener(topBarOnClickListener);
-		imageViewBack.setOnClickListener(topBarOnClickListener);
-		imageViewDelete.setOnClickListener(topBarOnClickListener);
 
 
-		if(activity instanceof FreshActivity){
-			relativeLayoutNotification.setVisibility(View.VISIBLE);
-			imageViewSearchCancel.setVisibility(View.GONE);
-			title.setText(activity.getResources().getString(R.string.app_name).toUpperCase());
-		} else {
-			relativeLayoutNotification.setVisibility(View.GONE);
-		}
-
-//        try {
-//            if(Data.getFreshData().stores.size()>1) {
-//                relativeLayoutNotification.setVisibility(View.GONE);
-//            } else {
-//                relativeLayoutNotification.setVisibility(View.VISIBLE);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
 	}
-
-//	public ImageView getImageViewSearch() {
-//		return imageViewSearch;
-//	}
 
 
 	public LinearLayout getLlLocation() {
@@ -174,50 +149,21 @@ public class TopBar implements FlurryEventNames {
 				case R.id.buttonCheckServer:
 					break;
 
-                case R.id.relativeLayoutNotification:
-                    if(activity instanceof FreshActivity) {
-                        ((FreshActivity)activity).openNotification();
-                    }
-                    break;
-
 				case R.id.imageViewBack:
 					if(activity instanceof FreshActivity){
 						((FreshActivity)activity).performBackPressed();
 					}
 					break;
 
-				case R.id.imageViewDelete:
-					if(activity instanceof FreshActivity){
-						((FreshActivity)activity).deleteCart();
+				case R.id.llSearchContainer:
+					if(activity instanceof FreshActivity) {
+						((FreshActivity)activity).searchItem();
 					}
 					break;
-
-//				case R.id.imageViewSearch:
-//					if(activity instanceof FreshActivity){
-//						((FreshActivity)activity).searchItem();
-//					}
-//					break;
 
 			}
 		}
 	};
-
-
-
-	public void setUserData(){
-		try {
-			int unreadNotificationsCount = Prefs.with(activity).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-			if(unreadNotificationsCount > 0){
-				textViewNotificationValue.setVisibility(View.VISIBLE);
-				textViewNotificationValue.setText(String.valueOf(unreadNotificationsCount));
-			}
-			else{
-				textViewNotificationValue.setVisibility(View.GONE);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 
 	private StateListDrawable getStateListDrawable(int resourceNormal, int resourcePressed){
@@ -230,4 +176,26 @@ public class TopBar implements FlurryEventNames {
 	}
 
 
+	public void setSearchVisibility(int visibility){
+		if(visibility == View.VISIBLE){
+			llSearchContainer.setBackgroundResource(R.drawable.capsule_white_stroke);
+			etSearch.setVisibility(View.VISIBLE);
+			ivSearchCross.setVisibility(View.VISIBLE);
+			setEtSearchWidth();
+		} else {
+			llSearchContainer.setBackgroundResource(R.drawable.background_transparent);
+			etSearch.setVisibility(View.GONE);
+			ivSearchCross.setVisibility(View.GONE);
+		}
+	}
+
+	public void setEtSearchWidth(){
+		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) etSearch.getLayoutParams();
+		if(llCartAmount.getVisibility() == View.VISIBLE){
+			params.width = (int) (ASSL.Xscale() * 260f);
+		} else {
+			params.width = (int) (ASSL.Xscale() * 360f);
+		}
+		etSearch.setLayoutParams(params);
+	}
 }
