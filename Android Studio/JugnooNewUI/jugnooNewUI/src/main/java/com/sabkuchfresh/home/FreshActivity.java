@@ -485,12 +485,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         viewSortFake.setVisibility(View.VISIBLE);
                         viewSortFake1.setVisibility(View.VISIBLE);
                         rlSortContainer.setVisibility(View.GONE);
-                        //rlSort.setBackgroundColor(getResources().getColor(R.color.transparent));
                     } else{
                         viewSortFake.setVisibility(View.GONE);
                         viewSortFake1.setVisibility(View.GONE);
                         rlSortContainer.setVisibility(View.VISIBLE);
-                        //rlSort.setBackgroundColor(getResources().getColor(R.color.black_translucent_less));
                     }
                 }
             });
@@ -1466,7 +1464,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             if(getFreshFragment() != null || getGroceryFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                 if (getProductsResponse() != null && totalQuantity > 0
                         && (fragment instanceof FreshFragment || fragment instanceof GroceryFragment || fragment instanceof FreshSearchFragment)
-                        && (relativeLayoutCheckoutBar.getVisibility() == View.VISIBLE)) {
+                        && (relativeLayoutCheckoutBar.getVisibility() == View.GONE)) {
                     if(Data.userData.isSubscriptionActive() && !TextUtils.isEmpty(getProductsResponse().getSubscriptionMessage())){
                         textViewMinOrder.setVisibility(View.VISIBLE);
                         textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());

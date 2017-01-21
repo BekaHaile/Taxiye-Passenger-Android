@@ -1,28 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linear"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_white"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="50px"
-        >
-
-        <ImageView
-            android:id="@+id/imageViewRadio"
-            android:layout_width="33px"
-            android:layout_height="33px"
-            android:layout_marginTop="10px"
-            android:src="@drawable/ic_radio_button_normal"
-            android:tag="mwar"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_100"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/textViewSlotTime"
@@ -30,14 +18,32 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10px"
             android:layout_marginLeft="40px"
-            android:layout_marginTop="10px"
+            android:layout_centerVertical="true"
             android:maxLines="2"
             android:text="A - Z"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_30"
-            />
+            android:textSize="@dimen/text_size_30" />
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/imageViewRadio"
+            android:layout_width="27px"
+            android:layout_height="20px"
+            android:layout_marginRight="@dimen/px_40"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_tick"
+            android:tag="mwar" />
+
+        <View
+            android:id="@+id/viewDivider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_2"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="@dimen/px_40"
+            android:layout_marginLeft="@dimen/px_40"
+            android:background="@color/stroke_light_grey_alpha"/>
+
+    </RelativeLayout>
 
 
 </LinearLayout>
