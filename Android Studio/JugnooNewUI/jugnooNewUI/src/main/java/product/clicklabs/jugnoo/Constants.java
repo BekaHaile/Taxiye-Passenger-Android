@@ -589,4 +589,6 @@ public interface Constants {
 	double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 100d;
 	String KEY_OPTIONS = "options";
 	String KEY_CUSTOMISATIONS = "customisations";
+	String KEY_SUPER_CATEGORY_ID = "super_category_id";
+	String KEY_SUPER_CATEGORY = "super_category";
 }

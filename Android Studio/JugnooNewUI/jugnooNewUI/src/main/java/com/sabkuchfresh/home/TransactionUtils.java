@@ -18,6 +18,7 @@ import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
+import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 
 import product.clicklabs.jugnoo.R;
 
@@ -26,11 +27,11 @@ import product.clicklabs.jugnoo.R;
  */
 public class TransactionUtils {
 
-	public void addFreshFragment(FragmentActivity activity, View container) {
+	public void addFreshFragment(FragmentActivity activity, View container, SuperCategoriesData.SuperCategory superCategory) {
 		if(!checkIfFragmentAdded(activity, FreshFragment.class.getName())) {
 			activity.getSupportFragmentManager().beginTransaction()
 					.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-					.add(container.getId(), new FreshFragment(),
+					.add(container.getId(), FreshFragment.newInstance(superCategory),
 							FreshFragment.class.getName())
 					.addToBackStack(FreshFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

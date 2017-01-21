@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
 import com.sabkuchfresh.adapters.MealAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -33,6 +34,7 @@ import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
@@ -86,12 +88,22 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private FreshSortingDialog freshSortingDialog;
     private ArrayList<SortResponseModel> slots = new ArrayList<>();
     private ArrayList<SubItem> freshData = new ArrayList<>();
-    public FreshFragment(){}
     private boolean loader = true, resumed = false;
     protected Bus mBus;
     PushDialog pushDialog;
     private RelativeLayout relativeLayoutNoMenus;
     private TextView textViewNothingFound;
+
+	SuperCategoriesData.SuperCategory superCategory;
+
+	public static FreshFragment newInstance(SuperCategoriesData.SuperCategory superCategory){
+		Gson gson = new Gson();
+		FreshFragment fragment = new FreshFragment();
+		Bundle bundle = new Bundle();
+		bundle.putString(Constants.KEY_SUPER_CATEGORY, gson.toJson(superCategory, SuperCategoriesData.SuperCategory.class));
+		fragment.setArguments(bundle);
+		return fragment;
+	}
 
 
 	@Override
@@ -106,9 +118,17 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		super.onStop();
 	}
 
+	private void parseArguments(){
+		Gson gson = new Gson();
+		Bundle bundle = getArguments();
+		superCategory = gson.fromJson(bundle.getString(Constants.KEY_SUPER_CATEGORY, Constants.EMPTY_JSON_OBJECT), SuperCategoriesData.SuperCategory.class);
+	}
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh, container, false);
+
+		parseArguments();
 
         activity = (FreshActivity) getActivity();
         mBus = (activity).getBus();
@@ -142,7 +162,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
-//        imageViewNoItem = (ImageView) rootView.findViewById(R.id.imageViewNoItem);
 
 		viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
@@ -206,6 +225,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         setSortingList();
 
 		activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
+		activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
 
         try {
             if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
@@ -294,6 +314,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			freshCategoryFragmentsAdapter.notifyDataSetChanged();
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
+			activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
             activity.resumeMethod();
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                 activity.showBottomBar(false);
@@ -326,6 +347,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 params.put(Constants.IS_FATAFAT, "1");
                 params.put(Constants.KEY_CLIENT_ID, ""+ Config.getFreshClientId());
                 params.put(Constants.INTERATED, "1");
+				params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategory.getSuperCategoryId()));
 				Log.i(TAG, "getAllProducts params=" + params.toString());
 
 				new HomeUtil().putDefaultParams(params);
@@ -369,14 +391,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                     activity.setMinOrderAmountText(FreshFragment.this);
 									activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
                                     setSortingList();
-                                    if(activity.freshSort == -1) {
-                                        int sortedBy = jObj.optInt(Constants.SORTED_BY);
-                                        activity.freshSort = sortedBy;
-                                        slots.get(sortedBy).setCheck(true);
-                                    } else {
-                                        slots.get(activity.freshSort).setCheck(true);
-                                        activity.onSortEvent(new SortSelection(activity.freshSort));
-                                    }
 
                                     if(activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
@@ -416,6 +430,14 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                             }).show(message);
                                         }
                                     }
+									if(activity.freshSort == -1) {
+										int sortedBy = jObj.optInt(Constants.SORTED_BY);
+										activity.freshSort = sortedBy;
+										slots.get(sortedBy).setCheck(true);
+									} else {
+										slots.get(activity.freshSort).setCheck(true);
+										activity.onSortEvent(new SortSelection(activity.freshSort));
+									}
                                 }
 							} else {
                                 activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
