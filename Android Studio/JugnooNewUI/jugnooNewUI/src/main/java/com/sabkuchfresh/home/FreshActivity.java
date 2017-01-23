@@ -75,6 +75,7 @@ import com.sabkuchfresh.retrofit.model.SubItemCompareAtoZ;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceHighToLow;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriceLowToHigh;
 import com.sabkuchfresh.retrofit.model.SubItemComparePriority;
+import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemCompareAtoZ;
@@ -161,6 +162,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private TransactionUtils transactionUtils;
 
     private ProductsResponse productsResponse;
+    private SuperCategoriesData superCategoriesData;
     private UserCheckoutResponse userCheckoutResponse;
 
     private String selectedAddress = "";
@@ -869,39 +871,34 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         saveCartToSP();
         Pair<Double, Integer> pair = getSubItemInCartTotalPrice();
         try {
-            if (getProductsResponse() != null
-                    && getProductsResponse().getCategories() != null) {
-
-                textViewTotalPrice.setText(String.format(getResources().getString(R.string.rupees_value_format),
+            textViewTotalPrice.setText(String.format(getResources().getString(R.string.rupees_value_format),
+                    Utils.getMoneyDecimalFormat().format(totalPrice)));
+            if (totalPrice > 0) {
+                topBar.getLlCartAmount().setVisibility(View.VISIBLE);
+                topBar.getTvCartAmount().setText(String.format(getResources().getString(R.string.rupees_value_format),
                         Utils.getMoneyDecimalFormat().format(totalPrice)));
-                if(totalPrice > 0){
-                    topBar.getLlCartAmount().setVisibility(View.VISIBLE);
-                    topBar.getTvCartAmount().setText(String.format(getResources().getString(R.string.rupees_value_format),
-                            Utils.getMoneyDecimalFormat().format(totalPrice)));
-                    topBar.setEtSearchWidth();
-                } else {
-                    topBar.getLlCartAmount().setVisibility(View.GONE);
-                    topBar.setEtSearchWidth();
-                }
-                if (totalQuantity > 0) {
-                    textViewCartItemsCount.setVisibility(View.VISIBLE);
-                    textViewCartItemsCountNew.setVisibility(View.VISIBLE);
-                    if(drawerLayout.getDrawerLockMode(GravityCompat.START)== DrawerLayout.LOCK_MODE_UNLOCKED)
+                topBar.setEtSearchWidth();
+            } else {
+                topBar.getLlCartAmount().setVisibility(View.GONE);
+                topBar.setEtSearchWidth();
+            }
+            if (totalQuantity > 0) {
+                textViewCartItemsCount.setVisibility(View.VISIBLE);
+                textViewCartItemsCountNew.setVisibility(View.VISIBLE);
+                if (drawerLayout.getDrawerLockMode(GravityCompat.START) == DrawerLayout.LOCK_MODE_UNLOCKED)
                     imageViewCartNew.setImageResource(R.drawable.ic_cart_fill);
-                    String total = String.valueOf(totalQuantity);
-                    textViewCartItemsCount.setText(total);
-                    textViewCartItemsCountNew.setText(total);
-                } else {
-                    textViewCartItemsCount.setVisibility(View.GONE);
-                    textViewCartItemsCountNew.setVisibility(View.GONE);
-                    imageViewCartNew.setImageResource(R.drawable.ic_cart_empty);
-                }
-                if(getFreshFragment() != null) {
-                    setMinOrderAmountText(getFreshFragment());
-                }
-                else if(getGroceryFragment() != null) {
-                    setMinOrderAmountText(getGroceryFragment());
-                }
+                String total = String.valueOf(totalQuantity);
+                textViewCartItemsCount.setText(total);
+                textViewCartItemsCountNew.setText(total);
+            } else {
+                textViewCartItemsCount.setVisibility(View.GONE);
+                textViewCartItemsCountNew.setVisibility(View.GONE);
+                imageViewCartNew.setImageResource(R.drawable.ic_cart_empty);
+            }
+            if (getFreshFragment() != null) {
+                setMinOrderAmountText(getFreshFragment());
+            } else if (getGroceryFragment() != null) {
+                setMinOrderAmountText(getGroceryFragment());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1017,7 +1014,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
             topBar.llSearchContainer.setVisibility(View.GONE);
             topBar.setSearchVisibility(View.GONE);
-            topBar.getLlCartContainer().setVisibility(View.GONE);
+            topBar.getLlCartContainer().setVisibility(View.VISIBLE);
             setRelativeLayoutLocalityClick();
             topBar.getLlLocation().setVisibility(View.GONE);
             relativeLayoutCheckoutBar.setVisibility(View.GONE);
@@ -1030,7 +1027,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.getLlLocation().setVisibility(View.VISIBLE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
-                topBar.llSearchContainer.setVisibility(View.VISIBLE);
+                //topBar.llSearchContainer.setVisibility(View.VISIBLE);
+                topBar.getIvSearch().setVisibility(View.VISIBLE);
                 textViewCheckout.setVisibility(View.GONE);
 
 
@@ -1064,7 +1062,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.below_shadow.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
 				textViewCheckout.setVisibility(View.GONE);
-                topBar.llSearchContainer.setVisibility(View.VISIBLE);
+                //topBar.llSearchContainer.setVisibility(View.VISIBLE);
+                topBar.getIvSearch().setVisibility(View.VISIBLE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
                 rlSort.setVisibility(View.VISIBLE);
 
@@ -1090,6 +1089,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.imageViewBack.setVisibility(View.GONE);
 				textViewCheckout.setVisibility(View.GONE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
+                topBar.getLlLocation().setVisibility(View.VISIBLE);
 
 				relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 relativeLayoutCart.setVisibility(View.GONE);
@@ -1143,6 +1143,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 textViewCheckout.setVisibility(View.GONE);
+                topBar.getLlLocation().setVisibility(View.VISIBLE);
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
@@ -1244,6 +1245,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 resetToolbar();
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.below_shadow.setVisibility(View.VISIBLE);
 
 				relativeLayoutSort.setVisibility(View.GONE);
                 relativeLayoutCart.setVisibility(View.VISIBLE);
@@ -1287,12 +1289,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             else if (fragment instanceof FreshSearchFragment || fragment instanceof MenusSearchFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
-
+                topBar.below_shadow.setVisibility(View.VISIBLE);
+                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
 				relativeLayoutSort.setVisibility(View.GONE);
                 relativeLayoutCart.setVisibility(View.VISIBLE);
-
                 topBar.title.setVisibility(View.GONE);
                 topBar.llSearchContainer.setVisibility(View.VISIBLE);
+                topBar.getIvSearch().setVisibility(View.GONE);
                 topBar.setSearchVisibility(View.VISIBLE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
 
@@ -1371,9 +1374,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         textViewMinOrder.setVisibility(View.VISIBLE);
                         textViewMinOrder.setText(getProductsResponse().getSubscriptionMessage());
                     }
-                    else if(totalPrice < getProductsResponse().getDeliveryInfo().getMinAmount()) {
+                    else if(totalPrice < getSuperCategoriesData().getDeliveryInfo().getMinAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
-                        double leftAmount = getProductsResponse().getDeliveryInfo().getMinAmount() - totalPrice;
+                        double leftAmount = getSuperCategoriesData().getDeliveryInfo().getMinAmount() - totalPrice;
                         textViewMinOrder.setText(getString(R.string.fresh_min_order_value_format,
                                 Utils.getMoneyDecimalFormatWithoutFloat().format(leftAmount)));
                     } else {
@@ -1742,6 +1745,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public ProductsResponse getProductsResponse() {
         return productsResponse;
+    }
+
+    public SuperCategoriesData getSuperCategoriesData() {
+        return superCategoriesData;
+    }
+
+    public void setSuperCategoriesData(SuperCategoriesData superCategoriesData) {
+        this.superCategoriesData = superCategoriesData;
     }
 
     public void setProductsResponse(ProductsResponse productsResponse) {

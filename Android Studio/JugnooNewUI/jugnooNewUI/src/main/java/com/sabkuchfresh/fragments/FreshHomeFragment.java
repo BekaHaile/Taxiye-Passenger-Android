@@ -84,6 +84,7 @@ public class FreshHomeFragment extends Fragment {
         super.onHiddenChanged(hidden);
         if(!hidden){
             activity.fragmentUISetup(this);
+            activity.updateCartValuesGetTotalPrice();
         }
     }
 
@@ -106,7 +107,9 @@ public class FreshHomeFragment extends Fragment {
                     public void success(SuperCategoriesData superCategoriesData, Response response) {
                         try {
                             if(superCategoriesData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                                activity.setSuperCategoriesData(superCategoriesData);
                                 adapter.setList(superCategoriesData.getSuperCategories());
+                                activity.updateCartValuesGetTotalPrice();
                             } else {
                                 DialogPopup.alertPopup(activity, "", superCategoriesData.getMessage());
                             }

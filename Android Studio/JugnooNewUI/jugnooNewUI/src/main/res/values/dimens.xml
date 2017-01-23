@@ -377,5 +377,6 @@
     <dimen name="px_320">
         320px
     </dimen>
+    <dimen name="px_7">7px</dimen>
 
 </resources>

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,7 +43,7 @@ public class TopBar implements FlurryEventNames {
 
 	public LinearLayout llSearchContainer;
 	public EditText etSearch;
-	public ImageView ivSearchCross;
+	public ImageView ivSearchCross, ivSearch;
 
 	public RelativeLayout relativeLayoutLocality;
 	public TextView textViewLocationValue, textViewReset, tvDeliveryAddress, tvCartAmount;
@@ -86,6 +88,7 @@ public class TopBar implements FlurryEventNames {
 
 		llSearchContainer = (LinearLayout) drawerLayout.findViewById(R.id.llSearchContainer);
 		etSearch = (EditText) drawerLayout.findViewById(R.id.etSearch); etSearch.setTypeface(Fonts.mavenMedium(activity));
+		ivSearch = (ImageView) drawerLayout.findViewById(R.id.ivSearch);
 		ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
 		setSearchVisibility(View.GONE);
 
@@ -93,7 +96,7 @@ public class TopBar implements FlurryEventNames {
 		topRl.setOnClickListener(topBarOnClickListener);
 		imageViewMenu.setOnClickListener(topBarOnClickListener);
 		buttonCheckServer.setOnClickListener(topBarOnClickListener);
-		llSearchContainer.setOnClickListener(topBarOnClickListener);
+		ivSearch.setOnClickListener(topBarOnClickListener);
 		imageViewBack.setOnClickListener(topBarOnClickListener);
 
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
@@ -109,10 +112,33 @@ public class TopBar implements FlurryEventNames {
 		});
 
 
+		etSearch.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				if(s.length() > 0){
+					ivSearchCross.setVisibility(View.VISIBLE);
+				} else{
+					ivSearchCross.setVisibility(View.GONE);
+				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+
+			}
+		});
 
 
 	}
 
+	public ImageView getIvSearch() {
+		return ivSearch;
+	}
 
 	public LinearLayout getLlLocation() {
 		return llLocation;
@@ -155,9 +181,11 @@ public class TopBar implements FlurryEventNames {
 					}
 					break;
 
-				case R.id.llSearchContainer:
+				case R.id.ivSearch:
 					if(activity instanceof FreshActivity) {
 						((FreshActivity)activity).searchItem();
+						llSearchContainer.setVisibility(View.VISIBLE);
+						ivSearch.setVisibility(View.GONE);
 					}
 					break;
 
@@ -180,12 +208,12 @@ public class TopBar implements FlurryEventNames {
 		if(visibility == View.VISIBLE){
 			llSearchContainer.setBackgroundResource(R.drawable.capsule_white_stroke);
 			etSearch.setVisibility(View.VISIBLE);
-			ivSearchCross.setVisibility(View.VISIBLE);
+			//ivSearchCross.setVisibility(View.VISIBLE);
 			setEtSearchWidth();
 		} else {
 			llSearchContainer.setBackgroundResource(R.drawable.background_transparent);
 			etSearch.setVisibility(View.GONE);
-			ivSearchCross.setVisibility(View.GONE);
+			//ivSearchCross.setVisibility(View.GONE);
 		}
 	}
 

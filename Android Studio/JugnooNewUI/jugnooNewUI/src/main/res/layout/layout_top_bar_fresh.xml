@@ -118,7 +118,7 @@
 
             <LinearLayout
                 android:id="@+id/llSearchCartContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -132,12 +132,11 @@
                     android:id="@+id/llSearchContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
                     android:layout_gravity="center_vertical"
+                    android:visibility="visible"
                     android:background="@drawable/capsule_white_stroke"
                     >
                     <ImageView
-                        android:id="@+id/ivSearch"
                         android:layout_width="62px"
                         android:layout_height="62px"
                         android:layout_margin="6px"
@@ -150,7 +149,7 @@
                         android:background="@drawable/background_transparent"
                         android:layout_gravity="center_vertical"
                         android:textCursorDrawable="@drawable/cursor_black"
-                        android:textColor="@color/text_color_dark_1"
+                        android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_light"
                         android:textSize="@dimen/text_size_26"
                         android:hint="@string/search"
@@ -162,10 +161,11 @@
 
                     <ImageView
                         android:id="@+id/ivSearchCross"
-                        android:layout_width="62px"
-                        android:layout_height="62px"
-                        android:padding="@dimen/px_15"
-                        android:layout_margin="6px"
+                        android:layout_width="32px"
+                        android:layout_height="34px"
+                        android:padding="@dimen/px_7"
+                        android:visibility="gone"
+                        android:layout_marginRight="@dimen/px_20"
                         android:src="@drawable/ic_cross_grey"
                         android:layout_gravity="center_vertical"
                         />
@@ -173,17 +173,35 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/ivSearch"
+                    android:layout_width="62px"
+                    android:layout_height="62px"
+                    android:layout_margin="6px"
+                    android:visibility="visible"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_search_new_selector"/>
+
+                <LinearLayout
                     android:id="@+id/llCartContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/px_62"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="36px"
+                    android:layout_marginLeft="@dimen/px_20"
                     android:animateLayoutChanges="true"
                     android:background="@drawable/capsule_cart_color"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:layout_gravity="center_vertical"
                     android:tag="mwar">
+
+
 
                     <ImageView
                         android:layout_width="@dimen/px_26"
@@ -218,6 +236,8 @@
                             android:tag="mwar"/>
 
                     </LinearLayout>
+
+                </LinearLayout>
 
                 </LinearLayout>
 
@@ -343,7 +363,7 @@
                     android:gravity="center_vertical"
                     android:maxLines="1"
                     android:text="asdf"
-                    android:textColor="@color/location_text_color"
+                    android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28"/>
 
             </LinearLayout>

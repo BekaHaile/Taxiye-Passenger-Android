@@ -157,7 +157,7 @@
     <LinearLayout
         android:id="@+id/offer_tag_layout"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/px_48"
+        android:layout_height="@dimen/px_30"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="2px"
@@ -181,7 +181,7 @@
             android:layout_width="32px"
             android:layout_height="match_parent"
             android:layout_marginLeft="-4px"
-            android:layout_marginBottom="-4px"
+            android:layout_marginBottom="0px"
             android:scaleType="fitXY"
             android:src="@drawable/bannar_image"
             />

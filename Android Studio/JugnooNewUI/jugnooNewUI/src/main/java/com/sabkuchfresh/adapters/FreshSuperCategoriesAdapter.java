@@ -83,13 +83,15 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<FreshSuper
 		try {
 			if(!TextUtils.isEmpty(superCategory.getSuperCategoryImage())) {
 				Picasso.with(context).load(superCategory.getSuperCategoryImage())
+						.placeholder(R.drawable.ic_fresh_new_placeholder)
+						.error(R.drawable.ic_fresh_new_placeholder)
 						.into(holder.ivSuperCategoryImage);
 			} else {
 				throw new Exception();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			Picasso.with(context).load("http://mobile-cuisine.com/wp-content/uploads/2015/09/fresh-produce-e1470234269209.jpg")
+			Picasso.with(context).load(R.drawable.ic_fresh_new_placeholder)
 //					.resize((int) (384f * ASSL.Xscale()), (int) (210f * ASSL.Yscale()))
 //					.transform(new RoundBorderTransform((int) (Math.min(ASSL.Xscale(), ASSL.Yscale()) * 6), 0))
 					.into(holder.ivSuperCategoryImage);

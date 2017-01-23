@@ -1675,7 +1675,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onSlotSelected(int position, Slot slot) {
         FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
-        if(activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1
+        if(activity.getSuperCategoriesData().getDeliveryInfo().getDynamicDeliveryCharges() == 1
                 && type == AppConstant.ApplicationType.MEALS){
             selectedSlot = slot.getDeliverySlotId();
             getCheckoutDataAPI();
@@ -2033,7 +2033,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         activity.setCartChangedAtCheckout(true);
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
-        if(activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1
+        if(activity.getSuperCategoriesData().getDeliveryInfo().getDynamicDeliveryCharges() == 1
                 && type == AppConstant.ApplicationType.MEALS){
             getCheckoutDataAPI();
         }
@@ -2048,11 +2048,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         updateCartDataView();
         if(subItem.getSubItemQuantitySelected() == 0){
             subItemsInCart.remove(position);
-            checkIfEmpty();
         }
         activity.saveCartList(subItemsInCart);
+
+        checkIfEmpty();
+
         if(subItemsInCart.size() > 0
-                && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1
+                && activity.getSuperCategoriesData().getDeliveryInfo().getDynamicDeliveryCharges() == 1
                 && type == AppConstant.ApplicationType.MEALS){
             getCheckoutDataAPI();
         }
@@ -2188,7 +2190,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private double deliveryCharges(){
-        return activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+        return activity.getSuperCategoriesData().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
     }
 
     private double packagingCharges(){

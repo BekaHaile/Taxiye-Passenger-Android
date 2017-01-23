@@ -26,6 +26,9 @@ public class SuperCategoriesData {
 	@SerializedName("show_message")
 	@Expose
 	private Integer showMessage;
+	@SerializedName("delivery_info")
+	@Expose
+	private DeliveryInfo deliveryInfo;
 
 	public Integer getFlag() {
 		return flag;
@@ -65,6 +68,14 @@ public class SuperCategoriesData {
 
 	public void setShowMessage(Integer showMessage) {
 		this.showMessage = showMessage;
+	}
+
+	public DeliveryInfo getDeliveryInfo() {
+		return deliveryInfo;
+	}
+
+	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
+		this.deliveryInfo = deliveryInfo;
 	}
 
 	public class SuperCategory {

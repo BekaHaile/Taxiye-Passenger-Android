@@ -28,7 +28,7 @@
                 android:id="@+id/ivSuperCategoryImage"
                 android:layout_width="@dimen/px_384"
                 android:layout_height="@dimen/px_210"
-                android:background="@color/address_stoke"
+                android:background="@drawable/ic_fresh_new_placeholder"
                 android:scaleType="centerCrop"/>
 
             <View
