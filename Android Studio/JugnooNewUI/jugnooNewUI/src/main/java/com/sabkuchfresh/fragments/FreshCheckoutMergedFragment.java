@@ -2045,14 +2045,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         editTextDeliveryInstructions.clearFocus();
         activity.setCartChangedAtCheckout(true);
         cartChangedRefreshCheckout = true;
-        updateCartDataView();
         if(subItem.getSubItemQuantitySelected() == 0){
             subItemsInCart.remove(position);
         }
         activity.saveCartList(subItemsInCart);
 
         checkIfEmpty();
-
+        updateCartDataView();
         if(subItemsInCart.size() > 0
                 && activity.getSuperCategoriesData().getDeliveryInfo().getDynamicDeliveryCharges() == 1
                 && type == AppConstant.ApplicationType.MEALS){
