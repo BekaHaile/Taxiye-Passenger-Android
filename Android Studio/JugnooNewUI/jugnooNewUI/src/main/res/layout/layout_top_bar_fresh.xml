@@ -116,7 +116,7 @@
                 android:visibility="gone"
                 />
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/llSearchCartContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,19 +124,19 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/px_38"
                 android:orientation="horizontal"
-                android:layout_toRightOf="@+id/imageViewBack"
-                android:gravity="right"
-                >
+                android:layout_toRightOf="@+id/imageViewBack">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/llSearchContainer"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:visibility="visible"
+                    android:layout_toLeftOf="@+id/llSearchCart"
+                    android:visibility="gone"
                     android:background="@drawable/capsule_white_stroke"
                     >
                     <ImageView
+                        android:id="@+id/ivSearchView"
                         android:layout_width="62px"
                         android:layout_height="62px"
                         android:layout_margin="6px"
@@ -144,7 +144,7 @@
                         android:src="@drawable/ic_search_new_selector"/>
                     <EditText
                         android:id="@+id/etSearch"
-                        android:layout_width="360px"
+                        android:layout_width="match_parent"
                         android:layout_height="62px"
                         android:background="@drawable/background_transparent"
                         android:layout_gravity="center_vertical"
@@ -153,6 +153,9 @@
                         android:textColorHint="@color/text_color_light"
                         android:textSize="@dimen/text_size_26"
                         android:hint="@string/search"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/ivSearchCross"
+                        android:layout_toRightOf="@+id/ivSearchView"
                         android:maxLines="1"
                         android:singleLine="true"
                         android:ellipsize="end"
@@ -164,19 +167,24 @@
                         android:layout_width="32px"
                         android:layout_height="34px"
                         android:padding="@dimen/px_7"
-                        android:visibility="gone"
+                        android:visibility="visible"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/px_20"
                         android:src="@drawable/ic_cross_grey"
                         android:layout_gravity="center_vertical"
                         />
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/llSearchCart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
+                    android:layout_alignParentRight="true"
                     android:layout_gravity="center_vertical">
 
                 <ImageView
@@ -241,7 +249,7 @@
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutLocality"

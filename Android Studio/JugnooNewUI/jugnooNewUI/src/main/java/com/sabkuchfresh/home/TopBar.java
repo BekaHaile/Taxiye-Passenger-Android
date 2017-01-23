@@ -41,13 +41,13 @@ public class TopBar implements FlurryEventNames {
 	public ImageView imageViewBack, ivDeliveryAddressCross, imageViewDelete;
 	public EditText editTextDeliveryAddress;
 
-	public LinearLayout llSearchContainer;
+	public RelativeLayout llSearchContainer;
 	public EditText etSearch;
 	public ImageView ivSearchCross, ivSearch;
 
-	public RelativeLayout relativeLayoutLocality;
+	public RelativeLayout relativeLayoutLocality, llSearchCartContainer;
 	public TextView textViewLocationValue, textViewReset, tvDeliveryAddress, tvCartAmount;
-	private LinearLayout llLocation, llCartAmount, llSearchCartContainer, llCartContainer;
+	private LinearLayout llLocation, llCartAmount, llCartContainer;
 
 
 
@@ -70,7 +70,7 @@ public class TopBar implements FlurryEventNames {
 		llCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llCartContainer);
 		llCartAmount = (LinearLayout) drawerLayout.findViewById(R.id.llCartAmount);
 		tvCartAmount = (TextView) drawerLayout.findViewById(R.id.tvCartAmount); tvCartAmount.setTypeface(Fonts.mavenRegular(activity));
-		llSearchCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
+		llSearchCartContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
 
 		below_shadow = (ImageView) drawerLayout.findViewById(R.id.below_shadow);
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
@@ -86,7 +86,7 @@ public class TopBar implements FlurryEventNames {
 		textViewLocationValue = (TextView) drawerLayout.findViewById(R.id.textViewLocationValue); textViewLocationValue.setTypeface(Fonts.mavenMedium(activity));
 		textViewReset = (TextView) drawerLayout.findViewById(R.id.textViewReset); textViewReset.setTypeface(Fonts.mavenMedium(activity));
 
-		llSearchContainer = (LinearLayout) drawerLayout.findViewById(R.id.llSearchContainer);
+		llSearchContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchContainer);
 		etSearch = (EditText) drawerLayout.findViewById(R.id.etSearch); etSearch.setTypeface(Fonts.mavenMedium(activity));
 		ivSearch = (ImageView) drawerLayout.findViewById(R.id.ivSearch);
 		ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
@@ -152,7 +152,7 @@ public class TopBar implements FlurryEventNames {
 		return tvCartAmount;
 	}
 
-	public LinearLayout getLlSearchCartContainer() {
+	public RelativeLayout getLlSearchCartContainer() {
 		return llSearchCartContainer;
 	}
 
