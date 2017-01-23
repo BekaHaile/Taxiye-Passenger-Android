@@ -1,18 +1,24 @@
 package com.sabkuchfresh.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshSuperCategoriesAdapter;
+import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.home.TopBar;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
 
@@ -29,6 +35,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -40,10 +47,11 @@ import retrofit.client.Response;
 public class FreshHomeFragment extends Fragment {
 
     private View rootView;
-    private RelativeLayout relative;
+    private RelativeLayout relative, relativeLayoutNoMenus;
     private FreshActivity activity;
     private RecyclerView rvFreshSuper;
     private FreshSuperCategoriesAdapter adapter;
+    private TextView textViewNothingFound;
 
     @Nullable
     @Override
@@ -60,7 +68,10 @@ public class FreshHomeFragment extends Fragment {
         }
         activity.fragmentUISetup(this);
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
-
+        relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
+        ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
+        relativeLayoutNoMenus.setVisibility(View.GONE);
         rvFreshSuper = (RecyclerView) rootView.findViewById(R.id.rvFreshSuper);
         rvFreshSuper.setItemAnimator(new DefaultItemAnimator());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, GridLayoutManager.HORIZONTAL, false);
@@ -73,8 +84,14 @@ public class FreshHomeFragment extends Fragment {
         });
 
         rvFreshSuper.setAdapter(adapter);
+        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 
-        getSuperCategoriesAPI();
+        relativeLayoutNoMenus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         return rootView;
     }
@@ -84,7 +101,19 @@ public class FreshHomeFragment extends Fragment {
         super.onHiddenChanged(hidden);
         if(!hidden){
             activity.fragmentUISetup(this);
-            activity.updateCartValuesGetTotalPrice();
+            if(activity.getCartChangedAtCheckout()){
+                activity.updateCartValuesGetTotalPrice();
+            }
+            activity.setCartChangedAtCheckout(false);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if(activity.isRefreshCart()){
+                        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
+                    }
+                    activity.setRefreshCart(false);
+                }
+            }, 300);
         }
     }
 
@@ -92,6 +121,7 @@ public class FreshHomeFragment extends Fragment {
     public void getSuperCategoriesAPI() {
         try {
             if(AppStatus.getInstance(activity).isOnline(activity)) {
+                relativeLayoutNoMenus.setVisibility(View.GONE);
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
@@ -106,7 +136,13 @@ public class FreshHomeFragment extends Fragment {
                     @Override
                     public void success(SuperCategoriesData superCategoriesData, Response response) {
                         try {
-                            if(superCategoriesData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                            if(superCategoriesData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
+                                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.GONE);
+                                relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+                                textViewNothingFound.setText(!TextUtils.isEmpty(superCategoriesData.getMessage()) ?
+                                        superCategoriesData.getMessage() : getString(R.string.nothing_found_near_you));
+                            } else if(superCategoriesData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+                                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                 activity.setSuperCategoriesData(superCategoriesData);
                                 adapter.setList(superCategoriesData.getSuperCategories());
                                 activity.updateCartValuesGetTotalPrice();

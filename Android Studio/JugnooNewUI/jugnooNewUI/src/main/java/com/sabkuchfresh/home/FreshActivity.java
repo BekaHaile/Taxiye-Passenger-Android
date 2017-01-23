@@ -1276,6 +1276,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.below_shadow.setVisibility(View.GONE);
+                topBar.getLlSearchCartContainer().setVisibility(View.GONE);
 
                 relativeLayoutSort.setVisibility(View.GONE);
                 relativeLayoutCart.setVisibility(View.VISIBLE);
@@ -2778,9 +2779,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             getTopBar().textViewLocationValue.setText(address);
             getTopBar().tvLocation.setText(address);
             if(getFreshCheckoutMergedFragment() == null && getMenusCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
-                if (appType == AppConstant.ApplicationType.FRESH && getFreshFragment() != null) {
-                    // TODO: 19/01/17
-                    getFreshFragment().getAllProducts(true, getSelectedLatLng());
+                if (appType == AppConstant.ApplicationType.FRESH && getFreshHomeFragment() != null) {
+                    getFreshHomeFragment().getSuperCategoriesAPI();
                 } else if (appType == AppConstant.ApplicationType.MEALS && getMealFragment() != null) {
                     getMealFragment().getAllProducts(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.GROCERY && getGroceryFragment() != null) {

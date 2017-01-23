@@ -9,7 +9,8 @@
         android:id="@+id/rvFreshSuper"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_908"
-        android:fadeScrollbars="true"
-        ></android.support.v7.widget.RecyclerView>
+        android:fadeScrollbars="true"/>
+
+    <include layout="@layout/layout_offering_not_available" />
 
 </RelativeLayout>

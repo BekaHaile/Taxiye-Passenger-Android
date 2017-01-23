@@ -91,8 +91,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private boolean loader = true, resumed = false;
     protected Bus mBus;
     PushDialog pushDialog;
-    private RelativeLayout relativeLayoutNoMenus;
-    private TextView textViewNothingFound;
 
 	SuperCategoriesData.SuperCategory superCategory;
 
@@ -153,12 +151,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-        relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
-        ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
-        relativeLayoutNoMenus.setVisibility(View.GONE);
-        rootView.findViewById(R.id.imageViewShadow).setVisibility(View.VISIBLE);
 
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
@@ -224,7 +216,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
         setSortingList();
 
-		activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
+        getAllProducts(true, activity.getSelectedLatLng());
 		activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
 
         try {
@@ -316,10 +308,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 			activity.fragmentUISetup(this);
 			activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
             activity.resumeMethod();
-            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
-                activity.showBottomBar(false);
-            }
-			if(activity.getCartChangedAtCheckout()){
+            if(activity.getCartChangedAtCheckout()){
 				activity.updateCartFromSP();
 				onUpdateListEvent(new UpdateMainList(true));
 				activity.updateCartValuesGetTotalPrice();
@@ -330,7 +319,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 public void run() {
                     activity.setMinOrderAmountText(FreshFragment.this);
 					if(activity.isRefreshCart()){
-						activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
+                        getAllProducts(true, activity.getSelectedLatLng());
 					}
 					activity.setRefreshCart(false);
                 }
@@ -361,7 +350,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                 RestClient.getFreshApiService().getAllProducts(params, new Callback<ProductsResponse>() {
 					@Override
 					public void success(ProductsResponse productsResponse, Response response) {
-                        relativeLayoutNoMenus.setVisibility(View.GONE);
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
 
@@ -385,12 +373,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
-                                    relativeLayoutNoMenus.setVisibility(View.VISIBLE);
 									activity.resetToolbar();
                                     mainLayout.setVisibility(View.GONE);
                                     activity.showBottomBar(false);
-                                    textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
-                                            productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
                                 else {
                                     activity.setProductsResponse(productsResponse);
