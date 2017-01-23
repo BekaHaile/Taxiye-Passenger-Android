@@ -1,6 +1,7 @@
 package com.sabkuchfresh.apis;
 
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
+import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
@@ -73,5 +74,10 @@ public interface FreshApiService {
 	@POST("/get_super_categories")
 	void getSuperCategories(@FieldMap Map<String, String> params,
 							Callback<SuperCategoriesData> callback);
+
+	@FormUrlEncoded
+	@POST("/get_item_search")
+	void getItemSearch(@FieldMap Map<String, String> params,
+							Callback<FreshSearchResponse> callback);
 
 }

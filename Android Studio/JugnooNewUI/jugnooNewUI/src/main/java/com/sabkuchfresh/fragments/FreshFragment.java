@@ -122,6 +122,10 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		superCategory = gson.fromJson(bundle.getString(Constants.KEY_SUPER_CATEGORY, Constants.EMPTY_JSON_OBJECT), SuperCategoriesData.SuperCategory.class);
 	}
 
+    public SuperCategoriesData.SuperCategory getSuperCategory() {
+        return superCategory;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh, container, false);

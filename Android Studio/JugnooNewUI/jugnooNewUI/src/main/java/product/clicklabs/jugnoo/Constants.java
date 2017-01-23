@@ -591,4 +591,5 @@ public interface Constants {
 	String KEY_CUSTOMISATIONS = "customisations";
 	String KEY_SUPER_CATEGORY_ID = "super_category_id";
 	String KEY_SUPER_CATEGORY = "super_category";
+	String KEY_SEARCH_TEXT = "search_string";
 }

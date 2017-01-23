@@ -22,7 +22,9 @@ import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
+import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 
@@ -31,9 +33,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 @SuppressLint("ValidFragment")
@@ -47,7 +61,7 @@ public class FreshSearchFragment extends Fragment {
 
 	private View rootView;
     private FreshActivity activity;
-    private int currentGroupId = 1;
+    private int currentGroupId = 1, superCategoryId = -1, cityId = 1;
 	private ArrayList<SubItem> subItemsInSearch;
 
 
@@ -60,6 +74,15 @@ public class FreshSearchFragment extends Fragment {
     public void onStop() {
 		super.onStop();
     }
+
+	public static FreshSearchFragment newInstance(int superCategoryId, int cityId){
+		FreshSearchFragment freshSearchFragment = new FreshSearchFragment();
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_SUPER_CATEGORY_ID, superCategoryId);
+		bundle.putInt(Constants.KEY_CITY_ID, cityId);
+		freshSearchFragment.setArguments(bundle);
+		return freshSearchFragment;
+	}
 	
 
     @Override
@@ -68,6 +91,8 @@ public class FreshSearchFragment extends Fragment {
 
         activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
+
+		searchText = "";
 
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		try {
@@ -103,6 +128,10 @@ public class FreshSearchFragment extends Fragment {
 		if(subItemsInSearch == null) {
 			subItemsInSearch = new ArrayList<>();
 		}
+
+		superCategoryId = getArguments().getInt(Constants.KEY_SUPER_CATEGORY_ID, -1);
+		cityId = getArguments().getInt(Constants.KEY_CITY_ID, 1);
+
 
 		freshCategoryItemsAdapter = new FreshCategoryItemsAdapter(activity,
 				subItemsInSearch, null, 0,
@@ -141,7 +170,7 @@ public class FreshSearchFragment extends Fragment {
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
-		activity.getTopBar().etSearch.addTextChangedListener(new TextWatcher() {
+		/*activity.getTopBar().etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -165,7 +194,7 @@ public class FreshSearchFragment extends Fragment {
 					e.printStackTrace();
 				}
 			}
-        });
+        });*/
 
 		activity.getTopBar().ivSearchCross.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,7 +202,6 @@ public class FreshSearchFragment extends Fragment {
 				activity.getTopBar().etSearch.setText("");
             }
         });
-
 
 		return rootView;
 	}
@@ -313,6 +341,84 @@ public class FreshSearchFragment extends Fragment {
 		super.onDestroy();
         ASSL.closeActivity(linearLayoutRoot);
         System.gc();
+	}
+
+
+
+
+	public void searchRestaurant(String s){
+		searchText = s.trim();
+		if(searchText.length() > 2) {
+			searchRestaurantsAutoComplete(searchText);
+		}
+	}
+
+	private String searchText;
+	private boolean refreshingAutoComplete = false;
+	public void searchRestaurantsAutoComplete(final String searchText) {
+		try {
+			if(!refreshingAutoComplete) {
+				if (AppStatus.getInstance(activity).isOnline(activity)) {
+						HashMap<String, String> params = new HashMap<>();
+						params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+						params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+						params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+						params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
+						params.put(Constants.KEY_CITY_ID, String.valueOf(cityId));
+						params.put(Constants.INTERATED, "1");
+						params.put(Constants.KEY_SEARCH_TEXT, searchText);
+						params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategoryId));
+
+						refreshingAutoComplete = true;
+
+						new HomeUtil().putDefaultParams(params);
+						RestClient.getFreshApiService().getItemSearch(params, new retrofit.Callback<FreshSearchResponse>() {
+							@Override
+							public void success(FreshSearchResponse freshSearchResponse, Response response) {
+								String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+								try {
+									String message = freshSearchResponse.getMessage();
+										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == freshSearchResponse.getFlag()) {
+											subItemsInSearch.clear();
+											for(SuperCategoriesData.SuperCategory superCategory : freshSearchResponse.getSuperCategories()){
+												for(Category category : superCategory.getCategories()){
+													subItemsInSearch.addAll(category.getSubItems());
+												}
+											}
+											freshCategoryItemsAdapter.notifyDataSetChanged();
+										} else {
+
+										}
+								} catch (Exception exception) {
+									exception.printStackTrace();
+								}
+								refreshingAutoComplete = false;
+								recallSearch(searchText);
+							}
+
+							@Override
+							public void failure(RetrofitError error) {
+								Log.e("search fragment", "fetchRestaurantViaSearch error" + error.toString());
+								refreshingAutoComplete = false;
+								recallSearch(searchText);
+							}
+						});
+				} else {
+					refreshingAutoComplete = true;
+					refreshingAutoComplete = false;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			refreshingAutoComplete = false;
+			recallSearch(searchText);
+		}
+	}
+
+	private void recallSearch(String previousSearchText){
+		if (!searchText.trim().equalsIgnoreCase(previousSearchText)) {
+			searchRestaurantsAutoComplete(searchText);
+		}
 	}
 
 

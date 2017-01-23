@@ -122,11 +122,11 @@ public class TransactionUtils {
 	}
 
 
-	public void openSearchFragment(FragmentActivity activity, View container) {
+	public void openSearchFragment(FragmentActivity activity, View container, int superCategoryId, int cityId) {
 		if(!checkIfFragmentAdded(activity, FreshSearchFragment.class.getName())) {
 			activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-					.add(container.getId(), new FreshSearchFragment(),
+					.add(container.getId(), FreshSearchFragment.newInstance(superCategoryId, cityId),
                             FreshSearchFragment.class.getName())
 					.addToBackStack(FreshSearchFragment.class.getName())
 					.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

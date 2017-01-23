@@ -98,6 +98,9 @@ public class SuperCategoriesData {
 		@SerializedName("super_category_banner")
 		@Expose
 		private SuperCategoryBanner superCategoryBanner;
+		@SerializedName("categories")
+		@Expose
+		private List<Category> categories;
 
 		public Integer getSuperCategoryId() {
 			return superCategoryId;
@@ -147,6 +150,13 @@ public class SuperCategoriesData {
 			this.superCategoryBanner = superCategoryBanner;
 		}
 
+		public List<Category> getCategories() {
+			return categories;
+		}
+
+		public void setCategories(List<Category> categories) {
+			this.categories = categories;
+		}
 	}
 
 	public class SuperCategoryBanner {

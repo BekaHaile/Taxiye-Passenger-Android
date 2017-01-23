@@ -25,6 +25,9 @@ public class DeliveryInfo {
 	@SerializedName("dynamic_delivery_charges")
 	@Expose
 	private Integer dynamicDeliveryCharges;
+	@SerializedName("cityId")
+	@Expose
+	private Integer cityId;
 
 	/**
 	 *
@@ -76,6 +79,14 @@ public class DeliveryInfo {
 
 	public void setMinimumOrderAmount(Double minimumOrderAmount) {
 		this.minimumOrderAmount = minimumOrderAmount;
+	}
+
+	public Integer getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Integer cityId) {
+		this.cityId = cityId;
 	}
 
 	public Integer getDynamicDeliveryCharges() {

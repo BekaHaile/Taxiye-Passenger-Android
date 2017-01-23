@@ -209,7 +209,7 @@ public class TopBar implements FlurryEventNames {
 			llSearchContainer.setBackgroundResource(R.drawable.capsule_white_stroke);
 			etSearch.setVisibility(View.VISIBLE);
 			//ivSearchCross.setVisibility(View.VISIBLE);
-			setEtSearchWidth();
+			//setEtSearchWidth();
 		} else {
 			llSearchContainer.setBackgroundResource(R.drawable.background_transparent);
 			etSearch.setVisibility(View.GONE);
@@ -218,7 +218,7 @@ public class TopBar implements FlurryEventNames {
 	}
 
 	public void setEtSearchWidth(){
-		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) etSearch.getLayoutParams();
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) etSearch.getLayoutParams();
 		if(llCartAmount.getVisibility() == View.VISIBLE){
 			params.width = (int) (ASSL.Xscale() * 260f);
 		} else {
