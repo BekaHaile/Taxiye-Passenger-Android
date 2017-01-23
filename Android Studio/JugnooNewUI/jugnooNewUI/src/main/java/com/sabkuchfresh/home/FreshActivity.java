@@ -613,16 +613,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                                         LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
                                     }
                             }
-                            else if(PushFlags.MENUS_STATUS.getOrdinal() == flag)
-                            {
+                            else if(PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
                                 Fragment fragment = getTopFragment();
-
-                                if(fragment instanceof MenusFragment && FreshActivity.this.hasWindowFocus())
-                                {
+                                if(fragment instanceof MenusFragment && FreshActivity.this.hasWindowFocus()) {
                                     ((MenusFragment)fragment).getAllMenus(true, getSelectedLatLng());
                                 }
-                                else
-                                {
+                                else {
                                     Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                     intent1.putExtra(Constants.KEY_FLAG, flag);
                                     LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);

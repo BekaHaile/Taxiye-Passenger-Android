@@ -109,6 +109,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         try {
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
+            reasons.clear();
             if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
                     .equals(Config.getFreshClientId())) {
 				viewType = Data.getFreshData().getFeedbackViewType();
@@ -118,7 +119,6 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 				activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
                 productType = ProductType.FRESH;
-                reasons.clear();
                 for(int i=0; i<Data.getFreshData().getNegativeFeedbackReasons().length(); i++){
                     reasons.add(new FeedbackReason(Data.getFreshData().getNegativeFeedbackReasons().get(i).toString()));
                 }
@@ -133,7 +133,6 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 feedbackOrderItems = Data.getMealsData().getFeedbackOrderItems();
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
                 productType = ProductType.MEALS;
-                reasons.clear();
                 for(int i=0; i<Data.getMealsData().getNegativeFeedbackReasons().length(); i++){
                     reasons.add(new FeedbackReason(Data.getMealsData().getNegativeFeedbackReasons().get(i).toString()));
                 }
@@ -147,7 +146,6 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
                 productType = ProductType.GROCERY;
-                reasons.clear();
                 for(int i=0; i<Data.getGroceryData().getNegativeFeedbackReasons().length(); i++){
                     reasons.add(new FeedbackReason(Data.getGroceryData().getNegativeFeedbackReasons().get(i).toString()));
                 }
@@ -161,7 +159,6 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 activity.getTopBar().title.setText(getResources().getString(R.string.menus));
                 endRideGoodFeedbackText = Data.getMenusData().getRideEndGoodFeedbackText();
                 productType = ProductType.MENUS;
-                reasons.clear();
                 for(int i=0; i<Data.getMenusData().getNegativeFeedbackReasons().length(); i++){
                     reasons.add(new FeedbackReason(Data.getMenusData().getNegativeFeedbackReasons().get(i).toString()));
                 }
@@ -288,16 +285,6 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 // api call
                 sendQuery(0, feedbackReasons);
 
-                /*if (Data.getMealsData().getNegativeFeedbackReasons().length() > 0) {
-                    if (feedbackReasons.length() > 0) {
-                        Log.v("reasons ","---> "+feedbackReasons);
-                        // api call
-                    } else {
-                        DialogPopup.alertPopup(activity, "", getString(R.string.please_provide_reason_for_rating));
-                        return;
-                    }
-                }*/
-
             }
         });
 
@@ -335,8 +322,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 //sendQuery(0, "");
                 try {
                 imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down_active);
-                if((Data.getMealsData().getNegativeFeedbackReasons() != null)
-                        && (Data.getMealsData().getNegativeFeedbackReasons().length() > 0)){
+                if(reasons.size() > 0){
                     llBadReason.setVisibility(View.VISIBLE);
                     new Handler().postDelayed(new Runnable() {
                         @Override

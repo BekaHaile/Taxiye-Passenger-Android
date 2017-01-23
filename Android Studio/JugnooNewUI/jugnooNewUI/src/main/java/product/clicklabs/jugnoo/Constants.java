@@ -498,6 +498,7 @@ public interface Constants {
 	String KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE = "ride_end_good_feedback_view_type";
 	String KEY_RIDE_END_GOOD_FEEDBACK_TEXT = "ride_end_good_feedback_text";
 	String KEY_RATE_APP = "rate_app";
+	String KEY_NEGATIVE_FEEDBACK_REASONS = "negative_feedback_reasons";
 
 	String KEY_PICKUP_LOCATION_ADDRESS = "pickup_location_address";
 	String KEY_DROP_LOCATION_ADDRESS = "drop_location_address";
@@ -594,7 +595,7 @@ public interface Constants {
 	String KEY_CUSTOMISATIONS = "customisations";
 	String KEY_SUPER_CATEGORY_ID = "super_category_id";
 	String KEY_SUPER_CATEGORY = "super_category";
-	String KEY_SEARCH_TEXT = "search_string";
+	String KEY_SEARCH_STRING = "search_string";
 	String SP_MENUS_FILTER_SORT_BY = "sp_menus_filter_sort_by";
 	String SP_MENUS_FILTER_MIN_ORDER = "sp_menus_filter_min_order";
 	String SP_MENUS_FILTER_DELIVERY_TIME = "sp_menus_filter_delivery_time";
@@ -603,4 +604,6 @@ public interface Constants {
 	String KEY_EVENT = "event";
 	String KEY_REFERRAL_POPUP_CONTENT = "referral_popup_content";
 	String SP_FRESH_CART_ADDRESS = "sp_fresh_cart_address";
+	String KEY_SEARCH_TEXT = "search_text";
+	String KEY_EMPTY_CART = "empty_cart";
 }

@@ -225,6 +225,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 					activity.updateCart = false;
 					activity.openCart();
 				}
+
+				activity.getBus().post(new SortSelection(activity.menusSort));
 			}
 		} catch (Exception exception) {
 			exception.printStackTrace();

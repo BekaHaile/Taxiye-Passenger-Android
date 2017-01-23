@@ -1846,21 +1846,30 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
-	public static boolean checkIfTrivialAPIErrors(Activity activity, JSONObject jObj) {
+	public static boolean checkIfTrivialAPIErrors(Activity activity, JSONObject jObj){
 		try {
-			int flag = jObj.getInt("flag");
+			int flag = jObj.getInt(KEY_FLAG);
+			String error = jObj.optString(KEY_ERROR);
+			String message = jObj.optString(KEY_MESSAGE);
+			return checkIfTrivialAPIErrors(activity, flag, error, message);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static boolean checkIfTrivialAPIErrors(Activity activity, int flag, String error, String message) {
+		try {
 			if (ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag) {
 				DialogPopup.dismissLoadingDialog();
 				HomeActivity.logoutUser(activity);
 				return true;
 			} else if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
 				DialogPopup.dismissLoadingDialog();
-				String errorMessage = jObj.getString("error");
-				DialogPopup.alertPopup(activity, "", errorMessage);
+				DialogPopup.alertPopup(activity, "", error);
 				return true;
 			} else if (ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag) {
 				DialogPopup.dismissLoadingDialog();
-				String message = jObj.getString("message");
 				DialogPopup.alertPopup(activity, "", message);
 				return true;
 			} else {

@@ -387,7 +387,7 @@ public class FreshSearchFragment extends Fragment {
 						params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
 						params.put(Constants.KEY_CITY_ID, String.valueOf(cityId));
 						params.put(Constants.INTERATED, "1");
-						params.put(Constants.KEY_SEARCH_TEXT, searchText);
+						params.put(Constants.KEY_SEARCH_STRING, searchText);
 						params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategoryId));
 
 						refreshingAutoComplete = true;
