@@ -36,6 +36,9 @@ public class ProductsResponse {
 	@SerializedName("subscription_message")
 	@Expose
 	private String subscriptionMessage;
+	@SerializedName("delivery_info")
+	@Expose
+	private DeliveryInfo deliveryInfo;
 
 	/**
 	 *
@@ -132,4 +135,11 @@ public class ProductsResponse {
 		this.subscriptionMessage = subscriptionMessage;
 	}
 
+	public DeliveryInfo getDeliveryInfo() {
+		return deliveryInfo;
+	}
+
+	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
+		this.deliveryInfo = deliveryInfo;
+	}
 }

@@ -73,23 +73,6 @@
                 android:visibility="gone"
                 />
 
-
-            <TextView
-                android:id="@+id/textViewSkip"
-                android:layout_width="100px"
-                android:layout_height="80px"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10px"
-                android:gravity="center"
-                android:text="@string/skip"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color_selector"
-                android:textSize="@dimen/text_size_30"
-                android:visibility="gone"
-
-                />
-
             <ImageView
                 android:id="@+id/imageViewDelete"
                 android:layout_width="74px"
@@ -208,7 +191,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/px_20"
                     android:animateLayoutChanges="true"
-                    android:background="@drawable/capsule_cart_color"
+                    android:background="@drawable/capsule_cart_selector"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:layout_gravity="center_vertical"

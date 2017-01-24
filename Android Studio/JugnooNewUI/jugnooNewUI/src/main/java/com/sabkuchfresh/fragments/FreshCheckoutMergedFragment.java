@@ -1384,6 +1384,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private void orderPlacedSuccess(PlaceOrderResponse placeOrderResponse){
+        LocalBroadcastManager.getInstance(activity).unregisterReceiver(broadcastReceiverWalletUpdate);
         orderPlaced = true;
         activity.saveCheckoutData(true);
         long time = 0L;
@@ -2189,7 +2190,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private double deliveryCharges(){
-        return activity.getSuperCategoriesData().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+        double deliveryCharges = 0d;
+        if(type == AppConstant.ApplicationType.MEALS) {
+            deliveryCharges = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+        } else{
+            deliveryCharges = activity.getSuperCategoriesData().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+        }
+
+        return deliveryCharges;
     }
 
     private double packagingCharges(){

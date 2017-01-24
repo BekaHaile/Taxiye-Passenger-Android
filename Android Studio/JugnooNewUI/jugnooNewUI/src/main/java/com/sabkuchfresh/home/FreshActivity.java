@@ -537,8 +537,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 slots.get(sortedBy).setCheck(true);
             } else {
                 slots.get(freshSort).setCheck(true);
-                onSortEvent(new SortSelection(freshSort));
             }
+            onSortEvent(new SortSelection(freshSort));
         }
     }
 
@@ -999,7 +999,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             topBar.below_shadow.setVisibility(View.GONE);
             relativeLayoutCartNew.setVisibility(View.GONE);
             linearLayoutCheckout.setVisibility(View.VISIBLE);
-            topBar.textViewSkip.setVisibility(View.GONE);
             topBar.imageViewDelete.setVisibility(View.GONE);
             topBar.relativeLayoutLocality.setVisibility(View.GONE);
             topBar.textViewReset.setVisibility(View.GONE);
@@ -1361,7 +1360,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.pick_addons));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                topBar.textViewSkip.setVisibility(View.VISIBLE);
             }
 
             if(topBar.imageViewMenu.getVisibility() == View.VISIBLE){

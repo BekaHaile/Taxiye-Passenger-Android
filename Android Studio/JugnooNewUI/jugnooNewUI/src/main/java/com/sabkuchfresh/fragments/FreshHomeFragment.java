@@ -140,7 +140,8 @@ public class FreshHomeFragment extends Fragment {
                     public void success(SuperCategoriesData superCategoriesData, Response response) {
                         try {
                             if(superCategoriesData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
-                                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.GONE);
+                                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                                activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                 relativeLayoutNoMenus.setVisibility(View.VISIBLE);
                                 textViewNothingFound.setText(!TextUtils.isEmpty(superCategoriesData.getMessage()) ?
                                         superCategoriesData.getMessage() : getString(R.string.nothing_found_near_you));

@@ -37,7 +37,7 @@ public class TopBar implements FlurryEventNames {
 	public ImageView imageViewMenu, below_shadow;
 	public TextView title;
 	public Button buttonCheckServer;
-	public TextView textViewSkip, tvLocation;
+	public TextView tvLocation;
 	public ImageView imageViewBack, ivDeliveryAddressCross, imageViewDelete;
 	public EditText editTextDeliveryAddress;
 
@@ -63,8 +63,6 @@ public class TopBar implements FlurryEventNames {
 		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.avenirNext(activity));
 
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
-		textViewSkip = (TextView) drawerLayout.findViewById(R.id.textViewSkip); textViewSkip.setTypeface(Fonts.mavenMedium(activity));
-		textViewSkip.setVisibility(View.GONE);
 		llLocation = (LinearLayout) drawerLayout.findViewById(R.id.llLocation);
 		tvDeliveryAddress = (TextView) drawerLayout.findViewById(R.id.tvDeliveryAddress); tvDeliveryAddress.setTypeface(Fonts.mavenMedium(activity));
 		llCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llCartContainer);

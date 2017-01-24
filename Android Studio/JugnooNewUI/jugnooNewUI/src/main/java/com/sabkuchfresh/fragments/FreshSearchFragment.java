@@ -323,6 +323,7 @@ public class FreshSearchFragment extends Fragment {
             }, 700);
 			activity.fragmentUISetup(this);
 			if(activity.getCartChangedAtCheckout()){
+				activity.updateCartFromSP();
 				activity.updateCartFromSPFMG(subItemsInSearch);
 				freshCategoryItemsAdapter.notifyDataSetChanged();
 				activity.updateCartValuesGetTotalPrice();

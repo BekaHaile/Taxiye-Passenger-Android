@@ -107,10 +107,6 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
             }
         });
 
-        setSkipOnCLickListener();
-
-
-
         updateCartItemsList();
 
         relativeLayoutCartTop = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCartTop);
@@ -206,23 +202,12 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
-            setSkipOnCLickListener();
             updateCartDataView();
             updateCartItemsList();
             updateAddonsListCount();
         }
     }
 
-
-    private void setSkipOnCLickListener(){
-        activity.getTopBar().textViewSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.getTransactionUtils().openCheckoutMergedFragment(activity, activity.getRelativeLayoutContainer());
-                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.SKIP_TOP);
-            }
-        });
-    }
 
     @Override
     public void onDestroy() {
