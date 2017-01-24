@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_toLeftOf="@+id/llQuantity"
         >
 
         <RelativeLayout
@@ -51,7 +52,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutContent"
-            android:layout_width="560px"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30px"
             android:layout_marginLeft="30px"
@@ -64,7 +65,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10px"
-                android:maxLines="2"
                 android:text="Orange opdoapsjkhkjh djkhakjsh djjjjj"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_34"
@@ -99,6 +99,7 @@
 
 
     <LinearLayout
+        android:id="@+id/llQuantity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/imageViewSep"

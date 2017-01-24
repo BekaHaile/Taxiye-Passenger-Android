@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -184,13 +183,16 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.textViewItemCategoryName.setText(sb);
 
             int total = item.getTotalQuantity();
-            if(total > 0){
-                mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
-                mHolder.addButton.setVisibility(View.GONE);
-                mHolder.textViewQuantity.setText(String.valueOf(total));
+            mHolder.textViewQuantity.setText(String.valueOf(total));
+            mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark);
+            mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
+            if (total == 0) {
+                mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme);
+                mHolder.imageViewMinus.setVisibility(View.GONE);
+                mHolder.textViewQuantity.setVisibility(View.GONE);
             } else {
-                mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
-                mHolder.addButton.setVisibility(View.VISIBLE);
+                mHolder.imageViewMinus.setVisibility(View.VISIBLE);
+                mHolder.textViewQuantity.setVisibility(View.VISIBLE);
             }
 
             mHolder.textViewAboutItemDescription.setVisibility(item.getItemDetails() != null ? View.VISIBLE : View.GONE);
@@ -248,7 +250,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.imageViewMinus.setTag(position);
             mHolder.imageViewPlus.setTag(position);
-            mHolder.addButton.setTag(position);
 
             View.OnClickListener plusClick = new View.OnClickListener() {
                 @Override
@@ -271,7 +272,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             };
 
-            mHolder.addButton.setOnClickListener(plusClick);
             mHolder.imageViewPlus.setOnClickListener(plusClick);
 
             mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
@@ -286,7 +286,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                                 if(item1.getItemSelectedList().get(0).getQuantity() == 0){
                                     item1.getItemSelectedList().clear();
                                 }
-                                notifyItemChanged(pos);
+                                notifyDataSetChanged();
                                 callback.onMinusClicked(pos, item1);
                             } else {
                                 callback.onMinusFailed(pos, item1);
@@ -294,7 +294,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         } else {
                             if(item1.getItemSelectedList().size() > 0){
                                 item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() - 1);
-                                notifyItemChanged(pos);
+                                notifyDataSetChanged();
                                 callback.onMinusClicked(pos, item1);
                             }
                         }
@@ -351,7 +351,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         public LinearLayout linearLayoutQuantitySelector;
         private ImageView imageViewFoodType, saperatorImage, imageViewMinus, imageViewPlus;
         public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity;
-        public Button addButton;
 
         public MainViewHolder(View itemView, Context context) {
             super(itemView);
@@ -366,8 +365,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
             textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenRegular(context));
             textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenRegular(context));
-
-            addButton = (Button) itemView.findViewById(R.id.add_button); addButton.setTypeface(Fonts.mavenRegular(context));
         }
     }
 

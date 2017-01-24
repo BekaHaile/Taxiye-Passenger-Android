@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 
 
@@ -89,8 +91,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 		viewPager.setAdapter(menusCategoryFragmentsAdapter);
 
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
-		tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
+		tabs.setTextColorResource(R.color.text_color_dark_1, R.color.text_color);
 		tabs.setBackgroundColor(activity.getResources().getColor(R.color.transparent));
+		tabs.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
         tabs.setOnMyTabClickListener(this);
 
 		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
