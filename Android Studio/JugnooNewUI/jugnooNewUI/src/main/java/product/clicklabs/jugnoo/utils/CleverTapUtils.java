@@ -164,7 +164,6 @@ public class CleverTapUtils {
             MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
 
         } catch(Exception e) {
-            e.printStackTrace();
         }
     }
 

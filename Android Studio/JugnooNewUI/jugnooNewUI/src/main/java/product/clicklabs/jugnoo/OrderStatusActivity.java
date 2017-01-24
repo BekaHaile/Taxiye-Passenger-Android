@@ -27,10 +27,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
-import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
+import com.sabkuchfresh.retrofit.model.SubItem;
 
 import org.json.JSONObject;
 
@@ -47,6 +48,7 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -427,9 +429,9 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                     e.printStackTrace();
                 }
 
-                Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
+                Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
                     @Override
-                    public void success(OrderHistoryResponse orderHistoryResponse, Response response) {
+                    public void success(SettleUserDebt orderHistoryResponse, Response response) {
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i("Order Status", "Fresh order cancel response = " + responseStr);
                         DialogPopup.dismissLoadingDialog();
@@ -905,11 +907,21 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                 Prefs.with(activity).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
             }
             JSONObject jCart = new JSONObject();
-            if (orderHistory != null && orderHistory.getOrderItems() != null) {
-                for (HistoryResponse.OrderItem subItem : orderHistory.getOrderItems()) {
-                    if (subItem.getItemQuantity() > 0) {
+            if (orderHistory.getOrderItems() != null) {
+                Gson gson = new Gson();
+                for (HistoryResponse.OrderItem orderItem : orderHistory.getOrderItems()) {
+                    if (orderItem.getItemQuantity() > 0) {
                         try {
-                            jCart.put(String.valueOf(subItem.getSubItemId()), (int) subItem.getItemQuantity());
+                            SubItem subItem1 = new SubItem();
+                            subItem1.setSubItemId(orderItem.getSubItemId());
+                            subItem1.setPrice(orderItem.getUnitAmount());
+                            subItem1.setStock(50);
+                            subItem1.setSubItemQuantitySelected(orderItem.getItemQuantity());
+                            subItem1.setSubItemName(orderItem.getItemName());
+                            subItem1.setBaseUnit(orderItem.getUnit());
+                            subItem1.setSubItemImage(orderItem.getSubItemImage());
+
+                            jCart.put(String.valueOf(orderItem.getSubItemId()), gson.toJson(subItem1, SubItem.class));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

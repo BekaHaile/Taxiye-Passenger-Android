@@ -559,7 +559,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         try {
                             scrollView.scrollTo(0, rootView.findViewById(R.id.linearLayoutDeliveryInstructions).getBottom());
                         } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
                 }, 100);
@@ -596,7 +595,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
             String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges()));
             textViewDeliveryChargesValue.setText(deliveryCharge);
-        } else if(activity.getUserCheckoutResponse().getDeliveryInfo() != null
+        } else if(activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getDeliveryInfo() != null
                 && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() != null
                 && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() > 0){
             textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));

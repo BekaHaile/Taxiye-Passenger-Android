@@ -1542,23 +1542,27 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             clearMealCart();
         }
         if(type == AppConstant.ApplicationType.MENUS){
-            for(com.sabkuchfresh.retrofit.model.menus.Category category : getMenuProductsResponse().getCategories()){
-                if(category.getSubcategories() != null){
-                    for(Subcategory subcategory : category.getSubcategories()){
-                        for(Item item : subcategory.getItems()){
+            if(getMenuProductsResponse() != null) {
+                for (com.sabkuchfresh.retrofit.model.menus.Category category : getMenuProductsResponse().getCategories()) {
+                    if (category.getSubcategories() != null) {
+                        for (Subcategory subcategory : category.getSubcategories()) {
+                            for (Item item : subcategory.getItems()) {
+                                item.getItemSelectedList().clear();
+                            }
+                        }
+                    } else if (category.getItems() != null) {
+                        for (Item item : category.getItems()) {
                             item.getItemSelectedList().clear();
                         }
-                    }
-                } else if(category.getItems() != null){
-                    for(Item item : category.getItems()){
-                        item.getItemSelectedList().clear();
                     }
                 }
             }
         } else {
-            for (Category category : productsResponse.getCategories()) {
-                for (SubItem subItem : category.getSubItems()) {
-                    subItem.setSubItemQuantitySelected(0);
+            if(productsResponse != null) {
+                for (Category category : productsResponse.getCategories()) {
+                    for (SubItem subItem : category.getSubItems()) {
+                        subItem.setSubItemQuantitySelected(0);
+                    }
                 }
             }
         }

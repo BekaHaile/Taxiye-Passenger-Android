@@ -11,6 +11,7 @@ import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -45,7 +46,7 @@ public interface FreshApiService {
 	@FormUrlEncoded
 	@POST("/cancel_order")
 	void cancelOrder(@FieldMap Map<String, String> params,
-                     Callback<OrderHistoryResponse> callback);
+                     Callback<SettleUserDebt> callback);
 
 
     @FormUrlEncoded
