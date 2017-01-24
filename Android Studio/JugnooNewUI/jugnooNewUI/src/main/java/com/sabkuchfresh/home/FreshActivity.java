@@ -1226,6 +1226,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 linearLayoutCheckout.setVisibility(View.GONE);
                 relativeLayoutSort.setVisibility(View.VISIBLE);
+                topBar.ivSearch.setVisibility(View.GONE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.filters);
@@ -1244,6 +1245,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 linearLayoutCheckout.setVisibility(View.GONE);
                 relativeLayoutSort.setVisibility(View.VISIBLE);
+                topBar.ivSearch.setVisibility(View.GONE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.select_cuisines);
