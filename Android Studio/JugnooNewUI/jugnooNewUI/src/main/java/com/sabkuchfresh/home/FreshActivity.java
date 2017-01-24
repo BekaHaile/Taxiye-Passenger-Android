@@ -207,7 +207,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private AppBarLayout appBarLayout;
     private RelativeLayout rlSort, rlSortBg, rlSortContainer;
     private View viewSortFake, viewSortFake1;
-    private ImageView ivSort, ivBelowShadowNew;
+    private ImageView ivSort;
+    public ImageView ivBelowShadowNew;
     private Toolbar toolbar;
     private RecyclerView rvDeliverySlots;
     private FreshSortingAdapter sortingAdapter;
@@ -1022,12 +1023,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
             topBar.llSearchContainer.setVisibility(View.GONE);
             topBar.setSearchVisibility(View.GONE);
-            topBar.getLlCartContainer().setVisibility(View.VISIBLE);
+            topBar.getLlCartContainer().setVisibility(View.GONE);
             setRelativeLayoutLocalityClick();
             topBar.getLlLocation().setVisibility(View.GONE);
             relativeLayoutCheckoutBar.setVisibility(View.GONE);
             ivBelowShadowNew.setVisibility(View.GONE);
             topBar.getLlSearchCart().setVisibility(View.VISIBLE);
+            topBar.ivFilter.setVisibility(View.GONE);
 
             if(fragment instanceof FreshHomeFragment){
                 resetToolbarWithScroll(226f);
@@ -1157,16 +1159,15 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
+                topBar.getIvSearch().setVisibility(View.VISIBLE);
+                topBar.ivFilter.setVisibility(View.VISIBLE);
 
-
-                relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 relativeLayoutCart.setVisibility(View.GONE);
                 linearLayoutCheckout.setVisibility(View.GONE);
 
                 relativeLayoutSort.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.menus));
-                //topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
@@ -1178,7 +1179,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 textViewCheckout.setVisibility(View.GONE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
-
+                topBar.getIvSearch().setVisibility(View.VISIBLE);
 
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 relativeLayoutCart.setVisibility(View.GONE);
@@ -1303,14 +1304,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
                 ivBelowShadowNew.setVisibility(View.VISIBLE);
-                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
 				relativeLayoutSort.setVisibility(View.GONE);
                 relativeLayoutCart.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.GONE);
                 topBar.llSearchContainer.setVisibility(View.VISIBLE);
-                topBar.getIvSearch().setVisibility(View.GONE);
                 topBar.setSearchVisibility(View.VISIBLE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
+                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                topBar.ivSearch.setVisibility(View.GONE);
 
                 try {
                     if(appType == AppConstant.ApplicationType.MENUS && getVendorMenuFragment() != null
@@ -1428,7 +1429,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void searchItem() {
         try {
             if(getAppType() == AppConstant.ApplicationType.MENUS){
-                getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
+                if(getTopFragment() instanceof MenusFragment){
+                    getMenusFragment().openSearch();
+                } else if(getTopFragment() instanceof VendorMenuFragment){
+                    getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
+                }
             } else {
                 if(getFreshFragment() != null){
                     getTransactionUtils().openSearchFragment(FreshActivity.this, relativeLayoutContainer, getFreshFragment().getSuperCategory().getSuperCategoryId(),
@@ -1440,6 +1445,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void openMenusFilter(){
+        getTransactionUtils().openMenusFilterFragment(this, getRelativeLayoutContainer());
     }
 
     private FreshSearchFragment getFreshSearchFragment() {
@@ -1651,9 +1660,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
                         }
                     }, false, false);
-        }
-        else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            finish();
         } else if(locationSearchShown) {
             locationSearchShown = false;
             try {
@@ -1661,7 +1667,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
+        }
+        else if(getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()){
+            getMenusFragment().openSearch();
+        }
+        else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            finish();
+        }
+        else {
             if((getSupportFragmentManager().getBackStackEntryCount() == 2 && getFreshSearchFragment() == null) ||
                     (getSupportFragmentManager().getBackStackEntryCount() == 3 && getFreshSearchFragment() != null)){
                 FlurryEventLogger.event(FlurryEventNames.REVIEW_CART, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.HOME_SCREEN);
@@ -3080,11 +3093,17 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             try {
                 if(getFreshSearchFragment() != null) {
                     getFreshSearchFragment().searchFreshItems(s.toString());
+                } else if(getTopFragment() instanceof MenusFragment){
+                    getMenusFragment().getMenusRestaurantAdapter().searchVendorsFromTopBar(s.toString());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     };
+
+    public DrawerLayout getDrawerLayout(){
+        return drawerLayout;
+    }
 
 }

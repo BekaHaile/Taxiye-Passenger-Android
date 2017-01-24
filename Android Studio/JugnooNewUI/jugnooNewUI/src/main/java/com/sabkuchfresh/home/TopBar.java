@@ -43,7 +43,7 @@ public class TopBar implements FlurryEventNames {
 
 	public RelativeLayout llSearchContainer;
 	public EditText etSearch;
-	public ImageView ivSearchCross, ivSearch;
+	public ImageView ivSearchCross, ivSearch, ivFilter;
 
 	public RelativeLayout relativeLayoutLocality, llSearchCartContainer;
 	public TextView textViewLocationValue, textViewReset, tvDeliveryAddress, tvCartAmount;
@@ -88,6 +88,7 @@ public class TopBar implements FlurryEventNames {
 		llSearchContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchContainer);
 		etSearch = (EditText) drawerLayout.findViewById(R.id.etSearch); etSearch.setTypeface(Fonts.mavenMedium(activity));
 		ivSearch = (ImageView) drawerLayout.findViewById(R.id.ivSearch);
+		ivFilter = (ImageView) drawerLayout.findViewById(R.id.ivFilter);
 		ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
 		setSearchVisibility(View.GONE);
 
@@ -96,6 +97,7 @@ public class TopBar implements FlurryEventNames {
 		imageViewMenu.setOnClickListener(topBarOnClickListener);
 		buttonCheckServer.setOnClickListener(topBarOnClickListener);
 		ivSearch.setOnClickListener(topBarOnClickListener);
+		ivFilter.setOnClickListener(topBarOnClickListener);
 		imageViewBack.setOnClickListener(topBarOnClickListener);
 
 		buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
@@ -187,8 +189,12 @@ public class TopBar implements FlurryEventNames {
 				case R.id.ivSearch:
 					if(activity instanceof FreshActivity) {
 						((FreshActivity)activity).searchItem();
-						llSearchContainer.setVisibility(View.VISIBLE);
-						ivSearch.setVisibility(View.GONE);
+					}
+					break;
+
+				case R.id.ivFilter:
+					if(activity instanceof FreshActivity){
+						((FreshActivity)activity).openMenusFilter();
 					}
 					break;
 

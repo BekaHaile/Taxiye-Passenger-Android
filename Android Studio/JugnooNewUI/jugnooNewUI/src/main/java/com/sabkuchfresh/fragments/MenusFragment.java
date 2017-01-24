@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -76,7 +78,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     private ArrayList<String> status = new ArrayList<>();
 
     PushDialog pushDialog;
-    private boolean resumed = false;
+    private boolean resumed = false, searchOpened = false;
 
     public MenusFragment() {
     }
@@ -180,6 +182,13 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        activity.getTopBar().ivSearchCross.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.getTopBar().etSearch.setText("");
+            }
+        });
 
         return rootView;
     }
@@ -436,6 +445,37 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             }
         }).show();
 
+    }
+
+    public void openSearch(){
+       if(searchOpened){
+           activity.getTopBar().etSearch.setText("");
+           activity.fragmentUISetup(this);
+           searchOpened = false;
+       } else {
+           activity.resetToolbar();
+           activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
+           activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
+           activity.ivBelowShadowNew.setVisibility(View.VISIBLE);
+           activity.getTopBar().title.setVisibility(View.GONE);
+           activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
+
+           activity.getTopBar().setSearchVisibility(View.VISIBLE);
+           activity.getTopBar().ivSearch.setVisibility(View.GONE);
+           activity.getTopBar().ivFilter.setVisibility(View.GONE);
+           activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+           searchOpened = true;
+           activity.getTopBar().etSearch.requestFocus();
+           Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
+       }
+    }
+
+    public boolean getSearchOpened(){
+        return searchOpened;
+    }
+
+    public MenusRestaurantAdapter getMenusRestaurantAdapter(){
+        return menusRestaurantAdapter;
     }
 
 }

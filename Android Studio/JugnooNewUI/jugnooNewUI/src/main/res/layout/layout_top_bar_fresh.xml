@@ -80,8 +80,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10px"
-                android:src="@drawable/ic_delete_selector"
                 android:padding="20px"
+                android:src="@drawable/ic_delete_selector"
                 android:tag="mwar"
                 android:visibility="gone"
                 />
@@ -92,9 +92,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="80px"
                 android:layout_marginRight="@dimen/px_38"
-                android:orientation="horizontal"
-                android:layout_marginLeft="80px">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/title"
@@ -104,10 +104,10 @@
                     android:layout_marginLeft="20px"
                     android:layout_toLeftOf="@+id/llSearchCart"
                     android:layout_marginRight="@dimen/px_10"
-                    android:gravity="center_vertical"
-                    android:text="@string/app_name"
                     android:ellipsize="end"
+                    android:gravity="center_vertical"
                     android:maxLines="1"
+                    android:text="@string/app_name"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_30"
@@ -120,47 +120,49 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/px_10"
                     android:layout_toLeftOf="@+id/llSearchCart"
-                    android:visibility="gone"
                     android:background="@drawable/capsule_white_stroke"
+                    android:visibility="gone"
                     >
+
                     <ImageView
                         android:id="@+id/ivSearchView"
                         android:layout_width="62px"
                         android:layout_height="62px"
-                        android:layout_margin="6px"
                         android:layout_gravity="center_vertical"
+                        android:layout_margin="6px"
                         android:src="@drawable/ic_search_new_selector"/>
+
                     <EditText
                         android:id="@+id/etSearch"
                         android:layout_width="match_parent"
                         android:layout_height="62px"
-                        android:background="@drawable/background_transparent"
-                        android:layout_gravity="center_vertical"
-                        android:textCursorDrawable="@drawable/cursor_black"
-                        android:textColor="@color/text_color"
-                        android:textColorHint="@color/text_color_light"
-                        android:textSize="@dimen/text_size_26"
-                        android:hint="@string/search"
                         android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
                         android:layout_toLeftOf="@+id/ivSearchCross"
                         android:layout_toRightOf="@+id/ivSearchView"
-                        android:maxLines="1"
-                        android:singleLine="true"
+                        android:background="@drawable/background_transparent"
                         android:ellipsize="end"
+                        android:hint="@string/search"
+                        android:maxLines="1"
                         android:padding="10px"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_light"
+                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textSize="@dimen/text_size_26"
                         />
 
                     <ImageView
                         android:id="@+id/ivSearchCross"
                         android:layout_width="32px"
                         android:layout_height="34px"
-                        android:padding="@dimen/px_7"
-                        android:visibility="visible"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/px_20"
-                        android:src="@drawable/ic_cross_grey"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/px_20"
+                        android:padding="@dimen/px_7"
+                        android:src="@drawable/ic_cross_grey"
+                        android:visibility="visible"
                         />
 
                 </RelativeLayout>
@@ -169,71 +171,81 @@
                     android:id="@+id/llSearchCart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
                     android:layout_alignParentRight="true"
-                    android:layout_gravity="center_vertical">
-
-                <ImageView
-                    android:id="@+id/ivSearch"
-                    android:layout_width="62px"
-                    android:layout_height="62px"
-                    android:layout_margin="6px"
-                    android:visibility="visible"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_search_new_selector"/>
-
-                <LinearLayout
-                    android:id="@+id/llCartContainer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/px_62"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/px_20"
                     android:animateLayoutChanges="true"
-                    android:background="@drawable/capsule_cart_selector"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
                     android:layout_gravity="center_vertical"
-                    android:tag="mwar">
-
-
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="@dimen/px_26"
-                        android:layout_height="@dimen/px_26"
-                        android:layout_marginLeft="@dimen/px_18"
-                        android:layout_marginRight="@dimen/px_18"
-                        android:src="@drawable/ic_cart_new"
-                        android:tag="mwar"/>
+                        android:id="@+id/ivSearch"
+                        android:layout_width="62px"
+                        android:layout_height="62px"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="6px"
+                        android:src="@drawable/ic_search_new_selector"
+                        android:visibility="visible"/>
+
+                    <ImageView
+                        android:id="@+id/ivFilter"
+                        android:layout_width="62px"
+                        android:layout_height="62px"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="6px"
+                        android:src="@drawable/ic_search_new_selector"
+                        android:visibility="gone"/>
 
                     <LinearLayout
-                        android:id="@+id/llCartAmount"
+                        android:id="@+id/llCartContainer"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="@dimen/px_18"
+                        android:layout_height="@dimen/px_62"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/px_20"
+                        android:animateLayoutChanges="true"
+                        android:background="@drawable/capsule_cart_selector"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:tag="mwar">
 
-                        <TextView
-                            android:id="@+id/tvCartAmount"
+
+                        <ImageView
+                            android:layout_width="@dimen/px_26"
+                            android:layout_height="@dimen/px_26"
+                            android:layout_marginLeft="@dimen/px_18"
+                            android:layout_marginRight="@dimen/px_18"
+                            android:src="@drawable/ic_cart_new"
+                            android:tag="mwar"/>
+
+                        <LinearLayout
+                            android:id="@+id/llCartAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="@dimen/px_18"
-                            android:text="240"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_26"/>
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
 
-                        <ImageView
-                            android:layout_width="13px"
-                            android:layout_height="23px"
-                            android:src="@drawable/back_arrow_white"
-                            android:tag="mwar"/>
+                            <TextView
+                                android:id="@+id/tvCartAmount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="@dimen/px_18"
+                                android:text="240"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/text_size_26"/>
+
+                            <ImageView
+                                android:layout_width="13px"
+                                android:layout_height="23px"
+                                android:src="@drawable/back_arrow_white"
+                                android:tag="mwar"/>
+
+                        </LinearLayout>
 
                     </LinearLayout>
-
-                </LinearLayout>
 
                 </LinearLayout>
 

@@ -432,7 +432,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 holderFilter.cardViewFilter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        activity.getTransactionUtils().openMenusFilterFragment(activity, activity.getRelativeLayoutContainer());
+
                     }
                 });
                 holderFilter.editTextSearch.removeTextChangedListener(textWatcher);
@@ -543,26 +543,26 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public int getItemViewType(int position)
-    {
-
+    public int getItemViewType(int position) {
+        int filterTabPos = 0;
         if(vendorsCompleteCount()>0)
         {
-            if(position==0) {
-                Log.e(TAG, position+">"+SEARCH_FILTER_ITEM);
-                return SEARCH_FILTER_ITEM;
-            }
-            else if(position>0 && position-1 < recentOrdersSize())
+//            if(position==0) {
+//                Log.e(TAG, position+">"+SEARCH_FILTER_ITEM);
+//                return SEARCH_FILTER_ITEM;
+//            }
+//            else
+            if(position>=filterTabPos && position-filterTabPos < recentOrdersSize())
             {
                 Log.e(TAG, position+">"+STATUS_ITEM);
                 return STATUS_ITEM;
             }
-            else if(position >= 1+recentOrders.size() && vendorsToShow.size() == 0)
+            else if(position >= filterTabPos+recentOrders.size() && vendorsToShow.size() == 0)
             {
                 Log.v(TAG,"no vender item  "+ position+">"+MAIN_ITEM);
                 return NO_VENDORS_ITEM;
             }
-            else if(position >= 1+recentOrders.size() && position-(1+recentOrders.size()) < vendorsToShow.size())
+            else if(position >= filterTabPos+recentOrders.size() && position-(filterTabPos+recentOrders.size()) < vendorsToShow.size())
             {
                 Log.e(TAG, position+">"+MAIN_ITEM);
                 return MAIN_ITEM;
@@ -594,7 +594,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
         int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
-        int filterCount = (vendorsCompleteCount() > 0) ? 1 : 0;
+//        int filterCount = (vendorsCompleteCount() > 0) ? 1 : 0;
+        int filterCount = 0;
         int blankItem = (vendorsToShowCount() > 0) ? 1 : 0;
 
         return  recentOrdersSize() + vendorsToShowCount() + noVenderToShowCount + filterCount + blankItem;
@@ -735,5 +736,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             searchVendors(s.toString());
         }
     };
+
+    public void searchVendorsFromTopBar(String s){
+        searchText = s;
+        searchVendors(s);
+    }
 
 }
