@@ -104,6 +104,7 @@ public class FreshHomeFragment extends Fragment {
         if(!hidden){
             activity.fragmentUISetup(this);
             if(activity.getCartChangedAtCheckout()){
+                activity.updateCartFromSP();
                 activity.updateCartValuesGetTotalPrice();
             }
             activity.setCartChangedAtCheckout(false);
@@ -130,7 +131,7 @@ public class FreshHomeFragment extends Fragment {
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
-                params.put(Constants.KEY_CLIENT_ID, Config.getGroceryClientId());
+                params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
                 params.put(Constants.INTERATED, "1");
 
                 new HomeUtil().putDefaultParams(params);

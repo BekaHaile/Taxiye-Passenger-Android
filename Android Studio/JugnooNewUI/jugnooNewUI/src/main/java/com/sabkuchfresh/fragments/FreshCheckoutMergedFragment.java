@@ -1165,7 +1165,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 if(activity.getAppType() == AppConstant.ApplicationType.MEALS){
                     params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
                 } else {
-                    params.put(Constants.KEY_CLIENT_ID, Config.getGroceryClientId());
+                    params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
                 }
                 params.put(Constants.KEY_CART, cartItems(type));
                 if(activity.getSelectedPromoCoupon() != null && activity.getSelectedPromoCoupon().getId() > -1){
@@ -1729,7 +1729,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 if(activity.getAppType() == AppConstant.ApplicationType.MEALS){
                     params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
                 } else {
-                    params.put(Constants.KEY_CLIENT_ID, Config.getGroceryClientId());
+                    params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
                 }
 
                 if(selectedSlot != -1) {

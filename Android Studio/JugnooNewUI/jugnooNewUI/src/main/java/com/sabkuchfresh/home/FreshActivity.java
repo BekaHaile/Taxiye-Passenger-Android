@@ -3081,7 +3081,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         public void afterTextChanged(Editable s) {
             try {
                 if(getFreshSearchFragment() != null) {
-                    getFreshSearchFragment().searchRestaurant(s.toString());
+                    getFreshSearchFragment().searchFreshItems(s.toString());
                 }
             } catch (Exception e) {
                 e.printStackTrace();

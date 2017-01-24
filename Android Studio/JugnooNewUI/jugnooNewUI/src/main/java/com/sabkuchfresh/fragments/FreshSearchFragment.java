@@ -351,10 +351,10 @@ public class FreshSearchFragment extends Fragment {
 
 
 
-	public void searchRestaurant(String s){
+	public void searchFreshItems(String s){
 		searchText = s.trim();
 		if(searchText.length() > 2) {
-			searchRestaurantsAutoComplete(searchText);
+			searchFreshItemsAutoComplete(searchText);
 		} else if(searchText.length() == 0){
 			subItemsInSearch.clear();
 			freshCategoryItemsAdapter.notifyDataSetChanged();
@@ -363,7 +363,7 @@ public class FreshSearchFragment extends Fragment {
 
 	private String searchText;
 	private boolean refreshingAutoComplete = false;
-	public void searchRestaurantsAutoComplete(final String searchText) {
+	public void searchFreshItemsAutoComplete(final String searchText) {
 		try {
 			if(!refreshingAutoComplete) {
 				if (AppStatus.getInstance(activity).isOnline(activity)) {
@@ -412,9 +412,6 @@ public class FreshSearchFragment extends Fragment {
 								recallSearch(searchText);
 							}
 						});
-				} else {
-					refreshingAutoComplete = true;
-					refreshingAutoComplete = false;
 				}
 			}
 		} catch (Exception e) {
@@ -426,7 +423,7 @@ public class FreshSearchFragment extends Fragment {
 
 	private void recallSearch(String previousSearchText){
 		if (!searchText.trim().equalsIgnoreCase(previousSearchText)) {
-			searchRestaurantsAutoComplete(searchText);
+			searchFreshItems(searchText);
 		}
 	}
 
