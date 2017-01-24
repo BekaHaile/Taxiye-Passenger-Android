@@ -14,9 +14,9 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -79,6 +79,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private LinearLayout noFreshsView;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
+	private ImageView belowShadow;
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 	private View rootView;
@@ -162,6 +163,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
 		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
 		viewPager.setAdapter(freshCategoryFragmentsAdapter);
+		belowShadow = (ImageView) rootView.findViewById(R.id.below_shadow);
 
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.text_color_dark_1, R.color.text_color);
@@ -389,6 +391,8 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
                                     if(activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
+										tabs.setVisibility(View.VISIBLE);
+										belowShadow.setVisibility(View.VISIBLE);
 										if(activity.getProductsResponse().getCategories().size() == 0){
 											activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
 											noFreshsView.setVisibility(View.VISIBLE);
@@ -396,6 +400,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 											mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 											activity.showBottomBar(false);
 											mainLayout.setVisibility(View.GONE);
+										} else if(activity.getProductsResponse().getCategories().size() == 1){
+											tabs.setVisibility(View.GONE);
+											belowShadow.setVisibility(View.GONE);
 										}
                                         activity.updateCartFromSP();
                                         activity.updateCartValuesGetTotalPrice();

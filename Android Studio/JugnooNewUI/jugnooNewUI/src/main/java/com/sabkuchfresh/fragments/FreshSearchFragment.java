@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +34,6 @@ import java.util.Locale;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -139,17 +136,16 @@ public class FreshSearchFragment extends Fragment {
 				new FreshCategoryItemsAdapter.Callback() {
 					@Override
 					public void onPlusClicked(int position, SubItem subItem) {
-						activity.updateCartValuesGetTotalPrice();
+						activity.updateCartValuesGetTotalPriceFMG(subItem);
 					}
 
 					@Override
 					public void onMinusClicked(int position, SubItem subItem) {
-						activity.updateCartValuesGetTotalPrice();
+						activity.updateCartValuesGetTotalPriceFMG(subItem);
 					}
 
 					@Override
 					public void onDeleteClicked(int position, SubItem subItem) {
-						activity.updateCartValuesGetTotalPrice();
 					}
 
 					@Override
@@ -195,6 +191,8 @@ public class FreshSearchFragment extends Fragment {
 				}
 			}
         });*/
+
+		activity.getTopBar().etSearch.setText("");
 
 		activity.getTopBar().ivSearchCross.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -312,11 +310,6 @@ public class FreshSearchFragment extends Fragment {
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
-		try {
-			freshCategoryItemsAdapter.notifyDataSetChanged();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		if(!hidden){
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -329,9 +322,21 @@ public class FreshSearchFragment extends Fragment {
                 }
             }, 700);
 			activity.fragmentUISetup(this);
-			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
-				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
+			if(activity.getCartChangedAtCheckout()){
+				activity.updateCartFromSPFMG(subItemsInSearch);
+				freshCategoryItemsAdapter.notifyDataSetChanged();
+				activity.updateCartValuesGetTotalPrice();
 			}
+			activity.setCartChangedAtCheckout(false);
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					activity.setMinOrderAmountText(FreshSearchFragment.this);
+				}
+			}, 300);
+//			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
+//				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
+//			}
 		}
 	}
 
@@ -385,6 +390,7 @@ public class FreshSearchFragment extends Fragment {
 													subItemsInSearch.addAll(category.getSubItems());
 												}
 											}
+											activity.updateCartFromSPFMG(subItemsInSearch);
 											freshCategoryItemsAdapter.notifyDataSetChanged();
 										} else {
 

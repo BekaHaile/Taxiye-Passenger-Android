@@ -871,8 +871,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         return pair;
     }
 
-    private Pair<Double, Integer> updateCartValuesGetTotalPriceFMG() {
-        saveCartToSP();
+    private Pair<Double, Integer> updateCartValuesGetTotalPriceFMG(){
+        return updateCartValuesGetTotalPriceFMG(null);
+    }
+
+    public Pair<Double, Integer> updateCartValuesGetTotalPriceFMG(SubItem subItemToUpdate) {
+        saveCartToSPFMG(subItemToUpdate);
         Pair<Double, Integer> pair = getSubItemInCartTotalPrice();
         try {
             textViewTotalPrice.setText(String.format(getResources().getString(R.string.rupees_value_format),
@@ -881,10 +885,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.getLlCartAmount().setVisibility(View.VISIBLE);
                 topBar.getTvCartAmount().setText(String.format(getResources().getString(R.string.rupees_value_format),
                         Utils.getMoneyDecimalFormat().format(totalPrice)));
-                //topBar.setEtSearchWidth();
             } else {
                 topBar.getLlCartAmount().setVisibility(View.GONE);
-                //topBar.setEtSearchWidth();
             }
             if (totalQuantity > 0) {
                 textViewCartItemsCount.setVisibility(View.VISIBLE);
@@ -946,10 +948,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     topBar.getLlCartAmount().setVisibility(View.VISIBLE);
                     topBar.getTvCartAmount().setText(String.format(getResources().getString(R.string.rupees_value_format),
                             Utils.getMoneyDecimalFormat().format(totalPrice)));
-                    //topBar.setEtSearchWidth();
                 } else {
                     topBar.getLlCartAmount().setVisibility(View.GONE);
-                    //topBar.setEtSearchWidth();
                 }
                 if (totalQuantity > 0) {
                     textViewCartItemsCount.setVisibility(View.VISIBLE);
@@ -977,7 +977,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             e.printStackTrace();
         }
 
-        saveCartToSP();
+        saveCartToSPMenus();
         if (totalQuantity > 0) {
         }
         pair = new Pair<>(totalPrice, totalQuantity);
@@ -1664,9 +1664,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     (getSupportFragmentManager().getBackStackEntryCount() == 4 && getFreshSearchFragment() != null)){
                 FlurryEventLogger.event(FlurryEventNames.CHECKOUT, FlurryEventNames.SCREEN_TRANSITION, FlurryEventNames.REVIEW_CART_SCREEN);
             }
-            if(getFreshSearchFragment() != null){
+            if(getTopFragment() instanceof FreshSearchFragment){
                 getFreshSearchFragment().clearArrays();
-            } else if(getMenusSearchFragment() != null){
+            } else if(getTopFragment() instanceof MenusSearchFragment){
                 getMenusSearchFragment().clearArrays();
             }
 
@@ -1866,11 +1866,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         if(getAppType() == AppConstant.ApplicationType.MENUS){
             saveCartToSPMenus();
         } else {
-            saveCartToSPFMG();
+            saveCartToSPFMG(null);
         }
     }
 
-    private void saveCartToSPFMG() {
+    private void saveCartToSPFMG(SubItem subItemToUpdate) {
         try {
             JSONObject jCart = new JSONObject();
             if(getAppType() == AppConstant.ApplicationType.FRESH) {
@@ -1881,7 +1881,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
             }
             Gson gson = new Gson();
-            if (getProductsResponse() != null
+            if (subItemToUpdate == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
                 for (Category category : getProductsResponse().getCategories()) {
                     for (SubItem subItem : category.getSubItems()) {
@@ -1898,6 +1898,20 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                                 e.printStackTrace();
                             }
                         }
+                    }
+                }
+            } else if(subItemToUpdate != null){
+                if (subItemToUpdate.getSubItemQuantitySelected() > 0) {
+                    try {
+                        jCart.put(String.valueOf(subItemToUpdate.getSubItemId()), gson.toJson(subItemToUpdate, SubItem.class));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        jCart.remove(String.valueOf(subItemToUpdate.getSubItemId()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -1970,11 +1984,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         if(getAppType() == AppConstant.ApplicationType.MENUS){
             updateCartFromSPMenus();
         } else {
-            updateCartFromSPFMG();
+            updateCartFromSPFMG(null);
         }
     }
 
-    private void updateCartFromSPFMG() {
+    public void updateCartFromSPFMG(ArrayList<SubItem> subItems) {
         try {
             JSONObject jCart;
             int type = getAppType();
@@ -1986,7 +2000,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
             }
             Gson gson = new Gson();
-            if (getProductsResponse() != null
+            if (subItems == null && getProductsResponse() != null
                     && getProductsResponse().getCategories() != null) {
                 boolean cartUpdated = false;
                 for (Category category : getProductsResponse().getCategories()) {
@@ -2008,7 +2022,28 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     }
                 }
                 if(cartUpdated) {
-                    saveCartToSP();
+                    saveCartToSPFMG(null);
+                }
+            } else if(subItems != null){
+                boolean cartUpdated = false;
+                for (SubItem subItem : subItems) {
+                    subItem.setSubItemQuantitySelected(0);
+                    try {
+                        String jItem = jCart.optString(String.valueOf(subItem.getSubItemId()), "");
+                        if(!TextUtils.isEmpty(jItem)){
+                            SubItem subItemSaved =  gson.fromJson(jItem, SubItem.class);
+                            if(subItem.getStock() < subItemSaved.getSubItemQuantitySelected()){
+                                subItemSaved.setSubItemQuantitySelected(subItem.getStock());
+                                cartUpdated = true;
+                            }
+                            subItem.setSubItemQuantitySelected(subItemSaved.getSubItemQuantitySelected());
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(cartUpdated) {
+                    saveCartToSPFMG(null);
                 }
             }
 

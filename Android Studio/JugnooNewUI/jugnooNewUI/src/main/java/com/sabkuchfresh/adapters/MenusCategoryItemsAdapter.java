@@ -236,17 +236,12 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             });
 
-
 //            makeTextViewResizable(mHolder.textViewAboutItemDescription, 2, context.getString(R.string.more), true);
-
-
-
-            mHolder.relativeLayoutQuantitySel.setVisibility(View.VISIBLE);
 
             if(context instanceof FreshActivity
                     && ((FreshActivity)context).getVendorOpened() != null
                     && (1 == ((FreshActivity)context).getVendorOpened().getIsClosed() || 0 == ((FreshActivity)context).getVendorOpened().getIsAvailable())){
-                mHolder.relativeLayoutQuantitySel.setVisibility(View.GONE);
+                mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
             }
 
 
@@ -352,7 +347,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     class MainViewHolder extends RecyclerView.ViewHolder {
 
         public CardView cardViewRecycler;
-        public RelativeLayout relativeLayoutItem, relativeLayoutQuantitySel ;
+        public RelativeLayout relativeLayoutItem;
         public LinearLayout linearLayoutQuantitySelector;
         private ImageView imageViewFoodType, saperatorImage, imageViewMinus, imageViewPlus;
         public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity;
@@ -362,7 +357,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             super(itemView);
             cardViewRecycler = (CardView) itemView.findViewById(R.id.cvRoot);
             relativeLayoutItem = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutItem);
-            relativeLayoutQuantitySel = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutQuantitySel);
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             saperatorImage = (ImageView) itemView.findViewById(R.id.saperatorImage);

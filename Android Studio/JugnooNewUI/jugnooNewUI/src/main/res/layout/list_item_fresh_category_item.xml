@@ -64,7 +64,6 @@
                 android:id="@+id/textViewItemName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
                 android:text="Orange"
                 android:textColor="@color/text_color_dark_1"
                 android:textSize="@dimen/text_size_30"

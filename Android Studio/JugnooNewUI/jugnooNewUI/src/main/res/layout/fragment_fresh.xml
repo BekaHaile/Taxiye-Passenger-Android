@@ -42,8 +42,8 @@
             <ImageView
                 android:id="@+id/below_shadow"
                 android:layout_width="match_parent"
-                android:layout_height="6px"
-                android:background="@drawable/shadow_down"
+                android:layout_height="14px"
+                android:background="@drawable/shadow_down_new"
                 />
         </RelativeLayout>
 
