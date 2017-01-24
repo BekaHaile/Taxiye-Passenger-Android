@@ -282,6 +282,6 @@
         android:layout_below="@+id/relativeLayoutMain"
         android:layout_marginLeft="@dimen/px_180"
         android:layout_marginRight="@dimen/px_22"
-        android:background="@color/stroke_color_light"/>
+        android:background="@color/stroke_light_grey_alpha"/>
 
 </RelativeLayout>

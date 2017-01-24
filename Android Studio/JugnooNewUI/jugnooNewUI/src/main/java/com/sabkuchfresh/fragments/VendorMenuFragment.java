@@ -44,8 +44,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private FreshActivity activity;
     private boolean tabClickFlag = false;
 
-    private FreshSortingDialog freshSortingDialog;
-    private ArrayList<SortResponseModel> slots = new ArrayList<>();
     public VendorMenuFragment(){}
     protected Bus mBus;
 
@@ -118,7 +116,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 		success(activity.getMenuProductsResponse());
 
-		getFreshSortingDialog();
+		activity.setSortingList(this);
 
 		return rootView;
 	}
@@ -234,43 +232,12 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 					activity.getRelativeLayoutCartNew().performClick();
 				}
 			}
-
-
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
 	}
 
 
-	public FreshSortingDialog getFreshSortingDialog() {
-		try {
-			if (freshSortingDialog == null) {
-                setSortingList();
-                slots.get(1).check = true;
-                activity.menusSort = slots.get(1).id;
-                activity.onSortEvent(new SortSelection(activity.menusSort));
-                freshSortingDialog = new FreshSortingDialog(activity, slots,
-                        new FreshSortingDialog.FreshDeliverySortDialogCallback() {
-                            @Override
-                            public void onOkClicked(int position) {
-                                activity.menusSort = position;
-                                activity.getBus().post(new SortSelection(position));
-                            }
-                        });
-            }
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return freshSortingDialog;
-	}
-
-	private void setSortingList() {
-		slots.clear();
-		slots.add(new SortResponseModel(0, "A-Z", false));
-//		slots.add(new SortResponseModel(1, "Popularity", false));
-		slots.add(new SortResponseModel(2, "Price: Low to High", false));
-		slots.add(new SortResponseModel(3, "Price: High to Low", false));
-	}
 
 	public MenusCategoryFragmentsAdapter getMenusCategoryFragmentsAdapter() {
 		return menusCategoryFragmentsAdapter;

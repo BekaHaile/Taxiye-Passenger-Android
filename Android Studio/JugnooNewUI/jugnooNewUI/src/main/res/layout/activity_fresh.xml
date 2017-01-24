@@ -48,6 +48,15 @@
             android:layout_marginTop="@dimen/px_96"
             android:src="@drawable/shadow_down" />
 
+        <ImageView
+            android:id="@+id/ivBelowShadowNew"
+            android:layout_width="match_parent"
+            android:layout_height="15px"
+            android:layout_marginTop="@dimen/px_96"
+            android:layout_marginLeft="@dimen/px_30"
+            android:layout_marginRight="@dimen/px_30"
+            android:src="@drawable/shadow_down_new"/>
+
 
         <LinearLayout
             android:id="@+id/linearLayoutCheckoutContainer"

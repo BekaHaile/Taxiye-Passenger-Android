@@ -67,7 +67,7 @@ public class FreshHomeFragment extends Fragment {
             e.printStackTrace();
         }
         activity.fragmentUISetup(this);
-        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
+
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
@@ -92,6 +92,8 @@ public class FreshHomeFragment extends Fragment {
 
             }
         });
+
+        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 
         return rootView;
     }

@@ -47,7 +47,7 @@ public class TopBar implements FlurryEventNames {
 
 	public RelativeLayout relativeLayoutLocality, llSearchCartContainer;
 	public TextView textViewLocationValue, textViewReset, tvDeliveryAddress, tvCartAmount;
-	private LinearLayout llLocation, llCartAmount, llCartContainer;
+	private LinearLayout llLocation, llCartAmount, llCartContainer, llSearchCart;
 
 
 
@@ -71,6 +71,7 @@ public class TopBar implements FlurryEventNames {
 		llCartAmount = (LinearLayout) drawerLayout.findViewById(R.id.llCartAmount);
 		tvCartAmount = (TextView) drawerLayout.findViewById(R.id.tvCartAmount); tvCartAmount.setTypeface(Fonts.mavenRegular(activity));
 		llSearchCartContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
+		llSearchCart = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCart);
 
 		below_shadow = (ImageView) drawerLayout.findViewById(R.id.below_shadow);
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
@@ -134,6 +135,10 @@ public class TopBar implements FlurryEventNames {
 		});
 
 
+	}
+
+	public LinearLayout getLlSearchCart() {
+		return llSearchCart;
 	}
 
 	public ImageView getIvSearch() {

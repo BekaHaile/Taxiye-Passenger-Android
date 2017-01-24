@@ -93,8 +93,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     private boolean loader = true;
     protected Bus mBus;
     PushDialog pushDialog;
-    private RelativeLayout relativeLayoutNoMenus;
-    private TextView textViewNothingFound;
 
     @Override
     public void onStart() {
@@ -128,11 +126,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			e.printStackTrace();
 		}
 
-        relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
-        ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
-        relativeLayoutNoMenus.setVisibility(View.GONE);
-        rootView.findViewById(R.id.imageViewShadow).setVisibility(View.VISIBLE);
 
 		activity.fragmentUISetup(this);
 		linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
@@ -300,9 +293,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
-            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
-                activity.showBottomBar(false);
-            }
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
@@ -340,7 +330,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 					public void success(ProductsResponse productsResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
-                        relativeLayoutNoMenus.setVisibility(View.GONE);
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
@@ -360,12 +349,9 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
-                                    relativeLayoutNoMenus.setVisibility(View.VISIBLE);
 									activity.resetToolbar();
                                     mainLayout.setVisibility(View.GONE);
                                     activity.showBottomBar(false);
-                                    textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
-                                            productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
                                 else {
                                     activity.setProductsResponse(productsResponse);

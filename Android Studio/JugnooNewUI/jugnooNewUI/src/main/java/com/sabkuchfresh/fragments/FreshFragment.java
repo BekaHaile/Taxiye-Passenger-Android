@@ -86,8 +86,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     private FreshActivity activity;
     private boolean tabClickFlag = false;
 
-    private FreshSortingDialog freshSortingDialog;
-    private ArrayList<SortResponseModel> slots = new ArrayList<>();
     private ArrayList<SubItem> freshData = new ArrayList<>();
     private boolean loader = true, resumed = false;
     protected Bus mBus;
@@ -220,7 +218,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         });
 
 
-        setSortingList();
+        activity.setSortingList(this);
 
         getAllProducts(true, activity.getSelectedLatLng());
 		activity.getTopBar().title.setText(superCategory.getSuperCategoryName());
@@ -296,13 +294,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 
     }
 
-    private void setSortingList() {
-        slots.clear();
-        slots.add(new SortResponseModel(0, "A-Z", false));
-        slots.add(new SortResponseModel(1, "Popularity", false));
-        slots.add(new SortResponseModel(2, "Price: Low to High", false));
-        slots.add(new SortResponseModel(3, "Price: High to Low", false));
-    }
+
 
     @Override
 	public void onHiddenChanged(boolean hidden) {
@@ -387,7 +379,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                     activity.setProductsResponse(productsResponse);
                                     activity.setMinOrderAmountText(FreshFragment.this);
 									activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
-                                    setSortingList();
+                                    activity.setSortingList(FreshFragment.this);
 
                                     if(activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
@@ -432,14 +424,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                             }).show(message);
                                         }
                                     }
-									if(activity.freshSort == -1) {
-										int sortedBy = jObj.optInt(Constants.SORTED_BY);
-										activity.freshSort = sortedBy;
-										slots.get(sortedBy).setCheck(true);
-									} else {
-										slots.get(activity.freshSort).setCheck(true);
-										activity.onSortEvent(new SortSelection(activity.freshSort));
-									}
+									activity.updateSortSelectedFromAPI(FreshFragment.this, jObj);
                                 }
 							} else {
                                 activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
@@ -523,24 +508,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         ASSL.closeActivity(linearLayoutRoot);
         System.gc();
 	}
-
-
-    public FreshSortingDialog getFreshSortingDialog() {
-
-        if (freshSortingDialog == null) {
-            freshSortingDialog = new FreshSortingDialog(activity, slots,
-                    new FreshSortingDialog.FreshDeliverySortDialogCallback() {
-                        @Override
-                        public void onOkClicked(int position) {
-                            //setSelectedSlotToView();
-//                            activity.sortArray(position);
-							activity.freshSort = position;
-                            activity.getBus().post(new SortSelection(position));
-                        }
-                    });
-        }
-        return freshSortingDialog;
-    }
 
     @Subscribe
     public void onUpdateListEvent(UpdateMainList event) {

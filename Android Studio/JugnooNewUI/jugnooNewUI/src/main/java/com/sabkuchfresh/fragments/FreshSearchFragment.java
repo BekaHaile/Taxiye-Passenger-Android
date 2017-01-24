@@ -355,6 +355,9 @@ public class FreshSearchFragment extends Fragment {
 		searchText = s.trim();
 		if(searchText.length() > 2) {
 			searchRestaurantsAutoComplete(searchText);
+		} else if(searchText.length() == 0){
+			subItemsInSearch.clear();
+			freshCategoryItemsAdapter.notifyDataSetChanged();
 		}
 	}
 

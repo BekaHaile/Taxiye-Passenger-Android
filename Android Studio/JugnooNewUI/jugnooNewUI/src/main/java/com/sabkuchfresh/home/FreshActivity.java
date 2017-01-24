@@ -207,7 +207,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private AppBarLayout appBarLayout;
     private RelativeLayout rlSort, rlSortBg, rlSortContainer;
     private View viewSortFake, viewSortFake1;
-    private ImageView ivSort;
+    private ImageView ivSort, ivBelowShadowNew;
     private Toolbar toolbar;
     private RecyclerView rvDeliverySlots;
     private FreshSortingAdapter sortingAdapter;
@@ -278,6 +278,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
             textViewTotalPrice = (TextView) findViewById(R.id.textViewTotalPrice);
             textViewTotalPrice.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+            ivBelowShadowNew = (ImageView) findViewById(R.id.ivBelowShadowNew);
 
             textViewCheckout = (TextView) findViewById(R.id.textViewCheckout);
             textViewCheckout.setTypeface(Fonts.mavenRegular(this));
@@ -322,7 +323,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 }
             });
 
-            setSortingList();
             sortingAdapter = new FreshSortingAdapter(FreshActivity.this, slots, new FreshSortingAdapter.Callback() {
                 @Override
                 public void onSlotSelected(int position, SortResponseModel slot) {
@@ -432,25 +432,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 }
             });
 
-            relativeLayoutSort.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FreshFragment fragment = getFreshFragment();
-                    MealFragment mealFragment = getMealFragment();
-                    GroceryFragment groceryFragment = getGroceryFragment();
-                    VendorMenuFragment vendorMenuFragment = getVendorMenuFragment();
-
-                    if (fragment != null && !fragment.isHidden()) {
-                        fragment.getFreshSortingDialog().showSorting();
-                    } else if(mealFragment != null && !mealFragment.isHidden()) {
-                        mealFragment.getFreshSortingDialog().showSorting();
-                    } else if(groceryFragment != null && !groceryFragment.isHidden()) {
-                        groceryFragment.getFreshSortingDialog().showSorting();
-                    } else if(vendorMenuFragment != null && !vendorMenuFragment.isHidden()) {
-                        vendorMenuFragment.getFreshSortingDialog().showSorting();
-                    }
-                }
-            });
 
 
             ivSort.setOnClickListener(new View.OnClickListener() {
@@ -529,12 +510,36 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     }
 
-    private void setSortingList() {
+    public void setSortingList(Fragment fragment) {
         slots.clear();
-        slots.add(new SortResponseModel(0, "A-Z", false));
-        slots.add(new SortResponseModel(1, "Popularity", false));
-        slots.add(new SortResponseModel(2, "Price: Low to High", false));
-        slots.add(new SortResponseModel(3, "Price: High to Low", false));
+        if(fragment instanceof FreshFragment) {
+            slots.add(new SortResponseModel(0, "A-Z", false));
+            slots.add(new SortResponseModel(1, "Popularity", false));
+            slots.add(new SortResponseModel(2, "Price: Low to High", false));
+            slots.add(new SortResponseModel(3, "Price: High to Low", false));
+        } else if(fragment instanceof VendorMenuFragment){
+            slots.add(new SortResponseModel(0, "A-Z", false));
+            slots.add(new SortResponseModel(2, "Price: Low to High", false));
+            slots.add(new SortResponseModel(3, "Price: High to Low", false));
+
+            slots.get(1).check = true;
+            menusSort = slots.get(1).id;
+            onSortEvent(new SortSelection(menusSort));
+        }
+        sortingAdapter.notifyDataSetChanged();
+    }
+
+    public void updateSortSelectedFromAPI(Fragment fragment, JSONObject jObj){
+        if(fragment instanceof FreshFragment) {
+            if (freshSort == -1) {
+                int sortedBy = jObj.optInt(Constants.SORTED_BY);
+                freshSort = sortedBy;
+                slots.get(sortedBy).setCheck(true);
+            } else {
+                slots.get(freshSort).setCheck(true);
+                onSortEvent(new SortSelection(freshSort));
+            }
+        }
     }
 
 
@@ -1022,6 +1027,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             setRelativeLayoutLocalityClick();
             topBar.getLlLocation().setVisibility(View.GONE);
             relativeLayoutCheckoutBar.setVisibility(View.GONE);
+            ivBelowShadowNew.setVisibility(View.GONE);
+            topBar.getLlSearchCart().setVisibility(View.VISIBLE);
 
             if(fragment instanceof FreshHomeFragment){
                 resetToolbarWithScroll(226f);
@@ -1250,6 +1257,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.below_shadow.setVisibility(View.VISIBLE);
+                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                topBar.getLlSearchCart().setVisibility(View.GONE);
 
 				relativeLayoutSort.setVisibility(View.GONE);
                 relativeLayoutCart.setVisibility(View.VISIBLE);
@@ -1257,7 +1266,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.title.setVisibility(View.VISIBLE);
 				topBar.title.setText(getResources().getString(R.string.checkout));
 				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                topBar.getLlSearchCartContainer().setVisibility(View.GONE);
 
 			} else if (fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
@@ -1292,9 +1300,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
             } else if (fragment instanceof FreshSearchFragment || fragment instanceof MenusSearchFragment) {
+                resetToolbar();
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.below_shadow.setVisibility(View.VISIBLE);
+                ivBelowShadowNew.setVisibility(View.VISIBLE);
                 topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
 				relativeLayoutSort.setVisibility(View.GONE);
                 relativeLayoutCart.setVisibility(View.VISIBLE);
