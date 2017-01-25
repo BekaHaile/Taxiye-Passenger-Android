@@ -362,9 +362,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                         noMealsView.setVisibility(View.GONE);
                                         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
                                         activity.showBottomBar(true);
+                                        activity.getTopBar().getLlCartContainer().setVisibility(View.VISIBLE);
                                     } else {
                                         noMealsView.setVisibility(View.VISIBLE);
                                         //mSwipeRefreshLayout.setVisibility(View.GONE);
+                                        activity.getTopBar().getLlCartContainer().setVisibility(View.GONE);
                                         activity.showBottomBar(false);
                                     }
 

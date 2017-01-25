@@ -1033,8 +1033,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             topBar.getLlSearchCart().setVisibility(View.VISIBLE);
             topBar.ivFilter.setVisibility(View.GONE);
             topBar.ivSearch.setVisibility(View.GONE);
+            topBar.buttonCheckServer.setVisibility(View.GONE);
 
             if(fragment instanceof FreshHomeFragment){
+                topBar.buttonCheckServer.setVisibility(View.VISIBLE);
                 resetToolbarWithScroll(226f);
                 topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -1907,7 +1909,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             } else if(getAppType() == AppConstant.ApplicationType.GROCERY){
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
             } else{
-                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+//                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
             }
             Gson gson = new Gson();
             if (subItemToUpdate == null && getProductsResponse() != null

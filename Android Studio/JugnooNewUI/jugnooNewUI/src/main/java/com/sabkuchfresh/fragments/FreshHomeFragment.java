@@ -128,8 +128,9 @@ public class FreshHomeFragment extends Fragment {
     public void getSuperCategoriesAPI() {
         try {
             if(AppStatus.getInstance(activity).isOnline(activity)) {
-                relativeLayoutNoMenus.setVisibility(View.GONE);
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+                adapter.clearList();
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -144,19 +145,21 @@ public class FreshHomeFragment extends Fragment {
                     public void success(SuperCategoriesData superCategoriesData, Response response) {
                         try {
                             if(superCategoriesData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
-                                adapter.clearList();
                                 oSnapNotAvailableCase(superCategoriesData.getMessage());
                             } else if(superCategoriesData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
                                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                 activity.setSuperCategoriesData(superCategoriesData);
                                 adapter.setList(superCategoriesData.getSuperCategories());
                                 activity.updateCartValuesGetTotalPrice();
+                                stopOhSnap();
                             } else {
                                 DialogPopup.alertPopup(activity, "", superCategoriesData.getMessage());
+                                stopOhSnap();
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             retryDialogSuperCategoriesAPI(DialogErrorType.SERVER_ERROR);
+                            stopOhSnap();
                         }
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -165,6 +168,7 @@ public class FreshHomeFragment extends Fragment {
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
                         retryDialogSuperCategoriesAPI(DialogErrorType.CONNECTION_LOST);
+                        stopOhSnap();
                     }
                 });
             }
@@ -201,6 +205,12 @@ public class FreshHomeFragment extends Fragment {
         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
         relativeLayoutNoMenus.setVisibility(View.VISIBLE);
         textViewNothingFound.setText(!TextUtils.isEmpty(message) ? message : getString(R.string.nothing_found_near_you));
+    }
+
+    public void stopOhSnap(){
+        relativeLayoutNoMenus.setVisibility(View.GONE);
+        activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+        activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
     }
 
 }
