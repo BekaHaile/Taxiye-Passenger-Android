@@ -7621,7 +7621,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 if(modeEnabled == 1){
                     topBar.textViewTitle.setText(getResources().getString(R.string.emergency_mode_enabled));
-                    topBar.textViewTitle.getPaint().setShader(null);
+
                     topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_30)*minRatio);
                     topBar.textViewTitle.setTextColor(getResources().getColor(R.color.red));
                     topBar.relativeLayoutNotification.setVisibility(View.GONE);
@@ -7651,7 +7651,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
             topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) getResources().getDimensionPixelSize(R.dimen.text_size_40) * minRatio);
             topBar.imageViewMenu.setImageResource(R.drawable.ic_menu_selector);
-            topBar.textViewTitle.getPaint().setShader(Utils.textColorGradient(this, topBar.textViewTitle));
+            topBar.textViewTitle.setTextColor(getResources().getColor(R.color.text_color));
 
         } catch(Exception e){
             e.printStackTrace();

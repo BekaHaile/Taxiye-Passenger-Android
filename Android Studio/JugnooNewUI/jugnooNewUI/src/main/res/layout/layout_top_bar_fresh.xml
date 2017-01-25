@@ -360,8 +360,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/delivery_address"
-                    android:textColor="@color/location_text_color"
-                    android:textSize="@dimen/text_size_20"/>
+                    android:textColor="@color/text_color_light_less"
+                    android:textSize="@dimen/text_size_22"/>
 
                 <TextView
                     android:id="@+id/tvLocation"

@@ -2544,6 +2544,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 }
             }
             clearMealCart();
+            updateCartFromSP();
+            updateCartValuesGetTotalPrice();
         } catch (Exception e) {
             e.printStackTrace();
         }
