@@ -306,7 +306,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
             else if (holder instanceof ViewHolder) {
                 position = position - recentOrders.size();
-                position = vendorsComplete.size() > 0 ? position - 1 : position;
+                position = vendorsComplete.size() > 0 ? position : position;
                 ViewHolder mHolder = ((ViewHolder) holder);
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
                 mHolder.textViewRestaurantName.setText(vendor.getName());

@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -194,17 +193,23 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
 
                 mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
+                mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark);
+                mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
                 if (subItem.getSubItemQuantitySelected() == 0) {
-                    mHolder.mAddButton.setVisibility(View.VISIBLE);
-                    mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
+                    if(subItem.getStock() > 0){
+                        mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme);
+                        mHolder.imageViewMinus.setVisibility(View.GONE);
+                        mHolder.textViewQuantity.setVisibility(View.GONE);
+                    } else{
+                        mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
+                    }
                 } else {
-                    mHolder.mAddButton.setVisibility(View.GONE);
-                    mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
+                    mHolder.imageViewMinus.setVisibility(View.VISIBLE);
+                    mHolder.textViewQuantity.setVisibility(View.VISIBLE);
                 }
 
                 if(subItem.getcanOrder() == 0) {
                     mHolder.imageClosed.setVisibility(View.GONE);
-                    mHolder.mAddButton.setVisibility(View.GONE);
                     mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
                     mHolder.cartLayout.setVisibility(View.VISIBLE);
                     mHolder.deliveryTime.setVisibility(View.VISIBLE);
@@ -223,20 +228,9 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     mHolder.deliveryTime.setVisibility(View.GONE);
                 }
 
-//                if(subItem.getcanOrder() == 1) {
-//                    mHolder.imageClosed.setVisibility(View.GONE);
-//                    mHolder.cartLayout.setVisibility(View.VISIBLE);
-//
-//                } else {
-//                    mHolder.imageClosed.setVisibility(View.VISIBLE);
-//                    mHolder.cartLayout.setVisibility(View.GONE);
-//                    mHolder.deliveryTime.setText("Order Starts at "+DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()));
-//                }
-
 
                 mHolder.imageViewMinus.setTag(position);
                 mHolder.imageViewPlus.setTag(position);
-                mHolder.mAddButton.setTag(position);
 
                 mHolder.belowLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -264,24 +258,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     }
                 });
-                mHolder.mAddButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            int pos = (int) v.getTag();
-                            if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-                                subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
-                            } else {
-                                Utils.showToast(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
-                            }
-                            callback.onPlusClicked(pos, subItems.get(pos));
-                            notifyDataSetChanged();
-                            MyApplication.getInstance().logEvent(FirebaseEvents.M_ADD, null);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
 
                 mHolder.imageViewPlus.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -295,6 +271,9 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             }
                             callback.onPlusClicked(pos, subItems.get(pos));
                             notifyDataSetChanged();
+                            if(subItems.get(pos).getSubItemQuantitySelected() == 1){
+                                MyApplication.getInstance().logEvent(FirebaseEvents.M_ADD, null);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -447,7 +426,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private ImageView imageViewMmeals, foodType;
         private ImageView imageViewMinus, imageViewPlus, imageClosed;
         public TextView textViewTitle, textPrice, textViewdetails, deliveryTime, textViewQuantity;
-        public Button mAddButton;
 
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
@@ -461,10 +439,6 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             imageClosed = (ImageView) itemView.findViewById(R.id.image_view_closed);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
-
-            mAddButton = (Button) itemView.findViewById(R.id.add_button);
-
-            mAddButton.setTypeface(Fonts.mavenRegular(context));
 
             textViewTitle = (TextView) itemView.findViewById(R.id.textViewTitle);
             textViewTitle.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);

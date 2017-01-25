@@ -204,6 +204,14 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+
+            if(activity.getCartChangedAtCheckout()){
+                activity.updateCartFromSP();
+                freshCartItemsAdapter.notifyDataSetChanged();
+                addOnItemsAdapter.notifyDataSetChanged();
+                activity.updateCartValuesGetTotalPrice();
+            }
+            activity.setCartChangedAtCheckout(false);
             updateCartDataView();
             updateCartItemsList();
             updateAddonsListCount();

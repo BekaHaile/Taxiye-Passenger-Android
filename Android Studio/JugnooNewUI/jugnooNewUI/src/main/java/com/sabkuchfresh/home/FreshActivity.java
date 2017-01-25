@@ -1909,7 +1909,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             } else if(getAppType() == AppConstant.ApplicationType.GROCERY){
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
             } else{
-//                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+                if(subItemToUpdate != null) {
+                    jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+                }
             }
             Gson gson = new Gson();
             if (subItemToUpdate == null && getProductsResponse() != null
