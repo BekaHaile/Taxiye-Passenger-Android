@@ -127,19 +127,21 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {
                         activity.saveCartList(subItemsInCart);
+                        activity.updateCartFromSP();
                         updateCartDataView();
                         updateAddonsListCount();
                     }
 
                     @Override
                     public void onMinusClicked(int position, SubItem subItem) {
-                        updateCartDataView();
                         if(subItem.getSubItemQuantitySelected() == 0){
                             subItemsInCart.remove(position);
-                            checkIfEmpty();
                         }
                         activity.saveCartList(subItemsInCart);
+                        activity.updateCartFromSP();
+                        updateCartDataView();
                         updateAddonsListCount();
+                        checkIfEmpty();
                     }
 
                     @Override
@@ -236,7 +238,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
-        updateCartTopBarView(activity.updateCartValuesGetTotalPrice());
+        updateCartTopBarView(activity.updateCartValuesGetTotalPriceFMG(subItem));
         addOnSelectedCount++;
         updateBottomBar();
         updateCartItemsList();
@@ -244,7 +246,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
 
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
-        updateCartTopBarView(activity.updateCartValuesGetTotalPrice());
+        updateCartTopBarView(activity.updateCartValuesGetTotalPriceFMG(subItem));
         addOnSelectedCount--;
         updateBottomBar();
         updateCartItemsList();
@@ -288,7 +290,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
     private void updateCartItemsList(){
         subItemsInCart = activity.fetchCartList();
         if(freshCartItemsAdapter != null){
-            freshCartItemsAdapter.notifyDataSetChanged();
+            freshCartItemsAdapter.setResults(subItemsInCart);
         }
     }
 
@@ -296,11 +298,13 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
         for(SubItem subItem : subItemsInCart){
             subItem.setSubItemQuantitySelected(0);
         }
+        activity.saveCartList(subItemsInCart);
+        activity.updateCartFromSP();
         updateCartDataView();
         subItemsInCart.clear();
+        activity.setCartChangedAtCheckout(true);
         freshCartItemsAdapter.notifyDataSetChanged();
         checkIfEmpty();
-
     }
 
     private void updateAddonsListCount(){
