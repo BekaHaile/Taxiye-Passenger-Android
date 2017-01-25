@@ -359,6 +359,7 @@ public class FreshSearchFragment extends Fragment {
 		} else if(searchText.length() == 0){
 			subItemsInSearch.clear();
 			freshCategoryItemsAdapter.notifyDataSetChanged();
+			textViewPlaceholder.setVisibility(View.GONE);
 		}
 	}
 
@@ -396,6 +397,11 @@ public class FreshSearchFragment extends Fragment {
 											}
 											activity.updateCartFromSPFMG(subItemsInSearch);
 											freshCategoryItemsAdapter.notifyDataSetChanged();
+											if(subItemsInSearch.size() > 0){
+												textViewPlaceholder.setVisibility(View.GONE);
+											} else{
+												textViewPlaceholder.setVisibility(View.VISIBLE);
+											}
 										} else {
 
 										}

@@ -1,42 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/llRoot"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/llRoot"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cvRoot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/px_5"
         android:layout_marginLeft="@dimen/px_15"
         android:layout_marginRight="@dimen/px_15"
         android:layout_marginTop="@dimen/px_5"
-        android:layout_marginBottom="@dimen/px_5"
         card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="@dimen/button_corner_radius">
 
         <RelativeLayout
             android:layout_width="@dimen/px_384"
-            android:layout_height="@dimen/px_210"
-            >
+            android:layout_height="@dimen/px_210">
 
             <ImageView
                 android:id="@+id/ivSuperCategoryImage"
                 android:layout_width="@dimen/px_384"
                 android:layout_height="@dimen/px_210"
-                android:src="@drawable/ic_fresh_new_placeholder"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_fresh_new_placeholder" />
 
             <View
                 android:layout_width="@dimen/px_384"
                 android:layout_height="@dimen/px_80"
                 android:layout_alignBottom="@+id/ivSuperCategoryImage"
-                android:background="@drawable/shadow_up"
-                />
+                android:background="@drawable/shadow_up_fresh_home_item" />
 
             <TextView
                 android:id="@+id/tvSuperCategoryName"
@@ -47,13 +43,11 @@
                 android:layout_marginLeft="@dimen/px_18"
                 android:text="@string/produce"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_26"
-                />
+                android:textSize="@dimen/text_size_26" />
 
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
-
 
 
 </LinearLayout>

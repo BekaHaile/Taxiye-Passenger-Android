@@ -116,6 +116,11 @@ public class FreshHomeFragment extends Fragment {
                 }
             }, 300);
         }
+
+        if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+            activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+            activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+        }
     }
 
 

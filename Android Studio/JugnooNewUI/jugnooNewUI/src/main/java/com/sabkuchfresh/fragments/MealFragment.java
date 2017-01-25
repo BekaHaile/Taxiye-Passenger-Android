@@ -114,7 +114,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         } catch (Exception e) {
             e.printStackTrace();
         }
-        linearLayoutRoot.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
+        linearLayoutRoot.setBackgroundColor(activity.getResources().getColor(R.color.white));
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
@@ -199,7 +199,14 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                     activity.setRefreshCart(false);
                 }
             }, 300);
+
+            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+            }
         }
+
+
     }
 
 
@@ -308,6 +315,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
+                                    activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                                    activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
                                     mSwipeRefreshLayout.setVisibility(View.GONE);
                                     noMealsView.setVisibility(View.GONE);
@@ -316,6 +325,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                             productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
                                 else {
+                                    activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
                                     int sortedBy = jObj.optInt(Constants.SORTED_BY);
                                     mealsData.clear();
                                     mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());

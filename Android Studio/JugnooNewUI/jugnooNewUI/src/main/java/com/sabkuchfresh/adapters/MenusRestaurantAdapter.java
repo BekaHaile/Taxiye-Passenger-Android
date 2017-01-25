@@ -426,7 +426,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             } else if (holder instanceof ViewTitleHolder) {
                 ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
                 titleholder.relative.setVisibility(View.VISIBLE);
-                titleholder.relative.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
+                titleholder.relative.setBackgroundColor(activity.getResources().getColor(R.color.white));
             } else if (holder instanceof ViewHolderFilter) {
                 ViewHolderFilter holderFilter = ((ViewHolderFilter) holder);
                 holderFilter.cardViewFilter.setOnClickListener(new View.OnClickListener() {

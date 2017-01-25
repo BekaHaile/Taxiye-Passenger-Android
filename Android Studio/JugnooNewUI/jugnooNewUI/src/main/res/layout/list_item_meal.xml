@@ -3,7 +3,7 @@
     android:id="@+id/linearRoot"
     android:layout_width="720px"
     android:layout_height="wrap_content"
-    android:background="@color/menu_item_selector_color"
+    android:background="@color/white"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 

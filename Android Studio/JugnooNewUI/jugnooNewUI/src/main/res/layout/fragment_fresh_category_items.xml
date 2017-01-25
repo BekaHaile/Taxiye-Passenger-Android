@@ -4,6 +4,7 @@
     android:id="@+id/linearLayoutRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     >
 
@@ -60,6 +61,7 @@
             android:layout_height="match_parent"
             android:fadeScrollbars="true"
             android:scrollbars="vertical"
+            android:background="@color/white"
             android:splitMotionEvents="false">
         </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>

@@ -1043,15 +1043,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.getIvSearch().setVisibility(View.VISIBLE);
                 textViewCheckout.setVisibility(View.GONE);
 
-
-
-
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     float marginBottom = 40f;
                     int dpAsPixels = (int) (marginBottom*scale + 0.5f);
                     fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
+
 
                 relativeLayoutCartNew.setVisibility(View.GONE);
                 relativeLayoutCart.setVisibility(View.GONE);
