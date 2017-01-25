@@ -110,7 +110,7 @@ public class RideOrderShortView {
 			}
 			else if(datum != null){
 				if(datum.getProductType() == ProductType.FRESH.getOrdinal()){
-					imageViewProductType.setImageResource(R.drawable.ic_support_fresh);
+					imageViewProductType.setImageResource(R.drawable.ic_fab_fresh);
 				} else if(datum.getProductType() == ProductType.MEALS.getOrdinal()){
 					imageViewProductType.setImageResource(R.drawable.ic_support_meals);
 				} else if(datum.getProductType() == ProductType.GROCERY.getOrdinal()){

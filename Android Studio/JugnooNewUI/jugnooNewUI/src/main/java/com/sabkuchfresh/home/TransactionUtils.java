@@ -12,6 +12,7 @@ import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
+import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MenusCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusFilterFragment;
@@ -219,6 +220,18 @@ public class TransactionUtils {
 
 	public boolean checkIfFragmentAdded(FragmentActivity activity, String tag){
 		return (activity.getSupportFragmentManager().findFragmentByTag(tag) != null);
+	}
+
+	public void addMealAddonItemsFragment(FragmentActivity fragmentActivity, View container) {
+		if(!checkIfFragmentAdded(fragmentActivity, MealAddonItemsFragment.class.getName())) {
+			fragmentActivity.getSupportFragmentManager().beginTransaction()
+					.add(container.getId(), new MealAddonItemsFragment(),
+							MealAddonItemsFragment.class.getName())
+					.addToBackStack(MealAddonItemsFragment.class.getName())
+					.hide(fragmentActivity.getSupportFragmentManager().findFragmentByTag(fragmentActivity.getSupportFragmentManager()
+							.getBackStackEntryAt(fragmentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+					.commitAllowingStateLoss();
+		}
 	}
 
 }

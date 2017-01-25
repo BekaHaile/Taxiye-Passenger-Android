@@ -247,11 +247,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         subItemsInCart = activity.fetchCartList();
         try {
-            if(activity.getProductsResponse() != null
+            if(type == AppConstant.ApplicationType.MEALS
+                    && activity.getProductsResponse() != null
 					&& activity.getProductsResponse().getCategories() != null) {
-				if(Data.AppType == AppConstant.ApplicationType.MEALS) {
-					currentGroupId = activity.getProductsResponse().getCategories().get(0).getCurrentGroupId();
-				}
+                currentGroupId = activity.getProductsResponse().getCategories().get(0).getCurrentGroupId();
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -1676,8 +1675,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onSlotSelected(int position, Slot slot) {
         FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
-        if(activity.getSuperCategoriesData().getDeliveryInfo().getDynamicDeliveryCharges() == 1
-                && type == AppConstant.ApplicationType.MEALS){
+        if(type == AppConstant.ApplicationType.MEALS
+                && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             selectedSlot = slot.getDeliverySlotId();
             getCheckoutDataAPI();
         } else{
@@ -2034,8 +2033,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         activity.setCartChangedAtCheckout(true);
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
-        if(activity.getSuperCategoriesData().getDeliveryInfo().getDynamicDeliveryCharges() == 1
-                && type == AppConstant.ApplicationType.MEALS){
+        if(type == AppConstant.ApplicationType.MEALS
+                && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             getCheckoutDataAPI();
         }
         updateCartDataView();
@@ -2054,8 +2053,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         checkIfEmpty();
         updateCartDataView();
         if(subItemsInCart.size() > 0
-                && activity.getSuperCategoriesData().getDeliveryInfo().getDynamicDeliveryCharges() == 1
-                && type == AppConstant.ApplicationType.MEALS){
+                && type == AppConstant.ApplicationType.MEALS
+                && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             getCheckoutDataAPI();
         }
     }

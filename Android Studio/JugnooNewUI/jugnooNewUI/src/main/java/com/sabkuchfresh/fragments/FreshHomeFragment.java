@@ -144,6 +144,7 @@ public class FreshHomeFragment extends Fragment {
                     public void success(SuperCategoriesData superCategoriesData, Response response) {
                         try {
                             if(superCategoriesData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
+                                adapter.clearList();
                                 oSnapNotAvailableCase(superCategoriesData.getMessage());
                             } else if(superCategoriesData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
                                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);

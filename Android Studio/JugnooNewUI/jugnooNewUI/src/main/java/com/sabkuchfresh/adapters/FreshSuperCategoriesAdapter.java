@@ -35,6 +35,13 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<FreshSuper
 		this.callback = callback;
 	}
 
+	public synchronized void clearList(){
+		if(superCategories != null) {
+			superCategories.clear();
+		}
+		notifyDataSetChanged();
+	}
+
 	public synchronized void setList(List<SuperCategoriesData.SuperCategory> elements){
 		this.superCategories = elements;
 		notifyDataSetChanged();

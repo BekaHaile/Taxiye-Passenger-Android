@@ -361,8 +361,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                     updateCartFromSP();
                     if (updateCartValuesGetTotalPrice().second > 0) {
-                        if (isMealAddonItemsAvailable()) {
-                            addMealAddonItemsFragment();
+                        if (getMealAddonItemsFragment() == null && isMealAddonItemsAvailable()) {
+                            getTransactionUtils().addMealAddonItemsFragment(FreshActivity.this, relativeLayoutContainer);
                         } else {
                             openCart(appType);
 
@@ -1032,6 +1032,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             ivBelowShadowNew.setVisibility(View.GONE);
             topBar.getLlSearchCart().setVisibility(View.VISIBLE);
             topBar.ivFilter.setVisibility(View.GONE);
+            topBar.ivSearch.setVisibility(View.GONE);
 
             if(fragment instanceof FreshHomeFragment){
                 resetToolbarWithScroll(226f);
@@ -1100,7 +1101,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
 				topBar.imageViewBack.setVisibility(View.GONE);
 				textViewCheckout.setVisibility(View.GONE);
-                topBar.ivSearch.setVisibility(View.GONE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
                 topBar.getLlLocation().setVisibility(View.VISIBLE);
 
@@ -1189,6 +1189,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 relativeLayoutCart.setVisibility(View.GONE);
                 linearLayoutCheckout.setVisibility(View.GONE);
                 relativeLayoutSort.setVisibility(View.VISIBLE);
+                rlSort.setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(vendorOpened.getName());
@@ -1230,7 +1231,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 linearLayoutCheckout.setVisibility(View.GONE);
                 relativeLayoutSort.setVisibility(View.VISIBLE);
-                topBar.ivSearch.setVisibility(View.GONE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.filters);
@@ -1249,7 +1249,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 relativeLayoutCartNew.setVisibility(View.VISIBLE);
                 linearLayoutCheckout.setVisibility(View.GONE);
                 relativeLayoutSort.setVisibility(View.VISIBLE);
-                topBar.ivSearch.setVisibility(View.GONE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.select_cuisines);
@@ -1317,7 +1316,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.setSearchVisibility(View.VISIBLE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
                 topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
-                topBar.ivSearch.setVisibility(View.GONE);
 
                 try {
                     if(appType == AppConstant.ApplicationType.MENUS && getVendorMenuFragment() != null
@@ -1360,7 +1358,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             else if (fragment instanceof MealAddonItemsFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.ivSearch.setVisibility(View.GONE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
 
                 relativeLayoutSort.setVisibility(View.GONE);
@@ -2484,16 +2481,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         this.deliveryAddressToEdit = deliveryAddressToEdit;
     }
 
-
-    public void addMealAddonItemsFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new MealAddonItemsFragment(),
-                        MealAddonItemsFragment.class.getName())
-                .addToBackStack(MealAddonItemsFragment.class.getName())
-                .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                .commitAllowingStateLoss();
-    }
 
     public MealAddonItemsFragment getMealAddonItemsFragment() {
         return (MealAddonItemsFragment) getSupportFragmentManager().findFragmentByTag(MealAddonItemsFragment.class.getName());
