@@ -359,6 +359,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     FlurryEventLogger.checkoutTrackEvent(AppConstant.EventTracker.REVIEW_CART, getProduct());
 
                     int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                    updateCartFromSP();
                     if (updateCartValuesGetTotalPrice().second > 0) {
                         if (isMealAddonItemsAvailable()) {
                             addMealAddonItemsFragment();
@@ -409,6 +410,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         if(!canOrder && Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType) == AppConstant.ApplicationType.MEALS)
                             return;
 
+                        updateCartFromSP();
                         if(updateCartValuesGetTotalPrice().second > 0) {
                             int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                             openCart(appType);
@@ -1085,7 +1087,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.title.setVisibility(View.VISIBLE);
 				topBar.title.setText(getResources().getString(R.string.fresh));
 				//topBar.title.getPaint().setShader(Utils.textColorGradient(this, topBar.title));
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 titleLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
                 setMinOrderAmountText(fragment);
@@ -1098,6 +1100,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
 				topBar.imageViewBack.setVisibility(View.GONE);
 				textViewCheckout.setVisibility(View.GONE);
+                topBar.ivSearch.setVisibility(View.GONE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
                 topBar.getLlLocation().setVisibility(View.VISIBLE);
 
@@ -1107,9 +1110,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 				relativeLayoutSort.setVisibility(View.VISIBLE);
 
-				if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-					fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-				}
+                if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    float marginBottom = 40f;
+                    int dpAsPixels = (int) (marginBottom*scale + 0.5f);
+                    fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
+                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                }
 
 				topBar.title.setVisibility(View.VISIBLE);
 				topBar.title.setText(getResources().getString(R.string.meals));
@@ -1354,6 +1360,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             else if (fragment instanceof MealAddonItemsFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.ivSearch.setVisibility(View.GONE);
+                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
 
                 relativeLayoutSort.setVisibility(View.GONE);
                 relativeLayoutCart.setVisibility(View.VISIBLE);

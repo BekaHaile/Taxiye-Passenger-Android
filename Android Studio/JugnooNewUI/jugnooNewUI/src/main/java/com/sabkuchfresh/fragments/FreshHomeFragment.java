@@ -100,6 +100,7 @@ public class FreshHomeFragment extends Fragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(!hidden){
+            adapter.notifyDataSetChanged();
             activity.fragmentUISetup(this);
             if(activity.getCartChangedAtCheckout()){
                 activity.updateCartFromSP();
@@ -143,11 +144,7 @@ public class FreshHomeFragment extends Fragment {
                     public void success(SuperCategoriesData superCategoriesData, Response response) {
                         try {
                             if(superCategoriesData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
-                                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
-                                activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
-                                relativeLayoutNoMenus.setVisibility(View.VISIBLE);
-                                textViewNothingFound.setText(!TextUtils.isEmpty(superCategoriesData.getMessage()) ?
-                                        superCategoriesData.getMessage() : getString(R.string.nothing_found_near_you));
+                                oSnapNotAvailableCase(superCategoriesData.getMessage());
                             } else if(superCategoriesData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
                                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                 activity.setSuperCategoriesData(superCategoriesData);
@@ -197,4 +194,12 @@ public class FreshHomeFragment extends Fragment {
                     }
                 });
     }
+
+    public void oSnapNotAvailableCase(String message){
+        activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+        activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+        relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+        textViewNothingFound.setText(!TextUtils.isEmpty(message) ? message : getString(R.string.nothing_found_near_you));
+    }
+
 }
