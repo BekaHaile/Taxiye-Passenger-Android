@@ -40,8 +40,8 @@ public class TopBar implements FlurryEventNames {
 	public EditText etSearch;
 	public ImageView ivSearchCross, ivSearch, ivFilter;
 
-	public RelativeLayout relativeLayoutLocality, llSearchCartContainer;
-	public TextView textViewLocationValue, textViewReset, tvCartAmount;
+	public RelativeLayout llSearchCartContainer;
+	public TextView textViewReset, tvCartAmount;
 	public LinearLayout llCartAmount, llCartContainer, llSearchCart;
 
 
@@ -70,9 +70,6 @@ public class TopBar implements FlurryEventNames {
 		ivDeliveryAddressCross = (ImageView) drawerLayout.findViewById(R.id.ivDeliveryAddressCross);
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
 
-		relativeLayoutLocality = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutLocality);
-		((TextView)drawerLayout.findViewById(R.id.textViewLocation)).setTypeface(Fonts.mavenRegular(activity));
-		textViewLocationValue = (TextView) drawerLayout.findViewById(R.id.textViewLocationValue); textViewLocationValue.setTypeface(Fonts.mavenMedium(activity));
 		textViewReset = (TextView) drawerLayout.findViewById(R.id.textViewReset); textViewReset.setTypeface(Fonts.mavenMedium(activity));
 
 		llSearchContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchContainer);

@@ -25,7 +25,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Pair;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -885,7 +884,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             textViewMinOrder.setVisibility(View.GONE);
 
             topBar.imageViewDelete.setVisibility(View.GONE);
-            topBar.relativeLayoutLocality.setVisibility(View.GONE);
             topBar.textViewReset.setVisibility(View.GONE);
 
             RelativeLayout.LayoutParams titleLayoutParams = (RelativeLayout.LayoutParams) topBar.title.getLayoutParams();
@@ -2589,9 +2587,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             } else {
                 address = getSelectedAddressType();
             }
-            getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26f * ASSL.Xscale());
-
-            getTopBar().textViewLocationValue.setText(address);
             setLocationAddress(address);
             if(getFreshCheckoutMergedFragment() == null && getMenusCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
                 if (appType == AppConstant.ApplicationType.FRESH && getFreshHomeFragment() != null) {

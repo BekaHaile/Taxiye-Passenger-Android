@@ -251,61 +251,6 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutLocality"
-                android:layout_width="350px"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:visibility="gone"
-                >
-
-                <LinearLayout
-                    android:layout_width="250px"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="-10px"
-                    android:layout_toLeftOf="@+id/imageViewLocality"
-                    android:gravity="right"
-                    android:orientation="vertical"
-                    >
-
-                    <TextView
-                        android:id="@+id/textViewLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/delivery_address"
-                        android:textColor="@color/text_color_theme_alpha_selector"
-                        android:textSize="@dimen/text_size_22"
-                        />
-
-                    <TextView
-                        android:id="@+id/textViewLocationValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:singleLine="true"
-                        android:text=""
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_26"
-                        />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/imageViewLocality"
-                    android:layout_width="96px"
-                    android:layout_height="96px"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/ic_locality_select"
-                    android:tag="mwar"
-                    />
-
-
-            </RelativeLayout>
-
-
             <TextView
                 android:id="@+id/textViewReset"
                 android:layout_width="wrap_content"
