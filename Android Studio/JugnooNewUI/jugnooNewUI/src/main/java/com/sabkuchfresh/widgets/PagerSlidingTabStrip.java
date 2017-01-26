@@ -245,7 +245,6 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
                 }
             });
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 	}

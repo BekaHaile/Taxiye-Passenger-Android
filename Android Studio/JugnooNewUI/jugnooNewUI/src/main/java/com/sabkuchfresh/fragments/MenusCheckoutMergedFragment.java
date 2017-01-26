@@ -113,7 +113,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         MenusCartItemsAdapter.Callback, PromoCouponsAdapter.Callback {
 
     private final String TAG = MenusCheckoutMergedFragment.class.getSimpleName();
-    private LinearLayout linearLayoutRoot;
+    private RelativeLayout rlRoot;
 
     private RelativeLayout relativeLayoutCartTop;
     private TextView textViewCartItems, textViewCartTotalUndiscount, textViewCartTotal;
@@ -208,10 +208,10 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
 
-        linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+        rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
         try {
-            if (linearLayoutRoot != null) {
-                new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+            if (rlRoot != null) {
+                new ASSL(activity, rlRoot, 1134, 720, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1308,7 +1308,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(rlRoot);
         System.gc();
     }
 

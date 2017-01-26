@@ -15,7 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
@@ -39,7 +39,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 @SuppressLint("ValidFragment")
 public class MenusSearchFragment extends Fragment {
 
-	private LinearLayout linearLayoutRoot;
+	private RelativeLayout rlRoot;
 
 	private RecyclerView recyclerViewCategoryItems;
 	private MenusCategoryItemsAdapter menusCategoryItemsAdapter;
@@ -68,15 +68,15 @@ public class MenusSearchFragment extends Fragment {
         activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
 
-		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(rlRoot != null) {
+				new ASSL(activity, rlRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        Utils.setupUI(rootView.findViewById(R.id.linearLayoutRoot), activity);
+        Utils.setupUI(rlRoot, activity);
 
 		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
 		recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
@@ -129,7 +129,7 @@ public class MenusSearchFragment extends Fragment {
 								new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
-										activity.getRelativeLayoutCheckoutBar().performClick();
+										activity.getTopBar().getLlCartContainer().performClick();
 									}
 								}, new View.OnClickListener() {
 									@Override
@@ -332,7 +332,7 @@ public class MenusSearchFragment extends Fragment {
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(rlRoot);
         System.gc();
 	}
 

@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.FreshCategoryItemsAdapter;
@@ -50,7 +50,7 @@ import retrofit.mime.TypedByteArray;
 @SuppressLint("ValidFragment")
 public class FreshSearchFragment extends Fragment {
 
-	private LinearLayout linearLayoutRoot;
+	private RelativeLayout rlRoot;
 
 	private RecyclerView recyclerViewCategoryItems;
 	private FreshCategoryItemsAdapter freshCategoryItemsAdapter;
@@ -91,15 +91,15 @@ public class FreshSearchFragment extends Fragment {
 
 		searchText = "";
 
-		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(rlRoot != null) {
+				new ASSL(activity, rlRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        Utils.setupUI(rootView.findViewById(R.id.linearLayoutRoot), activity);
+        Utils.setupUI(rlRoot, activity);
 
 		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
 		recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
@@ -345,7 +345,7 @@ public class FreshSearchFragment extends Fragment {
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(rlRoot);
         System.gc();
 	}
 

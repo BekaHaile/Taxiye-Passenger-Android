@@ -90,6 +90,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     private boolean resumed = false;
     private RelativeLayout relativeLayoutNoMenus;
     private TextView textViewNothingFound;
+    private View vShadow;
 
     public MealFragment() {
     }
@@ -143,6 +144,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
         mSwipeRefreshLayout.setEnabled(true);
 
         recyclerViewCategoryItems.setAdapter(mealAdapter);
+        vShadow = rootView.findViewById(R.id.vShadow);
+        vShadow.setVisibility(View.VISIBLE);
 
         setSortingList();
 
@@ -181,9 +184,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             activity.fragmentUISetup(this);
             mealAdapter.notifyDataSetChanged();
             activity.resumeMethod();
-            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
-                activity.showBottomBar(false);
-            }
             if(activity.getCartChangedAtCheckout()){
                 activity.updateCartFromSP();
                 mealAdapter.notifyDataSetChanged();
@@ -300,14 +300,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
-                            if(!isHidden()) {
-                                activity.showBottomBar(true);
-                            } else {
-                                Fragment fragment = activity.getTopFragment();
-                                if(fragment != null && fragment instanceof MealFragment) {
-                                    activity.showBottomBar(false);
-                                }
-                            }
 
                             JSONObject jObj = new JSONObject(responseStr);
                             String message = JSONParser.getServerMessage(jObj);
@@ -320,7 +312,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
                                     mSwipeRefreshLayout.setVisibility(View.GONE);
                                     noMealsView.setVisibility(View.GONE);
-                                    activity.showBottomBar(false);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
                                             productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
@@ -361,13 +352,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                     if(mealsData.size()+recentOrder.size()>0) {
                                         noMealsView.setVisibility(View.GONE);
                                         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                        activity.showBottomBar(true);
                                         activity.getTopBar().getLlCartContainer().setVisibility(View.VISIBLE);
                                     } else {
                                         noMealsView.setVisibility(View.VISIBLE);
-                                        //mSwipeRefreshLayout.setVisibility(View.GONE);
                                         activity.getTopBar().getLlCartContainer().setVisibility(View.GONE);
-                                        activity.showBottomBar(false);
                                     }
 
                                     if (activity.getProductsResponse() != null
@@ -415,7 +403,6 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     }
 
     private void retryDialog(DialogErrorType dialogErrorType) {
-        activity.showBottomBar(false);
         mealsData.clear();
         mealAdapter.setList(mealsData);
 

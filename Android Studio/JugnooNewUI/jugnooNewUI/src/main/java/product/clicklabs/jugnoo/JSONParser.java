@@ -185,7 +185,6 @@ public class JSONParser implements Constants {
             gamePredictName = gamePredictViewData.split(VIEW_DATA_SPLITTER)[1];
             gamePredictNew = gamePredictViewData.split(VIEW_DATA_SPLITTER)[2];
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         if(Prefs.with(context).getInt(SP_FIRST_LOGIN_COMPLETE, 0) == 0){
@@ -351,7 +350,6 @@ public class JSONParser implements Constants {
             if(deliveryData.getCoupons() != null)
                 Data.getDeliveryData().getPromoCoupons().addAll(deliveryData.getCoupons());
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -530,7 +528,6 @@ public class JSONParser implements Constants {
             }
 
         } catch (Exception e){
-            e.printStackTrace();
         }
     }
 

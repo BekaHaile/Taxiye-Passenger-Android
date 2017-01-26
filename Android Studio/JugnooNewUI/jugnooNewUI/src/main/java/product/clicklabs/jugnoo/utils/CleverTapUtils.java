@@ -145,7 +145,6 @@ public class CleverTapUtils {
             DecimalFormat df = new DecimalFormat("#.##");
             coupons.add(df.format(maxValue));
         } catch(Exception e) {
-            e.printStackTrace();
         }
         return coupons;
     }

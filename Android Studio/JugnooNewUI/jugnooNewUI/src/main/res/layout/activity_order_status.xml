@@ -4,15 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-    <ImageView
-        android:id="@+id/ivTopShadow"
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:background="@drawable/shadow_down"
-        android:visibility="gone"
-        />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -799,5 +790,12 @@
         </LinearLayout>
     </ScrollView>
 
+    <ImageView
+        android:id="@+id/ivTopShadow"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        android:visibility="gone"
+        />
 
 </RelativeLayout>

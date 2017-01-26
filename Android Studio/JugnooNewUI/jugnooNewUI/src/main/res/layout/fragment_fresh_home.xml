@@ -9,9 +9,17 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvFreshSuper"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/px_908"
-        android:fadeScrollbars="true"/>
+        android:layout_height="match_parent"
+        android:fadeScrollbars="true"
+        android:layout_marginTop="@dimen/shadow_new_height"
+        />
 
     <include layout="@layout/layout_offering_not_available" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        />
 
 </RelativeLayout>

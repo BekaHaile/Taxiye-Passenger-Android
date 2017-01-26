@@ -324,10 +324,9 @@
 
         </RelativeLayout>
 
-
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="15px"
+            android:layout_height="@dimen/shadow_new_height"
             android:layout_below="@+id/topBar"
             android:layout_marginLeft="@dimen/px_30"
             android:layout_marginRight="@dimen/px_30"
@@ -336,7 +335,7 @@
         <LinearLayout
             android:id="@+id/llLocation"
             android:layout_width="match_parent"
-            android:layout_height="100px"
+            android:layout_height="@dimen/top_bar_height"
             android:layout_below="@+id/topBar"
             android:background="@color/white"
             android:orientation="horizontal">
@@ -378,12 +377,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="15px"
-            android:layout_below="@+id/llLocation"
-            android:src="@drawable/shadow_down_new"/>
 
     </LinearLayout>
 

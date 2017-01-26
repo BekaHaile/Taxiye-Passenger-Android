@@ -236,7 +236,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
         }
 
-        activity.resetToolbar();
         deliveryAddressUpdated = false;
 
         type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
@@ -811,7 +810,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onResume() {
         super.onResume();
-        activity.resetToolbar();
         orderPaymentModes();
         setPaymentOptionUI();
         if(Data.userData.isSubscriptionActive()) {

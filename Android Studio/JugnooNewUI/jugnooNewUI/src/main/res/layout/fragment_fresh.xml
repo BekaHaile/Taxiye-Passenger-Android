@@ -19,12 +19,13 @@
             android:layout_width="match_parent"
             android:layout_height="84px"
             android:background="@color/white"
-            android:visibility="visible"
+            android:visibility="gone"
             app:pstsIndicatorColor="@color/theme_color"
             app:pstsIndicatorHeight="5px"
             app:pstsShouldExpand="true"
-            app:pstsUnderlineColor="@color/grey_light"
-            app:pstsUnderlineHeight="1px" />
+            app:pstsUnderlineColor="@color/transparent"
+            app:pstsUnderlineHeight="1px"
+            />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -36,10 +37,11 @@
                 android:layout_height="match_parent" />
 
             <ImageView
-                android:id="@+id/below_shadow"
+                android:id="@+id/ivShadowBelowTab"
                 android:layout_width="match_parent"
-                android:layout_height="14px"
-                android:background="@drawable/shadow_down_new" />
+                android:layout_height="@dimen/shadow_new_height"
+                android:background="@drawable/shadow_down_new"
+                android:visibility="gone"/>
         </RelativeLayout>
 
 

@@ -228,6 +228,12 @@
 
     </ScrollView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        />
+
     <include layout="@layout/layout_location_address_error" />
 
 </RelativeLayout>

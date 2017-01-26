@@ -65,12 +65,12 @@
         </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <ImageView
-        android:id="@+id/below_shadow_down"
+    <View
+        android:id="@+id/vShadow"
         android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/shadow_up"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        android:visibility="gone"
         />
 
 </RelativeLayout>

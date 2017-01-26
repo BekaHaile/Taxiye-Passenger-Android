@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -33,7 +32,7 @@ import static product.clicklabs.jugnoo.Constants.PUREVEGETARIAN;
 public class MenusFilterFragment extends Fragment{
 
 	private final String TAG = MenusFilterFragment.class.getSimpleName();
-	private ScrollView scrollViewRoot;
+	private RelativeLayout rlRoot;
 	private TextView textViewSortBy, textViewPopularity, textViewDistance, textViewPrice;
 	private CardView cardViewSort;
 	private RelativeLayout relativeLayoutPopularity, relativeLayoutDistance, relativeLayoutPrice;
@@ -96,10 +95,10 @@ public class MenusFilterFragment extends Fragment{
 
 		activity.fragmentUISetup(this);
 		setResetClickListener();
-		scrollViewRoot = (ScrollView) rootView.findViewById(R.id.scrollViewRoot);
+		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
 		try {
-			if(scrollViewRoot != null) {
-				new ASSL(activity, scrollViewRoot, 1134, 720, false);
+			if(rlRoot != null) {
+				new ASSL(activity, rlRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -403,7 +402,7 @@ public class MenusFilterFragment extends Fragment{
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(scrollViewRoot);
+        ASSL.closeActivity(rlRoot);
         System.gc();
 	}
 

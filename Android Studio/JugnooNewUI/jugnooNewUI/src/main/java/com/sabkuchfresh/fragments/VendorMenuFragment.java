@@ -7,24 +7,20 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.MenusCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
-import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.FreshSortingDialog;
-import com.sabkuchfresh.retrofit.model.SortResponseModel;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -41,6 +37,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private LinearLayout noFreshsView;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
+	private ImageView ivShadowBelowTab;
 	private MenusCategoryFragmentsAdapter menusCategoryFragmentsAdapter;
 	private View rootView;
     private FreshActivity activity;
@@ -93,6 +90,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 		tabs.setBackgroundColor(activity.getResources().getColor(R.color.transparent));
 		tabs.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
         tabs.setOnMyTabClickListener(this);
+		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
 
 		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -205,21 +203,14 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 	void success(VendorMenuResponse productsResponse) {
 		try {
 			noFreshsView.setVisibility(View.GONE);
-			if (!isHidden()) {
-				activity.showBottomBar(true);
-				activity.getTopBar().below_shadow.setVisibility(View.GONE);
-			} else {
-				Fragment fragment = activity.getTopFragment();
-				if (fragment != null && fragment instanceof VendorMenuFragment) {
-					activity.showBottomBar(false);
-					activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
-				}
-			}
 			mainLayout.setVisibility(View.VISIBLE);
 			activity.setMenuProductsResponse(productsResponse);
 
 			if (activity.getMenuProductsResponse() != null
 					&& activity.getMenuProductsResponse().getCategories() != null) {
+				tabs.setVisibility(View.VISIBLE);
+				ivShadowBelowTab.setVisibility(View.VISIBLE);
+
 				activity.updateCartFromSP();
 				activity.updateCartValuesGetTotalPrice();
 				menusCategoryFragmentsAdapter.setCategories(activity.getMenuProductsResponse().getCategories());
@@ -232,7 +223,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 				if (activity.updateCart) {
 					activity.updateCart = false;
 					activity.openCart();
-					activity.getRelativeLayoutCartNew().performClick();
 				}
 			}
 		} catch (Exception exception) {

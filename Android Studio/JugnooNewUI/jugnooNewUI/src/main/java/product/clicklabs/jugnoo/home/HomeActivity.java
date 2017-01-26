@@ -2774,7 +2774,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void setUserData() {
         try {
             menuBar.setUserData();
-            topBar.setUserData();
 
             updateInRideAddMoneyToWalletButtonText();
             setPaymentOptionInRide();
@@ -7622,7 +7621,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 if(modeEnabled == 1){
                     topBar.textViewTitle.setText(getResources().getString(R.string.emergency_mode_enabled));
 
-                    topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_30)*minRatio);
+//                    topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_30)*minRatio);
                     topBar.textViewTitle.setTextColor(getResources().getColor(R.color.red));
                     topBar.relativeLayoutNotification.setVisibility(View.GONE);
                     topBar.imageViewMenu.setImageResource(R.drawable.menu_icon_selector_emergency);
@@ -7649,7 +7648,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 localModeEnabled = 0;
             }
 
-            topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) getResources().getDimensionPixelSize(R.dimen.text_size_40) * minRatio);
+//            topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) getResources().getDimensionPixelSize(R.dimen.text_size_40) * minRatio);
             topBar.imageViewMenu.setImageResource(R.drawable.ic_menu_selector);
             topBar.textViewTitle.setTextColor(getResources().getColor(R.color.text_color));
 

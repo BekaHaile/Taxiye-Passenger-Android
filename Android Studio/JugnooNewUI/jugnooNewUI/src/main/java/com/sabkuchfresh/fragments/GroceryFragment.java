@@ -1,7 +1,6 @@
 package com.sabkuchfresh.fragments;
 
 import android.app.ProgressDialog;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
@@ -59,7 +57,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -336,22 +333,10 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 noFreshsView.setVisibility(View.GONE);
                                 mSwipeRefreshLayout.setVisibility(View.GONE);
-                                if(!isHidden()) {
-                                    activity.showBottomBar(true);
-                                    activity.getTopBar().below_shadow.setVisibility(View.GONE);
-                                } else {
-									Fragment fragment = activity.getTopFragment();
-									if(fragment != null && fragment instanceof GroceryFragment) {
-										activity.showBottomBar(false);
-										activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
-									}
-                                }
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
-									activity.resetToolbar();
                                     mainLayout.setVisibility(View.GONE);
-                                    activity.showBottomBar(false);
                                 }
                                 else {
                                     activity.setProductsResponse(productsResponse);
@@ -370,11 +355,8 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                     if(activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
 										if(activity.getProductsResponse().getCategories().size() == 0){
-											activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
 											noFreshsView.setVisibility(View.VISIBLE);
-//											imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
 											mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-											activity.showBottomBar(false);
 											mainLayout.setVisibility(View.GONE);
 										}
                                         activity.updateCartFromSP();
@@ -393,7 +375,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                         if(activity.updateCart) {
                                             activity.updateCart = false;
                                             activity.openCart();
-                                            activity.getRelativeLayoutCartNew().performClick();
                                         }
                                         if(productsResponse.getShowMessage() != null
                                                 && productsResponse.getShowMessage().equals(1)) {
@@ -408,9 +389,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 }
 							} else {
                                 noFreshsView.setVisibility(View.VISIBLE);
-//                                imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_grocery);
                                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                activity.showBottomBar(false);
                                 mainLayout.setVisibility(View.GONE);
                             }
 						} catch (Exception exception) {
@@ -456,9 +435,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
 	private void retryDialog(DialogErrorType dialogErrorType){
         noFreshsView.setVisibility(View.VISIBLE);
-//        imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_grocery);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-        activity.showBottomBar(false);
         mainLayout.setVisibility(View.GONE);
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,

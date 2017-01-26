@@ -1,7 +1,6 @@
 package com.sabkuchfresh.home;
 
 import android.app.Activity;
-import android.graphics.drawable.StateListDrawable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
@@ -19,7 +18,6 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -28,13 +26,11 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class TopBar implements FlurryEventNames {
 
-
 	Activity activity;
 	DrawerLayout drawerLayout;
 
-	//Top RL
 	public RelativeLayout topRl;
-	public ImageView imageViewMenu, below_shadow;
+	public ImageView imageViewMenu;
 	public TextView title;
 	public Button buttonCheckServer;
 	public TextView tvLocation;
@@ -71,7 +67,6 @@ public class TopBar implements FlurryEventNames {
 		llSearchCartContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
 		llSearchCart = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCart);
 
-		below_shadow = (ImageView) drawerLayout.findViewById(R.id.below_shadow);
 		imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
 		editTextDeliveryAddress = (EditText) drawerLayout.findViewById(R.id.editTextDeliveryAddress);
 		editTextDeliveryAddress.setTypeface(Fonts.mavenLight(activity));
@@ -203,36 +198,14 @@ public class TopBar implements FlurryEventNames {
 	};
 
 
-	private StateListDrawable getStateListDrawable(int resourceNormal, int resourcePressed){
-		StateListDrawable stateListDrawable = new StateListDrawable();
-		stateListDrawable.addState(new int[]{android.R.attr.state_pressed},
-				activity.getResources().getDrawable(resourcePressed));
-		stateListDrawable.addState(new int[]{},
-				activity.getResources().getDrawable(resourceNormal));
-		return stateListDrawable;
-	}
-
-
 	public void setSearchVisibility(int visibility){
 		if(visibility == View.VISIBLE){
 			llSearchContainer.setBackgroundResource(R.drawable.capsule_white_stroke);
 			etSearch.setVisibility(View.VISIBLE);
-			//ivSearchCross.setVisibility(View.VISIBLE);
-			//setEtSearchWidth();
 		} else {
 			llSearchContainer.setBackgroundResource(R.drawable.background_transparent);
 			etSearch.setVisibility(View.GONE);
-			//ivSearchCross.setVisibility(View.GONE);
 		}
 	}
 
-	public void setEtSearchWidth(){
-		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) etSearch.getLayoutParams();
-		if(llCartAmount.getVisibility() == View.VISIBLE){
-			params.width = (int) (ASSL.Xscale() * 260f);
-		} else {
-			params.width = (int) (ASSL.Xscale() * 360f);
-		}
-		etSearch.setLayoutParams(params);
-	}
 }

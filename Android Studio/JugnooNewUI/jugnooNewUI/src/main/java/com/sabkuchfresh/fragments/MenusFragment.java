@@ -449,14 +449,13 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     public void openSearch(){
        if(searchOpened){
+           searchOpened = false;
            activity.getTopBar().etSearch.setText("");
            activity.fragmentUISetup(this);
-           searchOpened = false;
        } else {
-           activity.resetToolbar();
+           searchOpened = true;
            activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
            activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
-           activity.ivBelowShadowNew.setVisibility(View.VISIBLE);
            activity.getTopBar().title.setVisibility(View.GONE);
            activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
 
@@ -464,7 +463,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
            activity.getTopBar().ivSearch.setVisibility(View.GONE);
            activity.getTopBar().ivFilter.setVisibility(View.GONE);
            activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-           searchOpened = true;
+           activity.resetToolbar(this);
+
            activity.getTopBar().etSearch.requestFocus();
            Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
        }

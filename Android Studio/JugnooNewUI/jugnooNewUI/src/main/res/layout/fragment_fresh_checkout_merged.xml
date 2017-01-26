@@ -3,7 +3,6 @@
     android:id="@+id/linearLayoutRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menu_item_selector_color"
     android:orientation="vertical">
 
     <ScrollView
@@ -573,6 +572,19 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_up_new"
+        android:layout_above="@+id/buttonPlaceOrder"
+        />
 
     <Button
         android:id="@+id/buttonPlaceOrder"

@@ -28,6 +28,12 @@
                 android:splitMotionEvents="false">
             </android.support.v7.widget.RecyclerView>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/shadow_new_height"
+                android:background="@drawable/shadow_down_new"
+                />
+
         </RelativeLayout>
 
 

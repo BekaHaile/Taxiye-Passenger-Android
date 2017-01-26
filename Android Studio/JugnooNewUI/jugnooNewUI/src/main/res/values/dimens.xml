@@ -379,4 +379,6 @@
     </dimen>
     <dimen name="px_7">7px</dimen>
 
+    <dimen name="shadow_new_height">14px</dimen>
+
 </resources>
