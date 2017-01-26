@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.MenusCategoryFragmentsAdapter;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
@@ -32,12 +31,12 @@ import product.clicklabs.jugnoo.utils.Log;
 public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener {
 
 	private final String TAG = VendorMenuFragment.class.getSimpleName();
-	private RelativeLayout linearLayoutRoot;
+	private LinearLayout llRoot;
     private LinearLayout mainLayout;
     private LinearLayout noFreshsView;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
-	private ImageView ivShadowBelowTab;
+	private ImageView ivShadowBelowTab, ivShadowAboveTab;
 	private MenusCategoryFragmentsAdapter menusCategoryFragmentsAdapter;
 	private View rootView;
     private FreshActivity activity;
@@ -69,10 +68,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         activity.setSwipeAvailable(false);
 
 		activity.fragmentUISetup(this);
-		linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(llRoot != null) {
+				new ASSL(activity, llRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,6 +90,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 		tabs.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
         tabs.setOnMyTabClickListener(this);
 		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
+		ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
 
 		viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -152,7 +152,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(llRoot);
         System.gc();
 	}
 
@@ -209,6 +209,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 			if (activity.getMenuProductsResponse() != null
 					&& activity.getMenuProductsResponse().getCategories() != null) {
 				tabs.setVisibility(View.VISIBLE);
+				ivShadowAboveTab.setVisibility(View.VISIBLE);
 				ivShadowBelowTab.setVisibility(View.VISIBLE);
 
 				activity.updateCartFromSP();

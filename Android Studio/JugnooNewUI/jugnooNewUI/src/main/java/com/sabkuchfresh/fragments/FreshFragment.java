@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -71,12 +70,12 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         SwipeRefreshLayout.OnRefreshListener{
 
 	private final String TAG = FreshFragment.class.getSimpleName();
-	private RelativeLayout linearLayoutRoot;
+	private LinearLayout llRoot;
     private LinearLayout mainLayout;
     private LinearLayout noFreshsView;
 	private PagerSlidingTabStrip tabs;
 	private ViewPager viewPager;
-	private ImageView ivShadowBelowTab;
+	private ImageView ivShadowBelowTab, ivShadowAboveTab;
 	private FreshCategoryFragmentsAdapter freshCategoryFragmentsAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 	private View rootView;
@@ -143,10 +142,10 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		}
 
 		activity.fragmentUISetup(this);
-		linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(llRoot != null) {
+				new ASSL(activity, llRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -159,6 +158,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		freshCategoryFragmentsAdapter = new FreshCategoryFragmentsAdapter(activity, getChildFragmentManager());
 		viewPager.setAdapter(freshCategoryFragmentsAdapter);
 		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
+		ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
 
 		tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		tabs.setTextColorResource(R.color.text_color_dark_1, R.color.text_color);
@@ -353,15 +353,18 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                     if(activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
 										tabs.setVisibility(View.VISIBLE);
+										ivShadowAboveTab.setVisibility(View.VISIBLE);
 										ivShadowBelowTab.setVisibility(View.VISIBLE);
 										if(activity.getProductsResponse().getCategories().size() == 0){
 											noFreshsView.setVisibility(View.VISIBLE);
 											mSwipeRefreshLayout.setVisibility(View.VISIBLE);
 											mainLayout.setVisibility(View.GONE);
 											tabs.setVisibility(View.GONE);
+											ivShadowAboveTab.setVisibility(View.GONE);
 										} else if(activity.getProductsResponse().getCategories().size() == 1){
 											tabs.setVisibility(View.GONE);
 											ivShadowBelowTab.setVisibility(View.GONE);
+											ivShadowAboveTab.setVisibility(View.VISIBLE);
 										}
                                         activity.updateCartFromSP();
                                         activity.updateCartValuesGetTotalPrice();
@@ -465,7 +468,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(llRoot);
         System.gc();
 	}
 

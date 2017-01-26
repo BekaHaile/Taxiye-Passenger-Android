@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -64,7 +65,8 @@ import retrofit.mime.TypedByteArray;
 public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener{
     private final String TAG = MenusFragment.class.getSimpleName();
 
-    private RelativeLayout linearLayoutRoot, relativeLayoutNoMenus;
+    private LinearLayout llRoot;
+    private RelativeLayout relativeLayoutNoMenus;
     private MenusRestaurantAdapter menusRestaurantAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
@@ -91,14 +93,15 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
+        activity.setDeliveryAddressView(rootView);
 
         Data.AppType = AppConstant.ApplicationType.MENUS;
         Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
 
-        linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+        llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
         try {
-            if (linearLayoutRoot != null) {
-                new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+            if (llRoot != null) {
+                new ASSL(activity, llRoot, 1134, 720, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -226,7 +229,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(llRoot);
         System.gc();
     }
 
@@ -452,6 +455,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
            searchOpened = false;
            activity.getTopBar().etSearch.setText("");
            activity.fragmentUISetup(this);
+           activity.setDeliveryAddressViewVisibility(View.VISIBLE);
        } else {
            searchOpened = true;
            activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
@@ -463,7 +467,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
            activity.getTopBar().ivSearch.setVisibility(View.GONE);
            activity.getTopBar().ivFilter.setVisibility(View.GONE);
            activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-           activity.resetToolbar(this);
+           activity.setDeliveryAddressViewVisibility(View.GONE);
 
            activity.getTopBar().etSearch.requestFocus();
            Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);

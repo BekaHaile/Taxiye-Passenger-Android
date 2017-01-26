@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
@@ -69,7 +68,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
         SwipeRefreshLayout.OnRefreshListener{
 
 	private final String TAG = GroceryFragment.class.getSimpleName();
-	private RelativeLayout linearLayoutRoot;
+	private LinearLayout llRoot;
     private LinearLayout mainLayout;
     private LinearLayout noFreshsView;
 	private PagerSlidingTabStrip tabs;
@@ -125,10 +124,11 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
 
 		activity.fragmentUISetup(this);
-		linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
+		activity.setDeliveryAddressView(rootView);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(llRoot != null) {
+				new ASSL(activity, llRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -460,7 +460,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(llRoot);
         System.gc();
 	}
 

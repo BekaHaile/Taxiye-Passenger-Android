@@ -69,7 +69,7 @@ import retrofit.mime.TypedByteArray;
 public class MealFragment extends Fragment implements FlurryEventNames, SwipeRefreshLayout.OnRefreshListener, MealAdapter.Callback {
     private final String TAG = MealFragment.class.getSimpleName();
 
-    private RelativeLayout linearLayoutRoot;
+    private LinearLayout llRoot;
     private MealAdapter mealAdapter;
     private RecyclerView recyclerViewCategoryItems;
 
@@ -102,20 +102,21 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
+        activity.setDeliveryAddressView(rootView);
 
         mBus = activity.getBus();
         Data.AppType = AppConstant.ApplicationType.MEALS;
         Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
 
-        linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+        llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
         try {
-            if (linearLayoutRoot != null) {
-                new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+            if (llRoot != null) {
+                new ASSL(activity, llRoot, 1134, 720, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        linearLayoutRoot.setBackgroundColor(activity.getResources().getColor(R.color.white));
+        llRoot.setBackgroundColor(activity.getResources().getColor(R.color.white));
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
@@ -253,7 +254,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(llRoot);
         System.gc();
     }
 
@@ -297,6 +298,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                     public void success(ProductsResponse productsResponse, Response response) {
                         noFreshsView.setVisibility(View.GONE);
                         relativeLayoutNoMenus.setVisibility(View.GONE);
+                        activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                        activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
                         String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i(TAG, "getAllProducts response = " + responseStr);
                         try {
@@ -310,6 +313,8 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                     activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                     activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
+                                    activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                                    activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                     mSwipeRefreshLayout.setVisibility(View.GONE);
                                     noMealsView.setVisibility(View.GONE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?

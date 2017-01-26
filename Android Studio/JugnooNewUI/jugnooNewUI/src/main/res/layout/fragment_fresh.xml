@@ -1,84 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutRoot"
+<LinearLayout
+    android:id="@+id/llRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    >
 
+    <include layout="@layout/layout_delivery_address_bar"/>
 
-    <LinearLayout
-        android:id="@+id/mainLayout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="visible">
+        >
 
-        <com.sabkuchfresh.widgets.PagerSlidingTabStrip
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="84px"
-            android:background="@color/white"
-            android:visibility="gone"
-            app:pstsIndicatorColor="@color/theme_color"
-            app:pstsIndicatorHeight="5px"
-            app:pstsShouldExpand="true"
-            app:pstsUnderlineColor="@color/transparent"
-            app:pstsUnderlineHeight="1px"
-            />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <ImageView
-                android:id="@+id/ivShadowBelowTab"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/shadow_new_height"
-                android:background="@drawable/shadow_down_new"
-                android:visibility="gone"/>
-        </RelativeLayout>
-
-
-    </LinearLayout>
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewCategoryItems"
+        <LinearLayout
+            android:id="@+id/mainLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fadeScrollbars="true"
-            android:scrollbars="vertical"
-            android:splitMotionEvents="false"></android.support.v7.widget.RecyclerView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:orientation="vertical"
+            android:visibility="visible">
 
-    <LinearLayout
-        android:id="@+id/noFreshsView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:visibility="gone">
+            <com.sabkuchfresh.widgets.PagerSlidingTabStrip
+                android:id="@+id/tabs"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="84px"
+                android:background="@color/white"
+                android:visibility="gone"
+                app:pstsIndicatorColor="@color/theme_color"
+                app:pstsIndicatorHeight="5px"
+                app:pstsShouldExpand="true"
+                app:pstsUnderlineColor="@color/transparent"
+                app:pstsUnderlineHeight="1px"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:id="@+id/ivShadowBelowTab"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/shadow_new_height"
+                    android:background="@drawable/shadow_down_new"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+
+        </LinearLayout>
 
         <ImageView
-            android:id="@+id/imageViewNoItem"
-            android:layout_width="389px"
-            android:layout_height="349px"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/ic_no_grocery_items"
-            android:tag="mwar" />
+            android:id="@+id/ivShadowAboveTab"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_new_height"
+            android:layout_marginLeft="@dimen/px_30"
+            android:layout_marginRight="@dimen/px_30"
+            android:src="@drawable/shadow_down_new"
+            android:visibility="gone"
+            />
 
-    </LinearLayout>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-</RelativeLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewCategoryItems"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadeScrollbars="true"
+                android:scrollbars="vertical"
+                android:splitMotionEvents="false"></android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/noFreshsView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/imageViewNoItem"
+                android:layout_width="389px"
+                android:layout_height="349px"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/ic_no_grocery_items"
+                android:tag="mwar"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

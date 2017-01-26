@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,7 +46,8 @@ import retrofit.client.Response;
 public class FreshHomeFragment extends Fragment {
 
     private View rootView;
-    private RelativeLayout relative, relativeLayoutNoMenus;
+    private LinearLayout llRoot;
+    private RelativeLayout relativeLayoutNoMenus;
     private FreshActivity activity;
     private RecyclerView rvFreshSuper;
     private FreshSuperCategoriesAdapter adapter;
@@ -55,16 +57,17 @@ public class FreshHomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_home, container, false);
-        relative = (RelativeLayout) rootView.findViewById(R.id.relative);
+        llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
         try {
             activity = (FreshActivity) getActivity();
-            if (relative != null) {
-                new ASSL(activity, relative, 1134, 720, false);
+            if (llRoot != null) {
+                new ASSL(activity, llRoot, 1134, 720, false);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         activity.fragmentUISetup(this);
+        activity.setDeliveryAddressView(rootView);
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);

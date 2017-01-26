@@ -1,25 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relative"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvFreshSuper"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fadeScrollbars="true"
-        android:layout_marginTop="@dimen/shadow_new_height"
+    <include
+        layout="@layout/layout_delivery_address_bar"
         />
 
-    <include layout="@layout/layout_offering_not_available" />
-
-    <View
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/shadow_new_height"
-        android:background="@drawable/shadow_down_new"
-        />
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvFreshSuper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/shadow_new_height"
+            android:fadeScrollbars="true"
+            />
+
+        <include layout="@layout/layout_offering_not_available"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_new_height"
+            android:background="@drawable/shadow_down_new"
+            />
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,42 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:id="@+id/llRoot"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <include layout="@layout/layout_offering_not_available" />
+    <include layout="@layout/layout_delivery_address_bar"/>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
-        <RelativeLayout
-            android:id="@+id/relativeLayoutListParent"
+        <include layout="@layout/layout_offering_not_available"/>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerViewRestaurant"
+            <RelativeLayout
+                android:id="@+id/relativeLayoutListParent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fadeScrollbars="true"
-                android:scrollbars="vertical"
-                android:splitMotionEvents="false">
-            </android.support.v7.widget.RecyclerView>
+                >
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/shadow_new_height"
-                android:background="@drawable/shadow_down_new"
-                />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerViewRestaurant"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fadeScrollbars="true"
+                    android:scrollbars="vertical"
+                    android:splitMotionEvents="false">
+                </android.support.v7.widget.RecyclerView>
 
-        </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/shadow_new_height"
+                    android:background="@drawable/shadow_down_new"
+                    />
+
+            </RelativeLayout>
 
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -268,6 +268,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
 
             topBar.etSearch.addTextChangedListener(textWatcher);
+            resetToolbar();
 
 
             appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -905,21 +906,16 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             topBar.llSearchContainer.setVisibility(View.GONE);
             topBar.setSearchVisibility(View.GONE);
             topBar.getLlCartContainer().setVisibility(View.GONE);
-            setRelativeLayoutLocalityClick();
-            topBar.getLlLocation().setVisibility(View.GONE);
             topBar.getLlSearchCart().setVisibility(View.VISIBLE);
             topBar.ivFilter.setVisibility(View.GONE);
             topBar.ivSearch.setVisibility(View.GONE);
             topBar.buttonCheckServer.setVisibility(View.GONE);
-
-            resetToolbar(fragment);
 
             if(fragment instanceof FreshHomeFragment){
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
                 topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
-                topBar.getLlLocation().setVisibility(View.VISIBLE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
                 topBar.getIvSearch().setVisibility(View.VISIBLE);
 
@@ -960,7 +956,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
 				topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.getLlCartContainer().setVisibility(View.VISIBLE);
-                topBar.getLlLocation().setVisibility(View.VISIBLE);
 
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     float marginBottom = 40f;
@@ -997,7 +992,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
-                topBar.getLlLocation().setVisibility(View.VISIBLE);
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
@@ -1161,7 +1155,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2410,16 +2403,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     }
 
 
-
-    private void setRelativeLayoutLocalityClick(){
-        topBar.getLlLocation().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
-            }
-        });
-    }
-
     private MenusResponse menusResponse;
 
     public MenusResponse getMenusResponse() {
@@ -2609,7 +2592,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             getTopBar().textViewLocationValue.setTextSize(TypedValue.COMPLEX_UNIT_PX, 26f * ASSL.Xscale());
 
             getTopBar().textViewLocationValue.setText(address);
-            getTopBar().tvLocation.setText(address);
+            setLocationAddress(address);
             if(getFreshCheckoutMergedFragment() == null && getMenusCheckoutMergedFragment() == null && getFeedbackFragment() == null) {
                 if (appType == AppConstant.ApplicationType.FRESH && getFreshHomeFragment() != null) {
                     getFreshHomeFragment().getSuperCategoriesAPI();
@@ -2740,29 +2723,18 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         }
     }
 
-    public void resetToolbar(Fragment frag) {
-        // TODO: 1/26/17 uncomment
-//        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-////        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-////                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-////                | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
-//        params.setScrollFlags(0);
-//
-//        float height = 96f;
-//        if(frag instanceof FreshHomeFragment
-//                || frag instanceof MealFragment
-//                || frag instanceof GroceryFragment){
-//            height = 206f;
-//        }
-//        else if(frag instanceof MenusFragment){
-//            if(!((MenusFragment)frag).getSearchOpened()){
-//                height = 206f;
-//            }
-//        }
-//
-//        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-//        layoutParams.height = (int)(height * ASSL.Yscale());
-//        toolbar.setLayoutParams(layoutParams);
+    public void resetToolbar() {
+        AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+//        params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+//                | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+//                | AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
+        params.setScrollFlags(0);
+
+        float height = 96f;
+
+        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        layoutParams.height = (int)(height * ASSL.Yscale());
+        toolbar.setLayoutParams(layoutParams);
     }
 
 
@@ -2867,6 +2839,36 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public DrawerLayout getDrawerLayout(){
         return drawerLayout;
+    }
+
+
+    private DeliveryAddressView deliveryAddressView;
+    public void setDeliveryAddressView(View view){
+        deliveryAddressView = new DeliveryAddressView(this, view);
+        setLlLocalityClick();
+    }
+
+    private void setLocationAddress(String address){
+        if(deliveryAddressView != null) {
+            deliveryAddressView.tvLocation.setText(address);
+        }
+    }
+
+    private void setLlLocalityClick(){
+        if(deliveryAddressView != null) {
+            deliveryAddressView.llLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
+                }
+            });
+        }
+    }
+
+    public void setDeliveryAddressViewVisibility(int visibility){
+        if(deliveryAddressView != null) {
+            deliveryAddressView.llLocation.setVisibility(visibility);
+        }
     }
 
 }

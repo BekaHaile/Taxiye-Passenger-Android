@@ -33,7 +33,6 @@ public class TopBar implements FlurryEventNames {
 	public ImageView imageViewMenu;
 	public TextView title;
 	public Button buttonCheckServer;
-	public TextView tvLocation;
 	public ImageView imageViewBack, ivDeliveryAddressCross, imageViewDelete;
 	public EditText editTextDeliveryAddress;
 
@@ -42,8 +41,8 @@ public class TopBar implements FlurryEventNames {
 	public ImageView ivSearchCross, ivSearch, ivFilter;
 
 	public RelativeLayout relativeLayoutLocality, llSearchCartContainer;
-	public TextView textViewLocationValue, textViewReset, tvDeliveryAddress, tvCartAmount;
-	private LinearLayout llLocation, llCartAmount, llCartContainer, llSearchCart;
+	public TextView textViewLocationValue, textViewReset, tvCartAmount;
+	public LinearLayout llCartAmount, llCartContainer, llSearchCart;
 
 
 
@@ -59,8 +58,6 @@ public class TopBar implements FlurryEventNames {
 		title = (TextView) drawerLayout.findViewById(R.id.title);title.setTypeface(Fonts.avenirNext(activity));
 
 		buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
-		llLocation = (LinearLayout) drawerLayout.findViewById(R.id.llLocation);
-		tvDeliveryAddress = (TextView) drawerLayout.findViewById(R.id.tvDeliveryAddress); tvDeliveryAddress.setTypeface(Fonts.mavenMedium(activity));
 		llCartContainer = (LinearLayout) drawerLayout.findViewById(R.id.llCartContainer);
 		llCartAmount = (LinearLayout) drawerLayout.findViewById(R.id.llCartAmount);
 		tvCartAmount = (TextView) drawerLayout.findViewById(R.id.tvCartAmount); tvCartAmount.setTypeface(Fonts.mavenRegular(activity));
@@ -72,8 +69,6 @@ public class TopBar implements FlurryEventNames {
 		editTextDeliveryAddress.setTypeface(Fonts.mavenLight(activity));
 		ivDeliveryAddressCross = (ImageView) drawerLayout.findViewById(R.id.ivDeliveryAddressCross);
 		imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
-
-		tvLocation = (TextView) drawerLayout.findViewById(R.id.tvLocation); tvLocation.setTypeface(Fonts.mavenMedium(activity));
 
 		relativeLayoutLocality = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutLocality);
 		((TextView)drawerLayout.findViewById(R.id.textViewLocation)).setTypeface(Fonts.mavenRegular(activity));
@@ -138,10 +133,6 @@ public class TopBar implements FlurryEventNames {
 
 	public ImageView getIvSearch() {
 		return ivSearch;
-	}
-
-	public LinearLayout getLlLocation() {
-		return llLocation;
 	}
 
 	public LinearLayout getLlCartAmount() {
