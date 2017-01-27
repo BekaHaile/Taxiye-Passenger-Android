@@ -1477,5 +1477,9 @@
     <string name="send_to">Send to</string>
     <string name="referral_code_copied">Referral Code Copied</string>
     <string name="send_via">Send via</string>
+    <string name="later">Later</string>
+    <string name="send_free_gift">Send free gift</string>
+    <string name="thank_you">Thank you!</string>
+    <string name="your_order_will_be_delivered_between">Your order will be delivered between</string>
 
 </resources>
