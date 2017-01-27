@@ -487,6 +487,9 @@ public interface Constants {
 	String AUTOS_PUSH = "autos_push";
 	String FRESH_PUSH = "fresh_push";
 	String MEALS_PUSH = "meals_push";
+	String GROCERY_PUSH = "grocery_push";
+	String MENUS_PUSH = "menus_push";
+	String PAY_PUSH = "pay_push";
 
 	String KEY_INTEGRATED_JUGNOO_ENABLED = "integrated_jugnoo_enabled";
 	String KEY_REDIRECT = "redirect";

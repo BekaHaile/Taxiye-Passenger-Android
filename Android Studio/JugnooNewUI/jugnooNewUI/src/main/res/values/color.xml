@@ -290,4 +290,7 @@
     <color name="cart_bg_color">#ff834e</color>
     <color name="cart_bg_color_pressed">#eb6f3a</color>
 
+    <color name="green_button">#18ca3c</color>
+    <color name="green_button_alpha">#9918ca3c</color>
+
 </resources>
