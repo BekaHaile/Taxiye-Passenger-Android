@@ -878,8 +878,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 
 
+
     public void fragmentUISetup(Fragment fragment) {
         try {
+            int llSearchCartContainerVis = View.VISIBLE;
+            int llSearchCartVis = View.VISIBLE;
+            int llCartContainerVis = View.GONE;
+            int ivSearchVis = View.GONE;
+            int llSearchContainerVis = View.GONE;
             int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
             textViewMinOrder.setVisibility(View.GONE);
 
@@ -902,20 +908,16 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             rlSort.setVisibility(View.GONE);
 
             topBar.llSearchContainer.setVisibility(View.GONE);
-            topBar.setSearchVisibility(View.GONE);
-            topBar.getLlCartContainer().setVisibility(View.GONE);
-            topBar.getLlSearchCart().setVisibility(View.VISIBLE);
             topBar.ivFilter.setVisibility(View.GONE);
-            topBar.ivSearch.setVisibility(View.GONE);
             topBar.buttonCheckServer.setVisibility(View.GONE);
 
             if(fragment instanceof FreshHomeFragment){
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
-                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                llSearchCartContainerVis = View.VISIBLE;
+                llCartContainerVis = View.VISIBLE;
+                ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
-                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
-                topBar.getIvSearch().setVisibility(View.VISIBLE);
 
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     float marginBottom = 40f;
@@ -934,11 +936,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof FreshFragment) {
-                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                llSearchCartContainerVis = View.VISIBLE;
+                llCartContainerVis = View.VISIBLE;
+                ivSearchVis = View.VISIBLE;
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.getIvSearch().setVisibility(View.VISIBLE);
-                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
                 rlSort.setVisibility(View.VISIBLE);
 
 				topBar.title.setVisibility(View.VISIBLE);
@@ -950,10 +952,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 
             } else if(fragment instanceof MealFragment){
-                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                llSearchCartContainerVis = View.VISIBLE;
+                llCartContainerVis = View.VISIBLE;
 				topBar.imageViewMenu.setVisibility(View.VISIBLE);
 				topBar.imageViewBack.setVisibility(View.GONE);
-                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
 
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     float marginBottom = 40f;
@@ -969,7 +971,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewMenu.getId());
 			}
             else if (fragment instanceof GroceryFragment) {
-                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                llSearchCartContainerVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
 
@@ -987,13 +989,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof MenusFragment) {
-                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                llSearchCartContainerVis = View.VISIBLE;
+                ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
-                topBar.getIvSearch().setVisibility(View.VISIBLE);
                 topBar.ivFilter.setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
@@ -1004,10 +1006,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
             }
             else if (fragment instanceof VendorMenuFragment) {
+                llCartContainerVis = View.VISIBLE;
+                ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
-                topBar.getIvSearch().setVisibility(View.VISIBLE);
 
                 rlSort.setVisibility(View.VISIBLE);
 
@@ -1062,8 +1064,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             else if (fragment instanceof FreshCheckoutMergedFragment || fragment instanceof MenusCheckoutMergedFragment) {
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
-                topBar.getLlSearchCart().setVisibility(View.GONE);
+                llSearchCartContainerVis = View.VISIBLE;
+                llSearchCartVis = View.GONE;
 
 				topBar.title.setVisibility(View.VISIBLE);
 				topBar.title.setText(getResources().getString(R.string.checkout));
@@ -1086,7 +1088,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 			} else if(fragment instanceof DeliveryAddressesFragment){
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.getLlSearchCartContainer().setVisibility(View.GONE);
+                llSearchCartContainerVis = View.GONE;
 
                 topBar.title.setVisibility(View.GONE);
                 topBar.editTextDeliveryAddress.setVisibility(View.VISIBLE);
@@ -1094,13 +1096,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
             } else if (fragment instanceof FreshSearchFragment || fragment instanceof MenusSearchFragment) {
+                llCartContainerVis = View.VISIBLE;
+                llSearchContainerVis = View.VISIBLE;
 				topBar.imageViewMenu.setVisibility(View.GONE);
 				topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.GONE);
                 topBar.llSearchContainer.setVisibility(View.VISIBLE);
-                topBar.setSearchVisibility(View.VISIBLE);
-                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
-                topBar.getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                llSearchCartContainerVis = View.VISIBLE;
 
                 try {
                     if(appType == AppConstant.ApplicationType.MENUS && getVendorMenuFragment() != null
@@ -1135,9 +1137,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
             else if (fragment instanceof MealAddonItemsFragment) {
+                llCartContainerVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
-                topBar.getLlCartContainer().setVisibility(View.VISIBLE);
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.pick_addons));
@@ -1153,6 +1155,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
+
+            topBar.getLlSearchCartContainer().setVisibility(llSearchCartContainerVis);
+            topBar.getLlSearchCart().setVisibility(llSearchCartVis);
+            topBar.getLlCartContainer().setVisibility(llCartContainerVis);
+            topBar.getIvSearch().setVisibility(ivSearchVis);
+            topBar.getLlSearchContainer().setVisibility(llSearchContainerVis);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

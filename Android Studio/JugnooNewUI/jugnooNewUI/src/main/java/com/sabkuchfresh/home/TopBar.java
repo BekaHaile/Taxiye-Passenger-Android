@@ -77,7 +77,7 @@ public class TopBar implements FlurryEventNames {
 		ivSearch = (ImageView) drawerLayout.findViewById(R.id.ivSearch);
 		ivFilter = (ImageView) drawerLayout.findViewById(R.id.ivFilter);
 		ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
-		setSearchVisibility(View.GONE);
+		//setSearchVisibility(View.GONE);
 
 
 		topRl.setOnClickListener(topBarOnClickListener);
@@ -122,6 +122,10 @@ public class TopBar implements FlurryEventNames {
 		});
 
 
+	}
+
+	public RelativeLayout getLlSearchContainer() {
+		return llSearchContainer;
 	}
 
 	public LinearLayout getLlSearchCart() {
@@ -189,10 +193,8 @@ public class TopBar implements FlurryEventNames {
 	public void setSearchVisibility(int visibility){
 		if(visibility == View.VISIBLE){
 			llSearchContainer.setBackgroundResource(R.drawable.capsule_white_stroke);
-			etSearch.setVisibility(View.VISIBLE);
 		} else {
-			llSearchContainer.setBackgroundResource(R.drawable.background_transparent);
-			etSearch.setVisibility(View.GONE);
+			//llSearchContainer.setBackgroundResource(R.drawable.background_transparent);
 		}
 	}
 
