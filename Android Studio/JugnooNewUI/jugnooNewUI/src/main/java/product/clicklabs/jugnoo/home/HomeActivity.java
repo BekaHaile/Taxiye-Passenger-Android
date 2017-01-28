@@ -41,7 +41,6 @@ import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.StyleSpan;
 import android.util.Pair;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -392,7 +391,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
     PushDialog pushDialog;
 
-    LocationFetcher highAccuracyLF, highSpeedAccuracyLF;
+    LocationFetcher highAccuracyLF = null, highSpeedAccuracyLF = null;
 
     PromoCoupon promoCouponSelectedForRide;
 

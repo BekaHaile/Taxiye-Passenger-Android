@@ -725,8 +725,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						} else{
 							Intent intent1 = new Intent();
 							intent1.setAction(ACTION_LOCATION_UPDATE);
-							intent1.putExtra(KEY_LATITUDE, LocationFetcher.getSavedLatFromSP(this));
-							intent1.putExtra(KEY_LONGITUDE, LocationFetcher.getSavedLngFromSP(this));
 							intent1.putExtra(KEY_EMERGENCY_LOC, true);
 							sendBroadcast(intent1);
 						}

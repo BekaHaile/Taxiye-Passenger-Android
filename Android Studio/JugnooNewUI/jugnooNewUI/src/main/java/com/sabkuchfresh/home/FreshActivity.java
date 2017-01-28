@@ -184,7 +184,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public boolean updateCart = false;
 
-    private LocationFetcher locationFetcher;
+    private LocationFetcher locationFetcher = null;
     public float scale = 0f;
 
     public boolean locationSearchShown = false;
@@ -3082,6 +3082,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         public String getType() {
             return type;
         }
+    }
+
+    public LocationFetcher getLocationFetcher(){
+        return locationFetcher;
     }
 
 }

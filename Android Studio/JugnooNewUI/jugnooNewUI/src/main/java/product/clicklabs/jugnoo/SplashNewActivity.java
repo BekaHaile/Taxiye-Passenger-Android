@@ -46,7 +46,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
@@ -372,10 +371,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			holdForBranch = false;
 			clickCount = 0;
 
-			if (Data.locationFetcher == null) {
-				Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
-			} else{
-				Data.locationFetcher.connect();
+			if (locationFetcher == null) {
+				locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
 			}
 
 			linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
@@ -1384,8 +1381,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 	public void getDeviceToken() {
 		boolean mockLocationEnabled = false;
-		if (Data.locationFetcher != null) {
-			mockLocationEnabled = Utils.mockLocationEnabled(Data.locationFetcher.getLocationUnchecked());
+		if (locationFetcher != null) {
+			mockLocationEnabled = Utils.mockLocationEnabled(locationFetcher.getLocationUnchecked());
 		}
 		if (mockLocationEnabled) {
 			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
@@ -1394,12 +1391,11 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 						@Override
 						public void onClick(View v) {
+							if (locationFetcher != null) {
+								locationFetcher.destroy();
+							}
 							startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
 							finish();
-							if (Data.locationFetcher != null) {
-								Data.locationFetcher.destroy();
-							}
-							Data.locationFetcher = null;
 						}
 					});
 		} else {
@@ -1485,15 +1481,16 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
+	private LocationFetcher locationFetcher = null;
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		if (Data.locationFetcher == null) {
-			Data.locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
+		if (locationFetcher == null) {
+			locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
 		} else{
-			Data.locationFetcher.connect();
+			locationFetcher.connect();
 		}
 
 		retryAccessTokenLogin();
@@ -1519,7 +1516,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	protected void onPause() {
 		try {
-			Data.locationFetcher.destroy();
+			if(locationFetcher != null) {
+				locationFetcher.destroy();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1566,9 +1565,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
 		if (!"".equalsIgnoreCase(pair.first)) {
 			String accessToken = pair.first;
-			if (Data.locationFetcher != null) {
-				Data.loginLatitude = Data.locationFetcher.getLatitude();
-				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			if (locationFetcher != null) {
+				Data.loginLatitude = locationFetcher.getLatitude();
+				Data.loginLongitude = locationFetcher.getLongitude();
 			}
 			getApiLoginUsingAccessToken().hit(accessToken, Data.loginLatitude, Data.loginLongitude, null,
 					false, new ApiLoginUsingAccessToken.Callback() {
@@ -2217,9 +2216,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (Data.locationFetcher != null) {
-				Data.loginLatitude = Data.locationFetcher.getLatitude();
-				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			if (locationFetcher != null) {
+				Data.loginLatitude = locationFetcher.getLatitude();
+				Data.loginLongitude = locationFetcher.getLongitude();
 			}
 
 			if (isPhoneNumber) {
@@ -2338,9 +2337,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (Data.locationFetcher != null) {
-				Data.loginLatitude = Data.locationFetcher.getLatitude();
-				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			if (locationFetcher != null) {
+				Data.loginLatitude = locationFetcher.getLatitude();
+				Data.loginLongitude = locationFetcher.getLongitude();
 			}
 
 
@@ -2459,9 +2458,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (Data.locationFetcher != null) {
-				Data.loginLatitude = Data.locationFetcher.getLatitude();
-				Data.loginLongitude = Data.locationFetcher.getLongitude();
+			if (locationFetcher != null) {
+				Data.loginLatitude = locationFetcher.getLatitude();
+				Data.loginLongitude = locationFetcher.getLongitude();
 			}
 
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
@@ -2894,9 +2893,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             HashMap<String, String> params = new HashMap<>();
 
-            if (Data.locationFetcher != null) {
-                Data.loginLatitude = Data.locationFetcher.getLatitude();
-                Data.loginLongitude = Data.locationFetcher.getLongitude();
+            if (locationFetcher != null) {
+                Data.loginLatitude = locationFetcher.getLatitude();
+                Data.loginLongitude = locationFetcher.getLongitude();
             }
 
             params.put("user_name", name);
@@ -3018,9 +3017,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             HashMap<String, String> params = new HashMap<>();
 
-            if (Data.locationFetcher != null) {
-                Data.loginLatitude = Data.locationFetcher.getLatitude();
-                Data.loginLongitude = Data.locationFetcher.getLongitude();
+            if (locationFetcher != null) {
+                Data.loginLatitude = locationFetcher.getLatitude();
+                Data.loginLongitude = locationFetcher.getLongitude();
             }
 
             params.put("user_fb_id", Data.facebookUserData.fbId);
@@ -3136,9 +3135,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             HashMap<String, String> params = new HashMap<>();
 
-            if (Data.locationFetcher != null) {
-                Data.loginLatitude = Data.locationFetcher.getLatitude();
-                Data.loginLongitude = Data.locationFetcher.getLongitude();
+            if (locationFetcher != null) {
+                Data.loginLatitude = locationFetcher.getLatitude();
+                Data.loginLongitude = locationFetcher.getLongitude();
             }
 
             params.put("google_access_token", Data.googleSignInAccount.getIdToken());
@@ -3301,9 +3300,9 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
             HashMap<String, String> params = new HashMap<>();
 
-            if (Data.locationFetcher != null) {
-                Data.loginLatitude = Data.locationFetcher.getLatitude();
-                Data.loginLongitude = Data.locationFetcher.getLongitude();
+            if (locationFetcher != null) {
+                Data.loginLatitude = locationFetcher.getLatitude();
+                Data.loginLongitude = locationFetcher.getLongitude();
             }
 
             params.put("email", email);
