@@ -673,6 +673,8 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SP_FRESH_LAST_ADDRESS_OBJ, EMPTY_JSON_OBJECT);
         Data.setLatLngOfJeanieLastShown(latLng);
 
+        resetMenusFilters(context);
+
         return resp;
     }
 
@@ -1782,4 +1784,13 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
     }
+
+    private void resetMenusFilters(Context context) {
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_SORT_BY, -1);
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_MIN_ORDER, -1);
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_DELIVERY_TIME, -1);
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_CUISINES, "");
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_QUICK, "");
+    }
+
 }

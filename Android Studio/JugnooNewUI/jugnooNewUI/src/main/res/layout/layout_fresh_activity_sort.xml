@@ -48,7 +48,8 @@
                 android:fadeScrollbars="true"
                 android:paddingTop="20px"
                 android:scrollbars="vertical"
-                android:splitMotionEvents="false"/>
+                android:splitMotionEvents="false"
+                />
 
 
         </RelativeLayout>
