@@ -203,7 +203,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private Toolbar toolbar;
     private RecyclerView rvDeliverySlots;
     private FreshSortingAdapter sortingAdapter;
-    private int pos = 102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -292,10 +291,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             sortingAdapter = new FreshSortingAdapter(FreshActivity.this, slots, new FreshSortingAdapter.Callback() {
                 @Override
                 public void onSlotSelected(int position, SortResponseModel slot) {
-                    pos = slot.id;
-                    setSlotSelected(getSlotSelected());
-
-                    int type = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+                    int type = getAppType();
                     if(type == AppConstant.ApplicationType.MEALS){
                         mealSort = position;
                         MyApplication.getInstance().logEvent(FirebaseEvents.M_SORT+"_"+slot.name, null);
@@ -445,8 +441,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             slots.add(new SortResponseModel(3, "Price: High to Low", false));
         } else if(fragment instanceof VendorMenuFragment){
             slots.add(new SortResponseModel(0, "A-Z", false));
-            slots.add(new SortResponseModel(2, "Price: Low to High", false));
-            slots.add(new SortResponseModel(3, "Price: High to Low", false));
+            slots.add(new SortResponseModel(1, "Price: Low to High", false));
+            slots.add(new SortResponseModel(2, "Price: High to Low", false));
 
             slots.get(1).check = true;
             menusSort = slots.get(1).id;
@@ -1941,11 +1937,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         comparator = new ItemCompareAtoZ();
                         gaEvents("", FlurryEventNames.SORT, FlurryEventNames.A_Z);
                         break;
-                    case 2:
+                    case 1:
                         comparator = new ItemComparePriceLowToHigh();
                         gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_LOW_TO_HIGH);
                         break;
-                    case 3:
+                    case 2:
                         comparator = new ItemComparePriceHighToLow();
                         gaEvents("", FlurryEventNames.SORT, FlurryEventNames.PRICE_HIGH_TO_LOW);
                         break;
