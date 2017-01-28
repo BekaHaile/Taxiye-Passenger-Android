@@ -395,6 +395,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.GROCERY);
                     lastClientId = Config.getGroceryClientId();
                 } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                    fetchFiltersFromSP();
                     openCart();
                     addMenusFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
@@ -1411,7 +1412,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         if(getFeedbackFragment() != null && getSupportFragmentManager().getBackStackEntryCount() == 2 && !getFeedbackFragment().isUpbuttonClicked) {
             finish();
         }
-        Utils.hideSoftKeyboard(this, topBar.etSearch);
+        try {
+            Utils.hideSoftKeyboard(this, textViewMinOrder);
+        } catch (Exception e) {
+        }
         final AddToAddressBookFragment fragment = getAddToAddressBookFragment();
         if(fragment != null && fragment.locationEdited){
             DialogPopup.alertPopupTwoButtonsWithListeners(FreshActivity.this, "",
@@ -1648,6 +1652,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             updateCartFromSPFMG(null);
         }
         saveCartToSP();
+        if(getAppType() == AppConstant.ApplicationType.MENUS) {
+            saveFilters();
+        }
 
         if (locationFetcher != null) {
             locationFetcher.destroy();
@@ -2421,8 +2428,77 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     }
 
     public void saveFilters(){
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_SORT_BY, sortBySelected.getOrdinal());
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_MIN_ORDER, moSelected.getOrdinal());
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_DELIVERY_TIME, dtSelected.getOrdinal());
+        StringBuilder sbCuisines = new StringBuilder();
+        if(cuisinesSelected.size() > 0){
+            for(String cuisine : cuisinesSelected){
+                sbCuisines.append(cuisine).append(",");
+            }
+        }
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_CUISINES, sbCuisines.toString());
+
+        StringBuilder sbQF = new StringBuilder();
+        if(quickFilterSelected.size() > 0){
+            for(String qf : quickFilterSelected){
+                sbQF.append(qf).append(",");
+            }
+        }
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_QUICK, sbQF.toString());
+    }
+
+
+    public void fetchFiltersFromSP(){
+        int sortBy = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_SORT_BY, sortBySelected.getOrdinal());
+        if(sortBy == MenusFilterFragment.SortType.POPULARITY.getOrdinal()){
+            sortBySelected = MenusFilterFragment.SortType.POPULARITY;
+        } else if(sortBy == MenusFilterFragment.SortType.DISTANCE.getOrdinal()){
+            sortBySelected = MenusFilterFragment.SortType.DISTANCE;
+        } else if(sortBy == MenusFilterFragment.SortType.PRICE.getOrdinal()){
+            sortBySelected = MenusFilterFragment.SortType.PRICE;
+        } else if(sortBy == MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED.getOrdinal()){
+            sortBySelected = MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED;
+        }
+
+        int mo = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_MIN_ORDER, moSelected.getOrdinal());
+        if(mo == MenusFilterFragment.MinOrder.MO150.getOrdinal()){
+            moSelected = MenusFilterFragment.MinOrder.MO150;
+        } else if(mo == MenusFilterFragment.MinOrder.MO250.getOrdinal()){
+            moSelected = MenusFilterFragment.MinOrder.MO250;
+        } else if(mo == MenusFilterFragment.MinOrder.MO500.getOrdinal()){
+            moSelected = MenusFilterFragment.MinOrder.MO500;
+        }
+
+        int dt = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_DELIVERY_TIME, dtSelected.getOrdinal());
+        if(dt == MenusFilterFragment.DeliveryTime.DT30.getOrdinal()){
+            dtSelected = MenusFilterFragment.DeliveryTime.DT30;
+        } else if(dt == MenusFilterFragment.DeliveryTime.DT45.getOrdinal()){
+            dtSelected = MenusFilterFragment.DeliveryTime.DT45;
+        } else if(dt == MenusFilterFragment.DeliveryTime.DT60.getOrdinal()){
+            dtSelected = MenusFilterFragment.DeliveryTime.DT60;
+        }
+
+        String cuisines = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_CUISINES, "");
+        if(!TextUtils.isEmpty(cuisines)){
+            String arr[] = cuisines.split(",");
+            cuisinesSelected.clear();
+            for(String cuisine : arr){
+                cuisinesSelected.add(cuisine);
+            }
+        }
+
+        String qfs = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_QUICK, "");
+        if(!TextUtils.isEmpty(qfs)){
+            String arr[] = qfs.split(",");
+            quickFilterSelected.clear();
+            for(String qf : arr){
+                quickFilterSelected.add(qf);
+            }
+        }
 
     }
+
 
     private MenusFilterFragment.SortType sortBySelected = MenusFilterFragment.SortType.NONE;
     private MenusFilterFragment.MinOrder moSelected = MenusFilterFragment.MinOrder.NONE;
