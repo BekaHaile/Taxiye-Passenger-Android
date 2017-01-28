@@ -908,7 +908,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             rlSort.setVisibility(View.GONE);
 
             topBar.llSearchContainer.setVisibility(View.GONE);
-            topBar.ivFilter.setVisibility(View.GONE);
+            int rlFilterVis = View.GONE;
             topBar.buttonCheckServer.setVisibility(View.GONE);
 
             if(fragment instanceof FreshHomeFragment){
@@ -996,7 +996,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
-                topBar.ivFilter.setVisibility(View.VISIBLE);
+                rlFilterVis = View.VISIBLE;
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.menus));
@@ -1161,6 +1161,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             topBar.getLlCartContainer().setVisibility(llCartContainerVis);
             topBar.getIvSearch().setVisibility(ivSearchVis);
             topBar.getLlSearchContainer().setVisibility(llSearchContainerVis);
+            topBar.rlFilter.setVisibility(rlFilterVis);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1647,6 +1648,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     @Override
     protected void onPause() {
         super.onPause();
+        if(cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null){
+            updateCartFromSPFMG(null);
+        }
         saveCartToSP();
 
         if (locationFetcher != null) {

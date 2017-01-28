@@ -534,7 +534,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
-    private boolean filterApplied(){
+    public boolean filterApplied(){
         return (activity.getCuisinesSelected().size() > 0
                 || activity.getMoSelected() != MenusFilterFragment.MinOrder.NONE
                 || activity.getDtSelected() != MenusFilterFragment.DeliveryTime.NONE

@@ -213,6 +213,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             activity.fragmentUISetup(this);
             activity.resumeMethod();
             menusRestaurantAdapter.applyFilter();
+            activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -275,6 +276,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
                                     menusRestaurantAdapter.setList(vendors);
                                     menusRestaurantAdapter.applyFilter();
+                                    activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
@@ -465,7 +467,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
            activity.getTopBar().setSearchVisibility(View.VISIBLE);
            activity.getTopBar().ivSearch.setVisibility(View.GONE);
-           activity.getTopBar().ivFilter.setVisibility(View.GONE);
+           activity.getTopBar().rlFilter.setVisibility(View.GONE);
            activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
            activity.setDeliveryAddressViewVisibility(View.GONE);
 
