@@ -147,7 +147,7 @@ public class AddWalletFragment extends Fragment {
 		textViewTitle.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionNameWallet(openWalletType));
 		imageViewWalletIcon.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconBig(openWalletType));
 
-		textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
+		//textViewTitle.getPaint().setShader(Utils.textColorGradient(getActivity(), textViewTitle));
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 

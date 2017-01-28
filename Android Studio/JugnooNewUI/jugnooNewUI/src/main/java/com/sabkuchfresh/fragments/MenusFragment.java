@@ -459,6 +459,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
            activity.setDeliveryAddressViewVisibility(View.VISIBLE);
        } else {
            searchOpened = true;
+           activity.getTopBar().etSearch.setText("");
            activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
            activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
            activity.getTopBar().title.setVisibility(View.GONE);

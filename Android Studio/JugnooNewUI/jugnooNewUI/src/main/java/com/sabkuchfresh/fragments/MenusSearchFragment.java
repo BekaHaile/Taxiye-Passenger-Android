@@ -90,6 +90,7 @@ public class MenusSearchFragment extends Fragment {
             @Override
             public void run() {
 				try {
+					activity.getTopBar().etSearch.setText("");
 					activity.getTopBar().etSearch.requestFocus();
 					InputMethodManager mgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 					mgr.showSoftInput(activity.getTopBar().etSearch, InputMethodManager.SHOW_IMPLICIT);

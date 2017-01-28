@@ -12,19 +12,18 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/px_5"
         android:layout_marginLeft="@dimen/px_15"
-        android:layout_marginRight="@dimen/px_15"
         android:layout_marginTop="@dimen/px_5"
         card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="@dimen/button_corner_radius">
 
         <RelativeLayout
-            android:layout_width="@dimen/px_384"
-            android:layout_height="@dimen/px_210">
+            android:layout_width="@dimen/px_320"
+            android:layout_height="@dimen/px_320">
 
             <ImageView
                 android:id="@+id/ivSuperCategoryImage"
-                android:layout_width="@dimen/px_384"
-                android:layout_height="@dimen/px_210"
+                android:layout_width="@dimen/px_320"
+                android:layout_height="@dimen/px_320"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_fresh_new_placeholder" />
 

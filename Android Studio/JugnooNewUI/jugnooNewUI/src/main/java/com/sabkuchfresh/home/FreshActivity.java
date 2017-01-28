@@ -2420,6 +2420,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         this.menusResponse = menusResponse;
     }
 
+    public void saveFilters(){
+
+    }
+
     private MenusFilterFragment.SortType sortBySelected = MenusFilterFragment.SortType.NONE;
     private MenusFilterFragment.MinOrder moSelected = MenusFilterFragment.MinOrder.NONE;
     private MenusFilterFragment.DeliveryTime dtSelected = MenusFilterFragment.DeliveryTime.NONE;

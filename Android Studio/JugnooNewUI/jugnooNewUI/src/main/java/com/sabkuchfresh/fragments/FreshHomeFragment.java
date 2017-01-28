@@ -75,7 +75,7 @@ public class FreshHomeFragment extends Fragment {
         relativeLayoutNoMenus.setVisibility(View.GONE);
         rvFreshSuper = (RecyclerView) rootView.findViewById(R.id.rvFreshSuper);
         rvFreshSuper.setItemAnimator(new DefaultItemAnimator());
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 4, GridLayoutManager.HORIZONTAL, false);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
         rvFreshSuper.setLayoutManager(gridLayoutManager);
         adapter = new FreshSuperCategoriesAdapter(activity, new FreshSuperCategoriesAdapter.Callback() {
             @Override

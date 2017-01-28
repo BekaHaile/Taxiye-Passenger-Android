@@ -67,7 +67,7 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
         imageViewBack.setOnClickListener(this);
 
         textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR);
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
+        //textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         bJoinNow = (Button) findViewById(R.id.bJoinNow); bJoinNow.setTypeface(Fonts.mavenMedium(this)); bJoinNow.setOnClickListener(this);
 
 

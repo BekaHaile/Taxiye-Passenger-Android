@@ -1,37 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/llLocation"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:visibility="gone"
-    >
+    android:orientation="vertical"
+    android:visibility="gone">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_new_height"
-        android:layout_marginLeft="@dimen/px_30"
-        android:layout_marginRight="@dimen/px_30"
-        android:src="@drawable/shadow_down_new"/>
+        android:src="@drawable/shadow_down_new" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@color/white"
-        android:orientation="horizontal">
+        android:background="@color/white">
 
         <ImageView
+            android:id="@+id/ivLoc"
             android:layout_width="25px"
             android:layout_height="34px"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/px_42"
-            android:src="@drawable/ic_new_fresh_location"/>
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_new_fresh_location" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/px_22"
+            android:layout_toRightOf="@+id/ivLoc"
+            android:layout_toLeftOf="@+id/ivEditLoc"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -41,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/delivery_address"
                 android:textColor="@color/text_color_light_less"
-                android:textSize="@dimen/text_size_22"/>
+                android:textSize="@dimen/text_size_22" />
 
             <TextView
                 android:id="@+id/tvLocation"
@@ -53,10 +52,22 @@
                 android:maxLines="1"
                 android:text=""
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_28"/>
+                android:textSize="@dimen/text_size_28" />
 
         </LinearLayout>
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/ivEditLoc"
+            android:layout_width="60px"
+            android:layout_height="60px"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20px"
+            android:padding="15px"
+            android:src="@drawable/edit_icon_selector"
+            android:tag="mwar"
+            android:visibility="visible" />
+
+    </RelativeLayout>
 
 </LinearLayout>

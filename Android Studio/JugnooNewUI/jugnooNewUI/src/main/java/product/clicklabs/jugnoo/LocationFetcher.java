@@ -98,18 +98,6 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		String longitude = preferences.getString(LOCATION_LNG, "" + 0);
 		return Double.parseDouble(longitude);
 	}
-	
-	
-	
-	
-
-
-
-
-
-
-
-
 
 
 	private void createLocationRequest(long interval) {
@@ -133,15 +121,6 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
         LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationrequest, this);
     }
 
-
-
-
-
-
-
-
-	
-	
 	/**
 	 * Function to get latitude
 	 * */

@@ -335,9 +335,9 @@ public class FreshSearchFragment extends Fragment {
 					activity.setMinOrderAmountText(FreshSearchFragment.this);
 				}
 			}, 300);
-//			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
-//				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
-//			}
+			if(activity.getTopBar().etSearch.getText().toString().trim().length() > 0){
+				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
+			}
 		}
 	}
 
@@ -353,6 +353,17 @@ public class FreshSearchFragment extends Fragment {
 
 
 	public void searchFreshItems(String s){
+		try {
+			if (s.length() > 0) {
+				new SubItemsSearchAsync().execute(s.toString());
+			} else {
+				subItemsInSearch.clear();
+				clearArrays();
+				freshCategoryItemsAdapter.notifyDataSetChanged();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		searchText = s.trim();
 		if(searchText.length() > 2) {
 			searchFreshItemsAutoComplete(searchText);
@@ -389,10 +400,12 @@ public class FreshSearchFragment extends Fragment {
 								try {
 									String message = freshSearchResponse.getMessage();
 										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == freshSearchResponse.getFlag()) {
-											subItemsInSearch.clear();
+											//subItemsInSearch.clear();
 											for(SuperCategoriesData.SuperCategory superCategory : freshSearchResponse.getSuperCategories()){
-												for(Category category : superCategory.getCategories()){
-													subItemsInSearch.addAll(category.getSubItems());
+												if(!superCategory.getSuperCategoryId().equals(superCategoryId)) {
+													for (Category category : superCategory.getCategories()) {
+														subItemsInSearch.addAll(category.getSubItems());
+													}
 												}
 											}
 											activity.updateCartFromSPFMG(subItemsInSearch);
