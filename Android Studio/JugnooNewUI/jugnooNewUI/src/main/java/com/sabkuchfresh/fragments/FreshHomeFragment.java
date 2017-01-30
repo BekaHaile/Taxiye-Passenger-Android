@@ -109,7 +109,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         });
 
         rvFreshSuper.setAdapter(adapter);
-        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 
         relativeLayoutNoMenus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,16 +168,31 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getFreshApiService().getSuperCategories(params, new Callback<SuperCategoriesData>() {
                     @Override
-                    public void success(SuperCategoriesData superCategoriesData, Response response) {
+                    public void success(final SuperCategoriesData superCategoriesData, Response response) {
+                        DialogPopup.dismissLoadingDialog();
                         try {
                             if(superCategoriesData.getFlag() == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
                                 oSnapNotAvailableCase(superCategoriesData.getMessage());
                             } else if(superCategoriesData.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
-                                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
-                                activity.setSuperCategoriesData(superCategoriesData);
-                                adapter.setList(superCategoriesData.getSuperCategories());
-                                activity.updateCartValuesGetTotalPrice();
-                                stopOhSnap();
+                                if(activity.getCartCityId() == -1){
+                                    activity.setCartCityId(superCategoriesData.getDeliveryInfo().getCityId());
+                                }
+
+                                if(!activity.checkForCityChange(superCategoriesData.getDeliveryInfo().getCityId(),
+                                        new FreshActivity.CityChangeCallback() {
+                                            @Override
+                                            public void onYesClick() {
+                                                setSuperCategoriesDataToUI(superCategoriesData);
+                                            }
+
+                                            @Override
+                                            public void onNoClick() {
+
+                                            }
+                                        })){
+                                    setSuperCategoriesDataToUI(superCategoriesData);
+                                }
+
                             } else {
                                 DialogPopup.alertPopup(activity, "", superCategoriesData.getMessage());
                                 stopOhSnap();
@@ -188,7 +202,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                             retryDialogSuperCategoriesAPI(DialogErrorType.SERVER_ERROR);
                             stopOhSnap();
                         }
-                        DialogPopup.dismissLoadingDialog();
                     }
 
                     @Override
@@ -206,6 +219,15 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void setSuperCategoriesDataToUI(SuperCategoriesData superCategoriesData){
+        activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+        activity.setSuperCategoriesData(superCategoriesData);
+        adapter.setList(superCategoriesData.getSuperCategories());
+        activity.updateCartValuesGetTotalPrice();
+        stopOhSnap();
     }
 
     private void retryDialogSuperCategoriesAPI(DialogErrorType dialogErrorType){

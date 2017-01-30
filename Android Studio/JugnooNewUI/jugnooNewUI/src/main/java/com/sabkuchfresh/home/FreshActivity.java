@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -1900,7 +1899,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 
 
-    private void clearCart() {
+    public void clearCart() {
         Prefs.with(this).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
     }
 
@@ -2749,7 +2748,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void onAddressUpdated(AddressAdded event) {
         try {
             if (event.flag) {
-                setRefreshCart(true);
+                if(getFreshCheckoutMergedFragment() != null || getMenusCheckoutMergedFragment() != null){
+                    setRefreshCart(true);
+                }
                 int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
                 setAddressAndFetchOfferingData(appType);
                 saveOfferingLastAddress(appType);
@@ -2847,11 +2848,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             Iterator<String> itemIds = jCart.keys();
             while(itemIds.hasNext()){
                 String itemId = itemIds.next();
-                String jItem = jCart.optString(itemId, "");
-                if(!TextUtils.isEmpty(jItem)){
-                    SubItem subItemSaved =  gson.fromJson(jItem, SubItem.class);
-                    if(subItemSaved.getSubItemQuantitySelected() > 0){
-                        subItemsInCart.add(subItemSaved);
+                if(Utils.checkIfOnlyDigits(itemId)) {
+                    String jItem = jCart.optString(itemId, "");
+                    if (!TextUtils.isEmpty(jItem)) {
+                        SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
+                        if (subItemSaved.getSubItemQuantitySelected() > 0) {
+                            subItemsInCart.add(subItemSaved);
+                        }
                     }
                 }
             }
@@ -2875,6 +2878,50 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     }
                 }
             }
+            if(subItems.size() > 0){
+                jCart.put(Constants.KEY_CITY_ID, getCartCityId());
+            }
+            int type = getAppType();
+            if(type == AppConstant.ApplicationType.FRESH) {
+                Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
+            } else if(type == AppConstant.ApplicationType.GROCERY){
+                Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
+            } else{
+                Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getCartCityId(){
+        try {
+            JSONObject jCart = new JSONObject();
+            if(getAppType() == AppConstant.ApplicationType.FRESH) {
+				jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+			} else if(getAppType() == AppConstant.ApplicationType.GROCERY){
+				jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+			} else{
+				jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+			}
+            return jCart.optInt(Constants.KEY_CITY_ID, -1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public void setCartCityId(int cityId){
+        try {
+            JSONObject jCart = new JSONObject();
+            if(getAppType() == AppConstant.ApplicationType.FRESH) {
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+            } else if(getAppType() == AppConstant.ApplicationType.GROCERY){
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+            } else{
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+            }
+            jCart.put(Constants.KEY_CITY_ID, cityId);
             int type = getAppType();
             if(type == AppConstant.ApplicationType.FRESH) {
                 Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
@@ -2943,6 +2990,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             deliveryAddressView.llLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    saveDeliveryAddressModel();
                     getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
                 }
             });
@@ -2952,6 +3000,85 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void setDeliveryAddressViewVisibility(int visibility){
         if(deliveryAddressView != null) {
             deliveryAddressView.llLocation.setVisibility(visibility);
+        }
+    }
+
+
+    private DeliveryAddressModel deliveryAddressModel;
+    private void saveDeliveryAddressModel(){
+        deliveryAddressModel = new DeliveryAddressModel(getSelectedAddress(), getSelectedLatLng(),
+                getSelectedAddressId(), getSelectedAddressType());
+    }
+
+    private void setDeliveryAddressModelToSelectedAddress(){
+        if(deliveryAddressModel != null){
+            setSelectedAddress(deliveryAddressModel.getAddress());
+            setSelectedLatLng(deliveryAddressModel.getLatLng());
+            setSelectedAddressId(deliveryAddressModel.getId());
+            setSelectedAddressType(deliveryAddressModel.getType());
+            onAddressUpdated(new AddressAdded(true));
+        }
+    }
+
+    public boolean checkForCityChange(final int cityId, final CityChangeCallback callback){
+        if(fetchCartList().size() > 0
+                && getCartCityId() != cityId){
+            DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
+                    getString(R.string.delivery_address_changed_alert),
+                    getString(R.string.yes), getString(R.string.no),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            clearCart();
+                            setCartCityId(cityId);
+                            callback.onYesClick();
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setDeliveryAddressModelToSelectedAddress();
+                            callback.onNoClick();
+                        }
+                    }, false, false);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public interface CityChangeCallback{
+        void onYesClick();
+        void onNoClick();
+    }
+
+    public class DeliveryAddressModel{
+        private String address;
+        private LatLng latLng;
+        private int id;
+        private String type;
+
+        public DeliveryAddressModel(String address, LatLng latLng, int id, String type) {
+            this.address = address;
+            this.latLng = latLng;
+            this.id = id;
+            this.type = type;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public LatLng getLatLng() {
+            return latLng;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getType() {
+            return type;
         }
     }
 

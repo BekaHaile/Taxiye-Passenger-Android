@@ -899,13 +899,6 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
     public void saveHistoryCardToSP(HistoryResponse.Datum orderHistory) {
         try {
-            if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
-                Prefs.with(activity).save(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT);
-            } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
-                Prefs.with(activity).save(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT);
-            } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
-                Prefs.with(activity).save(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT);
-            }
             JSONObject jCart = new JSONObject();
             if (orderHistory.getOrderItems() != null) {
                 Gson gson = new Gson();
@@ -928,6 +921,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                     }
                 }
             }
+            jCart.put(Constants.KEY_CITY_ID, orderHistory.getCityId());
             if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
                 Prefs.with(activity).save(Constants.SP_FRESH_CART, jCart.toString());
                 sendMessage(0, orderHistory);

@@ -36,6 +36,9 @@ public class UserCheckoutResponse{
 	@SerializedName("delivery_info")
 	@Expose
 	private DeliveryInfo deliveryInfo;
+	@SerializedName("cart")
+	@Expose
+	private List<CartItem> cartItems;
 
 	/**
 	 *
@@ -125,6 +128,14 @@ public class UserCheckoutResponse{
 
 	public void setSubscription(Subscription subscription) {
 		this.subscription = subscription;
+	}
+
+	public List<CartItem> getCartItems() {
+		return cartItems;
+	}
+
+	public void setCartItems(List<CartItem> cartItems) {
+		this.cartItems = cartItems;
 	}
 
 	public class Subscription {
@@ -245,6 +256,109 @@ public class UserCheckoutResponse{
 
 		public void setSelectedSlot(Integer selectedSlot) {
 			this.selectedSlot = selectedSlot;
+		}
+	}
+
+	public class CartItem {
+
+		@SerializedName("sub_item_id")
+		@Expose
+		private Integer subItemId;
+		@SerializedName("quantity")
+		@Expose
+		private Integer quantity;
+		@SerializedName("super_category_id")
+		@Expose
+		private Integer superCategoryId;
+		@SerializedName("category_id")
+		@Expose
+		private Integer categoryId;
+		@SerializedName("sub_item_name")
+		@Expose
+		private String subItemName;
+		@SerializedName("sub_item_image")
+		@Expose
+		private String subItemImage;
+		@SerializedName("price")
+		@Expose
+		private Double price;
+		@SerializedName("status")
+		@Expose
+		private Integer status;
+
+		public Integer getSubItemId() {
+			return subItemId;
+		}
+
+		public void setSubItemId(Integer subItemId) {
+			this.subItemId = subItemId;
+		}
+
+		public Integer getQuantity() {
+			return quantity;
+		}
+
+		public void setQuantity(Integer quantity) {
+			this.quantity = quantity;
+		}
+
+		public Integer getSuperCategoryId() {
+			return superCategoryId;
+		}
+
+		public void setSuperCategoryId(Integer superCategoryId) {
+			this.superCategoryId = superCategoryId;
+		}
+
+		public Integer getCategoryId() {
+			return categoryId;
+		}
+
+		public void setCategoryId(Integer categoryId) {
+			this.categoryId = categoryId;
+		}
+
+		public String getSubItemName() {
+			return subItemName;
+		}
+
+		public void setSubItemName(String subItemName) {
+			this.subItemName = subItemName;
+		}
+
+		public String getSubItemImage() {
+			return subItemImage;
+		}
+
+		public void setSubItemImage(String subItemImage) {
+			this.subItemImage = subItemImage;
+		}
+
+		public Double getPrice() {
+			return price;
+		}
+
+		public void setPrice(Double price) {
+			this.price = price;
+		}
+
+		public Integer getStatus() {
+			return status;
+		}
+
+		public void setStatus(Integer status) {
+			this.status = status;
+		}
+
+		public CartItem(){}
+
+		public CartItem(Integer subItemId){
+			this.subItemId = subItemId;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			return (o instanceof CartItem) && ((CartItem)o).getSubItemId().equals(subItemId);
 		}
 	}
 }
