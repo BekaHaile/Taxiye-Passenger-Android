@@ -1746,6 +1746,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+
+                                    updateCartFromCheckoutData(userCheckoutResponse);
+
                                     buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.place_order));
                                     activity.setUserCheckoutResponse(userCheckoutResponse);
                                     Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
@@ -1930,6 +1933,43 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 });
     }
 
+
+    private void updateCartFromCheckoutData(UserCheckoutResponse userCheckoutResponse){
+        if(userCheckoutResponse.getCartItems() != null){
+            boolean cartChanged = false;
+            for(int i=0; i<subItemsInCart.size(); i++){
+                SubItem si = subItemsInCart.get(i);
+                int index = userCheckoutResponse.getCartItems().indexOf(userCheckoutResponse.new CartItem(si.getSubItemId()));
+                if(index > -1){
+                    UserCheckoutResponse.CartItem cartItem = userCheckoutResponse.getCartItems().remove(index);
+                    if(cartItem.getStatus() < 0 || cartItem.getQuantity() <= 0){
+                        subItemsInCart.remove(i);
+                        i--;
+                        cartChanged = true;
+                    } else {
+                        cartChanged = cartChanged
+                                || (!si.getPrice().equals(cartItem.getPrice())
+                                || !si.getSubItemQuantitySelected().equals(cartItem.getQuantity())
+                                || !si.getSubItemName().equalsIgnoreCase(cartItem.getSubItemName())
+                                || !si.getSubItemImage().equalsIgnoreCase(cartItem.getSubItemImage()));
+                        si.setSubItemQuantitySelected(cartItem.getQuantity());
+                        si.setSubItemName(cartItem.getSubItemName());
+                        si.setSubItemImage(cartItem.getSubItemImage());
+                        si.setPrice(cartItem.getPrice());
+                    }
+                } else {
+                    subItemsInCart.remove(i);
+                    i--;
+                    cartChanged = true;
+                }
+            }
+            if(cartChanged) {
+                activity.saveCartList(subItemsInCart);
+                freshCartItemsAdapter.notifyDataSetChanged();
+                activity.setCartChangedAtCheckout(true);
+            }
+        }
+    }
 
     private void setDeliverySlotsDataUI() {
         if (activity.getUserCheckoutResponse() != null
