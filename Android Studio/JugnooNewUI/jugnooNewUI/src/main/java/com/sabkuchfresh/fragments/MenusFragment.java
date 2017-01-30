@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -400,6 +401,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     private void retryDialogVendorData(DialogErrorType dialogErrorType, final MenusResponse.Vendor vendor){

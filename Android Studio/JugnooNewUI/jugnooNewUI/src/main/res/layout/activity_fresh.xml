@@ -8,6 +8,7 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         android:splitMotionEvents="false">
 
         <android.support.design.widget.AppBarLayout
@@ -16,20 +17,84 @@
             android:layout_height="wrap_content"
             app:elevation="0dp">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/toolbar_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:contentInsetLeft="0dp"
-                android:contentInsetStart="0dp"
-                app:contentInsetLeft="0dp"
-                app:contentInsetStart="0dp"
-                app:layout_scrollFlags="scroll|enterAlways|snap">
-                <include
-                    android:id="@+id/topBarMain"
-                    layout="@layout/layout_top_bar_fresh" />
-            </android.support.v7.widget.Toolbar>
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:contentScrim="@android:color/white"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:scrimAnimationDuration="100"
+                app:scrimVisibleHeightTrigger="10dp">
+
+
+                <RelativeLayout
+                    android:id="@+id/layout_rest_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:animateLayoutChanges="true"
+                    android:visibility="gone">
+
+
+                    <ImageView
+                        android:id="@+id/iv_rest_collapse_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/black" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/shadow_menu_collapse_image" />
+
+                    <TextView
+                        android:id="@+id/tv_rest_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/tv_rest_reviews"
+                        android:layout_marginLeft="46px"
+                        android:text="EKAM RESTAURANT"
+                        app:font="avenir"
+                        android:textColor="@android:color/white"
+                        android:textSize="31px" />
+
+
+                    <TextView
+                        android:id="@id/tv_rest_reviews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="24px"
+                        android:layout_marginLeft="46px"
+                        android:layout_marginTop="3dp"
+                        app:font="maven"
+                        android:text="4.3 (14 Reviews)"
+                        android:textColor="@android:color/white"
+                        android:textSize="24px" />
+
+
+                </RelativeLayout>
+
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/transparent"
+                    android:contentInsetLeft="0dp"
+                    android:contentInsetStart="0dp"
+                    app:contentInsetLeft="0dp"
+                    app:contentInsetStart="0dp"
+                    app:layout_collapseMode="pin">
+                    <!--app:layout_scrollFlags="scroll|enterAlways|snap">-->
+
+                    <include
+                        android:id="@+id/topBarMain"
+                        layout="@layout/layout_top_bar_fresh" />
+                </android.support.v7.widget.Toolbar>
+
+
+            </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
         <RelativeLayout
@@ -42,8 +107,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:layout_gravity="bottom"
+            android:animateLayoutChanges="true"
             android:orientation="vertical">
 
             <TextView

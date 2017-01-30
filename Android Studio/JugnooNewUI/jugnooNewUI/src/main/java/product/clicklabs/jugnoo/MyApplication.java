@@ -23,6 +23,7 @@ import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.otto.Bus;
+import com.tsengvn.typekit.Typekit;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,24 +47,24 @@ import product.clicklabs.jugnoo.wallet.WalletCore;
 /**
  * Created by socomo20 on 8/22/15.
  */
-public class MyApplication extends Application{
+public class MyApplication extends Application {
 
-	public static final String TAG = MyApplication.class
-			.getSimpleName();
+    public static final String TAG = MyApplication.class
+            .getSimpleName();
 
-	private static MyApplication mInstance;
-	public String ACTIVITY_NAME_PLAY = "GAME";
-	public String ACTIVITY_NAME_FREE_RIDES = "FREE RIDES";
-	public String ACTIVITY_NAME_WALLET = "WALLET";
-	public String ACTIVITY_NAME_INBOX= "INBOX";
-	public String ACTIVITY_NAME_PROMOTIONS = "PROMOTIONS";
-	public String ACTIVITY_NAME_HISTORY = "HISTORY";
-	public String ACTIVITY_NAME_OFFERS = "PROMOTIONS";
-	public String ACTIVITY_NAME_REFER_A_DRIVER = "REFER A DRIVER";
-	public String ACTIVITY_NAME_SUPPORT = "SUPPORT";
-	public String ACTIVITY_NAME_ABOUT = "ABOUT";
-	public String ACTIVITY_NAME_JUGNOO_STAR = "JUGNOO STAR";
-	public String ACTIVITY_NAME_NOTIFICATION_SETTING = "SET PREFERENCES";
+    private static MyApplication mInstance;
+    public String ACTIVITY_NAME_PLAY = "GAME";
+    public String ACTIVITY_NAME_FREE_RIDES = "FREE RIDES";
+    public String ACTIVITY_NAME_WALLET = "WALLET";
+    public String ACTIVITY_NAME_INBOX = "INBOX";
+    public String ACTIVITY_NAME_PROMOTIONS = "PROMOTIONS";
+    public String ACTIVITY_NAME_HISTORY = "HISTORY";
+    public String ACTIVITY_NAME_OFFERS = "PROMOTIONS";
+    public String ACTIVITY_NAME_REFER_A_DRIVER = "REFER A DRIVER";
+    public String ACTIVITY_NAME_SUPPORT = "SUPPORT";
+    public String ACTIVITY_NAME_ABOUT = "ABOUT";
+    public String ACTIVITY_NAME_JUGNOO_STAR = "JUGNOO STAR";
+    public String ACTIVITY_NAME_NOTIFICATION_SETTING = "SET PREFERENCES";
 
     /**
      * The {@code FirebaseAnalytics} used to record screen views.
@@ -73,59 +74,70 @@ public class MyApplication extends Application{
     // [END declare_analytics]
 
 
-	/**
-	 * Reference to the bus (OTTO By Square)
-	 */
-	private Bus mBus;
-	public Branch branch;
+    /**
+     * Reference to the bus (OTTO By Square)
+     */
+    private Bus mBus;
+    public Branch branch;
 
-	private CleverTapAPI cleverTap;
+    private CleverTapAPI cleverTap;
 
-	@Override
-	public void onCreate() {
-		ActivityLifecycleCallback.register(this);
-		super.onCreate();
-		try {
-			Fabric.with(this, new Crashlytics());
-			if(!this.isTestModeEnabled()) {
+    @Override
+    public void onCreate() {
+        ActivityLifecycleCallback.register(this);
+
+        /**
+         Edited by Parminder Singh on 1/30/17 at 3:47 PM
+         **/
+
+
+        Typekit.getInstance()
+                .add("maven", Typekit.createFromAsset(this, "fonts/maven_pro_medium.ttf")).add("avenir",Typekit.createFromAsset(this,  "fonts/avenir_next_demi.otf"))
+        .add("maven-bold",Typekit.createFromAsset(this, "fonts/maven_pro_bold.ttf"));
+
+
+        super.onCreate();
+        try {
+            Fabric.with(this, new Crashlytics());
+            if (!this.isTestModeEnabled()) {
                 Branch.getInstance(this);
             } else {
                 Branch.getTestInstance(this);
             }
-			Branch.getAutoInstance(this);
+            Branch.getAutoInstance(this);
 
-			if(!this.isTestModeEnabled()) {
-				branch = Branch.getInstance(this);
-			} else {
-				branch = Branch.getTestInstance(this);
-			}
+            if (!this.isTestModeEnabled()) {
+                branch = Branch.getInstance(this);
+            } else {
+                branch = Branch.getTestInstance(this);
+            }
 
-			if(BuildConfig.DEBUG_MODE) {
+            if (BuildConfig.DEBUG_MODE) {
 //				Feature.setErrorDebug(true);
 //				Feature.enableDebug(true);
-				CleverTapAPI.setDebugLevel(1);
-			}
+                CleverTapAPI.setDebugLevel(1);
+            }
 
-			mInstance = this;
-			mBus = new Bus();
-			mBus.register(this);
+            mInstance = this;
+            mBus = new Bus();
+            mBus.register(this);
 
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-			AnalyticsTrackers.initialize(this);
-			AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		getCleverTap();
-	}
+            AnalyticsTrackers.initialize(this);
+            AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        getCleverTap();
+    }
 
-	public Bus getBus() {
-		return mBus;
-	}
+    public Bus getBus() {
+        return mBus;
+    }
 
     public FirebaseAnalytics getFirebaseAnalytics() {
-        if(mFirebaseAnalytics == null) {
+        if (mFirebaseAnalytics == null) {
             mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         }
         return mFirebaseAnalytics;
@@ -133,392 +145,394 @@ public class MyApplication extends Application{
 
 
     public void logEvent(String content, Bundle bundle) {
-		if(content.length()>31) {
-			content = content.substring(0, 31);
-		}
-		if(bundle != null) {
-			getFirebaseAnalytics().logEvent(content, bundle);
-		} else{
-			Bundle bundle1 = new Bundle();
-			getFirebaseAnalytics().logEvent(content, bundle1);
-		}
+        if (content.length() > 31) {
+            content = content.substring(0, 31);
+        }
+        if (bundle != null) {
+            getFirebaseAnalytics().logEvent(content, bundle);
+        } else {
+            Bundle bundle1 = new Bundle();
+            getFirebaseAnalytics().logEvent(content, bundle1);
+        }
     }
 
-	@Override
-	protected void attachBaseContext(Context base) {
-		super.attachBaseContext(base);
-		MultiDex.install(this);
-	}
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
-	private boolean isTestModeEnabled() {
-		boolean isTestMode_ = false;
-		String testModeKey = "io.branch.sdk.TestMode";
+    private boolean isTestModeEnabled() {
+        boolean isTestMode_ = false;
+        String testModeKey = "io.branch.sdk.TestMode";
 
-		try {
-			ApplicationInfo e = this.getPackageManager().getApplicationInfo(this.getPackageName(), 128);
-			if(e.metaData != null) {
-				isTestMode_ = e.metaData.getBoolean(testModeKey, false);
-			}
-		} catch (PackageManager.NameNotFoundException var4) {
-			var4.printStackTrace();
-		}
+        try {
+            ApplicationInfo e = this.getPackageManager().getApplicationInfo(this.getPackageName(), 128);
+            if (e.metaData != null) {
+                isTestMode_ = e.metaData.getBoolean(testModeKey, false);
+            }
+        } catch (PackageManager.NameNotFoundException var4) {
+            var4.printStackTrace();
+        }
 
-		return isTestMode_;
-	}
+        return isTestMode_;
+    }
 
 
+    public static synchronized MyApplication getInstance() {
+        return mInstance;
+    }
 
-	public static synchronized MyApplication getInstance() {
-		return mInstance;
-	}
+    public synchronized Tracker getGoogleAnalyticsTracker() {
+        AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();
+        return analyticsTrackers.get(AnalyticsTrackers.Target.APP);
+    }
 
-	public synchronized Tracker getGoogleAnalyticsTracker() {
-		AnalyticsTrackers analyticsTrackers = AnalyticsTrackers.getInstance();
-		return analyticsTrackers.get(AnalyticsTrackers.Target.APP);
-	}
+    /***
+     * Tracking screen view
+     *
+     * @param screenName screen name to be displayed on GA dashboard
+     */
+    public void trackScreenView(String screenName) {
+        Tracker t = getGoogleAnalyticsTracker();
+        t.enableAdvertisingIdCollection(true);
+        // Set screen name.
+        t.setScreenName(screenName);
 
-	/***
-	 * Tracking screen view
-	 *
-	 * @param screenName screen name to be displayed on GA dashboard
-	 */
-	public void trackScreenView(String screenName) {
-		Tracker t = getGoogleAnalyticsTracker();
-		t.enableAdvertisingIdCollection(true);
-		// Set screen name.
-		t.setScreenName(screenName);
+        // Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
-		// Send a screen view.
-		t.send(new HitBuilders.ScreenViewBuilder().build());
+        GoogleAnalytics.getInstance(this).dispatchLocalHits();
+    }
 
-		GoogleAnalytics.getInstance(this).dispatchLocalHits();
-	}
+    public void setGAUserId(String mUserId) {
+        Tracker t = getGoogleAnalyticsTracker();
+        t.enableAdvertisingIdCollection(true);
+        // Set screen name.
+        t.setClientId(mUserId);
 
-	public void setGAUserId(String mUserId) {
-		Tracker t = getGoogleAnalyticsTracker();
-		t.enableAdvertisingIdCollection(true);
-		// Set screen name.
-		t.setClientId(mUserId);
+        // Send a screen view.
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
-		// Send a screen view.
-		t.send(new HitBuilders.ScreenViewBuilder().build());
+        GoogleAnalytics.getInstance(this).dispatchLocalHits();
+    }
 
-		GoogleAnalytics.getInstance(this).dispatchLocalHits();
-	}
+    /***
+     * Tracking exception
+     *
+     * @param e exception to be tracked
+     */
+    public void trackException(Exception e) {
+        if (e != null) {
+            Tracker t = getGoogleAnalyticsTracker();
 
-	/***
-	 * Tracking exception
-	 *
-	 * @param e exception to be tracked
-	 */
-	public void trackException(Exception e) {
-		if (e != null) {
-			Tracker t = getGoogleAnalyticsTracker();
+            t.send(new HitBuilders.ExceptionBuilder()
+                    .setDescription(
+                            new StandardExceptionParser(this, null)
+                                    .getDescription(Thread.currentThread().getName(), e))
+                    .setFatal(false)
+                    .build()
+            );
+        }
+    }
 
-			t.send(new HitBuilders.ExceptionBuilder()
-							.setDescription(
-									new StandardExceptionParser(this, null)
-											.getDescription(Thread.currentThread().getName(), e))
-							.setFatal(false)
-							.build()
-			);
-		}
-	}
+    /***
+     * Tracking event
+     *
+     * @param category event category
+     * @param action   action of the event
+     * @param label    label
+     */
+    public void trackEvent(String category, String action, String label) {
+        Tracker t = getGoogleAnalyticsTracker();
+        t.enableAdvertisingIdCollection(true);
+        // Build and send an Event.
+        t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
 
-	/***
-	 * Tracking event
-	 *
-	 * @param category event category
-	 * @param action   action of the event
-	 * @param label    label
-	 */
-	public void trackEvent(String category, String action, String label) {
-		Tracker t = getGoogleAnalyticsTracker();
-		t.enableAdvertisingIdCollection(true);
-		// Build and send an Event.
-		t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).build());
-
-        if(category.equalsIgnoreCase(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION)) {
+        if (category.equalsIgnoreCase(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION)) {
             Bundle bundle = new Bundle();
-            logEvent("Transaction_"+action+"_"+label, bundle);
+            logEvent("Transaction_" + action + "_" + label, bundle);
         }
 
 
-	}
+    }
 
 
+    public void trackEvent(String userId, String category, String action, String label, Map<String, String> map) {
 
-	public void trackEvent(String userId, String category, String action, String label, Map<String, String> map) {
+        Tracker t = getGoogleAnalyticsTracker();
+        t.enableAdvertisingIdCollection(true);
+        t.setClientId(userId);
+        HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder();
+        eventBuilder.setCategory(category).setAction(action).setLabel(label);
+        for (String key : map.keySet()) {
+            eventBuilder.set(key, map.get(key));
+        }
 
-		Tracker t = getGoogleAnalyticsTracker();
-		t.enableAdvertisingIdCollection(true);
-		t.setClientId(userId);
-		HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder();
-		eventBuilder.setCategory(category).setAction(action).setLabel(label);
-		for (String key : map.keySet()) {
-			eventBuilder.set(key, map.get(key));
-		}
-
-		// Build and send an Event.
-		t.send(eventBuilder.build());
-		GoogleAnalytics.getInstance(this).dispatchLocalHits();
-	}
+        // Build and send an Event.
+        t.send(eventBuilder.build());
+        GoogleAnalytics.getInstance(this).dispatchLocalHits();
+    }
 
 
-		/**
-         *
-         * @param category
-         * @param action
-         * @param label
-         * @param value
-         */
-	public void trackEvent(String category, String action, String label, long value) {
-		Tracker t = getGoogleAnalyticsTracker();
-		t.enableAdvertisingIdCollection(true);
-		// Build and send an Event.
-		t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
-        if(category.equalsIgnoreCase(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION)) {
+    /**
+     * @param category
+     * @param action
+     * @param label
+     * @param value
+     */
+    public void trackEvent(String category, String action, String label, long value) {
+        Tracker t = getGoogleAnalyticsTracker();
+        t.enableAdvertisingIdCollection(true);
+        // Build and send an Event.
+        t.send(new HitBuilders.EventBuilder().setCategory(category).setAction(action).setLabel(label).setValue(value).build());
+        if (category.equalsIgnoreCase(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION)) {
             Bundle bundle = new Bundle();
             bundle.putLong("value", value);
-            logEvent("Transaction_"+action+"_"+label, bundle);
+            logEvent("Transaction_" + action + "_" + label, bundle);
         }
-	}
+    }
 
 
-	public static ProductAction productAction;
-	private static ProductAction getProductAction() {
-		if(productAction == null) {
-			productAction = new ProductAction(ProductAction.ACTION_CHECKOUT);
-		}
-		return productAction;
-	}
+    public static ProductAction productAction;
 
-	public void eventTracker(int position, List<Product> product) {
+    private static ProductAction getProductAction() {
+        if (productAction == null) {
+            productAction = new ProductAction(ProductAction.ACTION_CHECKOUT);
+        }
+        return productAction;
+    }
+
+    public void eventTracker(int position, List<Product> product) {
 // Add the step number and additional info about the checkout to the action.
-		ProductAction productAction = getProductAction();
-		productAction.setCheckoutStep(position);
-		HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder();
-		for(int i=0;i<product.size();i++) {
-			builder.addProduct(product.get(i));
-		}
-		builder.setProductAction(productAction);
+        ProductAction productAction = getProductAction();
+        productAction.setCheckoutStep(position);
+        HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder();
+        for (int i = 0; i < product.size(); i++) {
+            builder.addProduct(product.get(i));
+        }
+        builder.setProductAction(productAction);
 
-		Tracker t = getGoogleAnalyticsTracker();
-		t.send(builder.build());
-
-
-	}
+        Tracker t = getGoogleAnalyticsTracker();
+        t.send(builder.build());
 
 
-	/***
-	 * Tracking event
-	 *
-	 * @param category event category
-	 * @param action   action of the event
-	 * @param label    label
-	 * @param map hash map for key value pairs
-	 */
-	public void trackEvent(String category, String action, String label, Map<String, String> map) {
-		Tracker t = getGoogleAnalyticsTracker();
+    }
 
-		HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder();
-		eventBuilder.setCategory(category).setAction(action).setLabel(label);
-		for (String key : map.keySet()) {
-			eventBuilder.set(key, map.get(key));
-		}
 
-		// Build and send an Event.
-		t.send(eventBuilder.build());
-	}
+    /***
+     * Tracking event
+     *
+     * @param category event category
+     * @param action   action of the event
+     * @param label    label
+     * @param map      hash map for key value pairs
+     */
+    public void trackEvent(String category, String action, String label, Map<String, String> map) {
+        Tracker t = getGoogleAnalyticsTracker();
 
-	public void transactions(List<Product> product, ProductAction productAction) {
-		HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder();
-		for(int i=0;i<product.size();i++) {
-			builder.addProduct(product.get(i));
-		}
+        HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder();
+        eventBuilder.setCategory(category).setAction(action).setLabel(label);
+        for (String key : map.keySet()) {
+            eventBuilder.set(key, map.get(key));
+        }
 
-		builder.setProductAction(productAction);
+        // Build and send an Event.
+        t.send(eventBuilder.build());
+    }
 
-		Tracker t = getGoogleAnalyticsTracker();
-		t.enableAdvertisingIdCollection(true);
-		t.setScreenName("transaction");
-		t.send(builder.build());
+    public void transactions(List<Product> product, ProductAction productAction) {
+        HitBuilders.ScreenViewBuilder builder = new HitBuilders.ScreenViewBuilder();
+        for (int i = 0; i < product.size(); i++) {
+            builder.addProduct(product.get(i));
+        }
+
+        builder.setProductAction(productAction);
+
+        Tracker t = getGoogleAnalyticsTracker();
+        t.enableAdvertisingIdCollection(true);
+        t.setScreenName("transaction");
+        t.send(builder.build());
 
 //        t.send(new HitBuilders.ScreenViewBuilder()
 //                .setNewSession()
 //                .build());
 
 
-	}
+    }
 
 
-	private WalletCore walletCore;
-	public WalletCore getWalletCore(){
-		if(walletCore == null){
-			walletCore = new WalletCore(this);
-		}
-		return walletCore;
-	}
+    private WalletCore walletCore;
+
+    public WalletCore getWalletCore() {
+        if (walletCore == null) {
+            walletCore = new WalletCore(this);
+        }
+        return walletCore;
+    }
 
 
-	public String getDeviceToken(){
-		String deviceToken = Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found");
-		if(deviceToken.equalsIgnoreCase("not_found")){
-			deviceToken = FirebaseInstanceId.getInstance().getToken();
-			if(deviceToken == null){
-				deviceToken = "not_found";
-			}
-		}
-		return deviceToken;
-	}
+    public String getDeviceToken() {
+        String deviceToken = Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, "not_found");
+        if (deviceToken.equalsIgnoreCase("not_found")) {
+            deviceToken = FirebaseInstanceId.getInstance().getToken();
+            if (deviceToken == null) {
+                deviceToken = "not_found";
+            }
+        }
+        return deviceToken;
+    }
 
 
-	private AppSwitcher appSwitcher;
-	public AppSwitcher getAppSwitcher(){
-		if(appSwitcher == null){
-			appSwitcher = new AppSwitcher();
-		}
-		return appSwitcher;
-	}
+    private AppSwitcher appSwitcher;
 
-	public CleverTapAPI getCleverTap() {
-		if(cleverTap == null) {
-			try {
-				cleverTap = CleverTapAPI.getInstance(getApplicationContext());
-			} catch (CleverTapMetaDataNotFoundException e) {
-				// thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
-			} catch (CleverTapPermissionsNotSatisfied e) {
-				// thrown if you haven’t requested the required permissions in your AndroidManifest.xml
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return cleverTap;
-	}
+    public AppSwitcher getAppSwitcher() {
+        if (appSwitcher == null) {
+            appSwitcher = new AppSwitcher();
+        }
+        return appSwitcher;
+    }
 
-	public void setLocationToCleverTap() {
-		try {
-			Location location = getCleverTap().getLocation();
-			getCleverTap().setLocation(location);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public CleverTapAPI getCleverTap() {
+        if (cleverTap == null) {
+            try {
+                cleverTap = CleverTapAPI.getInstance(getApplicationContext());
+            } catch (CleverTapMetaDataNotFoundException e) {
+                // thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
+            } catch (CleverTapPermissionsNotSatisfied e) {
+                // thrown if you haven’t requested the required permissions in your AndroidManifest.xml
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return cleverTap;
+    }
 
-	/**
-	 * Method used to send event on clever tap
-	 * @param eventName
-	 * @param prodViewedAction
+    public void setLocationToCleverTap() {
+        try {
+            Location location = getCleverTap().getLocation();
+            getCleverTap().setLocation(location);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Method used to send event on clever tap
+     *
+     * @param eventName
+     * @param prodViewedAction
      */
-	public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
-		try{
-			prodViewedAction.put(Events.TIMING, new Date());
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+    public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
+        try {
+            prodViewedAction.put(Events.TIMING, new Date());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		getCleverTap().event.push(eventName, prodViewedAction);
-	}
+        getCleverTap().event.push(eventName, prodViewedAction);
+    }
 
-	public void charged(HashMap<String, Object> chargeDetails, ArrayList<HashMap<String, Object>> items) {
-		try {
-			try{
-				chargeDetails.put(Events.TIMING, new Date());
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-			getCleverTap().event.push(CleverTapAPI.CHARGED_EVENT, chargeDetails, items);
-		} catch (Exception e) {
-			// You have to specify the first parameter to push()
-			// as CleverTapAPI.CHARGED_EVENT
-		}
-	}
+    public void charged(HashMap<String, Object> chargeDetails, ArrayList<HashMap<String, Object>> items) {
+        try {
+            try {
+                chargeDetails.put(Events.TIMING, new Date());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            getCleverTap().event.push(CleverTapAPI.CHARGED_EVENT, chargeDetails, items);
+        } catch (Exception e) {
+            // You have to specify the first parameter to push()
+            // as CleverTapAPI.CHARGED_EVENT
+        }
+    }
 
-	public void udpateUserData(String key, ArrayList<String> coupons) {
-		try {
-			if(coupons.size()>0)
-				getCleverTap().profile.setMultiValuesForKey(key, coupons);
-			else {
-				HashMap<String, Object> profileUpdate = new HashMap<>();
-				profileUpdate.put(key, "NA");
-				getCleverTap().profile.push(profileUpdate);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public void udpateUserData(String key, ArrayList<String> coupons) {
+        try {
+            if (coupons.size() > 0)
+                getCleverTap().profile.setMultiValuesForKey(key, coupons);
+            else {
+                HashMap<String, Object> profileUpdate = new HashMap<>();
+                profileUpdate.put(key, "NA");
+                getCleverTap().profile.push(profileUpdate);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	private CleverTapUtils cleverTapUtils;
-	public CleverTapUtils getCleverTapUtils(){
-		if(cleverTapUtils == null){
-			cleverTapUtils = new CleverTapUtils();
-		}
-		return cleverTapUtils;
-	}
+    private CleverTapUtils cleverTapUtils;
 
-
-	public Database2 getDatabase2(){
-		return Database2.getInstance(this);
-	}
-
-	public void initializeServerURL(Context context) {
-		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
-
-		ConfigMode configModeToSet;
-		if (link.equalsIgnoreCase(Config.getLiveServerUrl())
-				|| link.equalsIgnoreCase(Config.getLegacyServerUrl())) {
-			configModeToSet = ConfigMode.LIVE;
-		} else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
-			configModeToSet = ConfigMode.DEV;
-		} else if (link.equalsIgnoreCase(Config.getDev1ServerUrl())) {
-			configModeToSet = ConfigMode.DEV_1;
-		} else if (link.equalsIgnoreCase(Config.getDev2ServerUrl())) {
-			configModeToSet = ConfigMode.DEV_2;
-		} else if (link.equalsIgnoreCase(Config.getDev3ServerUrl())) {
-			configModeToSet = ConfigMode.DEV_3;
-		} else {
-			Config.CUSTOM_SERVER_URL = link;
-			configModeToSet = ConfigMode.CUSTOM;
-		}
-		String freshServerUrlToSet = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
-		String menusServerUrlToSet = Prefs.with(context).getString(SPLabels.MENUS_SERVER_SELECTED, Config.getMenusDefaultServerUrl());
-		String payServerUrlToSet = Prefs.with(context).getString(SPLabels.PAY_SERVER_SELECTED, Config.getPayDefaultServerUrl());
-
-		if(configModeToSet != Config.getConfigMode()
-				|| !Config.getFreshServerUrl().equalsIgnoreCase(freshServerUrlToSet)
-				|| !Config.getMenusServerUrl().equalsIgnoreCase(menusServerUrlToSet)
-				|| !Config.getPayServerUrl().equalsIgnoreCase(payServerUrlToSet)){
-			RestClient.clearRestClients();
-		}
-		Config.setConfigMode(configModeToSet);
-		Config.FRESH_SERVER_URL = freshServerUrlToSet;
-
-		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
-
-		RestClient.setupAllClients();
-	}
+    public CleverTapUtils getCleverTapUtils() {
+        if (cleverTapUtils == null) {
+            cleverTapUtils = new CleverTapUtils();
+        }
+        return cleverTapUtils;
+    }
 
 
-	public int appVersion(){
-		try {
-			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			return pInfo.versionCode;
-		} catch (PackageManager.NameNotFoundException e) {
-			e.printStackTrace();
-			return 0;
-		}
-	}
+    public Database2 getDatabase2() {
+        return Database2.getInstance(this);
+    }
 
-	public String osVersion(){
-		return android.os.Build.VERSION.RELEASE;
-	}
+    public void initializeServerURL(Context context) {
+        String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 
-	public String country(){
-		return getResources().getConfiguration().locale.getDisplayCountry(Locale.getDefault());
-	}
+        ConfigMode configModeToSet;
+        if (link.equalsIgnoreCase(Config.getLiveServerUrl())
+                || link.equalsIgnoreCase(Config.getLegacyServerUrl())) {
+            configModeToSet = ConfigMode.LIVE;
+        } else if (link.equalsIgnoreCase(Config.getDevServerUrl())) {
+            configModeToSet = ConfigMode.DEV;
+        } else if (link.equalsIgnoreCase(Config.getDev1ServerUrl())) {
+            configModeToSet = ConfigMode.DEV_1;
+        } else if (link.equalsIgnoreCase(Config.getDev2ServerUrl())) {
+            configModeToSet = ConfigMode.DEV_2;
+        } else if (link.equalsIgnoreCase(Config.getDev3ServerUrl())) {
+            configModeToSet = ConfigMode.DEV_3;
+        } else {
+            Config.CUSTOM_SERVER_URL = link;
+            configModeToSet = ConfigMode.CUSTOM;
+        }
+        String freshServerUrlToSet = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
+        String menusServerUrlToSet = Prefs.with(context).getString(SPLabels.MENUS_SERVER_SELECTED, Config.getMenusDefaultServerUrl());
+        String payServerUrlToSet = Prefs.with(context).getString(SPLabels.PAY_SERVER_SELECTED, Config.getPayDefaultServerUrl());
 
-	public String deviceName(){
-		return android.os.Build.MANUFACTURER + android.os.Build.MODEL;
-	}
+        if (configModeToSet != Config.getConfigMode()
+                || !Config.getFreshServerUrl().equalsIgnoreCase(freshServerUrlToSet)
+                || !Config.getMenusServerUrl().equalsIgnoreCase(menusServerUrlToSet)
+                || !Config.getPayServerUrl().equalsIgnoreCase(payServerUrlToSet)) {
+            RestClient.clearRestClients();
+        }
+        Config.setConfigMode(configModeToSet);
+        Config.FRESH_SERVER_URL = freshServerUrlToSet;
+
+        Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
+
+        RestClient.setupAllClients();
+    }
+
+
+    public int appVersion() {
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            return pInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public String osVersion() {
+        return android.os.Build.VERSION.RELEASE;
+    }
+
+    public String country() {
+        return getResources().getConfiguration().locale.getDisplayCountry(Locale.getDefault());
+    }
+
+    public String deviceName() {
+        return android.os.Build.MANUFACTURER + android.os.Build.MODEL;
+    }
 
 }

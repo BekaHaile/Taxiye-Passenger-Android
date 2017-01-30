@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#383838</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorRed">#ff0000</color>
+    <color name="opaquewhite">#40FFFFFF</color>
+    <color name="theme_cart_pressed">#99F17B47</color>
+    <color name="theme_cart_selected">#ff834e</color>
+    <color name="grey">#595868</color>
+    <!--<color name="primaryColor">#383838</color>-->
+</resources>
