@@ -83,6 +83,9 @@ public class HistoryResponse {
         @SerializedName("drop_address")
         @Expose
         private String dropAddress;
+        @SerializedName("city_id")
+        @Expose
+        private Integer cityId;
         @SerializedName("driver_id")
         @Expose
         private Integer driverId = 0;
@@ -1091,6 +1094,17 @@ public class HistoryResponse {
 
         public void setAddressId(Integer addressId) {
             this.addressId = addressId;
+        }
+
+        public Integer getCityId() {
+            if(cityId == null){
+                cityId = -1;
+            }
+            return cityId;
+        }
+
+        public void setCityId(Integer cityId) {
+            this.cityId = cityId;
         }
     }
 

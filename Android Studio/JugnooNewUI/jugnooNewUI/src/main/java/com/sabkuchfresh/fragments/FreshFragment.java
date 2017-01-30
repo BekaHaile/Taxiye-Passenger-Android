@@ -345,6 +345,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 									activity.getFreshHomeFragment().oSnapNotAvailableCase(message);
                                 }
                                 else {
+
                                     activity.setProductsResponse(productsResponse);
                                     activity.setMinOrderAmountText(FreshFragment.this);
 									activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
