@@ -2748,7 +2748,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void onAddressUpdated(AddressAdded event) {
         try {
             if (event.flag) {
-                setRefreshCart(true);
+                if(getFreshCheckoutMergedFragment() != null || getMenusCheckoutMergedFragment() != null){
+                    setRefreshCart(true);
+                }
                 int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
                 setAddressAndFetchOfferingData(appType);
                 saveOfferingLastAddress(appType);

@@ -109,7 +109,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         });
 
         rvFreshSuper.setAdapter(adapter);
-        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 
         relativeLayoutNoMenus.setOnClickListener(new View.OnClickListener() {
             @Override
