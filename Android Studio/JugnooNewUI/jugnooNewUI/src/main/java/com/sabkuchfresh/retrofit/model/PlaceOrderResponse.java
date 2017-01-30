@@ -226,6 +226,8 @@ public class PlaceOrderResponse {
 		@Expose
 		private String buttonText;
 
+		private Integer shown;
+
 		public String getImageUrl() {
 			return imageUrl;
 		}
@@ -267,6 +269,17 @@ public class PlaceOrderResponse {
 
 		public void setButtonId(Integer buttonId) {
 			this.buttonId = buttonId;
+		}
+
+		public Integer getShown() {
+			if(shown == null){
+				shown = 0;
+			}
+			return shown;
+		}
+
+		public void setShown(Integer shown) {
+			this.shown = shown;
 		}
 	}
 

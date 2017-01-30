@@ -133,11 +133,6 @@ public class OrderCompleteReferralDialog {
 				public void onClick(View v) {
 					dialog.dismiss();
 					callback.onDialogDismiss();
-					apiReferralUserEvent(OrderCompleteReferralDialog.this.engagementId,
-							OrderCompleteReferralDialog.this.orderId,
-							OrderCompleteReferralDialog.this.productType,
-							0);
-
 				}
 			});
 

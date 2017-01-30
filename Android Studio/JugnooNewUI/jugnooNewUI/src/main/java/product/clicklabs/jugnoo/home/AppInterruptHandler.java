@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.home;
 
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
+
 import org.json.JSONObject;
 
 public interface AppInterruptHandler {
@@ -14,7 +16,7 @@ public interface AppInterruptHandler {
 	
 	void onNoDriversAvailablePushRecieved(String logMessage);
 	
-	void startRideForCustomer(final int flag, String message);
+	void startRideForCustomer(int flag, String message, PlaceOrderResponse.ReferralPopupContent popupContent);
 	
 	void customerEndRideInterrupt(String engagementId);
 	

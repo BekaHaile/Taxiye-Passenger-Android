@@ -89,6 +89,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -3367,6 +3369,24 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                         showChatButton();
 
+                        if(Data.autoData != null && Data.autoData.getReferralPopupContent() != null){
+                            if(Data.autoData.getReferralPopupContent().getShown() == 0) {
+                                new OrderCompleteReferralDialog(this, new OrderCompleteReferralDialog.Callback() {
+                                    @Override
+                                    public void onDialogDismiss() {
+                                    }
+
+                                    @Override
+                                    public void onConfirmed() {
+                                        ReferralActions.shareToWhatsapp(HomeActivity.this);
+                                    }
+                                }).show(false, "", "", "", Data.autoData.getReferralPopupContent(),
+                                        Integer.parseInt(Data.autoData.getcEngagementId()),
+                                        -1, ProductType.AUTO.getOrdinal());
+                                Data.autoData.getReferralPopupContent().setShown(1);
+                            }
+                        }
+
                         break;
 
                     case P_RIDE_END:
@@ -6406,7 +6426,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     @Override
-    public void startRideForCustomer(final int flag, final String message) {
+    public void startRideForCustomer(final int flag, final String message, final PlaceOrderResponse.ReferralPopupContent referralPopupContent) {
         try {
             if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)) {
                 Log.e("in ", "herestartRideForCustomer");
@@ -6420,7 +6440,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         public void run() {
                             try {
                                 Log.i("in in herestartRideForCustomer  run class", "=");
-                                if(Data.autoData.getAssignedDriverInfo() != null) {
+                                if(Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
+                                    Data.autoData.setReferralPopupContent(referralPopupContent);
 									initializeStartRideVariables();
 									passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
 									switchPassengerScreen(passengerScreenMode);

@@ -601,4 +601,5 @@ public interface Constants {
 	String SP_MENUS_FILTER_CUISINES = "sp_menus_filter_cuisines";
 	String SP_MENUS_FILTER_QUICK = "sp_menus_filter_quick";
 	String KEY_EVENT = "event";
+	String KEY_REFERRAL_POPUP_CONTENT = "referral_popup_content";
 }

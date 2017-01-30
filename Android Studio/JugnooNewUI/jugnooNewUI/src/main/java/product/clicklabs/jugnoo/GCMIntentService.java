@@ -32,6 +32,8 @@ import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.NotificationInfo;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.RequestCreator;
@@ -516,7 +518,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "")));
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_IN_RIDE.getOrdinal());
 						if (HomeActivity.appInterruptHandler != null) {
-							HomeActivity.appInterruptHandler.startRideForCustomer(0, message1);
+							PlaceOrderResponse.ReferralPopupContent referralPopupContent = null;
+							try {
+								JSONObject jReferralPopupContent = jObj.optJSONObject(KEY_REFERRAL_POPUP_CONTENT);
+								referralPopupContent = new Gson().fromJson(jReferralPopupContent.toString(), PlaceOrderResponse.ReferralPopupContent.class);
+							} catch (Exception e){}
+							HomeActivity.appInterruptHandler.startRideForCustomer(0, message1, referralPopupContent);
 						} else {
 							String SHARED_PREF_NAME = "myPref",
 									SP_CUSTOMER_SCREEN_MODE = "customer_screen_mode",
@@ -550,7 +557,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.ride_cancelled_by_driver));
 						if (HomeActivity.appInterruptHandler != null) {
-							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1);
+							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1, null);
 						}
 						notificationManager(this, title, message1, playSound);
 						stopLocationUpdateService();
