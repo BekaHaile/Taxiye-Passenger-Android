@@ -51,6 +51,7 @@ import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.home.OrderCheckoutFailureDialog;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
@@ -1403,30 +1404,30 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null){
             restaurantName = activity.getVendorOpened().getName();
         }
-//        new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
-//            @Override
-//            public void onDismiss() {
-//                activity.orderComplete();
-//            }
-//        }).show(String.valueOf(placeOrderResponse.getOrderId()),
-//                deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
-//                placeOrderResponse);
+        if(placeOrderResponse.getReferralPopupContent() == null){
+            new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+                @Override
+                public void onDismiss() {
+                    activity.orderComplete();
+                }
+            }).show(String.valueOf(placeOrderResponse.getOrderId()),
+                    deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
+                    placeOrderResponse);
+        } else {
+            new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
+                @Override
+                public void onDialogDismiss() {
+                    activity.orderComplete();
+                }
+
+                @Override
+                public void onConfirmed() {
+                    activity.orderComplete();
+                    ReferralActions.shareToWhatsapp(activity);
+                }
+            }).show(true, deliverySlot, deliveryDay, placeOrderResponse.getReferralPopupContent());
+        }
         activity.setSelectedPromoCoupon(noSelectionCoupon);
-
-        new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
-            @Override
-            public void onDialogDismiss() {
-                activity.orderComplete();
-            }
-
-            @Override
-            public void onConfirmed() {
-                activity.orderComplete();
-                ReferralActions.shareToWhatsapp(activity);
-            }
-        }).show(true, deliverySlot, deliveryDay, Data.userData.jugnooFbBanner, "Send Gifts for Free!",
-                "Gift your friends Rs. 50 off on their first ride, food or grocery order.", "SEND FREE GIFT");
-
         flurryEventPlaceOrder(placeOrderResponse);
     }
 

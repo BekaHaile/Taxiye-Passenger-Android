@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 
 import product.clicklabs.jugnoo.R;
@@ -34,8 +35,7 @@ public class OrderCompleteReferralDialog {
 
 
 	public Dialog show(boolean showOrderDetails, String orderTime, String orderDay,
-										 String referralImage, String referralHeading,
-										 String referralText, String referralButtonText) {
+					   PlaceOrderResponse.ReferralPopupContent referralPopupContent) {
 		try {
 			Font fonts = new Font();
 			dialog = new Dialog(context, android.R.style.Theme_Translucent_NoTitleBar);
@@ -75,13 +75,16 @@ public class OrderCompleteReferralDialog {
 			Button bSendGift = (Button) dialog.findViewById(R.id.bSendGift);bSendGift.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
 
 
-			if(!TextUtils.isEmpty(referralImage)) {
-				Picasso.with(context).load(referralImage)
+			if(!TextUtils.isEmpty(referralPopupContent.getImageUrl())) {
+				Picasso.with(context).load(referralPopupContent.getImageUrl())
+						.placeholder(R.drawable.ic_notification_placeholder)
 						.into(ivReferralImage);
+			} else {
+				ivReferralImage.setVisibility(View.GONE);
 			}
-			tvReferralHeading.setText(referralHeading);
-			tvReferralText.setText(referralText);
-			bSendGift.setText(referralButtonText);
+			tvReferralHeading.setText(referralPopupContent.getHeading());
+			tvReferralText.setText(referralPopupContent.getText());
+			bSendGift.setText(referralPopupContent.getButtonText());
 
 			bSendGift.setOnClickListener(new View.OnClickListener() {
 				@Override
