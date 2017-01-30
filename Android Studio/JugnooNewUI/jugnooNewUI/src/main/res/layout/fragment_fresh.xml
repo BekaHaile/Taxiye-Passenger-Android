@@ -75,7 +75,7 @@
                 android:layout_height="match_parent"
                 android:fadeScrollbars="true"
                 android:scrollbars="vertical"
-                android:splitMotionEvents="false"></android.support.v7.widget.RecyclerView>
+                android:splitMotionEvents="false"/>
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout

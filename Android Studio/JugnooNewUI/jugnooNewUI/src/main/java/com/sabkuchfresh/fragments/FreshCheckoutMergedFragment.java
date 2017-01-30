@@ -2083,6 +2083,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private void checkIfEmpty(){
         if(subItemsInCart.size() == 0){
+            activity.updateTotalAmountPrice(0d);
             if(activity.isMealAddonItemsAvailable()){
                 activity.performBackPressed();
             }

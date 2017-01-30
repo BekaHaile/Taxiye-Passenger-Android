@@ -249,7 +249,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="@dimen/px_18"
-                                android:text="240"
+                                android:text=""
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/text_size_26"/>
 

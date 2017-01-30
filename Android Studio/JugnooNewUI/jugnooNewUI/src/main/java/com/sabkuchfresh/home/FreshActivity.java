@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -798,13 +799,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         saveCartToSPFMG(subItemToUpdate);
         Pair<Double, Integer> pair = getSubItemInCartTotalPrice();
         try {
-            if (totalPrice > 0) {
-                topBar.getLlCartAmount().setVisibility(View.VISIBLE);
-                topBar.getTvCartAmount().setText(String.format(getResources().getString(R.string.rupees_value_format),
-                        Utils.getMoneyDecimalFormat().format(totalPrice)));
-            } else {
-                topBar.getLlCartAmount().setVisibility(View.GONE);
-            }
+            updateTotalAmountPrice(totalPrice);
             if (getFreshFragment() != null) {
                 setMinOrderAmountText(getFreshFragment());
             } else if (getGroceryFragment() != null) {
@@ -846,13 +841,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         }
                     }
                 }
-                if(totalPrice > 0){
-                    topBar.getLlCartAmount().setVisibility(View.VISIBLE);
-                    topBar.getTvCartAmount().setText(String.format(getResources().getString(R.string.rupees_value_format),
-                            Utils.getMoneyDecimalFormat().format(totalPrice)));
-                } else {
-                    topBar.getLlCartAmount().setVisibility(View.GONE);
-                }
+                updateTotalAmountPrice(totalPrice);
                 if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
                     if (getMenusCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
@@ -873,6 +862,19 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         return pair;
     }
 
+    public void updateTotalAmountPrice(double totalPrice){
+        try {
+            if (totalPrice > 0) {
+                topBar.getLlCartAmount().setVisibility(View.VISIBLE);
+                topBar.getTvCartAmount().setText(String.format(getResources().getString(R.string.rupees_value_format),
+                        Utils.getMoneyDecimalFormat().format(totalPrice)));
+            } else {
+                topBar.getLlCartAmount().setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
@@ -903,8 +905,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             topBar.editTextDeliveryAddress.setVisibility(View.GONE);
 
             rlSort.setVisibility(View.GONE);
-
-            topBar.llSearchContainer.setVisibility(View.GONE);
             int rlFilterVis = View.GONE;
             topBar.buttonCheckServer.setVisibility(View.GONE);
 

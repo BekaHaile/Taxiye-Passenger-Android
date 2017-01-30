@@ -288,5 +288,6 @@
     <color name="brown_marker_text">#8D6E63</color>
     <color name="location_text_color">#a7a7a7</color>
     <color name="cart_bg_color">#ff834e</color>
+    <color name="cart_bg_color_pressed">#eb6f3a</color>
 
 </resources>

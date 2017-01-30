@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +44,7 @@ import retrofit.client.Response;
  * Created by ankit on 19/01/17.
  */
 
-public class FreshHomeFragment extends Fragment {
+public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private View rootView;
     private LinearLayout llRoot;
@@ -52,6 +53,7 @@ public class FreshHomeFragment extends Fragment {
     private RecyclerView rvFreshSuper;
     private FreshSuperCategoriesAdapter adapter;
     private TextView textViewNothingFound;
+    private SwipeRefreshLayout swipeContainer;
 
     @Nullable
     @Override
@@ -68,6 +70,14 @@ public class FreshHomeFragment extends Fragment {
         }
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
+
+        swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(this);
+        swipeContainer.setColorSchemeResources(R.color.white);
+        swipeContainer.setProgressBackgroundColorSchemeResource(R.color.theme_color);
+        swipeContainer.setSize(SwipeRefreshLayout.DEFAULT);
+        swipeContainer.setEnabled(true);
+        //swipeContainer.setVisibility(View.GONE);
 
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
@@ -178,12 +188,14 @@ public class FreshHomeFragment extends Fragment {
             else {
                 retryDialogSuperCategoriesAPI(DialogErrorType.NO_NET);
             }
+            swipeContainer.setRefreshing(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void retryDialogSuperCategoriesAPI(DialogErrorType dialogErrorType){
+        swipeContainer.setVisibility(View.VISIBLE);
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
@@ -216,4 +228,8 @@ public class FreshHomeFragment extends Fragment {
         activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void onRefresh() {
+        getSuperCategoriesAPI();
+    }
 }
