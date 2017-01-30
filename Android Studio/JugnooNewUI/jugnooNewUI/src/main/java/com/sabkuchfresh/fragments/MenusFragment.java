@@ -157,6 +157,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+
                         activity.openFeedback();
                     }
                 }, 300);

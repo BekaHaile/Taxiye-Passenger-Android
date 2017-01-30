@@ -101,7 +101,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.layout_feedback, container, false);
+
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
@@ -109,37 +109,35 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         try {
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
-            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+            if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
                     .equals(Config.getFreshClientId())) {
-				viewType = Data.getFreshData().getFeedbackViewType();
-				dateValue = Data.getFreshData().getFeedbackDeliveryDate();
-				orderAmount = Data.getFreshData().getAmount();
-				orderId = Data.getFreshData().getOrderId();
-				activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
+                viewType = Data.getFreshData().getFeedbackViewType();
+                dateValue = Data.getFreshData().getFeedbackDeliveryDate();
+                orderAmount = Data.getFreshData().getAmount();
+                orderId = Data.getFreshData().getOrderId();
+                activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
                 productType = ProductType.FRESH;
                 reasons.clear();
-                for(int i=0; i<Data.getFreshData().getNegativeFeedbackReasons().length(); i++){
+                for (int i = 0; i < Data.getFreshData().getNegativeFeedbackReasons().length(); i++) {
                     reasons.add(new FeedbackReason(Data.getFreshData().getNegativeFeedbackReasons().get(i).toString()));
                 }
-			}
-            else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
-                    .equals(Config.getMealsClientId())){
-				viewType = Data.getMealsData().getFeedbackViewType();
-				dateValue = Data.getMealsData().getFeedbackDeliveryDate();
-				orderAmount = Data.getMealsData().getAmount();
-				orderId = Data.getMealsData().getOrderId();
-				activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getMealsClientId())) {
+                viewType = Data.getMealsData().getFeedbackViewType();
+                dateValue = Data.getMealsData().getFeedbackDeliveryDate();
+                orderAmount = Data.getMealsData().getAmount();
+                orderId = Data.getMealsData().getOrderId();
+                activity.getTopBar().title.setText(getResources().getString(R.string.meals));
                 feedbackOrderItems = Data.getMealsData().getFeedbackOrderItems();
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
                 productType = ProductType.MEALS;
                 reasons.clear();
-                for(int i=0; i<Data.getMealsData().getNegativeFeedbackReasons().length(); i++){
+                for (int i = 0; i < Data.getMealsData().getNegativeFeedbackReasons().length(); i++) {
                     reasons.add(new FeedbackReason(Data.getMealsData().getNegativeFeedbackReasons().get(i).toString()));
                 }
-			}
-            else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
-                    .equals(Config.getGroceryClientId())){
+            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getGroceryClientId())) {
                 viewType = Data.getGroceryData().getFeedbackViewType();
                 dateValue = Data.getGroceryData().getFeedbackDeliveryDate();
                 orderAmount = Data.getGroceryData().getAmount();
@@ -148,12 +146,11 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
                 productType = ProductType.GROCERY;
                 reasons.clear();
-                for(int i=0; i<Data.getGroceryData().getNegativeFeedbackReasons().length(); i++){
+                for (int i = 0; i < Data.getGroceryData().getNegativeFeedbackReasons().length(); i++) {
                     reasons.add(new FeedbackReason(Data.getGroceryData().getNegativeFeedbackReasons().get(i).toString()));
                 }
-            }
-            else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
-                    .equals(Config.getMenusClientId())){
+            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())
+                    .equals(Config.getMenusClientId())) {
                 viewType = Data.getMenusData().getFeedbackViewType();
                 dateValue = Data.getMenusData().getFeedbackDeliveryDate();
                 orderAmount = Data.getMenusData().getAmount();
@@ -162,20 +159,28 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 endRideGoodFeedbackText = Data.getMenusData().getRideEndGoodFeedbackText();
                 productType = ProductType.MENUS;
                 reasons.clear();
-                for(int i=0; i<Data.getMenusData().getNegativeFeedbackReasons().length(); i++){
+                for (int i = 0; i < Data.getMenusData().getNegativeFeedbackReasons().length(); i++) {
                     reasons.add(new FeedbackReason(Data.getMenusData().getNegativeFeedbackReasons().get(i).toString()));
                 }
             } else {
-				activity.finish();
-			}
+                activity.finish();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        if(TextUtils.isEmpty(orderId))
+        rootView = inflater.inflate(R.layout.layout_feedback, container, false);
+
+        if (TextUtils.isEmpty(orderId))
             activity.finish();
 
 
+        setUp();
+
+        return rootView;
+    }
+
+    private void setUp() {
         mainLayout = (RelativeLayout) rootView.findViewById(R.id.mainLayout);
         new ASSL(activity, mainLayout, 1134, 720, false);
 
@@ -191,7 +196,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         textViewThanks = (TextView) rootView.findViewById(R.id.textViewThanks);
         textViewRSTotalFare = (TextView) rootView.findViewById(R.id.textViewRSTotalFare);
         textViewRSData = (TextView) rootView.findViewById(R.id.textViewRSData);
-        tvItems = (TextView) rootView.findViewById(R.id.tvItems); tvItems.setTypeface(Fonts.avenirNext(activity));
+        tvItems = (TextView) rootView.findViewById(R.id.tvItems);
+        tvItems.setTypeface(Fonts.avenirNext(activity));
         textViewRSCashPaidValue = (TextView) rootView.findViewById(R.id.textViewRSCashPaidValue);
         textViewRSInvoice = (TextView) rootView.findViewById(R.id.textViewRSInvoice);
         textViewRSRateYourRide = (TextView) rootView.findViewById(R.id.textViewRSRateYourRide);
@@ -209,9 +215,9 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
         textViewRSCashPaidValue.setText(getResources().getString(R.string.rupee)
                 + "" + Utils.getMoneyDecimalFormat().format(orderAmount));
-        textViewRSData.setText(""+dateValue);
+        textViewRSData.setText("" + dateValue);
 
-        if(feedbackOrderItems != null && !feedbackOrderItems.equalsIgnoreCase("")){
+        if (feedbackOrderItems != null && !feedbackOrderItems.equalsIgnoreCase("")) {
             textViewRSTotalFare.setVisibility(View.GONE);
             tvItems.setVisibility(View.VISIBLE);
             tvItems.setText(feedbackOrderItems);
@@ -222,7 +228,8 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         linearLayoutRSViewInvoice = (LinearLayout) rootView.findViewById(R.id.linearLayoutRSViewInvoice);
 
         imageViewRideEndWithImage = (ImageView) rootView.findViewById(R.id.imageViewRideEndWithImage);
-        textViewRideEndWithImage = (TextView) rootView.findViewById(R.id.textViewRideEndWithImage); textViewRideEndWithImage.setTypeface(Fonts.mavenMedium(activity));
+        textViewRideEndWithImage = (TextView) rootView.findViewById(R.id.textViewRideEndWithImage);
+        textViewRideEndWithImage.setTypeface(Fonts.mavenMedium(activity));
         imageViewThumbsUpGif = (ImageView) rootView.findViewById(R.id.imageViewThumbsUpGif);
         imageviewType = (ImageView) rootView.findViewById(R.id.imageview_type);
         ivOffering = (ImageView) rootView.findViewById(R.id.ivOffering);
@@ -230,22 +237,24 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         imageViewThumbsUp = (ImageView) rootView.findViewById(R.id.imageViewThumbsUp);
         llBadReason = (LinearLayout) rootView.findViewById(R.id.llBadReason);
         gridViewRSFeedbackReasons = (NonScrollGridView) rootView.findViewById(R.id.gridViewRSFeedbackReasons);
-        textViewRSOtherError = (TextView) rootView.findViewById(R.id.textViewRSOtherError); textViewRSOtherError.setTypeface(Fonts.mavenRegular(activity));
+        textViewRSOtherError = (TextView) rootView.findViewById(R.id.textViewRSOtherError);
+        textViewRSOtherError.setTypeface(Fonts.mavenRegular(activity));
 
         buttonEndRideSkip = (Button) rootView.findViewById(R.id.buttonEndRideSkip);
         buttonEndRideInviteFriends = (Button) rootView.findViewById(R.id.buttonEndRideInviteFriends);
-        ((TextView)rootView.findViewById(R.id.textViewRSWhatImprove)).setTypeface(Fonts.mavenMedium(activity));
-        buttonRSSubmitFeedback = (Button) rootView.findViewById(R.id.buttonRSSubmitFeedback); buttonRSSubmitFeedback.setTypeface(Fonts.mavenRegular(activity));
+        ((TextView) rootView.findViewById(R.id.textViewRSWhatImprove)).setTypeface(Fonts.mavenMedium(activity));
+        buttonRSSubmitFeedback = (Button) rootView.findViewById(R.id.buttonRSSubmitFeedback);
+        buttonRSSubmitFeedback.setTypeface(Fonts.mavenRegular(activity));
         editTextRSFeedback = (EditText) rootView.findViewById(R.id.editTextRSFeedback);
 
 
-        if(Config.getFreshClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+        if (Config.getFreshClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.feedback_fresh);
             ivOffering.setImageResource(R.drawable.ic_fab_fresh);
-        } else if(Config.getGroceryClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+        } else if (Config.getGroceryClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.feedback_grocery);
             ivOffering.setImageResource(R.drawable.ic_fab_grocery);
-        } else if(Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
+        } else if (Config.getMenusClientId().equals(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()))) {
             imageviewType.setImageResource(R.drawable.ic_fab_menus);
             ivOffering.setImageResource(R.drawable.ic_fab_menus);
         } else {
@@ -258,7 +267,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                     new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
                         @Override
                         public void onLastItemSelected(boolean selected) {
-                            if(!selected){
+                            if (!selected) {
                                 if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
                                     textViewRSOtherError.setText("");
                                 }
@@ -276,12 +285,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
                 //boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
                 String feedbackStr = editTextRSFeedback.getText().toString().trim();
-                if(feedbackStr.length() > 0){
+                if (feedbackStr.length() > 0) {
                     if (feedbackStr.length() > 300) {
                         editTextRSFeedback.requestFocus();
                         editTextRSFeedback.setError(getString(R.string.review_must_be_in));
-                    } else{
-                        feedbackReasons = feedbackReasons+", "+feedbackStr;
+                    } else {
+                        feedbackReasons = feedbackReasons + ", " + feedbackStr;
                     }
                 }
 
@@ -334,34 +343,31 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             public void onClick(View v) {
                 //sendQuery(0, "");
                 try {
-                imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down_active);
-                if((Data.getMealsData().getNegativeFeedbackReasons() != null)
-                        && (Data.getMealsData().getNegativeFeedbackReasons().length() > 0)){
-                    llBadReason.setVisibility(View.VISIBLE);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            scrollViewRideSummary.smoothScrollTo(0, (int)buttonRSSubmitFeedback.getY());
-                        }
-                    }, 300);
-                    scrollViewRideSummary.smoothScrollTo(0, (int)buttonRSSubmitFeedback.getY());
-                } else{
-                    sendQuery(0, "");
-                }
+                    imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down_active);
+                    if ((Data.getMealsData().getNegativeFeedbackReasons() != null)
+                            && (Data.getMealsData().getNegativeFeedbackReasons().length() > 0)) {
+                        llBadReason.setVisibility(View.VISIBLE);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                scrollViewRideSummary.smoothScrollTo(0, (int) buttonRSSubmitFeedback.getY());
+                            }
+                        }, 300);
+                        scrollViewRideSummary.smoothScrollTo(0, (int) buttonRSSubmitFeedback.getY());
+                    } else {
+                        sendQuery(0, "");
+                    }
 
 
-                //openSupportFragment();
+                    //openSupportFragment();
 
-                    if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+                    if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
                         MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_DOWNVOTE, new Bundle());
-                    }
-                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
                         MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_DOWNVOTE, new Bundle());
-                    }
-                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
                         MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_DOWNVOTE, new Bundle());
-                    }
-                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
                         MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_DOWNVOTE, new Bundle());
                     }
                 } catch (Exception e) {
@@ -377,30 +383,27 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                 imageViewThumbsDown.setImageResource(R.drawable.ic_thumbs_down);
                 isUpbuttonClicked = true;
                 sendQuery(1, "");
-                if(viewType != -1){
-                    if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
+                if (viewType != -1) {
+                    if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()) {
                         endRideWithImages(R.drawable.ride_end_image_1);
-                    } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()){
+                    } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()) {
                         endRideWithImages(R.drawable.ride_end_image_2);
-                    } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()){
+                    } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()) {
                         endRideWithImages(R.drawable.ride_end_image_3);
-                    } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()){
+                    } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()) {
                         endRideWithImages(R.drawable.ride_end_image_4);
-                    } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
+                    } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
                         endRideWithGif();
                     }
                 }
                 try {
-                    if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
-						MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_UPVOTE, new Bundle());
-					}
-					else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
-						MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_UPVOTE, new Bundle());
-					}
-					else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
-						MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_UPVOTE, new Bundle());
-					}
-                    else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+                    if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+                        MyApplication.getInstance().logEvent(FirebaseEvents.FRESH_UPVOTE, new Bundle());
+                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
+                        MyApplication.getInstance().logEvent(FirebaseEvents.MEALS_UPVOTE, new Bundle());
+                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
+                        MyApplication.getInstance().logEvent(FirebaseEvents.GROCERY_UPVOTE, new Bundle());
+                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
                         MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_UPVOTE, new Bundle());
                     }
                 } catch (Exception e) {
@@ -424,8 +427,6 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 //            }
 //        });
 //        linearLayoutRideSummary.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
-
-        return rootView;
     }
 
     private void updateUI() {
@@ -445,7 +446,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    private void endRideWithGif(){
+    private void endRideWithGif() {
         relativeLayoutGreat.setVisibility(View.VISIBLE);
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageViewThumbsUpGif);
         Glide.with(activity)
@@ -461,7 +462,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         }, 3000);
     }
 
-    private void endRideWithImages(int drawable){
+    private void endRideWithImages(int drawable) {
         try {
             relativeLayoutRideEndWithImage.setVisibility(View.VISIBLE);
             imageViewRideEndWithImage.setImageResource(drawable);
@@ -509,13 +510,13 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
      */
     private void sendQuery(final int rating, final String negativeReasons) {
         try {
-            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+            if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
                 Data.getFreshData().setPendingFeedback(0);
-            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
                 Data.getMealsData().setPendingFeedback(0);
-            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
                 Data.getGroceryData().setPendingFeedback(0);
-            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
                 Data.getMenusData().setPendingFeedback(0);
             } else {
                 activity.finish();
@@ -525,12 +526,12 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put(Constants.ORDER_ID, ""+orderId);
+                params.put(Constants.ORDER_ID, "" + orderId);
                 params.put(Constants.RATING, "" + rating);
                 params.put(Constants.RATING_TYPE, "0");
                 params.put(Constants.INTERATED, "1");
                 params.put(Constants.COMMENT, negativeReasons);
-                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
                 Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
                     @Override
@@ -538,19 +539,19 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                         DialogPopup.dismissLoadingDialog();
                         try {
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                if(rating == 1) {
+                                if (rating == 1) {
                                     // for Good rating
-                                    if(viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
+                                    if (viewType == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
                                                 backPressed(true);
                                             }
                                         }, 3000);
-                                    } else if(viewType == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()) {
+                                    } else if (viewType == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()) {
                                         backPressed(true);
                                     }
-                                } else if(rating == 0) {
+                                } else if (rating == 0) {
                                     // for bad rating
                                     backPressed(true);
                                 }
@@ -563,52 +564,52 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                            DialogPopup.dialogNoInternet(activity, DialogErrorType.CONNECTION_LOST,
-                                    new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
-                                        @Override
-                                        public void positiveClick(View view) {
-                                            sendQuery(rating, negativeReasons);
-                                        }
+                        DialogPopup.dialogNoInternet(activity, DialogErrorType.CONNECTION_LOST,
+                                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                                    @Override
+                                    public void positiveClick(View view) {
+                                        sendQuery(rating, negativeReasons);
+                                    }
 
-                                        @Override
-                                        public void neutralClick(View view) {
+                                    @Override
+                                    public void neutralClick(View view) {
 
-                                        }
+                                    }
 
-                                        @Override
-                                        public void negativeClick(View view) {
+                                    @Override
+                                    public void negativeClick(View view) {
 
-                                        }
-                                    });
+                                    }
+                                });
 
                     }
                 };
                 new HomeUtil().putDefaultParams(params);
-                if(productType == ProductType.MENUS){
+                if (productType == ProductType.MENUS) {
                     RestClient.getMenusApiService().orderFeedback(params, callback);
                 } else {
                     RestClient.getFreshApiService().orderFeedback(params, callback);
                 }
 
             } else {
-                    DialogPopup.dialogNoInternet(activity,
-                            Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
-                            new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
-                                @Override
-                                public void positiveClick(View v) {
-                                    sendQuery(rating, negativeReasons);
-                                }
+                DialogPopup.dialogNoInternet(activity,
+                        Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                        new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                            @Override
+                            public void positiveClick(View v) {
+                                sendQuery(rating, negativeReasons);
+                            }
 
-                                @Override
-                                public void neutralClick(View v) {
+                            @Override
+                            public void neutralClick(View v) {
 
-                                }
+                            }
 
-                                @Override
-                                public void negativeClick(View v) {
+                            @Override
+                            public void negativeClick(View v) {
 
-                                }
-                            });
+                            }
+                        });
             }
         } catch (Exception e) {
             DialogPopup.dismissLoadingDialog();
@@ -622,19 +623,19 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
      */
     private void getOrderData() {
         try {
-            if(AppStatus.getInstance(activity).isOnline(activity)) {
+            if (AppStatus.getInstance(activity).isOnline(activity)) {
 
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put("access_token", Data.userData.accessToken);
                 params.put("order_id", "" + orderId);
-                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
                 params.put(Constants.INTERATED, "1");
                 Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
                     @Override
                     public void success(HistoryResponse historyResponse, Response response) {
-                        String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                         Log.i("Server response", "response = " + responseStr);
                         try {
 
@@ -659,20 +660,19 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e("TAG", "getRecentRidesAPI error="+error.toString());
+                        Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
                         DialogPopup.dismissLoadingDialog();
                         updateListData(Data.SERVER_NOT_RESOPNDING_MSG);
                     }
                 };
 
                 new HomeUtil().putDefaultParams(params);
-                if(productType == ProductType.MENUS){
+                if (productType == ProductType.MENUS) {
                     RestClient.getMenusApiService().orderHistory(params, callback);
                 } else {
                     RestClient.getFreshApiService().orderHistory(params, callback);
                 }
-            }
-            else {
+            } else {
                 updateListData(Data.CHECK_INTERNET_MSG);
             }
         } catch (Exception e) {
@@ -697,7 +697,6 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
     }
 
 
-
     private void backPressed(boolean goodRating) {
         activity.setRefreshCart(true);
         try {
@@ -707,14 +706,15 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             activity.getSupportFragmentManager().popBackStackImmediate();
         }
 
-        if(goodRating && rateApp == 1){
+        if (goodRating && rateApp == 1) {
             getRateAppDialog().show(rateAppDialogContent);
         }
     }
 
     private RateAppDialog rateAppDialog;
-    private RateAppDialog getRateAppDialog(){
-        if(rateAppDialog == null){
+
+    private RateAppDialog getRateAppDialog() {
+        if (rateAppDialog == null) {
             rateAppDialog = new RateAppDialog(activity);
         }
         return rateAppDialog;
@@ -725,13 +725,13 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
-            if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+            if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.fresh));
-            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())){
+            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.meals));
-            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())){
+            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
-            } else if(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())){
+            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.menus));
             }
         }

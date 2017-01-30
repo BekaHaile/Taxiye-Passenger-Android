@@ -70,6 +70,7 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_category_items, container, false);
+        rootView = inflater.inflate(R.layout.fragment_fresh_category_items, container, false);
 
 		try {
 			Bundle bundle = getArguments();

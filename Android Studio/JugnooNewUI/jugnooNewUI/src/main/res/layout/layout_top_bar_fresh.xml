@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:splitMotionEvents="false">
@@ -14,11 +13,11 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/topRl"
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_bar_height"
-            android:background="@color/white"
+            android:background="@android:color/transparent"
             android:splitMotionEvents="false">
 
             <ImageView
@@ -29,20 +28,18 @@
                 android:layout_marginLeft="10px"
                 android:padding="@dimen/px_15"
                 android:src="@drawable/ic_menu_new_selector"
-                android:tag="mwar"/>
+                android:tag="mwar" />
 
             <Button
                 android:id="@+id/buttonCheckServer"
                 android:layout_width="80px"
                 android:layout_height="80px"
                 android:layout_marginLeft="150px"
-                android:background="@drawable/background_transparent"
-                />
+                android:background="@drawable/background_transparent" />
 
             <ImageView
                 android:id="@+id/imageViewBack"
-                style="@style/back_image"
-                />
+                style="@style/back_image" />
 
             <EditText
                 android:id="@+id/editTextDeliveryAddress"
@@ -54,8 +51,7 @@
                 android:hint="@string/type_delivery_address"
                 android:textColor="@color/text_color"
                 android:textCursorDrawable="@drawable/cursor_black"
-                android:textSize="@dimen/text_size_30"
-                />
+                android:textSize="@dimen/text_size_30" />
 
             <ImageView
                 android:id="@+id/ivDeliveryAddressCross"
@@ -67,8 +63,7 @@
                 android:padding="20px"
                 android:src="@drawable/ic_cross_et"
                 android:tag="mwar"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/imageViewDelete"
@@ -80,8 +75,7 @@
                 android:padding="20px"
                 android:src="@drawable/ic_delete_selector"
                 android:tag="mwar"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/llSearchCartContainer"
@@ -99,28 +93,26 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20px"
-                    android:layout_toLeftOf="@+id/llSearchCart"
                     android:layout_marginRight="@dimen/px_10"
+                    android:layout_toLeftOf="@+id/llSearchCart"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:maxLines="1"
                     android:text="@string/app_name"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_34"
-                    />
+                    android:textSize="@dimen/text_size_34" />
 
                 <RelativeLayout
                     android:id="@+id/llSearchContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/px_10"
                     android:layout_toLeftOf="@+id/llSearchCart"
                     android:background="@drawable/capsule_white_stroke"
-                    android:visibility="gone"
-                    android:layout_centerVertical="true"
-                    >
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/ivSearchView"
@@ -128,7 +120,7 @@
                         android:layout_height="62px"
                         android:layout_gravity="center_vertical"
                         android:layout_margin="6px"
-                        android:src="@drawable/ic_search_new_selector"/>
+                        android:src="@drawable/ic_search_new_selector" />
 
                     <EditText
                         android:id="@+id/etSearch"
@@ -147,8 +139,7 @@
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_light"
                         android:textCursorDrawable="@drawable/cursor_black"
-                        android:textSize="@dimen/text_size_26"
-                        />
+                        android:textSize="@dimen/text_size_26" />
 
                     <ImageView
                         android:id="@+id/ivSearchCross"
@@ -160,8 +151,7 @@
                         android:layout_marginRight="@dimen/px_20"
                         android:padding="@dimen/px_7"
                         android:src="@drawable/ic_cross_grey"
-                        android:visibility="visible"
-                        />
+                        android:visibility="visible" />
 
                 </RelativeLayout>
 
@@ -171,9 +161,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/px_20"
                     android:animateLayoutChanges="true"
-                    android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -184,7 +174,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_margin="6px"
                         android:src="@drawable/ic_search_new_selector"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                     <RelativeLayout
                         android:id="@+id/rlFilter"
@@ -192,23 +182,22 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_margin="6px">
+
                         <ImageView
                             android:id="@+id/ivFilter"
                             android:layout_width="62px"
                             android:layout_height="62px"
-                            android:src="@drawable/ic_menus_filters"
-                            />
+                            android:src="@drawable/ic_menus_filters" />
+
                         <ImageView
                             android:id="@+id/ivFilterApplied"
                             android:layout_width="20px"
                             android:layout_height="20px"
+                            android:layout_alignRight="@+id/ivFilter"
                             android:src="@drawable/tick"
                             android:tag="mwar"
-                            android:visibility="visible"
-                            android:layout_alignRight="@+id/ivFilter"
-                            />
+                            android:visibility="visible" />
                     </RelativeLayout>
-
 
 
                     <LinearLayout
@@ -231,7 +220,7 @@
                             android:layout_marginLeft="@dimen/px_18"
                             android:layout_marginRight="@dimen/px_18"
                             android:src="@drawable/ic_cart_new"
-                            android:tag="mwar"/>
+                            android:tag="mwar" />
 
                         <LinearLayout
                             android:id="@+id/llCartAmount"
@@ -249,13 +238,13 @@
                                 android:layout_marginRight="@dimen/px_18"
                                 android:text="240"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/text_size_26"/>
+                                android:textSize="@dimen/text_size_26" />
 
                             <ImageView
                                 android:layout_width="13px"
                                 android:layout_height="23px"
                                 android:src="@drawable/back_arrow_white"
-                                android:tag="mwar"/>
+                                android:tag="mwar" />
 
                         </LinearLayout>
 
@@ -278,8 +267,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_selector"
                 android:textSize="30.6px"
-                android:visibility="gone"
-                />
+                android:visibility="gone" />
 
         </RelativeLayout>
 

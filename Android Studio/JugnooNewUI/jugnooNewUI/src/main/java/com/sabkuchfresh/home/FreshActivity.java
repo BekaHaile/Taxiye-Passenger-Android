@@ -1012,9 +1012,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
 
 
-                setCollapsingToolbar();
-
-
                 if (getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
                     if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
@@ -1145,6 +1142,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 titleLayoutParams.addRule(RelativeLayout.RIGHT_OF, topBar.imageViewBack.getId());
             }
 
+
             topBar.title.setLayoutParams(titleLayoutParams);
 
             topBar.getLlSearchCartContainer().setVisibility(llSearchCartContainerVis);
@@ -1153,6 +1151,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             topBar.getIvSearch().setVisibility(ivSearchVis);
             topBar.getLlSearchContainer().setVisibility(llSearchContainerVis);
             topBar.rlFilter.setVisibility(rlFilterVis);
+
+
+            /**
+             Edited by Parminder Singh on 1/30/17 at 9:59 PM
+             **/
+
+            setCollapsingToolbar(fragment instanceof VendorMenuFragment);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1164,22 +1169,36 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
      **/
 
 
-    private void setCollapsingToolbar() {
-        findViewById(R.id.layout_rest_details).setVisibility(View.VISIBLE);
-//        CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (ASSL.Yscale() * 250f));
-        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        layoutParams.height = (int)(ASSL.Yscale() * 250f) ;
-        appBarLayout.setLayoutParams(layoutParams);
+    private void setCollapsingToolbar(boolean isEnable) {
+        if (isEnable) {
+            findViewById(R.id.layout_rest_details).setVisibility(View.VISIBLE);
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+            layoutParams.height = (int) (ASSL.Yscale() * 260f);
+            appBarLayout.setLayoutParams(layoutParams);
+            toolbar.getBackground().setAlpha(0);
+            llCartContainer.getBackground().setAlpha(0);
+            topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(0));
+            appBarLayout.addOnOffsetChangedListener(collapseBarController);
+            CollapsingToolbarLayout.LayoutParams toolBarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+            TypedValue tv = new TypedValue();
+            if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+                int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+                toolBarParams.height = actionBarHeight;
+                toolbar.setLayoutParams(toolBarParams);
 
-
-        appBarLayout.addOnOffsetChangedListener(collapseBarController);
-        CollapsingToolbarLayout.LayoutParams toolBarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-        TypedValue tv = new TypedValue();
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-            toolBarParams.height = actionBarHeight;
+            }
+        } else {
+            findViewById(R.id.layout_rest_details).setVisibility(View.GONE);
+            appBarLayout.removeOnOffsetChangedListener(collapseBarController);
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+            layoutParams.height = AppBarLayout.LayoutParams.WRAP_CONTENT;
+            appBarLayout.setLayoutParams(layoutParams);
+            CollapsingToolbarLayout.LayoutParams toolBarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+            toolBarParams.height = CollapsingToolbarLayout.LayoutParams.WRAP_CONTENT;
             toolbar.setLayoutParams(toolBarParams);
-
+            llCartContainer.getBackground().setAlpha(255);
+            toolbar.getBackground().setAlpha(255);
+            topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(255));
         }
 
 
@@ -3002,12 +3021,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 
     private State mCurrentState;
-    private TextView tvCollapRestaurantName;
-    private TextView tvCollapRestaurantReviews;
+    public TextView tvCollapRestaurantName;
+    public TextView tvCollapRestaurantReviews;
     private RelativeLayout rlCollapseDetails;
     private LinearLayout llCartContainer;
     private LinearLayout llToolbarLayout;
-    private ImageView ivCollapseRestImage;
+    public ImageView ivCollapseRestImage;
     private AppBarLayout.OnOffsetChangedListener collapseBarController = new AppBarLayout.OnOffsetChangedListener() {
         @Override
         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -3027,7 +3046,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 int calculatedAlpha = -verticalOffset * 250 / appBarLayout.getTotalScrollRange();
 
 
-               //  topBar.topRl.getBackground().setAlpha(calculatedAlpha);
+               toolbar.getBackground().setAlpha(calculatedAlpha);
 
                 llCartContainer.getBackground().setAlpha(calculatedAlpha);
 
@@ -3067,14 +3086,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             case EXPANDED:
                 topBar.title.setVisibility(View.INVISIBLE);
                 llCartContainer.getBackground().setAlpha(0);
-             //   topBar.topRl.getBackground().setAlpha(0);
+                toolbar.getBackground().setAlpha(0);
                 topBar.imageViewBack.setVisibility(View.INVISIBLE);
                 //    ivSearch.setImageResource(R.drawable.searc_icon);
                 break;
             case COLLAPSED:
                 rlCollapseDetails.setVisibility(View.GONE);
                 llCartContainer.getBackground().setAlpha(255);
-           //      topBar.topRl.getBackground().setAlpha(255);
+               toolbar.getBackground().setAlpha(255);
                 break;
             case IDLE:
                 topBar.imageViewBack.setVisibility(View.VISIBLE);

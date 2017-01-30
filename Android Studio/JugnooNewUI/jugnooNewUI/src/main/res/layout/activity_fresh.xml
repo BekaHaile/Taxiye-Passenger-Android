@@ -11,21 +11,22 @@
         android:fitsSystemWindows="true"
         android:splitMotionEvents="false">
 
+
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             app:elevation="0dp">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                app:contentScrim="@android:color/white"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                app:scrimAnimationDuration="100"
-                app:scrimVisibleHeightTrigger="10dp">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+          <!--      app:contentScrim="@android:color/white"
+                app:scrimAnimationDuration="400"
+                app:scrimVisibleHeightTrigger="50px">-->
 
 
                 <RelativeLayout
@@ -40,7 +41,7 @@
                         android:id="@+id/iv_rest_collapse_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@android:color/black" />
+                        android:background="@color/black_alpha" />
 
                     <View
                         android:layout_width="match_parent"
@@ -53,10 +54,10 @@
                         android:layout_height="wrap_content"
                         android:layout_above="@+id/tv_rest_reviews"
                         android:layout_marginLeft="46px"
-                        android:text="EKAM RESTAURANT"
-                        app:font="avenir"
+                        android:text=""
                         android:textColor="@android:color/white"
-                        android:textSize="31px" />
+                        android:textSize="31px"
+                        app:font="avenir" />
 
 
                     <TextView
@@ -66,11 +67,11 @@
                         android:layout_alignParentBottom="true"
                         android:layout_marginBottom="24px"
                         android:layout_marginLeft="46px"
-                        android:layout_marginTop="3dp"
-                        app:font="maven"
-                        android:text="4.3 (14 Reviews)"
+                        android:layout_marginTop="10px"
+                        android:text=""
                         android:textColor="@android:color/white"
-                        android:textSize="24px" />
+                        android:textSize="25px"
+                        app:font="maven" />
 
 
                 </RelativeLayout>
@@ -80,12 +81,13 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/transparent"
+                    android:background="@android:color/white"
                     android:contentInsetLeft="0dp"
                     android:contentInsetStart="0dp"
                     app:contentInsetLeft="0dp"
                     app:contentInsetStart="0dp"
                     app:layout_collapseMode="pin">
+                    <!--  -->
                     <!--app:layout_scrollFlags="scroll|enterAlways|snap">-->
 
                     <include
