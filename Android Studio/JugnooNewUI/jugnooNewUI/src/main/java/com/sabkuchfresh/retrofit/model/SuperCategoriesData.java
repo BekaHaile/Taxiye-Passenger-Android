@@ -101,6 +101,9 @@ public class SuperCategoriesData {
 		@SerializedName("categories")
 		@Expose
 		private List<Category> categories;
+		@SerializedName("is_enabled")
+		@Expose
+		private Integer isEnabled;
 
 		public Integer getSuperCategoryId() {
 			return superCategoryId;
@@ -156,6 +159,14 @@ public class SuperCategoriesData {
 
 		public void setCategories(List<Category> categories) {
 			this.categories = categories;
+		}
+
+		public Integer getIsEnabled() {
+			return isEnabled;
+		}
+
+		public void setIsEnabled(Integer isEnabled) {
+			this.isEnabled = isEnabled;
 		}
 	}
 

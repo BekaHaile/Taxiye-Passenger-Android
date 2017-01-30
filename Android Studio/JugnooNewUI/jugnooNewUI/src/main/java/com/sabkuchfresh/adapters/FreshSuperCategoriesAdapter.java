@@ -24,11 +24,14 @@ import product.clicklabs.jugnoo.utils.Fonts;
  * Created by shankar on 1/20/17.
  */
 
-public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<FreshSuperCategoriesAdapter.ViewHolderCategory>{
+public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
 	private Context context;
 	private List<SuperCategoriesData.SuperCategory> superCategories;
 	private Callback callback;
+	private boolean isSingleItem;
+	public static final int MAIN_ITEM = 1;
+	public static final int SINGLE_ITEM = 0;
 
 	public FreshSuperCategoriesAdapter(Context context, Callback callback){
 		this.context = context;
@@ -44,6 +47,17 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<FreshSuper
 
 	public synchronized void setList(List<SuperCategoriesData.SuperCategory> elements){
 		this.superCategories = elements;
+		int enabledItem = 0;
+		for(int i=0; i< elements.size(); i++){
+			if(elements.get(i).getIsEnabled() == 1){
+				enabledItem++;
+			}
+		}
+		if(enabledItem == 1){
+			isSingleItem = true;
+		} else{
+			isSingleItem = false;
+		}
 		notifyDataSetChanged();
 	}
 
@@ -51,6 +65,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<FreshSuper
 		public LinearLayout llRoot;
 		public ImageView ivSuperCategoryImage;
 		public TextView tvSuperCategoryName;
+		public View viewBG;
 
 		public ViewHolderCategory(View view, Context context) {
 			super(view);
@@ -58,50 +73,117 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<FreshSuper
 			ivSuperCategoryImage = (ImageView) view.findViewById(R.id.ivSuperCategoryImage);
 			tvSuperCategoryName = (TextView) view.findViewById(R.id.tvSuperCategoryName);
 			tvSuperCategoryName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+			viewBG = (View) view.findViewById(R.id.viewBG);
+		}
+	}
+
+	public class ViewHolderCategorySingle extends RecyclerView.ViewHolder {
+		public LinearLayout llRoot;
+		public ImageView ivSuperCategoryImage;
+		public TextView tvSuperCategoryName, tvComingSoon;
+		public View viewBG;
+
+		public ViewHolderCategorySingle(View view, Context context) {
+			super(view);
+			llRoot = (LinearLayout) view.findViewById(R.id.llRoot);
+			ivSuperCategoryImage = (ImageView) view.findViewById(R.id.ivSuperCategoryImage);
+			tvSuperCategoryName = (TextView) view.findViewById(R.id.tvSuperCategoryName);
+			tvSuperCategoryName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+			tvComingSoon = (TextView) view.findViewById(R.id.tvComingSoon);
+			tvComingSoon.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
+			viewBG = (View) view.findViewById(R.id.viewBG);
 		}
 	}
 
 	@Override
-	public ViewHolderCategory onCreateViewHolder(ViewGroup parent, int viewType) {
-		final View view = LayoutInflater.from(context).inflate(R.layout.list_item_fresh_super_category, parent, false);
-		view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT));
-		ASSL.DoMagic(view);
-		return new ViewHolderCategory(view, context);
+	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		if (viewType == SINGLE_ITEM) {
+			View view = LayoutInflater.from(context).inflate(R.layout.list_item_fresh_super_category_single, parent, false);
+			view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+			ASSL.DoMagic(view);
+			return new ViewHolderCategorySingle(view, context);
+		} else{
+			View view = LayoutInflater.from(context).inflate(R.layout.list_item_fresh_super_category, parent, false);
+			view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+			ASSL.DoMagic(view);
+			return new ViewHolderCategory(view, context);
+		}
+
 	}
 
 	@Override
-	public void onBindViewHolder(ViewHolderCategory holder, int position) {
+	public void onBindViewHolder(RecyclerView.ViewHolder mholder, int position) {
 		SuperCategoriesData.SuperCategory superCategory = superCategories.get(position);
-		holder.tvSuperCategoryName.setText(superCategory.getSuperCategoryName());
-		holder.llRoot.setTag(position);
-		holder.llRoot.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					int pos = (int) v.getTag();
-					callback.onItemClick(pos, superCategories.get(pos));
-				} catch (Exception e) {
-					e.printStackTrace();
+		if(mholder instanceof ViewHolderCategory) {
+			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
+			holder.tvSuperCategoryName.setText(superCategory.getSuperCategoryName());
+			holder.llRoot.setTag(position);
+			holder.llRoot.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						int pos = (int) v.getTag();
+						callback.onItemClick(pos, superCategories.get(pos));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
-			}
-		});
+			});
 
 
-		try {
-			if(!TextUtils.isEmpty(superCategory.getSuperCategoryImage())) {
-				Picasso.with(context).load(superCategory.getSuperCategoryImage())
-						.placeholder(R.drawable.ic_fresh_new_placeholder)
-						.error(R.drawable.ic_fresh_new_placeholder)
+			try {
+				if (!TextUtils.isEmpty(superCategory.getSuperCategoryImage())) {
+					Picasso.with(context).load(superCategory.getSuperCategoryImage())
+							.placeholder(R.drawable.ic_fresh_new_placeholder)
+							.error(R.drawable.ic_fresh_new_placeholder)
+							.into(holder.ivSuperCategoryImage);
+				} else {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Picasso.with(context).load(R.drawable.ic_fresh_new_placeholder)
 						.into(holder.ivSuperCategoryImage);
-			} else {
-				throw new Exception();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			Picasso.with(context).load(R.drawable.ic_fresh_new_placeholder)
-//					.resize((int) (384f * ASSL.Xscale()), (int) (210f * ASSL.Yscale()))
-//					.transform(new RoundBorderTransform((int) (Math.min(ASSL.Xscale(), ASSL.Yscale()) * 6), 0))
-					.into(holder.ivSuperCategoryImage);
+
+			if (superCategory.getIsEnabled() == 0) {
+				holder.viewBG.setBackgroundResource(R.drawable.bg_white_60_selector_color);
+				holder.llRoot.setEnabled(false);
+			} else {
+				holder.viewBG.setBackgroundResource(R.drawable.bg_transparent_white_60_selector);
+				holder.llRoot.setEnabled(true);
+			}
+		} else if(mholder instanceof ViewHolderCategorySingle) {
+			ViewHolderCategorySingle singleHolder = ((ViewHolderCategorySingle) mholder);
+			singleHolder.tvSuperCategoryName.setText(superCategory.getSuperCategoryName());
+			singleHolder.llRoot.setTag(position);
+			singleHolder.llRoot.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						int pos = (int) v.getTag();
+						callback.onItemClick(pos, superCategories.get(pos));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+
+
+			try {
+				if (!TextUtils.isEmpty(superCategory.getSuperCategoryImage())) {
+					Picasso.with(context).load(superCategory.getSuperCategoryImage())
+							.placeholder(R.drawable.ic_fresh_new_placeholder)
+							.error(R.drawable.ic_fresh_new_placeholder)
+							.into(singleHolder.ivSuperCategoryImage);
+				} else {
+					throw new Exception();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Picasso.with(context).load(R.drawable.ic_fresh_new_placeholder)
+						.into(singleHolder.ivSuperCategoryImage);
+			}
 		}
 
 	}
@@ -109,6 +191,15 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<FreshSuper
 	@Override
 	public int getItemCount() {
 		return superCategories == null ? 0 : superCategories.size();
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		if(position == 0 && isSingleItem) {
+			return SINGLE_ITEM;
+		} else {
+			return MAIN_ITEM;
+		}
 	}
 
 	public interface Callback{

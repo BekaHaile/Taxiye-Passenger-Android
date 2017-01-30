@@ -85,7 +85,21 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         relativeLayoutNoMenus.setVisibility(View.GONE);
         rvFreshSuper = (RecyclerView) rootView.findViewById(R.id.rvFreshSuper);
         rvFreshSuper.setItemAnimator(new DefaultItemAnimator());
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup(){
+            @Override
+            public int getSpanSize(int position) {
+                switch (adapter.getItemViewType(position)){
+                    case FreshSuperCategoriesAdapter.SINGLE_ITEM:
+                        return 2;
+                    case FreshSuperCategoriesAdapter.MAIN_ITEM:
+                        return 1;
+                    default:
+                        return 1;
+                }
+            }
+        });
         rvFreshSuper.setLayoutManager(gridLayoutManager);
         adapter = new FreshSuperCategoriesAdapter(activity, new FreshSuperCategoriesAdapter.Callback() {
             @Override
