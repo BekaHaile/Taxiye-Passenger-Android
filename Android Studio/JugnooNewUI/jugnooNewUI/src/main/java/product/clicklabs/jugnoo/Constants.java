@@ -600,4 +600,5 @@ public interface Constants {
 	String SP_MENUS_FILTER_DELIVERY_TIME = "sp_menus_filter_delivery_time";
 	String SP_MENUS_FILTER_CUISINES = "sp_menus_filter_cuisines";
 	String SP_MENUS_FILTER_QUICK = "sp_menus_filter_quick";
+	String KEY_EVENT = "event";
 }

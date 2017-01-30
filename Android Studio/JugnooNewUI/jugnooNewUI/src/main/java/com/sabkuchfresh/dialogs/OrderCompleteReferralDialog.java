@@ -15,18 +15,33 @@ import android.widget.TextView;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Font;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class OrderCompleteReferralDialog {
 
-	private final String TAG = OrderCompleteReferralDialog.class.getSimpleName();
 	private Context context;
 	private Callback callback;
-	private Dialog dialog = null;
+	private Dialog dialog;
+	private PlaceOrderResponse.ReferralPopupContent referralPopupContent;
+	private int engagementId;
+	private int orderId;
+	private int productType;
 
 	public OrderCompleteReferralDialog(Context context, Callback callback) {
 		this.context = context;
@@ -34,9 +49,14 @@ public class OrderCompleteReferralDialog {
 	}
 
 
-	public Dialog show(boolean showOrderDetails, String orderTime, String orderDay,
-					   PlaceOrderResponse.ReferralPopupContent referralPopupContent) {
+	public Dialog show(boolean showOrderDetails, String orderTime, String orderDay, String orderText,
+					   PlaceOrderResponse.ReferralPopupContent referralPopupContent,
+					   int engagementId, int orderId, int productType) {
 		try {
+			this.engagementId = engagementId;
+			this.orderId = orderId;
+			this.productType = productType;
+			this.referralPopupContent = referralPopupContent;
 			Font fonts = new Font();
 			dialog = new Dialog(context, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogDown;
@@ -58,13 +78,23 @@ public class OrderCompleteReferralDialog {
 				tvThankyou.setTypeface(fonts.mavenMedium(context), Typeface.BOLD);
 				TextView tvYourOrder = (TextView) dialog.findViewById(R.id.tvYourOrder);
 				tvYourOrder.setTypeface(fonts.mavenRegular(context));
+				RelativeLayout rlOrderDay = (RelativeLayout) dialog.findViewById(R.id.rlOrderDay);
 				TextView tvOrderTimeVal = (TextView) dialog.findViewById(R.id.tvOrderTimeVal);
 				tvOrderTimeVal.setTypeface(fonts.mavenMedium(context));
 				TextView tvOrderDayVal = (TextView) dialog.findViewById(R.id.tvOrderDayVal);
 				tvOrderDayVal.setTypeface(fonts.mavenMedium(context));
 
-				tvOrderTimeVal.setText(orderTime);
-				tvOrderDayVal.setText(orderDay);
+				if(productType == ProductType.MENUS.getOrdinal()){
+					rlOrderDay.setVisibility(View.GONE);
+					tvOrderTimeVal.setVisibility(View.GONE);
+					tvYourOrder.setText(orderText);
+					LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tvYourOrder.getLayoutParams();
+					params.setMargins(0, 0, 0, (int) (ASSL.Yscale() * 26f));
+					tvYourOrder.setLayoutParams(params);
+				} else {
+					tvOrderTimeVal.setText(orderTime);
+					tvOrderDayVal.setText(orderDay);
+				}
 			}
 
 			ImageView ivReferralImage = (ImageView)dialog.findViewById(R.id.ivReferralImage);
@@ -91,6 +121,10 @@ public class OrderCompleteReferralDialog {
 				public void onClick(View v) {
 					dialog.dismiss();
 					callback.onConfirmed();
+					apiReferralUserEvent(OrderCompleteReferralDialog.this.engagementId,
+							OrderCompleteReferralDialog.this.orderId,
+							OrderCompleteReferralDialog.this.productType,
+							OrderCompleteReferralDialog.this.referralPopupContent.getButtonId());
 				}
 			});
 
@@ -99,6 +133,11 @@ public class OrderCompleteReferralDialog {
 				public void onClick(View v) {
 					dialog.dismiss();
 					callback.onDialogDismiss();
+					apiReferralUserEvent(OrderCompleteReferralDialog.this.engagementId,
+							OrderCompleteReferralDialog.this.orderId,
+							OrderCompleteReferralDialog.this.productType,
+							0);
+
 				}
 			});
 
@@ -115,5 +154,40 @@ public class OrderCompleteReferralDialog {
 		void onDialogDismiss();
 		void onConfirmed();
 	}
+
+
+
+	private void apiReferralUserEvent(int engagementId, int orderId, int productType, int event) {
+		try {
+			HashMap<String, String> params = new HashMap<>();
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			if (productType == ProductType.AUTO.getOrdinal()) {
+				params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
+			} else {
+				params.put(Constants.KEY_ORDER_ID, String.valueOf(orderId));
+			}
+			params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(productType));
+			params.put(Constants.KEY_EVENT, String.valueOf(event));
+
+			retrofit.Callback<SettleUserDebt> callback = new retrofit.Callback<SettleUserDebt>() {
+				@Override
+				public void success(SettleUserDebt historyResponse, Response response) {
+					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+					Log.i("referralUserEvent Server response", "response = " + responseStr);
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					Log.e("TAG", "referralUserEvent error=" + error.toString());
+				}
+			};
+
+			new HomeUtil().putDefaultParams(params);
+			RestClient.getApiService().referralUserEvent(params, callback);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 }

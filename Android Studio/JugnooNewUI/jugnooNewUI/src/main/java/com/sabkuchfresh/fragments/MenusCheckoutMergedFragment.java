@@ -1101,7 +1101,10 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                                                 activity.orderComplete();
                                                 ReferralActions.shareToWhatsapp(activity);
                                             }
-                                        }).show(true, deliverySlot, deliveryDay, placeOrderResponse.getReferralPopupContent());
+                                        }).show(true, deliverySlot, deliveryDay,
+                                                activity.getResources().getString(R.string.thank_you_for_placing_order_menus_format, restaurantName),
+                                                placeOrderResponse.getReferralPopupContent(),
+                                                -1, placeOrderResponse.getOrderId(), ProductType.MENUS.getOrdinal());
                                     }
 
                                     activity.setSelectedPromoCoupon(noSelectionCoupon);

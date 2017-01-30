@@ -54,6 +54,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_color"
+                    android:gravity="center"
+                    android:paddingLeft="@dimen/px_20"
+                    android:paddingRight="@dimen/px_20"
                     android:textSize="@dimen/text_size_30"
                     android:text="@string/your_order_will_be_delivered_between"
                     />
@@ -68,6 +71,7 @@
                     />
 
                 <RelativeLayout
+                    android:id="@+id/rlOrderDay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px_24"

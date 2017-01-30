@@ -210,6 +210,9 @@ public class PlaceOrderResponse {
 	}
 
 	public class ReferralPopupContent{
+		@SerializedName("button_id")
+		@Expose
+		private Integer buttonId;
 		@SerializedName("image_url")
 		@Expose
 		private String imageUrl;
@@ -253,6 +256,17 @@ public class PlaceOrderResponse {
 
 		public void setButtonText(String buttonText) {
 			this.buttonText = buttonText;
+		}
+
+		public Integer getButtonId() {
+			if(buttonId == null){
+				buttonId = 0;
+			}
+			return buttonId;
+		}
+
+		public void setButtonId(Integer buttonId) {
+			this.buttonId = buttonId;
 		}
 	}
 

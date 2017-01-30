@@ -1414,6 +1414,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
                     placeOrderResponse);
         } else {
+            int productType;
+            if(type == AppConstant.ApplicationType.MEALS){
+                productType = ProductType.MEALS.getOrdinal();
+            } else {
+                productType = ProductType.FRESH.getOrdinal();
+            }
             new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
                 @Override
                 public void onDialogDismiss() {
@@ -1425,7 +1431,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     activity.orderComplete();
                     ReferralActions.shareToWhatsapp(activity);
                 }
-            }).show(true, deliverySlot, deliveryDay, placeOrderResponse.getReferralPopupContent());
+            }).show(true, deliverySlot, deliveryDay, "", placeOrderResponse.getReferralPopupContent(),
+                    -1, placeOrderResponse.getOrderId(), productType);
         }
         activity.setSelectedPromoCoupon(noSelectionCoupon);
         flurryEventPlaceOrder(placeOrderResponse);
