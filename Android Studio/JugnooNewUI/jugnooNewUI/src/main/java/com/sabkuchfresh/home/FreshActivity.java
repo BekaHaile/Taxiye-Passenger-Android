@@ -3031,6 +3031,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         public void onClick(View v) {
                             clearCart();
                             setCartCityId(cityId);
+                            updateCartFromSP();
+                            updateCartValuesGetTotalPrice();
                             callback.onYesClick();
                         }
                     },
