@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -1177,7 +1178,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             layoutParams.height = (int) (ASSL.Yscale() * 260f);
             appBarLayout.setLayoutParams(layoutParams);
 
-
             CollapsingToolbarLayout.LayoutParams toolBarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
             TypedValue tv = new TypedValue();
             if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
@@ -1188,14 +1188,15 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             }
 
 
-            toolbar.invalidate();
-
             onStateChanged(appBarLayout, State.EXPANDED);
 
 
             appBarLayout.addOnOffsetChangedListener(collapseBarController);
 
         } else {
+
+            appBarLayout.removeOnOffsetChangedListener(collapseBarController);
+
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
             layoutParams.height = AppBarLayout.LayoutParams.WRAP_CONTENT;
             appBarLayout.setLayoutParams(layoutParams);
@@ -1204,9 +1205,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             toolBarParams.height = CollapsingToolbarLayout.LayoutParams.WRAP_CONTENT;
             toolbar.setLayoutParams(toolBarParams);
 
-            appBarLayout.removeOnOffsetChangedListener(collapseBarController);
 
-            onStateChanged(appBarLayout,State.COLLAPSED);
+            onStateChanged(appBarLayout, State.COLLAPSED);
 
         }
 
@@ -3055,7 +3055,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 int calculatedAlpha = -verticalOffset * 250 / appBarLayout.getTotalScrollRange();
 
 
-                toolbar.getBackground().setAlpha(calculatedAlpha);
+                getSupportActionBar().getCustomView().getBackground().setAlpha(calculatedAlpha);
+         //       toolbar.getBackground().setAlpha(calculatedAlpha);
 
                 topBar.getIvSearch().getBackground().setAlpha(calculatedAlpha);
 
@@ -3097,7 +3098,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         switch (expanded) {
             case EXPANDED:
                 //Toolbar
-                toolbar.getBackground().setAlpha(0);
+               // toolbar.getBackground().setAlpha(0);
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                 //Title
                 topBar.title.setVisibility(View.INVISIBLE);
@@ -3117,13 +3119,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 break;
             case COLLAPSED:
                 //Toolbar
-                toolbar.getBackground().setAlpha(255);
+              //  toolbar.getBackground().setAlpha(255);
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
 
                 //Restaurant Details
                 rlCollapseDetails.setVisibility(View.GONE);
-
-
 
 
                 //Cart and Search Button
@@ -3139,7 +3140,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 break;
             case IDLE:
                 topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.parseColor("#595968"), PorterDuff.Mode.SRC_ATOP);
-                topBar.imageViewBack.setVisibility(View.VISIBLE);
                 rlCollapseDetails.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
                 break;
