@@ -17,6 +17,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -209,6 +210,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private Toolbar toolbar;
     private RecyclerView rvDeliverySlots;
     private FreshSortingAdapter sortingAdapter;
+    private static final float COLLAPSE_TOOLBAR_HEIGHT = 270f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1175,7 +1177,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         if (isEnable) {
             findViewById(R.id.layout_rest_details).setVisibility(View.VISIBLE);
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-            layoutParams.height = (int) (ASSL.Yscale() * 260f);
+            layoutParams.height = (int) (ASSL.Yscale() * COLLAPSE_TOOLBAR_HEIGHT);
             appBarLayout.setLayoutParams(layoutParams);
 
             CollapsingToolbarLayout.LayoutParams toolBarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
@@ -3055,8 +3057,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 int calculatedAlpha = -verticalOffset * 250 / appBarLayout.getTotalScrollRange();
 
 
-                getSupportActionBar().getCustomView().getBackground().setAlpha(calculatedAlpha);
-         //       toolbar.getBackground().setAlpha(calculatedAlpha);
+
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(calculatedAlpha, 255, 255, 255)));
+
 
                 topBar.getIvSearch().getBackground().setAlpha(calculatedAlpha);
 
@@ -3098,7 +3101,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         switch (expanded) {
             case EXPANDED:
                 //Toolbar
-               // toolbar.getBackground().setAlpha(0);
+                // toolbar.getBackground().setAlpha(0);
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                 //Title
@@ -3119,7 +3122,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 break;
             case COLLAPSED:
                 //Toolbar
-              //  toolbar.getBackground().setAlpha(255);
+                //  toolbar.getBackground().setAlpha(255);
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
 
@@ -3132,14 +3135,14 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.getIvSearch().getBackground().setAlpha(255);
 
                 //back Button
-                topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.parseColor("#595968"), PorterDuff.Mode.SRC_ATOP);
+                topBar.imageViewBack.getDrawable().mutate().setColorFilter(ContextCompat.getColor(this, R.color.lightBlackTxtColor), PorterDuff.Mode.SRC_ATOP);
                 topBar.imageViewBack.getDrawable().setAlpha(255);
 
                 //Title
                 topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(255));
                 break;
             case IDLE:
-                topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.parseColor("#595968"), PorterDuff.Mode.SRC_ATOP);
+                topBar.imageViewBack.getDrawable().mutate().setColorFilter(ContextCompat.getColor(this, R.color.lightBlackTxtColor), PorterDuff.Mode.SRC_ATOP);
                 rlCollapseDetails.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
                 break;

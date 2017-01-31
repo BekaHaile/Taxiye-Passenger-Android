@@ -57,7 +57,7 @@
                         android:layout_marginLeft="46px"
                         android:text=""
                         android:textColor="@android:color/white"
-                        android:textSize="31px"
+                        android:textSize="38px"
                         app:font="avenir" />
 
 
