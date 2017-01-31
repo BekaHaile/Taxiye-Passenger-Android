@@ -230,13 +230,17 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         }
     }
 
-
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        try {
+            menusRestaurantAdapter.removeHandler();
+        } catch (Exception e) {
+        }
+        super.onDestroyView();
         ASSL.closeActivity(llRoot);
         System.gc();
     }
+
 
     @Override
     public void onRefresh() {

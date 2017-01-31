@@ -487,6 +487,9 @@ public interface Constants {
 	String AUTOS_PUSH = "autos_push";
 	String FRESH_PUSH = "fresh_push";
 	String MEALS_PUSH = "meals_push";
+	String GROCERY_PUSH = "grocery_push";
+	String MENUS_PUSH = "menus_push";
+	String PAY_PUSH = "pay_push";
 
 	String KEY_INTEGRATED_JUGNOO_ENABLED = "integrated_jugnoo_enabled";
 	String KEY_REDIRECT = "redirect";
@@ -597,4 +600,6 @@ public interface Constants {
 	String SP_MENUS_FILTER_DELIVERY_TIME = "sp_menus_filter_delivery_time";
 	String SP_MENUS_FILTER_CUISINES = "sp_menus_filter_cuisines";
 	String SP_MENUS_FILTER_QUICK = "sp_menus_filter_quick";
+	String KEY_EVENT = "event";
+	String KEY_REFERRAL_POPUP_CONTENT = "referral_popup_content";
 }

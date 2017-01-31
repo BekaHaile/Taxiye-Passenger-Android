@@ -75,14 +75,21 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.possibleStatus = possibleStatus;
         timerHandler.postDelayed(timerRunnable, 1000);
     }
-        Handler timerHandler = new Handler();
-        Runnable timerRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    applyFilter();
-                    timerHandler.postDelayed(this, 60000); //run every minute
-                    }
-            };
+
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                applyFilter();
+                if (timerHandler != null) {
+                    timerHandler.postDelayed(timerRunnable, 60000); //run every minute
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     private void searchVendors(String text){
         vendorsToShow.clear();
@@ -673,6 +680,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void searchVendorsFromTopBar(String s){
         searchText = s;
         searchVendors(s);
+    }
+
+    public void removeHandler(){
+        if(timerHandler != null){
+            timerHandler.removeCallbacks(timerRunnable);
+            timerHandler = null;
+        }
     }
 
 }

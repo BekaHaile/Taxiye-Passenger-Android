@@ -40,6 +40,7 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
+import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -1078,13 +1079,32 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                                     if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null){
                                         restaurantName = activity.getVendorOpened().getName();
                                     }
-                                    new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
-                                        @Override
-                                        public void onDismiss() {
-                                            activity.orderComplete();
-                                        }
-                                    }).show(String.valueOf(placeOrderResponse.getOrderId()),
-                                            deliverySlot, deliveryDay, showDeliverySlot, restaurantName, placeOrderResponse);
+                                    if(placeOrderResponse.getReferralPopupContent() == null) {
+                                        new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+                                            @Override
+                                            public void onDismiss() {
+                                                activity.orderComplete();
+                                            }
+                                        }).show(String.valueOf(placeOrderResponse.getOrderId()),
+                                                deliverySlot, deliveryDay, showDeliverySlot, restaurantName, placeOrderResponse);
+                                    }
+                                    else {
+                                        new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
+                                            @Override
+                                            public void onDialogDismiss() {
+                                                activity.orderComplete();
+                                            }
+
+                                            @Override
+                                            public void onConfirmed() {
+                                                activity.orderComplete();
+                                            }
+                                        }).show(true, deliverySlot, deliveryDay,
+                                                activity.getResources().getString(R.string.thank_you_for_placing_order_menus_format, restaurantName),
+                                                placeOrderResponse.getReferralPopupContent(),
+                                                -1, placeOrderResponse.getOrderId(), ProductType.MENUS.getOrdinal());
+                                    }
+
                                     activity.setSelectedPromoCoupon(noSelectionCoupon);
 
 

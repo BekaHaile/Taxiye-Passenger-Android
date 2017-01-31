@@ -74,19 +74,7 @@ public class ShareActivity extends BaseFragmentActivity {
 		return callbackManager;
 	}
 
-	@Override
-	protected void onStart() {
-		super.onStart();
-//		FlurryAgent.init(this, Config.getFlurryKey());
-//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
-	}
 
-	@Override
-	protected void onStop() {
-		super.onStop();
-//		FlurryAgent.onEndSession(this);
-	}
-	
 	@Override
 	protected void onResume() {
 		super.onResume();

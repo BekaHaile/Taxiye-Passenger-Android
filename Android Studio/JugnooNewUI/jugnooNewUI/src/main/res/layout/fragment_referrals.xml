@@ -4,181 +4,141 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
-        android:id="@+id/scrollView"
+    <LinearLayout
+        android:id="@+id/relativeLayoutShare"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/relativeLayoutReferContainer">
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:splitMotionEvents="false">
 
-        <LinearLayout
-            android:id="@+id/relativeLayoutShare"
+        <ImageView
+            android:id="@+id/imageViewLogo"
+            android:layout_width="match_parent"
+            android:layout_height="330px"
+            android:layout_marginTop="@dimen/px_15"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_promotions_friend_refer"
+            android:tag="mlar"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/textViewDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:splitMotionEvents="false">
+            android:layout_centerInParent="true"
+            android:layout_marginTop="56px"
+            android:gravity="center"
+            android:paddingLeft="40px"
+            android:paddingRight="40px"
+            android:lineSpacingExtra="4px"
+            android:textColorLink="@color/theme_color"
+            android:text="@string/free_ride_desc"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llShare"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_360"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey_lb_list"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:id="@+id/llWhatsappShare"
+            android:layout_width="@dimen/px_500"
+            android:layout_height="@dimen/px_82"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/button_green"
+            >
 
             <ImageView
-                android:id="@+id/imageViewLogo"
-                android:layout_width="645px"
-                android:layout_height="283px"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30px"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_promotions_friend_refer"
-                android:tag="mlar"
-                android:visibility="visible" />
-
-            <RelativeLayout
-                android:id="@+id/shareiconContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40px">
-
-                <ImageView
-                    android:id="@+id/imageViewSideLine"
-                    android:layout_width="130px"
-                    android:layout_height="173px"
-                    android:layout_marginLeft="30px"
-                    android:layout_marginTop="15px"
-                    android:src="@drawable/free_rides_earn_dashed_line" />
-
-                <TextView
-                    android:id="@+id/textViewShare"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:gravity="center"
-                    android:text="@string/share_your_code"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_36" />
-
-                <TextView
-                    android:id="@+id/textViewCode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/textViewShare"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="20px"
-                    android:gravity="center"
-                    android:text="    "
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_50" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageViewSideLine"
-                    android:layout_marginTop="-57px"
-                    android:layout_marginLeft="100px"
-                    android:layout_marginRight="100px"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/imageViewFbMessanger"
-                        android:layout_width="115px"
-                        android:layout_height="115px"
-                        android:tag="mwar"
-                        android:src="@drawable/ic_share_fb_messenger_selector"/>
-
-                    <ImageView
-                        android:id="@+id/imageViewWhatsapp"
-                        android:layout_width="115px"
-                        android:layout_height="115px"
-                        android:layout_marginLeft="20px"
-                        android:tag="mwar"
-                        android:src="@drawable/ic_share_whatsapp_selector"/>
-
-                    <ImageView
-                        android:id="@+id/imageViewEmail"
-                        android:layout_width="115px"
-                        android:layout_height="115px"
-                        android:layout_marginLeft="20px"
-                        android:visibility="gone"
-                        android:tag="mwar"
-                        android:src="@drawable/ic_share_email_selector"/>
-
-                    <ImageView
-                        android:id="@+id/imageViewMessage"
-                        android:layout_width="115px"
-                        android:layout_height="115px"
-                        android:layout_marginLeft="20px"
-                        android:tag="mwar"
-                        android:src="@drawable/ic_share_messages_selector"/>
-
-                    <ImageView
-                        android:id="@+id/imageViewMore"
-                        android:layout_width="115px"
-                        android:layout_height="115px"
-                        android:layout_marginLeft="20px"
-                        android:tag="mwar"
-                        android:src="@drawable/ic_share_show_more_selector"/>
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="130px"
-                    android:layout_height="173px"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="30px"
-                    android:layout_marginTop="15px"
-                    android:scaleX="-1"
-                    android:src="@drawable/free_rides_earn_dashed_line" />
-
-            </RelativeLayout>
-
-            <Button
-                android:id="@+id/buttonInvite"
-                style="@style/ButtonTheme"
-                android:layout_below="@+id/textViewCode"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="70px"
-                android:visibility="gone"
-                android:text="@string/invite_friends_caps" />
+                android:layout_width="@dimen/px_50"
+                android:layout_height="@dimen/px_50"
+                android:tag="mwar"
+                android:src="@drawable/ic_whatsapp_white"
+                />
 
             <TextView
-                android:id="@+id/textViewDesc"
+                android:id="@+id/tvWhatsapp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="120px"
-                android:gravity="center"
-                android:paddingLeft="40px"
-                android:paddingRight="40px"
-                android:textColorLink="@color/theme_color"
-                android:text="@string/free_ride_desc"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_30" />
+                android:textSize="@dimen/text_size_30"
+                android:textColor="@color/white"
+                android:text="@string/invite_via_whatsapp"
+                android:textAllCaps="true"
+                android:layout_marginLeft="@dimen/px_12"
+                />
 
-            <TextView
-                android:id="@+id/textViewMoreInfo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginTop="30px"
-                android:gravity="center"
-                android:text="Details"
-                android:visibility="gone"
-                android:textColor="@color/text_color_theme_selector"
-                android:textSize="@dimen/text_size_36" />
-
-            <ImageView
-                android:layout_width="164px"
-                android:layout_height="4px"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="-2px"
-                android:visibility="gone"
-                android:background="@color/theme_color" />
 
         </LinearLayout>
-    </ScrollView>
+
+        <TextView
+            android:id="@+id/tvMoreSharingOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_28"
+            android:textColor="@color/text_color_selector"
+            android:text="@string/view_more_sharing_options"
+            android:paddingLeft="@dimen/px_15"
+            android:paddingRight="@dimen/px_15"
+            android:paddingBottom="@dimen/px_15"
+            android:layout_marginTop="@dimen/px_15"
+            />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/llReferralCode"
+        android:layout_width="@dimen/px_320"
+        android:layout_height="@dimen/px_120"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginBottom="-60px"
+        android:background="@drawable/bg_white_dashed_b"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/llShare"
+        >
+
+        <TextView
+            android:id="@+id/tvYourReferralCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_20"
+            android:textColor="@color/text_color"
+            android:text="@string/your_referral_code"
+            />
+
+
+        <TextView
+            android:id="@+id/tvReferralCodeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_size_36"
+            android:textColor="@color/text_color"
+            android:text="9999999999"
+            android:layout_marginTop="@dimen/px_10"
+            />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayoutReferContainer"
         android:layout_width="wrap_content"
         android:layout_height="158px"
         android:visibility="visible"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        >
 
         <RelativeLayout
             android:id="@+id/relativeLayoutMultipleTab"

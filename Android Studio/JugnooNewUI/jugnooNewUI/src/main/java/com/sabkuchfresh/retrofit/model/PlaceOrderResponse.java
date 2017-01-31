@@ -27,9 +27,6 @@ public class PlaceOrderResponse {
 	@SerializedName("message")
 	@Expose
 	private String message;
-//	@SerializedName("payment_object")
-//	@Expose
-//	private Integer orderId;
 
 	@SerializedName("payment_object")
 	@Expose
@@ -38,6 +35,9 @@ public class PlaceOrderResponse {
 	@SerializedName("subscription_message")
 	@Expose
 	private SubscriptionMessage subscriptionMessage;
+	@SerializedName("referral_popup_content")
+	@Expose
+	private ReferralPopupContent referralPopupContent;
 
 	/**
 	 *
@@ -163,6 +163,14 @@ public class PlaceOrderResponse {
 		this.subscriptionMessage = subscriptionMessage;
 	}
 
+	public ReferralPopupContent getReferralPopupContent() {
+		return referralPopupContent;
+	}
+
+	public void setReferralPopupContent(ReferralPopupContent referralPopupContent) {
+		this.referralPopupContent = referralPopupContent;
+	}
+
 	public class SubscriptionMessage {
 
 		@SerializedName("heading")
@@ -199,6 +207,80 @@ public class PlaceOrderResponse {
 			this.linkText = linkText;
 		}
 
+	}
+
+	public class ReferralPopupContent{
+		@SerializedName("button_id")
+		@Expose
+		private Integer buttonId;
+		@SerializedName("image_url")
+		@Expose
+		private String imageUrl;
+		@SerializedName("heading")
+		@Expose
+		private String heading;
+		@SerializedName("text")
+		@Expose
+		private String text;
+		@SerializedName("button_text")
+		@Expose
+		private String buttonText;
+
+		private Integer shown;
+
+		public String getImageUrl() {
+			return imageUrl;
+		}
+
+		public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
+		}
+
+		public String getHeading() {
+			return heading;
+		}
+
+		public void setHeading(String heading) {
+			this.heading = heading;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public void setText(String text) {
+			this.text = text;
+		}
+
+		public String getButtonText() {
+			return buttonText;
+		}
+
+		public void setButtonText(String buttonText) {
+			this.buttonText = buttonText;
+		}
+
+		public Integer getButtonId() {
+			if(buttonId == null){
+				buttonId = 0;
+			}
+			return buttonId;
+		}
+
+		public void setButtonId(Integer buttonId) {
+			this.buttonId = buttonId;
+		}
+
+		public Integer getShown() {
+			if(shown == null){
+				shown = 0;
+			}
+			return shown;
+		}
+
+		public void setShown(Integer shown) {
+			this.shown = shown;
+		}
 	}
 
 }

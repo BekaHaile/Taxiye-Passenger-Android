@@ -368,21 +368,40 @@
     <dimen name="px_80">
         80px
     </dimen>
+    <dimen name="px_320">
+        320px
+    </dimen>
+    <dimen name="px_120">
+        120px
+    </dimen>
+    <dimen name="px_460">
+        460px
+    </dimen>
+    <dimen name="px_82">
+        82px
+    </dimen>
+    <dimen name="px_12">
+        12px
+    </dimen>
     <dimen name="px_450">
         450px
     </dimen>
     <dimen name="px_420">
         420px
     </dimen>
-    <dimen name="px_320">
-        320px
-    </dimen>
     <dimen name="px_7">7px</dimen>
 
     <dimen name="shadow_new_height">14px</dimen>
-    <dimen name="px_360">360px</dimen>
     <dimen name="px_27">27px</dimen>
     <dimen name="px_13">13px</dimen>
-    <dimen name="px_12">12px</dimen>
+    <dimen name="px_360">
+        360px
+    </dimen>
+    <dimen name="px_174">
+        174px
+    </dimen>
+    <dimen name="px_346">
+        346px
+    </dimen>
 
 </resources>

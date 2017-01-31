@@ -10,6 +10,7 @@ import com.facebook.appevents.AppEventsConstants;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.datastructure.PopupData;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Store;
 
 import org.json.JSONArray;
@@ -322,6 +323,7 @@ public class JSONParser implements Constants {
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
             Data.autoData.setUseRecentLocAutoSnapMaxDistance(autosData.getUseRecentLocAutoSnapMaxDistance());
+            Data.autoData.setReferralPopupContent(autosData.getReferralPopupContent());
 
             if(Data.autoData.getPromoCoupons() == null){
                 Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
@@ -1078,6 +1080,7 @@ public class JSONParser implements Constants {
             int cancellationCharges = 0, isPooledRide = 0, chatEnabled = 0;
             long cancellationTimeOffset = 0;
             ArrayList<String> fellowRiders = new ArrayList<>();
+            PlaceOrderResponse.ReferralPopupContent referralPopupContent = null;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1195,6 +1198,11 @@ public class JSONParser implements Constants {
                             } catch(Exception e){
                                 e.printStackTrace();
                             }
+
+                            try {
+                                JSONObject jReferralPopupContent = jObject.optJSONObject(KEY_REFERRAL_POPUP_CONTENT);
+                                referralPopupContent = new Gson().fromJson(jReferralPopupContent.toString(), PlaceOrderResponse.ReferralPopupContent.class);
+                            } catch (Exception e){}
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(context, jObject1);
@@ -1258,6 +1266,7 @@ public class JSONParser implements Constants {
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled));
 
                 Data.autoData.setFareFactor(fareFactor);
+                Data.autoData.setReferralPopupContent(referralPopupContent);
 
                 Log.e("Data.autoData.getAssignedDriverInfo() on login", "=" + Data.autoData.getAssignedDriverInfo().latLng);
 

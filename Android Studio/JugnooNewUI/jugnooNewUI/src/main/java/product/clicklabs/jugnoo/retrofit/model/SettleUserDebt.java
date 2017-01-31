@@ -14,6 +14,9 @@ public class SettleUserDebt {
 	@SerializedName("message")
 	@Expose
 	private String message;
+	@SerializedName("error")
+	@Expose
+	private String error;
 
 	public Integer getFlag() {
 		return flag;
@@ -29,5 +32,13 @@ public class SettleUserDebt {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
 	}
 }

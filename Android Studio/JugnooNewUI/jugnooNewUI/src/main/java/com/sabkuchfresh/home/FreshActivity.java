@@ -184,7 +184,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public boolean updateCart = false;
 
-    private LocationFetcher locationFetcher;
+    private LocationFetcher locationFetcher = null;
     public float scale = 0f;
 
     public boolean locationSearchShown = false;
@@ -2990,7 +2990,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             deliveryAddressView.llLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    saveDeliveryAddressModel();
                     getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
                 }
             });
@@ -3004,21 +3003,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     }
 
 
-    private DeliveryAddressModel deliveryAddressModel;
-    private void saveDeliveryAddressModel(){
-        deliveryAddressModel = new DeliveryAddressModel(getSelectedAddress(), getSelectedLatLng(),
-                getSelectedAddressId(), getSelectedAddressType());
-    }
-
-    private void setDeliveryAddressModelToSelectedAddress(){
-        if(deliveryAddressModel != null){
-            setSelectedAddress(deliveryAddressModel.getAddress());
-            setSelectedLatLng(deliveryAddressModel.getLatLng());
-            setSelectedAddressId(deliveryAddressModel.getId());
-            setSelectedAddressType(deliveryAddressModel.getType());
-            onAddressUpdated(new AddressAdded(true));
-        }
-    }
 
     public boolean checkForCityChange(final int cityId, final CityChangeCallback callback){
         if(fetchCartList().size() > 0
@@ -3039,7 +3023,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setDeliveryAddressModelToSelectedAddress();
+                            setRefreshCart(true);
+                            getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
                             callback.onNoClick();
                         }
                     }, false, false);
@@ -3054,34 +3039,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         void onNoClick();
     }
 
-    public class DeliveryAddressModel{
-        private String address;
-        private LatLng latLng;
-        private int id;
-        private String type;
-
-        public DeliveryAddressModel(String address, LatLng latLng, int id, String type) {
-            this.address = address;
-            this.latLng = latLng;
-            this.id = id;
-            this.type = type;
-        }
-
-        public String getAddress() {
-            return address;
-        }
-
-        public LatLng getLatLng() {
-            return latLng;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getType() {
-            return type;
-        }
+    public LocationFetcher getLocationFetcher(){
+        return locationFetcher;
     }
 
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -32,14 +31,13 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	private Context context;
 
 	
-	private static String LOCATION_SP = "location_sp",
+	private final String LOCATION_SP = "location_sp",
 			LOCATION_LAT = "location_lat",
 			LOCATION_LNG = "location_lng";
-	
-	private Handler checkLocationUpdateStartedHandler;
-	private Runnable checkLocationUpdateStartedRunnable;
 
-	private static final long CHECK_LOCATION_INTERVAL = 20000, LAST_LOCATON_TIME_THRESHOLD = 2 * 60000;
+	public LocationFetcher(Context context){
+		this.context = context;
+	}
 
 	public LocationFetcher(LocationUpdate locationUpdate, long requestInterval) {
 		this.locationUpdate = locationUpdate;
@@ -64,20 +62,9 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		else{																						// google play services not working
 			Log.e("Google Play error", "=" + resp);
 		}
-		startCheckingLocationUpdates();
 	}
 	
-	public synchronized void destroyWaitAndConnect(){
-		destroy();
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				connect();
-			}
-		}, 2000);
-	}
-	
-	public static synchronized void saveLatLngToSP(Context context, double latitude, double longitude){
+	public synchronized void saveLatLngToSP(double latitude, double longitude){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putString(LOCATION_LAT, ""+latitude);
@@ -86,14 +73,14 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	}
 
 
-	public static double getSavedLatFromSP(Context context){
+	public double getSavedLatFromSP(){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		String latitude = preferences.getString(LOCATION_LAT, "" + 0);
 		Log.d("saved last lat", "==" + latitude);
 		return Double.parseDouble(latitude);
 	}
 
-	public static double getSavedLngFromSP(Context context){
+	public double getSavedLngFromSP(){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
 		String longitude = preferences.getString(LOCATION_LNG, "" + 0);
 		return Double.parseDouble(longitude);
@@ -131,7 +118,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 				return loc.getLatitude();
 			}
 		} catch(Exception e){Log.e("e", "=" + e.toString());}
-		return getSavedLatFromSP(context);
+		return getSavedLatFromSP();
 	}
 	
 	/**
@@ -144,7 +131,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 				return loc.getLongitude();
 			}
 		} catch(Exception e){Log.e("e", "=" + e.toString());}
-		return getSavedLngFromSP(context);
+		return getSavedLngFromSP();
 	}
 
 	private Location getLocation(){
@@ -186,7 +173,6 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		}catch(Exception e){
 			Log.e("e", "=" + e.toString());
 		}
-		stopCheckingLocationUpdates();
 	}
 	
 
@@ -241,59 +227,10 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			if(location != null && !Utils.mockLocationEnabled(location)) {
 				this.location = location;
 				locationUpdate.onLocationChanged(location);
-				saveLatLngToSP(context, location.getLatitude(), location.getLongitude());
+				saveLatLngToSP(location.getLatitude(), location.getLongitude());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-		}
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	private synchronized void startCheckingLocationUpdates(){
-		checkLocationUpdateStartedHandler = new Handler();
-		checkLocationUpdateStartedRunnable = new Runnable() {
-			@Override
-			public void run() {
-				if(LocationFetcher.this.location == null){
-					destroyWaitAndConnect();
-				}
-				else{
-					long timeSinceLastLocationFix = System.currentTimeMillis() - LocationFetcher.this.location.getTime();
-					if(timeSinceLastLocationFix > LAST_LOCATON_TIME_THRESHOLD){
-						destroyWaitAndConnect();
-					}
-					else{
-						checkLocationUpdateStartedHandler.postDelayed(checkLocationUpdateStartedRunnable, CHECK_LOCATION_INTERVAL);
-					}
-				}
-			}
-		};
-		checkLocationUpdateStartedHandler.postDelayed(checkLocationUpdateStartedRunnable, CHECK_LOCATION_INTERVAL);
-	}
-
-	private synchronized void stopCheckingLocationUpdates(){
-		try{
-			if(checkLocationUpdateStartedHandler != null && checkLocationUpdateStartedRunnable != null){
-				checkLocationUpdateStartedHandler.removeCallbacks(checkLocationUpdateStartedRunnable);
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		} finally{
-			checkLocationUpdateStartedHandler = null;
-			checkLocationUpdateStartedRunnable = null;
 		}
 	}
 

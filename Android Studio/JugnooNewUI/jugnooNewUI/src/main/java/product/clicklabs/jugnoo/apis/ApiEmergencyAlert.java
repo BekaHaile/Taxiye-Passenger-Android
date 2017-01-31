@@ -10,7 +10,6 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Database2;
-import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PendingCall;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -54,8 +53,8 @@ public class ApiEmergencyAlert {
 					params.put(Constants.KEY_LATITUDE, String.valueOf(myLocation.getLatitude()));
 					params.put(Constants.KEY_LONGITUDE, String.valueOf(myLocation.getLongitude()));
 				} else {
-					params.put(Constants.KEY_LATITUDE, String.valueOf(LocationFetcher.getSavedLatFromSP(activity)));
-					params.put(Constants.KEY_LONGITUDE, String.valueOf(LocationFetcher.getSavedLngFromSP(activity)));
+					params.put(Constants.KEY_LATITUDE, String.valueOf(callback.getSavedLatitude()));
+					params.put(Constants.KEY_LONGITUDE, String.valueOf(callback.getSavedLongitude()));
 				}
 
 				new HomeUtil().putDefaultParams(params);
@@ -93,6 +92,8 @@ public class ApiEmergencyAlert {
 	public interface Callback{
 		void onSuccess();
 		void onFailure();
+		double getSavedLatitude();
+		double getSavedLongitude();
 	}
 
 }

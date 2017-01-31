@@ -21,7 +21,9 @@ public class LocationReceiverBG extends BroadcastReceiver {
                 final Location location = locationResult.getLastLocation();
 //                final Location location = (Location) intent.getExtras().get(LocationServices.FusedLocationApi.KEY_LOCATION_CHANGED);
                 if (location != null && !Utils.mockLocationEnabled(location)) {
-                    LocationFetcher.saveLatLngToSP(context, location.getLatitude(), location.getLongitude());
+                    LocationFetcher locationFetcher = new LocationFetcher(context);
+                    locationFetcher.saveLatLngToSP(location.getLatitude(), location.getLongitude());
+                    locationFetcher = null;
                     Intent intent1 = new Intent();
                     intent1.setAction(Constants.ACTION_LOCATION_UPDATE);
                     intent1.putExtra(Constants.KEY_LATITUDE, location.getLatitude());
