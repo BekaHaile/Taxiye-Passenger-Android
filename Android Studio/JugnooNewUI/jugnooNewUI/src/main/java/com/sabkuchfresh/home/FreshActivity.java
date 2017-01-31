@@ -5,8 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -1175,10 +1176,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
             layoutParams.height = (int) (ASSL.Yscale() * 260f);
             appBarLayout.setLayoutParams(layoutParams);
-            toolbar.getBackground().setAlpha(0);
-            llCartContainer.getBackground().setAlpha(0);
-            topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(0));
-            appBarLayout.addOnOffsetChangedListener(collapseBarController);
+
+
             CollapsingToolbarLayout.LayoutParams toolBarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
             TypedValue tv = new TypedValue();
             if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
@@ -1187,18 +1186,28 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 toolbar.setLayoutParams(toolBarParams);
 
             }
+
+
+            toolbar.invalidate();
+
+            onStateChanged(appBarLayout, State.EXPANDED);
+
+
+            appBarLayout.addOnOffsetChangedListener(collapseBarController);
+
         } else {
-            findViewById(R.id.layout_rest_details).setVisibility(View.GONE);
-            appBarLayout.removeOnOffsetChangedListener(collapseBarController);
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
             layoutParams.height = AppBarLayout.LayoutParams.WRAP_CONTENT;
             appBarLayout.setLayoutParams(layoutParams);
+
             CollapsingToolbarLayout.LayoutParams toolBarParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
             toolBarParams.height = CollapsingToolbarLayout.LayoutParams.WRAP_CONTENT;
             toolbar.setLayoutParams(toolBarParams);
-            llCartContainer.getBackground().setAlpha(255);
-            toolbar.getBackground().setAlpha(255);
-            topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(255));
+
+            appBarLayout.removeOnOffsetChangedListener(collapseBarController);
+
+            onStateChanged(appBarLayout,State.COLLAPSED);
+
         }
 
 
@@ -3046,7 +3055,9 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 int calculatedAlpha = -verticalOffset * 250 / appBarLayout.getTotalScrollRange();
 
 
-               toolbar.getBackground().setAlpha(calculatedAlpha);
+                toolbar.getBackground().setAlpha(calculatedAlpha);
+
+                topBar.getIvSearch().getBackground().setAlpha(calculatedAlpha);
 
                 llCartContainer.getBackground().setAlpha(calculatedAlpha);
 
@@ -3054,10 +3065,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
 
                 tvCollapRestaurantReviews.setTextColor(tvCollapRestaurantReviews.getTextColors().withAlpha(255 - calculatedAlpha));
+                ivCollapseRestImage.getBackground().setAlpha(255 - calculatedAlpha);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    topBar.imageViewBack.setImageAlpha(calculatedAlpha);
-                }
+                topBar.imageViewBack.getDrawable().setAlpha(calculatedAlpha);
+
+
                 topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(calculatedAlpha));
 
 
@@ -3084,22 +3096,52 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     private void onStateChanged(AppBarLayout appBarLayout, State expanded) {
         switch (expanded) {
             case EXPANDED:
-                topBar.title.setVisibility(View.INVISIBLE);
-                llCartContainer.getBackground().setAlpha(0);
+                //Toolbar
                 toolbar.getBackground().setAlpha(0);
-                topBar.imageViewBack.setVisibility(View.INVISIBLE);
-                //    ivSearch.setImageResource(R.drawable.searc_icon);
+
+                //Title
+                topBar.title.setVisibility(View.INVISIBLE);
+
+                //Cart and Search Button
+                llCartContainer.getBackground().setAlpha(0);
+                topBar.getIvSearch().getBackground().setAlpha(0);
+
+                //back Button
+                topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+                topBar.imageViewBack.getDrawable().setAlpha(255);
+
+
+                //Restaurant Details
+                tvCollapRestaurantName.setTextColor(tvCollapRestaurantName.getTextColors().withAlpha(255));
+                tvCollapRestaurantReviews.setTextColor(tvCollapRestaurantReviews.getTextColors().withAlpha(255));
                 break;
             case COLLAPSED:
+                //Toolbar
+                toolbar.getBackground().setAlpha(255);
+
+
+                //Restaurant Details
                 rlCollapseDetails.setVisibility(View.GONE);
+
+
+
+
+                //Cart and Search Button
                 llCartContainer.getBackground().setAlpha(255);
-               toolbar.getBackground().setAlpha(255);
+                topBar.getIvSearch().getBackground().setAlpha(255);
+
+                //back Button
+                topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.parseColor("#595968"), PorterDuff.Mode.SRC_ATOP);
+                topBar.imageViewBack.getDrawable().setAlpha(255);
+
+                //Title
+                topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(255));
                 break;
             case IDLE:
+                topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.parseColor("#595968"), PorterDuff.Mode.SRC_ATOP);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 rlCollapseDetails.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
-                //    ivSearch.setImageResource(R.drawable.search);
                 break;
         }
     }

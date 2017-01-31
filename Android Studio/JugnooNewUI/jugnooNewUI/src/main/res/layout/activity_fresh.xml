@@ -17,16 +17,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
+            app:expanded="false"
             app:elevation="0dp">
 
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-          <!--      app:contentScrim="@android:color/white"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+               app:contentScrim="@android:color/white"
                 app:scrimAnimationDuration="400"
-                app:scrimVisibleHeightTrigger="50px">-->
+
+                app:scrimVisibleHeightTrigger="50px">
 
 
                 <RelativeLayout

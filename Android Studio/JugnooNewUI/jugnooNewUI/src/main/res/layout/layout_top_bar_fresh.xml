@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:splitMotionEvents="false">
 
     <LinearLayout
@@ -170,11 +171,19 @@
                     <ImageView
                         android:id="@+id/ivSearch"
                         android:layout_width="62px"
-                        android:layout_height="62px"
+                        android:layout_height="58px"
+                        android:padding="16px"
                         android:layout_gravity="center_vertical"
-                        android:layout_margin="6px"
-                        android:src="@drawable/ic_search_new_selector"
+                        android:layout_margin="7px"
+                        android:layout_marginTop="9px"
+                        android:background="@drawable/rectangle_6_copy"
+                        android:src="@drawable/searc_icon"
                         android:visibility="visible" />
+
+
+
+
+
 
                     <RelativeLayout
                         android:id="@+id/rlFilter"
