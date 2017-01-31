@@ -119,6 +119,19 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
 
+        try {
+            if(Data.getFreshData() != null && Data.getFreshData().pendingFeedback == 1) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        activity.openFeedback();
+                    }
+                }, 300);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return rootView;
     }
 

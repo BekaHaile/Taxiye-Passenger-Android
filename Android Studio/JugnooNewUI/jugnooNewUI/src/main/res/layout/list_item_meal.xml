@@ -131,6 +131,7 @@
                     android:paddingRight="20px"
                     android:text="Description"
                     android:maxLines="3"
+                    android:ellipsize="end"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/text_size_24"
                     android:visibility="visible" />

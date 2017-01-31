@@ -96,7 +96,7 @@ public class AddOnItemsAdapter extends BaseAdapter {
         mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
                 Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
 
-        mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
+
         mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark);
         mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
         if (subItem.getSubItemQuantitySelected() == 0) {
@@ -110,6 +110,7 @@ public class AddOnItemsAdapter extends BaseAdapter {
                 mHolder.textViewOutOfStock.setVisibility(View.VISIBLE);
             }
         } else {
+            mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
             mHolder.imageViewMinus.setVisibility(View.VISIBLE);
             mHolder.textViewQuantity.setVisibility(View.VISIBLE);
             mHolder.textViewOutOfStock.setVisibility(View.GONE);

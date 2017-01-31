@@ -26,6 +26,7 @@
                 app:contentInsetLeft="0dp"
                 app:contentInsetStart="0dp"
                 app:layout_scrollFlags="scroll|enterAlways|snap">
+
                 <include
                     android:id="@+id/topBarMain"
                     layout="@layout/layout_top_bar_fresh" />
@@ -42,8 +43,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:layout_gravity="bottom"
+            android:animateLayoutChanges="true"
             android:orientation="vertical">
 
             <TextView

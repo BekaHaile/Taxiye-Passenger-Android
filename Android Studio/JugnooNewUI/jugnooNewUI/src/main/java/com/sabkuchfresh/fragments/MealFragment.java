@@ -25,6 +25,7 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshSortingDialog;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.home.TopBar;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
@@ -157,6 +158,7 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                         activity.openFeedback();
                     }
                 }, 300);

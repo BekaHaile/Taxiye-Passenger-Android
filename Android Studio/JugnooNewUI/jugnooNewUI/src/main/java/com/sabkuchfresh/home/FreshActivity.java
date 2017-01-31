@@ -1196,7 +1196,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         try {
             if(getAppType() == AppConstant.ApplicationType.MENUS){
                 if(getTopFragment() instanceof MenusFragment){
-                    getMenusFragment().openSearch();
+                    getMenusFragment().openSearch(false);
                 } else if(getTopFragment() instanceof VendorMenuFragment){
                     getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
                 }
@@ -1442,7 +1442,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             }
         }
         else if(getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()){
-            getMenusFragment().openSearch();
+            getMenusFragment().openSearch(false);
         }
         else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();

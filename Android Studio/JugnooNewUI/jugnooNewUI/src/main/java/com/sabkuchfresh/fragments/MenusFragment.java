@@ -214,6 +214,10 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             activity.resumeMethod();
             menusRestaurantAdapter.applyFilter();
             activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
+            if(searchOpened){
+                searchOpened = false;
+                openSearch(false);
+            }
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -280,6 +284,11 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
+
+                                    if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                                        activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                                        activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                                    }
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -451,15 +460,16 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     }
 
-    public void openSearch(){
+    public void openSearch(boolean clearEt){
        if(searchOpened){
            searchOpened = false;
            activity.getTopBar().etSearch.setText("");
            activity.fragmentUISetup(this);
-           activity.setDeliveryAddressViewVisibility(View.VISIBLE);
        } else {
            searchOpened = true;
-           activity.getTopBar().etSearch.setText("");
+           if(clearEt) {
+               activity.getTopBar().etSearch.setText("");
+           }
            activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
            activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
            activity.getTopBar().title.setVisibility(View.GONE);
@@ -467,9 +477,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
            activity.getTopBar().setSearchVisibility(View.VISIBLE);
            activity.getTopBar().ivSearch.setVisibility(View.GONE);
-           activity.getTopBar().rlFilter.setVisibility(View.GONE);
            activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-           activity.setDeliveryAddressViewVisibility(View.GONE);
 
            activity.getTopBar().etSearch.requestFocus();
            Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);

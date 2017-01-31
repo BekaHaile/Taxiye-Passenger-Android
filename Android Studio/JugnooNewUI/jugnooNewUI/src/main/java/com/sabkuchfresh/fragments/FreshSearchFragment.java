@@ -354,7 +354,7 @@ public class FreshSearchFragment extends Fragment {
 
 	public void searchFreshItems(String s){
 		try {
-			if (s.length() > 0 && s.length() < 3 && activity.getFreshFragment() != null) {
+			if (s.length() > 0 && activity.getFreshFragment() != null) {
 				new SubItemsSearchAsync().execute(s.toString());
 			} else {
 				subItemsInSearch.clear();
@@ -400,7 +400,7 @@ public class FreshSearchFragment extends Fragment {
 								try {
 									String message = freshSearchResponse.getMessage();
 										if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == freshSearchResponse.getFlag()) {
-											subItemsInSearch.clear();
+											//subItemsInSearch.clear();
 											for(SuperCategoriesData.SuperCategory superCategory : freshSearchResponse.getSuperCategories()){
 												if(!superCategory.getSuperCategoryId().equals(superCategoryId)) {
 													for (Category category : superCategory.getCategories()) {

@@ -104,7 +104,7 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
 			return new ViewHolderCategorySingle(view, context);
 		} else{
 			View view = LayoutInflater.from(context).inflate(R.layout.list_item_fresh_super_category, parent, false);
-			view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+			view.setLayoutParams(new RecyclerView.LayoutParams(360, RecyclerView.LayoutParams.WRAP_CONTENT));
 			ASSL.DoMagic(view);
 			return new ViewHolderCategory(view, context);
 		}

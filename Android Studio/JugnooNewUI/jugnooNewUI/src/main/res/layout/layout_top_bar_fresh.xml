@@ -130,7 +130,7 @@
                         android:layout_height="62px"
                         android:layout_gravity="center_vertical"
                         android:layout_margin="6px"
-                        android:src="@drawable/ic_search_new_selector"/>
+                        android:src="@drawable/ic_search_new"/>
 
                     <EditText
                         android:id="@+id/etSearch"
