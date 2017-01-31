@@ -34,6 +34,8 @@ import android.widget.TextView;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.jugnoo.pay.activities.PaySDKUtils;
 import com.jugnoo.pay.models.MessageRequest;
 import com.sabkuchfresh.adapters.FreshSortingAdapter;
@@ -2878,9 +2880,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     }
                 }
             }
-            if(subItems.size() > 0){
-                jCart.put(Constants.KEY_CITY_ID, getCartCityId());
-            }
+            jCart.put(Constants.KEY_CITY_ID, getCartCityId());
             int type = getAppType();
             if(type == AppConstant.ApplicationType.FRESH) {
                 Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
@@ -3023,12 +3023,16 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setRefreshCart(true);
-                            getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
+                            setDeliveryAddressModelToSelectedAddress();
+//                            setRefreshCart(true);
+//                            getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
                             callback.onNoClick();
                         }
                     }, false, false);
             return true;
+        } else if(getCartCityId() != cityId){
+            setCartCityId(cityId);
+            return false;
         } else {
             return false;
         }
@@ -3039,8 +3043,69 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         void onNoClick();
     }
 
-    public LocationFetcher getLocationFetcher(){
-        return locationFetcher;
+    private DeliveryAddressModel deliveryAddressModel;
+    private Gson gson = new Gson();
+    public void saveDeliveryAddressModel() {
+        deliveryAddressModel = new DeliveryAddressModel(getSelectedAddress(), getSelectedLatLng(),
+                getSelectedAddressId(), getSelectedAddressType());
+        try{Prefs.with(this).save(Constants.SP_FRESH_CART_ADDRESS, gson.toJson(deliveryAddressModel,
+                DeliveryAddressModel.class));}catch(Exception e){}
+    }
+
+    private void setDeliveryAddressModelToSelectedAddress() {
+        if(deliveryAddressModel == null){
+            try {deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(Constants.SP_FRESH_CART_ADDRESS,
+						Constants.EMPTY_JSON_OBJECT), DeliveryAddressModel.class);} catch (Exception e) {}
+        }
+        if (deliveryAddressModel != null) {
+            setSelectedAddress(deliveryAddressModel.getAddress());
+            setSelectedLatLng(deliveryAddressModel.getLatLng());
+            setSelectedAddressId(deliveryAddressModel.getId());
+            setSelectedAddressType(deliveryAddressModel.getType());
+            onAddressUpdated(new AddressAdded(true));
+        }
+    }
+
+    public class DeliveryAddressModel {
+        @SerializedName("address")
+        @Expose
+        private String address;
+        @SerializedName("latitude")
+        @Expose
+        private Double latitude;
+        @SerializedName("longitude")
+        @Expose
+        private Double longitude;
+        @SerializedName("id")
+        @Expose
+        private Integer id;
+        @SerializedName("type")
+        @Expose
+        private String type;
+
+        public DeliveryAddressModel(String address, LatLng latLng, int id, String type) {
+            this.address = address;
+            this.latitude = latLng.latitude;
+            this.longitude = latLng.longitude;
+            this.id = id;
+            this.type = type;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public LatLng getLatLng() {
+            return new LatLng(latitude, longitude);
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getType() {
+            return type;
+        }
     }
 
 }
