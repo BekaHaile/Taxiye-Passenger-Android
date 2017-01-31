@@ -1838,6 +1838,24 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         e.printStackTrace();
                                     }
                                     cartChangedRefreshCheckout = false;
+                                    if(userCheckoutResponse.getCityId() != null) {
+                                        activity.checkForCityChange(userCheckoutResponse.getCityId(),
+                                                new FreshActivity.CityChangeCallback() {
+                                                    @Override
+                                                    public void onYesClick() {
+                                                        if(activity.getFreshFragment() != null){
+                                                            activity.performBackPressed();
+                                                        }
+                                                        activity.setRefreshCart(true);
+                                                        activity.performBackPressed();
+                                                    }
+
+                                                    @Override
+                                                    public void onNoClick() {
+                                                        getCheckoutDataAPI();
+                                                    }
+                                                });
+                                    }
 
                                 } else{
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);

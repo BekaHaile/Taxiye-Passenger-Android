@@ -39,6 +39,9 @@ public class UserCheckoutResponse{
 	@SerializedName("cart")
 	@Expose
 	private List<CartItem> cartItems;
+	@SerializedName("cityId")
+	@Expose
+	private Integer cityId;
 
 	/**
 	 *
@@ -136,6 +139,14 @@ public class UserCheckoutResponse{
 
 	public void setCartItems(List<CartItem> cartItems) {
 		this.cartItems = cartItems;
+	}
+
+	public Integer getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Integer cityId) {
+		this.cityId = cityId;
 	}
 
 	public class Subscription {
