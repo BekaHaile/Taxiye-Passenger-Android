@@ -156,8 +156,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             if(AppStatus.getInstance(activity).isOnline(activity)) {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
-                adapter.clearList();
-
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
