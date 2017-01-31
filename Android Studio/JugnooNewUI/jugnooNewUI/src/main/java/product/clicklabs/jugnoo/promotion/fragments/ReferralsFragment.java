@@ -119,7 +119,11 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 		llWhatsappShare.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ReferralActions.shareToWhatsapp(activity);
+				if(Utils.appInstalledOrNot(activity, "com.whatsapp")){
+					ReferralActions.shareToWhatsapp(activity);
+				} else {
+					ReferralActions.openGenericShareIntent(activity, null);
+				}
                 MyApplication.getInstance().logEvent(REFERRAL+"_"+OUTSIDE_WHATSAPP, bundle);
 				FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "WhatsApp");
 			}

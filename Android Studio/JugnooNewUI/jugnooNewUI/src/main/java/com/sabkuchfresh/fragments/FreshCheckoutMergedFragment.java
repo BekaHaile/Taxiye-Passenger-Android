@@ -95,7 +95,6 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
-import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
@@ -1429,7 +1428,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 @Override
                 public void onConfirmed() {
                     activity.orderComplete();
-                    ReferralActions.shareToWhatsapp(activity);
                 }
             }).show(true, deliverySlot, deliveryDay, "", placeOrderResponse.getReferralPopupContent(),
                     -1, placeOrderResponse.getOrderId(), productType);

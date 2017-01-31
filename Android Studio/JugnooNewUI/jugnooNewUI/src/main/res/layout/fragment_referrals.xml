@@ -17,6 +17,7 @@
             android:id="@+id/imageViewLogo"
             android:layout_width="match_parent"
             android:layout_height="330px"
+            android:layout_marginTop="@dimen/px_15"
             android:layout_centerHorizontal="true"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_promotions_friend_refer"

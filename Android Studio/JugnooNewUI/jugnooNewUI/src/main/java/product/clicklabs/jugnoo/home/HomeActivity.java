@@ -3378,7 +3378,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
                                     @Override
                                     public void onConfirmed() {
-                                        ReferralActions.shareToWhatsapp(HomeActivity.this);
                                     }
                                 }).show(false, "", "", "", Data.autoData.getReferralPopupContent(),
                                         Integer.parseInt(Data.autoData.getcEngagementId()),

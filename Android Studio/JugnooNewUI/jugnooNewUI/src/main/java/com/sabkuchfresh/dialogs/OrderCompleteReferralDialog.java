@@ -1,5 +1,6 @@
 package com.sabkuchfresh.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -22,12 +23,14 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Font;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -98,7 +101,7 @@ public class OrderCompleteReferralDialog {
 			}
 
 			ImageView ivReferralImage = (ImageView)dialog.findViewById(R.id.ivReferralImage);
-			TextView tvReferralHeading = (TextView) dialog.findViewById(R.id.tvReferralHeading); tvReferralHeading.setTypeface(fonts.mavenMedium(context), Typeface.BOLD);
+			TextView tvReferralHeading = (TextView) dialog.findViewById(R.id.tvReferralHeading); tvReferralHeading.setTypeface(fonts.mavenRegular(context), Typeface.BOLD);
 			TextView tvReferralText = (TextView) dialog.findViewById(R.id.tvReferralText); tvReferralText.setTypeface(fonts.mavenMedium(context));
 
 			Button bLater = (Button) dialog.findViewById(R.id.bLater);bLater.setTypeface(Fonts.mavenRegular(context));
@@ -120,6 +123,11 @@ public class OrderCompleteReferralDialog {
 				@Override
 				public void onClick(View v) {
 					dialog.dismiss();
+					if(Utils.appInstalledOrNot(context, "com.whatsapp")){
+						ReferralActions.shareToWhatsapp((Activity) context);
+					} else {
+						ReferralActions.openGenericShareIntent((Activity) context, null);
+					}
 					callback.onConfirmed();
 					apiReferralUserEvent(OrderCompleteReferralDialog.this.engagementId,
 							OrderCompleteReferralDialog.this.orderId,
