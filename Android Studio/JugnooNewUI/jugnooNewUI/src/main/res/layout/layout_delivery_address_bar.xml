@@ -14,7 +14,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_height"
-        android:background="@color/white">
+        android:background="@drawable/bg_white_menu_item_selector_color_selector">
 
         <ImageView
             android:id="@+id/ivLoc"

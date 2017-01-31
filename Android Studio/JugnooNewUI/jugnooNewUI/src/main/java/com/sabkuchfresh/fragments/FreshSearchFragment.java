@@ -120,7 +120,7 @@ public class FreshSearchFragment extends Fragment {
 					e.printStackTrace();
 				}
 			}
-        }, 3);
+        }, 300);
 
 		if(subItemsInSearch == null) {
 			subItemsInSearch = new ArrayList<>();

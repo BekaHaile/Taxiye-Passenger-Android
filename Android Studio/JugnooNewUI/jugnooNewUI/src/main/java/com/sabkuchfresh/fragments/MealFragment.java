@@ -155,10 +155,10 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
 
         try {
             if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
+                //activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                         activity.openFeedback();
                     }
                 }, 300);
@@ -204,6 +204,11 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
             }, 300);
 
             if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
+                activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+                activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+            }
+
+            if(noMealsView.getVisibility() == View.VISIBLE){
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                 activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
             }
@@ -315,15 +320,17 @@ public class MealFragment extends Fragment implements FlurryEventNames, SwipeRef
                                     activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                     activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                     relativeLayoutNoMenus.setVisibility(View.VISIBLE);
-                                    activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
-                                    activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                     mSwipeRefreshLayout.setVisibility(View.GONE);
                                     noMealsView.setVisibility(View.GONE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
                                             productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
                                 else {
-                                    activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
+                                    if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
+                                        activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+                                    } else{
+                                        activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
+                                    }
                                     int sortedBy = jObj.optInt(Constants.SORTED_BY);
                                     mealsData.clear();
                                     mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());

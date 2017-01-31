@@ -177,7 +177,8 @@
                     android:animateLayoutChanges="true"
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
                     <ImageView
                         android:id="@+id/ivSearch"
@@ -193,7 +194,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_margin="6px">
+                        android:layout_marginLeft="@dimen/px_20">
                         <ImageView
                             android:id="@+id/ivFilter"
                             android:layout_width="62px"

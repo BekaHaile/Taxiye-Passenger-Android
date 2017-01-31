@@ -1,6 +1,8 @@
 package com.sabkuchfresh.home;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
+import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
@@ -178,7 +180,18 @@ public class TopBar implements FlurryEventNames {
 
 				case R.id.ivSearch:
 					if(activity instanceof FreshActivity) {
+						//llSearchCart.setLayoutTransition(null);
+						LayoutTransition lt = new LayoutTransition();
+						lt.disableTransitionType(LayoutTransition.DISAPPEARING);
+						//llSearchCart.setLayoutTransition(lt);
 						((FreshActivity)activity).searchItem();
+						/*new Handler().postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								((FreshActivity)activity).searchItem();
+							}
+						}, 1000);*/
+
 					}
 					break;
 
