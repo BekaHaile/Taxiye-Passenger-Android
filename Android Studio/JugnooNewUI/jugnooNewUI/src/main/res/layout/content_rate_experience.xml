@@ -3,20 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#eeeeee"
     android:fillViewport="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:paddingBottom="40px"
     android:paddingLeft="20px"
     android:paddingRight="20px"
-    android:paddingTop="20px"
-    android:background="@color/white"
-    >
+    android:paddingTop="20px">
 
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <!--<android.support.v7.widget.CardView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/root_layout"
+            android:background="@android:color/white"
             android:layout_width="match_parent"
+            android:paddingLeft="30px"
+            android:paddingRight="30px"
             android:layout_height="match_parent"
             android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
@@ -24,6 +29,7 @@
             android:paddingBottom="40px">
 
             <TextView
+                android:id="@+id/tv_view_invoice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -35,6 +41,7 @@
 
 
             <TextView
+                android:id="@+id/tv_rate_experience"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -44,12 +51,20 @@
                 android:textSize="42px"
                 app:font="maven" />
 
-            <RatingBar
+
+            <com.sabkuchfresh.utils.CustomRatingBar
+                android:id="@+id/rating_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="124px" />
-
+                android:layout_marginBottom="124px"
+                android:numStars="5"
+                android:rating="2"
+                app:halfStars="false"
+                app:maxStars="5"
+                app:onlyForDisplay="false"
+                app:starOn="@drawable/star_yellow_new_full"
+                app:starOff="@drawable/star_yellow_new_empty" />
 
             <EditText
                 android:layout_width="match_parent"
@@ -62,9 +77,11 @@
                 android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color_hint"
                 android:textCursorDrawable="@drawable/cursor_black"
-                android:textSize="26px" />
+                android:textSize="26px"
+                android:id="@+id/edt_feedback_title" />
 
             <EditText
+                android:id="@+id/edt_feedback_descc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="56px"
@@ -79,6 +96,7 @@
                 android:textSize="26px" />
 
             <Button
+                android:id="@+id/btn_submit"
                 style="@style/ButtonTheme"
                 android:layout_width="380px"
                 android:layout_height="wrap_content"
@@ -88,5 +106,5 @@
 
 
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    <!--</android.support.v7.widget.CardView>-->
 </android.support.v4.widget.NestedScrollView>

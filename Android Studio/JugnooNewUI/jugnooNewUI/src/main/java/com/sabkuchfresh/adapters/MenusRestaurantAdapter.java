@@ -411,6 +411,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         String paddingStarToText = " ";
                         Spannable restaurant = new SpannableString(vendor.getName() + padddingTitleToStar + activity.getString(R.string.star_icon) + paddingStarToText + vendor.getRating());
 
+
                         //append strings and set different fonts to each subString
                         restaurant.setSpan(new CustomTypeFaceSpan("", restaurantName), 0, vendor.getName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         restaurant.setSpan(new CustomTypeFaceSpan("", star), vendor.getName().length() + padddingTitleToStar.length(), vendor.getName().length() + padddingTitleToStar.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

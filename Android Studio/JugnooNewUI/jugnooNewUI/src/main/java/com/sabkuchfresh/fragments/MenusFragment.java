@@ -152,20 +152,22 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
 
+
+
         try {
             if(Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
 
-                        activity.openFeedback();
+                     activity.openMenuFeedback();
                     }
                 }, 300);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         try {
             if(Data.userData.getPromoSuccess() == 0) {
                 showPromoFailedAtSignupDialog();

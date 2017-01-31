@@ -69,6 +69,7 @@ import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
+import com.sabkuchfresh.fragments.NewFeedbackFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliveryAddress;
@@ -411,9 +412,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                     fetchFiltersFromSP();
                     openCart();
                     addMenusFragment();
+
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
                     lastClientId = Config.getMenusClientId();
                     marginBottom = 33f;
+
                 } else {
                     openCart();
                     addFreshHomeFragment();
@@ -1117,12 +1120,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 setMinOrderAmountText(fragment);
 
-            } else if (fragment instanceof FeedbackFragment) {
+            } else if (fragment instanceof FeedbackFragment || fragment instanceof NewFeedbackFragment)
+            {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-            } else if (fragment instanceof OrderStatusActivity) {
+            }else if (fragment instanceof OrderStatusActivity) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
@@ -3057,7 +3061,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 int calculatedAlpha = -verticalOffset * 250 / appBarLayout.getTotalScrollRange();
 
 
-
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(calculatedAlpha, 255, 255, 255)));
 
 
@@ -3147,6 +3150,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 topBar.title.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+
+    public void openMenuFeedback() {
+        getTransactionUtils().openMenuFeedback(FreshActivity.this, relativeLayoutContainer);
     }
 
     public enum State {
