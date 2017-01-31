@@ -128,7 +128,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MainViewHolder) {
-            MainViewHolder mHolder = ((MainViewHolder) holder);
+            final MainViewHolder mHolder = ((MainViewHolder) holder);
             final SubItem subItem = subItems.get(position);
 
             mHolder.textViewItemName.setText(subItem.getSubItemName());
@@ -251,6 +251,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.imageViewMinus.setTag(position);
             mHolder.imageViewPlus.setTag(position);
+            mHolder.linearLayoutQuantitySelector.setTag(position);
 
             mHolder.textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -261,6 +262,12 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             });
 
+            mHolder.linearLayoutQuantitySelector.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Log.e("onClick", "v=="+v);
+                }
+            });
 
             mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -294,6 +301,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 public void onClick(View v) {
                     try {
                         int pos = (int) v.getTag();
+                        mHolder.linearLayoutQuantitySelector.performClick();
                         if(callback.checkForAdd(pos, subItems.get(pos))) {
                             if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                                 subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
