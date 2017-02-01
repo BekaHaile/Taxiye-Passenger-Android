@@ -14,7 +14,7 @@
         android:orientation="vertical"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="8px"
-        app:cardPreventCornerOverlap="true"
+        app:cardPreventCornerOverlap="false"
         app:cardUseCompatPadding="true"
         android:layout_margin="@dimen/px_30"
         android:layout_centerInParent="true"
@@ -32,7 +32,7 @@
                 android:id="@+id/llOrderDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/menu_item_selector_color_F7"
+                android:background="@drawable/bg_menu_item_selector_f7_tlrr"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:visibility="gone"
@@ -78,11 +78,13 @@
                     android:layout_marginBottom="@dimen/px_26">
                     
                     <View
-                        android:layout_width="@dimen/px_100"
+                        android:layout_width="match_parent"
                         android:layout_height="@dimen/px_2"
                         android:background="@color/stroke_color_dark"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/px_46"
+                        android:layout_marginRight="@dimen/px_46"
+                        android:layout_toLeftOf="@+id/tvOrderDayVal"
                         />
                     
                     <TextView
@@ -97,10 +99,12 @@
                         />
 
                     <View
-                        android:layout_width="@dimen/px_100"
+                        android:layout_width="match_parent"
                         android:layout_height="@dimen/px_2"
+                        android:layout_toRightOf="@+id/tvOrderDayVal"
                         android:background="@color/stroke_color_dark"
                         android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/px_46"
                         android:layout_marginRight="@dimen/px_46"
                         android:layout_alignParentRight="true"
                         />
@@ -118,8 +122,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/px_346"
                     android:scaleType="centerCrop"
-                    android:layout_marginLeft="-4px"
-                    android:layout_marginRight="-4px"
                     android:tag="mwar"
                     />
 

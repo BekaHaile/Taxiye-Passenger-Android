@@ -1337,7 +1337,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         selectedLatLng = new LatLng(Data.latitude, Data.longitude);
     }
 
-    public void orderComplete() {
+    public void clearAllCartAtOrderComplete(){
         int type = getAppType();
         if(type == AppConstant.ApplicationType.FRESH) {
             clearCart();
@@ -1373,6 +1373,10 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 }
             }
         }
+    }
+
+    public void orderComplete() {
+        clearAllCartAtOrderComplete();
         splInstr = "";
         slotSelected = null;
         slotToSelect = null;

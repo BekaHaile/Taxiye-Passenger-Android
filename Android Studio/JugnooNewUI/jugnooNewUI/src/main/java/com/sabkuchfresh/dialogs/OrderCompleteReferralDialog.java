@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.FlurryEventLogger;
-import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 
@@ -100,6 +99,8 @@ public class OrderCompleteReferralDialog {
 					tvOrderTimeVal.setText(orderTime);
 					tvOrderDayVal.setText(orderDay);
 				}
+			} else {
+				llOrderDetails.setVisibility(View.GONE);
 			}
 
 			ImageView ivReferralImage = (ImageView)dialog.findViewById(R.id.ivReferralImage);

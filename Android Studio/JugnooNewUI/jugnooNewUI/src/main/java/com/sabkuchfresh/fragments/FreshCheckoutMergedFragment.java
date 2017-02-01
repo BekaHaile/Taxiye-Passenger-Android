@@ -1432,6 +1432,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             }).show(true, deliverySlot, deliveryDay, "", placeOrderResponse.getReferralPopupContent(),
                     -1, placeOrderResponse.getOrderId(), productType);
         }
+        activity.clearAllCartAtOrderComplete();
         activity.setSelectedPromoCoupon(noSelectionCoupon);
         flurryEventPlaceOrder(placeOrderResponse);
     }

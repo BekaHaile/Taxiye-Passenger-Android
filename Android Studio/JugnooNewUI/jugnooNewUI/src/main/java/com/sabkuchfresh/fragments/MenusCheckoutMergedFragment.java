@@ -1104,6 +1104,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                                                 placeOrderResponse.getReferralPopupContent(),
                                                 -1, placeOrderResponse.getOrderId(), ProductType.MENUS.getOrdinal());
                                     }
+                                    activity.clearAllCartAtOrderComplete();
 
                                     activity.setSelectedPromoCoupon(noSelectionCoupon);
 

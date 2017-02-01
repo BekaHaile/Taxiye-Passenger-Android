@@ -105,7 +105,7 @@
         android:orientation="vertical"
         android:gravity="center"
         android:layout_marginBottom="-60px"
-        android:background="@drawable/bg_white_dashed_b"
+        android:background="@drawable/bg_white_menu_color_dashed_selector"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/llShare"
         >
