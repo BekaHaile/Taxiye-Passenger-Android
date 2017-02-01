@@ -153,6 +153,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
                     }
                     activity.setRefreshCart(false);
+                    activity.refreshCart2 = false;
                 }
             }, 300);
         }
