@@ -1838,7 +1838,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         e.printStackTrace();
                                     }
                                     cartChangedRefreshCheckout = false;
-                                    if(userCheckoutResponse.getCityId() != null) {
+                                    if(FreshCheckoutMergedFragment.this.type == AppConstant.ApplicationType.FRESH
+                                            && userCheckoutResponse.getCityId() != null) {
                                         activity.checkForCityChange(userCheckoutResponse.getCityId(),
                                                 new FreshActivity.CityChangeCallback() {
                                                     @Override
