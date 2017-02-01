@@ -213,7 +213,7 @@
         android:layout_marginBottom="25px"
         android:layout_marginRight="20px"
         android:animateLayoutChanges="true"
-        android:background="@drawable/add_item_selector"
+        android:background="@drawable/bg_white_round_layer_shadow"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="visible">
@@ -223,7 +223,7 @@
             android:layout_width="70px"
             android:layout_height="70px"
             android:padding="20px"
-            android:src="@drawable/ic_minus_dark"
+            android:src="@drawable/ic_minus_dark_selector"
             android:tag="mwar"
             android:visibility="visible" />
 
@@ -243,7 +243,7 @@
             android:layout_width="70px"
             android:layout_height="70px"
             android:padding="20px"
-            android:src="@drawable/ic_plus_dark"
+            android:src="@drawable/ic_plus_dark_selector"
             android:tag="mwar" />
 
     </LinearLayout>

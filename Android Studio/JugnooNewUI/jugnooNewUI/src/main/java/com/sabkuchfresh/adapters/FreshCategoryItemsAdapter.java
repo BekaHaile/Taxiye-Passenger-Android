@@ -207,11 +207,11 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
 
             mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
-            mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark);
+            mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
             mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
             if (subItem.getSubItemQuantitySelected() == 0) {
                 if(subItem.getStock() > 0){
-                    mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme);
+                    mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme_selector);
                     mHolder.imageViewMinus.setVisibility(View.GONE);
                     mHolder.textViewQuantity.setVisibility(View.GONE);
                     mHolder.textViewOutOfStock.setVisibility(View.GONE);
