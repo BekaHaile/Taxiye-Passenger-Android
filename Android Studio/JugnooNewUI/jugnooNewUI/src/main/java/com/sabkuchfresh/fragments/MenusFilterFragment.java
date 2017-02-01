@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -186,6 +188,14 @@ public class MenusFilterFragment extends Fragment{
 		((TextView) rootView.findViewById(R.id.textViewDT60)).setTypeface(Fonts.mavenMedium(activity));
 
 		buttonApply = (Button) rootView.findViewById(R.id.buttonApply); buttonApply.setTypeface(Fonts.mavenRegular(activity));
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				Utils.hideSoftKeyboard(activity, textViewDeliveryTime);
+			}
+		}, 200);
+
 
 		relativeLayoutPopularity.setOnClickListener(new View.OnClickListener() {
 			@Override

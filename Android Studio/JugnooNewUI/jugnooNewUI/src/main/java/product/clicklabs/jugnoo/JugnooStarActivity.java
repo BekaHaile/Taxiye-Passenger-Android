@@ -142,15 +142,15 @@ public class JugnooStarActivity extends BaseFragmentActivity implements View.OnC
                 benefitOffering.add(Config.getAutosClientId());
                 benefits.add(Data.userData.getSubscriptionData().getSubTextAutos());
             }
-            if(Data.userData.getFreshEnabled() == 1
-                    && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextFresh())){
-                benefitOffering.add(Config.getFreshClientId());
-                benefits.add(Data.userData.getSubscriptionData().getSubTextFresh());
-            }
             if(Data.userData.getMealsEnabled() == 1
                     && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextMeals())){
                 benefitOffering.add(Config.getMealsClientId());
                 benefits.add(Data.userData.getSubscriptionData().getSubTextMeals());
+            }
+            if(Data.userData.getFreshEnabled() == 1
+                    && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextFresh())){
+                benefitOffering.add(Config.getFreshClientId());
+                benefits.add(Data.userData.getSubscriptionData().getSubTextFresh());
             }
             if(Data.userData.getGroceryEnabled() == 1
                     && !TextUtils.isEmpty(Data.userData.getSubscriptionData().getSubTextGrocery())){

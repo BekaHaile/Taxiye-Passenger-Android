@@ -957,6 +957,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             @Override
             public void onDrawerOpened(View drawerView) {
                 Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Side Menu");
             }
 
             @Override

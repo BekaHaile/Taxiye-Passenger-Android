@@ -519,7 +519,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 Bundle bundle = new Bundle();
                 MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.FREE_RIDES, bundle);
-                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", "Free rides");
+                FlurryEventLogger.eventGA(Constants.INFORMATIVE, "menu", MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES);
 
             } else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, ReferDriverActivity.class));

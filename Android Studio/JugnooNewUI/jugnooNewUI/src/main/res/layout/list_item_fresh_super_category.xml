@@ -32,6 +32,11 @@
                 android:tag="mwar"
                 android:src="@drawable/ic_fresh_new_placeholder" />
 
+            <View
+                android:id="@+id/viewBG"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_transparent_white_60_selector"/>
 
             <View
                 android:layout_width="@dimen/px_320"
@@ -50,11 +55,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_26" />
 
-            <View
-                android:id="@+id/viewBG"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/bg_transparent_white_60_selector"/>
+
 
         </RelativeLayout>
 

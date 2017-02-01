@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.FlurryEventLogger;
+import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
 
@@ -134,6 +136,7 @@ public class OrderCompleteReferralDialog {
 							OrderCompleteReferralDialog.this.orderId,
 							OrderCompleteReferralDialog.this.productType,
 							OrderCompleteReferralDialog.this.referralPopupContent.getButtonId());
+					FlurryEventLogger.event(Constants.INFORMATIVE, "Popup - Send Free Rides", OrderCompleteReferralDialog.this.referralPopupContent.getButtonText());
 				}
 			});
 
@@ -142,10 +145,12 @@ public class OrderCompleteReferralDialog {
 				public void onClick(View v) {
 					dialog.dismiss();
 					callback.onDialogDismiss();
+					FlurryEventLogger.event(Constants.INFORMATIVE, "Popup - Send Free Rides", "Later");
 				}
 			});
 
 			dialog.show();
+			FlurryEventLogger.event(Constants.INFORMATIVE, "Popup - Send Free Rides", "Send Free Rides");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

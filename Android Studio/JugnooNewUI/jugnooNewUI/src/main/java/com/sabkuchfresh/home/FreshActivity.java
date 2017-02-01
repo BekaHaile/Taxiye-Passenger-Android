@@ -272,6 +272,27 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             topBar.etSearch.addTextChangedListener(textWatcher);
             resetToolbar();
 
+            drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    FlurryEventLogger.event(Constants.INFORMATIVE, "menu", "Side Menu");
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+
+                }
+
+                @Override
+                public void onDrawerStateChanged(int newState) {
+
+                }
+            });
 
             appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                 @Override
