@@ -23,7 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
-               app:contentScrim="@android:color/white">
+               app:contentScrim="@android:color/white"
+                app:scrimVisibleHeightTrigger="100px">
                <!-- app:scrimAnimationDuration="400"
 
                 app:scrimVisibleHeightTrigger="50px">-->
