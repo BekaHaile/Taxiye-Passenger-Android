@@ -149,7 +149,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(activity.isRefreshCart()){
+                    if(activity.isRefreshCart() || activity.refreshCart2){
                         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FRESH);
                     }
                     activity.setRefreshCart(false);

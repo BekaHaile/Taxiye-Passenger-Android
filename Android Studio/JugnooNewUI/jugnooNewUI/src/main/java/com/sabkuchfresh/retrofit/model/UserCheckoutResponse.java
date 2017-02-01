@@ -306,6 +306,9 @@ public class UserCheckoutResponse{
 		}
 
 		public Integer getQuantity() {
+			if(quantity == null){
+				quantity = 0;
+			}
 			return quantity;
 		}
 
@@ -354,6 +357,9 @@ public class UserCheckoutResponse{
 		}
 
 		public Integer getStatus() {
+			if(status == null){
+				status = 0;
+			}
 			return status;
 		}
 

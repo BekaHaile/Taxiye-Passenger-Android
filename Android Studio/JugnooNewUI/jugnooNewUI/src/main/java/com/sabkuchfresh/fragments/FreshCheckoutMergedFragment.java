@@ -1768,96 +1768,96 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-
-                                    updateCartFromCheckoutData(userCheckoutResponse);
-
-                                    buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.place_order));
-                                    activity.setUserCheckoutResponse(userCheckoutResponse);
-                                    Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
-
-                                    setActivityLastAddressFromResponse(userCheckoutResponse);
-                                    updateCartDataView();
-                                    updateDeliverySlot(userCheckoutResponse.getDeliveryInfo());
-                                    setDeliverySlotsDataUI();
-
-                                    updateAddressView();
-
-                                    String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
-                                    if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
-                                        if(Data.getMealsData().getPromoCoupons() == null){
-                                            Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                                        }
-                                        Data.getMealsData().getPromoCoupons().clear();
-                                        if(userCheckoutResponse.getPromotions() != null){
-                                            Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
-                                        }
-                                        if(userCheckoutResponse.getCoupons() != null){
-                                            Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
-                                        }
-                                    } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
-                                        if(Data.getGroceryData().getPromoCoupons() == null){
-                                            Data.getGroceryData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                                        }
-                                        Data.getGroceryData().getPromoCoupons().clear();
-                                        if(userCheckoutResponse.getPromotions() != null){
-                                            Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
-                                        }
-                                        if(userCheckoutResponse.getCoupons() != null){
-                                            Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
-                                        }
-                                    } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
-                                        if(Data.getMenusData().getPromoCoupons() == null){
-                                            Data.getMenusData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                                        }
-                                        Data.getMenusData().getPromoCoupons().clear();
-                                        if(userCheckoutResponse.getPromotions() != null){
-                                            Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
-                                        }
-                                        if(userCheckoutResponse.getCoupons() != null){
-                                            Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
-                                        }
-                                    } else {
-                                        if(Data.getFreshData().getPromoCoupons() == null){
-                                            Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                                        }
-                                        Data.getFreshData().getPromoCoupons().clear();
-                                        if(userCheckoutResponse.getPromotions() != null){
-                                            Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
-                                        }
-                                        if(userCheckoutResponse.getCoupons() != null){
-                                            Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
-                                        }
-                                    }
-                                    updateCouponsDataView();
-
-                                    try {
-                                        if(cartChangedRefreshCheckout){
-											setSelectedCoupon(promoCoupons.indexOf(activity.getSelectedPromoCoupon()));
-										}
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    cartChangedRefreshCheckout = false;
                                     if(FreshCheckoutMergedFragment.this.type == AppConstant.ApplicationType.FRESH
-                                            && userCheckoutResponse.getCityId() != null) {
-                                        activity.checkForCityChange(userCheckoutResponse.getCityId(),
-                                                new FreshActivity.CityChangeCallback() {
-                                                    @Override
-                                                    public void onYesClick() {
-                                                        if(activity.getFreshFragment() != null){
-                                                            activity.performBackPressed();
-                                                        }
-                                                        activity.setRefreshCart(true);
-                                                        activity.performBackPressed();
+                                            && userCheckoutResponse.getCityId() != null
+                                            && activity.checkForCityChange(userCheckoutResponse.getCityId(),
+                                            new FreshActivity.CityChangeCallback() {
+                                                @Override
+                                                public void onYesClick() {
+                                                    activity.refreshCart2 = true;
+                                                    if(activity.getFreshFragment() != null) {
+                                                        activity.getSupportFragmentManager().popBackStack(FreshFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                                    } else {
+                                                        activity.getSupportFragmentManager().popBackStack(FreshCheckoutMergedFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                                                     }
+                                                }
 
-                                                    @Override
-                                                    public void onNoClick() {
-                                                        getCheckoutDataAPI();
-                                                    }
-                                                });
+                                                @Override
+                                                public void onNoClick() {
+                                                    getCheckoutDataAPI();
+                                                }
+                                            })) {
+                                    } else {
+                                        updateCartFromCheckoutData(userCheckoutResponse);
+
+                                        buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.place_order));
+                                        activity.setUserCheckoutResponse(userCheckoutResponse);
+                                        Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
+
+                                        setActivityLastAddressFromResponse(userCheckoutResponse);
+                                        updateCartDataView();
+                                        updateDeliverySlot(userCheckoutResponse.getDeliveryInfo());
+                                        setDeliverySlotsDataUI();
+
+                                        updateAddressView();
+
+                                        String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+                                        if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
+                                            if (Data.getMealsData().getPromoCoupons() == null) {
+                                                Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                            }
+                                            Data.getMealsData().getPromoCoupons().clear();
+                                            if (userCheckoutResponse.getPromotions() != null) {
+                                                Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                            }
+                                            if (userCheckoutResponse.getCoupons() != null) {
+                                                Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
+                                        } else if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+                                            if (Data.getGroceryData().getPromoCoupons() == null) {
+                                                Data.getGroceryData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                            }
+                                            Data.getGroceryData().getPromoCoupons().clear();
+                                            if (userCheckoutResponse.getPromotions() != null) {
+                                                Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                            }
+                                            if (userCheckoutResponse.getCoupons() != null) {
+                                                Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
+                                        } else if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                                            if (Data.getMenusData().getPromoCoupons() == null) {
+                                                Data.getMenusData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                            }
+                                            Data.getMenusData().getPromoCoupons().clear();
+                                            if (userCheckoutResponse.getPromotions() != null) {
+                                                Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                            }
+                                            if (userCheckoutResponse.getCoupons() != null) {
+                                                Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
+                                        } else {
+                                            if (Data.getFreshData().getPromoCoupons() == null) {
+                                                Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                            }
+                                            Data.getFreshData().getPromoCoupons().clear();
+                                            if (userCheckoutResponse.getPromotions() != null) {
+                                                Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                            }
+                                            if (userCheckoutResponse.getCoupons() != null) {
+                                                Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
+                                        }
+                                        updateCouponsDataView();
+
+                                        try {
+                                            if (cartChangedRefreshCheckout) {
+                                                setSelectedCoupon(promoCoupons.indexOf(activity.getSelectedPromoCoupon()));
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        cartChangedRefreshCheckout = false;
                                     }
-
                                 } else{
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {

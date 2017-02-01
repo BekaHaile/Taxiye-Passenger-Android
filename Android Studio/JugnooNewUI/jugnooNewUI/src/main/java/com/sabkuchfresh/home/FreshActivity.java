@@ -2416,6 +2416,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         }
     }
 
+    public boolean refreshCart2 = false;
     private boolean refreshCart = false;
     public boolean isRefreshCart(){
         return refreshCart;
@@ -2423,6 +2424,8 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     public void setRefreshCart(boolean refreshCart){
         this.refreshCart = refreshCart;
     }
+
+
 
 
 

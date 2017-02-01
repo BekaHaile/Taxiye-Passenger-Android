@@ -104,8 +104,8 @@ public class OrderCompleteReferralDialog {
 			TextView tvReferralHeading = (TextView) dialog.findViewById(R.id.tvReferralHeading); tvReferralHeading.setTypeface(fonts.mavenRegular(context), Typeface.BOLD);
 			TextView tvReferralText = (TextView) dialog.findViewById(R.id.tvReferralText); tvReferralText.setTypeface(fonts.mavenMedium(context));
 
-			Button bLater = (Button) dialog.findViewById(R.id.bLater);bLater.setTypeface(Fonts.mavenRegular(context));
-			Button bSendGift = (Button) dialog.findViewById(R.id.bSendGift);bSendGift.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+			Button bLater = (Button) dialog.findViewById(R.id.bLater);bLater.setTypeface(Fonts.mavenMedium(context));
+			Button bSendGift = (Button) dialog.findViewById(R.id.bSendGift);bSendGift.setTypeface(Fonts.mavenMedium(context));
 
 
 			if(!TextUtils.isEmpty(referralPopupContent.getImageUrl())) {
@@ -115,7 +115,7 @@ public class OrderCompleteReferralDialog {
 			} else {
 				ivReferralImage.setVisibility(View.GONE);
 			}
-			tvReferralHeading.setText(referralPopupContent.getHeading());
+			tvReferralHeading.setText(referralPopupContent.getHeading().replace("\\n", "\n"));
 			tvReferralText.setText(referralPopupContent.getText());
 			bSendGift.setText(referralPopupContent.getButtonText());
 
@@ -129,6 +129,7 @@ public class OrderCompleteReferralDialog {
 						ReferralActions.openGenericShareIntent((Activity) context, null);
 					}
 					callback.onConfirmed();
+
 					apiReferralUserEvent(OrderCompleteReferralDialog.this.engagementId,
 							OrderCompleteReferralDialog.this.orderId,
 							OrderCompleteReferralDialog.this.productType,
