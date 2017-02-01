@@ -1,5 +1,6 @@
 package com.sabkuchfresh.home;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -32,6 +34,7 @@ import android.text.TextWatcher;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -853,6 +856,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                         }
                     }
                 }
+
+/*
+                ((LinearLayout) findViewById(R.id.llCartContainer)).getLayoutTransition().setAnimateParentHierarchy(false);
+                ((LinearLayout) findViewById(R.id.llCartContainer)).setLayoutTransition(new LayoutTransition());*/
+
+
                 if (totalPrice > 0) {
                     topBar.getLlCartAmount().setVisibility(View.VISIBLE);
                     topBar.getTvCartAmount().setText(String.format(getResources().getString(R.string.rupees_value_format),
@@ -1120,13 +1129,12 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 setMinOrderAmountText(fragment);
 
-            } else if (fragment instanceof FeedbackFragment || fragment instanceof NewFeedbackFragment)
-            {
+            } else if (fragment instanceof FeedbackFragment || fragment instanceof NewFeedbackFragment) {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-            }else if (fragment instanceof OrderStatusActivity) {
+            } else if (fragment instanceof OrderStatusActivity) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
@@ -3097,7 +3105,21 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         tvCollapRestaurantReviews = (TextView) findViewById(R.id.tv_rest_reviews);
         rlCollapseDetails = (RelativeLayout) findViewById(R.id.layout_rest_details);
         llCartContainer = (LinearLayout) findViewById(R.id.llCartContainer);
-        //llToolbarLayout = (R) findViewById(R.id.topRl);
+
+
+        //to enable animate layout changes since it acts weirdly with collapsing toolbar if declared in xml because it animates whole heirarchy and hence toolbar behaves weirdly
+        //This method is being used to animate the specific group and its nested children
+        if (llCartContainer.getLayoutTransition() != null) {
+            llCartContainer.getLayoutTransition().setAnimateParentHierarchy(false);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            ViewGroup layout = (ViewGroup) findViewById(R.id.llSearchCart);
+            LayoutTransition layoutTransition = layout.getLayoutTransition();
+            if (layoutTransition != null) {
+                layoutTransition.enableTransitionType(LayoutTransition.CHANGING);
+            }
+        }
+
     }
 
     private void onStateChanged(AppBarLayout appBarLayout, State expanded) {
