@@ -75,7 +75,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             ivOffering;
     private FreshActivity activity;
     private LinearLayout linearLayoutRideSummary, linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer, llBadReason;
-    private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
+    private RelativeLayout  mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
     private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaidValue, tvItems,
             textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp, textViewRideEndWithImage;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;

@@ -1,5 +1,7 @@
 package com.sabkuchfresh.fragments;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,10 +9,10 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
@@ -22,16 +24,12 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by Parminder Singh on 1/30/17.
@@ -73,6 +71,8 @@ public class NewFeedbackFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
+
+
         mainLayout = (LinearLayout) rootView.findViewById(R.id.root_layout);
         new ASSL(activity, mainLayout, 1134, 720, false);
 /*

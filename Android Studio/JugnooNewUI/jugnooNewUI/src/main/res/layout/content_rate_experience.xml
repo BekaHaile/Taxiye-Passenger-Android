@@ -1,32 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eeeeee"
-    android:fillViewport="true"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:paddingBottom="40px"
-    android:paddingLeft="20px"
-    android:paddingRight="20px"
-    android:paddingTop="20px">
+    android:background="@color/dull_background"
+    android:padding="25px"
 
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent">-->
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="2dp">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/root_layout"
-            android:background="@android:color/white"
             android:layout_width="match_parent"
-            android:paddingLeft="30px"
-            android:paddingRight="30px"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
             android:orientation="vertical"
-            android:paddingBottom="40px">
+            android:padding="36px">
 
             <TextView
                 android:id="@+id/tv_view_invoice"
@@ -37,6 +31,8 @@
                 android:layout_marginTop="40px"
                 android:text="VIEW INVOICE"
                 android:textColor="@color/dialog_color_menus_customize_item"
+                android:textSize="30px"
+                android:textStyle="bold"
                 app:font="avenir" />
 
 
@@ -45,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="60px"
+                android:layout_marginBottom="40px"
                 android:text="Rate your Experience"
                 android:textColor="@color/text_color"
                 android:textSize="42px"
@@ -57,16 +53,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="124px"
+                android:layout_marginBottom="60px"
                 android:numStars="5"
-                android:rating="2"
+                android:rating="3"
                 app:halfStars="false"
                 app:maxStars="5"
                 app:onlyForDisplay="false"
-                app:starOn="@drawable/star_yellow_new_full"
-                app:starOff="@drawable/star_yellow_new_empty" />
+                app:starOff="@drawable/star_yellow_new_empty"
+                app:starOn="@drawable/star_yellow_new_full" />
 
             <EditText
+                android:id="@+id/edt_feedback_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="28px"
@@ -77,18 +74,18 @@
                 android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color_hint"
                 android:textCursorDrawable="@drawable/cursor_black"
-                android:textSize="26px"
-                android:id="@+id/edt_feedback_title" />
+                android:textSize="26px" />
 
             <EditText
                 android:id="@+id/edt_feedback_descc"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginBottom="56px"
+                android:layout_weight="1"
                 android:background="@drawable/background_white_rounded_bordered"
                 android:gravity="top|left"
                 android:hint="Description goes here..."
-                android:minHeight="300px"
+                android:minHeight="180px"
                 android:padding="20px"
                 android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color_hint"
@@ -99,6 +96,7 @@
                 android:id="@+id/btn_submit"
                 style="@style/ButtonTheme"
                 android:layout_width="380px"
+                android:padding="20px"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="SUBMIT"
@@ -106,5 +104,5 @@
 
 
         </LinearLayout>
-    <!--</android.support.v7.widget.CardView>-->
-</android.support.v4.widget.NestedScrollView>
+    </android.support.v7.widget.CardView>
+</ScrollView>

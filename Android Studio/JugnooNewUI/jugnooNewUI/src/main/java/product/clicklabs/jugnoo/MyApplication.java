@@ -98,7 +98,7 @@ public class MyApplication extends Application {
 
         super.onCreate();
         try {
-            Fabric.with(this, new Crashlytics());
+           // Fabric.with(this, new Crashlytics());
             if (!this.isTestModeEnabled()) {
                 Branch.getInstance(this);
             } else {

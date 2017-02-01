@@ -3,6 +3,8 @@ package com.sabkuchfresh.utils;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
@@ -23,6 +25,12 @@ import product.clicklabs.jugnoo.R;
  * regular rating bar. it wraps the stars making its size fit the parent
  */
 public class CustomRatingBar extends LinearLayout {
+
+
+    private static final int LOW_RATING_RED = Color.parseColor("#FB9758");
+    private static final int MEDIUM_RATING_YELLOW = Color.parseColor("#FFD365");
+    private static final int GOOD_RATING_GREEN = Color.parseColor("#8DCF61");
+
     public IRatingBarCallbacks getOnScoreChanged() {
         return onScoreChanged;
     }
@@ -35,8 +43,9 @@ public class CustomRatingBar extends LinearLayout {
         void scoreChanged(float score);
     }
 
+
     private int mMaxStars = 5;
-    private float mCurrentScore = 2.5f;
+    private float mCurrentScore = 3f;
     private int mStarOnResource = R.drawable.star_yellow_new_full;
     private int mStarOffResource = R.drawable.star_yellow_new_empty;
     private int mStarHalfResource = R.drawable.star_yellow_new_empty;
@@ -50,7 +59,13 @@ public class CustomRatingBar extends LinearLayout {
 
     public CustomRatingBar(Context context) {
         super(context);
+
         init();
+    }
+
+
+    public ImageView[] getmStarsViews() {
+        return mStarsViews;
     }
 
     public float getScore() {
@@ -157,14 +172,33 @@ public class CustomRatingBar extends LinearLayout {
         boolean flagHalf = (mCurrentScore != 0 && (mCurrentScore % 0.5 == 0)) && mHalfStars;
         for (int i = 1; i <= mMaxStars; i++) {
 
-            if (i <= mCurrentScore)
+            if (i <= mCurrentScore) {
                 mStarsViews[i - 1].setImageResource(mStarOnResource);
-            else {
+
+                switch (i) {
+                    case 1:
+                        mStarsViews[i - 1].getDrawable().setColorFilter(LOW_RATING_RED, PorterDuff.Mode.SRC_ATOP);
+                        break;
+                    case 2:
+                        mStarsViews[i - 1].getDrawable().setColorFilter(MEDIUM_RATING_YELLOW, PorterDuff.Mode.SRC_ATOP);
+                        break;
+                    default:
+                        mStarsViews[i - 1].getDrawable().setColorFilter(GOOD_RATING_GREEN, PorterDuff.Mode.SRC_ATOP);
+                        break;
+                }
+
+
+            } else {
                 if (flagHalf && i - 0.5 <= mCurrentScore)
                     mStarsViews[i - 1].setImageResource(mStarHalfResource);
                 else
                     mStarsViews[i - 1].setImageResource(mStarOffResource);
+
+
+                mStarsViews[i - 1].getDrawable().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
             }
+
+
         }
     }
 
