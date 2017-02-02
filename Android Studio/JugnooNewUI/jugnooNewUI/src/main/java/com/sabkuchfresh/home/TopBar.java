@@ -1,12 +1,8 @@
 package com.sabkuchfresh.home;
 
-import android.animation.LayoutTransition;
 import android.app.Activity;
-import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +17,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -38,8 +35,9 @@ public class TopBar implements FlurryEventNames {
 	public ImageView imageViewBack, ivDeliveryAddressCross, imageViewDelete;
 	public EditText editTextDeliveryAddress;
 
-	public RelativeLayout llSearchContainer;
+	public LinearLayout llSearchContainer;
 	public EditText etSearch;
+	public ProgressWheel pbSearch;
 	public ImageView ivSearchCross, ivSearch, ivFilterApplied;
 	public RelativeLayout rlFilter;
 
@@ -75,9 +73,10 @@ public class TopBar implements FlurryEventNames {
 
 		textViewReset = (TextView) drawerLayout.findViewById(R.id.textViewReset); textViewReset.setTypeface(Fonts.mavenMedium(activity));
 
-		llSearchContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchContainer);
+		llSearchContainer = (LinearLayout) drawerLayout.findViewById(R.id.llSearchContainer);
 		etSearch = (EditText) drawerLayout.findViewById(R.id.etSearch); etSearch.setTypeface(Fonts.mavenMedium(activity));
 		ivSearch = (ImageView) drawerLayout.findViewById(R.id.ivSearch);
+		pbSearch = (ProgressWheel) drawerLayout.findViewById(R.id.pbSearch);
 		rlFilter = (RelativeLayout) drawerLayout.findViewById(R.id.rlFilter);
 		ivFilterApplied = (ImageView) drawerLayout.findViewById(R.id.ivFilterApplied);
 		ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
@@ -105,31 +104,9 @@ public class TopBar implements FlurryEventNames {
 		});
 
 
-		etSearch.addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				if(s.length() > 0){
-					ivSearchCross.setVisibility(View.VISIBLE);
-				} else{
-					ivSearchCross.setVisibility(View.GONE);
-				}
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-
-			}
-		});
-
-
 	}
 
-	public RelativeLayout getLlSearchContainer() {
+	public LinearLayout getLlSearchContainer() {
 		return llSearchContainer;
 	}
 
@@ -181,8 +158,8 @@ public class TopBar implements FlurryEventNames {
 				case R.id.ivSearch:
 					if(activity instanceof FreshActivity) {
 						//llSearchCart.setLayoutTransition(null);
-						LayoutTransition lt = new LayoutTransition();
-						lt.disableTransitionType(LayoutTransition.DISAPPEARING);
+//						LayoutTransition lt = new LayoutTransition();
+//						lt.disableTransitionType(LayoutTransition.DISAPPEARING);
 						//llSearchCart.setLayoutTransition(lt);
 						((FreshActivity)activity).searchItem();
 						/*new Handler().postDelayed(new Runnable() {
@@ -212,6 +189,15 @@ public class TopBar implements FlurryEventNames {
 		} else {
 			//llSearchContainer.setBackgroundResource(R.drawable.background_transparent);
 		}
+	}
+
+	public void setPBSearchVisibility(int visibility){
+		if(visibility == View.VISIBLE){
+			pbSearch.spin();
+		} else {
+			pbSearch.stopSpinning();
+		}
+		pbSearch.setVisibility(visibility);
 	}
 
 }

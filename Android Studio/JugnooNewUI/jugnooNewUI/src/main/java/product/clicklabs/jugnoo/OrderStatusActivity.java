@@ -968,8 +968,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
                         {
                             getOrderData(activity);
                         }
-                        else if(PushFlags.MENUS_STATUS.getOrdinal() == flag)
-                        {
+                        else if(PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
                             Log.v("menus status ","menus status tracking");
                             getOrderData(activity);
                         }

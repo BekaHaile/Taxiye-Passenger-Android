@@ -19,6 +19,7 @@ import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
+import com.sabkuchfresh.retrofit.model.menus.RestaurantSearchResponse;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -27,17 +28,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Shankar on 15/11/16.
@@ -48,10 +60,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private String TAG = "Menus Screen";
     private ArrayList<RecentOrder> recentOrders;
     private ArrayList<String> possibleStatus;
-    private int listType = 0;
 
     private FreshActivity activity;
-    private ArrayList<MenusResponse.Vendor> vendorsComplete, vendors, vendorsToShow;
+    private ArrayList<MenusResponse.Vendor> vendorsComplete, vendorsFiltered, vendorsToShow;
     private Callback callback;
     private String searchText;
 
@@ -61,11 +72,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private static final int NO_VENDORS_ITEM = 4;
 
 
-    public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors,ArrayList<RecentOrder> recentOrders,ArrayList<String> possibleStatus, Callback callback) {
+    public MenusRestaurantAdapter(FreshActivity activity, ArrayList<MenusResponse.Vendor> vendors,
+                                  ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback) {
         this.activity = activity;
         this.vendorsComplete = vendors;
-        this.vendors = new ArrayList<>();
-        this.vendors.addAll(vendors);
+        this.vendorsFiltered = new ArrayList<>();
+        this.vendorsFiltered.addAll(vendors);
         this.vendorsToShow = new ArrayList<>();
         this.vendorsToShow.addAll(vendors);
         this.callback = callback;
@@ -91,17 +103,21 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     };
 
-    private void searchVendors(String text){
+    private synchronized void searchVendors(String text, List<Integer> searchedRestaurantIds){
         vendorsToShow.clear();
         text = text.toLowerCase();
         if(TextUtils.isEmpty(text)){
-            vendorsToShow.addAll(vendors);
+            vendorsToShow.addAll(vendorsFiltered);
         } else {
-            for(MenusResponse.Vendor vendor : vendors)
-            {
-                if(vendor.getName().toLowerCase().contains(text) || vendor.getCuisines().toString().toLowerCase().contains(text))
-                {
-                    vendorsToShow.add(vendor);
+            for(MenusResponse.Vendor vendor : vendorsFiltered) {
+                if(searchedRestaurantIds == null) {
+                    if (vendor.getName().toLowerCase().contains(text) || vendor.getCuisines().toString().toLowerCase().contains(text)) {
+                        vendorsToShow.add(vendor);
+                    }
+                } else {
+                    if(searchedRestaurantIds.contains(vendor.getRestaurantId())){
+                        vendorsToShow.add(vendor);
+                    }
                 }
             }
         }
@@ -111,15 +127,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void setList(ArrayList<MenusResponse.Vendor> vendors) {
         this.vendorsComplete = vendors;
-        this.vendors.clear();
-        this.vendors.addAll(vendors);
+        this.vendorsFiltered.clear();
+        this.vendorsFiltered.addAll(vendors);
         this.vendorsToShow.clear();
         this.vendorsToShow.addAll(vendors);
         applyFilter();
     }
 
     public void applyFilter(){
-        vendors.clear();
+        vendorsFiltered.clear();
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         for(MenusResponse.Vendor vendor : vendorsComplete){
             boolean cuisineMatched = false, moMatched = false, dtMatched = false;
@@ -138,8 +154,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     || vendor.getMinDeliveryTime() <= activity.getDtSelected().getOrdinal();
 
             boolean qfMatched = true;
-            for(String filter : activity.getQuickFilterSelected())
-            {
+            for(String filter : activity.getQuickFilterSelected()) {
                 if((filter.equalsIgnoreCase(Constants.ACCEPTONLINE) && vendor.getApplicablePaymentMode().equals(ApplicablePaymentMode.CASH.getOrdinal()))
                         || (filter.equalsIgnoreCase(Constants.OFFERSDISCOUNT) && vendor.getOffersDiscounts().equals(0))
                         || (filter.equalsIgnoreCase(Constants.PUREVEGETARIAN) && vendor.getPureVegetarian().equals(0))
@@ -163,47 +178,27 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
             if(cuisineMatched && moMatched && dtMatched && qfMatched){
-                vendors.add(vendor);
+                vendorsFiltered.add(vendor);
             }
         }
 
-        Collections.sort(vendors, new Comparator<MenusResponse.Vendor>() {
+        Collections.sort(vendorsFiltered, new Comparator<MenusResponse.Vendor>() {
             @Override
             public int compare(MenusResponse.Vendor lhs, MenusResponse.Vendor rhs) {
                 int point = 0;
-
-
-                if(lhs.getIsClosed()==0 && rhs.getIsClosed()!=0)
-                {
+                if (lhs.getIsClosed() == 0 && rhs.getIsClosed() != 0) {
                     point = -(rhs.getIsClosed() - lhs.getIsClosed());
-                }
-               else if(lhs.getIsClosed()!=0 && rhs.getIsClosed()==0)
-                {
+                } else if (lhs.getIsClosed() != 0 && rhs.getIsClosed() == 0) {
                     point = -(rhs.getIsClosed() - lhs.getIsClosed());
-                }
-               else if(lhs.getIsAvailable()==0 && rhs.getIsAvailable()!=0)
-                {
+                } else if (lhs.getIsAvailable() == 0 && rhs.getIsAvailable() != 0) {
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
-                }
-                else if(lhs.getIsAvailable()!=0 && rhs.getIsAvailable()==0)
-                {
+                } else if (lhs.getIsAvailable() != 0 && rhs.getIsAvailable() == 0) {
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
-                }
-
-//                else if (activity.getSortBySelected() == MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED)
-//                {
-//                    point = rhs.getApplicablePaymentMode() - lhs.getApplicablePaymentMode();
-//                }
-                else if (activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY)
-                {
+                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY) {
                     point = rhs.getPopularity() - lhs.getPopularity();
-                }
-                else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE)
-                {
-                    point = -(int)(rhs.getDistance() - lhs.getDistance());
-                }
-                else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE)
-                {
+                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE) {
+                    point = -(int) (rhs.getDistance() - lhs.getDistance());
+                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE) {
                     point = lhs.getPriceRange() - rhs.getPriceRange();
                 }
 
@@ -211,7 +206,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
         });
 
-        searchVendors(searchText);
+        searchRestaurant(searchText);
     }
 
     @Override
@@ -258,18 +253,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
                 try {
                     RecentOrder recentOrder = recentOrders.get(position);
-                    for(int i=0; i<statusHolder.relativeStatusBar.getChildCount(); i++)
-                    {
-                        if(statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup)
-                        {
-                            ViewGroup viewGroup = (ViewGroup)(statusHolder.relativeStatusBar.getChildAt(i));
-                            for(int j=0; j<viewGroup.getChildCount(); j++)
-                            {
+                    for (int i = 0; i < statusHolder.relativeStatusBar.getChildCount(); i++) {
+                        if (statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup) {
+                            ViewGroup viewGroup = (ViewGroup) (statusHolder.relativeStatusBar.getChildAt(i));
+                            for (int j = 0; j < viewGroup.getChildCount(); j++) {
                                 viewGroup.getChildAt(j).setVisibility(View.GONE);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             statusHolder.relativeStatusBar.getChildAt(i).setVisibility(View.GONE);
                         }
                     }
@@ -297,8 +287,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     e.printStackTrace();
                 }
 
-            }
-            else if (holder instanceof ViewHolder) {
+            } else if (holder instanceof ViewHolder) {
                 position = position - recentOrders.size();
                 ViewHolder mHolder = ((ViewHolder) holder);
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
@@ -306,29 +295,22 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                 DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
                 String currentSystemTime = dateFormat.format(new Date()).toString();
-                long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()) , currentSystemTime);
-                long minutes =  ((timeDiff1 / (1000l*60l)));
+                long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
+                long minutes = ((timeDiff1 / (1000l * 60l)));
 
-    //            long timeDiff = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()) , formattedDate) / (60 * 1000);
-
-
-                Log.e(TAG, " position= "+position+", get close time  "+DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn())+
-                        " minute= "+minutes+" restaurant name= "+vendor.getName());
-
-
-                if(minutes > vendor.getBufferTime()){
-                mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.GONE);
-                } else if(minutes <= vendor.getBufferTime() && minutes > 0) {
-                mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.VISIBLE);
-                mHolder.textViewRestaurantCloseTime.setText("Closes in "+minutes+" min");
+                if (minutes > vendor.getBufferTime()) {
+                    mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.GONE);
+                } else if (minutes <= vendor.getBufferTime() && minutes > 0) {
+                    mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.VISIBLE);
+                    mHolder.textViewRestaurantCloseTime.setText("Closes in " + minutes + " min");
                 } else {
-                mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.GONE);
+                    mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.GONE);
                 }
-                mHolder.textViewClosed.setVisibility(((vendor.getIsClosed() == 1)||(vendor.getIsAvailable()==0)) ? View.VISIBLE : View.GONE);
+                mHolder.textViewClosed.setVisibility(((vendor.getIsClosed() == 1) || (vendor.getIsAvailable() == 0)) ? View.VISIBLE : View.GONE);
 
                 mHolder.textViewDelivery.setVisibility(((vendor.getMinimumOrderAmount() != null)) ? View.VISIBLE : View.GONE);
-                if(vendor.getMinimumOrderAmount() != null){
-                    if(vendor.getMinimumOrderAmount() > 0){
+                if (vendor.getMinimumOrderAmount() != null) {
+                    if (vendor.getMinimumOrderAmount() > 0) {
                         mHolder.textViewDelivery.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
                     } else {
                         mHolder.textViewDelivery.setText(activity.getString(R.string.no_minimum_order));
@@ -339,25 +321,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 mHolder.textViewAddressLine.setVisibility(((vendor.getRestaurantAddress() != null)) ? View.VISIBLE : View.GONE);
                 mHolder.textViewAddressLine.setText(vendor.getRestaurantAddress());
 
-
-
-
-                /*mHolder.textViewClosed.setVisibility(((vendor.getIsClosed() == 1)||(vendor.getIsAvailable()==0)) ? View.VISIBLE : View.GONE);
-                mHolder.relativeLayoutRestaurantCloseTime.setVisibility(((vendor.getInClose() != null)) ? View.VISIBLE : View.GONE);
-                mHolder.textViewRestaurantCloseTime.setText(vendor.getInClose());
-
-                mHolder.textViewDelivery.setVisibility(((vendor.getMinimumOrderAmount() != null)) ? View.VISIBLE : View.GONE);
-                mHolder.textViewDelivery.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
-*/
-                mHolder.textViewAddressLine.setText(vendor.getRestaurantAddress());
-
-                if(vendor.getCuisines() != null && vendor.getCuisines().size() > 0){
+                if (vendor.getCuisines() != null && vendor.getCuisines().size() > 0) {
                     StringBuilder cuisines = new StringBuilder();
                     int maxSize = vendor.getCuisines().size() > 3 ? 3 : vendor.getCuisines().size();
-                    for(int i=0; i<maxSize; i++){
+                    for (int i = 0; i < maxSize; i++) {
                         String cuisine = vendor.getCuisines().get(i);
                         cuisines.append(cuisine);
-                        if(i < maxSize-1){
+                        if (i < maxSize - 1) {
                             cuisines.append(" ").append(activity.getString(R.string.bullet)).append(" ");
                         }
                     }
@@ -378,21 +348,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                     }
                 });
-               /* mHolder.textViewR1.setTextColor(activity.getResources().getColor(R.color.text_color_light_less));
-                mHolder.textViewR2.setTextColor(activity.getResources().getColor(R.color.text_color_light_less));
-                mHolder.textViewR3.setTextColor(activity.getResources().getColor(R.color.text_color_light_less));
-                switch(vendor.getPriceRange()){
-                    case 2:
-                        mHolder.textViewR3.setTextColor(activity.getResources().getColor(R.color.green_rupee));
-                    case 1:
-                        mHolder.textViewR2.setTextColor(activity.getResources().getColor(R.color.green_rupee));
-                    case 0:
-                        mHolder.textViewR1.setTextColor(activity.getResources().getColor(R.color.green_rupee));
-                }*/
 
-                if(vendor.getIsClosed() == 0){
+                if (vendor.getIsClosed() == 0) {
                     String deliveryTime = String.valueOf(vendor.getDeliveryTime());
-                    if(vendor.getMinDeliveryTime() != null){
+                    if (vendor.getMinDeliveryTime() != null) {
                         deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
                     }
                     mHolder.textViewMinimumOrder.setText(activity.getString(R.string.delivers_in_format, deliveryTime));
@@ -415,6 +374,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                    mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_meal_place_holder);
                 }
             } else if (holder instanceof ViewTitleHolder) {
                 ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
@@ -422,12 +382,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 titleholder.relative.setBackgroundColor(activity.getResources().getColor(R.color.white));
             } else if (holder instanceof ViewNoVenderItem){
                 ViewNoVenderItem holderNoVenderItem = (ViewNoVenderItem) holder;
-                if(vendorsComplete.size() == 0) {
+                if (vendorsComplete.size() == 0) {
                     holderNoVenderItem.textViewNoMenus.setText(R.string.no_menus_available_your_location);
-                } else if(vendors.size() == 0){
+                } else if (vendorsFiltered.size() == 0) {
                     holderNoVenderItem.textViewNoMenus.setText(R.string.no_menus_available_with_these_filters);
-                } else if(vendorsToShow.size()==0) {
-                    holderNoVenderItem.textViewNoMenus.setText(R.string.no_menus_available_with_this_name);
+                } else if (vendorsToShow.size() == 0) {
+                    holderNoVenderItem.textViewNoMenus.setText(R.string.oops_no_results_found);
                 }
             }
         } catch (Exception e) {
@@ -525,45 +485,29 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
-        if(vendorsCompleteCount()>0)
-        {
-            if(position>=0 && position < recentOrders.size())
-            {
-                Log.e(TAG, position+">"+STATUS_ITEM);
+        if (vendorsCompleteCount() > 0) {
+            if (position >= 0 && position < recentOrders.size()) {
                 return STATUS_ITEM;
-            }
-            else if(position >= recentOrders.size() && vendorsToShow.size() == 0)
-            {
-                Log.v(TAG,"no vender item  "+ position+">"+MAIN_ITEM);
+            } else if (position >= recentOrders.size() && vendorsToShow.size() == 0) {
                 return NO_VENDORS_ITEM;
-            }
-            else if(position >= recentOrders.size() && position-recentOrders.size() < vendorsToShow.size())
-            {
-                Log.e(TAG, position+">"+MAIN_ITEM);
+            } else if (position >= recentOrders.size() && position - recentOrders.size() < vendorsToShow.size()) {
                 return MAIN_ITEM;
-            }
-            else
-            {
-                if(vendorsToShowCount() > 0){
+            } else {
+                if (vendorsToShowCount() > 0) {
                     return BLANK_ITEM;
                 } else {
                     return NO_VENDORS_ITEM;
                 }
             }
-        } else if(position<recentOrdersSize()) {
-            Log.e(TAG, position+">"+STATUS_ITEM);
+        } else if (position < recentOrdersSize()) {
             return STATUS_ITEM;
-        }
-        else
-        {
-            Log.e(TAG, position+">"+BLANK_ITEM);
-            if(vendorsToShowCount() > 0){
+        } else {
+            if (vendorsToShowCount() > 0) {
                 return BLANK_ITEM;
             } else {
                 return NO_VENDORS_ITEM;
             }
         }
-
     }
 
     @Override
@@ -587,8 +531,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     static class ViewHolder extends RecyclerView.ViewHolder {
         public LinearLayout linearRoot;
         public ImageView imageViewRestaurantImage, imageViewAddressLine;
-        public TextView textViewClosed, textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines,
-                textViewR1, textViewR2, textViewR3;
+        public TextView textViewClosed, textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
 
         public RelativeLayout relativeLayoutRestaurantCloseTime;
         public TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery;
@@ -608,12 +551,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             textViewRestaurantCloseTime = (TextView) itemView.findViewById(R.id.textViewRestaurantCloseTime);textViewRestaurantCloseTime.setTypeface(Fonts.mavenMedium(context));
             textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);textViewAddressLine.setTypeface(Fonts.mavenMedium(context));
             textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);textViewDelivery.setTypeface(Fonts.mavenRegular(context));
-
-
-            /* textViewR1 = (TextView) itemView.findViewById(R.id.textViewR1); textViewR1.setTypeface(Fonts.mavenRegular(context));
-            textViewR2 = (TextView) itemView.findViewById(R.id.textViewR2); textViewR2.setTypeface(Fonts.mavenRegular(context));
-            textViewR3 = (TextView) itemView.findViewById(R.id.textViewR3); textViewR3.setTypeface(Fonts.mavenRegular(context));*/
-
         }
     }
 
@@ -677,15 +614,102 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 		void onNotify(int count);
     }
 
-    public void searchVendorsFromTopBar(String s){
-        searchText = s;
-        searchVendors(s);
-    }
 
     public void removeHandler(){
         if(timerHandler != null){
             timerHandler.removeCallbacks(timerRunnable);
             timerHandler = null;
+        }
+    }
+
+
+    public void searchRestaurant(String s){
+        if(s.length() == 0){
+            queryMap.clear();
+        } else if(searchText.length() > s.length()){
+            queryMap.remove(searchText);
+        }
+        int oldLength = searchText.length();
+        searchText = s;
+        if(searchText.length() > 2) {
+            searchRestaurantsAutoComplete(searchText);
+        } else {
+            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
+                searchVendors("", null);
+            } else if(vendorsFiltered.size() > 0 && vendorsToShow.size() == 0){
+                searchVendors("", null);
+            }
+        }
+    }
+
+    private HashMap<String, List<Integer>> queryMap = new HashMap<>();
+    private boolean refreshingAutoComplete = false;
+    public void searchRestaurantsAutoComplete(final String searchText) {
+        try {
+            if(!refreshingAutoComplete) {
+                if (AppStatus.getInstance(activity).isOnline(activity)) {
+                    if(queryMap.containsKey(searchText)){
+                        searchVendors(searchText, queryMap.get(searchText));
+                    } else {
+                        HashMap<String, String> params = new HashMap<>();
+                        params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                        params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+                        params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+                        params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
+                        params.put(Constants.INTERATED, "1");
+                        params.put(Constants.KEY_SEARCH_TEXT, searchText);
+
+                        refreshingAutoComplete = true;
+                        activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
+
+                        new HomeUtil().putDefaultParams(params);
+                        RestClient.getMenusApiService().fetchRestaurantViaSearch(params, new retrofit.Callback<RestaurantSearchResponse>() {
+                            @Override
+                            public void success(RestaurantSearchResponse productsResponse, Response response) {
+                                activity.getTopBar().setPBSearchVisibility(View.GONE);
+                                try {
+                                    if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
+                                        if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
+                                            searchVendors(searchText, productsResponse.getRestaurantIds());
+                                            if(productsResponse.getRestaurantIds().size() > 0) {
+                                                queryMap.put(searchText, productsResponse.getRestaurantIds());
+                                            }
+                                        } else {
+                                            searchVendors(searchText, null);
+                                        }
+                                    }
+                                } catch (Exception exception) {
+                                    exception.printStackTrace();
+                                }
+                                refreshingAutoComplete = false;
+                                recallSearch(searchText);
+                            }
+
+                            @Override
+                            public void failure(RetrofitError error) {
+                                activity.getTopBar().setPBSearchVisibility(View.GONE);
+                                Log.e(TAG, "fetchRestaurantViaSearch error" + error.toString());
+                                refreshingAutoComplete = false;
+                                recallSearch(searchText);
+                            }
+                        });
+                    }
+                } else {
+                    refreshingAutoComplete = true;
+                    searchVendors(searchText, null);
+                    refreshingAutoComplete = false;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            refreshingAutoComplete = false;
+            recallSearch(searchText);
+        }
+    }
+
+    private void recallSearch(String previousSearchText){
+        if (!searchText.trim().equalsIgnoreCase(previousSearchText)) {
+            searchRestaurantsAutoComplete(searchText);
         }
     }
 

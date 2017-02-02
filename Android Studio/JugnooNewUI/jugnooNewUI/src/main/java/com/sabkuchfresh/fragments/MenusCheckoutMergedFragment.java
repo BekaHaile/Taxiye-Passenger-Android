@@ -1158,16 +1158,15 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
                                         final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                         final int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                                         final int isEmpty = jObj.optInt(Constants.KEY_IS_EMPTY, 0);
+                                        final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
                                         DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 Log.v("redirect value","redirect value"+redirect);
-                                                if(appType == AppConstant.ApplicationType.MENUS && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag && isEmpty == 1) {
-                                                    activity.clearMenusCart();
-                                                    activity.setRefreshCart(true);
-                                                    activity.performBackPressed();
-                                                    activity.setRefreshCart(true);
-                                                    activity.performBackPressed();
+                                                if(emptyCart == 1){
+                                                    clearMenusCartAndGoToMenusFragment();
+                                                } else if(appType == AppConstant.ApplicationType.MENUS && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag && isEmpty == 1) {
+                                                    clearMenusCartAndGoToMenusFragment();
                                                 }
                                                 else if(redirect == 1) {
                                                     activity.setRefreshCart(true);
@@ -1209,6 +1208,14 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
         }
         buttonPlaceOrder.setEnabled(true);
+    }
+
+    private void clearMenusCartAndGoToMenusFragment(){
+        activity.clearMenusCart();
+        activity.setRefreshCart(true);
+        activity.performBackPressed();
+        activity.setRefreshCart(true);
+        activity.performBackPressed();
     }
 
     private void retryDialog(DialogErrorType dialogErrorType, final int apiHit) {
@@ -1549,10 +1556,13 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                                 } else{
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
+                                    final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            if(redirect == 1) {
+                                            if(emptyCart == 1){
+                                                clearMenusCartAndGoToMenusFragment();
+                                            } else if(redirect == 1) {
                                                 activity.performBackPressed();
                                             }
                                         }

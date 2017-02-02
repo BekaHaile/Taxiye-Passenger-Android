@@ -15,6 +15,9 @@ public class SendMoneyCallbackResponse {
 	@SerializedName("message")
 	@Expose
 	private String message;
+	@SerializedName("error")
+	@Expose
+	private String error;
 	@SerializedName("npciTxnId")
 	@Expose
 	private String npciTxnId;
@@ -74,5 +77,13 @@ public class SendMoneyCallbackResponse {
 
 	public void setTxnMessage(String txnMessage) {
 		this.txnMessage = txnMessage;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
 	}
 }

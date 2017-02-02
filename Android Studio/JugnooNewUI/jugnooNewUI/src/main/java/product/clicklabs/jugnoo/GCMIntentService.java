@@ -761,21 +761,22 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(KEY_CLIENT_ID, clientId);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
-					else if (PushFlags.MENUS_STATUS.getOrdinal() == flag) {
+					else if (PushFlags.MENUS_STATUS.getOrdinal() == flag
+							|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
 						String clientId = jObj.optString(KEY_CLIENT_ID, "");
 						int orderId = jObj.optInt(KEY_ORDER_ID, 0);
 						int productType = jObj.optInt(KEY_PRODUCT_TYPE, ProductType.AUTO.getOrdinal());
-						message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
-						notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
-								null, url, playSound, showDialog, showPush, tabIndex, flag, orderId, productType);
+						message1 = jObj.optString(KEY_MESSAGE, "");
+						if(!TextUtils.isEmpty(message1)) {
+							notificationManagerCustomID(this, title, message1, PROMOTION_NOTIFICATION_ID, deepindex,
+									null, url, playSound, showDialog, showPush, tabIndex, flag, orderId, productType);
+						}
 						Intent intent = new Intent(Data.LOCAL_BROADCAST);
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						intent.putExtra(KEY_CLIENT_ID, clientId);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
-
-
 					else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
 						String clientId = jObj.optString(KEY_CLIENT_ID, "");
 						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
