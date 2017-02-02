@@ -282,6 +282,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     }
                 }
                 activity.setRefreshCart(true);
+                deliveryAddressUpdated = true;
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -1926,6 +1927,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
                                 Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
                         activity.setRefreshCart(true);
+                        deliveryAddressUpdated = true;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                getCheckoutDataAPI();
+                            }
+                        }, 500);
                     } catch (Exception e) {
                     }
                 } else {
@@ -1942,14 +1950,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
 
-//            if(type != AppConstant.ApplicationType.MENUS) {
-//                if (!checkoutSaveData.isDefault()) {
-//                    activity.setSelectedAddress(checkoutSaveData.getAddress());
-//                    activity.setSelectedAddressType(checkoutSaveData.getAddressType());
-//                    activity.setSelectedAddressId(checkoutSaveData.getAddressId());
-//                    activity.setSelectedLatLng(new LatLng(checkoutSaveData.getLatitude(), checkoutSaveData.getLongitude()));
-//                }
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
