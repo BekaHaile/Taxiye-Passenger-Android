@@ -604,6 +604,7 @@
             android:progressDrawable="@android:color/transparent"
             android:text="Do Not Touch"
             android:tag="mwar"
+            android:paddingLeft="100px"
             android:thumb="@drawable/ic_capsule_white" />
 
         <Button

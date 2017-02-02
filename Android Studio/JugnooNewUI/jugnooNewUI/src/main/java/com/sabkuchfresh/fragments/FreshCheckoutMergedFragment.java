@@ -458,7 +458,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         seekbartest = (TextView) rootView.findViewById(R.id.slider_text);
         Confirm = (Button) rootView.findViewById(R.id.after_slide_button);
         seekbartest.setText("Swipe right to pay >>");
-        //sb.setThumb(writeOnDrawable(R.drawable.ic_capsule_white, "Pay 300"));
+        sb.setThumb(writeOnDrawable(R.drawable.ic_capsule_white, "Pay 300"));
         sb.setOnSeekBarChangeListener(this);
 
         if(Data.userData.getShowSubscriptionData() == 1 && !Data.userData.isSubscriptionActive()) {
@@ -2559,7 +2559,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         Canvas canvas = new Canvas(bm);
         canvas.drawText(text, 0, (int)(ASSL.Xscale()*72), paint);
-        bm.setHeight((int)(ASSL.Xscale()*72));
+        //bm.setHeight((int)(ASSL.Xscale()*72));
 
         return new BitmapDrawable(bm);
     }
