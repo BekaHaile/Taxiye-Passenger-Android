@@ -166,32 +166,6 @@ public class FreshSearchFragment extends Fragment {
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
-		/*activity.getTopBar().etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-				try {
-					if (s.length() > 0) {
-						new SubItemsSearchAsync().execute(s.toString());
-					} else {
-						clearArrays();
-						freshCategoryItemsAdapter.notifyDataSetChanged();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-        });*/
-
 		activity.getTopBar().etSearch.setText("");
 
 		activity.getTopBar().ivSearchCross.setOnClickListener(new View.OnClickListener() {

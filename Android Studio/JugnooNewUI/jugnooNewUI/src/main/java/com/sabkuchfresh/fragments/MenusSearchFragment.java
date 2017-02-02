@@ -9,8 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,32 +141,6 @@ public class MenusSearchFragment extends Fragment {
 		recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
 
 
-		activity.getTopBar().etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-				try {
-					if (s.length() > 0) {
-						new ItemsSearchAsync().execute(s.toString());
-					} else {
-						clearArrays();
-						menusCategoryItemsAdapter.notifyDataSetChanged();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-        });
-
 		activity.getTopBar().ivSearchCross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,6 +156,19 @@ public class MenusSearchFragment extends Fragment {
 		itemsInSearch.clear();
 		tokenSearched = "";
 		listHashMap.clear();
+	}
+
+	public void searchItems(String s){
+		try {
+			if (s.length() > 0) {
+				new ItemsSearchAsync().execute(s);
+			} else {
+				clearArrays();
+				menusCategoryItemsAdapter.notifyDataSetChanged();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private String tokenSearched = "";

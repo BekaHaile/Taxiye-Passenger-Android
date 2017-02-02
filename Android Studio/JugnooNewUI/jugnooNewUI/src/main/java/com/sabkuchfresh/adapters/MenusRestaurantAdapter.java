@@ -50,7 +50,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 /**
  * Created by Shankar on 15/11/16.
@@ -486,21 +485,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemViewType(int position) {
-        if(vendorsCompleteCount()>0)
-        {
-            if(position>=0 && position < recentOrders.size())
-            {
-                Log.e(TAG, position+">"+STATUS_ITEM);
+        if (vendorsCompleteCount() > 0) {
+            if (position >= 0 && position < recentOrders.size()) {
                 return STATUS_ITEM;
-            }
-            else if(position >= recentOrders.size() && vendorsToShow.size() == 0)
-            {
-                Log.v(TAG,"no vender item  "+ position+">"+MAIN_ITEM);
+            } else if (position >= recentOrders.size() && vendorsToShow.size() == 0) {
                 return NO_VENDORS_ITEM;
-            }
-            else if(position >= recentOrders.size() && position-recentOrders.size() < vendorsToShow.size())
-            {
-                Log.e(TAG, position+">"+MAIN_ITEM);
+            } else if (position >= recentOrders.size() && position - recentOrders.size() < vendorsToShow.size()) {
                 return MAIN_ITEM;
             } else {
                 if (vendorsToShowCount() > 0) {
@@ -518,7 +508,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 return NO_VENDORS_ITEM;
             }
         }
-
     }
 
     @Override
@@ -625,9 +614,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 		void onNotify(int count);
     }
 
-    public void searchVendorsFromTopBar(String s){
-            searchRestaurant(s);
-    }
 
     public void removeHandler(){
         if(timerHandler != null){
@@ -637,29 +623,25 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
-    private void searchRestaurant(String s){
-        if(s.trim().length() == 0){
+    public void searchRestaurant(String s){
+        if(s.length() == 0){
             queryMap.clear();
-        } else if(searchText.length() > s.trim().length()){
+        } else if(searchText.length() > s.length()){
             queryMap.remove(searchText);
         }
         int oldLength = searchText.length();
-        searchText = s.trim();
+        searchText = s;
         if(searchText.length() > 2) {
             searchRestaurantsAutoComplete(searchText);
         } else {
-            if(oldLength > s.trim().length() || oldLength == 0 || s.trim().length() == 0){
+            if(oldLength > s.length() || oldLength == 0 || s.length() == 0){
+                searchVendors("", null);
+            } else if(vendorsFiltered.size() > 0 && vendorsToShow.size() == 0){
                 searchVendors("", null);
             }
         }
     }
 
-    public void clearSearchText(){
-        clearEditText = true;
-        notifyDataSetChanged();
-    }
-
-    private boolean clearEditText = false;
     private HashMap<String, List<Integer>> queryMap = new HashMap<>();
     private boolean refreshingAutoComplete = false;
     public void searchRestaurantsAutoComplete(final String searchText) {
@@ -678,14 +660,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         params.put(Constants.KEY_SEARCH_TEXT, searchText);
 
                         refreshingAutoComplete = true;
+                        activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
 
                         new HomeUtil().putDefaultParams(params);
                         RestClient.getMenusApiService().fetchRestaurantViaSearch(params, new retrofit.Callback<RestaurantSearchResponse>() {
                             @Override
                             public void success(RestaurantSearchResponse productsResponse, Response response) {
-                                String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                                activity.getTopBar().setPBSearchVisibility(View.GONE);
                                 try {
-                                    String message = productsResponse.getMessage();
                                     if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
                                         if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
                                             searchVendors(searchText, productsResponse.getRestaurantIds());
@@ -705,6 +687,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                             @Override
                             public void failure(RetrofitError error) {
+                                activity.getTopBar().setPBSearchVisibility(View.GONE);
                                 Log.e(TAG, "fetchRestaurantViaSearch error" + error.toString());
                                 refreshingAutoComplete = false;
                                 recallSearch(searchText);

@@ -614,11 +614,11 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
                                     }
                             }
                             else if(PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
-                                Fragment fragment = getTopFragment();
-                                if(fragment instanceof MenusFragment && FreshActivity.this.hasWindowFocus()) {
+                                Fragment fragment = getMenusFragment();
+                                if(fragment != null && FreshActivity.this.hasWindowFocus()) {
                                     ((MenusFragment)fragment).getAllMenus(true, getSelectedLatLng());
                                 }
-                                else {
+                                else{
                                     Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                     intent1.putExtra(Constants.KEY_FLAG, flag);
                                     LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
@@ -2999,10 +2999,17 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         @Override
         public void afterTextChanged(Editable s) {
             try {
-                if(getFreshSearchFragment() != null) {
+                if(getTopFragment() instanceof FreshSearchFragment) {
                     getFreshSearchFragment().searchFreshItems(s.toString());
                 } else if(getTopFragment() instanceof MenusFragment){
-                    getMenusFragment().getMenusRestaurantAdapter().searchVendorsFromTopBar(s.toString());
+                    getMenusFragment().getMenusRestaurantAdapter().searchRestaurant(s.toString().trim());
+                } else if(getTopFragment() instanceof MenusSearchFragment){
+                    getMenusSearchFragment().searchItems(s.toString().trim());
+                }
+                if(s.length() > 0){
+                    topBar.ivSearchCross.setVisibility(View.VISIBLE);
+                } else{
+                    topBar.ivSearchCross.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
