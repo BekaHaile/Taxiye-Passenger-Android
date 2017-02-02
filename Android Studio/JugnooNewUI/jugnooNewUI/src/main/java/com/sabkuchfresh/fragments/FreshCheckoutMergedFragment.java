@@ -598,6 +598,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         keyboardLayoutListener.setResizeTextView(false);
         linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
+        checkoutApiDoneOnce = false;
+
         return rootView;
     }
 
@@ -1946,6 +1948,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
+    private boolean checkoutApiDoneOnce = false;
     private void setActivityLastAddressFromResponse(UserCheckoutResponse userCheckoutResponse){
         try {
             if(!activity.isAddressConfirmed() && TextUtils.isEmpty(activity.getSelectedAddressType())) {
@@ -1958,12 +1961,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                 Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
                         activity.setRefreshCart(true);
                         deliveryAddressUpdated = true;
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                getCheckoutDataAPI();
-                            }
-                        }, 500);
+                        if(!checkoutApiDoneOnce) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getCheckoutDataAPI();
+                                }
+                            }, 500);
+                        }
+                        checkoutApiDoneOnce = true;
                     } catch (Exception e) {
                     }
                 } else {
