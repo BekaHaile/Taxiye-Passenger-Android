@@ -93,6 +93,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     private CardView cardViewSearch;
     private EditText editTextDeliveryAddress;
     private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
+    private ScrollView scrollViewSuggestions;
 
 
     public double current_latitude = 0.0;
@@ -168,6 +169,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
         textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
         textViewSavedPlaces.setVisibility(View.GONE);
         textViewRecentAddresses.setVisibility(View.GONE);
+        scrollViewSuggestions = (ScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
 
         listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
         try {
@@ -436,6 +438,12 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(!hidden && (activity instanceof FreshActivity)) {
@@ -446,7 +454,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
             addPlaceActivity.getTextViewTitle().setVisibility(View.GONE);
             addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.VISIBLE);
         }
-
+        scrollViewSuggestions.scrollTo(0, 0);
     }
 
     private interface GetLatLngFromPlaceId{

@@ -3,7 +3,7 @@
     android:id="@+id/linearLayoutRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menu_item_selector_color"
+                android:background="@color/white"
     android:orientation="vertical">
 
     <ScrollView
@@ -574,16 +574,26 @@
 
     </ScrollView>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_up_new"
+        android:layout_above="@+id/buttonPlaceOrder"
+        />
+
     <Button
         android:id="@+id/buttonPlaceOrder"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_94"
         android:layout_gravity="center_horizontal"
         android:text="@string/place_order"
-        android:background="@drawable/button_theme"
-        android:layout_marginLeft="-6px"
-        android:layout_marginRight="-6px"
-        android:layout_marginBottom="-6px"
+        android:background="@drawable/bg_place_order_selector"
         android:textColor="@color/white"
         android:textAllCaps="true"
         android:textSize="@dimen/text_size_34"

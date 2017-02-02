@@ -1,6 +1,7 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,10 +58,20 @@ public class FreshSortingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 ((ViewHolderSlot)holder).textViewSlotTime.setText(slot.name);
                 if(!(slot.check)){
-                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
+                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(0);
+                    ((ViewHolderSlot)holder).textViewSlotTime.setAlpha(0.6f);
+                    ((ViewHolderSlot)holder).textViewSlotTime.setTypeface(Fonts.mavenMedium(activity));
                 } else{
-                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
+                    ((ViewHolderSlot)holder).imageViewRadio.setImageResource(R.drawable.ic_tick);
+                    ((ViewHolderSlot)holder).textViewSlotTime.setAlpha(1.0f);
+                    ((ViewHolderSlot)holder).textViewSlotTime.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
                 }
+
+            if(position == sortArray.size()-1){
+                ((ViewHolderSlot)holder).viewDivider.setVisibility(View.GONE);
+            } else{
+                ((ViewHolderSlot)holder).viewDivider.setVisibility(View.VISIBLE);
+            }
 //                if(slot.check){
 //                    ((ViewHolderSlot)holder).textViewSlotTime.setAlpha(1.0f);
 //                    ((ViewHolderSlot)holder).imageViewRadio.setAlpha(1.0f);
@@ -106,11 +117,13 @@ public class FreshSortingAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public LinearLayout linear;
         private ImageView imageViewRadio;
         public TextView textViewSlotTime;
+        public View viewDivider;
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
             linear = (LinearLayout) itemView.findViewById(R.id.linear);
             imageViewRadio = (ImageView) itemView.findViewById(R.id.imageViewRadio);
-            textViewSlotTime = (TextView)itemView.findViewById(R.id.textViewSlotTime); textViewSlotTime.setTypeface(Fonts.mavenRegular(context));
+            textViewSlotTime = (TextView)itemView.findViewById(R.id.textViewSlotTime); textViewSlotTime.setTypeface(Fonts.mavenMedium(context));
+            viewDivider = (View) itemView.findViewById(R.id.viewDivider);
         }
     }
 

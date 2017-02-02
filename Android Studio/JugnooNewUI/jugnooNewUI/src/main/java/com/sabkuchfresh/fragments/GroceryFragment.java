@@ -1,7 +1,6 @@
 package com.sabkuchfresh.fragments;
 
 import android.app.ProgressDialog;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -15,8 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.FreshCategoryFragmentsAdapter;
@@ -59,7 +56,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -72,7 +68,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
         SwipeRefreshLayout.OnRefreshListener{
 
 	private final String TAG = GroceryFragment.class.getSimpleName();
-	private RelativeLayout linearLayoutRoot;
+	private LinearLayout llRoot;
     private LinearLayout mainLayout;
     private LinearLayout noFreshsView;
 	private PagerSlidingTabStrip tabs;
@@ -93,8 +89,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     private boolean loader = true;
     protected Bus mBus;
     PushDialog pushDialog;
-    private RelativeLayout relativeLayoutNoMenus;
-    private TextView textViewNothingFound;
 
     @Override
     public void onStart() {
@@ -128,17 +122,13 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			e.printStackTrace();
 		}
 
-        relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
-        ((TextView)rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        textViewNothingFound = (TextView)rootView.findViewById(R.id.textViewNothingFound); textViewNothingFound.setTypeface(Fonts.mavenMedium(activity));
-        relativeLayoutNoMenus.setVisibility(View.GONE);
-        rootView.findViewById(R.id.imageViewShadow).setVisibility(View.VISIBLE);
 
 		activity.fragmentUISetup(this);
-		linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
+		llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
+		activity.setDeliveryAddressView(rootView);
 		try {
-			if(linearLayoutRoot != null) {
-				new ASSL(activity, linearLayoutRoot, 1134, 720, false);
+			if(llRoot != null) {
+				new ASSL(activity, llRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -300,9 +290,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 			tabs.notifyDataSetChanged();
 			activity.fragmentUISetup(this);
             activity.resumeMethod();
-            if(relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
-                activity.showBottomBar(false);
-            }
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
@@ -340,33 +327,16 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 					public void success(ProductsResponse productsResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.i(TAG, "getAllProducts response = " + responseStr);
-                        relativeLayoutNoMenus.setVisibility(View.GONE);
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							String message = JSONParser.getServerMessage(jObj);
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 noFreshsView.setVisibility(View.GONE);
                                 mSwipeRefreshLayout.setVisibility(View.GONE);
-                                if(!isHidden()) {
-                                    activity.showBottomBar(true);
-                                    activity.getTopBar().below_shadow.setVisibility(View.GONE);
-                                } else {
-									Fragment fragment = activity.getTopFragment();
-									if(fragment != null && fragment instanceof GroceryFragment) {
-										activity.showBottomBar(false);
-										activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
-									}
-                                }
                                 mainLayout.setVisibility(View.VISIBLE);
 								int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(flag == ApiResponseFlags.FRESH_NOT_AVAILABLE.getOrdinal()){
-                                    relativeLayoutNoMenus.setVisibility(View.VISIBLE);
-									activity.getSearchLayout().setVisibility(View.GONE);
-									activity.resetToolbar();
                                     mainLayout.setVisibility(View.GONE);
-                                    activity.showBottomBar(false);
-                                    textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
-                                            productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
                                 }
                                 else {
                                     activity.setProductsResponse(productsResponse);
@@ -385,11 +355,8 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                     if(activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
 										if(activity.getProductsResponse().getCategories().size() == 0){
-											activity.getTopBar().below_shadow.setVisibility(View.VISIBLE);
 											noFreshsView.setVisibility(View.VISIBLE);
-//											imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_fresh);
 											mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-											activity.showBottomBar(false);
 											mainLayout.setVisibility(View.GONE);
 										}
                                         activity.updateCartFromSP();
@@ -408,7 +375,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                         if(activity.updateCart) {
                                             activity.updateCart = false;
                                             activity.openCart();
-                                            activity.getRelativeLayoutCartNew().performClick();
                                         }
                                         if(productsResponse.getShowMessage() != null
                                                 && productsResponse.getShowMessage().equals(1)) {
@@ -423,9 +389,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
                                 }
 							} else {
                                 noFreshsView.setVisibility(View.VISIBLE);
-//                                imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_grocery);
                                 mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-                                activity.showBottomBar(false);
                                 mainLayout.setVisibility(View.GONE);
                             }
 						} catch (Exception exception) {
@@ -471,9 +435,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 
 	private void retryDialog(DialogErrorType dialogErrorType){
         noFreshsView.setVisibility(View.VISIBLE);
-//        imageViewNoItem.setBackgroundResource(R.drawable.img_no_items_grocery);
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-        activity.showBottomBar(false);
         mainLayout.setVisibility(View.GONE);
 		DialogPopup.dialogNoInternet(activity,
 				dialogErrorType,
@@ -498,7 +460,7 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(linearLayoutRoot);
+        ASSL.closeActivity(llRoot);
         System.gc();
 	}
 

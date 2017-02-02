@@ -48,12 +48,12 @@ import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
+import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.home.OrderCheckoutFailureDialog;
-import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.DeliverySlot;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Slot;
@@ -199,6 +199,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private Button btnAddStar;
     private String selectedSubId;
 
+    public ArrayList<SubItem> subItemsInCart;
+
     @Override
     public void onStart() {
         LocalBroadcastManager.getInstance(activity).registerReceiver(broadcastReceiverWalletUpdate,
@@ -224,6 +226,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         cartChangedRefreshCheckout = false;
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
+        activity.setCartChangedAtCheckout(false);
 
         linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
         try {
@@ -234,7 +237,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             e.printStackTrace();
         }
 
-        activity.resetToolbar();
         deliveryAddressUpdated = false;
 
         type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
@@ -242,31 +244,24 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         orderPlaced = false;
         checkoutSaveData = new CheckoutSaveData();
 
-        if(activity.subItemsInCart == null) {
-            activity.subItemsInCart = new ArrayList<>();
-        }
-        activity.subItemsInCart.clear();
 
-
-        if(activity.getProductsResponse() != null
-                && activity.getProductsResponse().getCategories() != null) {
-            for (Category category : activity.getProductsResponse().getCategories()) {
-                for (SubItem subItem : category.getSubItems()) {
-                    if (subItem.getSubItemQuantitySelected() > 0) {
-                        activity.subItemsInCart.add(subItem);
-                    }
-                }
-                if(Data.AppType == AppConstant.ApplicationType.MEALS) {
-                    currentGroupId = category.getCurrentGroupId();
-                }
-            }
+        subItemsInCart = activity.fetchCartList();
+        try {
+            if(type == AppConstant.ApplicationType.MEALS
+                    && activity.getProductsResponse() != null
+					&& activity.getProductsResponse().getCategories() != null) {
+                currentGroupId = activity.getProductsResponse().getCategories().get(0).getCurrentGroupId();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
 
         try {
-            for (int i = 0; i < activity.subItemsInCart.size(); i++) {
-                MyApplication.getInstance().getCleverTapUtils().addToCart(activity.subItemsInCart.get(i).getSubItemName(),
-                        activity.subItemsInCart.get(i).getSubItemId(), activity.subItemsInCart.get(i).getSubItemQuantitySelected(),
-                        activity.subItemsInCart.get(i).getPrice(),
+            for (int i = 0; i < subItemsInCart.size(); i++) {
+                MyApplication.getInstance().getCleverTapUtils().addToCart(subItemsInCart.get(i).getSubItemName(),
+                        subItemsInCart.get(i).getSubItemId(), subItemsInCart.get(i).getSubItemQuantitySelected(),
+                        subItemsInCart.get(i).getPrice(),
                         Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
                         Data.userData.getCity());
             }
@@ -299,7 +294,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         ((TextView)rootView.findViewById(R.id.textViewDeliveryAddress)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewPaymentVia)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.textViewOffers)).setTypeface(Fonts.mavenMedium(activity));
-//        ((TextView)rootView.findViewById(R.id.textViewDeliveryInstructions)).setTypeface(Fonts.mavenMedium(activity));
 
 
         relativeLayoutCartTop = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCartTop);
@@ -340,7 +334,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         ((TextView)rootView.findViewById(R.id.tvStarOffer)).setTypeface(Fonts.mavenMedium(activity));
         ((TextView)rootView.findViewById(R.id.tvSubTotal)).setTypeface(Fonts.mavenMedium(activity));
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, activity.subItemsInCart, FlurryEventNames.REVIEW_CART, true, this);
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, FlurryEventNames.REVIEW_CART, true, this);
         listViewCart.setAdapter(freshCartItemsAdapter);
 
         linearLayoutDeliverySlot = (LinearLayout) rootView.findViewById(R.id.linearLayoutDeliverySlot);
@@ -485,10 +479,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
                             Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getVendorOpened().getMinimumOrderAmount())));
                 }
-//                else if((((type == AppConstant.ApplicationType.GROCERY) || (type == AppConstant.ApplicationType.FRESH)) && subTotalAmount < activity.getProductsResponse().getDeliveryInfo().getMinAmount())) {
-//                    Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
-//                            Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getProductsResponse().getDeliveryInfo().getMinAmount())));
-//                }
                 else if (buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
                     getCheckoutDataAPI();
                 } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
@@ -499,20 +489,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         activity.getPaymentOption().getOrdinal(), activity.getSelectedPromoCoupon())){
                     activity.setSplInstr(editTextDeliveryInstructions.getText().toString().trim());
                     placeOrder();
-                    if(type == AppConstant.ApplicationType.MEALS){
-                        MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+activity.getPaymentOption(), null);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
-                    } else if(type == AppConstant.ApplicationType.GROCERY){
-                        MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+activity.getPaymentOption(), null);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
-                    } else if(type == AppConstant.ApplicationType.MENUS){
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+activity.getPaymentOption(), null);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
-                    } else{
-                        MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+activity.getPaymentOption(), null);
-                        MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
-                    }
-                    FlurryEventLogger.event(PAYMENT_SCREEN, ORDER_PLACED, ORDER_PLACED);
+                    placeOrderAnalytics();
                 }
             }
         });
@@ -571,7 +548,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         linearLayoutCartExpansion.setVisibility(View.VISIBLE);
         imageViewDeleteCart.setVisibility(View.GONE);
-        //imageViewCartArrow.setRotation(180f);
 
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
@@ -582,7 +558,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         try {
                             scrollView.scrollTo(0, rootView.findViewById(R.id.linearLayoutDeliveryInstructions).getBottom());
                         } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
                 }, 100);
@@ -619,7 +594,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
             String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges()));
             textViewDeliveryChargesValue.setText(deliveryCharge);
-        } else if(activity.getUserCheckoutResponse().getDeliveryInfo() != null
+        } else if(activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getDeliveryInfo() != null
                 && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() != null
                 && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() > 0){
             textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
@@ -835,7 +811,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onResume() {
         super.onResume();
-        activity.resetToolbar();
         orderPaymentModes();
         setPaymentOptionUI();
         if(Data.userData.isSubscriptionActive()) {
@@ -1102,55 +1077,39 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             idKey = Constants.KEY_ITEM_ID;
         }
         JSONArray jCart = new JSONArray();
-        if (activity.getProductsResponse() != null
-                && activity.getProductsResponse().getCategories() != null) {
-            for (Category category : activity.getProductsResponse().getCategories()) {
-                Log.d(TAG, "" + category.getCategoryName());
-                for (SubItem subItem : category.getSubItems()) {
-                    if (subItem.getSubItemQuantitySelected() > 0) {
-                        try {
-                            JSONObject jItem = new JSONObject();
-                            //subItem.getSubItemName();
-                            jItem.put(idKey, subItem.getSubItemId());
-                            jItem.put(Constants.KEY_QUANTITY, subItem.getSubItemQuantitySelected());
-                            jCart.put(jItem);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return "";
-                        }
-
-                        try {
-                            String categoryName = "", itemName = "";
-                            double price = 0.0;
-                            int qty = 0, itemId = 0;
-
-                            qty = subItem.getSubItemQuantitySelected();
-                            categoryName = category.getCategoryName();
-                            itemId = subItem.getSubItemId();
-                            itemName = subItem.getSubItemName();
-                            price = subItem.getPrice();
-
-                            Product product = new Product()
-                                    .setCategory(categoryName)
-                                    .setId("" + itemId)
-                                    .setName(itemName)
-                                    .setPrice(price)
-                                    .setQuantity(qty);
-//                                                                .setPosition(4);
-                            productList.add(product);
-
-                            HashMap<String, Object> item = new HashMap<>();
-                            item.put(Events.PRODUCT_NAME, itemName);
-                            item.put(Events.PRODUCT_ID, itemId);
-                            item.put(Events.QUANTITY, qty);
-                            items.add(item);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return "";
-                        }
-                    }
+        for(SubItem subItem : subItemsInCart){
+            if(subItem.getSubItemQuantitySelected() > 0){
+                try {
+                    JSONObject jItem = new JSONObject();
+                    jItem.put(idKey, subItem.getSubItemId());
+                    jItem.put(Constants.KEY_QUANTITY, subItem.getSubItemQuantitySelected());
+                    jCart.put(jItem);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    String categoryName = "", itemName = "";
+                    double price = 0.0;
+                    int qty = 0, itemId = 0;
+                    qty = subItem.getSubItemQuantitySelected();
+                    categoryName = subItem.getSubItemName();
+                    itemId = subItem.getSubItemId();
+                    itemName = subItem.getSubItemName();
+                    price = subItem.getPrice();
+                    Product product = new Product()
+                            .setCategory(categoryName)
+                            .setId("" + itemId)
+                            .setName(itemName)
+                            .setPrice(price)
+                            .setQuantity(qty);
+                    productList.add(product);
+                    HashMap<String, Object> item = new HashMap<>();
+                    item.put(Events.PRODUCT_NAME, itemName);
+                    item.put(Events.PRODUCT_ID, itemId);
+                    item.put(Events.QUANTITY, qty);
+                    items.add(item);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -1201,7 +1160,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     params.put(Constants.KEY_DELIVERY_ADDRESS_TYPE, String.valueOf(activity.getSelectedAddressType()));
                 }
                 params.put(Constants.KEY_DELIVERY_NOTES, String.valueOf(activity.getSpecialInst()));
-                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                if(activity.getAppType() == AppConstant.ApplicationType.MEALS){
+                    params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
+                } else {
+                    params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
+                }
                 params.put(Constants.KEY_CART, cartItems(type));
                 if(activity.getSelectedPromoCoupon() != null && activity.getSelectedPromoCoupon().getId() > -1){
                     if(activity.getSelectedPromoCoupon() instanceof CouponInfo){
@@ -1419,6 +1382,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private void orderPlacedSuccess(PlaceOrderResponse placeOrderResponse){
+        LocalBroadcastManager.getInstance(activity).unregisterReceiver(broadcastReceiverWalletUpdate);
         orderPlaced = true;
         activity.saveCheckoutData(true);
         long time = 0L;
@@ -1439,14 +1403,36 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null){
             restaurantName = activity.getVendorOpened().getName();
         }
-        new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
-            @Override
-            public void onDismiss() {
-                activity.orderComplete();
+        if(placeOrderResponse.getReferralPopupContent() == null){
+            new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+                @Override
+                public void onDismiss() {
+                    activity.orderComplete();
+                }
+            }).show(String.valueOf(placeOrderResponse.getOrderId()),
+                    deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
+                    placeOrderResponse);
+        } else {
+            int productType;
+            if(type == AppConstant.ApplicationType.MEALS){
+                productType = ProductType.MEALS.getOrdinal();
+            } else {
+                productType = ProductType.FRESH.getOrdinal();
             }
-        }).show(String.valueOf(placeOrderResponse.getOrderId()),
-                deliverySlot, deliveryDay, showDeliverySlot, restaurantName,
-                placeOrderResponse);
+            new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
+                @Override
+                public void onDialogDismiss() {
+                    activity.orderComplete();
+                }
+
+                @Override
+                public void onConfirmed() {
+                    activity.orderComplete();
+                }
+            }).show(true, deliverySlot, deliveryDay, "", placeOrderResponse.getReferralPopupContent(),
+                    -1, placeOrderResponse.getOrderId(), productType);
+        }
+        activity.clearAllCartAtOrderComplete();
         activity.setSelectedPromoCoupon(noSelectionCoupon);
         flurryEventPlaceOrder(placeOrderResponse);
     }
@@ -1710,8 +1696,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onSlotSelected(int position, Slot slot) {
         FlurryEventLogger.event(CHECKOUT_SCREEN, TIMESLOT_CHANGED, "" + (position + 1));
-        if(activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1
-                && type == AppConstant.ApplicationType.MEALS){
+        if(type == AppConstant.ApplicationType.MEALS
+                && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             selectedSlot = slot.getDeliverySlotId();
             getCheckoutDataAPI();
         } else{
@@ -1748,50 +1734,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     idKey = Constants.KEY_ITEM_ID;
                 }
 
-                JSONArray jCart = new JSONArray();
-                if (activity.getProductsResponse() != null
-                        && activity.getProductsResponse().getCategories() != null) {
-                    for (Category category : activity.getProductsResponse().getCategories()) {
-                        Log.d(TAG, "" + category.getCategoryName());
-                        for (SubItem subItem : category.getSubItems()) {
-                            if (subItem.getSubItemQuantitySelected() > 0) {
-                                try {
-                                    JSONObject jItem = new JSONObject();
-                                    //subItem.getSubItemName();
-                                    jItem.put(idKey, subItem.getSubItemId());
-                                    jItem.put(Constants.KEY_QUANTITY, subItem.getSubItemQuantitySelected());
-                                    jCart.put(jItem);
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                                try {
-                                    String categoryName = "", itemName = "";
-                                    double price = 0.0;
-                                    int qty = 0, itemId = 0;
-
-                                    qty = subItem.getSubItemQuantitySelected();
-                                    categoryName = category.getCategoryName();
-                                    itemId = subItem.getSubItemId();
-                                    itemName = subItem.getSubItemName();
-                                    price = subItem.getPrice();
-
-                                    Product product = new Product()
-                                            .setCategory(categoryName)
-                                            .setId("" + itemId)
-                                            .setName(itemName)
-                                            .setPrice(price)
-                                            .setQuantity(qty);
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                }
-                params.put(Constants.KEY_CART, jCart.toString());
+                params.put(Constants.KEY_CART, cartItems(type));
                 params.put(Constants.ORDER_AMOUNT, Utils.getMoneyDecimalFormat().format(subTotalAmount));
 
 
@@ -1804,7 +1747,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     params.put(Constants.KEY_RESTAURANT_DATA, data);
                 }
                 params.put(Constants.INTERATED, "1");
-                params.put(Constants.KEY_CLIENT_ID, ""+ Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                if(activity.getAppType() == AppConstant.ApplicationType.MEALS){
+                    params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
+                } else {
+                    params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
+                }
+
                 if(selectedSlot != -1) {
                     params.put(Constants.KEY_USER_SELECTED_SLOT, String.valueOf(selectedSlot));
                 }
@@ -1821,74 +1769,96 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.place_order));
-                                    activity.setUserCheckoutResponse(userCheckoutResponse);
-                                    Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
+                                    if(FreshCheckoutMergedFragment.this.type == AppConstant.ApplicationType.FRESH
+                                            && userCheckoutResponse.getCityId() != null
+                                            && activity.checkForCityChange(userCheckoutResponse.getCityId(),
+                                            new FreshActivity.CityChangeCallback() {
+                                                @Override
+                                                public void onYesClick() {
+                                                    activity.refreshCart2 = true;
+                                                    if(activity.getFreshFragment() != null) {
+                                                        activity.getSupportFragmentManager().popBackStack(FreshFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                                    } else {
+                                                        activity.getSupportFragmentManager().popBackStack(FreshCheckoutMergedFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                                    }
+                                                }
 
-                                    setActivityLastAddressFromResponse(userCheckoutResponse);
-                                    updateCartDataView();
-                                    updateDeliverySlot(userCheckoutResponse.getDeliveryInfo());
-                                    setDeliverySlotsDataUI();
-
-                                    updateAddressView();
-
-                                    String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
-                                    if(lastClientId.equalsIgnoreCase(Config.getMealsClientId())){
-                                        if(Data.getMealsData().getPromoCoupons() == null){
-                                            Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                                        }
-                                        Data.getMealsData().getPromoCoupons().clear();
-                                        if(userCheckoutResponse.getPromotions() != null){
-                                            Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
-                                        }
-                                        if(userCheckoutResponse.getCoupons() != null){
-                                            Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
-                                        }
-                                    } else if(lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
-                                        if(Data.getGroceryData().getPromoCoupons() == null){
-                                            Data.getGroceryData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                                        }
-                                        Data.getGroceryData().getPromoCoupons().clear();
-                                        if(userCheckoutResponse.getPromotions() != null){
-                                            Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
-                                        }
-                                        if(userCheckoutResponse.getCoupons() != null){
-                                            Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
-                                        }
-                                    } else if(lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
-                                        if(Data.getMenusData().getPromoCoupons() == null){
-                                            Data.getMenusData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                                        }
-                                        Data.getMenusData().getPromoCoupons().clear();
-                                        if(userCheckoutResponse.getPromotions() != null){
-                                            Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
-                                        }
-                                        if(userCheckoutResponse.getCoupons() != null){
-                                            Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
-                                        }
+                                                @Override
+                                                public void onNoClick() {
+                                                    getCheckoutDataAPI();
+                                                }
+                                            })) {
                                     } else {
-                                        if(Data.getFreshData().getPromoCoupons() == null){
-                                            Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                                        }
-                                        Data.getFreshData().getPromoCoupons().clear();
-                                        if(userCheckoutResponse.getPromotions() != null){
-                                            Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
-                                        }
-                                        if(userCheckoutResponse.getCoupons() != null){
-                                            Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
-                                        }
-                                    }
-                                    updateCouponsDataView();
+                                        updateCartFromCheckoutData(userCheckoutResponse);
 
-                                    try {
-                                        if(cartChangedRefreshCheckout){
-											setSelectedCoupon(promoCoupons.indexOf(activity.getSelectedPromoCoupon()));
-										}
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    cartChangedRefreshCheckout = false;
+                                        buttonPlaceOrder.setText(getActivity().getResources().getString(R.string.place_order));
+                                        activity.setUserCheckoutResponse(userCheckoutResponse);
+                                        Log.v(TAG, "" + userCheckoutResponse.getCheckoutData().getLastAddress());
 
+                                        setActivityLastAddressFromResponse(userCheckoutResponse);
+                                        updateCartDataView();
+                                        updateDeliverySlot(userCheckoutResponse.getDeliveryInfo());
+                                        setDeliverySlotsDataUI();
+
+                                        updateAddressView();
+
+                                        String lastClientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+                                        if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
+                                            if (Data.getMealsData().getPromoCoupons() == null) {
+                                                Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                            }
+                                            Data.getMealsData().getPromoCoupons().clear();
+                                            if (userCheckoutResponse.getPromotions() != null) {
+                                                Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                            }
+                                            if (userCheckoutResponse.getCoupons() != null) {
+                                                Data.getMealsData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
+                                        } else if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
+                                            if (Data.getGroceryData().getPromoCoupons() == null) {
+                                                Data.getGroceryData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                            }
+                                            Data.getGroceryData().getPromoCoupons().clear();
+                                            if (userCheckoutResponse.getPromotions() != null) {
+                                                Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                            }
+                                            if (userCheckoutResponse.getCoupons() != null) {
+                                                Data.getGroceryData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
+                                        } else if (lastClientId.equalsIgnoreCase(Config.getMenusClientId())) {
+                                            if (Data.getMenusData().getPromoCoupons() == null) {
+                                                Data.getMenusData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                            }
+                                            Data.getMenusData().getPromoCoupons().clear();
+                                            if (userCheckoutResponse.getPromotions() != null) {
+                                                Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                            }
+                                            if (userCheckoutResponse.getCoupons() != null) {
+                                                Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
+                                        } else {
+                                            if (Data.getFreshData().getPromoCoupons() == null) {
+                                                Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                            }
+                                            Data.getFreshData().getPromoCoupons().clear();
+                                            if (userCheckoutResponse.getPromotions() != null) {
+                                                Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                            }
+                                            if (userCheckoutResponse.getCoupons() != null) {
+                                                Data.getFreshData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
+                                        }
+                                        updateCouponsDataView();
+
+                                        try {
+                                            if (cartChangedRefreshCheckout) {
+                                                setSelectedCoupon(promoCoupons.indexOf(activity.getSelectedPromoCoupon()));
+                                            }
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+                                        cartChangedRefreshCheckout = false;
+                                    }
                                 } else{
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
@@ -2006,6 +1976,43 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
 
+    private void updateCartFromCheckoutData(UserCheckoutResponse userCheckoutResponse){
+        if(userCheckoutResponse.getCartItems() != null){
+            boolean cartChanged = false;
+            for(int i=0; i<subItemsInCart.size(); i++){
+                SubItem si = subItemsInCart.get(i);
+                int index = userCheckoutResponse.getCartItems().indexOf(userCheckoutResponse.new CartItem(si.getSubItemId()));
+                if(index > -1){
+                    UserCheckoutResponse.CartItem cartItem = userCheckoutResponse.getCartItems().remove(index);
+                    if(cartItem.getStatus() < 0 || cartItem.getQuantity() <= 0){
+                        subItemsInCart.remove(i);
+                        i--;
+                        cartChanged = true;
+                    } else {
+                        cartChanged = cartChanged
+                                || (!si.getPrice().equals(cartItem.getPrice())
+                                || !si.getSubItemQuantitySelected().equals(cartItem.getQuantity())
+                                || !si.getSubItemName().equalsIgnoreCase(cartItem.getSubItemName())
+                                || !si.getSubItemImage().equalsIgnoreCase(cartItem.getSubItemImage()));
+                        si.setSubItemQuantitySelected(cartItem.getQuantity());
+                        si.setSubItemName(cartItem.getSubItemName());
+                        si.setSubItemImage(cartItem.getSubItemImage());
+                        si.setPrice(cartItem.getPrice());
+                    }
+                } else {
+                    subItemsInCart.remove(i);
+                    i--;
+                    cartChanged = true;
+                }
+            }
+            if(cartChanged) {
+                activity.saveCartList(subItemsInCart);
+                freshCartItemsAdapter.notifyDataSetChanged();
+                activity.setCartChangedAtCheckout(true);
+            }
+        }
+    }
+
     private void setDeliverySlotsDataUI() {
         if (activity.getUserCheckoutResponse() != null
                 && activity.getUserCheckoutResponse().getCheckoutData() != null
@@ -2102,10 +2109,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     @Override
     public void onPlusClicked(int position, SubItem subItem) {
+        activity.saveCartList(subItemsInCart);
+        activity.setCartChangedAtCheckout(true);
         editTextDeliveryInstructions.clearFocus();
         cartChangedRefreshCheckout = true;
-        if(activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1
-                && type == AppConstant.ApplicationType.MEALS){
+        if(type == AppConstant.ApplicationType.MEALS
+                && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             getCheckoutDataAPI();
         }
         updateCartDataView();
@@ -2114,16 +2123,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     @Override
     public void onMinusClicked(int position, SubItem subItem) {
         editTextDeliveryInstructions.clearFocus();
+        activity.setCartChangedAtCheckout(true);
         cartChangedRefreshCheckout = true;
-        updateCartDataView();
         if(subItem.getSubItemQuantitySelected() == 0){
-            activity.subItemsInCart.remove(position);
-            checkIfEmpty();
+            subItemsInCart.remove(position);
         }
+        activity.saveCartList(subItemsInCart);
 
-        if(activity.subItemsInCart.size() > 0
-                && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1
-                && type == AppConstant.ApplicationType.MEALS){
+        checkIfEmpty();
+        updateCartDataView();
+        if(subItemsInCart.size() > 0
+                && type == AppConstant.ApplicationType.MEALS
+                && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             getCheckoutDataAPI();
         }
     }
@@ -2142,18 +2153,19 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
     public void deleteCart() {
-        for(SubItem subItem : activity.subItemsInCart){
+        for(SubItem subItem : subItemsInCart){
             subItem.setSubItemQuantitySelected(0);
         }
         updateCartDataView();
-        activity.subItemsInCart.clear();
+        subItemsInCart.clear();
         freshCartItemsAdapter.notifyDataSetChanged();
         checkIfEmpty();
 
     }
 
     private void checkIfEmpty(){
-        if(activity.subItemsInCart.size() == 0){
+        if(subItemsInCart.size() == 0){
+            activity.updateTotalAmountPrice(0d);
             if(activity.isMealAddonItemsAvailable()){
                 activity.performBackPressed();
             }
@@ -2207,7 +2219,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     private void updateCartDataView(){
         try {
-            Pair<Double, Integer> pair = activity.updateCartValuesGetTotalPrice();
+            Pair<Double, Integer> pair = activity.getSubItemInCartTotalPrice();
             subTotalAmount = pair.first;
             updateCartTopBarView(pair);
             updateCartUI();
@@ -2258,7 +2270,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     }
 
     private double deliveryCharges(){
-        return activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+        double deliveryCharges = 0d;
+        if(type == AppConstant.ApplicationType.MEALS) {
+            deliveryCharges = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+        } else{
+            deliveryCharges = activity.getSuperCategoriesData().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+        }
+
+        return deliveryCharges;
     }
 
     private double packagingCharges(){
@@ -2276,15 +2295,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
-/*
-    private double packagingCharges(){
-        if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
-                && activity.getVendorOpened().getPackingCharges() != null){
-            return activity.getVendorOpened().getPackingCharges();
-        } else {
-            return 0;
-        }
-    }*/
 
     private double serviceTax(){
         if(type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null
@@ -2401,6 +2411,23 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private boolean deliveryAddressUpdated = false;
     public void setDeliveryAddressUpdated(boolean deliveryAddressUpdated){
         this.deliveryAddressUpdated = deliveryAddressUpdated;
+    }
+
+    private void placeOrderAnalytics(){
+        if(type == AppConstant.ApplicationType.MEALS){
+            MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+activity.getPaymentOption(), null);
+            MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+        } else if(type == AppConstant.ApplicationType.GROCERY){
+            MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+activity.getPaymentOption(), null);
+            MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+        } else if(type == AppConstant.ApplicationType.MENUS){
+            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+activity.getPaymentOption(), null);
+            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+        } else{
+            MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+activity.getPaymentOption(), null);
+            MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER, null);
+        }
+        FlurryEventLogger.event(PAYMENT_SCREEN, ORDER_PLACED, ORDER_PLACED);
     }
 
 }

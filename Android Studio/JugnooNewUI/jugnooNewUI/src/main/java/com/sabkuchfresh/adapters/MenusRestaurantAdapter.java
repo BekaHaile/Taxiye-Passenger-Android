@@ -4,15 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -61,7 +57,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     private static final int MAIN_ITEM = 0;
     private static final int BLANK_ITEM = 1;
-    private static final int SEARCH_FILTER_ITEM = 2;
     private static final int STATUS_ITEM = 3;
     private static final int NO_VENDORS_ITEM = 4;
 
@@ -80,14 +75,21 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.possibleStatus = possibleStatus;
         timerHandler.postDelayed(timerRunnable, 1000);
     }
-        Handler timerHandler = new Handler();
-        Runnable timerRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    applyFilter();
-                    timerHandler.postDelayed(this, 60000); //run every minute
-                    }
-            };
+
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                applyFilter();
+                if (timerHandler != null) {
+                    timerHandler.postDelayed(timerRunnable, 60000); //run every minute
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     private void searchVendors(String text){
         vendorsToShow.clear();
@@ -229,13 +231,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
             ASSL.DoMagic(v);
             return new ViewTitleHolder(v);
-        } else if (viewType == SEARCH_FILTER_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_search_filter, parent, false);
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            v.setLayoutParams(layoutParams);
-
-            ASSL.DoMagic(v);
-            return new ViewHolderFilter(v, activity);
         }
         else if (viewType == STATUS_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_meals_order_status, parent, false);
@@ -262,7 +257,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             if (holder instanceof ViewTitleStatus) {
                 ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
                 try {
-                    position = vendorsComplete.size() > 0 ? position - 1 : position;
                     RecentOrder recentOrder = recentOrders.get(position);
                     for(int i=0; i<statusHolder.relativeStatusBar.getChildCount(); i++)
                     {
@@ -306,7 +300,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
             else if (holder instanceof ViewHolder) {
                 position = position - recentOrders.size();
-                position = vendorsComplete.size() > 0 ? position - 1 : position;
                 ViewHolder mHolder = ((ViewHolder) holder);
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
                 mHolder.textViewRestaurantName.setText(vendor.getName());
@@ -426,19 +419,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             } else if (holder instanceof ViewTitleHolder) {
                 ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
                 titleholder.relative.setVisibility(View.VISIBLE);
-                titleholder.relative.setBackgroundColor(activity.getResources().getColor(R.color.menu_item_selector_color));
-            } else if (holder instanceof ViewHolderFilter) {
-                ViewHolderFilter holderFilter = ((ViewHolderFilter) holder);
-                holderFilter.cardViewFilter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        activity.getTransactionUtils().openMenusFilterFragment(activity, activity.getRelativeLayoutContainer());
-                    }
-                });
-                holderFilter.editTextSearch.removeTextChangedListener(textWatcher);
-                holderFilter.editTextSearch.addTextChangedListener(textWatcher);
-                holderFilter.editTextSearch.requestFocus();
-                holderFilter.imageViewFilterApplied.setVisibility(filterApplied() ? View.VISIBLE : View.GONE);
+                titleholder.relative.setBackgroundColor(activity.getResources().getColor(R.color.white));
             } else if (holder instanceof ViewNoVenderItem){
                 ViewNoVenderItem holderNoVenderItem = (ViewNoVenderItem) holder;
                 if(vendorsComplete.size() == 0) {
@@ -534,7 +515,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
-    private boolean filterApplied(){
+    public boolean filterApplied(){
         return (activity.getCuisinesSelected().size() > 0
                 || activity.getMoSelected() != MenusFilterFragment.MinOrder.NONE
                 || activity.getDtSelected() != MenusFilterFragment.DeliveryTime.NONE
@@ -543,26 +524,20 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public int getItemViewType(int position)
-    {
-
+    public int getItemViewType(int position) {
         if(vendorsCompleteCount()>0)
         {
-            if(position==0) {
-                Log.e(TAG, position+">"+SEARCH_FILTER_ITEM);
-                return SEARCH_FILTER_ITEM;
-            }
-            else if(position>0 && position-1 < recentOrdersSize())
+            if(position>=0 && position < recentOrders.size())
             {
                 Log.e(TAG, position+">"+STATUS_ITEM);
                 return STATUS_ITEM;
             }
-            else if(position >= 1+recentOrders.size() && vendorsToShow.size() == 0)
+            else if(position >= recentOrders.size() && vendorsToShow.size() == 0)
             {
                 Log.v(TAG,"no vender item  "+ position+">"+MAIN_ITEM);
                 return NO_VENDORS_ITEM;
             }
-            else if(position >= 1+recentOrders.size() && position-(1+recentOrders.size()) < vendorsToShow.size())
+            else if(position >= recentOrders.size() && position-recentOrders.size() < vendorsToShow.size())
             {
                 Log.e(TAG, position+">"+MAIN_ITEM);
                 return MAIN_ITEM;
@@ -594,10 +569,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
         int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
-        int filterCount = (vendorsCompleteCount() > 0) ? 1 : 0;
         int blankItem = (vendorsToShowCount() > 0) ? 1 : 0;
-
-        return  recentOrdersSize() + vendorsToShowCount() + noVenderToShowCount + filterCount + blankItem;
+        return  recentOrdersSize() + vendorsToShowCount() + noVenderToShowCount + blankItem;
     }
 
     private int recentOrdersSize(){
@@ -666,20 +639,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
 
-    static class ViewHolderFilter extends RecyclerView.ViewHolder {
-        private RelativeLayout relativeLayoutSearchFilter;
-        private EditText editTextSearch;
-        private CardView cardViewFilter;
-        private ImageView imageViewFilterApplied;
-        public ViewHolderFilter(View itemView, Context context) {
-            super(itemView);
-            relativeLayoutSearchFilter = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutSearchFilter);
-            editTextSearch = (EditText) itemView.findViewById(R.id.editTextSearch); editTextSearch.setTypeface(Fonts.mavenMedium(context));
-            cardViewFilter = (CardView) itemView.findViewById(R.id.cardViewFilter);
-            imageViewFilterApplied = (ImageView) itemView.findViewById(R.id.imageViewFilterApplied);
-        }
-    }
-
 
     static class ViewTitleStatus extends RecyclerView.ViewHolder {
 
@@ -718,22 +677,16 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 		void onNotify(int count);
     }
 
-    private TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public void searchVendorsFromTopBar(String s){
+        searchText = s;
+        searchVendors(s);
+    }
 
+    public void removeHandler(){
+        if(timerHandler != null){
+            timerHandler.removeCallbacks(timerRunnable);
+            timerHandler = null;
         }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            searchText = s.toString();
-            searchVendors(s.toString());
-        }
-    };
+    }
 
 }

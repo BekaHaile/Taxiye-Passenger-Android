@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.util.ArrayList;
 
@@ -46,6 +47,7 @@ public class AutoData {
     private Integer useRecentLocAtRequest;
     private Double useRecentLocAutoSnapMinDistance;
     private Double useRecentLocAutoSnapMaxDistance;
+    private PlaceOrderResponse.ReferralPopupContent referralPopupContent;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -462,5 +464,13 @@ public class AutoData {
 
     public void setUseRecentLocAutoSnapMaxDistance(Double useRecentLocAutoSnapMaxDistance) {
         this.useRecentLocAutoSnapMaxDistance = useRecentLocAutoSnapMaxDistance;
+    }
+
+    public PlaceOrderResponse.ReferralPopupContent getReferralPopupContent() {
+        return referralPopupContent;
+    }
+
+    public void setReferralPopupContent(PlaceOrderResponse.ReferralPopupContent referralPopupContent) {
+        this.referralPopupContent = referralPopupContent;
     }
 }

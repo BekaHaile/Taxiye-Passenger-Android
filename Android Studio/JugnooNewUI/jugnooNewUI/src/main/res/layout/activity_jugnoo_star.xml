@@ -15,7 +15,6 @@
             android:id="@+id/textViewTitle"
             style="@style/title"
             android:layout_width="wrap_content"
-            android:layout_centerInParent="true"
             android:gravity="center"
             android:text="@string/jugnoo_star" />
 

@@ -83,6 +83,9 @@ public class HistoryResponse {
         @SerializedName("drop_address")
         @Expose
         private String dropAddress;
+        @SerializedName("city_id")
+        @Expose
+        private Integer cityId;
         @SerializedName("driver_id")
         @Expose
         private Integer driverId = 0;
@@ -1092,6 +1095,17 @@ public class HistoryResponse {
         public void setAddressId(Integer addressId) {
             this.addressId = addressId;
         }
+
+        public Integer getCityId() {
+            if(cityId == null){
+                cityId = -1;
+            }
+            return cityId;
+        }
+
+        public void setCityId(Integer cityId) {
+            this.cityId = cityId;
+        }
     }
 
 
@@ -1124,6 +1138,9 @@ public class HistoryResponse {
         @SerializedName("customisations")
         @Expose
         private String customisations;
+        @SerializedName("sub_item_image")
+        @Expose
+        private String subItemImage;
         /**
          * @return The subItemId
          */
@@ -1241,6 +1258,14 @@ public class HistoryResponse {
 
         public void setCustomisations(String customisations) {
             this.customisations = customisations;
+        }
+
+        public String getSubItemImage() {
+            return subItemImage;
+        }
+
+        public void setSubItemImage(String subItemImage) {
+            this.subItemImage = subItemImage;
         }
     }
 }

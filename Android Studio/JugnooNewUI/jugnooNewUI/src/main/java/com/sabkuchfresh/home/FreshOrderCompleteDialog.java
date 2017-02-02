@@ -183,9 +183,6 @@ public class FreshOrderCompleteDialog {
             TextView textViewOrderId = (TextView) dialog.findViewById(R.id.textViewtop);
             textViewOrderId.setTypeface(Fonts.mavenRegular(activity));
 
-//            TextView textViewThankYou = (TextView) dialog.findViewById(R.id.textViewletus);
-//            textViewThankYou.setTypeface(Fonts.mavenRegular(activity));
-
             textViewOrderId.setText(activity.getResources().getString(R.string.delivery_pop_text));
 
 

@@ -1,33 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/linearLayoutMain"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/sliding_bottom_bg_color">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayoutMain"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sliding_bottom_bg_color">
 
     <ScrollView
         android:id="@+id/scrollViewSuggestions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardViewCart"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16px"
                 android:layout_marginRight="16px"
                 android:layout_marginTop="30px"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px"
-                >
+                card_view:cardCornerRadius="4px">
 
                 <LinearLayout
                     android:id="@+id/linearLayoutCurrentOption"
@@ -47,7 +43,7 @@
                             android:layout_height="25px"
                             android:layout_marginLeft="35px"
                             android:src="@drawable/ic_delivery_addess"
-                            android:tag="mwar"/>
+                            android:tag="mwar" />
 
                         <TextView
                             android:id="@+id/textViewCurrentLocation"
@@ -56,13 +52,13 @@
                             android:layout_marginLeft="40px"
                             android:text="Current Location"
                             android:textColor="@color/text_color_light_selector"
-                            android:textSize="@dimen/text_size_28"/>
+                            android:textSize="@dimen/text_size_28" />
                     </LinearLayout>
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="2px"
-                        android:src="@color/stroke_light_grey_alpha"/>
+                        android:src="@color/stroke_light_grey_alpha" />
 
                     <LinearLayout
                         android:id="@+id/linearLayoutChooseOnMap"
@@ -76,7 +72,7 @@
                             android:layout_height="33px"
                             android:layout_marginLeft="35px"
                             android:src="@drawable/ic_delivery_address_map_pin"
-                            android:tag="mwar"/>
+                            android:tag="mwar" />
 
                         <TextView
                             android:id="@+id/textViewChooseOnMap"
@@ -85,7 +81,7 @@
                             android:layout_marginLeft="40px"
                             android:text="Choose on map"
                             android:textColor="@color/text_color_light_selector"
-                            android:textSize="@dimen/text_size_28"/>
+                            android:textSize="@dimen/text_size_28" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -103,20 +99,17 @@
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_less_light"
                 android:textSize="@dimen/text_size_24"
-                android:visibility="visible"
-                />
+                android:visibility="visible" />
 
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardViewSavedPlaces"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16px"
                 android:layout_marginRight="16px"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px"
-                >
+                card_view:cardCornerRadius="4px">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -128,20 +121,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_white_menu_item_selector_color_selector"
-                        android:minHeight="110px"
-                        >
+                        android:minHeight="110px">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
+                            android:layout_marginBottom="20px"
                             android:layout_marginLeft="20px"
                             android:layout_marginTop="20px"
-                            android:layout_marginBottom="20px"
                             android:layout_toLeftOf="@+id/imageViewEditHome"
                             android:layout_toRightOf="@+id/imageViewAddHome"
-                            android:orientation="vertical"
-                            >
+                            android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/textViewAddHome"
@@ -149,7 +140,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/add_home"
                                 android:textColor="@color/text_color_light_selector"
-                                android:textSize="@dimen/text_size_32"/>
+                                android:textSize="@dimen/text_size_32" />
 
                             <TextView
                                 android:id="@+id/textViewAddHomeValue"
@@ -160,8 +151,7 @@
                                 android:text="test"
                                 android:textColor="@color/text_color_light"
                                 android:textSize="@dimen/text_size_26"
-                                android:visibility="gone"
-                                />
+                                android:visibility="gone" />
 
                             <TextView
                                 android:id="@+id/textViewAddressUsedHome"
@@ -170,8 +160,7 @@
                                 android:layout_marginTop="7px"
                                 android:text="@string/address_used_multiple_time_format"
                                 android:textColor="@color/text_color_light"
-                                android:textSize="@dimen/text_size_22"
-                                />
+                                android:textSize="@dimen/text_size_22" />
                         </LinearLayout>
 
                         <ImageView
@@ -182,7 +171,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="30px"
                             android:src="@drawable/ic_home"
-                            android:tag="mwar"/>
+                            android:tag="mwar" />
 
                         <ImageView
                             android:id="@+id/imageViewEditHome"
@@ -194,7 +183,7 @@
                             android:padding="15px"
                             android:src="@drawable/edit_icon_selector"
                             android:tag="mwar"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
 
                     </RelativeLayout>
 
@@ -202,7 +191,7 @@
                         android:id="@+id/imageViewSep"
                         android:layout_width="match_parent"
                         android:layout_height="2px"
-                        android:background="@color/stroke_light_grey_alpha"/>
+                        android:background="@color/stroke_light_grey_alpha" />
 
 
                     <RelativeLayout
@@ -216,13 +205,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
+                            android:layout_marginBottom="20px"
                             android:layout_marginLeft="20px"
                             android:layout_marginTop="20px"
-                            android:layout_marginBottom="20px"
                             android:layout_toLeftOf="@+id/imageViewEditWork"
                             android:layout_toRightOf="@+id/imageViewAddWork"
-                            android:orientation="vertical"
-                            >
+                            android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/textViewAddWork"
@@ -230,7 +218,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/add_work"
                                 android:textColor="@color/text_color_light_selector"
-                                android:textSize="@dimen/text_size_32"/>
+                                android:textSize="@dimen/text_size_32" />
 
                             <TextView
                                 android:id="@+id/textViewAddWorkValue"
@@ -241,8 +229,7 @@
                                 android:text="test"
                                 android:textColor="@color/text_color_light"
                                 android:textSize="@dimen/text_size_26"
-                                android:visibility="gone"
-                                />
+                                android:visibility="gone" />
 
                             <TextView
                                 android:id="@+id/textViewAddressUsedWork"
@@ -251,8 +238,7 @@
                                 android:layout_marginTop="7px"
                                 android:text="@string/address_used_multiple_time_format"
                                 android:textColor="@color/text_color_light"
-                                android:textSize="@dimen/text_size_22"
-                                />
+                                android:textSize="@dimen/text_size_22" />
                         </LinearLayout>
 
                         <ImageView
@@ -263,7 +249,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="30px"
                             android:src="@drawable/ic_work"
-                            android:tag="mwar"/>
+                            android:tag="mwar" />
 
                         <ImageView
                             android:id="@+id/imageViewEditWork"
@@ -275,7 +261,7 @@
                             android:padding="15px"
                             android:src="@drawable/edit_icon_selector"
                             android:tag="mwar"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
 
                         <ImageView
                             android:layout_width="660px"
@@ -283,7 +269,7 @@
                             android:layout_alignParentBottom="true"
                             android:layout_centerHorizontal="true"
                             android:src="@color/text_color_hint"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
                     </RelativeLayout>
 
                     <product.clicklabs.jugnoo.utils.NonScrollListView
@@ -292,7 +278,7 @@
                         android:layout_height="wrap_content"
                         android:divider="@color/transparent"
                         android:dividerHeight="0px"
-                        android:splitMotionEvents="false"/>
+                        android:splitMotionEvents="false" />
 
 
                 </LinearLayout>
@@ -312,20 +298,17 @@
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_less_light"
                 android:textSize="@dimen/text_size_24"
-                android:visibility="visible"
-                />
+                android:visibility="visible" />
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardViewRecentAddresses"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20px"
                 android:layout_marginLeft="16px"
                 android:layout_marginRight="16px"
-                android:layout_marginBottom="20px"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px"
-                >
+                card_view:cardCornerRadius="4px">
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/listViewRecentAddresses"
@@ -336,8 +319,7 @@
                     android:fadeScrollbars="true"
                     android:scrollbars="vertical"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
-                    />
+                    android:visibility="visible" />
 
             </android.support.v7.widget.CardView>
 
@@ -351,29 +333,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/sliding_bottom_bg_color"
-        android:visibility="gone"
-        >
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/linearLayoutSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:splitMotionEvents="false"
-            >
+            android:splitMotionEvents="false">
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardViewSearch"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10px"
                 android:layout_marginLeft="16px"
                 android:layout_marginRight="16px"
                 android:layout_marginTop="20px"
-                android:layout_marginBottom="10px"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px"
-                >
+                card_view:cardCornerRadius="4px">
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/listViewSearch"
@@ -384,8 +362,7 @@
                     android:fadeScrollbars="true"
                     android:scrollbars="vertical"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
-                    />
+                    android:visibility="visible" />
 
             </android.support.v7.widget.CardView>
 
@@ -397,13 +374,13 @@
                 android:layout_marginBottom="16px"
                 android:layout_marginTop="24px"
                 android:src="@drawable/powered_by_google_light"
-                android:tag="mwar"/>
+                android:tag="mwar" />
 
             <TextView
                 android:id="@+id/textViewScrollSearch"
                 android:layout_width="10px"
                 android:layout_height="10px"
-                android:textSize="28px"/>
+                android:textSize="28px" />
         </LinearLayout>
 
     </ScrollView>
@@ -413,6 +390,6 @@
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_alignParentTop="true"
-        android:src="@color/stroke_light_grey_alpha"/>
+        android:src="@color/stroke_light_grey_alpha" />
 
 </RelativeLayout>

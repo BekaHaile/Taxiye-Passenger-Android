@@ -487,6 +487,9 @@ public interface Constants {
 	String AUTOS_PUSH = "autos_push";
 	String FRESH_PUSH = "fresh_push";
 	String MEALS_PUSH = "meals_push";
+	String GROCERY_PUSH = "grocery_push";
+	String MENUS_PUSH = "menus_push";
+	String PAY_PUSH = "pay_push";
 
 	String KEY_INTEGRATED_JUGNOO_ENABLED = "integrated_jugnoo_enabled";
 	String KEY_REDIRECT = "redirect";
@@ -589,4 +592,15 @@ public interface Constants {
 	double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 100d;
 	String KEY_OPTIONS = "options";
 	String KEY_CUSTOMISATIONS = "customisations";
+	String KEY_SUPER_CATEGORY_ID = "super_category_id";
+	String KEY_SUPER_CATEGORY = "super_category";
+	String KEY_SEARCH_TEXT = "search_string";
+	String SP_MENUS_FILTER_SORT_BY = "sp_menus_filter_sort_by";
+	String SP_MENUS_FILTER_MIN_ORDER = "sp_menus_filter_min_order";
+	String SP_MENUS_FILTER_DELIVERY_TIME = "sp_menus_filter_delivery_time";
+	String SP_MENUS_FILTER_CUISINES = "sp_menus_filter_cuisines";
+	String SP_MENUS_FILTER_QUICK = "sp_menus_filter_quick";
+	String KEY_EVENT = "event";
+	String KEY_REFERRAL_POPUP_CONTENT = "referral_popup_content";
+	String SP_FRESH_CART_ADDRESS = "sp_fresh_cart_address";
 }

@@ -4,9 +4,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menu_item_selector_color"
+    android:background="@color/white"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new"
+        />
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardViewSearch"
@@ -16,7 +21,7 @@
         android:layout_marginBottom="6px"
         android:layout_marginLeft="24px"
         android:layout_marginRight="24px"
-        android:layout_marginTop="24px"
+        android:layout_marginTop="18px"
         card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="4px"
         >

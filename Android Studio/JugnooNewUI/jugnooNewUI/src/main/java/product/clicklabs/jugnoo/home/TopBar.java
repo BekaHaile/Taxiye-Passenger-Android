@@ -2,13 +2,11 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -43,7 +41,6 @@ public class TopBar implements FirebaseEvents {
     public ImageView imageViewHelp;
     public ImageView imageViewBack, imageViewDelete;
     public TextView textViewAdd;
-    public EditText editTextDeliveryAddress;
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
         this.activity = activity;
@@ -58,7 +55,8 @@ public class TopBar implements FirebaseEvents {
         imageViewSearchIcon = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchIcon);
         textViewTitle = (TextView) drawerLayout.findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(activity));
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
+        textViewTitle.setTextColor(activity.getResources().getColor(R.color.text_color));
+//        textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
         buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
         imageViewHelp = (ImageView) drawerLayout.findViewById(R.id.imageViewHelp);
 
@@ -160,35 +158,6 @@ public class TopBar implements FirebaseEvents {
                 case R.id.textViewAdd:
                     break;
 
-//                case R.id.imageViewAppToggle:
-//                    if (activity instanceof HomeActivity) {
-//                        if (((HomeActivity) activity).map != null
-//                                && ((HomeActivity) activity).mapStateListener != null
-//                                && ((HomeActivity) activity).mapStateListener.isMapSettled()) {
-//                            Data.latitude = ((HomeActivity) activity).map.getCameraPosition().target.latitude;
-//                            Data.longitude = ((HomeActivity) activity).map.getCameraPosition().target.longitude;
-//                        }
-//                        try {
-//                            if (!Data.userData.getFatafatUrlLink().trim().equalsIgnoreCase("")) {
-//                                Log.v("fatafat url link", "---> " + Data.userData.getFatafatUrlLink());
-//                                activity.startActivity(new Intent(activity, WebActivity.class));
-//                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-//                            } else {
-//                                CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
-//                            }
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                            CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
-//                        }
-//                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
-//
-//                        Bundle bundle = new Bundle();
-//                        MyApplication.getInstance().logEvent(TRANSACTION+"_"+HOME_SCREEN+"_"+FRESH, bundle);
-//
-//                        FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "Home Screen", "fresh");
-//                    }
-//                    break;
-
                 case R.id.imageViewSearchIcon:
 
                     break;
@@ -199,23 +168,6 @@ public class TopBar implements FirebaseEvents {
         }
     };
 
-
-    public void setUserData() {
-        try {
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private StateListDrawable getStateListDrawable(int resourceNormal, int resourcePressed) {
-        StateListDrawable stateListDrawable = new StateListDrawable();
-        stateListDrawable.addState(new int[]{android.R.attr.state_pressed},
-                activity.getResources().getDrawable(resourcePressed));
-        stateListDrawable.addState(new int[]{},
-                activity.getResources().getDrawable(resourceNormal));
-        return stateListDrawable;
-    }
 
 
 
@@ -230,14 +182,14 @@ public class TopBar implements FirebaseEvents {
         }
         imageViewBack.setVisibility(View.GONE);
         textViewTitle.setText(activity.getResources().getString(R.string.rides));
-        textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
+//        textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
 
         if (!defaultState) {
             imageViewMenu.setVisibility(View.GONE);
             imageViewHelp.setVisibility(View.GONE);
             imageViewBack.setVisibility(View.VISIBLE);
             textViewTitle.setText(title);
-            textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
+//            textViewTitle.getPaint().setShader(Utils.textColorGradient(context, textViewTitle));
         }
     }
 

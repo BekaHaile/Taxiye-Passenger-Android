@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/llRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvRoot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/white"
+        android:layout_margin="@dimen/px_15"
+        card_view:cardCornerRadius="@dimen/button_corner_radius"
+        android:tag="mwar"
+        android:layout_centerInParent="true"
+        >
+
+        <RelativeLayout
+            android:layout_width="@dimen/px_320"
+            android:layout_height="@dimen/px_320"
+            android:tag="mwar">
+
+            <ImageView
+                android:id="@+id/ivSuperCategoryImage"
+                android:layout_width="@dimen/px_320"
+                android:layout_height="@dimen/px_320"
+                android:scaleType="centerCrop"
+                android:tag="mwar"
+                android:src="@drawable/ic_fresh_new_placeholder" />
+
+
+            <View
+                android:layout_width="@dimen/px_320"
+                android:layout_height="@dimen/px_80"
+                android:layout_alignBottom="@+id/ivSuperCategoryImage"
+                android:background="@drawable/shadow_up_fresh_home_item" />
+
+            <TextView
+                android:id="@+id/tvSuperCategoryName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/ivSuperCategoryImage"
+                android:layout_marginBottom="@dimen/px_15"
+                android:layout_marginLeft="@dimen/px_18"
+                android:text="@string/produce"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_26" />
+
+            <View
+                android:id="@+id/viewBG"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_transparent_white_60_selector"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvComingSoon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/px_15"
+        android:text="@string/coming_soon_to_your_city"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_30"/>
+
+
+</LinearLayout>

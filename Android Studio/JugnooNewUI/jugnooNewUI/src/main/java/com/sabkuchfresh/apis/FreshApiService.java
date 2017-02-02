@@ -1,14 +1,17 @@
 package com.sabkuchfresh.apis;
 
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
+import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.ProductsResponse;
+import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 
 import java.util.Map;
 
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -43,7 +46,7 @@ public interface FreshApiService {
 	@FormUrlEncoded
 	@POST("/cancel_order")
 	void cancelOrder(@FieldMap Map<String, String> params,
-                     Callback<OrderHistoryResponse> callback);
+                     Callback<SettleUserDebt> callback);
 
 
     @FormUrlEncoded
@@ -66,5 +69,16 @@ public interface FreshApiService {
 	@POST("/place_order_callback")
 	void placeOrderCallback(@FieldMap Map<String, String> params,
 							Callback<SendMoneyCallbackResponse> callback);
+
+
+	@FormUrlEncoded
+	@POST("/get_super_categories")
+	void getSuperCategories(@FieldMap Map<String, String> params,
+							Callback<SuperCategoriesData> callback);
+
+	@FormUrlEncoded
+	@POST("/get_item_search")
+	void getItemSearch(@FieldMap Map<String, String> params,
+							Callback<FreshSearchResponse> callback);
 
 }

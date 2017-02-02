@@ -531,4 +531,9 @@ public interface ApiService {
     void getSavingsMeterReading(@FieldMap Map<String, String> params,
                             Callback<FetchSubscriptionSavingsResponse> callback);
 
+    @FormUrlEncoded
+    @POST("/referral_user_event")
+    void referralUserEvent(@FieldMap Map<String, String> params,
+                      Callback<SettleUserDebt> callback);
+
 }

@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -128,7 +128,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MainViewHolder) {
-            MainViewHolder mHolder = ((MainViewHolder) holder);
+            final MainViewHolder mHolder = ((MainViewHolder) holder);
             final SubItem subItem = subItems.get(position);
 
             mHolder.textViewItemName.setText(subItem.getSubItemName());
@@ -148,8 +148,6 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 mHolder.textViewItemCost.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
                         subItem.getOldPrice()));
             }
-
-            mHolder.textViewItemOff.setText(subItem.getSubItemName());
 
             if (openMode == OpenMode.CART) {
                 Log.d("TAG", "currentGroupId = " + currentGroupId);
@@ -209,18 +207,21 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
 
             mHolder.textViewQuantity.setText(String.valueOf(subItem.getSubItemQuantitySelected()));
+            mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
+            mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
             if (subItem.getSubItemQuantitySelected() == 0) {
                 if(subItem.getStock() > 0){
-                    mHolder.mAddButton.setVisibility(View.VISIBLE);
+                    mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_theme_selector);
+                    mHolder.imageViewMinus.setVisibility(View.GONE);
+                    mHolder.textViewQuantity.setVisibility(View.GONE);
                     mHolder.textViewOutOfStock.setVisibility(View.GONE);
                 } else{
-                    mHolder.mAddButton.setVisibility(View.GONE);
+                    mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
                     mHolder.textViewOutOfStock.setVisibility(View.VISIBLE);
                 }
-                mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
             } else {
-                mHolder.mAddButton.setVisibility(View.GONE);
-                mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);
+                mHolder.imageViewMinus.setVisibility(View.VISIBLE);
+                mHolder.textViewQuantity.setVisibility(View.VISIBLE);
                 mHolder.textViewOutOfStock.setVisibility(View.GONE);
             }
 
@@ -229,17 +230,10 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     && ((FreshActivity)context).getVendorOpened() != null
                     && (1 == ((FreshActivity)context).getVendorOpened().getIsClosed() || 0 == ((FreshActivity)context).getVendorOpened().getIsAvailable())){
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
-                mHolder.mAddButton.setVisibility(View.GONE);
                 mHolder.textViewOutOfStock.setVisibility(View.GONE);
             }
-//            if (openMode == OpenMode.CART) {
-                mHolder.imageViewDelete.setVisibility(View.GONE);
-//            } else {
-//                mHolder.imageViewDelete.setVisibility(View.GONE);
-//            }
 
             if(!subItem.getSubItemDesc().equalsIgnoreCase("")){
-                mHolder.imageViewMoreInfoSeprator.setVisibility(!TextUtils.isEmpty(subItem.getBaseUnit()) ? View.VISIBLE : View.GONE);
                 mHolder.textViewMoreInfo.setVisibility(View.VISIBLE);
                 if(appType == AppConstant.ApplicationType.MENUS){
                     mHolder.textViewMoreInfo.setTextColor(context.getResources().getColor(R.color.text_color_light));
@@ -249,7 +243,6 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     mHolder.textViewMoreInfo.setText(context.getString(R.string.more_info));
                 }
             } else{
-                mHolder.imageViewMoreInfoSeprator.setVisibility(View.GONE);
                 mHolder.textViewMoreInfo.setVisibility(View.GONE);
             }
 
@@ -258,8 +251,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.imageViewMinus.setTag(position);
             mHolder.imageViewPlus.setTag(position);
-            mHolder.imageViewDelete.setTag(position);
-            mHolder.mAddButton.setTag(position);
+            mHolder.linearLayoutQuantitySelector.setTag(position);
 
             mHolder.textViewMoreInfo.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -270,6 +262,12 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             });
 
+            mHolder.linearLayoutQuantitySelector.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Log.e("onClick", "v=="+v);
+                }
+            });
 
             mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -282,7 +280,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                                     subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
                             callback.onMinusClicked(pos, subItems.get(pos));
 
-                            notifyDataSetChanged();
+                            notifyItemChanged(pos);
                             int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
                             if(appType == AppConstant.ApplicationType.FRESH){
                                 FlurryEventLogger.event(FRESH_FRAGMENT, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
@@ -297,11 +295,13 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     }
                 }
             });
-            mHolder.mAddButton.setOnClickListener(new View.OnClickListener() {
+
+            mHolder.imageViewPlus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
                         int pos = (int) v.getTag();
+                        mHolder.linearLayoutQuantitySelector.performClick();
                         if(callback.checkForAdd(pos, subItems.get(pos))) {
                             if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
                                 subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
@@ -309,55 +309,22 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                                 Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
                             }
                             callback.onPlusClicked(pos, subItems.get(pos));
-                            notifyDataSetChanged();
+                            notifyItemChanged(pos);
 
-                            FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-                            int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
-                            if (appType == AppConstant.ApplicationType.FRESH) {
-                                MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
-                            } else if (appType == AppConstant.ApplicationType.GROCERY) {
-                                MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
-                            } else if (appType == AppConstant.ApplicationType.MENUS) {
-                                MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
+                            if(subItems.get(pos).getSubItemQuantitySelected() == 1) {
+                                FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
+                                int appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
+                                if (appType == AppConstant.ApplicationType.FRESH) {
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_ADD, null);
+                                } else if (appType == AppConstant.ApplicationType.GROCERY) {
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_ADD, null);
+                                } else if (appType == AppConstant.ApplicationType.MENUS) {
+                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_ADD, null);
+                                }
+                            } else {
+                                FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
                             }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            mHolder.imageViewPlus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        int pos = (int) v.getTag();
-//                        subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock() ?
-//                                subItems.get(pos).getSubItemQuantitySelected() + 1 : subItems.get(pos).getStock());
-                        if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-                            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
-                        } else {
-                            Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
-                        }
-
-                        callback.onPlusClicked(pos, subItems.get(pos));
-                        FlurryEventLogger.event(categoryName, FlurryEventNames.ADD_PRODUCT, subItems.get(pos).getSubItemName());
-                        notifyDataSetChanged();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            mHolder.imageViewDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        int pos = (int) v.getTag();
-                        FlurryEventLogger.event(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
-                        subItems.get(pos).setSubItemQuantitySelected(0);
-                        callback.onDeleteClicked(pos, subItems.get(pos));
-
-                        notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -397,10 +364,10 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             }
             mHolder.imageViewFoodType.setLayoutParams(paramsFT);
             mHolder.linearLayoutContent.setLayoutParams(paramsLLC);
-            if(TextUtils.isEmpty(subItem.getBaseUnit()) && TextUtils.isEmpty(subItem.getSubItemDesc())) {
-                mHolder.linearLayoutUnitMoreInfo.setVisibility(View.GONE);
+            if(TextUtils.isEmpty(subItem.getOfferText()) && TextUtils.isEmpty(subItem.getSubItemDesc())) {
+                mHolder.llMoreInfoOff.setVisibility(View.GONE);
             } else {
-                mHolder.linearLayoutUnitMoreInfo.setVisibility(View.VISIBLE);
+                mHolder.llMoreInfoOff.setVisibility(View.VISIBLE);
             }
 
         } else if(holder instanceof ViewTitleHolder) {
@@ -445,11 +412,10 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     static class MainViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout relative;
-        private ImageView imageViewItemImage, imageViewFoodType, imageViewMinus, imageViewPlus, imageViewDelete, bannerBg, imageViewMoreInfoSeprator;
+        private ImageView imageViewItemImage, imageViewFoodType, imageViewMinus, imageViewPlus, bannerBg;
         public TextView textViewItemName, textViewItemUnit, textViewItemPrice, textViewQuantity, textViewItemCost, textViewItemOff, offerTag;
-        public TextView unavilableView, textViewOutOfStock, textViewMoreInfo;
-        public Button mAddButton;
-        public LinearLayout linearLayoutContent, linearLayoutQuantitySelector, offerTagLayout, linearLayoutUnitMoreInfo;
+        public TextView textViewOutOfStock, textViewMoreInfo, unavilableView;
+        public LinearLayout linearLayoutContent, linearLayoutQuantitySelector, offerTagLayout, llMoreInfoOff;
         public MainViewHolder(View itemView, Context context) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
@@ -460,23 +426,19 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
-            imageViewDelete = (ImageView) itemView.findViewById(R.id.imageViewDelete);
-            imageViewMoreInfoSeprator = (ImageView)itemView.findViewById(R.id.imageViewMoreInfoSeprator);
             bannerBg = (ImageView) itemView.findViewById(R.id.banner_bg);
-            mAddButton = (Button) itemView.findViewById(R.id.add_button); mAddButton.setTypeface(Fonts.mavenRegular(context));
             textViewMoreInfo = (TextView)itemView.findViewById(R.id.textViewMoreInfo);textViewMoreInfo.setTypeface(Fonts.mavenRegular(context));
 
             unavilableView = (TextView) itemView.findViewById(R.id.unavilable_view); unavilableView.setTypeface(Fonts.mavenRegular(context));
-
-            textViewItemName = (TextView)itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenMedium(context));
+            textViewItemName = (TextView)itemView.findViewById(R.id.textViewItemName); textViewItemName.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textViewItemUnit = (TextView)itemView.findViewById(R.id.textViewItemUnit); textViewItemUnit.setTypeface(Fonts.mavenRegular(context));
-            textViewItemPrice = (TextView)itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenRegular(context));
-            textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
+            textViewItemPrice = (TextView)itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
+            textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.avenirMedium(context));
             textViewItemCost = (TextView)itemView.findViewById(R.id.textViewItemCost); textViewItemCost.setTypeface(Fonts.mavenRegular(context));
             textViewItemOff = (TextView)itemView.findViewById(R.id.textViewItemOff); textViewItemOff.setTypeface(Fonts.mavenRegular(context));
             textViewOutOfStock = (TextView)itemView.findViewById(R.id.textViewOutOfStock); textViewOutOfStock.setTypeface(Fonts.mavenRegular(context));
             offerTag = (TextView)itemView.findViewById(R.id.offer_tag); offerTag.setTypeface(Fonts.mavenRegular(context));
-            linearLayoutUnitMoreInfo = (LinearLayout) itemView.findViewById(R.id.linearLayoutUnitMoreInfo);
+            llMoreInfoOff = (LinearLayout) itemView.findViewById(R.id.llMoreInfoOff);
         }
     }
 

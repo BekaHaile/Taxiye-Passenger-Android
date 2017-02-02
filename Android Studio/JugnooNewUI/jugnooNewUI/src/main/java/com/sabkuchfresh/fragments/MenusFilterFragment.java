@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -9,13 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import static product.clicklabs.jugnoo.Constants.PUREVEGETARIAN;
 public class MenusFilterFragment extends Fragment{
 
 	private final String TAG = MenusFilterFragment.class.getSimpleName();
-	private ScrollView scrollViewRoot;
+	private RelativeLayout rlRoot;
 	private TextView textViewSortBy, textViewPopularity, textViewDistance, textViewPrice;
 	private CardView cardViewSort;
 	private RelativeLayout relativeLayoutPopularity, relativeLayoutDistance, relativeLayoutPrice;
@@ -96,10 +97,10 @@ public class MenusFilterFragment extends Fragment{
 
 		activity.fragmentUISetup(this);
 		setResetClickListener();
-		scrollViewRoot = (ScrollView) rootView.findViewById(R.id.scrollViewRoot);
+		rlRoot = (RelativeLayout) rootView.findViewById(R.id.rlRoot);
 		try {
-			if(scrollViewRoot != null) {
-				new ASSL(activity, scrollViewRoot, 1134, 720, false);
+			if(rlRoot != null) {
+				new ASSL(activity, rlRoot, 1134, 720, false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -187,6 +188,14 @@ public class MenusFilterFragment extends Fragment{
 		((TextView) rootView.findViewById(R.id.textViewDT60)).setTypeface(Fonts.mavenMedium(activity));
 
 		buttonApply = (Button) rootView.findViewById(R.id.buttonApply); buttonApply.setTypeface(Fonts.mavenRegular(activity));
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				Utils.hideSoftKeyboard(activity, textViewDeliveryTime);
+			}
+		}, 200);
+
 
 		relativeLayoutPopularity.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -403,7 +412,7 @@ public class MenusFilterFragment extends Fragment{
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-        ASSL.closeActivity(scrollViewRoot);
+        ASSL.closeActivity(rlRoot);
         System.gc();
 	}
 

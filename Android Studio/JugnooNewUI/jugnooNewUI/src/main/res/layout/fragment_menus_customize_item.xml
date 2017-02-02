@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/menu_item_selector_color"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvCustomizeItem"
@@ -17,6 +17,11 @@
         android:layout_above="@+id/rlAddToCart"
         >
     </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new" />
 
     <RelativeLayout
         android:id="@+id/rlAddToCart"
@@ -55,9 +60,9 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/px_6"
         android:layout_above="@+id/rlAddToCart"
-        android:background="@drawable/shadow_up"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_up_new"
         />
 
 </RelativeLayout>

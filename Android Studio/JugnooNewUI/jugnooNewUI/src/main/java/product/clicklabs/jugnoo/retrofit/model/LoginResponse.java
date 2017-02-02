@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -486,6 +487,9 @@ public class LoginResponse {
 		@SerializedName("points_of_interest")
 		@Expose
 		private List<FetchUserAddressResponse.Address> pointsOfInterestAddresses = new ArrayList<FetchUserAddressResponse.Address>();
+		@SerializedName("referral_popup_content")
+		@Expose
+		private PlaceOrderResponse.ReferralPopupContent referralPopupContent;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -640,6 +644,14 @@ public class LoginResponse {
 
 		public void setPointsOfInterestAddresses(List<FetchUserAddressResponse.Address> pointsOfInterestAddresses) {
 			this.pointsOfInterestAddresses = pointsOfInterestAddresses;
+		}
+
+		public PlaceOrderResponse.ReferralPopupContent getReferralPopupContent() {
+			return referralPopupContent;
+		}
+
+		public void setReferralPopupContent(PlaceOrderResponse.ReferralPopupContent referralPopupContent) {
+			this.referralPopupContent = referralPopupContent;
 		}
 	}
 
