@@ -287,6 +287,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     }
                 }
                 activity.setRefreshCart(true);
+                deliveryAddressUpdated = true;
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -1956,6 +1957,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         activity.setSelectedLatLng(new LatLng(Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLatitude()),
                                 Double.parseDouble(userCheckoutResponse.getCheckoutData().getLastAddressLongitude())));
                         activity.setRefreshCart(true);
+                        deliveryAddressUpdated = true;
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                getCheckoutDataAPI();
+                            }
+                        }, 500);
                     } catch (Exception e) {
                     }
                 } else {
@@ -1972,14 +1980,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 }
             }
 
-//            if(type != AppConstant.ApplicationType.MENUS) {
-//                if (!checkoutSaveData.isDefault()) {
-//                    activity.setSelectedAddress(checkoutSaveData.getAddress());
-//                    activity.setSelectedAddressType(checkoutSaveData.getAddressType());
-//                    activity.setSelectedAddressId(checkoutSaveData.getAddressId());
-//                    activity.setSelectedLatLng(new LatLng(checkoutSaveData.getLatitude(), checkoutSaveData.getLongitude()));
-//                }
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2257,8 +2257,26 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
+
     private double deliveryCharges(){
-        return activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+        double deliveryCharges = 0d;
+        if(type == AppConstant.ApplicationType.MEALS) {
+            if(activity.getUserCheckoutResponse() != null
+                    && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() != null
+                    && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() > 0){
+                deliveryCharges = activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges();
+            } else if(activity.getUserCheckoutResponse() != null
+                    && activity.getUserCheckoutResponse().getDeliveryInfo() != null
+                    && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() != null
+                    && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() > 0){
+                deliveryCharges = activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges();
+            } else {
+                deliveryCharges = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+            }
+        } else{
+            return activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+        }
+        return deliveryCharges;
     }
 
     private double packagingCharges(){

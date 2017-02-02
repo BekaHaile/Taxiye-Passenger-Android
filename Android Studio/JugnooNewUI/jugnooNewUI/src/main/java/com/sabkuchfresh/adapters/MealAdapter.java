@@ -3,6 +3,7 @@ package com.sabkuchfresh.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,9 +110,9 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     {
         try {
             if (holder instanceof ViewTitleStatus) {
-                final ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
+                ViewTitleStatus statusHolder = ((ViewTitleStatus) holder);
                 try {
-                    final RecentOrder recentOrder = recentOrders.get(position);
+                    RecentOrder recentOrder = recentOrders.get(position);
                     for(int i=0; i<statusHolder.relativeStatusBar.getChildCount(); i++)
                     {
                         if(statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup)
@@ -136,15 +137,21 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         statusHolder.tvDeliveryTime.setText(activity.getResources().getString(R.string.delivery_before_colon)+" "+recentOrder.getEndTime());
                     }
 
-                    statusHolder.container.setOnClickListener(new View.OnClickListener() {
+                    statusHolder.cvMain.setTag(position);
+                    statusHolder.cvMain.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Intent intent = new Intent(activity, RideTransactionsActivity.class);
-                            intent.putExtra(Constants.KEY_ORDER_ID, recentOrder.getOrderId());
-                            intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
-                            activity.startActivity(intent);
-                            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                            FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.ORDER_STATUS);
+                            try {
+                                int pos = (int) v.getTag();
+                                Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                                intent.putExtra(Constants.KEY_ORDER_ID, recentOrders.get(pos).getOrderId());
+                                intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
+                                activity.startActivity(intent);
+                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                FlurryEventLogger.eventGA(Constants.INFORMATIVE, TAG, Constants.ORDER_STATUS);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                 } catch (Exception e) {
@@ -154,7 +161,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } else if (holder instanceof ViewHolderSlot) {
                 position = position - recentOrders.size();
                 ViewHolderSlot mHolder = ((ViewHolderSlot) holder);
-                final SubItem subItem = subItems.get(position);
+                SubItem subItem = subItems.get(position);
 
                 mHolder.textViewTitle.setText(subItem.getSubItemName());
                 mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
@@ -493,6 +500,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     static class ViewTitleStatus extends RecyclerView.ViewHolder {
 
         public LinearLayout linear;
+        public CardView cvMain;
         public RelativeLayout container, relativeStatusBar;
         public TextView tvOrderId, tvOrderIdValue,tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
@@ -501,6 +509,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public ViewTitleStatus(View itemView, Context context) {
             super(itemView);
             linear = (LinearLayout) itemView.findViewById(R.id.linear);
+            cvMain = (CardView) itemView.findViewById(R.id.cvMain);
             container = (RelativeLayout) itemView.findViewById(R.id.container);
             relativeStatusBar = (RelativeLayout) itemView.findViewById(R.id.relativeStatusBar);
             tvOrderId = (TextView) itemView.findViewById(R.id.tvOrderId); tvOrderId.setTypeface(Fonts.mavenRegular(context));
