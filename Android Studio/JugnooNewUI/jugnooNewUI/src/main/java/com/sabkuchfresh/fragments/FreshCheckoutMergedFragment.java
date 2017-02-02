@@ -2269,13 +2269,26 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
     }
 
+
     private double deliveryCharges(){
         double deliveryCharges = 0d;
         if(type == AppConstant.ApplicationType.MEALS) {
-            deliveryCharges = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+            if(activity.getUserCheckoutResponse() != null
+                    && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() != null
+                    && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() > 0){
+                deliveryCharges = activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges();
+            } else if(activity.getUserCheckoutResponse() != null
+                    && activity.getUserCheckoutResponse().getDeliveryInfo() != null
+                    && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() != null
+                    && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() > 0){
+                deliveryCharges = activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges();
+            } else {
+                deliveryCharges = activity.getProductsResponse().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
+            }
         } else{
             deliveryCharges = activity.getSuperCategoriesData().getDeliveryInfo().getApplicableDeliveryCharges(type, subTotalAmount);
         }
+
 
         return deliveryCharges;
     }
