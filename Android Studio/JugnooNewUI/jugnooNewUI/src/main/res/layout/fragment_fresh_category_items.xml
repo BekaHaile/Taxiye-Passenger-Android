@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/sliding_bottom_bg_color">
+    android:background="@color/menu_item_selector_color">
 
     <include layout="@layout/layout_offering_not_available" />
 

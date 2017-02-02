@@ -33,6 +33,9 @@ public class UserCheckoutResponse{
 	@SerializedName("subscription")
 	@Expose
 	private Subscription subscription;
+	@SerializedName("delivery_info")
+	@Expose
+	private DeliveryInfo deliveryInfo;
 
 	/**
 	 *
@@ -110,6 +113,14 @@ public class UserCheckoutResponse{
 			subscription = new Subscription();
 		}
 		return subscription;
+	}
+
+	public DeliveryInfo getDeliveryInfo() {
+		return deliveryInfo;
+	}
+
+	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
+		this.deliveryInfo = deliveryInfo;
 	}
 
 	public void setSubscription(Subscription subscription) {
@@ -208,6 +219,32 @@ public class UserCheckoutResponse{
 
 		public void setCashbackText(String cashbackText) {
 			this.cashbackText = cashbackText;
+		}
+	}
+
+	public class DeliveryInfo {
+
+		@SerializedName("delivery_charges")
+		@Expose
+		private Double deliveryCharges;
+		@SerializedName("selected_slot")
+		@Expose
+		private Integer selectedSlot;
+
+		public Double getDeliveryCharges() {
+			return deliveryCharges;
+		}
+
+		public void setDeliveryCharges(Double deliveryCharges) {
+			this.deliveryCharges = deliveryCharges;
+		}
+
+		public Integer getSelectedSlot() {
+			return selectedSlot;
+		}
+
+		public void setSelectedSlot(Integer selectedSlot) {
+			this.selectedSlot = selectedSlot;
 		}
 	}
 }

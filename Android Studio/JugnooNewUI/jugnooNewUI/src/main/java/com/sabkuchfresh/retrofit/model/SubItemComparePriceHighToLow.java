@@ -5,8 +5,8 @@ import java.util.Comparator;
 /**
  * Created by Gurmail S. Kang on 5/5/16.
  */
-public class SubItemCompare implements Comparator<SubItem> {
+public class SubItemComparePriceHighToLow implements Comparator<SubItem> {
     public int compare(SubItem subItem1, SubItem subItem2) {
-        return subItem1.getSubItemName().compareToIgnoreCase(subItem2.getSubItemName());
+        return Double.compare(subItem2.getPrice(), subItem1.getPrice());
     }
 }

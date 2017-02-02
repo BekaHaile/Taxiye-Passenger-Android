@@ -245,8 +245,8 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 	public void onResume() {
 		super.onResume();
 		if(!isHidden() && resumed) {
-			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
-			activity.setRefreshCart(false);
+//			activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
+//			activity.setRefreshCart(false);
 		}
 		resumed = true;
 	}

@@ -10,7 +10,7 @@
     android:layout_marginRight="20px"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="4px"
-    android:visibility="gone"
+    android:visibility="visible"
     >
 
     <RelativeLayout

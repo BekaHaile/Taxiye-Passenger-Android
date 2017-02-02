@@ -91,6 +91,7 @@ public class DeliverySlotsAdapter extends RecyclerView.Adapter<DeliverySlotsAdap
                         if(slots.get(pos).getIsActiveSlot() == 1) {
                             callback.onSlotSelected(pos, slots.get(pos));
                             notifyDataSetChanged();
+
                             int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
                             if (appType == AppConstant.ApplicationType.MEALS) {
                                 MyApplication.getInstance().logEvent(FirebaseEvents.M_CART + "_" + slots.get(pos).getDayName() + ", " + slots.get(pos).getTimeSlotDisplay(), null);

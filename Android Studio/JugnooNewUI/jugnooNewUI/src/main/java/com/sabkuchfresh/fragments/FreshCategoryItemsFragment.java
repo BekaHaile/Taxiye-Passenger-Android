@@ -47,6 +47,16 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 
     protected Bus mBus;
 
+	public static FreshCategoryItemsFragment newInstance(int position, int isVendorMenu){
+		FreshCategoryItemsFragment frag = new FreshCategoryItemsFragment();
+		Bundle bundle = new Bundle();
+		bundle.putInt(Constants.KEY_CATEGORY_POSITION, position);
+		bundle.putInt(Constants.KEY_IS_VENDOR_MENU, isVendorMenu);
+		frag.setArguments(bundle);
+		return frag;
+	}
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -67,6 +77,7 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 			Bundle bundle = getArguments();
 			if(bundle.containsKey(Constants.KEY_CATEGORY_POSITION)) {
 				int position = bundle.getInt(Constants.KEY_CATEGORY_POSITION);
+				int isVendorMenu = bundle.getInt(Constants.KEY_IS_VENDOR_MENU);
 
 				activity = (FreshActivity) getActivity();
                 mBus = (activity).getBus();
@@ -131,7 +142,7 @@ public class FreshCategoryItemsFragment extends Fragment implements SwipeRefresh
 
 							@Override
 							public boolean checkForAdd(int position, SubItem subItem) {
-								return activity.checkForAdd(position, subItem);
+								return activity.checkForAdd();
 							}
 						} ,AppConstant.ListType.HOME, FlurryEventNames.HOME_SCREEN, 1);
 				recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);

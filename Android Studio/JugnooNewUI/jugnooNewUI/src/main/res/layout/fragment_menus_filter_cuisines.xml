@@ -38,6 +38,7 @@
                 android:textColorHint="@color/text_color_hint"
                 android:textSize="@dimen/text_size_32"
                 android:layout_toLeftOf="@+id/imageViewSearch"
+                android:textCursorDrawable="@drawable/cursor_black"
                 />
 
 

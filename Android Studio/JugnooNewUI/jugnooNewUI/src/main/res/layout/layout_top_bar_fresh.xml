@@ -68,7 +68,7 @@
                 android:textSize="@dimen/text_size_30"
                 android:textColor="@color/text_color"
                 android:layout_toLeftOf="@+id/linearLayoutNotification"
-                android:textCursorDrawable="@drawable/blue_color_cursor"
+                android:textCursorDrawable="@drawable/cursor_black"
                 />
 
             <ImageView

@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.AddOnItemsAdapter;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
@@ -38,7 +40,6 @@ public class StarMembershipAdapter extends BaseAdapter {
 		this.callback = callback;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
-
 
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		if (holder instanceof ViewHolder && benefits != null) {
@@ -72,26 +73,6 @@ public class StarMembershipAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder holder;
-			if (convertView == null) {
-					convertView = mInflater.inflate(R.layout.list_item_offering_benefits, null);
-					holder = new ViewHolder(convertView, context);
-
-							holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
-					ASSL.DoMagic(holder.relative);
-
-							convertView.setTag(holder);
-				} else {
-					holder = (ViewHolder) convertView.getTag();
-			}
-			holder.id = position;
-			onBindViewHolder(holder, position);
-
-				return convertView;
-			}
-
-	@Override
 	public int getCount() {
 		return benefitsOfferings == null ? 0 : benefitsOfferings.size();
 	}
@@ -107,12 +88,25 @@ public class StarMembershipAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public int getItemViewType(int position) {
-		/*if (isPositionFooter(position)) {
-			return TYPE_FOOTER;
-		}*/
-		return TYPE_ITEM;
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		if (convertView == null) {
+			convertView = mInflater.inflate(R.layout.list_item_offering_benefits, null);
+			holder = new ViewHolder(convertView, context);
+
+			holder.relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
+			ASSL.DoMagic(holder.relative);
+
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+		holder.id = position;
+		onBindViewHolder(holder, position);
+
+		return convertView;
 	}
+
 
 	private boolean isPositionFooter(int position) {
 		return position == benefits.size();
@@ -133,18 +127,6 @@ public class StarMembershipAdapter extends BaseAdapter {
 			tvOfferingName = (TextView) itemView.findViewById(R.id.tvOfferingName); tvOfferingName.setTypeface(Fonts.mavenMedium(context));
 			tvOfferingBenefits = (TextView) itemView.findViewById(R.id.tvOfferingBenefits);tvOfferingBenefits.setTypeface(Fonts.mavenRegular(context));
 			ivSep = (ImageView) itemView.findViewById(R.id.ivSep);
-		}
-	}
-
-	public class ViewFooterHolder extends RecyclerView.ViewHolder {
-		public TextView tvUnsubscribe;
-		public LinearLayout llContainer;
-
-		public ViewFooterHolder(View convertView, Context context) {
-			super(convertView);
-			llContainer = (LinearLayout) convertView.findViewById(R.id.llContainer);
-			tvUnsubscribe = (TextView) convertView.findViewById(R.id.tvUnsubscribe);
-			tvUnsubscribe.setTypeface(Fonts.mavenLight(context));
 		}
 	}
 

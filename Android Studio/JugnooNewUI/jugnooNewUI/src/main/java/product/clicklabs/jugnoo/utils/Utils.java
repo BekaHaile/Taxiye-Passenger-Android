@@ -64,6 +64,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.R;
@@ -716,7 +717,7 @@ public class Utils {
 
 	public static boolean mockLocationEnabled(Location location) {
 		try {
-			if (Config.getDefaultServerUrl().equalsIgnoreCase(Config.getLiveServerUrl())) {
+			if (!BuildConfig.DEBUG && Config.getDefaultServerUrl().equalsIgnoreCase(Config.getLiveServerUrl())) {
 				boolean isMockLocation = false;
 				if(location != null){
 					Bundle extras = location.getExtras();

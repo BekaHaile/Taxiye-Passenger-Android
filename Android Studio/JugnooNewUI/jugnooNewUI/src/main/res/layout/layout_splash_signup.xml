@@ -71,7 +71,7 @@
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@null"
+                        android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="@dimen/text_size_34" />
 
                     <TextView
@@ -123,7 +123,7 @@
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@null"
+                        android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="@dimen/text_size_34" />
 
                     <TextView
@@ -187,7 +187,7 @@
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@null"
+                        android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="@dimen/text_size_34" />
 
                     <TextView
@@ -240,7 +240,7 @@
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@null"
+                        android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="@dimen/text_size_34" />
 
                     <TextView
@@ -294,7 +294,7 @@
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@null"
+                        android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="@dimen/text_size_34" />
 
                 </RelativeLayout>

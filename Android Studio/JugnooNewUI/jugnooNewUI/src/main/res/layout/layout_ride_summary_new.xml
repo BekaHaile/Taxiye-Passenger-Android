@@ -229,8 +229,8 @@
                 
                 <ImageView
                     android:id="@+id/imageViewThumbsDown"
-                    android:layout_width="244px"
-                    android:layout_height="244px"
+                    android:layout_width="238px"
+                    android:layout_height="238px"
                     android:layout_marginLeft="20px"
                     android:contentDescription="@string/bad_feedback"
                     android:src="@drawable/ic_thumbs_down_selector"
@@ -238,8 +238,8 @@
 
                 <ImageView
                     android:id="@+id/imageViewThumbsUp"
-                    android:layout_width="244px"
-                    android:layout_height="244px"
+                    android:layout_width="238px"
+                    android:layout_height="238px"
                     android:layout_marginLeft="50px"
                     android:contentDescription="@string/great_feedback"
                     android:layout_marginRight="20px"
@@ -319,6 +319,7 @@
                 android:scrollbars="vertical"
                 android:textColor="@color/grey_dark_more"
                 android:textSize="28px"
+                android:textCursorDrawable="@drawable/cursor_black"
                 />
 
             <LinearLayout

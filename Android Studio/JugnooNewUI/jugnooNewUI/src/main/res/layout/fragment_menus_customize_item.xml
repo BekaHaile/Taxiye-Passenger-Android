@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rlRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/menu_item_selector_color"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvCustomizeItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadeScrollbars="true"
+        android:scrollbars="vertical"
+        android:splitMotionEvents="false"
+        android:layout_above="@+id/rlAddToCart"
+        >
+    </android.support.v7.widget.RecyclerView>
+
+    <RelativeLayout
+        android:id="@+id/rlAddToCart"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_108"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_theme"
+        android:layout_marginLeft="-6px"
+        android:layout_marginRight="-6px"
+        android:layout_marginBottom="-4px"
+        >
+        <TextView
+            android:id="@+id/tvAddToCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/text_size_32"
+            android:textColor="@color/white"
+            android:text="@string/add_to_cart"
+            android:textAllCaps="true"
+            />
+
+        <TextView
+            android:id="@+id/tvItemTotalValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/px_42"
+            android:textSize="@dimen/text_size_32"
+            android:textColor="@color/white"
+            android:text="@string/rupee_0"
+            />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_6"
+        android:layout_above="@+id/rlAddToCart"
+        android:background="@drawable/shadow_up"
+        />
+
+</RelativeLayout>
