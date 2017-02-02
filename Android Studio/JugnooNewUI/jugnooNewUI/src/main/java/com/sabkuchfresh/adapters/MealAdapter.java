@@ -153,7 +153,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             } else if (holder instanceof ViewHolderSlot) {
                 position = position - recentOrders.size();
                 ViewHolderSlot mHolder = ((ViewHolderSlot) holder);
-                final SubItem subItem = subItems.get(position);
+                SubItem subItem = subItems.get(position);
 
                 mHolder.textViewTitle.setText(subItem.getSubItemName());
                 mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
