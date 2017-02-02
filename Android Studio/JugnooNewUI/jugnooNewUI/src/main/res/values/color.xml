@@ -292,5 +292,6 @@
 
     <color name="green_button">#18ca3c</color>
     <color name="green_button_alpha">#9918ca3c</color>
+    <color name="slider_green">#5ecd93</color>
 
 </resources>
