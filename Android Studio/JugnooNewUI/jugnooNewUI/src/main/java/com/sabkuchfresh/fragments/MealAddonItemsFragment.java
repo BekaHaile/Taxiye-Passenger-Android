@@ -156,6 +156,11 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
                     }
 
                     @Override
+                    public void deleteStarSubscription() {
+                        freshCartItemsAdapter.setResults(subItemsInCart, null);
+                    }
+
+                    @Override
                     public PromoCoupon getSelectedCoupon() {
                         return null;
                     }
@@ -298,7 +303,7 @@ public class MealAddonItemsFragment extends Fragment implements FlurryEventNames
     private void updateCartItemsList(){
         subItemsInCart = activity.fetchCartList();
         if(freshCartItemsAdapter != null){
-            freshCartItemsAdapter.setResults(subItemsInCart);
+            freshCartItemsAdapter.setResults(subItemsInCart, null);
         }
     }
 

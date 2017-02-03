@@ -110,6 +110,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -479,9 +480,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         btnAddStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), JugnooStarActivity.class);
+                /*Intent intent = new Intent(getActivity(), JugnooStarActivity.class);
                 intent.putExtra("checkout_fragment", selectedSubId);
-                getActivity().startActivity(intent);
+                getActivity().startActivity(intent);*/
+                SubscriptionData.Subscription subscription = new Gson().fromJson(selectedSubId, SubscriptionData.Subscription.class);
+                freshCartItemsAdapter.setResults(subItemsInCart, subscription);
+                cvBecomeStar.setVisibility(View.GONE);
             }
         });
 
@@ -2322,6 +2326,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                 && activity.getProductsResponse().getDeliveryInfo().getDynamicDeliveryCharges() == 1){
             getCheckoutDataAPI();
         }
+    }
+
+    @Override
+    public void deleteStarSubscription() {
+        cvBecomeStar.setVisibility(View.VISIBLE);
+        freshCartItemsAdapter.setResults(subItemsInCart, null);
     }
 
 
