@@ -11,7 +11,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -78,7 +77,7 @@ public class ApiLoginUsingAccessToken {
 			}
 
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(activity, params);
-			String links = Database2.getInstance(activity).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(Constants.KEY_BRANCH_REFERRING_LINKS, links);

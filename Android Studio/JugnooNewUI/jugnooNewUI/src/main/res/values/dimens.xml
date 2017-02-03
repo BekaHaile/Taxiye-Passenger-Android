@@ -412,5 +412,8 @@
     <dimen name="text_size_16">
         16px
     </dimen>
+    <dimen name="px_90">
+        90px
+    </dimen>
 
 </resources>

@@ -468,6 +468,10 @@ public class MyApplication extends Application{
 		return Database2.getInstance(this);
 	}
 
+	public Database getDatabase(){
+		return Database.getInstance(this);
+	}
+
 	public void initializeServerURL(Context context) {
 		String link = Prefs.with(context).getString(SPLabels.SERVER_SELECTED, Config.getDefaultServerUrl());
 

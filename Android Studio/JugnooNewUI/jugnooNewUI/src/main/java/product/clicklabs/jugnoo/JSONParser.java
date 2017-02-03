@@ -1337,8 +1337,8 @@ public class JSONParser implements Constants {
 
         editor.commit();
 
-        Database.getInstance(context).deleteSavedPath();
-        Database.getInstance(context).close();
+        MyApplication.getInstance().getDatabase().deleteSavedPath();
+        MyApplication.getInstance().getDatabase().close();
     }
 
 

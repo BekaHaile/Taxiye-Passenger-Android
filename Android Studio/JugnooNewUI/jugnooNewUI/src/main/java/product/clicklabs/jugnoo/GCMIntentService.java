@@ -679,14 +679,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 					}
 					else if (PushFlags.CLEAR_ALL_MESSAGE.getOrdinal() == flag) {
-						Database2.getInstance(this).deleteNotificationTable();
+						MyApplication.getInstance().getDatabase2().deleteNotificationTable();
 						notifyActivityOnPush();
 					}
 					else if (PushFlags.DELETE_NOTIFICATION_ID.getOrdinal() == flag) {
 						if(jObj.has(KEY_NOTIFICATION_ID)) {
 							int id = jObj.optInt(KEY_NOTIFICATION_ID, -1);
 							if(id != -1) {
-								Database2.getInstance(this).deleteNotification(id);
+								MyApplication.getInstance().getDatabase2().deleteNotification(id);
 								notifyActivityOnPush();
 							}
 						}

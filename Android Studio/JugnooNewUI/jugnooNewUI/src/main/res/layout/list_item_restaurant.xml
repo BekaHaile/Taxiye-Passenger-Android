@@ -64,7 +64,7 @@
         android:layout_marginTop="@dimen/px_10"
         android:maxLines="3"
         android:text="Title\nabc"
-        android:textColor="@color/text_color_light"
+        android:textColor="@color/text_color_light_less"
         android:textSize="@dimen/text_size_26" />
 
     <TextView

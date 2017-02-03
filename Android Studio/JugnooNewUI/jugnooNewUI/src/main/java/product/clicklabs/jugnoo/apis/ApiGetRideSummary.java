@@ -11,8 +11,8 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -134,7 +134,7 @@ public class ApiGetRideSummary {
 									Prefs.with(activity).save(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION,
 											Data.userData.getInAppSupportPanelVersion());
 								} else{
-									itemsMain = Database2.getInstance(activity).getSupportDataItems(supportCategory);
+									itemsMain = MyApplication.getInstance().getDatabase2().getSupportDataItems(supportCategory);
 								}
 
 								callback.onSuccess(endRideData, finalDatum, itemsMain);

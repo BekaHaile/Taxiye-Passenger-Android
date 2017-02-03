@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.models.PokestopInfo;
@@ -51,12 +51,12 @@ public class PokestopHelper {
         try {
             if (Prefs.with(context).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1
                     && Prefs.with(context).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
-                long updatedTimestamp = Database2.getInstance(context).getPokestopDataUpdatedTimestamp(cityId);
+                long updatedTimestamp = MyApplication.getInstance().getDatabase2().getPokestopDataUpdatedTimestamp(cityId);
                 if((System.currentTimeMillis() - updatedTimestamp) > Constants.DAY_MILLIS) {
                     findPokeStop(latLngMapCenter, cityId);
                 } else{
                     if(pokestopInfos.size() == 0 || cityIdOfData != cityId){
-                        FindPokestopResponse findPokestopResponse = Database2.getInstance(context).getPokestopData(cityId);
+                        FindPokestopResponse findPokestopResponse = MyApplication.getInstance().getDatabase2().getPokestopData(cityId);
                         showPokestopData((ArrayList<PokestopInfo>) findPokestopResponse.getPokestops(), cityId);
                     }
                 }
@@ -98,7 +98,7 @@ public class PokestopHelper {
                         try {
                             if(findPokestopResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
                                 showPokestopData((ArrayList<PokestopInfo>) findPokestopResponse.getPokestops(), cityId);
-                                Database2.getInstance(context).insertUpdatePokestopData(cityId, responseStr);
+                                MyApplication.getInstance().getDatabase2().insertUpdatePokestopData(cityId, responseStr);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

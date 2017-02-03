@@ -236,7 +236,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						}
 						String link = referringParams.optString("link", "");
 						if (!"".equalsIgnoreCase(link)) {
-							Database2.getInstance(SplashNewActivity.this).insertLink(link);
+							MyApplication.getInstance().getDatabase2().insertLink(link);
 						}
 
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
@@ -408,7 +408,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			//buttonLogin.startAnimation(scale);
 
 
-			String[] emails = Database.getInstance(this).getEmails();
+			String[] emails = MyApplication.getInstance().getDatabase().getEmails();
 			ArrayAdapter<String> adapter;
 			if (emails == null) {
 				emails = new String[]{};
@@ -2251,7 +2251,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -2306,7 +2306,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
-									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
+									MyApplication.getInstance().getDatabase().insertEmail(emailId);
 									DialogPopup.dismissLoadingDialog();
 								}
 							} else {
@@ -2373,7 +2373,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -2427,7 +2427,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 											loginResponse, LoginVia.FACEBOOK, new LatLng(Data.loginLatitude, Data.loginLongitude));
 
 
-									Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
+									MyApplication.getInstance().getDatabase().insertEmail(Data.facebookUserData.userEmail);
 								}
 								DialogPopup.showLoadingDialog(activity, "Loading...");
 							} else {
@@ -2489,7 +2489,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -2545,7 +2545,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 
-									Database.getInstance(SplashNewActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
+									MyApplication.getInstance().getDatabase().insertEmail(Data.googleSignInAccount.getEmail());
 								}
 							}
 							else{
@@ -2935,7 +2935,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 params.put("device_rooted", "0");
             }
             params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-            String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+            String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
             if (links != null) {
                 if (!"[]".equalsIgnoreCase(links)) {
                     params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -3060,7 +3060,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 params.put("device_rooted", "0");
             }
             params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-            String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+            String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
             if (links != null) {
                 if (!"[]".equalsIgnoreCase(links)) {
                     params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -3174,7 +3174,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 params.put("device_rooted", "0");
             }
             params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-            String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+            String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
             if (links != null) {
                 if (!"[]".equalsIgnoreCase(links)) {
                     params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -3357,8 +3357,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                 if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
                                     new JSONParser().parseAccessTokenLoginData(activity, jsonString,
                                             loginResponse, LoginVia.EMAIL_OTP, new LatLng(Data.loginLatitude, Data.loginLongitude));
-                                    Database.getInstance(activity).insertEmail(email);
-                                    Database.getInstance(activity).close();
+                                    MyApplication.getInstance().getDatabase().insertEmail(email);
+                                    MyApplication.getInstance().getDatabase().close();
                                     loginDataFetched = true;
                                 }
                             } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {

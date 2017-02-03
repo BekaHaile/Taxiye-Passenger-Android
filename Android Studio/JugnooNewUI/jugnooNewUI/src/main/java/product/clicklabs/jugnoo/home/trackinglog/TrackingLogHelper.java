@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -41,16 +41,16 @@ public class TrackingLogHelper {
 
 	public void generateTrackLogFile(String engagementId){
 		try {
-			JSONArray driverLocations = Database2.getInstance(context).getDriverLocations(Integer.parseInt(engagementId));
-			JSONArray trackingLogs = Database2.getInstance(context).getTrackingLogs(Integer.parseInt(engagementId));
+			JSONArray driverLocations = MyApplication.getInstance().getDatabase2().getDriverLocations(Integer.parseInt(engagementId));
+			JSONArray trackingLogs = MyApplication.getInstance().getDatabase2().getTrackingLogs(Integer.parseInt(engagementId));
 			if(trackingLogs.length() > 0 && driverLocations.length() > 0) {
 				JSONObject jsonObjectTrackingLog = new JSONObject();
 				jsonObjectTrackingLog.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
 				jsonObjectTrackingLog.put(Constants.KEY_DRIVER_LOCATIONS, driverLocations);
 				jsonObjectTrackingLog.put(Constants.KEY_TRACKING_LOGS, trackingLogs);
 				writeTrackingLogToFile(engagementId, jsonObjectTrackingLog.toString());
-				Database2.getInstance(context).deleteDriverLocations(Integer.parseInt(engagementId));
-				Database2.getInstance(context).deleteTrackingLogs(Integer.parseInt(engagementId));
+				MyApplication.getInstance().getDatabase2().deleteDriverLocations(Integer.parseInt(engagementId));
+				MyApplication.getInstance().getDatabase2().deleteTrackingLogs(Integer.parseInt(engagementId));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,7 +59,7 @@ public class TrackingLogHelper {
 
 	public void uploadAllTrackLogs(){
 		try{
-			ArrayList<Integer> engagementIds = Database2.getInstance(context).getDistinctEngagementIdsFromDriverLocations();
+			ArrayList<Integer> engagementIds = MyApplication.getInstance().getDatabase2().getDistinctEngagementIdsFromDriverLocations();
 			for(Integer engagementId : engagementIds){
 				generateTrackLogFile(String.valueOf(engagementId));
 			}

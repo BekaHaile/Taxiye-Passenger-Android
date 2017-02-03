@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -42,9 +46,11 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -87,6 +93,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         this.recentOrders = recentOrders;
         this.possibleStatus = possibleStatus;
         timerHandler.postDelayed(timerRunnable, 1000);
+        restaurantName = ""; locality = ""; telephone = "";
     }
 
     Handler timerHandler = new Handler();
@@ -221,12 +228,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             ASSL.DoMagic(v);
             return new ViewHolder(v, activity);
         } else if (viewType == BLANK_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, 194);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommend_restaurant, parent, false);
+            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
 
             ASSL.DoMagic(v);
-            return new ViewTitleHolder(v);
+            return new ViewHolderRestaurantForm(v, activity);
         }
         else if (viewType == STATUS_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_meals_order_status, parent, false);
@@ -378,10 +385,29 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     e.printStackTrace();
                     mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_meal_place_holder);
                 }
-            } else if (holder instanceof ViewTitleHolder) {
-                ViewTitleHolder titleholder = ((ViewTitleHolder) holder);
-                titleholder.relative.setVisibility(View.VISIBLE);
-                titleholder.relative.setBackgroundColor(activity.getResources().getColor(R.color.white));
+            } else if (holder instanceof ViewHolderRestaurantForm) {
+                ViewHolderRestaurantForm titleHolder = ((ViewHolderRestaurantForm) holder);
+                titleHolder.etRestaurantName.setText(restaurantName);
+                titleHolder.etLocality.setText(locality);
+                titleHolder.etTelephone.setText(telephone);
+                titleHolder.etRestaurantName.setSelection(restaurantName.length());
+
+                titleHolder.etRestaurantName.addTextChangedListener(twRestaurantName);
+                titleHolder.etLocality.addTextChangedListener(twLocality);
+                titleHolder.etTelephone.addTextChangedListener(twTelephone);
+
+                titleHolder.bSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(TextUtils.isEmpty(restaurantName)){
+                            Utils.showToast(activity, activity.getString(R.string.restaurant_name_is_neccessary));
+                        } else {
+                            apiRecommendRestaurant();
+                        }
+                    }
+                });
+
+
             } else if (holder instanceof ViewNoVenderItem){
                 ViewNoVenderItem holderNoVenderItem = (ViewNoVenderItem) holder;
                 if (vendorsComplete.size() == 0) {
@@ -544,22 +570,29 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             rlRoot = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
             imageViewRestaurantImage = (ImageView) itemView.findViewById(R.id.imageViewRestaurantImage);
             textViewClosed = (TextView) itemView.findViewById(R.id.textViewClosed); textViewClosed.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
-            textViewRestaurantName = (TextView) itemView.findViewById(R.id.textViewRestaurantName); textViewRestaurantName.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
-            textViewMinimumOrder = (TextView) itemView.findViewById(R.id.textViewMinimumOrder); textViewMinimumOrder.setTypeface(Fonts.mavenRegular(context));
+            textViewRestaurantName = (TextView) itemView.findViewById(R.id.textViewRestaurantName); textViewRestaurantName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+            textViewMinimumOrder = (TextView) itemView.findViewById(R.id.textViewMinimumOrder); textViewMinimumOrder.setTypeface(Fonts.mavenMedium(context));
             textViewRestaurantCusines = (TextView) itemView.findViewById(R.id.textViewRestaurantCusines); textViewRestaurantCusines.setTypeface(Fonts.mavenMedium(context));
 
             relativeLayoutRestaurantCloseTime = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutRestaurantCloseTime);
             textViewRestaurantCloseTime = (TextView) itemView.findViewById(R.id.textViewRestaurantCloseTime);textViewRestaurantCloseTime.setTypeface(Fonts.mavenMedium(context));
             textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);textViewAddressLine.setTypeface(Fonts.mavenMedium(context));
-            textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);textViewDelivery.setTypeface(Fonts.mavenRegular(context));
+            textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);textViewDelivery.setTypeface(Fonts.mavenMedium(context));
         }
     }
 
-    static class ViewTitleHolder extends RecyclerView.ViewHolder {
-        public RelativeLayout relative;
-        public ViewTitleHolder(View itemView) {
+    class ViewHolderRestaurantForm extends RecyclerView.ViewHolder {
+        public TextView tvCouldNotFind, tvRecommend;
+        public EditText etRestaurantName, etLocality, etTelephone;
+        public Button bSubmit;
+        public ViewHolderRestaurantForm(View itemView, Context context) {
             super(itemView);
-            relative = (RelativeLayout) itemView.findViewById(R.id.relative);
+            tvCouldNotFind = (TextView) itemView.findViewById(R.id.tvCouldNotFind); tvCouldNotFind.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+            tvRecommend = (TextView) itemView.findViewById(R.id.tvRecommend); tvRecommend.setTypeface(Fonts.mavenMedium(context));
+            etRestaurantName = (EditText) itemView.findViewById(R.id.etRestaurantName); etRestaurantName.setTypeface(Fonts.mavenMedium(context));
+            etLocality = (EditText) itemView.findViewById(R.id.etLocality); etLocality.setTypeface(Fonts.mavenMedium(context));
+            etTelephone = (EditText) itemView.findViewById(R.id.etTelephone); etTelephone.setTypeface(Fonts.mavenMedium(context));
+            bSubmit = (Button) itemView.findViewById(R.id.bSubmit); bSubmit.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
         }
     }
 
@@ -713,5 +746,105 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             searchRestaurantsAutoComplete(searchText);
         }
     }
+
+
+    private String restaurantName = "", locality = "", telephone = "";
+
+    private TextWatcher twRestaurantName = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            restaurantName = s.toString().trim();
+        }
+    };
+
+    private TextWatcher twLocality = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            locality = s.toString().trim();
+        }
+    };
+
+    private TextWatcher twTelephone = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            telephone = s.toString().trim();
+        }
+    };
+
+
+    public void apiRecommendRestaurant() {
+        try {
+            if (AppStatus.getInstance(activity).isOnline(activity)) {
+                DialogPopup.showLoadingDialog(activity, "");
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+                params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
+                params.put(Constants.INTERATED, "1");
+                params.put(Constants.KEY_RESTAURANT_NAME, restaurantName);
+                params.put(Constants.KEY_RESTAURANT_ADDRESS, locality);
+                params.put(Constants.KEY_RESTAURANT_PHONE, telephone);
+
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getMenusApiService().suggestRestaurant(params, new retrofit.Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt productsResponse, Response response) {
+                        try {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
+                                    Utils.showToast(activity, productsResponse.getMessage());
+                                } else {
+                                    Utils.showToast(activity, productsResponse.getMessage());
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, "fetchRestaurantViaSearch error" + error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

@@ -785,8 +785,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 												loginResponse, LoginVia.EMAIL_OTP,
 												new LatLng(Data.loginLatitude, Data.loginLongitude));
-										Database.getInstance(OTPConfirmScreen.this).insertEmail(emailRegisterData.emailId);
-										Database.getInstance(OTPConfirmScreen.this).close();
+										MyApplication.getInstance().getDatabase().insertEmail(emailRegisterData.emailId);
+										MyApplication.getInstance().getDatabase().close();
 										loginDataFetched = true;
 										firebaseEventWalletAtSignup();
 									}
@@ -892,8 +892,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 												loginResponse, LoginVia.FACEBOOK_OTP,
 												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										loginDataFetched = true;
-										Database.getInstance(OTPConfirmScreen.this).insertEmail(facebookRegisterData.fbUserEmail);
-										Database.getInstance(OTPConfirmScreen.this).close();
+										MyApplication.getInstance().getDatabase().insertEmail(facebookRegisterData.fbUserEmail);
+										MyApplication.getInstance().getDatabase().close();
 										firebaseEventWalletAtSignup();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
@@ -991,8 +991,8 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 												loginResponse, LoginVia.GOOGLE_OTP,
 												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										loginDataFetched = true;
-										Database.getInstance(OTPConfirmScreen.this).insertEmail(googleRegisterData.email);
-										Database.getInstance(OTPConfirmScreen.this).close();
+										MyApplication.getInstance().getDatabase().insertEmail(googleRegisterData.email);
+										MyApplication.getInstance().getDatabase().close();
 										firebaseEventWalletAtSignup();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
@@ -1365,7 +1365,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -1409,7 +1409,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL,
 											new LatLng(Data.loginLatitude, Data.loginLongitude));
-									Database.getInstance(OTPConfirmScreen.this).insertEmail(emailId);
+									MyApplication.getInstance().getDatabase().insertEmail(emailId);
 									loginDataFetched = true;
 									DialogPopup.showLoadingDialog(activity, "Loading...");
 									DialogPopup.dismissLoadingDialog();
@@ -1478,7 +1478,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -1521,7 +1521,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 											new LatLng(Data.loginLatitude, Data.loginLongitude));
 									loginDataFetched = true;
 
-									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.facebookUserData.userEmail);
+									MyApplication.getInstance().getDatabase().insertEmail(Data.facebookUserData.userEmail);
 									DialogPopup.showLoadingDialog(activity, "Loading...");
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -1584,7 +1584,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -1631,7 +1631,7 @@ public class OTPConfirmScreen extends BaseActivity implements LocationUpdate, Fl
 									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 
-									Database.getInstance(OTPConfirmScreen.this).insertEmail(Data.googleSignInAccount.getEmail());
+									MyApplication.getInstance().getDatabase().insertEmail(Data.googleSignInAccount.getEmail());
 									DialogPopup.showLoadingDialog(activity, "Loading...");
 									DialogPopup.dismissLoadingDialog();
 								}

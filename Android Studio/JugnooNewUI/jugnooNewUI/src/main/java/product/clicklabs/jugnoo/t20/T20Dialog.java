@@ -18,13 +18,13 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -224,9 +224,9 @@ public class T20Dialog {
 						String message = JSONParser.getServerMessage(jObj);
 						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 
-							List<Selection> selections = Database2.getInstance(activity).getT20DataItems(T20DataType.SELECTION.getOrdinal());
+							List<Selection> selections = MyApplication.getInstance().getDatabase2().getT20DataItems(T20DataType.SELECTION.getOrdinal());
 							selections.add(new Selection(schedule.getScheduleId(), schedule.getSelectedTeamId()));
-							Database2.getInstance(activity).insertUpdateT20Data(T20DataType.SELECTION.getOrdinal(), selections);
+							MyApplication.getInstance().getDatabase2().insertUpdateT20Data(T20DataType.SELECTION.getOrdinal(), selections);
 
 							dialog.dismiss();
 							if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){

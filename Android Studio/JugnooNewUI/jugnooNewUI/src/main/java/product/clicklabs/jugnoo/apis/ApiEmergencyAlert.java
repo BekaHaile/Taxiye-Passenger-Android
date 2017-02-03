@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PendingCall;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -77,7 +77,7 @@ public class ApiEmergencyAlert {
 					@Override
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "emergencyAlert error" + error.toString());
-						Database2.getInstance(activity).insertPendingAPICall(activity,
+						MyApplication.getInstance().getDatabase2().insertPendingAPICall(activity,
 								PendingCall.EMERGENCY_ALERT.getPath(), params);
 						callback.onFailure();
 					}

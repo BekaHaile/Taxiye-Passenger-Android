@@ -117,7 +117,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
     }
 
     private void loadListFromDB() {
-        ArrayList<NotificationData> notificationDatas = Database2.getInstance(NotificationCenterActivity.this).getAllNotification();
+        ArrayList<NotificationData> notificationDatas = MyApplication.getInstance().getDatabase2().getAllNotification();
         Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
         if (notificationDatas.size() > 0) {
             linearLayoutNoNotifications.setVisibility(View.GONE);

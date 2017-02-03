@@ -68,4 +68,9 @@ public interface MenusApiService {
 	void fetchRestaurantViaSearch(@FieldMap Map<String, String> params,
 							Callback<RestaurantSearchResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/v1/customer/suggest_restaurant")
+	void suggestRestaurant(@FieldMap Map<String, String> params,
+								  Callback<SettleUserDebt> callback);
+
 }

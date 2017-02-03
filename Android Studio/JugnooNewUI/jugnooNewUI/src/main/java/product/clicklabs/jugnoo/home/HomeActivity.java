@@ -117,8 +117,6 @@ import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database;
-import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
@@ -2801,7 +2799,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         passengerMainLayout.setVisibility(View.VISIBLE);
 
-        Database2.getInstance(HomeActivity.this).close();
+        MyApplication.getInstance().getDatabase2().close();
 
     }
 
@@ -2856,7 +2854,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         // delete the RidePath Table from Phone Database :)
-                        Database2.getInstance(HomeActivity.this).deleteRidePathTable();
+                        MyApplication.getInstance().getDatabase2().deleteRidePathTable();
                         //fabViewTest.setRelativeLayoutFABVisibility(mode);
                         Log.d("RidePath DB", "Deleted");
 
@@ -2890,7 +2888,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                         Data.autoData.setAssignedDriverInfo(null);
 
-                        Database2.getInstance(HomeActivity.this).deleteRidePathTable();
+                        MyApplication.getInstance().getDatabase2().deleteRidePathTable();
 
 
                         clearMap();
@@ -3162,7 +3160,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             } else{
                                 driverLocationMarker.setRotation((float)Data.autoData.getAssignedDriverInfo().getBearing());
                             }
-                            Database2.getInstance(this).insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
+                            MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
                                     Data.autoData.getAssignedDriverInfo().latLng,
                                     driverLocationMarker.getRotation(),
                                     TrackingLogModeValue.RESET.getOrdinal(),
@@ -3235,7 +3233,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if(Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0){
                                 driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
                             }
-                            Database2.getInstance(this).insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
+                            MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
                                     Data.autoData.getAssignedDriverInfo().latLng,
                                     driverLocationMarker.getRotation(),
                                     TrackingLogModeValue.RESET.getOrdinal(),
@@ -4517,7 +4515,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         @Override
         protected String doInBackground(String... params) {
             try {
-                ArrayList<NotificationData> notificationDatas = Database2.getInstance(HomeActivity.this).getAllNotification();
+                ArrayList<NotificationData> notificationDatas = MyApplication.getInstance().getDatabase2().getAllNotification();
                 if(notificationDatas.size() == 0) {
                     Prefs.with(HomeActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
                 }
@@ -5823,7 +5821,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             if(MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng , driverCurrentLatLng) > 5) {
                                                 Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
                                                 Data.autoData.getAssignedDriverInfo().setEta(eta);
-                                                Database2.getInstance(HomeActivity.this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
+                                                MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
                                                 HomeActivity.this.runOnUiThread(new Runnable() {
 
                                                     @Override
@@ -5951,7 +5949,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         long startTime = System.currentTimeMillis();
                         HashMap<String, String> nameValuePairs = new HashMap<>();
                         nameValuePairs.put("last_sent_max_id", "" +
-                                Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo());
+                                MyApplication.getInstance().getDatabase2().getLastRowIdInRideInfo());
                         nameValuePairs.put("engagement_id", Data.autoData.getcEngagementId());
                         nameValuePairs.put("access_token", Data.userData.accessToken);
 
@@ -5997,7 +5995,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             }
                                             plotPolylineInRideDriverPath();
 
-                                            try { Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
+                                            try { MyApplication.getInstance().getDatabase2().createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -6033,7 +6031,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         if(polylineOptionsInRideDriverPath.size() == 0) {
             try {
-                ArrayList<RidePath> ridePathsList = Database2.getInstance(HomeActivity.this).getRidePathInfo();
+                ArrayList<RidePath> ridePathsList = MyApplication.getInstance().getDatabase2().getRidePathInfo();
                 for (RidePath ridePath : ridePathsList) {
                     PolylineOptions polylineOptions = new PolylineOptions();
                     polylineOptions.width(ASSL.Xscale() * 7);
@@ -6647,7 +6645,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled));
 
-            Database2.getInstance(this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
+            MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
 
             if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
                 passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
@@ -6687,8 +6685,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         editor.commit();
 
-        Database.getInstance(this).deleteSavedPath();
-        Database.getInstance(this).close();
+        MyApplication.getInstance().getDatabase().deleteSavedPath();
+        MyApplication.getInstance().getDatabase().close();
 
     }
 
@@ -6706,8 +6704,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         editor.commit();
 
-        Database.getInstance(this).deleteSavedPath();
-        Database.getInstance(this).close();
+        MyApplication.getInstance().getDatabase().deleteSavedPath();
+        MyApplication.getInstance().getDatabase().close();
 
     }
 
@@ -7088,7 +7086,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
 
 
-                                String links = Database2.getInstance(HomeActivity.this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+                                String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
                                 if(links != null){
                                     if(!"[]".equalsIgnoreCase(links)) {
                                         nameValuePairs.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -8231,7 +8229,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             });
 
-            Database2.getInstance(activity).insertPendingAPICall(activity,
+            MyApplication.getInstance().getDatabase2().insertPendingAPICall(activity,
                     PendingCall.SKIP_RATING_BY_CUSTOMER.getPath(), params);
 
             try { Data.autoData.getDriverInfos().clear(); } catch (Exception e) { e.printStackTrace(); }
