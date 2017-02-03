@@ -403,5 +403,14 @@
     <dimen name="px_346">
         346px
     </dimen>
+    <dimen name="px_380">
+        380px
+    </dimen>
+    <dimen name="px_14">
+        14px
+    </dimen>
+    <dimen name="text_size_16">
+        16px
+    </dimen>
 
 </resources>

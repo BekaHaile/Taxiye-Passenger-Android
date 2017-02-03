@@ -22,6 +22,7 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.squareup.leakcanary.LeakCanary;
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
@@ -85,6 +86,12 @@ public class MyApplication extends Application{
 	public void onCreate() {
 		ActivityLifecycleCallback.register(this);
 		super.onCreate();
+		if (LeakCanary.isInAnalyzerProcess(this)) {
+			// This process is dedicated to LeakCanary for heap analysis.
+			// You should not init your app in this process.
+			return;
+		}
+		LeakCanary.install(this);
 		try {
 			Fabric.with(this, new Crashlytics());
 			if(!this.isTestModeEnabled()) {

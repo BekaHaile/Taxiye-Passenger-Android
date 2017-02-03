@@ -21,6 +21,7 @@ import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.RestaurantSearchResponse;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RoundBorderTransform;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -317,7 +318,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     }
                 }
 
-                mHolder.imageViewAddressLine.setVisibility(((vendor.getRestaurantAddress() != null)) ? View.VISIBLE : View.GONE);
                 mHolder.textViewAddressLine.setVisibility(((vendor.getRestaurantAddress() != null)) ? View.VISIBLE : View.GONE);
                 mHolder.textViewAddressLine.setText(vendor.getRestaurantAddress());
 
@@ -336,8 +336,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     mHolder.textViewRestaurantCusines.setText("");
                 }
 
-                mHolder.linearRoot.setTag(position);
-                mHolder.linearRoot.setOnClickListener(new View.OnClickListener() {
+                mHolder.rlRoot.setTag(position);
+                mHolder.rlRoot.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
@@ -362,10 +362,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                 try {
                     if (!TextUtils.isEmpty(vendor.getImage())) {
+                        float ratio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                         Picasso.with(activity).load(vendor.getImage())
                                 .placeholder(R.drawable.ic_meal_place_holder)
-                                .fit()
+                                .resize((int)(ratio * 150f), (int)(ratio * 150f))
                                 .centerCrop()
+                                .transform(new RoundBorderTransform((int)(ratio*6f), 0))
                                 .error(R.drawable.ic_meal_place_holder)
                                 .into(mHolder.imageViewRestaurantImage);
                     } else {
@@ -529,8 +531,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        public LinearLayout linearRoot;
-        public ImageView imageViewRestaurantImage, imageViewAddressLine;
+        public RelativeLayout rlRoot;
+        public ImageView imageViewRestaurantImage;
         public TextView textViewClosed, textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
 
         public RelativeLayout relativeLayoutRestaurantCloseTime;
@@ -539,9 +541,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         public ViewHolder(View itemView, Context context) {
             super(itemView);
-            linearRoot = (LinearLayout) itemView.findViewById(R.id.linearRoot);
+            rlRoot = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
             imageViewRestaurantImage = (ImageView) itemView.findViewById(R.id.imageViewRestaurantImage);
-            imageViewAddressLine = (ImageView) itemView.findViewById(R.id.imageViewAddressLine);
             textViewClosed = (TextView) itemView.findViewById(R.id.textViewClosed); textViewClosed.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textViewRestaurantName = (TextView) itemView.findViewById(R.id.textViewRestaurantName); textViewRestaurantName.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textViewMinimumOrder = (TextView) itemView.findViewById(R.id.textViewMinimumOrder); textViewMinimumOrder.setTypeface(Fonts.mavenRegular(context));

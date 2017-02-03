@@ -1,11 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/linearRoot"
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlRoot"
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:gravity="center_horizontal"
-              android:orientation="vertical">
+                android:background="@drawable/bg_white_menu_item_selector_color_selector"
+    >
+
+    <ImageView
+        android:id="@+id/imageViewRestaurantImage"
+        android:layout_width="@dimen/px_150"
+        android:layout_height="@dimen/px_150"
+        android:layout_margin="@dimen/px_30"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_meal_place_holder"
+        android:tag="mwar"
+        android:visibility="visible"
+        />
+
+    <View
+        android:layout_width="@dimen/px_150"
+        android:layout_height="@dimen/px_40"
+        android:layout_marginLeft="@dimen/px_30"
+        android:background="@drawable/shadow_up_menu_item"
+        android:layout_alignBottom="@+id/imageViewRestaurantImage"
+        />
+
+
+    <TextView
+        android:id="@+id/textViewAddressLine"
+        android:layout_width="@dimen/px_150"
+        android:layout_height="wrap_content"
+        android:text="Sector 28 B"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_16"
+        android:background="@color/transparent"
+        android:layout_marginLeft="@dimen/px_30"
+        android:layout_alignBottom="@+id/imageViewRestaurantImage"
+        android:drawableLeft="@drawable/ic_restaurant_location"
+        android:paddingLeft="@dimen/px_5"
+        android:paddingBottom="@dimen/px_2"
+        android:drawablePadding="@dimen/px_5"
+        />
+
+    <TextView
+        android:id="@+id/textViewRestaurantName"
+        android:layout_width="@dimen/px_380"
+        android:layout_height="wrap_content"
+        android:maxLines="3"
+        android:text="Title\nabc"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_32"
+        android:layout_marginTop="@dimen/px_26"
+        android:layout_toRightOf="@+id/imageViewRestaurantImage"
+        />
+
+    <TextView
+        android:id="@+id/textViewRestaurantCusines"
+        android:layout_width="@dimen/px_480"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/imageViewRestaurantImage"
+        android:layout_below="@+id/textViewRestaurantName"
+        android:layout_marginTop="@dimen/px_10"
+        android:maxLines="3"
+        android:text="Title\nabc"
+        android:textColor="@color/text_color_light"
+        android:textSize="@dimen/text_size_26" />
+
+    <TextView
+        android:id="@+id/textViewMinimumOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Minimum Order r399"
+        android:textColor="@color/order_history_status_color"
+        android:textSize="@dimen/text_size_22"
+        android:layout_marginTop="@dimen/px_10"
+        android:layout_toRightOf="@+id/imageViewRestaurantImage"
+        android:layout_below="@+id/textViewRestaurantCusines"
+        />
+
+
+    <TextView
+        android:id="@+id/textViewDelivery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delivers in 40-60 min"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/text_size_22"
+        android:layout_marginTop="@dimen/px_14"
+        android:layout_marginBottom="@dimen/px_26"
+        android:layout_toRightOf="@+id/imageViewRestaurantImage"
+        android:layout_below="@+id/textViewMinimumOrder"
+        />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_2"
+        android:layout_below="@+id/textViewDelivery"
+        android:layout_marginLeft="@dimen/px_24"
+        android:layout_marginRight="@dimen/px_24"
+        android:background="@color/stroke_light_grey_alpha"
+        />
+
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -19,7 +115,9 @@
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="8px"
         app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        android:visibility="gone"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,21 +132,6 @@
                 android:layout_gravity="center_horizontal"
                 android:orientation="vertical"
                 android:tag="mwar">
-
-                <ImageView
-                    android:id="@+id/imageViewRestaurantImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_meal_place_holder"
-                    android:tag="mwar"
-                    android:visibility="visible"/>
-
-                <View
-                    android:layout_alignParentBottom="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="60px"
-                    android:background="@drawable/shadow_up_menu_item" />
 
                 <TextView
                     android:id="@+id/textViewClosed"
@@ -99,103 +182,10 @@
                 </RelativeLayout>
 
 
-                    <ImageView
-                        android:id="@+id/imageViewAddressLine"
-                        android:layout_width="18px"
-                        android:layout_height="28px"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_other_location_white"
-                        android:tag="mwar"
-                        android:background="@color/transparent"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="14px"
-                        android:layout_marginBottom="15px"/>
-
-                    <TextView
-                        android:id="@+id/textViewAddressLine"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="bottom"
-                        android:text="Sector 28 B, Chandigarh"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/text_size_20"
-                        android:background="@color/transparent"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="40px"
-                        android:layout_marginBottom="15px"/>
                 </RelativeLayout>
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20px"
-                android:layout_marginBottom="20px">
-
-
-                <LinearLayout
-                    android:layout_width="390px"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginLeft="20px"
-                    android:id="@+id/linearLayoutRestaurantName">
-
-                    <TextView
-                        android:id="@+id/textViewRestaurantName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="2"
-                        android:text="Title\nabc"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34" />
-
-                    <TextView
-                        android:id="@+id/textViewRestaurantCusines"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginTop="10px"
-                        android:maxLines="2"
-                        android:text="Title"
-                        android:textColor="@color/text_color_light_less"
-                        android:textSize="@dimen/text_size_24" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="12px"
-                    android:layout_marginRight="15px"
-                    android:layout_toRightOf="@id/linearLayoutRestaurantName">
-                    <TextView
-                        android:id="@+id/textViewDelivery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:text="Delivers in 40-60 min"
-                        android:gravity="right"
-                        android:textColor="@color/order_history_status_color"
-                        android:textSize="@dimen/text_size_22"
-                       />
-                    <TextView
-                        android:id="@+id/textViewMinimumOrder"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:text="Minimum Order r399"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_22"
-                        android:gravity="right"
-                        android:layout_marginTop="12px"
-                       />
-                </LinearLayout>
-
-            </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
-</LinearLayout>
+</RelativeLayout>

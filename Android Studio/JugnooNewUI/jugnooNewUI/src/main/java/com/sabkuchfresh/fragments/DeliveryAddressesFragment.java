@@ -189,8 +189,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 public void onEditClick(SearchResult searchResult) {
                     goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                 }
-            }, true, true);
+            }, false, true);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
+            imageViewEditHome.setVisibility(View.GONE);
+            imageViewEditWork.setVisibility(View.GONE);
         } catch (Exception e) {
             e.printStackTrace();
         }

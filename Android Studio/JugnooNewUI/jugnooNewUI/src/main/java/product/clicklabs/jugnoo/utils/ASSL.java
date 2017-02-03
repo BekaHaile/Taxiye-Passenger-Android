@@ -228,7 +228,7 @@ import android.widget.TextView;
 /* 302 */       (int)(rootLayout.getPaddingTop() * scaleY),
 /* 304 */       (int)(rootLayout.getPaddingRight() * scaleX),
 /* 306 */       (int)(rootLayout.getPaddingBottom() * scaleY));
-/*     */ 
+
 /* 312 */     if ((rootLayout instanceof ViewGroup))
 /*     */     {
 /* 314 */       ViewGroup vg = (ViewGroup)rootLayout;
