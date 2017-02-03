@@ -29,51 +29,7 @@
                 app:scrimVisibleHeightTrigger="50px">-->
 
 
-                <RelativeLayout
-                    android:id="@+id/layout_rest_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone">
-
-
-                    <ImageView
-                        android:id="@+id/iv_rest_collapse_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/black_alpha" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/shadow_menu_collapse_image" />
-
-                    <TextView
-                        android:id="@+id/tv_rest_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/tv_rest_reviews"
-                        android:layout_marginLeft="46px"
-                        android:text=""
-                        android:textColor="@android:color/white"
-                        android:textSize="38px"
-                        app:font="avenir" />
-
-
-                    <TextView
-                        android:id="@id/tv_rest_reviews"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="24px"
-                        android:layout_marginLeft="46px"
-                        android:layout_marginTop="10px"
-                        android:text=""
-                        android:textColor="@android:color/white"
-                        android:textSize="25px"
-                        app:font="maven" />
-
-
-                </RelativeLayout>
+                <include layout="@layout/restaurant_collapse_details" />
 
 
                 <android.support.v7.widget.Toolbar

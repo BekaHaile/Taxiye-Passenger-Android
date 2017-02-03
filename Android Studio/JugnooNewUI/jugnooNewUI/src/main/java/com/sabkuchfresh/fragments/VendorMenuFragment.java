@@ -242,11 +242,14 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     Picasso.with(activity).load(activity.getVendorOpened().getImage()).fit().into(activity.ivCollapseRestImage);
 
                     if (activity.getVendorOpened().getRating() != null) {
+
                         Spannable spannable = new SpannableString(activity.getString(R.string.star_icon) + " " + activity.getVendorOpened().getRating() + "  " + "(" + activity.getVendorOpened().getReviewCount() + " Reviews)");
                         Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
                         spannable.setSpan(new CustomTypeFaceSpan("",star),0,1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
                         activity.tvCollapRestaurantReviews.setText(spannable);
+
                     }
+
 
                 }
             }
