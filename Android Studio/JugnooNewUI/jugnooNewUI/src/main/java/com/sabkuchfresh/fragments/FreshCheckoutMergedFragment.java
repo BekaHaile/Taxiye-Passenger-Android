@@ -118,6 +118,7 @@ import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
+import product.clicklabs.jugnoo.utils.Font;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
@@ -206,7 +207,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private boolean cartChangedRefreshCheckout = false;
     private MySpinner spin;
     boolean flag = false;
-    TextView seekbartest;
+    TextView sliderText;
 
     public FreshCheckoutMergedFragment() {
     }
@@ -444,35 +445,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         spin = (MySpinner) rootView.findViewById(R.id.simpleSpinner);
         btnAddStar = (Button) rootView.findViewById(R.id.btnAddStar);
         viewAlpha = (View) rootView.findViewById(R.id.viewAlpha);
-        /*mSwipeButton = (SwipeButton) rootView.findViewById(R.id.my_swipe_button);
 
-        SwipeButtonCustomItems swipeButtonSettings = new SwipeButtonCustomItems() {
-            @Override
-            public void onSwipeConfirm() {
-                Log.d("NEW_STUFF", "New swipe confirm callback");
-            }
-        };
 
-        swipeButtonSettings
-                .setButtonPressText(">> NEW TEXT! >>")
-                .setGradientColor1(0xFF888888)
-                .setGradientColor2(0xFF666666)
-                .setGradientColor2Width(60)
-                .setGradientColor3(0xFF333333)
-                .setPostConfirmationColor(0xFF888888)
-                .setActionConfirmDistanceFraction(0.7)
-                .setActionConfirmText("Action Confirmed");
-
-        if (mSwipeButton != null) {
-            mSwipeButton.setSwipeButtonCustomItems(swipeButtonSettings);
-        }*/
-
-        seekbartest = (TextView) rootView.findViewById(R.id.slider_text);
-        seekbartest.setText("Swipe right to pay >>");
+        sliderText = (TextView) rootView.findViewById(R.id.sliderText); sliderText.setTypeface(Fonts.mavenMedium(activity));
+        sliderText.setText("Swipe right to pay >>");
 
         rlSliderContainer = (RelativeLayout) rootView.findViewById(R.id.rlSliderContainer);
         relativeLayoutSlider = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSlider);
-        tvSlide = (TextView) rootView.findViewById(R.id.tvSlide);
+        tvSlide = (TextView) rootView.findViewById(R.id.tvSlide); tvSlide.setTypeface(Fonts.mavenMedium(activity));
         displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         paramsF = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
@@ -545,8 +525,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                     getCheckoutDataAPI();
                 } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
+                    setSlideInitial();
                 } else if (TextUtils.isEmpty(activity.getSelectedAddress())) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_address));
+                    setSlideInitial();
                 } else if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
                         activity.getPaymentOption().getOrdinal(), activity.getSelectedPromoCoupon())){
                     activity.setSplInstr(editTextDeliveryInstructions.getText().toString().trim());
@@ -650,7 +632,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                                 && (event.getRawX()-getRelativeSliderLeftMargin()) < relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2)){
                             paramsF.leftMargin = (int) layoutX(event.getRawX()-getRelativeSliderLeftMargin());
                             relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
-                            seekbartest.setVisibility(View.VISIBLE);
+                            sliderText.setVisibility(View.VISIBLE);
                             float percent = (event.getRawX()-getRelativeSliderLeftMargin()) / (relativeLayoutSlider.getWidth()-tvSlide.getWidth());
                             viewAlpha.setAlpha(percent);
                         }
@@ -658,16 +640,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
                     case MotionEvent.ACTION_UP:
                         if ((event.getRawX()-getRelativeSliderLeftMargin()) < (relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2))*0.8f) {
-                            animateSliderButton(paramsF.leftMargin, 0);
-                            rlSliderContainer.setBackgroundResource(R.color.theme_color);
-                            relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
-                            viewAlpha.setAlpha(0.0f);
+                            setSlideInitial();
                         } else{
                             animateSliderButton(paramsF.leftMargin, relativeLayoutSlider.getWidth()-tvSlide.getWidth());
                             relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_confirm_color_bg);
                             rlSliderContainer.setBackgroundResource(R.color.slider_green);
-                            seekbartest.setVisibility(View.GONE);
+                            sliderText.setVisibility(View.GONE);
                             viewAlpha.setAlpha(1.0f);
+                            buttonPlaceOrder.performClick();
                         }
                         break;
                 }
@@ -676,7 +656,23 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             }
         });
 
+        if(Data.userData.getSlideCheckoutPayEnabled() == 1){
+            rlSliderContainer.setVisibility(View.VISIBLE);
+            buttonPlaceOrder.setVisibility(View.GONE);
+        } else{
+            buttonPlaceOrder.setVisibility(View.VISIBLE);
+            rlSliderContainer.setVisibility(View.GONE);
+        }
+
         return rootView;
+    }
+
+    private void setSlideInitial(){
+        animateSliderButton(paramsF.leftMargin, 0);
+        rlSliderContainer.setBackgroundResource(R.color.theme_color);
+        relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
+        sliderText.setVisibility(View.VISIBLE);
+        viewAlpha.setAlpha(0.0f);
     }
 
     private float getRelativeSliderLeftMargin(){
@@ -1163,6 +1159,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         showWalletBalanceLowDialog(PaymentOption.PAYTM);
                     }
                     goAhead = false;
+                    setSlideInitial();
                 }
             }
             else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
@@ -1175,6 +1172,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         showWalletBalanceLowDialog(PaymentOption.MOBIKWIK);
                     }
                     goAhead = false;
+                    setSlideInitial();
                 }
             }
             else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
@@ -1187,62 +1185,73 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         showWalletBalanceLowDialog(PaymentOption.FREECHARGE);
                     }
                     goAhead = false;
+                    setSlideInitial();
                 }
             }
             else if (activity.getPaymentOption() == PaymentOption.JUGNOO_PAY) {
                 if (Data.getPayData() == null || Data.getPayData().getPay().getHasVpa() != 1) {
                     relativeLayoutJugnooPay.performClick();
                     goAhead = false;
+                    setSlideInitial();
                 }
             }
             if (goAhead) {
                 buttonPlaceOrder.setEnabled(false);
-                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-                        activity.getResources().getString(R.string.place_order_confirmation),
-                        activity.getResources().getString(R.string.ok),
-                        activity.getResources().getString(R.string.cancel),
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (activity.getPaymentOption().getOrdinal() == 1) {
-                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
-                                } else {
-                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
+                if(rlSliderContainer.getVisibility() == View.VISIBLE){
+                    placeOrderConfirmation();
+                } else {
+                    DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+                            activity.getResources().getString(R.string.place_order_confirmation),
+                            activity.getResources().getString(R.string.ok),
+                            activity.getResources().getString(R.string.cancel),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    placeOrderConfirmation();
                                 }
-
-                                if(appType == AppConstant.ApplicationType.MEALS){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
-                                } else if(appType == AppConstant.ApplicationType.GROCERY){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
-                                } else if(appType == AppConstant.ApplicationType.MENUS){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
-                                } else{
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+                            },
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    buttonPlaceOrder.setEnabled(true);
+                                    if (appType == AppConstant.ApplicationType.MEALS) {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY + "_" + FirebaseEvents.PLACE_ORDER + "_" + FirebaseEvents.CANCEL, null);
+                                    } else if (appType == AppConstant.ApplicationType.GROCERY) {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY + "_" + FirebaseEvents.PLACE_ORDER + "_" + FirebaseEvents.CANCEL, null);
+                                    } else if (appType == AppConstant.ApplicationType.MENUS) {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY + "_" + FirebaseEvents.PLACE_ORDER + "_" + FirebaseEvents.CANCEL, null);
+                                    } else {
+                                        MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY + "_" + FirebaseEvents.PLACE_ORDER + "_" + FirebaseEvents.CANCEL, null);
+                                    }
                                 }
-                                placeOrderApi();
-                            }
-                        },
-                        new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                buttonPlaceOrder.setEnabled(true);
-                                if(appType == AppConstant.ApplicationType.MEALS){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
-                                } else if(appType == AppConstant.ApplicationType.GROCERY){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
-                                } else if(appType == AppConstant.ApplicationType.MENUS){
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
-                                } else{
-                                    MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.CANCEL, null);
-                                }
-                            }
-                        }, false, false);
+                            }, false, false);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
+    private void placeOrderConfirmation(){
+        int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+        if (activity.getPaymentOption().getOrdinal() == 1) {
+            FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
+        } else {
+            FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
+        }
+
+        if(appType == AppConstant.ApplicationType.MEALS){
+            MyApplication.getInstance().logEvent(FirebaseEvents.M_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+        } else if(appType == AppConstant.ApplicationType.GROCERY){
+            MyApplication.getInstance().logEvent(FirebaseEvents.G_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+        } else if(appType == AppConstant.ApplicationType.MENUS){
+            MyApplication.getInstance().logEvent(FirebaseEvents.MENUS_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+        } else{
+            MyApplication.getInstance().logEvent(FirebaseEvents.F_PAY+"_"+FirebaseEvents.PLACE_ORDER+"_"+FirebaseEvents.OK, null);
+        }
+        placeOrderApi();
+    }
 
     private String cartItems(int type){
         String idKey = Constants.KEY_SUB_ITEM_ID;

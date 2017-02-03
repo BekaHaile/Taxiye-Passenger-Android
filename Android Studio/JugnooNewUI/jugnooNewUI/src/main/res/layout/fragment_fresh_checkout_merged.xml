@@ -581,14 +581,21 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_new_height"
-        android:layout_above="@+id/buttonPlaceOrder"
+        android:layout_above="@+id/llPayViewContainer"
         android:background="@drawable/shadow_up_new" />
+
+    <LinearLayout
+        android:id="@+id/llPayViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
     
     <RelativeLayout
         android:id="@+id/rlSliderContainer"
         android:layout_width="match_parent"
         android:layout_height="102px"
-        android:layout_above="@+id/rlSeekBar"
+        android:visibility="gone"
         android:background="@color/theme_color">
 
         <View
@@ -599,7 +606,7 @@
             android:background="@color/slider_green"/>
 
         <TextView
-            android:id="@+id/slider_text"
+            android:id="@+id/sliderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -631,59 +638,19 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/rlSeekBar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonPlaceOrder"
-        android:animateLayoutChanges="true"
-        android:visibility="gone"
-        android:background="@color/theme_color">
-
-        <SeekBar
-            android:id="@+id/myseek"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/capsule_slider_color_bg"
-            android:clickable="false"
-            android:max="100"
-            android:paddingLeft="50dp"
-            android:paddingRight="60dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="@dimen/px_20"
-            android:layout_marginBottom="@dimen/px_20"
-            android:layout_centerVertical="true"
-            android:progressDrawable="@android:color/transparent"
-            android:text=""
-            android:tag="DontTouchMe"
-            android:thumb="@drawable/seek_thumb_custom"/>
-
-
-    </RelativeLayout>
-
-    <!--<product.clicklabs.jugnoo.widgets.SwipeButton.SwipeButton
-        android:id="@+id/my_swipe_button"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/px_94"
-        android:text="Button"
-        android:visibility="gone"
-        android:layout_above="@id/buttonPlaceOrder"
-        android:background="#888888"
-        android:textColor="#ffffff"
-        />-->
-
     <Button
         android:id="@+id/buttonPlaceOrder"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_94"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/bg_place_order_selector"
         android:text="@string/place_order"
+        android:visibility="gone"
         android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_34" />
+
+    </LinearLayout>
 
 </RelativeLayout>

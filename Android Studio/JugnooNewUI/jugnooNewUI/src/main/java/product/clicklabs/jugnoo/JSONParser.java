@@ -135,6 +135,7 @@ public class JSONParser implements Constants {
         int fabButtonEnable = userData.optInt("fab_button_enabled", 0);
         Prefs.with(context).save(SPLabels.SHOW_FAB_SETTING, fabButtonEnable);
         int integratedJugnooEnabled = userData.optInt(KEY_INTEGRATED_JUGNOO_ENABLED, 0);
+        int slideCheckoutPayEnabled = userData.optInt(SLIDE_CHECKOUT_PAY_ENABLED, 0);
 
 
         String defaultBranchDesktopUrl = Prefs.with(context).getString(SPLabels.BRANCH_DESKTOP_URL, "");
@@ -236,7 +237,7 @@ public class JSONParser implements Constants {
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled,
                 inviteFriendButton, defaultClientId, integratedJugnooEnabled,
-                topupCardEnabled, showHomeScreen, showSubscriptionData);
+                topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled);
 
         Data.userData.setSubscriptionData(loginUserData.getSubscriptionData());
 
