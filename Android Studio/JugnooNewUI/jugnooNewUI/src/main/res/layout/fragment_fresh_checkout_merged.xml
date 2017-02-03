@@ -583,48 +583,83 @@
         android:layout_height="@dimen/shadow_new_height"
         android:layout_above="@+id/buttonPlaceOrder"
         android:background="@drawable/shadow_up_new" />
-
+    
     <RelativeLayout
-        android:id="@+id/rlSeekBar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonPlaceOrder"
+        android:id="@+id/rlSliderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="102px"
+        android:layout_above="@+id/rlSeekBar"
         android:background="@color/theme_color">
 
-        <SeekBar
-            android:id="@+id/myseek"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/px_72"
-            android:background="@drawable/capsule_slider_color_bg"
-            android:clickable="false"
-            android:max="100"
-            android:layout_marginLeft="@dimen/px_40"
-            android:layout_marginRight="@dimen/px_40"
-            android:layout_centerVertical="true"
-            android:progressDrawable="@android:color/transparent"
-            android:text="Do Not Touch"
-            android:tag="mwar"
-            android:paddingLeft="100px"
-            android:thumb="@drawable/ic_capsule_white" />
-
-        <Button
-            android:id="@+id/after_slide_button"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/px_94"
-            android:background="@color/slider_green"
-            android:text=""
-            android:visibility="invisible" />
+        <View
+            android:id="@+id/viewAlpha"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0"
+            android:background="@color/slider_green"/>
 
         <TextView
             android:id="@+id/slider_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="140px"
+            android:layout_marginRight="100px"
             android:layout_centerVertical="true"
             android:text="Swipe right to pay >>"
             android:textColor="#fff"
             android:textSize="@dimen/text_size_24" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayoutSlider"
+            android:layout_width="match_parent"
+            android:layout_height="72px"
+            android:background="@drawable/capsule_slider_color_bg"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="40px"
+            android:layout_marginLeft="40px">
+
+            <TextView
+                android:id="@+id/tvSlide"
+                android:layout_width="186px"
+                android:layout_height="72px"
+                android:background="@drawable/capsule_white_color"
+                android:text="Pay 300"
+                android:gravity="center"
+                android:textColor="@color/text_color"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlSeekBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonPlaceOrder"
+        android:animateLayoutChanges="true"
+        android:visibility="gone"
+        android:background="@color/theme_color">
+
+        <SeekBar
+            android:id="@+id/myseek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/capsule_slider_color_bg"
+            android:clickable="false"
+            android:max="100"
+            android:paddingLeft="50dp"
+            android:paddingRight="60dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="@dimen/px_20"
+            android:layout_marginBottom="@dimen/px_20"
+            android:layout_centerVertical="true"
+            android:progressDrawable="@android:color/transparent"
+            android:text=""
+            android:tag="DontTouchMe"
+            android:thumb="@drawable/seek_thumb_custom"/>
+
+
     </RelativeLayout>
 
     <!--<product.clicklabs.jugnoo.widgets.SwipeButton.SwipeButton

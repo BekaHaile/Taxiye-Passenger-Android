@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.animation.ArgbEvaluator;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,12 +11,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -24,10 +29,15 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -127,7 +137,7 @@ import retrofit.mime.TypedByteArray;
 
 
 public class FreshCheckoutMergedFragment extends Fragment implements FlurryEventNames, DeliverySlotsAdapter.Callback,
-        FreshCartItemsAdapter.Callback, PromoCouponsAdapter.Callback , View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+        FreshCartItemsAdapter.Callback, PromoCouponsAdapter.Callback {
 
     private final String TAG = FreshCheckoutMergedFragment.class.getSimpleName();
     private RelativeLayout linearLayoutRoot;
@@ -195,9 +205,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private boolean orderPlaced = false;
     private boolean cartChangedRefreshCheckout = false;
     private MySpinner spin;
-    SeekBar sb;
     boolean flag = false;
-    Button Confirm;
     TextView seekbartest;
 
     public FreshCheckoutMergedFragment() {
@@ -209,10 +217,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private CheckoutSaveData checkoutSaveData;
     private int type, selectedSlot = -1;
     private BecomeStarAdapter becomeStarAdapter;
-    private RelativeLayout rlSeekBar;
     private Button btnAddStar;
     private String selectedSubId;
     private SwipeButton mSwipeButton;
+    private TextView tvSlide;
+    private float xDown = 0f;
+    private DisplayMetrics displayMetrics;
+    private RelativeLayout relativeLayoutSlider, rlSliderContainer;
+    private RelativeLayout.LayoutParams paramsF;
+    private View viewAlpha;
 
     public ArrayList<SubItem> subItemsInCart;
 
@@ -430,6 +443,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         cvBecomeStar = (CardView) rootView.findViewById(R.id.cvBecomeStar); cvBecomeStar.setVisibility(View.GONE);
         spin = (MySpinner) rootView.findViewById(R.id.simpleSpinner);
         btnAddStar = (Button) rootView.findViewById(R.id.btnAddStar);
+        viewAlpha = (View) rootView.findViewById(R.id.viewAlpha);
         /*mSwipeButton = (SwipeButton) rootView.findViewById(R.id.my_swipe_button);
 
         SwipeButtonCustomItems swipeButtonSettings = new SwipeButtonCustomItems() {
@@ -453,13 +467,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             mSwipeButton.setSwipeButtonCustomItems(swipeButtonSettings);
         }*/
 
-        rlSeekBar = (RelativeLayout) rootView.findViewById(R.id.rlSeekBar);
-        sb = (SeekBar) rootView.findViewById(R.id.myseek);
         seekbartest = (TextView) rootView.findViewById(R.id.slider_text);
-        Confirm = (Button) rootView.findViewById(R.id.after_slide_button);
         seekbartest.setText("Swipe right to pay >>");
-        sb.setThumb(writeOnDrawable(R.drawable.ic_capsule_white, "Pay 300"));
-        sb.setOnSeekBarChangeListener(this);
+
+        rlSliderContainer = (RelativeLayout) rootView.findViewById(R.id.rlSliderContainer);
+        relativeLayoutSlider = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSlider);
+        tvSlide = (TextView) rootView.findViewById(R.id.tvSlide);
+        displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        paramsF = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
 
         if(Data.userData.getShowSubscriptionData() == 1 && !Data.userData.isSubscriptionActive()) {
             cvBecomeStar.setVisibility(View.VISIBLE);
@@ -620,8 +636,114 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         checkoutApiDoneOnce = false;
 
+        tvSlide.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        xDown = event.getRawX();
+                        break;
+
+                    case MotionEvent.ACTION_MOVE:
+                        Log.v("getRawx", "--> "+event.getRawX());
+                        if((event.getRawX()-getRelativeSliderLeftMargin()) > (tvSlide.getWidth()/2)
+                                && (event.getRawX()-getRelativeSliderLeftMargin()) < relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2)){
+                            paramsF.leftMargin = (int) layoutX(event.getRawX()-getRelativeSliderLeftMargin());
+                            relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
+                            seekbartest.setVisibility(View.VISIBLE);
+                            float percent = (event.getRawX()-getRelativeSliderLeftMargin()) / (relativeLayoutSlider.getWidth()-tvSlide.getWidth());
+                            viewAlpha.setAlpha(percent);
+                        }
+                        break;
+
+                    case MotionEvent.ACTION_UP:
+                        if ((event.getRawX()-getRelativeSliderLeftMargin()) < (relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2))*0.8f) {
+                            animateSliderButton(paramsF.leftMargin, 0);
+                            rlSliderContainer.setBackgroundResource(R.color.theme_color);
+                            relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
+                            viewAlpha.setAlpha(0.0f);
+                        } else{
+                            animateSliderButton(paramsF.leftMargin, relativeLayoutSlider.getWidth()-tvSlide.getWidth());
+                            relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_confirm_color_bg);
+                            rlSliderContainer.setBackgroundResource(R.color.slider_green);
+                            seekbartest.setVisibility(View.GONE);
+                            viewAlpha.setAlpha(1.0f);
+                        }
+                        break;
+                }
+
+                return true;
+            }
+        });
+
         return rootView;
     }
+
+    private float getRelativeSliderLeftMargin(){
+        RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams)relativeLayoutSlider.getLayoutParams();
+        return relativeParams.leftMargin;
+    }
+
+    private long animDuration = 150;
+    private void animateSliderButton(final int currMargin, final float newMargin){
+        float diff = newMargin - (float)currMargin;
+        Animation translateAnim = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0,
+                TranslateAnimation.ABSOLUTE, diff,
+                TranslateAnimation.ABSOLUTE, 0,
+                TranslateAnimation.ABSOLUTE, 0);
+        translateAnim.setDuration(animDuration);
+        translateAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+        translateAnim.setFillAfter(false);
+        translateAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                tvSlide.clearAnimation();
+                paramsF.leftMargin = (int) newMargin;
+                relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
+                tvSlide.setEnabled(true);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        tvSlide.clearAnimation();
+        tvSlide.setEnabled(false);
+        tvSlide.startAnimation(translateAnim);
+    }
+
+    private float layoutX(float rawX){
+        return rawX - sliderButtonWidth()/2f;
+    }
+
+    private float sliderButtonWidth(){
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
+        return (float)params.width;
+    }
+
+    /*
+
+    private float currentSliderPositionFloat(){
+        return ((float)paramsF.leftMargin + sliderButtonWidth()/2f) / (float)getItemWidth();
+    }
+
+
+
+    private float sliderPositionFloatByRawX(float rawX){
+        return (rawX + sliderButtonWidth()/2f) / (float)getItemWidth();
+    }
+
+    private void updateSliderViews(){
+        RelativeLayout.LayoutParams paramsABS = (RelativeLayout.LayoutParams) relativeLayoutSlider.getLayoutParams();
+        paramsABS.width = getFullWidth();
+        relativeLayoutSlider.setLayoutParams(paramsABS);
+    }*/
 
     private void updateCartUI() {
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
@@ -756,8 +878,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         if(payableAmount() > 0) {
             buttonPlaceOrder.setText("PAY "+activity.getString(R.string.rupees_value_format,
                     Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
+            tvSlide.setText("PAY "+activity.getString(R.string.rupees_value_format,
+                    Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
         } else{
             buttonPlaceOrder.setText(activity.getResources().getString(R.string.place_order));
+            tvSlide.setText(activity.getResources().getString(R.string.place_order));
         }
 
         updateStarLayout();
@@ -2493,74 +2618,5 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         FlurryEventLogger.event(PAYMENT_SCREEN, ORDER_PLACED, ORDER_PLACED);
     }
 
-    @Override
-    public void onProgressChanged(SeekBar arg0, int arg1, boolean arg2) {
-        if (arg1 > 95) {
-            //arg0.setThumb(getResources().getDrawable(R.drawable.slider_icon));
-            //rlSeekBar.setBackgroundResource(activity.getResources().getColor(R.color.slider_green));
-        }
-    }
 
-    @Override
-    public void onStartTrackingTouch(SeekBar arg0) {
-        seekbartest.setVisibility(View.INVISIBLE);
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar arg0) {
-        Log.d("onStopTrackingTouch", "onStopTrackingTouch");
-        if (arg0.getProgress() < 80) {
-            arg0.setProgress(0);
-            sb.setBackgroundResource(R.drawable.capsule_slider_color_bg);
-            rlSeekBar.setBackgroundResource(R.color.theme_color);
-            seekbartest.setVisibility(View.VISIBLE);
-            seekbartest.setText("Swipe right to pay >>");
-
-        } else {
-            arg0.setProgress(100);
-            seekbartest.setVisibility(View.VISIBLE);
-            seekbartest.setText("");
-            rlSeekBar.setBackgroundResource(R.color.slider_green);
-            sb.setBackgroundResource(R.drawable.capsule_slider_confirm_color_bg);
-            //Confirm.setVisibility(View.VISIBLE);
-
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        sb.setVisibility(View.VISIBLE);
-        sb.setProgress(0);
-        Confirm.setVisibility(View.INVISIBLE);
-        sb.setBackgroundResource(R.drawable.slider_back);
-        seekbartest.setVisibility(View.VISIBLE);
-        seekbartest.setText("Slide to Unlock");
-    }
-
-    private Bitmap getBitmap(int drawableRes) {
-        Drawable drawable = getResources().getDrawable(drawableRes);
-        Canvas canvas = new Canvas();
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        canvas.setBitmap(bitmap);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
-    }
-
-    public BitmapDrawable writeOnDrawable(int drawableId, String text){
-        Bitmap bm = BitmapFactory.decodeResource(activity.getResources(), drawableId).copy(Bitmap.Config.ARGB_8888, true);
-
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.BLACK);
-        paint.setTextSize((int)(ASSL.Xscale()*52));
-
-
-        Canvas canvas = new Canvas(bm);
-        canvas.drawText(text, 0, (int)(ASSL.Xscale()*72), paint);
-        //bm.setHeight((int)(ASSL.Xscale()*72));
-
-        return new BitmapDrawable(bm);
-    }
 }
