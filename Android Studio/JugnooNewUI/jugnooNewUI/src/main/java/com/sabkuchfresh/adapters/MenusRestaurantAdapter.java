@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private String searchText;
 
     private static final int MAIN_ITEM = 0;
-    private static final int BLANK_ITEM = 1;
+    private static final int FORM_ITEM = 1;
     private static final int STATUS_ITEM = 3;
     private static final int NO_VENDORS_ITEM = 4;
 
@@ -227,7 +228,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             v.setLayoutParams(layoutParams);
             ASSL.DoMagic(v);
             return new ViewHolder(v, activity);
-        } else if (viewType == BLANK_ITEM) {
+        } else if (viewType == FORM_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommend_restaurant, parent, false);
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
             v.setLayoutParams(layoutParams);
@@ -301,20 +302,26 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 MenusResponse.Vendor vendor = vendorsToShow.get(position);
                 mHolder.textViewRestaurantName.setText(vendor.getName());
 
+                mHolder.vSep.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
+
                 DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
                 String currentSystemTime = dateFormat.format(new Date()).toString();
                 long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
                 long minutes = ((timeDiff1 / (1000l * 60l)));
 
-                if (minutes > vendor.getBufferTime()) {
-                    mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.GONE);
-                } else if (minutes <= vendor.getBufferTime() && minutes > 0) {
-                    mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.VISIBLE);
-                    mHolder.textViewRestaurantCloseTime.setText("Closes in " + minutes + " min");
+                if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
+                    mHolder.textViewRestaurantCloseTime.setVisibility(View.VISIBLE);
+                    mHolder.textViewRestaurantCloseTime.setText(R.string.closed);
                 } else {
-                    mHolder.relativeLayoutRestaurantCloseTime.setVisibility(View.GONE);
+                    if (minutes > vendor.getBufferTime()) {
+                        mHolder.textViewRestaurantCloseTime.setVisibility(View.GONE);
+                    } else if (minutes <= vendor.getBufferTime() && minutes > 0) {
+                        mHolder.textViewRestaurantCloseTime.setVisibility(View.VISIBLE);
+                        mHolder.textViewRestaurantCloseTime.setText("Closes in " + minutes + " min");
+                    } else {
+                        mHolder.textViewRestaurantCloseTime.setVisibility(View.GONE);
+                    }
                 }
-                mHolder.textViewClosed.setVisibility(((vendor.getIsClosed() == 1) || (vendor.getIsAvailable() == 0)) ? View.VISIBLE : View.GONE);
 
                 mHolder.textViewDelivery.setVisibility(((vendor.getMinimumOrderAmount() != null)) ? View.VISIBLE : View.GONE);
                 if (vendor.getMinimumOrderAmount() != null) {
@@ -392,18 +399,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 titleHolder.etTelephone.setText(telephone);
                 titleHolder.etRestaurantName.setSelection(restaurantName.length());
 
-                titleHolder.etRestaurantName.addTextChangedListener(twRestaurantName);
-                titleHolder.etLocality.addTextChangedListener(twLocality);
-                titleHolder.etTelephone.addTextChangedListener(twTelephone);
-
                 titleHolder.bSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(TextUtils.isEmpty(restaurantName)){
-                            Utils.showToast(activity, activity.getString(R.string.restaurant_name_is_neccessary));
-                        } else {
-                            apiRecommendRestaurant();
-                        }
+                        apiRecommendRestaurant();
                     }
                 });
 
@@ -522,7 +521,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 return MAIN_ITEM;
             } else {
                 if (vendorsToShowCount() > 0) {
-                    return BLANK_ITEM;
+                    return FORM_ITEM;
                 } else {
                     return NO_VENDORS_ITEM;
                 }
@@ -531,7 +530,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return STATUS_ITEM;
         } else {
             if (vendorsToShowCount() > 0) {
-                return BLANK_ITEM;
+                return FORM_ITEM;
             } else {
                 return NO_VENDORS_ITEM;
             }
@@ -541,8 +540,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     @Override
     public int getItemCount() {
         int noVenderToShowCount = ((recentOrdersSize() > 0 || vendorsCompleteCount() > 0) && (vendorsToShowCount() == 0)) ? 1 : 0;
-        int blankItem = (vendorsToShowCount() > 0) ? 1 : 0;
-        return  recentOrdersSize() + vendorsToShowCount() + noVenderToShowCount + blankItem;
+        int formItem = (vendorsToShowCount() > 0) ? 1 : 0;
+        return  recentOrdersSize() + vendorsToShowCount() + noVenderToShowCount + formItem;
     }
 
     private int recentOrdersSize(){
@@ -556,25 +555,22 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout rlRoot;
+        public View vSep;
         public ImageView imageViewRestaurantImage;
-        public TextView textViewClosed, textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
-
-        public RelativeLayout relativeLayoutRestaurantCloseTime;
+        public TextView textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
         public TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery;
 
 
         public ViewHolder(View itemView, Context context) {
             super(itemView);
             rlRoot = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
+            vSep = itemView.findViewById(R.id.vSep);
             imageViewRestaurantImage = (ImageView) itemView.findViewById(R.id.imageViewRestaurantImage);
-            textViewClosed = (TextView) itemView.findViewById(R.id.textViewClosed); textViewClosed.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textViewRestaurantName = (TextView) itemView.findViewById(R.id.textViewRestaurantName); textViewRestaurantName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
             textViewMinimumOrder = (TextView) itemView.findViewById(R.id.textViewMinimumOrder); textViewMinimumOrder.setTypeface(Fonts.mavenMedium(context));
             textViewRestaurantCusines = (TextView) itemView.findViewById(R.id.textViewRestaurantCusines); textViewRestaurantCusines.setTypeface(Fonts.mavenMedium(context));
-
-            relativeLayoutRestaurantCloseTime = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutRestaurantCloseTime);
             textViewRestaurantCloseTime = (TextView) itemView.findViewById(R.id.textViewRestaurantCloseTime);textViewRestaurantCloseTime.setTypeface(Fonts.mavenMedium(context));
             textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);textViewAddressLine.setTypeface(Fonts.mavenMedium(context));
             textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);textViewDelivery.setTypeface(Fonts.mavenMedium(context));
@@ -593,10 +589,15 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             etLocality = (EditText) itemView.findViewById(R.id.etLocality); etLocality.setTypeface(Fonts.mavenMedium(context));
             etTelephone = (EditText) itemView.findViewById(R.id.etTelephone); etTelephone.setTypeface(Fonts.mavenMedium(context));
             bSubmit = (Button) itemView.findViewById(R.id.bSubmit); bSubmit.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+
+            etRestaurantName.addTextChangedListener(twRestaurantName);
+            etLocality.addTextChangedListener(twLocality);
+            etTelephone.addTextChangedListener(twTelephone);
+            etTelephone.setOnEditorActionListener(onEditorActionListener);
         }
     }
 
-    static class ViewNoVenderItem extends RecyclerView.ViewHolder {
+    class ViewNoVenderItem extends RecyclerView.ViewHolder {
         public RelativeLayout rlLayoutNoVender;
         public TextView textViewNoMenus;
         public ViewNoVenderItem(View itemView,Context context)
@@ -611,7 +612,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
 
 
-    static class ViewTitleStatus extends RecyclerView.ViewHolder {
+    class ViewTitleStatus extends RecyclerView.ViewHolder {
 
         public LinearLayout linear;
         public RelativeLayout container, relativeStatusBar;
@@ -804,6 +805,10 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public void apiRecommendRestaurant() {
         try {
+            if(TextUtils.isEmpty(restaurantName)){
+                Utils.showToast(activity, activity.getString(R.string.restaurant_name_is_neccessary));
+                return;
+            }
             if (AppStatus.getInstance(activity).isOnline(activity)) {
                 DialogPopup.showLoadingDialog(activity, "");
                 HashMap<String, String> params = new HashMap<>();
@@ -845,6 +850,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             e.printStackTrace();
         }
     }
+
+    private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            apiRecommendRestaurant();
+            return false;
+        }
+    };
 
 
 }

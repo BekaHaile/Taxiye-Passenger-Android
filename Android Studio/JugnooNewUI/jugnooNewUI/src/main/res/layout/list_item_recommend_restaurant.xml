@@ -7,6 +7,14 @@
     android:background="@color/white"
     >
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_2"
+        android:layout_marginLeft="@dimen/px_24"
+        android:layout_marginRight="@dimen/px_24"
+        android:background="@color/stroke_light_grey_alpha"
+        />
+
     <TextView
         android:id="@+id/tvCouldNotFind"
         android:layout_width="match_parent"

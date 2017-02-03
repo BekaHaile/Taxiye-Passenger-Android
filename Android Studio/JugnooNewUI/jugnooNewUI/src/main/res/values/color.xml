@@ -293,4 +293,7 @@
     <color name="green_button">#18ca3c</color>
     <color name="green_button_alpha">#9918ca3c</color>
 
+    <color name="red_very_light">#ffe9e9</color>
+    <color name="red_dark_more">#d0021b</color>
+
 </resources>
