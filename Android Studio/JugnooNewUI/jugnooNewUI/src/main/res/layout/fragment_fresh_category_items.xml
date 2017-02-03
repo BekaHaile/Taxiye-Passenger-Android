@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llRoot"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include
-        layout="@layout/layout_delivery_address_bar"
-        />
+    <include layout="@layout/layout_delivery_address_bar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
-        <include layout="@layout/layout_offering_not_available"/>
+        <include layout="@layout/layout_offering_not_available" />
 
         <ImageView
             android:id="@+id/noMealsView"
@@ -25,8 +22,7 @@
             android:layout_centerInParent="true"
             android:background="@drawable/ic_no_meals"
             android:tag="mwar"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/noFreshsView"
@@ -35,16 +31,14 @@
             android:layout_centerInParent="true"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:visibility="gone"
-            >
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="376px"
                 android:layout_height="270px"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/ic_no_grocery_items"
-                android:tag="mwar"
-                />
+                android:tag="mwar" />
 
             <TextView
                 android:id="@+id/swipe_text"
@@ -53,8 +47,7 @@
                 android:layout_marginTop="38px"
                 android:text="@string/please_swipe_down_to_reload"
                 android:textColor="@color/text_color"
-                android:textSize="36px"
-                />
+                android:textSize="36px" />
 
         </LinearLayout>
 
@@ -69,8 +62,7 @@
                 android:layout_height="match_parent"
                 android:fadeScrollbars="true"
                 android:scrollbars="vertical"
-                android:splitMotionEvents="false">
-            </android.support.v7.widget.RecyclerView>
+                android:splitMotionEvents="false"></android.support.v7.widget.RecyclerView>
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <View
@@ -78,8 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/shadow_new_height"
             android:background="@drawable/shadow_down_new"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
     </RelativeLayout>
 

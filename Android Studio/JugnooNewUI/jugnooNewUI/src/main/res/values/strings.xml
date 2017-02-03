@@ -1489,4 +1489,6 @@
     <string name="telephone_number_optional">Telephone Number (optional)</string>
     <string name="restaurant_name_is_neccessary">Restaurant name is neccessary</string>
 
+    <string name="star_icon">&#xe9d9;</string>
+
 </resources>

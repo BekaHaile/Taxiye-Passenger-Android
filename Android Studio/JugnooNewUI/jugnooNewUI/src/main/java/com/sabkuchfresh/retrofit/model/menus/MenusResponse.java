@@ -235,6 +235,29 @@ public class MenusResponse {
 		@Expose
 		private Long bufferTime;
 
+
+
+		@SerializedName("rating")
+		private Double rating;
+
+		@SerializedName("review_count")
+		private long reviewCount;
+
+		public Double getRating() {
+			return rating==null?null:Math.round(rating * 10.0) / 10.0;
+		}
+
+		public long getReviewCount() {
+			return reviewCount;
+		}
+
+		@SerializedName("rating_color")
+		private String colorCode;
+
+		public String getColorCode() {
+			return colorCode;
+		}
+
 		/**
 		 *
 		 * @return

@@ -295,5 +295,6 @@
 
     <color name="red_very_light">#ffe9e9</color>
     <color name="red_dark_more">#d0021b</color>
+    <color name="dull_background">#eeeeee</color>
 
 </resources>

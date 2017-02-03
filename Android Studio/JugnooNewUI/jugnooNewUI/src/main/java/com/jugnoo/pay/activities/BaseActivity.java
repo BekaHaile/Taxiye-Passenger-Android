@@ -21,6 +21,7 @@ import android.widget.EditText;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.sabkuchfresh.utils.AppConstant;
+import com.tsengvn.typekit.TypekitContextWrapper;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -35,6 +36,17 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9001;
     BroadcastReceiver broadcastReceiver;
     int tokens;
+
+
+    /**
+     * Edited by Parminder Singh on 1/30/17 at 3:49 PM
+     **/
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -608,4 +608,5 @@ public interface Constants {
 	String SP_FRESH_CART_ADDRESS = "sp_fresh_cart_address";
 	String KEY_SEARCH_TEXT = "search_text";
 	String KEY_EMPTY_CART = "empty_cart";
+	String FEEDBACK_TITLE = "feedback_title";
 }

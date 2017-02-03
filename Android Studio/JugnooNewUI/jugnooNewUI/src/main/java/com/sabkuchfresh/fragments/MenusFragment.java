@@ -25,8 +25,8 @@ import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
@@ -150,19 +150,22 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
 
+
+
         try {
             if(Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        activity.openFeedback();
+
+                     activity.openFeedback();
                     }
                 }, 300);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         try {
             if(Data.userData.getPromoSuccess() == 0) {
                 showPromoFailedAtSignupDialog();
@@ -414,6 +417,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     private void retryDialogVendorData(DialogErrorType dialogErrorType, final MenusResponse.Vendor vendor){

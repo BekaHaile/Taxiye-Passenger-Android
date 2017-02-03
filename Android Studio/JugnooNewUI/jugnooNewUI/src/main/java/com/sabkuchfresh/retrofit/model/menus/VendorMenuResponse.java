@@ -37,6 +37,12 @@ public class VendorMenuResponse {
     @Expose
     private List<Charges> charges = null;
 
+
+
+
+
+
+
     public Integer getFlag() {
         return flag;
     }
