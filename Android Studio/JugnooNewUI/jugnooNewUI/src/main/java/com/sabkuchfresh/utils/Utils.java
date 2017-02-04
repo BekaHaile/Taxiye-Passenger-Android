@@ -59,8 +59,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
@@ -116,17 +116,17 @@ public class Utils {
         return px;
     }
 
-    public static void showToast(Context context, String string){
-        try {
-            if(Data.toast != null){
-                Data.toast.cancel();
-            }
-            Data.toast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
-            Data.toast.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+	public static void showToast(Context context, String string){
+		try {
+			if(MyApplication.getInstance().getToast() != null){
+				MyApplication.getInstance().getToast().cancel();
+			}
+			MyApplication.getInstance().setToast(Toast.makeText(context, string, Toast.LENGTH_SHORT));
+			MyApplication.getInstance().getToast().show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
     /**
      * This method converts device specific pixels to density independent pixels.

@@ -52,7 +52,6 @@ import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -310,7 +309,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
      */
     public void getOrderData(final Activity activity) {
         try {
-            if(AppStatus.getInstance(activity).isOnline(activity)) {
+            if(MyApplication.getInstance().isOnline()) {
 
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 
@@ -413,7 +412,7 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 
     private void cancelOrderApiCall(int orderId) {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();

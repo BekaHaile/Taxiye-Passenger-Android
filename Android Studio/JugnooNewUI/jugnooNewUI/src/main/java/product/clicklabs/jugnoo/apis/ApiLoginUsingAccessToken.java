@@ -22,7 +22,6 @@ import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -48,7 +47,7 @@ public class ApiLoginUsingAccessToken {
 
 	public void hit(String accessToken, final double latitude, final double longitude, String specificClientId, boolean showDialog, final Callback callback){
 
-		if (AppStatus.getInstance(activity).isOnline(activity)) {
+		if (MyApplication.getInstance().isOnline()) {
 
 			if(showDialog) {
 				DialogPopup.showLoadingDialog(activity, "Loading...");

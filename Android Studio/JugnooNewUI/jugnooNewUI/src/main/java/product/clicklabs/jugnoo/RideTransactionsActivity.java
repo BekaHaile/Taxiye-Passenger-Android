@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.datastructure.ProductType;
-import product.clicklabs.jugnoo.datastructure.UpdateRideTransaction;
 import product.clicklabs.jugnoo.fragments.RideTransactionsFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
@@ -19,7 +18,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class RideTransactionsActivity extends BaseFragmentActivity implements UpdateRideTransaction, FlurryEventNames {
+public class RideTransactionsActivity extends BaseFragmentActivity implements FlurryEventNames {
 
     private final String TAG = RideTransactionsActivity.class.getSimpleName();
 
@@ -29,7 +28,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	ImageView imageViewBack, imageViewInvoice;
 
     RelativeLayout relativeLayoutContainer;
-    public static UpdateRideTransaction updateRideTransaction;
 
 	@Override
 	protected void onResume() {
@@ -46,8 +44,6 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_rides_transactions);
-
-        updateRideTransaction = this;
 
 		relative = (RelativeLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
@@ -117,15 +113,4 @@ public class RideTransactionsActivity extends BaseFragmentActivity implements Up
 	}
 
 
-    @Override
-    public void updateRideTransaction(int position) {
-        try {
-//            if (rideInfosList.size() > 0) {
-//                rideInfosList.get(position).isRatedBefore = 1;
-//            }
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-	
 }

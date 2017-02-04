@@ -16,7 +16,6 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -49,7 +48,7 @@ public class SendFeedbackQuery {
             } else {
                 activity.finish();
             }
-            if (AppStatus.getInstance(MyApplication.getInstance()).isOnline(MyApplication.getInstance())) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);

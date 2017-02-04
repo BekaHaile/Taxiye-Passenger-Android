@@ -7,15 +7,14 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +46,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -57,11 +57,9 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
-import product.clicklabs.jugnoo.utils.Font;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -736,7 +734,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void searchRestaurantsAutoComplete(final String searchText) {
         try {
             if(!refreshingAutoComplete) {
-                if (AppStatus.getInstance(activity).isOnline(activity)) {
+                if (MyApplication.getInstance().isOnline()) {
                     if(queryMap.containsKey(searchText)){
                         searchVendors(searchText, queryMap.get(searchText));
                     } else {
@@ -863,7 +861,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 Utils.showToast(activity, activity.getString(R.string.restaurant_name_is_neccessary));
                 return;
             }
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, "");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -883,6 +881,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
                                     Utils.showToast(activity, productsResponse.getMessage());
+                                    restaurantName = ""; locality = ""; telephone = "";
+                                    notifyDataSetChanged();
                                 } else {
                                     Utils.showToast(activity, productsResponse.getMessage());
                                 }

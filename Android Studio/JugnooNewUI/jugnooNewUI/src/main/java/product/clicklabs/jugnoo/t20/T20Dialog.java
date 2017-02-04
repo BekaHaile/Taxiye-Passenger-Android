@@ -32,7 +32,6 @@ import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Selection;
 import product.clicklabs.jugnoo.t20.models.T20DataType;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -202,7 +201,7 @@ public class T20Dialog {
 
 
 	private void submitSelectedTeam() {
-		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+		if (!HomeActivity.checkIfUserDataNull(activity) && MyApplication.getInstance().isOnline()) {
 			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();

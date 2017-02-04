@@ -59,7 +59,6 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -634,7 +633,7 @@ public class AddAddressMapFragment extends Fragment implements LocationUpdate,
 
     private void fillAddressDetails(final LatLng latLng ,final boolean setData) {
         try {
-            if (AppStatus.getInstance(getActivity()).isOnline(getActivity())) {
+            if (MyApplication.getInstance().isOnline()) {
                 final Map<String, String> params = new HashMap<String, String>(6);
 
                 params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);

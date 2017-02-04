@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
@@ -44,7 +43,6 @@ public class Data {
 
 
 	public static boolean linkFoundOnce = false;
-	public static Toast toast;
 
 
 

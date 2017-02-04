@@ -33,7 +33,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -438,7 +437,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 	
 
 	public void cancelRideAPI(final Activity activity, final String reasons, final String addtionalReason) {
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			if (MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(activity, "Loading...");
 				
 				HashMap<String, String> params = new HashMap<>();

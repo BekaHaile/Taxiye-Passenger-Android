@@ -22,7 +22,6 @@ import product.clicklabs.jugnoo.home.models.PokestopTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -74,7 +73,7 @@ public class PokestopHelper {
      */
     private void findPokeStop(LatLng latLngMapCenter, final int cityId) {
         try {
-            if (AppStatus.getInstance(context).isOnline(context)) {
+            if (MyApplication.getInstance().isOnline()) {
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_MAP_CENTER_LATITUDE, String.valueOf(latLngMapCenter.latitude));

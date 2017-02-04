@@ -91,7 +91,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -948,7 +947,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     public void placeOrderApi() {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 productList.clear();
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
@@ -1451,7 +1450,7 @@ public class MenusCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     public void getCheckoutDataAPI() {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 

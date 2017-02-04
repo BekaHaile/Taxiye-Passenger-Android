@@ -115,7 +115,6 @@ import java.util.List;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
-import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.OrderStatusActivity;
@@ -150,14 +149,13 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.http.HEAD;
 import retrofit.mime.TypedByteArray;
 
 
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends AppCompatActivity implements LocationUpdate, FlurryEventNames {
+public class FreshActivity extends AppCompatActivity implements FlurryEventNames {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -200,7 +198,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
     public boolean updateCart = false;
 
-    private LocationFetcher locationFetcher = null;
     public float scale = 0f;
 
     public boolean locationSearchShown = false;
@@ -658,11 +655,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
 
                 fetchWalletBalance(this);
 
-                if (locationFetcher == null) {
-                    locationFetcher = new LocationFetcher(this, 60000l);
-                } else {
-                    locationFetcher.connect();
-                }
+                MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 60000l);
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
                         Data.userData.getIntegratedJugnooEnabled() == 1) {
@@ -1710,9 +1703,7 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
             saveFilters();
         }
 
-        if (locationFetcher != null) {
-            locationFetcher.destroy();
-        }
+        MyApplication.getInstance().getLocationFetcher().destroy();
 
     }
 
@@ -2064,12 +2055,6 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Data.latitude = location.getLatitude();
-        Data.longitude = location.getLongitude();
     }
 
 
@@ -3332,5 +3317,13 @@ public class FreshActivity extends AppCompatActivity implements LocationUpdate, 
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
     }
+
+    private LocationUpdate locationUpdate = new LocationUpdate() {
+        @Override
+        public void onLocationChanged(Location location) {
+            Data.latitude = location.getLatitude();
+            Data.longitude = location.getLongitude();
+        }
+    };
 
 }

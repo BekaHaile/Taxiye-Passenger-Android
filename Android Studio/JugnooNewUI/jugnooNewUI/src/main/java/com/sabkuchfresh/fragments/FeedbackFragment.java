@@ -52,7 +52,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -507,7 +506,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
             } else {
                 activity.finish();
             }
-            if (AppStatus.getInstance(MyApplication.getInstance()).isOnline(MyApplication.getInstance())) {
+            if (MyApplication.getInstance().isOnline()) {
                 //DialogPopup.showLoadingDialog(activity, "loading...");
 
                 HashMap<String, String> params = new HashMap<>();
@@ -609,7 +608,7 @@ public class FeedbackFragment extends Fragment implements View.OnClickListener, 
      */
     private void getOrderData() {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 DialogPopup.showLoadingDialog(activity, "Loading...");
 

@@ -20,7 +20,6 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -48,7 +47,7 @@ public class ApiFetchWalletBalance {
 
 	public void getBalance(final boolean showDialog) {
 		try {
-			if (AppStatus.getInstance(activity).isOnline(activity)) {
+			if (MyApplication.getInstance().isOnline()) {
 
 				ProgressDialog progressDialog = null;
 				if (showDialog) {

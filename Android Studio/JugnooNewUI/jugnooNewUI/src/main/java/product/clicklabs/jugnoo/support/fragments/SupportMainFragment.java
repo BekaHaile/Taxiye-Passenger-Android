@@ -32,7 +32,6 @@ import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.support.models.SupportCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -173,7 +172,7 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 				showPanelSuccess(menu);
 			}
 			else {
-				if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+				if (!HomeActivity.checkIfUserDataNull(activity) && MyApplication.getInstance().isOnline()) {
 					DialogPopup.showLoadingDialog(activity, "");
 
 					HashMap<String, String> params = new HashMap<>();

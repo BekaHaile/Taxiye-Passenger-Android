@@ -49,7 +49,6 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -251,7 +250,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     public void getAllMenus(final boolean loader, final LatLng latLng) {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 ProgressDialog progressDialog = null;
                 if (loader)
                     progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
@@ -361,7 +360,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     public void getVendorMenu(final MenusResponse.Vendor vendor) {
         try {
-            if(AppStatus.getInstance(activity).isOnline(activity)) {
+            if(MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();

@@ -55,7 +55,6 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -308,7 +307,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 	public void getAllProducts(final boolean loader, final LatLng latLng) {
 		try {
             this.loader = loader;
-			if(AppStatus.getInstance(activity).isOnline(activity)) {
+			if(MyApplication.getInstance().isOnline()) {
                 ProgressDialog progressDialog = null;
                 if(loader)
                     progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));

@@ -33,13 +33,13 @@ import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import retrofit.RetrofitError;
@@ -353,7 +353,7 @@ public class FreshSearchFragment extends Fragment {
 	public void searchFreshItemsAutoComplete(final String searchText) {
 		try {
 			if(!refreshingAutoComplete) {
-				if (AppStatus.getInstance(activity).isOnline(activity)) {
+				if (MyApplication.getInstance().isOnline()) {
 						HashMap<String, String> params = new HashMap<>();
 						params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 						params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));

@@ -13,10 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -156,7 +156,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 		super.onPostExecute(params);
 		try {
 			if(params != null) {
-				if (AppStatus.getInstance(context).isOnline(context)) {
+				if (MyApplication.getInstance().isOnline()) {
 					Log.i(TAG, "params before api=" + params);
 					new HomeUtil().putDefaultParams(params);
 					RestClient.getApiService().uploadAnalytics(params, new Callback<SettleUserDebt>() {
@@ -192,7 +192,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 		try {
 			HashMap<String, String> params = getPreparedParams();
 			if(params != null) {
-				if (AppStatus.getInstance(context).isOnline(context)) {
+				if (MyApplication.getInstance().isOnline()) {
 					Log.i(TAG, "params before sync api=" + params);
 					new HomeUtil().putDefaultParams(params);
 					Response response = RestClient.getApiService().uploadAnalytics(params);

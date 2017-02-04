@@ -11,7 +11,6 @@ import product.clicklabs.jugnoo.datastructure.PendingCall;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.client.Response;
@@ -70,9 +69,9 @@ public class PushPendingCallsReceiver extends BroadcastReceiver {
 
 
     public void startAPI(Context context, PendingAPICall pendingAPICall) {
-        if (AppStatus.getInstance(context).isOnline(context)) {
+        if (MyApplication.getInstance().isOnline()) {
             try {
-                if (AppStatus.getInstance(context).isOnline(context)) {
+                if (MyApplication.getInstance().isOnline()) {
                     Response response = null;
                     if(PendingCall.EMERGENCY_ALERT.getPath().equalsIgnoreCase(pendingAPICall.url)){
                         response = RestClient.getApiService().emergencyAlertSync(pendingAPICall.nameValuePairs);

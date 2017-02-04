@@ -26,6 +26,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -33,7 +34,6 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import retrofit.Callback;
@@ -167,7 +167,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
 
     public void getSuperCategoriesAPI() {
         try {
-            if(AppStatus.getInstance(activity).isOnline(activity)) {
+            if(MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();

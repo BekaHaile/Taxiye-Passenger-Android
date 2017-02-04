@@ -15,7 +15,6 @@ import product.clicklabs.jugnoo.datastructure.PendingCall;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Log;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -42,7 +41,7 @@ public class ApiEmergencyAlert {
 
 	public void raiseEmergencyAlertAPI(Location myLocation, String alertType, String driverId, String engagementId) {
 		try {
-			if(AppStatus.getInstance(activity).isOnline(activity)) {
+			if(MyApplication.getInstance().isOnline()) {
 				final HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_DRIVER_ID, driverId);

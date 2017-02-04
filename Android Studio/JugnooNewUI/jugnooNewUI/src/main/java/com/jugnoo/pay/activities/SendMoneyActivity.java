@@ -34,9 +34,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -250,7 +250,7 @@ public class SendMoneyActivity extends BaseActivity {
 
     private void callingSendMoneyApi() {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
 				CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
 				SendMoneyRequest request = new SendMoneyRequest();
 
@@ -373,7 +373,7 @@ public class SendMoneyActivity extends BaseActivity {
 
     private void callingRequestMoneyApi() {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
 				CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
 				final SendMoneyRequest request = new SendMoneyRequest();
 

@@ -15,7 +15,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -123,9 +122,8 @@ public class LocationUpdateService extends Service {
 				double latitude = intent.getDoubleExtra(Constants.KEY_LATITUDE, 0);
 				double longitude = intent.getDoubleExtra(Constants.KEY_LONGITUDE, 0);
 				if(Double.compare(latitude, 0) == 0 && Double.compare(longitude, 0) == 0){
-					LocationFetcher lf = new LocationFetcher(context);
-					latitude = lf.getSavedLatFromSP();
-					longitude = lf.getSavedLngFromSP();
+					latitude = MyApplication.getInstance().getLocationFetcher().getSavedLatFromSP();
+					longitude = MyApplication.getInstance().getLocationFetcher().getSavedLngFromSP();
 				}
 				emergencyLoc = intent.getBooleanExtra(Constants.KEY_EMERGENCY_LOC, false);
 				Log.i(TAG, "customonReceive lat=" + latitude + ", lng=" + longitude);

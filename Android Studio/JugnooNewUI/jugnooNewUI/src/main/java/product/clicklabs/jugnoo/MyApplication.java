@@ -6,14 +6,16 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.widget.Toast;
 
 import com.clevertap.android.sdk.ActivityLifecycleCallback;
 import com.clevertap.android.sdk.CleverTapAPI;
 import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
 import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
@@ -22,6 +24,7 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.squareup.leakcanary.LeakCanary;
 import com.squareup.otto.Bus;
 import com.tsengvn.typekit.Typekit;
 
@@ -33,7 +36,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import io.branch.referral.Branch;
-import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -97,12 +99,12 @@ public class MyApplication extends Application {
 
 
         super.onCreate();
-//		if (LeakCanary.isInAnalyzerProcess(this)) {
-//			// This process is dedicated to LeakCanary for heap analysis.
-//			// You should not init your app in this process.
-//			return;
-//		}
-//		LeakCanary.install(this);
+		if (LeakCanary.isInAnalyzerProcess(this)) {
+			// This process is dedicated to LeakCanary for heap analysis.
+			// You should not init your app in this process.
+			return;
+		}
+		LeakCanary.install(this);
         try {
            // Fabric.with(this, new Crashlytics());
             if (!this.isTestModeEnabled()) {
@@ -543,5 +545,46 @@ public class MyApplication extends Application {
 	public String deviceName(){
 		return android.os.Build.MANUFACTURER + android.os.Build.MODEL;
 	}
+
+	private LocationFetcher locationFetcher;
+	public LocationFetcher getLocationFetcher(){
+		if(locationFetcher == null){
+			locationFetcher = new LocationFetcher(this);
+		}
+		return locationFetcher;
+	}
+
+	private Toast toast;
+	public Toast getToast(){
+		return toast;
+	}
+	public void setToast(Toast toast){
+		this.toast = toast;
+	}
+
+
+	public boolean isOnline() {
+		try {
+			ConnectivityManager connectManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			NetworkInfo activeNetwork = connectManager.getActiveNetworkInfo();
+			if (activeNetwork != null) { // connected to the internet
+				if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+					// connected to wifi
+					return true;
+				} else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+					// connected to the mobile provider's data plan
+					return true;
+				}
+			} else {
+				// not connected to the internet
+				return false;
+			}
+			return false;
+		} catch (Exception e) {
+			System.out.println("CheckConnectivity Exception: " + e.getMessage());
+		}
+		return false;
+	}
+
 
 }
