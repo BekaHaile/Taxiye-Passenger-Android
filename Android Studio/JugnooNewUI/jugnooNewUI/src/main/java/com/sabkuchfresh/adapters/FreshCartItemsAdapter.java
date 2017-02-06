@@ -109,8 +109,8 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		SubItem subItem;
 		if(position == subItems.size()){
 			subItem = new SubItem();
-			subItem.setSubItemName(subscription.getSubscriptionId()+"");
-			subItem.setPrice((double)subscription.getMinimumOrderAmount());
+			subItem.setSubItemName(subscription.getDescription());
+			subItem.setPrice((double)subscription.getPrice());
 			subItem.setSubItemQuantitySelected(1);
 		} else {
 			subItem = subItems.get(position);

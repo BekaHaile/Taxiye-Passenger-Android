@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 
@@ -45,6 +46,15 @@ public class UserCheckoutResponse{
 	@SerializedName("subscription_info")
 	@Expose
 	private SubscriptionInfo subscriptionInfo;
+	@SerializedName("show_star_subscriptions")
+	@Expose
+	private Integer showStarSubscriptions;
+	@SerializedName("star_subscription_title")
+	@Expose
+	private String starSubscriptionTitle;
+	@SerializedName("star_subscription_text")
+	@Expose
+	private String starSubscriptionText;
 
 	/**
 	 *
@@ -158,6 +168,32 @@ public class UserCheckoutResponse{
 
 	public void setSubscriptionInfo(SubscriptionInfo subscriptionInfo) {
 		this.subscriptionInfo = subscriptionInfo;
+	}
+
+	public Integer getShowStarSubscriptions() {
+		if(showStarSubscriptions == null)
+			showStarSubscriptions = 0;
+		return showStarSubscriptions;
+	}
+
+	public void setShowStarSubscriptions(Integer showStarSubscriptions) {
+		this.showStarSubscriptions = showStarSubscriptions;
+	}
+
+	public String getStarSubscriptionText() {
+		return starSubscriptionText;
+	}
+
+	public void setStarSubscriptionText(String starSubscriptionText) {
+		this.starSubscriptionText = starSubscriptionText;
+	}
+
+	public String getStarSubscriptionTitle() {
+		return starSubscriptionTitle;
+	}
+
+	public void setStarSubscriptionTitle(String starSubscriptionTitle) {
+		this.starSubscriptionTitle = starSubscriptionTitle;
 	}
 
 	public class Subscription {
@@ -416,6 +452,15 @@ public class UserCheckoutResponse{
 		@SerializedName("cashback_text")
 		@Expose
 		private String cashbackText;
+		@SerializedName("price")
+		@Expose
+		private Integer price;
+		@SerializedName("plan_string")
+		@Expose
+		private String planString;
+		@SerializedName("description")
+		@Expose
+		private String description;
 
 		public Integer getSubscriptionId() {
 			return subscriptionId;
@@ -481,5 +526,28 @@ public class UserCheckoutResponse{
 			this.cashbackText = cashbackText;
 		}
 
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public String getPlanString() {
+			return planString;
+		}
+
+		public void setPlanString(String planString) {
+			this.planString = planString;
+		}
+
+		public Integer getPrice() {
+			return price;
+		}
+
+		public void setPrice(Integer price) {
+			this.price = price;
+		}
 	}
 }
