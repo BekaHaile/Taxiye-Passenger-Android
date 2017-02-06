@@ -1,7 +1,7 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
@@ -144,31 +144,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             MainViewHolder mHolder = ((MainViewHolder) holder);
             Item item = subItems.get(position);
 
-            Item itemUp = position == 0 ? null : subItems.get(position - 1);
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mHolder.cardViewRecycler.getLayoutParams();
-            int topMargin, bottomMargin;
-            if(itemUp == null){
-                topMargin = (int)(25.0f*ASSL.Yscale());
-            } else if(itemUp.getIsSubCategory() == 1){
-                topMargin = (int)(6.0f*ASSL.Yscale());
-            } else{
-                topMargin = (int)(-6.0f*ASSL.Yscale());
-            }
-
-            Item itemDown = (position < (subItems.size()-1)) ? subItems.get(position + 1) : null;
-            if(itemDown == null){
-                mHolder.saperatorImage.setVisibility(View.GONE);
-                bottomMargin = (int)(25.0f*ASSL.Yscale());
-            } else if(itemDown.getIsSubCategory() == 1){
-                mHolder.saperatorImage.setVisibility(View.GONE);
-                bottomMargin = (int)(6.0f*ASSL.Yscale());
-            } else{
-                mHolder.saperatorImage.setVisibility(View.VISIBLE);
-                bottomMargin = (int)(-8.0f*ASSL.Yscale());
-            }
-            layoutParams.setMargins((int) (25.0f*ASSL.Xscale()), topMargin, (int)(25.0f*ASSL.Xscale()), bottomMargin);
-            mHolder.cardViewRecycler.setLayoutParams(layoutParams);
-
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
 
             StringBuilder sb = new StringBuilder();
@@ -181,6 +156,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
             mHolder.textViewItemCategoryName.setText(sb);
+            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 90f)));
 
             int total = item.getTotalQuantity();
             mHolder.textViewQuantity.setText(String.valueOf(total));
@@ -195,10 +171,9 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 mHolder.textViewQuantity.setVisibility(View.VISIBLE);
             }
 
-            mHolder.textViewAboutItemDescription.setVisibility(item.getItemDetails() != null ? View.VISIBLE : View.GONE);
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
             mHolder.textViewAboutItemDescription.setTag(position);
-
+            RelativeLayout.LayoutParams paramsDesc = (RelativeLayout.LayoutParams) mHolder.textViewAboutItemDescription.getLayoutParams();
             if(!TextUtils.isEmpty(item.getItemDetails())){
                 if(item.getItemDetails().length() > 80){
                     SpannableStringBuilder ssb;
@@ -216,7 +191,11 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     mHolder.textViewAboutItemDescription.append(" ");
                     mHolder.textViewAboutItemDescription.append(ssb);
                 }
+                paramsDesc.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+            } else {
+                paramsDesc.height = 1;
             }
+            mHolder.textViewAboutItemDescription.setLayoutParams(paramsDesc);
             mHolder.textViewAboutItemDescription.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -230,7 +209,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             } else {
                                 item1.setExpanded(true);
                             }
-                            notifyItemChanged(pos);
+                            notifyDataSetChanged();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -307,7 +286,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             titleholder.relative.setVisibility(View.VISIBLE);
         } else if(holder instanceof SubCategoryViewHolder) {
             SubCategoryViewHolder subCategoryHolder = ((SubCategoryViewHolder) holder);
-            subCategoryHolder.textViewSubCategoryName.setText(subItems.get(position).getItemName().toUpperCase());
+            subCategoryHolder.tvSubCategoryName.setText(subItems.get(position).getItemName().toUpperCase());
         }
 
 	}
@@ -330,7 +309,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     itemSelected.setTotalPrice(item1.getPrice());
                     item1.getItemSelectedList().add(itemSelected);
                 }
-                notifyItemChanged(pos);
+                notifyDataSetChanged();
                 callback.onPlusClicked(pos, item1);
             }
         } else {
@@ -346,25 +325,22 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     class MainViewHolder extends RecyclerView.ViewHolder {
 
-        public CardView cardViewRecycler;
         public RelativeLayout relativeLayoutItem;
         public LinearLayout linearLayoutQuantitySelector;
-        private ImageView imageViewFoodType, saperatorImage, imageViewMinus, imageViewPlus;
+        private ImageView imageViewFoodType, imageViewMinus, imageViewPlus;
         public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity;
 
         public MainViewHolder(View itemView, Context context) {
             super(itemView);
-            cardViewRecycler = (CardView) itemView.findViewById(R.id.cvRoot);
             relativeLayoutItem = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutItem);
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
-            saperatorImage = (ImageView) itemView.findViewById(R.id.saperatorImage);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
 
-            textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenRegular(context));
-            textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenRegular(context));
-            textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenRegular(context));
+            textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
+            textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+            textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenMedium(context));
         }
     }
 
@@ -379,11 +355,11 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     class SubCategoryViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView textViewSubCategoryName;
+        public TextView tvSubCategoryName;
         public SubCategoryViewHolder(View itemView, Context context) {
             super(itemView);
-            textViewSubCategoryName = (TextView) itemView.findViewById(R.id.tvSubCategoryName);textViewSubCategoryName.setTypeface(Fonts.mavenRegular(context));
-
+            tvSubCategoryName = (TextView) itemView.findViewById(R.id.tvSubCategoryName);
+            tvSubCategoryName.setTypeface(Fonts.avenirNext(context));
         }
     }
 

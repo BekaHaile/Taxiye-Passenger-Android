@@ -3,17 +3,20 @@ package com.sabkuchfresh.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -327,12 +330,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     }
                 }
 
-                mHolder.textViewDelivery.setVisibility(((vendor.getMinimumOrderAmount() != null)) ? View.VISIBLE : View.GONE);
+                mHolder.textViewMinimumOrder.setVisibility(((vendor.getMinimumOrderAmount() != null)) ? View.VISIBLE : View.GONE);
                 if (vendor.getMinimumOrderAmount() != null) {
                     if (vendor.getMinimumOrderAmount() > 0) {
-                        mHolder.textViewDelivery.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
+                        mHolder.textViewMinimumOrder.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
                     } else {
-                        mHolder.textViewDelivery.setText(activity.getString(R.string.no_minimum_order));
+                        mHolder.textViewMinimumOrder.setText(activity.getString(R.string.no_minimum_order));
                     }
                 }
 
@@ -367,16 +370,27 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     }
                 });
 
+                final String prefix;
+                final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+                final SpannableStringBuilder sb;
                 if (vendor.getIsClosed() == 0) {
                     String deliveryTime = String.valueOf(vendor.getDeliveryTime());
                     if (vendor.getMinDeliveryTime() != null) {
                         deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
                     }
-                    mHolder.textViewMinimumOrder.setText(activity.getString(R.string.delivers_in_format, deliveryTime));
+                    prefix = activity.getString(R.string.delivers_in);
+                    sb = new SpannableStringBuilder(deliveryTime+" min");
+
                 } else {
-                    mHolder.textViewMinimumOrder.setText(activity.getString(R.string.opens_at_format,
-                            String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt()))));
+                    prefix = activity.getString(R.string.opens_at);
+                    sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt())));
                 }
+                sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mHolder.textViewDelivery.setText(prefix);
+                mHolder.textViewDelivery.append(" ");
+                mHolder.textViewDelivery.append(sb);
+
+
 
                 try {
                     if (!TextUtils.isEmpty(vendor.getImage())) {
@@ -398,30 +412,26 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_meal_place_holder);
                 }
 
-
-                if (vendor.getRating() != null && vendor.getName() != null) {
+                mHolder.tvRating.setVisibility(View.GONE);
+                if (vendor.getRating() != null) {
                     Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
-                    Typeface rating = Typeface.createFromAsset(activity.getAssets(), "fonts/maven_pro_bold.ttf");
-                    String padddingTitleToStar = "  ";
+                    Typeface rating = Fonts.mavenMedium(activity);
                     String paddingStarToText = " ";
-                    Spannable restaurant = new SpannableString(vendor.getName() + padddingTitleToStar + activity.getString(R.string.star_icon) + paddingStarToText + vendor.getRating());
+                    Spannable restaurantRating = new SpannableString(activity.getString(R.string.star_icon) + paddingStarToText + vendor.getRating());
 
                     //append strings and set different fonts to each subString
-                    restaurant.setSpan(new CustomTypeFaceSpan("", Fonts.mavenMedium(activity)), 0, vendor.getName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    restaurant.setSpan(new CustomTypeFaceSpan("", star), vendor.getName().length() + padddingTitleToStar.length(), vendor.getName().length() + padddingTitleToStar.length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    restaurant.setSpan(new CustomTypeFaceSpan("", rating), vendor.getName().length() + padddingTitleToStar.length() + 1, restaurant.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                    //set FontSize to Star icon and rating and set Corresponding Color
-                    restaurant.setSpan(new RelativeSizeSpan(0.8f), vendor.getName().length(), restaurant.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    restaurantRating.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    restaurantRating.setSpan(new CustomTypeFaceSpan("", rating), 1, restaurantRating.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                     int ratingColor;
                     if (vendor.getColorCode() != null && vendor.getColorCode().startsWith("#") && vendor.getColorCode().length() == 7)
                         ratingColor = Color.parseColor(vendor.getColorCode());
                     else
-                        ratingColor = Color.parseColor("#1fbd2a"); //default Green Color
+                        ratingColor = Color.parseColor("#8dd061"); //default Green Color
 
-                    restaurant.setSpan(new ForegroundColorSpan(ratingColor), vendor.getName().length(), restaurant.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    mHolder.textViewRestaurantName.setText(restaurant);
+                    setTextViewDrawableColor(mHolder.tvRating, ratingColor);
+                    mHolder.tvRating.setText(restaurantRating);
+                    mHolder.tvRating.setVisibility(View.VISIBLE);
                 }
 
             } else if (holder instanceof ViewHolderRestaurantForm) {
@@ -453,6 +463,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             e.printStackTrace();
         }
 
+    }
+
+    private void setTextViewDrawableColor(TextView textView, int color) {
+        for (Drawable drawable : textView.getCompoundDrawables()) {
+            if (drawable != null) {
+                drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+            }
+        }
+        if(textView.getBackground() != null){
+            textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        }
     }
 
 
@@ -595,7 +616,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         public View vSep;
         public ImageView imageViewRestaurantImage;
         public TextView textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
-        public TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery;
+        public TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery, tvRating;
 
 
         public ViewHolder(View itemView, Context context) {
@@ -609,6 +630,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             textViewRestaurantCloseTime = (TextView) itemView.findViewById(R.id.textViewRestaurantCloseTime);textViewRestaurantCloseTime.setTypeface(Fonts.mavenMedium(context));
             textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);textViewAddressLine.setTypeface(Fonts.mavenMedium(context));
             textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);textViewDelivery.setTypeface(Fonts.mavenMedium(context));
+            tvRating = (TextView) itemView.findViewById(R.id.tvRating);
         }
     }
 

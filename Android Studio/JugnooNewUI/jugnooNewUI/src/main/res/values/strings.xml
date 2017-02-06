@@ -1184,7 +1184,7 @@
     <string name="location">Location</string>
     <string name="vendor_colon">Vendor:</string>
     <string name="mins_format">%s mins</string>
-    <string name="opens_at_format">Opens at %s</string>
+    <string name="opens_at">Opens at</string>
     <string name="delivered_from_colon">Delivered from:</string>
     <string name="oh_snap">Oh snap!</string>
     <string name="nothing_found_near_you">Nothing found near you\ntry to search with a different location.</string>
@@ -1429,7 +1429,7 @@
     <string name="pure_veg">Pure Vegetarian</string>
     <string name="free_delivery">Free Delivery</string>
 
-    <string name="delivers_in_format">Delivers in %s mins</string>
+    <string name="delivers_in">Delivers in</string>
     <string name="minimum_order_rupee_format">Minimum Order \u20B9%s</string>
     <string name="jugnoo_star">Jugnoo star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>

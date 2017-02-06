@@ -258,6 +258,22 @@ public class MenusResponse {
 			return colorCode;
 		}
 
+		public void setRestaurantAdd(String restaurantAdd) {
+			this.restaurantAdd = restaurantAdd;
+		}
+
+		public void setRating(Double rating) {
+			this.rating = rating;
+		}
+
+		public void setReviewCount(long reviewCount) {
+			this.reviewCount = reviewCount;
+		}
+
+		public void setColorCode(String colorCode) {
+			this.colorCode = colorCode;
+		}
+
 		/**
 		 *
 		 * @return
