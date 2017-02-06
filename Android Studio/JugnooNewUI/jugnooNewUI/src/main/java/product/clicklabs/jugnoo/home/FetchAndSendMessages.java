@@ -35,13 +35,18 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 			KEYWORD_PAYTM = "paytm",
 			KEYWORD_OLA = "ola",
 			KEYWORD_OLAX = "ola!",
-			KEYWORD_SAY_OLA = "say ola",
 			KEYWORD_TFS = "tfs",
-			KEYWORD_BOOKING = "booking",
-			KEYWORD_AUTO = "auto",
 			KEYWORD_TAXI_FOR_SURE = "taxiforsure",
 			KEYWORD_TAXI_FS = "taxifs",
 			KEYWORD_PNR = "PNR";
+
+	private final String[] KEYWORDS_BODY = new String[]{ KEYWORD_OLA, KEYWORD_OLAX, KEYWORD_TFS,
+			KEYWORD_TAXI_FOR_SURE, KEYWORD_TAXI_FS, KEYWORD_PNR,
+			"faasos", "swiggy", "freshmenu", "bigbasketeer", "foodpanda", "yumist",
+			"bigbasket.com", "grofers", "tapzo", "order", "summary", "foodie", "delivery", "delivered"};
+	private final String[] KEYWORDS_FROM = new String[]{ "swiggy", "faasos", "panda", "tapzo" };
+
+	private ArrayList<KeywordDatum> keywordData;
 
 	private final long DAY_MILLIS = 24 * 60 * 60 * 1000;
 	private final long THREE_DAYS_MILLIS = 3 * DAY_MILLIS;
@@ -63,6 +68,15 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 			this.startTime = 60000;
 			this.endTime = 60000;
 		}
+
+		keywordData = new ArrayList<>();
+		for(String keyword : KEYWORDS_BODY){
+			keywordData.add(new KeywordDatum(keyword, true));
+		}
+		for(String keyword : KEYWORDS_FROM){
+			keywordData.add(new KeywordDatum(keyword, false));
+		}
+
 	}
 	@Override
 	protected void onPreExecute() {
@@ -240,23 +254,12 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 						if(body.toLowerCase().contains(KEYWORD_PAYTM) && body.toLowerCase().contains(KEYWORD_UBER)){
 							messages.add(new MSenderBody(sender, body, date));
 						}
-						else if(body.toLowerCase().contains(KEYWORD_TFS) || body.toLowerCase().contains(KEYWORD_TFS)){
-							messages.add(new MSenderBody(sender, body, date));
-						}
-						else if(body.toLowerCase().contains(KEYWORD_OLA) || body.toLowerCase().contains(KEYWORD_OLA)){
-							messages.add(new MSenderBody(sender, body, date));
-						}
-						else if(body.toLowerCase().contains(KEYWORD_OLAX) || body.toLowerCase().contains(KEYWORD_OLAX)){
-							messages.add(new MSenderBody(sender, body, date));
-						}
-						else if(body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE) || body.toLowerCase().contains(KEYWORD_TAXI_FOR_SURE)){
-							messages.add(new MSenderBody(sender, body, date));
-						}
-						else if(body.toLowerCase().contains(KEYWORD_TAXI_FS) || body.toLowerCase().contains(KEYWORD_TAXI_FS)){
-							messages.add(new MSenderBody(sender, body, date));
-						}
-						else if(body.contains(KEYWORD_PNR)){
-							messages.add(new MSenderBody(sender, body, date));
+						for(KeywordDatum keywordDatum : keywordData){
+							if(keywordDatum.isBody && body.toLowerCase().contains(keywordDatum.keyword)){
+								messages.add(new MSenderBody(sender, body, date));
+							} else if(!keywordDatum.isBody && sender.toLowerCase().contains(keywordDatum.keyword)){
+								messages.add(new MSenderBody(sender, body, date));
+							}
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -312,6 +315,16 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 
 		public void setDate(String date) {
 			this.date = date;
+		}
+	}
+
+	class KeywordDatum{
+		private String keyword;
+		private boolean isBody;
+
+		public KeywordDatum(String keyword, boolean isBody){
+			this.keyword = keyword;
+			this.isBody = isBody;
 		}
 	}
 }

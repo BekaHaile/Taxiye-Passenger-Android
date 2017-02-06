@@ -47,6 +47,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -65,6 +66,7 @@ import java.util.Map;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
+import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -286,7 +288,7 @@ public class SplashNewActivity extends BaseActivity implements FlurryEventNames,
 		super.onCreate(savedInstanceState);
 		try {
 
-		//	Fabric.with(this, new Crashlytics());
+			Fabric.with(this, new Crashlytics());
 
 			try {
 				if (getIntent().hasExtra("deep_link_class")) {
