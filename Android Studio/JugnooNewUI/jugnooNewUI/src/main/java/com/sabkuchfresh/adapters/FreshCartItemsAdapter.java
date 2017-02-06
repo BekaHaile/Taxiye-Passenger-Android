@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.Picasso;
 
@@ -47,7 +48,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 	private Callback callback;
 	private boolean checkForCouponApplied;
 	private int appType;
-	private SubscriptionData.Subscription subscription;
+	private UserCheckoutResponse.SubscriptionInfo subscription;
 
 	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, String categoryName, boolean checkForCouponApplied,
 								 Callback callback) {
@@ -60,7 +61,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
 	}
 
-	public synchronized void setResults(ArrayList<SubItem> subItems, SubscriptionData.Subscription subscription) {
+	public synchronized void setResults(ArrayList<SubItem> subItems, UserCheckoutResponse.SubscriptionInfo subscription) {
 		this.subItems = subItems;
 		this.subscription = subscription;
 		notifyDataSetChanged();
@@ -108,10 +109,9 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		SubItem subItem;
 		if(position == subItems.size()){
 			subItem = new SubItem();
-			subItem.setSubItemName(subscription.getPlanString());
-			subItem.setPrice((double)subscription.getAmount());
+			subItem.setSubItemName(subscription.getSubscriptionId()+"");
+			subItem.setPrice((double)subscription.getMinimumOrderAmount());
 			subItem.setSubItemQuantitySelected(1);
-			subItem.setSubItemImage("image");
 		} else {
 			subItem = subItems.get(position);
 		}
@@ -129,16 +129,25 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		}
 
 		try {
-			if (!TextUtils.isEmpty(subItem.getSubItemImage())) {
-				mHolder.imageViewItemImage.setVisibility(View.VISIBLE);
-				Picasso.with(context).load(subItem.getSubItemImage())
+			if(position == subItems.size()){
+				Picasso.with(context).load(R.drawable.star)
 						.placeholder(R.drawable.ic_fresh_item_placeholder)
 						.fit()
 						.centerCrop()
 						.error(R.drawable.ic_fresh_item_placeholder)
 						.into(mHolder.imageViewItemImage);
 			} else {
-				mHolder.imageViewItemImage.setVisibility(View.GONE);
+				if (!TextUtils.isEmpty(subItem.getSubItemImage())) {
+					mHolder.imageViewItemImage.setVisibility(View.VISIBLE);
+					Picasso.with(context).load(subItem.getSubItemImage())
+							.placeholder(R.drawable.ic_fresh_item_placeholder)
+							.fit()
+							.centerCrop()
+							.error(R.drawable.ic_fresh_item_placeholder)
+							.into(mHolder.imageViewItemImage);
+				} else {
+					mHolder.imageViewItemImage.setVisibility(View.GONE);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

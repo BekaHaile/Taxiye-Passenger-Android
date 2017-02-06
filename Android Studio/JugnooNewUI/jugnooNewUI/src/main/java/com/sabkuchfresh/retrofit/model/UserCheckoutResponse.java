@@ -42,6 +42,9 @@ public class UserCheckoutResponse{
 	@SerializedName("cityId")
 	@Expose
 	private Integer cityId;
+	@SerializedName("subscription_info")
+	@Expose
+	private SubscriptionInfo subscriptionInfo;
 
 	/**
 	 *
@@ -147,6 +150,14 @@ public class UserCheckoutResponse{
 
 	public void setCityId(Integer cityId) {
 		this.cityId = cityId;
+	}
+
+	public SubscriptionInfo getSubscriptionInfo() {
+		return subscriptionInfo;
+	}
+
+	public void setSubscriptionInfo(SubscriptionInfo subscriptionInfo) {
+		this.subscriptionInfo = subscriptionInfo;
 	}
 
 	public class Subscription {
@@ -377,5 +388,98 @@ public class UserCheckoutResponse{
 		public boolean equals(Object o) {
 			return (o instanceof CartItem) && ((CartItem)o).getSubItemId().equals(subItemId);
 		}
+	}
+
+	public class SubscriptionInfo {
+
+		@SerializedName("subscription_id")
+		@Expose
+		private Integer subscriptionId;
+		@SerializedName("discount")
+		@Expose
+		private Integer discount;
+		@SerializedName("discount_is_percent")
+		@Expose
+		private Integer discountIsPercent;
+		@SerializedName("minimum_order_amount")
+		@Expose
+		private Integer minimumOrderAmount;
+		@SerializedName("delivery_charges")
+		@Expose
+		private Integer deliveryCharges;
+		@SerializedName("cashback")
+		@Expose
+		private Integer cashback;
+		@SerializedName("cashback_is_percent")
+		@Expose
+		private Integer cashbackIsPercent;
+		@SerializedName("cashback_text")
+		@Expose
+		private String cashbackText;
+
+		public Integer getSubscriptionId() {
+			return subscriptionId;
+		}
+
+		public void setSubscriptionId(Integer subscriptionId) {
+			this.subscriptionId = subscriptionId;
+		}
+
+		public Integer getDiscount() {
+			return discount;
+		}
+
+		public void setDiscount(Integer discount) {
+			this.discount = discount;
+		}
+
+		public Integer getDiscountIsPercent() {
+			return discountIsPercent;
+		}
+
+		public void setDiscountIsPercent(Integer discountIsPercent) {
+			this.discountIsPercent = discountIsPercent;
+		}
+
+		public Integer getMinimumOrderAmount() {
+			return minimumOrderAmount;
+		}
+
+		public void setMinimumOrderAmount(Integer minimumOrderAmount) {
+			this.minimumOrderAmount = minimumOrderAmount;
+		}
+
+		public Integer getDeliveryCharges() {
+			return deliveryCharges;
+		}
+
+		public void setDeliveryCharges(Integer deliveryCharges) {
+			this.deliveryCharges = deliveryCharges;
+		}
+
+		public Integer getCashback() {
+			return cashback;
+		}
+
+		public void setCashback(Integer cashback) {
+			this.cashback = cashback;
+		}
+
+		public Integer getCashbackIsPercent() {
+			return cashbackIsPercent;
+		}
+
+		public void setCashbackIsPercent(Integer cashbackIsPercent) {
+			this.cashbackIsPercent = cashbackIsPercent;
+		}
+
+		public String getCashbackText() {
+			return cashbackText;
+		}
+
+		public void setCashbackText(String cashbackText) {
+			this.cashbackText = cashbackText;
+		}
+
 	}
 }
