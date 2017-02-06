@@ -3206,6 +3206,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     float searchAndCapsuleAlpha2 = (((appBarLayout.getTotalScrollRange() / 2) - (-verticalOffset)) * 1.0f) / (appBarLayout.getTotalScrollRange() / 2 - 0);
                     searchAndCapsuleAlpha2 = searchAndCapsuleAlpha2 * 255;
 
+                    topBar.getIvSearch().getBackground().setAlpha((int) searchAndCapsuleAlpha2);
                     if (!topBar.getIvSearch().getBackground().getConstantState().equals(ContextCompat.getDrawable(FreshActivity.this, R.drawable.ic_circle).getConstantState())) {
                         topBar.getIvSearch().setBackgroundResource(R.drawable.ic_circle);
 
@@ -3218,7 +3219,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     if (!topBar.llCartContainer.isSelected())
                         topBar.llCartContainer.setSelected(true);
                     topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha2);
-                    topBar.getIvSearch().getBackground().setAlpha((int) searchAndCapsuleAlpha2);
                     topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.argb((int) searchAndCapsuleAlpha2, 255, 255, 255), PorterDuff.Mode.SRC_ATOP);
                 } else {
 
@@ -3229,11 +3229,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                     }
 
-
+                    topBar.getIvSearch().getBackground().setAlpha((int) searchAndCapsuleAlpha1);
                     if (topBar.llCartContainer.isSelected())
                         topBar.llCartContainer.setSelected(false);
+
                     topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha1);
-                    topBar.getIvSearch().getBackground().setAlpha((int) searchAndCapsuleAlpha1);
                     topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.argb((int) searchAndCapsuleAlpha1, 89, 89, 104), PorterDuff.Mode.SRC_ATOP);
 
                 }
