@@ -241,6 +241,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         adapter.setList(superCategoriesData.getSuperCategories());
         activity.updateCartValuesGetTotalPrice();
         stopOhSnap();
+        rvFreshSuper.smoothScrollToPosition(0);
     }
 
     private void retryDialogSuperCategoriesAPI(DialogErrorType dialogErrorType){

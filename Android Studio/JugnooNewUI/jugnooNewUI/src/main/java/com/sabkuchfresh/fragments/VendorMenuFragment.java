@@ -245,10 +245,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
 
                 if (activity.getVendorOpened() != null) {
-                    activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName());
+                    activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
                     Picasso.with(activity).load(activity.getVendorOpened().getImage()).fit().into(activity.ivCollapseRestImage);
 
-                    activity.setVendorDeliveryTime(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime);
+                    activity.setVendorDeliveryTimeToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime);
                     setTextViewDrawableColor(activity.tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));
 
                     if (activity.getVendorOpened().getRating() != null) {

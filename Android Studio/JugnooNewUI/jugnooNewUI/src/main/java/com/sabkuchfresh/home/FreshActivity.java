@@ -3371,7 +3371,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     };
 
 
-    public void setVendorDeliveryTime(MenusResponse.Vendor vendor, TextView textView){
+    public void setVendorDeliveryTimeToTextView(MenusResponse.Vendor vendor, TextView textView){
         final String prefix;
         final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
         final SpannableStringBuilder sb;
@@ -3391,6 +3391,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         textView.setText(prefix);
         textView.append(" ");
         textView.append(sb);
+    }
+
+    public FABViewTest getFabViewTest(){
+        return fabViewTest;
     }
 
 }

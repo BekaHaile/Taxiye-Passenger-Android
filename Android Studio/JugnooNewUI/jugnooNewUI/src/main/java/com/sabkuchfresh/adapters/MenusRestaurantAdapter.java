@@ -369,7 +369,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     }
                 });
 
-                activity.setVendorDeliveryTime(vendor, mHolder.textViewDelivery);
+                activity.setVendorDeliveryTimeToTextView(vendor, mHolder.textViewDelivery);
                 setTextViewDrawableColor(mHolder.textViewDelivery, ContextCompat.getColor(activity, R.color.text_color));
 
 
@@ -378,20 +378,18 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     if (!TextUtils.isEmpty(vendor.getImage())) {
                         float ratio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                         Picasso.with(activity).load(vendor.getImage())
-                                .placeholder(R.drawable.ic_meal_place_holder)
+                                .placeholder(R.drawable.ic_fresh_item_placeholder)
                                 .resize((int)(ratio * 150f), (int)(ratio * 150f))
                                 .centerCrop()
                                 .transform(new RoundBorderTransform((int)(ratio*6f), 0))
                                 .error(R.drawable.ic_meal_place_holder)
                                 .into(mHolder.imageViewRestaurantImage);
                     } else {
-                        mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_meal_place_holder);
+                        mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
                     }
-
-
                 } catch (Exception e) {
                     e.printStackTrace();
-                    mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_meal_place_holder);
+                    mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
                 }
 
                 mHolder.tvRating.setVisibility(View.GONE);
@@ -887,11 +885,20 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         try {
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
-                                    Utils.showToast(activity, productsResponse.getMessage());
+                                    DialogPopup.alertPopupWithListener(activity,
+                                            activity.getString(R.string.thanks_for_recommendation),
+                                            productsResponse.getMessage(),
+                                            activity.getString(R.string.ok),
+                                            new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+
+                                                }
+                                            }, false, true);
                                     restaurantName = ""; locality = ""; telephone = "";
                                     notifyDataSetChanged();
                                 } else {
-                                    Utils.showToast(activity, productsResponse.getMessage());
+                                    DialogPopup.alertPopup(activity, "", productsResponse.getMessage());
                                 }
                             }
                         } catch (Exception exception) {

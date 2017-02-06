@@ -84,6 +84,9 @@ public class KeyboardLayoutListener implements ViewTreeObserver.OnGlobalLayoutLi
         }
     }
 
+    public int getKeyBoardState(){
+        return keyBoardState;
+    }
 
     public interface KeyBoardStateHandler {
         void keyboardOpened();

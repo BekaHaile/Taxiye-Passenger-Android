@@ -51,6 +51,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -80,6 +81,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     PushDialog pushDialog;
     private boolean resumed = false, searchOpened = false;
+    private KeyboardLayoutListener keyboardLayoutListener;
 
     public MenusFragment() {
     }
@@ -194,6 +196,24 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
             }
         });
 
+        keyboardLayoutListener = new KeyboardLayoutListener(llRoot,
+                (TextView) rootView.findViewById(R.id.tvScroll), new KeyboardLayoutListener.KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+                activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void keyBoardClosed() {
+                if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        keyboardLayoutListener.setResizeTextView(false);
+
+        llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
         return rootView;
     }
 
@@ -296,6 +316,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                     }
+                                    recyclerViewRestaurant.smoothScrollToPosition(0);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -474,6 +495,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
            searchOpened = false;
            activity.getTopBar().etSearch.setText("");
            activity.fragmentUISetup(this);
+           if(keyboardLayoutListener.getKeyBoardState() == 1){
+               activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+           }
        } else {
            searchOpened = true;
            if(clearEt) {

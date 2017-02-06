@@ -1,7 +1,6 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
@@ -11,6 +10,7 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -146,16 +146,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
 
-            StringBuilder sb = new StringBuilder();
-            sb.append(item.getItemName())
-            .append("\n");
-            if(!TextUtils.isEmpty(item.getDisplayPrice())){
-                sb.append(item.getDisplayPrice());
-            } else {
-                sb.append(context.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(item.getPrice())));
-            }
-
-            mHolder.textViewItemCategoryName.setText(sb);
+            setItemNameToTextView(item, mHolder.textViewItemCategoryName);
             mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 90f)));
 
             int total = item.getTotalQuantity();
@@ -339,7 +330,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
 
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
-            textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
+            textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenMedium(context));
             textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenMedium(context));
         }
     }
@@ -448,4 +439,18 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         return ssb;
     }
 
+
+    private void setItemNameToTextView(Item item, TextView textView){
+        final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+        final SpannableStringBuilder sb = new SpannableStringBuilder(item.getItemName());
+        sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        textView.setText(sb);
+        textView.append("\n");
+        if(!TextUtils.isEmpty(item.getDisplayPrice())){
+            textView.append(item.getDisplayPrice());
+        } else {
+            textView.append(context.getString(R.string.rupees_value_format, com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(item.getPrice())));
+        }
+    }
 }
