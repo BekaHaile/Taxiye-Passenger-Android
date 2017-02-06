@@ -19,6 +19,7 @@ import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
 import com.sabkuchfresh.fragments.NewFeedbackFragment;
+import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 
@@ -75,6 +76,19 @@ public class TransactionUtils {
                     .add(container.getId(), new VendorMenuFragment(),
                             VendorMenuFragment.class.getName())
                     .addToBackStack(VendorMenuFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openRestaurantImageFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, RestaurantImageFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out,0, 0)
+                    .add(container.getId(), RestaurantImageFragment.newInstance(),
+                            RestaurantImageFragment.class.getName())
+                    .addToBackStack(RestaurantImageFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();
@@ -208,7 +222,7 @@ public class TransactionUtils {
     public void openMenuFeedback(FragmentActivity activity, View container) {
         if (!checkIfFragmentAdded(activity, NewFeedbackFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in,android.R.anim.fade_out)
+                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out, android.R.anim.fade_in, android.R.anim.fade_out)
                     .add(container.getId(), new NewFeedbackFragment(),
                             NewFeedbackFragment.class.getName())
                     .addToBackStack(NewFeedbackFragment.class.getName())

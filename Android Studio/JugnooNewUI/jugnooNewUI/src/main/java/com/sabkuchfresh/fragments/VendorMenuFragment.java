@@ -141,6 +141,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         super.onResume();
         if (!isHidden()) {
             activity.setRefreshCart(false);
+
         }
     }
 
@@ -152,6 +153,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         if (!hidden) {
             menusCategoryFragmentsAdapter.notifyDataSetChanged();
             tabs.notifyDataSetChanged();
+            activity.collapseToolbar();
             activity.fragmentUISetup(this);
             activity.resumeMethod();
             if (activity.isRefreshCart()) {
@@ -270,6 +272,15 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     } else {
                         activity.tvCollapRestaurantRating.setVisibility(View.GONE);
                     }
+
+
+                    activity.ivCollapseRestImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.openRestaurantFragment();
+                        }
+                    });
+
 
                 }
             }

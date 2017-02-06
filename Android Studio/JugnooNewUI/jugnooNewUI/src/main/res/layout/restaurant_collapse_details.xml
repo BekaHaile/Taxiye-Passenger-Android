@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_rest_details"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/layout_rest_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone"
-                tools:showIn="@layout/activity_fresh">
+    android:visibility="gone">
 
 
     <ImageView
@@ -15,10 +13,24 @@
         android:layout_height="match_parent"
         android:background="@color/black_alpha" />
 
+
+
     <View
+        android:id="@+id/shadow_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/opaque_black" />
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/iv_rest_original_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:layout_centerInParent="true"
+        android:tag="mwar" />
+
+
 
     <TextView
         android:id="@+id/tv_rest_title"
