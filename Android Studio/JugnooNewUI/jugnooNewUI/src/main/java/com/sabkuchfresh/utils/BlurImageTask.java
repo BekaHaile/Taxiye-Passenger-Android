@@ -72,6 +72,7 @@ public class BlurImageTask extends AsyncTask<String, Void, Pair<Bitmap, Bitmap>>
     private OnExecution onExecution;
 
 
+
     public BlurImageTask(Activity context, OnExecution onExecution) {
         this.context = context;
         this.onExecution = onExecution;

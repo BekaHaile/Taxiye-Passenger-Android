@@ -3,9 +3,17 @@ package com.sabkuchfresh.fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +23,7 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.BlurImageTask;
+import com.sabkuchfresh.utils.CustomTypeFaceSpan;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,15 +37,17 @@ public class RestaurantImageFragment extends Fragment {
     ImageView backgroundImageView;
     @Bind(R.id.tv_rest_title)
     TextView tvRestTitle;
-    @Bind(R.id.tv_rest_reviews)
-    TextView tvRestReviews;
+    @Bind(R.id.tvCollapRestaurantRating)
+    TextView tvCollapRestaurantRating;
+    @Bind(R.id.tvCollapRestaurantDeliveryTime)
+    TextView tvCollapRestaurantDeliveryTime;
     @Bind(R.id.layout_rest_details)
     RelativeLayout layoutRestDetails;
     @Bind(R.id.iv_rest_original_image)
     ImageView ivRestOriginalImage;
     @Bind(R.id.shadow_view)
     View shadowView;
-    private FreshActivity freshActivity;
+    private FreshActivity activity;
     private BlurImageTask loadBlurredImageTask;
 
 
@@ -59,7 +70,7 @@ public class RestaurantImageFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof FreshActivity)
-            freshActivity = (FreshActivity) context;
+            activity = (FreshActivity) context;
 
 
     }
@@ -70,22 +81,21 @@ public class RestaurantImageFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.restaurant_collapse_details, container, false);
         ButterKnife.bind(this, view);
-        freshActivity.fragmentUISetup(this);
+        activity.fragmentUISetup(this);
         try {
             if (layoutRestDetails != null) {
-                new ASSL(freshActivity, layoutRestDetails, 1134, 720, true);
+                new ASSL(activity, layoutRestDetails, 1134, 720, true);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (freshActivity != null) {
+        if (activity != null) {
             shadowView.setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.opaque_black_strong));
             layoutRestDetails.setVisibility(View.VISIBLE);
             ivRestOriginalImage.setVisibility(View.VISIBLE);
             backgroundImageView.setScaleType(ImageView.ScaleType.FIT_XY);
 
-            if (freshActivity.getVendorOpened() != null && freshActivity.getVendorOpened().getImage() != null) {
-
+            if (activity.getVendorOpened() != null && activity.getVendorOpened().getImage() != null) {
 
                 //background blurred Image
                 loadBlurredImageTask = new BlurImageTask(getActivity(), new BlurImageTask.OnExecution() {
@@ -99,10 +109,33 @@ public class RestaurantImageFragment extends Fragment {
                         }
                     }
                 });
-                loadBlurredImageTask.execute(freshActivity.getVendorOpened().getImage());
+                loadBlurredImageTask.execute(activity.getVendorOpened().getImage());
 
 
-                tvRestTitle.setText(freshActivity.getVendorOpened().getName());
+                tvRestTitle.setText(activity.getVendorOpened().getName());
+
+                activity.setVendorDeliveryTimeToTextView(activity.getVendorOpened(), tvCollapRestaurantDeliveryTime);
+                setTextViewDrawableColor(tvCollapRestaurantDeliveryTime, ContextCompat.getColor(activity, R.color.white));
+
+                if (activity.getVendorOpened().getRating() != null) {
+                    tvCollapRestaurantRating.setVisibility(View.VISIBLE);
+
+                    Spannable spannable = new SpannableString(activity.getString(R.string.star_icon) + " " + activity.getVendorOpened().getRating() + "  " + "(" + activity.getVendorOpened().getReviewCount() + ")");
+                    Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
+                    spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                    tvCollapRestaurantRating.setText(spannable);
+                    int ratingColor;
+                    if (activity.getVendorOpened().getColorCode() != null
+                            && activity.getVendorOpened().getColorCode().startsWith("#")
+                            && activity.getVendorOpened().getColorCode().length() == 7)
+                        ratingColor = Color.parseColor(activity.getVendorOpened().getColorCode());
+                    else
+                        ratingColor = Color.parseColor("#8dd061"); //default Green Color
+
+                    setTextViewBackgroundDrawableColor(tvCollapRestaurantRating, ratingColor);
+                } else {
+                    tvCollapRestaurantRating.setVisibility(View.GONE);
+                }
 
             }
         }
@@ -118,5 +151,19 @@ public class RestaurantImageFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
+
+    private void setTextViewDrawableColor(TextView textView, int color) {
+        for (Drawable drawable : textView.getCompoundDrawables()) {
+            if (drawable != null) {
+                drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+            }
+        }
+    }
+
+    private void setTextViewBackgroundDrawableColor(TextView textView, int color) {
+        if(textView.getBackground() != null){
+            textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        }
+    }
 
 }
