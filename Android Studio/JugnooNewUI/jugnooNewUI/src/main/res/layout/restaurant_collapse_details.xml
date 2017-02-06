@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="gone"
-    tools:showIn="@layout/activity_fresh">
+                tools:showIn="@layout/activity_fresh">
 
 
     <ImageView
@@ -24,26 +24,49 @@
         android:id="@+id/tv_rest_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/tv_rest_reviews"
-        android:layout_marginLeft="46px"
+        android:layout_above="@+id/tvCollapRestaurantDeliveryTime"
+        android:layout_marginLeft="@dimen/px_30"
         android:text=""
         android:textColor="@android:color/white"
-        android:textSize="38px"
+        android:textSize="@dimen/text_size_36"
         app:font="avenir" />
 
 
     <TextView
-        android:id="@id/tv_rest_reviews"
+        android:id="@+id/tvCollapRestaurantDeliveryTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="24px"
-        android:layout_marginLeft="46px"
-        android:layout_marginTop="10px"
         android:text=""
-        android:textColor="@android:color/white"
-        android:textSize="25px"
-        app:font="maven" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_22"
+        android:layout_marginLeft="@dimen/px_30"
+        android:layout_marginTop="@dimen/px_10"
+        android:layout_marginBottom="@dimen/px_20"
+        android:drawableLeft="@drawable/ic_clock_grey"
+        android:drawablePadding="@dimen/px_8"
+        android:layout_alignParentBottom="true"
+        app:font="maven"
+        />
+
+
+    <TextView
+        android:id="@+id/tvCollapRestaurantRating"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/px_40"
+        android:background="@drawable/capsule_text_color"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/tv_rest_title"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_20"
+        android:paddingRight="@dimen/px_15"
+        android:paddingLeft="@dimen/px_15"
+        android:gravity="center_vertical"
+        android:layout_marginTop="@dimen/px_10"
+        android:layout_marginRight="@dimen/px_30"
+        android:visibility="visible"
+        app:font="maven"
+        />
 
 
 </RelativeLayout>

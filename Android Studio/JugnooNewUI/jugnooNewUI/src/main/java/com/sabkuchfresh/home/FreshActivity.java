@@ -29,8 +29,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -140,6 +143,7 @@ import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -3170,7 +3174,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     private State mCurrentState;
     public TextView tvCollapRestaurantName;
-    public TextView tvCollapRestaurantReviews;
+    public TextView tvCollapRestaurantRating, tvCollapRestaurantDeliveryTime;
     private RelativeLayout rlCollapseDetails;
     private LinearLayout llCartContainer;
     private LinearLayout llToolbarLayout;
@@ -3244,9 +3248,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 tvCollapRestaurantName.setTextColor(tvCollapRestaurantName.getTextColors().withAlpha(255 - calculatedAlpha));
 
 
-                tvCollapRestaurantReviews.setTextColor(tvCollapRestaurantReviews.getTextColors().withAlpha(255 - calculatedAlpha));
+//                tvCollapRestaurantRating.setTextColor(tvCollapRestaurantRating.getTextColors().withAlpha(255 - calculatedAlpha));
+                tvCollapRestaurantRating.setAlpha((float)(255 - calculatedAlpha)/255f);
                 ivCollapseRestImage.getBackground().setAlpha(255 - calculatedAlpha);
                 topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(calculatedAlpha));
+                tvCollapRestaurantDeliveryTime.setAlpha((float)(255 - calculatedAlpha)/255f);
 
 
                 if (mCurrentState != State.IDLE) {
@@ -3263,7 +3269,8 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     private void initCollapseToolBarViews() {
         ivCollapseRestImage = (ImageView) findViewById(R.id.iv_rest_collapse_image);
         tvCollapRestaurantName = (TextView) findViewById(R.id.tv_rest_title);
-        tvCollapRestaurantReviews = (TextView) findViewById(R.id.tv_rest_reviews);
+        tvCollapRestaurantRating = (TextView) findViewById(R.id.tvCollapRestaurantRating);
+        tvCollapRestaurantDeliveryTime = (TextView) findViewById(R.id.tvCollapRestaurantDeliveryTime);
         rlCollapseDetails = (RelativeLayout) findViewById(R.id.layout_rest_details);
         llCartContainer = (LinearLayout) findViewById(R.id.llCartContainer);
 
@@ -3306,7 +3313,9 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                 //Restaurant Details
                 tvCollapRestaurantName.setTextColor(tvCollapRestaurantName.getTextColors().withAlpha(255));
-                tvCollapRestaurantReviews.setTextColor(tvCollapRestaurantReviews.getTextColors().withAlpha(255));
+//                tvCollapRestaurantRating.setTextColor(tvCollapRestaurantRating.getTextColors().withAlpha(255));
+                tvCollapRestaurantRating.setAlpha(1f);
+                tvCollapRestaurantDeliveryTime.setAlpha(1f);
                 break;
             case COLLAPSED:
                 //Toolbar
@@ -3361,5 +3370,27 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         }
     };
 
+
+    public void setVendorDeliveryTime(MenusResponse.Vendor vendor, TextView textView){
+        final String prefix;
+        final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+        final SpannableStringBuilder sb;
+        if (vendor.getIsClosed() == 0) {
+            String deliveryTime = String.valueOf(vendor.getDeliveryTime());
+            if (vendor.getMinDeliveryTime() != null) {
+                deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
+            }
+            prefix = getString(R.string.delivers_in);
+            sb = new SpannableStringBuilder(deliveryTime+" min");
+
+        } else {
+            prefix = getString(R.string.opens_at);
+            sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt())));
+        }
+        sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(prefix);
+        textView.append(" ");
+        textView.append(sb);
+    }
 
 }

@@ -8,15 +8,14 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -370,25 +369,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     }
                 });
 
-                final String prefix;
-                final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-                final SpannableStringBuilder sb;
-                if (vendor.getIsClosed() == 0) {
-                    String deliveryTime = String.valueOf(vendor.getDeliveryTime());
-                    if (vendor.getMinDeliveryTime() != null) {
-                        deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
-                    }
-                    prefix = activity.getString(R.string.delivers_in);
-                    sb = new SpannableStringBuilder(deliveryTime+" min");
-
-                } else {
-                    prefix = activity.getString(R.string.opens_at);
-                    sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt())));
-                }
-                sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                mHolder.textViewDelivery.setText(prefix);
-                mHolder.textViewDelivery.append(" ");
-                mHolder.textViewDelivery.append(sb);
+                activity.setVendorDeliveryTime(vendor, mHolder.textViewDelivery);
+                setTextViewDrawableColor(mHolder.textViewDelivery, ContextCompat.getColor(activity, R.color.text_color));
 
 
 
@@ -429,7 +411,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     else
                         ratingColor = Color.parseColor("#8dd061"); //default Green Color
 
-                    setTextViewDrawableColor(mHolder.tvRating, ratingColor);
+                    setTextViewBackgroundDrawableColor(mHolder.tvRating, ratingColor);
                     mHolder.tvRating.setText(restaurantRating);
                     mHolder.tvRating.setVisibility(View.VISIBLE);
                 }
@@ -465,14 +447,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     }
 
+    private void setTextViewBackgroundDrawableColor(TextView textView, int color) {
+        if(textView.getBackground() != null){
+            textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        }
+    }
+
     private void setTextViewDrawableColor(TextView textView, int color) {
         for (Drawable drawable : textView.getCompoundDrawables()) {
             if (drawable != null) {
                 drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
             }
-        }
-        if(textView.getBackground() != null){
-            textView.getBackground().setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
         }
     }
 
