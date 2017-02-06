@@ -18,7 +18,9 @@
         android:layout_marginTop="15px"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
-        app:cardBackgroundColor="@color/white">
+        app:cardBackgroundColor="@color/white"
+        android:id="@+id/cvMain"
+        >
 
         <RelativeLayout
             android:id="@+id/container"
