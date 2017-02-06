@@ -592,23 +592,18 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                             } else if (PushFlags.STATUS_CHANGED.getOrdinal() == flag) {
                                 String clientId = intent.getStringExtra(Constants.KEY_CLIENT_ID);
                                 Fragment fragment = getTopFragment();
-                                    if(fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus())
-                                    {
-                                        ((MealFragment)fragment).getAllProducts(true, getSelectedLatLng());
-                                    }
-                                    else
-                                    {
-                                        Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
-                                        intent1.putExtra(Constants.KEY_FLAG, flag);
-                                        LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
-                                    }
-                            }
-                            else if(PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
-                                Fragment fragment = getMenusFragment();
-                                if(fragment != null && FreshActivity.this.hasWindowFocus()) {
-                                    ((MenusFragment)fragment).getAllMenus(true, getSelectedLatLng());
+                                if (fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()) {
+                                    ((MealFragment) fragment).getAllProducts(true, getSelectedLatLng());
+                                } else {
+                                    Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
+                                    intent1.putExtra(Constants.KEY_FLAG, flag);
+                                    LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
                                 }
-                                else{
+                            } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
+                                Fragment fragment = getMenusFragment();
+                                if (fragment != null && FreshActivity.this.hasWindowFocus()) {
+                                    ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng());
+                                } else {
                                     Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                     intent1.putExtra(Constants.KEY_FLAG, flag);
                                     LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
@@ -849,7 +844,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                     }
                 }
                 updateTotalAmountPrice(totalPrice);
-                if(getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
+                if (getVendorMenuFragment() != null && getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
                     if (getMenusCheckoutMergedFragment() == null && totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
                     } else {
@@ -868,7 +863,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         return pair;
     }
 
-    public void updateTotalAmountPrice(double totalPrice){
+    public void updateTotalAmountPrice(double totalPrice) {
         try {
             if (totalPrice > 0) {
                 topBar.getLlCartAmount().setVisibility(View.VISIBLE);
@@ -915,7 +910,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             LayoutTransition layoutTransition = new LayoutTransition();
             topBar.getLlSearchCart().setLayoutTransition(layoutTransition);
 
-            if(fragment instanceof FreshHomeFragment){
+            if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
                 llSearchCartContainerVis = View.VISIBLE;
                 llCartContainerVis = View.VISIBLE;
@@ -944,9 +939,9 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 rlSort.setVisibility(View.VISIBLE);
 
-				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.setText(getResources().getString(R.string.fresh));
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getResources().getString(R.string.fresh));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 setMinOrderAmountText(fragment);
 
 
@@ -956,22 +951,21 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
 
-                if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
+                if (Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
                     llSearchCartVis = View.GONE;
                 }
 
-                if(Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     float marginBottom = 40f;
                     int dpAsPixels = (int) (marginBottom * scale + 0.5f);
                     fabViewTest.menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, dpAsPixels);
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 }
 
-				topBar.title.setVisibility(View.VISIBLE);
-				topBar.title.setText(getResources().getString(R.string.meals));
-				drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-			}
-            else if (fragment instanceof GroceryFragment) {
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getResources().getString(R.string.meals));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+            } else if (fragment instanceof GroceryFragment) {
                 llSearchCartContainerVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -1013,7 +1007,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(vendorOpened.getName());
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                if(getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
+                if (getVendorOpened() != null && getVendorOpened().getMinimumOrderAmount() != null) {
                     if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                         textViewMinOrder.setVisibility(View.VISIBLE);
                     } else {
@@ -1030,8 +1024,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getString(R.string.customize_item));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            }
-            else if (fragment instanceof MenusFilterFragment) {
+            } else if (fragment instanceof MenusFilterFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
 
@@ -1047,10 +1040,9 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(R.string.select_cuisines);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            }
-            else if (fragment instanceof FreshCheckoutMergedFragment || fragment instanceof MenusCheckoutMergedFragment) {
-				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.VISIBLE);
+            } else if (fragment instanceof FreshCheckoutMergedFragment || fragment instanceof MenusCheckoutMergedFragment) {
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
                 llSearchCartContainerVis = View.VISIBLE;
                 llSearchCartVis = View.GONE;
 
@@ -1058,9 +1050,9 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.title.setText(getResources().getString(R.string.checkout));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
-			} else if (fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
-				topBar.imageViewMenu.setVisibility(View.GONE);
-				topBar.imageViewBack.setVisibility(View.VISIBLE);
+            } else if (fragment instanceof AddAddressMapFragment || fragment instanceof AddToAddressBookFragment) {
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
                 llSearchCartVis = View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
@@ -1121,8 +1113,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            }
-            else if (fragment instanceof MealAddonItemsFragment) {
+            } else if (fragment instanceof MealAddonItemsFragment) {
                 llCartContainerVis = View.GONE;
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
@@ -1141,12 +1132,12 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             topBar.getLlSearchContainer().setVisibility(llSearchContainerVis);
             topBar.rlFilter.setVisibility(rlFilterVis);
 
-            if(topBar.getLlSearchCart().getVisibility() == View.VISIBLE){
+            if (topBar.getLlSearchCart().getVisibility() == View.VISIBLE) {
                 topBar.title.setGravity(Gravity.LEFT);
-                titleLayoutParams.setMargins((int)(ASSL.Xscale()*20), 0, 0, 0);
-            } else{
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20), 0, 0, 0);
+            } else {
                 topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins((int)(ASSL.Xscale()*-32), 0, 0, 0);
+                titleLayoutParams.setMargins((int) (ASSL.Xscale() * -32), 0, 0, 0);
             }
 
             topBar.title.setLayoutParams(titleLayoutParams);
@@ -1176,6 +1167,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             }
 
 
+            topBar.getIvSearch().setBackgroundResource(R.drawable.ic_circle);
             onStateChanged(appBarLayout, State.EXPANDED);
 
 
@@ -1193,7 +1185,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             toolBarParams.height = CollapsingToolbarLayout.LayoutParams.WRAP_CONTENT;
             toolbar.setLayoutParams(toolBarParams);
 
-
+            topBar.getIvSearch().setBackgroundResource(R.drawable.rectangle_6_copy);
             onStateChanged(appBarLayout, State.COLLAPSED);
 
         }
@@ -1242,10 +1234,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
     public void searchItem() {
         try {
-            if(getAppType() == AppConstant.ApplicationType.MENUS){
-                if(getTopFragment() instanceof MenusFragment){
+            if (getAppType() == AppConstant.ApplicationType.MENUS) {
+                if (getTopFragment() instanceof MenusFragment) {
                     getMenusFragment().openSearch(false);
-                } else if(getTopFragment() instanceof VendorMenuFragment){
+                } else if (getTopFragment() instanceof VendorMenuFragment) {
                     getTransactionUtils().openMenusSearchFragment(FreshActivity.this, relativeLayoutContainer);
                 }
             } else {
@@ -1344,7 +1336,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         selectedLatLng = new LatLng(Data.latitude, Data.longitude);
     }
 
-    public void clearAllCartAtOrderComplete(){
+    public void clearAllCartAtOrderComplete() {
         int type = getAppType();
         if (type == AppConstant.ApplicationType.FRESH) {
             clearCart();
@@ -1490,11 +1482,9 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else if(getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()){
+        } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
             getMenusFragment().openSearch(false);
-        }
-        else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+        } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finish();
         } else {
             if ((getSupportFragmentManager().getBackStackEntryCount() == 2 && getFreshSearchFragment() == null) ||
@@ -1948,7 +1938,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             e.printStackTrace();
         }
     }
-
 
 
     public void clearCart() {
@@ -2798,7 +2787,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     public void onAddressUpdated(AddressAdded event) {
         try {
             if (event.flag) {
-                if(getFreshCheckoutMergedFragment() != null || getMenusCheckoutMergedFragment() != null){
+                if (getFreshCheckoutMergedFragment() != null || getMenusCheckoutMergedFragment() != null) {
                     setRefreshCart(true);
                 }
                 int appType = Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
@@ -2903,7 +2892,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             Iterator<String> itemIds = jCart.keys();
             while (itemIds.hasNext()) {
                 String itemId = itemIds.next();
-                if(Utils.checkIfOnlyDigits(itemId)) {
+                if (Utils.checkIfOnlyDigits(itemId)) {
                     String jItem = jCart.optString(itemId, "");
                     if (!TextUtils.isEmpty(jItem)) {
                         SubItem subItemSaved = gson.fromJson(jItem, SubItem.class);
@@ -2935,11 +2924,11 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             }
             jCart.put(Constants.KEY_CITY_ID, getCartCityId());
             int type = getAppType();
-            if(type == AppConstant.ApplicationType.FRESH) {
+            if (type == AppConstant.ApplicationType.FRESH) {
                 Prefs.with(this).save(Constants.SP_FRESH_CART, jCart.toString());
-            } else if(type == AppConstant.ApplicationType.GROCERY){
+            } else if (type == AppConstant.ApplicationType.GROCERY) {
                 Prefs.with(this).save(Constants.SP_GROCERY_CART, jCart.toString());
-            } else{
+            } else {
                 Prefs.with(this).save(Constants.SP_MEAL_CART, jCart.toString());
             }
         } catch (Exception e) {
@@ -2947,16 +2936,16 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         }
     }
 
-    public int getCartCityId(){
+    public int getCartCityId() {
         try {
             JSONObject jCart = new JSONObject();
-            if(getAppType() == AppConstant.ApplicationType.FRESH) {
-				jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-			} else if(getAppType() == AppConstant.ApplicationType.GROCERY){
-				jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-			} else{
-				jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
-			}
+            if (getAppType() == AppConstant.ApplicationType.FRESH) {
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
+            } else if (getAppType() == AppConstant.ApplicationType.GROCERY) {
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
+            } else {
+                jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
+            }
             return jCart.optInt(Constants.KEY_CITY_ID, -1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -2964,14 +2953,14 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         return -1;
     }
 
-    public void setCartCityId(int cityId){
+    public void setCartCityId(int cityId) {
         try {
             JSONObject jCart = new JSONObject();
-            if(getAppType() == AppConstant.ApplicationType.FRESH) {
+            if (getAppType() == AppConstant.ApplicationType.FRESH) {
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_FRESH_CART, Constants.EMPTY_JSON_OBJECT));
-            } else if(getAppType() == AppConstant.ApplicationType.GROCERY){
+            } else if (getAppType() == AppConstant.ApplicationType.GROCERY) {
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_GROCERY_CART, Constants.EMPTY_JSON_OBJECT));
-            } else{
+            } else {
                 jCart = new JSONObject(Prefs.with(this).getString(Constants.SP_MEAL_CART, Constants.EMPTY_JSON_OBJECT));
             }
             jCart.put(Constants.KEY_CITY_ID, cityId);
@@ -3012,16 +3001,16 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         @Override
         public void afterTextChanged(Editable s) {
             try {
-                if(getTopFragment() instanceof FreshSearchFragment) {
+                if (getTopFragment() instanceof FreshSearchFragment) {
                     getFreshSearchFragment().searchFreshItems(s.toString());
-                } else if(getTopFragment() instanceof MenusFragment){
+                } else if (getTopFragment() instanceof MenusFragment) {
                     getMenusFragment().getMenusRestaurantAdapter().searchRestaurant(s.toString().trim());
-                } else if(getTopFragment() instanceof MenusSearchFragment){
+                } else if (getTopFragment() instanceof MenusSearchFragment) {
                     getMenusSearchFragment().searchItems(s.toString().trim());
                 }
-                if(s.length() > 0){
+                if (s.length() > 0) {
                     topBar.ivSearchCross.setVisibility(View.VISIBLE);
-                } else{
+                } else {
                     topBar.ivSearchCross.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
@@ -3066,9 +3055,9 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
     }
 
 
-    public boolean checkForCityChange(final int cityId, final CityChangeCallback callback){
-        if(fetchCartList().size() > 0
-                && getCartCityId() != cityId){
+    public boolean checkForCityChange(final int cityId, final CityChangeCallback callback) {
+        if (fetchCartList().size() > 0
+                && getCartCityId() != cityId) {
             DialogPopup.alertPopupTwoButtonsWithListeners(this, "",
                     getString(R.string.delivery_address_changed_alert),
                     getString(R.string.yes), getString(R.string.no),
@@ -3092,7 +3081,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                         }
                     }, false, false);
             return true;
-        } else if(getCartCityId() != cityId){
+        } else if (getCartCityId() != cityId) {
             setCartCityId(cityId);
             return false;
         } else {
@@ -3100,24 +3089,32 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
         }
     }
 
-    public interface CityChangeCallback{
+    public interface CityChangeCallback {
         void onYesClick();
+
         void onNoClick();
     }
 
     private DeliveryAddressModel deliveryAddressModel;
     private Gson gson = new Gson();
+
     public void saveDeliveryAddressModel() {
         deliveryAddressModel = new DeliveryAddressModel(getSelectedAddress(), getSelectedLatLng(),
                 getSelectedAddressId(), getSelectedAddressType());
-        try{Prefs.with(this).save(Constants.SP_FRESH_CART_ADDRESS, gson.toJson(deliveryAddressModel,
-                DeliveryAddressModel.class));}catch(Exception e){}
+        try {
+            Prefs.with(this).save(Constants.SP_FRESH_CART_ADDRESS, gson.toJson(deliveryAddressModel,
+                    DeliveryAddressModel.class));
+        } catch (Exception e) {
+        }
     }
 
     private void setDeliveryAddressModelToSelectedAddress() {
-        if(deliveryAddressModel == null){
-            try {deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(Constants.SP_FRESH_CART_ADDRESS,
-						Constants.EMPTY_JSON_OBJECT), DeliveryAddressModel.class);} catch (Exception e) {}
+        if (deliveryAddressModel == null) {
+            try {
+                deliveryAddressModel = gson.fromJson(Prefs.with(this).getString(Constants.SP_FRESH_CART_ADDRESS,
+                        Constants.EMPTY_JSON_OBJECT), DeliveryAddressModel.class);
+            } catch (Exception e) {
+            }
         }
         if (deliveryAddressModel != null) {
             setSelectedAddress(deliveryAddressModel.getAddress());
@@ -3200,19 +3197,55 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(calculatedAlpha, 255, 255, 255)));
 
 
-                topBar.getIvSearch().getBackground().setAlpha(calculatedAlpha);
 
-                llCartContainer.getBackground().setAlpha(calculatedAlpha);
+                /*this code animates the half range from 255-->0 changes icon and then again animates to 0-255 as the vertical offset increases and vice versa
+                   this implies for back button,search button and capsule cart layout */
+                if (-verticalOffset <= appBarLayout.getTotalScrollRange() / 2) {
+
+
+                    float searchAndCapsuleAlpha2 = (((appBarLayout.getTotalScrollRange() / 2) - (-verticalOffset)) * 1.0f) / (appBarLayout.getTotalScrollRange() / 2 - 0);
+                    searchAndCapsuleAlpha2 = searchAndCapsuleAlpha2 * 255;
+
+                    topBar.getIvSearch().getBackground().setAlpha((int) searchAndCapsuleAlpha2);
+                    if (!topBar.getIvSearch().getBackground().getConstantState().equals(ContextCompat.getDrawable(FreshActivity.this, R.drawable.ic_circle).getConstantState())) {
+                        topBar.getIvSearch().setBackgroundResource(R.drawable.ic_circle);
+
+                    }
+
+
+
+
+
+                    if (!topBar.llCartContainer.isSelected())
+                        topBar.llCartContainer.setSelected(true);
+                    topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha2);
+                    topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.argb((int) searchAndCapsuleAlpha2, 255, 255, 255), PorterDuff.Mode.SRC_ATOP);
+                } else {
+
+                    float searchAndCapsuleAlpha1 = (appBarLayout.getTotalScrollRange() - (-verticalOffset)) * 1.0f / (appBarLayout.getTotalScrollRange() - (appBarLayout.getTotalScrollRange() / 2));
+                    searchAndCapsuleAlpha1 = 255 - (searchAndCapsuleAlpha1 * 255);
+                    if (!topBar.getIvSearch().getBackground().getConstantState().equals(ContextCompat.getDrawable(FreshActivity.this, R.drawable.rectangle_6_copy).getConstantState())) {
+                        topBar.getIvSearch().setBackgroundResource(R.drawable.rectangle_6_copy);
+
+                    }
+
+                    topBar.getIvSearch().getBackground().setAlpha((int) searchAndCapsuleAlpha1);
+                    if (topBar.llCartContainer.isSelected())
+                        topBar.llCartContainer.setSelected(false);
+
+                    topBar.llCartContainer.getBackground().setAlpha((int) searchAndCapsuleAlpha1);
+                    topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.argb((int) searchAndCapsuleAlpha1, 89, 89, 104), PorterDuff.Mode.SRC_ATOP);
+
+                }
+
+
+                //        llCartContainer.getBackground().setAlpha(calculatedAlpha);
 
                 tvCollapRestaurantName.setTextColor(tvCollapRestaurantName.getTextColors().withAlpha(255 - calculatedAlpha));
 
 
                 tvCollapRestaurantReviews.setTextColor(tvCollapRestaurantReviews.getTextColors().withAlpha(255 - calculatedAlpha));
                 ivCollapseRestImage.getBackground().setAlpha(255 - calculatedAlpha);
-
-                topBar.imageViewBack.getDrawable().setAlpha(calculatedAlpha);
-
-
                 topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(calculatedAlpha));
 
 
@@ -3261,8 +3294,10 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.title.setVisibility(View.INVISIBLE);
 
                 //Cart and Search Button
-                llCartContainer.getBackground().setAlpha(0);
-                topBar.getIvSearch().getBackground().setAlpha(0);
+                llCartContainer.getBackground().setAlpha(255);
+                llCartContainer.setSelected(true);
+                topBar.getIvSearch().getBackground().setAlpha(255);
+
 
                 //back Button
                 topBar.imageViewBack.getDrawable().mutate().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
@@ -3285,6 +3320,7 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
 
                 //Cart and Search Button
                 llCartContainer.getBackground().setAlpha(255);
+                llCartContainer.setSelected(false);
                 topBar.getIvSearch().getBackground().setAlpha(255);
 
                 //back Button
@@ -3295,7 +3331,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
                 topBar.title.setTextColor(topBar.title.getTextColors().withAlpha(255));
                 break;
             case IDLE:
-                topBar.imageViewBack.getDrawable().mutate().setColorFilter(ContextCompat.getColor(this, R.color.lightBlackTxtColor), PorterDuff.Mode.SRC_ATOP);
                 rlCollapseDetails.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
                 break;
@@ -3325,5 +3360,6 @@ public class FreshActivity extends AppCompatActivity implements FlurryEventNames
             Data.longitude = location.getLongitude();
         }
     };
+
 
 }

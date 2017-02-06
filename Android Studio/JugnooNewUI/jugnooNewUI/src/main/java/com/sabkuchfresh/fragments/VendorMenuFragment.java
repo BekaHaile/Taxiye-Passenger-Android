@@ -206,10 +206,10 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     }
 
 
+    public MenusCategoryFragmentsAdapter getMenusCategoryFragmentsAdapter() {
+        return menusCategoryFragmentsAdapter;
+    }
 
-	public MenusCategoryFragmentsAdapter getMenusCategoryFragmentsAdapter() {
-		return menusCategoryFragmentsAdapter;
-	}
     void success(VendorMenuResponse productsResponse) {
         try {
             noFreshsView.setVisibility(View.GONE);
@@ -246,7 +246,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
                         Spannable spannable = new SpannableString(activity.getString(R.string.star_icon) + " " + activity.getVendorOpened().getRating() + "  " + "(" + activity.getVendorOpened().getReviewCount() + " Reviews)");
                         Typeface star = Typeface.createFromAsset(activity.getAssets(), "fonts/icomoon.ttf");
-                        spannable.setSpan(new CustomTypeFaceSpan("",star),0,1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+                        spannable.setSpan(new CustomTypeFaceSpan("", star), 0, 1, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
                         activity.tvCollapRestaurantReviews.setText(spannable);
 
                     }
