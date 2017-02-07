@@ -603,4 +603,7 @@ public interface Constants {
 	String KEY_EVENT = "event";
 	String KEY_REFERRAL_POPUP_CONTENT = "referral_popup_content";
 	String SP_FRESH_CART_ADDRESS = "sp_fresh_cart_address";
+	String SLIDE_CHECKOUT_PAY_ENABLED = "slide_checkout_pay_enabled";
+	String KEY_SUBSCRIPTION_INFO = "subscription_info";
+	String KEY_SUBSCRIPTION_ID = "subscription_id";
 }

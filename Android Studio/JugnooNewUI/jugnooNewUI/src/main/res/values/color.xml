@@ -61,6 +61,7 @@
     <color name="black_translucent_level_3">#33000000</color>
     <color name="black_translucent_more">#BB000000</color>
     <color name="black_80">#CC000000</color>
+    <color name="black_20">#33000000</color>
 
 
     <color name="transparent">#0000</color>
@@ -292,5 +293,6 @@
 
     <color name="green_button">#18ca3c</color>
     <color name="green_button_alpha">#9918ca3c</color>
+    <color name="slider_green">#5ecd93</color>
 
 </resources>
