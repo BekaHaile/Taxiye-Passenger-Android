@@ -199,8 +199,9 @@ public class FreshSearchFragment extends Fragment {
 				if(activity.getProductsResponse() != null
 						&& activity.getProductsResponse().getCategories() != null) {
 					String token = params[0];
-					subItemsInSearch.clear();
+
 					if(!token.equalsIgnoreCase(tokenSearched)) {
+						subItemsInSearch.clear();
 						if(token.length() == 1 && token.length() > tokenSearched.length()) {
 							searchFromStart(token);
 						}

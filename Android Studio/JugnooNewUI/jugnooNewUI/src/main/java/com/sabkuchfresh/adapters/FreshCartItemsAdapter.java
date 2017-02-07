@@ -257,7 +257,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 
 	private void doPlus(int pos){
 		if(subscription != null && pos > subItems.size()-1){
-			Utils.showToast(context, context.getResources().getString(R.string.no_more_than, 1));
+			Utils.showToast(context, context.getResources().getString(R.string.no_more_than_star, 1));
 		} else {
 			if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
 				subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);

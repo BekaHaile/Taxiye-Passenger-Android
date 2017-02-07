@@ -100,7 +100,7 @@ public class FreshOrderCompleteDialog {
 			textViewOrderId.append(sb);
 			if(showDeliverySlot) {
 				textViewOrderId.append("\n");
-				textViewOrderId.append(activity.getResources().getString(R.string.will_be_delivered_by));
+				textViewOrderId.append(activity.getResources().getString(R.string.will_be_delivered_between));
 			}
 			RelativeLayout relativeslot = (RelativeLayout) dialog.findViewById(R.id.relativeslot);
 			if(!showDeliverySlot){

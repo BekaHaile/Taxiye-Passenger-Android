@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -193,6 +194,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
     private MySpinner spin;
     boolean flag = false;
     TextView sliderText;
+    private Dialog dialogOrderComplete;
 
     public FreshCheckoutMergedFragment() {
     }
@@ -434,7 +436,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
 
         sliderText = (TextView) rootView.findViewById(R.id.sliderText); sliderText.setTypeface(Fonts.mavenMedium(activity));
-        sliderText.setText("Swipe right to pay >>");
+        sliderText.setText("Swipe to confirm >>");
 
         rlSliderContainer = (RelativeLayout) rootView.findViewById(R.id.rlSliderContainer);
         relativeLayoutSlider = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutSlider);
@@ -459,6 +461,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             }
         });
 
+        rlSliderContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         relativeLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -601,7 +609,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                         break;
 
                     case MotionEvent.ACTION_MOVE:
-                        Log.v("getRawx", "--> "+event.getRawX());
                         if((event.getRawX()-getRelativeSliderLeftMargin()) > (tvSlide.getWidth()/2)
                                 && (event.getRawX()-getRelativeSliderLeftMargin()) < relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2)){
                             paramsF.leftMargin = (int) layoutX(event.getRawX()-getRelativeSliderLeftMargin());
@@ -609,11 +616,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
                             sliderText.setVisibility(View.VISIBLE);
                             float percent = (event.getRawX()-getRelativeSliderLeftMargin()) / (relativeLayoutSlider.getWidth()-tvSlide.getWidth());
                             viewAlpha.setAlpha(percent);
+                            Log.v("slide percent","--> "+percent);
+                            if(percent > 0.6f){
+                                sliderText.setVisibility(View.GONE);
+                            } else{
+                                sliderText.setVisibility(View.VISIBLE);
+                            }
                         }
                         break;
 
                     case MotionEvent.ACTION_UP:
-                        if ((event.getRawX()-getRelativeSliderLeftMargin()) < (relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2))*0.8f) {
+                        if ((event.getRawX()-getRelativeSliderLeftMargin()) < (relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2))*0.6f) {
                             setSlideInitial();
                         } else{
                             animateSliderButton(paramsF.leftMargin, relativeLayoutSlider.getWidth()-tvSlide.getWidth());
@@ -697,24 +710,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         return (float)params.width;
     }
 
-    /*
-
-    private float currentSliderPositionFloat(){
-        return ((float)paramsF.leftMargin + sliderButtonWidth()/2f) / (float)getItemWidth();
-    }
-
-
-
-    private float sliderPositionFloatByRawX(float rawX){
-        return (rawX + sliderButtonWidth()/2f) / (float)getItemWidth();
-    }
-
-    private void updateSliderViews(){
-        RelativeLayout.LayoutParams paramsABS = (RelativeLayout.LayoutParams) relativeLayoutSlider.getLayoutParams();
-        paramsABS.width = getFullWidth();
-        relativeLayoutSlider.setLayoutParams(paramsABS);
-    }*/
-
     private void updateCartUI() {
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
 
@@ -728,22 +723,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
         relativeLayoutDeliveryCharges.setVisibility(View.VISIBLE);
 
-//        if(activity.getUserCheckoutResponse() != null
-//                && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() != null
-//                && activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges() > 0){
-//            textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
-//            String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(activity.getUserCheckoutResponse().getSubscription().getDeliveryCharges()));
-//            textViewDeliveryChargesValue.setText(deliveryCharge);
-//        } else if(activity.getUserCheckoutResponse() != null
-//                && activity.getUserCheckoutResponse().getDeliveryInfo() != null
-//                && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() != null
-//                && activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges() > 0){
-//            textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
-//            String deliveryCharge = activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(activity.getUserCheckoutResponse().getDeliveryInfo().getDeliveryCharges()));
-//            textViewDeliveryChargesValue.setText(deliveryCharge);
-//        } else {
-//
-//        }
         double deliveryCharges = deliveryCharges();
         if (deliveryCharges > 0) {
             textViewDeliveryChargesValue.setTextColor(activity.getResources().getColor(R.color.text_color));
@@ -768,23 +747,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             relativeLayoutJugnooCash.setVisibility(View.GONE);
         }
 
-        /*if(relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
-                || relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
-                || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
-                || relativeLayoutVAT.getVisibility() == View.VISIBLE
-                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            imageViewSep1.setVisibility(View.VISIBLE);
-        } else{
-            imageViewSep1.setVisibility(View.GONE);
-        }*/
-        /*if(relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
-                || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
-                || relativeLayoutVAT.getVisibility() == View.VISIBLE
-                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            imageViewSep2.setVisibility(View.VISIBLE);
-        } else{
-            imageViewSep2.setVisibility(View.GONE);
-        }*/
         if(relativeLayoutServiceTax.getVisibility() == View.VISIBLE
                 || relativeLayoutVAT.getVisibility() == View.VISIBLE
                 || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
@@ -805,19 +767,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
 
-        /*if(relativeLayoutDiscount.getVisibility() == View.VISIBLE
-                || relativeLayoutDeliveryCharges.getVisibility() == View.VISIBLE
-                || relativeLayoutPackagingCharges.getVisibility() == View.VISIBLE
-                || relativeLayoutServiceTax.getVisibility() == View.VISIBLE
-                || relativeLayoutVAT.getVisibility() == View.VISIBLE
-                || relativeLayoutJugnooCash.getVisibility() == View.VISIBLE){
-            linearLayoutCartDetails.setVisibility(View.VISIBLE);
-            imageViewCartSep.setVisibility(View.GONE);
-        } else {
-            linearLayoutCartDetails.setVisibility(View.GONE);
-            imageViewCartSep.setVisibility(View.VISIBLE);
-        }*/
-
         textViewCartTotal.setText(activity.getString(R.string.rupees_value_format,
                 Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
         if(getTotalPromoAmount() > 0){
@@ -829,14 +778,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             textViewCartTotalUndiscount.setVisibility(View.GONE);
         }
 
-        if(payableAmount() > 0) {
-            buttonPlaceOrder.setText("PAY "+activity.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
-            tvSlide.setText("PAY "+activity.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
-        } else{
-            buttonPlaceOrder.setText(activity.getResources().getString(R.string.place_order));
-            tvSlide.setText(activity.getResources().getString(R.string.place_order));
+        if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
+            if (payableAmount() > 0) {
+                buttonPlaceOrder.setText("PAY " + activity.getString(R.string.rupees_value_format,
+                        Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
+                tvSlide.setText("PAY " + activity.getString(R.string.rupees_value_format,
+                        Utils.getMoneyDecimalFormatWithoutFloat().format(payableAmount())));
+            } else {
+                buttonPlaceOrder.setText(activity.getResources().getString(R.string.place_order));
+                tvSlide.setText(activity.getResources().getString(R.string.place_order));
+            }
         }
 
         updateStarLayout();
@@ -940,11 +891,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         super.onResume();
         orderPaymentModes();
         setPaymentOptionUI();
-        if(Data.userData.isSubscriptionActive() && activity.getUserCheckoutResponse().getShowStarSubscriptions() == 0) {
+        if(Data.userData.isSubscriptionActive()) {
             cvBecomeStar.setVisibility(View.GONE);
         }
 
-        getCheckoutDataAPI(selectedSubscription);
+        if(dialogOrderComplete == null || !dialogOrderComplete.isShowing()) {
+            getCheckoutDataAPI(selectedSubscription);
+        }
     }
 
     private void setSubscriptionView() {
@@ -1602,7 +1555,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
         }
 
         if(placeOrderResponse.getReferralPopupContent() == null){
-            new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+            dialogOrderComplete = new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
                 @Override
                 public void onDismiss() {
                     activity.orderComplete();
@@ -1617,7 +1570,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             } else {
                 productType = ProductType.FRESH.getOrdinal();
             }
-            new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
+            dialogOrderComplete = new OrderCompleteReferralDialog(activity, new OrderCompleteReferralDialog.Callback() {
                 @Override
                 public void onDialogDismiss() {
                     activity.orderComplete();
@@ -2223,7 +2176,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
             }
         }
 
-        if(!Data.userData.isSubscriptionActive() && userCheckoutResponse.getShowStarSubscriptions() == 1) {
+        if(Data.userData.getShowSubscriptionData() == 1 && !Data.userData.isSubscriptionActive() && userCheckoutResponse.getShowStarSubscriptions() == 1) {
             if (userCheckoutResponse.getSubscriptionInfo() != null) {
                 freshCartItemsAdapter.setResults(subItemsInCart, userCheckoutResponse.getSubscriptionInfo());
                 cvBecomeStar.setVisibility(View.GONE);
