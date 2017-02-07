@@ -24,7 +24,6 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -84,7 +83,7 @@ public class UserDebtDialog {
 
 	private void settleUserDebt(final Activity activity) {
 		try {
-			if (AppStatus.getInstance(activity).isOnline(activity)) {
+			if (MyApplication.getInstance().isOnline()) {
 
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 

@@ -143,6 +143,96 @@ public class ShowPanelResponse {
 		@SerializedName("30")
 		@Expose
 		private List<Item> menu30 = new ArrayList<Item>();
+		@SerializedName("31")
+		@Expose
+		private List<Item> menu31 = new ArrayList<Item>();
+		@SerializedName("32")
+		@Expose
+		private List<Item> menu32 = new ArrayList<Item>();
+		@SerializedName("33")
+		@Expose
+		private List<Item> menu33 = new ArrayList<Item>();
+		@SerializedName("34")
+		@Expose
+		private List<Item> menu34 = new ArrayList<Item>();
+		@SerializedName("35")
+		@Expose
+		private List<Item> menu35 = new ArrayList<Item>();
+		@SerializedName("36")
+		@Expose
+		private List<Item> menu36 = new ArrayList<Item>();
+		@SerializedName("37")
+		@Expose
+		private List<Item> menu37 = new ArrayList<Item>();
+		@SerializedName("38")
+		@Expose
+		private List<Item> menu38 = new ArrayList<Item>();
+		@SerializedName("39")
+		@Expose
+		private List<Item> menu39 = new ArrayList<Item>();
+		@SerializedName("40")
+		@Expose
+		private List<Item> menu40 = new ArrayList<Item>();
+		@SerializedName("41")
+		@Expose
+		private List<Item> menu41 = new ArrayList<Item>();
+		@SerializedName("42")
+		@Expose
+		private List<Item> menu42 = new ArrayList<Item>();
+		@SerializedName("43")
+		@Expose
+		private List<Item> menu43 = new ArrayList<Item>();
+		@SerializedName("44")
+		@Expose
+		private List<Item> menu44 = new ArrayList<Item>();
+		@SerializedName("45")
+		@Expose
+		private List<Item> menu45 = new ArrayList<Item>();
+		@SerializedName("46")
+		@Expose
+		private List<Item> menu46 = new ArrayList<Item>();
+		@SerializedName("47")
+		@Expose
+		private List<Item> menu47 = new ArrayList<Item>();
+		@SerializedName("48")
+		@Expose
+		private List<Item> menu48 = new ArrayList<Item>();
+		@SerializedName("49")
+		@Expose
+		private List<Item> menu49 = new ArrayList<Item>();
+		@SerializedName("50")
+		@Expose
+		private List<Item> menu50 = new ArrayList<Item>();
+		@SerializedName("51")
+		@Expose
+		private List<Item> menu51 = new ArrayList<Item>();
+		@SerializedName("52")
+		@Expose
+		private List<Item> menu52 = new ArrayList<Item>();
+		@SerializedName("53")
+		@Expose
+		private List<Item> menu53 = new ArrayList<Item>();
+		@SerializedName("54")
+		@Expose
+		private List<Item> menu54 = new ArrayList<Item>();
+		@SerializedName("55")
+		@Expose
+		private List<Item> menu55 = new ArrayList<Item>();
+		@SerializedName("56")
+		@Expose
+		private List<Item> menu56 = new ArrayList<Item>();
+		@SerializedName("57")
+		@Expose
+		private List<Item> menu57 = new ArrayList<Item>();
+		@SerializedName("58")
+		@Expose
+		private List<Item> menu58 = new ArrayList<Item>();
+		@SerializedName("59")
+		@Expose
+		private List<Item> menu59 = new ArrayList<Item>();
+		@SerializedName("60")
+		@Expose
+		private List<Item> menu60 = new ArrayList<Item>();
 
 		public List<Item> getMenu1() {
 			return menu1;
@@ -382,6 +472,246 @@ public class ShowPanelResponse {
 
 		public void setMenu30(List<Item> menu30) {
 			this.menu30 = menu30;
+		}
+
+		public List<Item> getMenu31() {
+			return menu31;
+		}
+
+		public void setMenu31(List<Item> menu31) {
+			this.menu31 = menu31;
+		}
+
+		public List<Item> getMenu32() {
+			return menu32;
+		}
+
+		public void setMenu32(List<Item> menu32) {
+			this.menu32 = menu32;
+		}
+
+		public List<Item> getMenu33() {
+			return menu33;
+		}
+
+		public void setMenu33(List<Item> menu33) {
+			this.menu33 = menu33;
+		}
+
+		public List<Item> getMenu34() {
+			return menu34;
+		}
+
+		public void setMenu34(List<Item> menu34) {
+			this.menu34 = menu34;
+		}
+
+		public List<Item> getMenu35() {
+			return menu35;
+		}
+
+		public void setMenu35(List<Item> menu35) {
+			this.menu35 = menu35;
+		}
+
+		public List<Item> getMenu36() {
+			return menu36;
+		}
+
+		public void setMenu36(List<Item> menu36) {
+			this.menu36 = menu36;
+		}
+
+		public List<Item> getMenu37() {
+			return menu37;
+		}
+
+		public void setMenu37(List<Item> menu37) {
+			this.menu37 = menu37;
+		}
+
+		public List<Item> getMenu38() {
+			return menu38;
+		}
+
+		public void setMenu38(List<Item> menu38) {
+			this.menu38 = menu38;
+		}
+
+		public List<Item> getMenu39() {
+			return menu39;
+		}
+
+		public void setMenu39(List<Item> menu39) {
+			this.menu39 = menu39;
+		}
+
+		public List<Item> getMenu40() {
+			return menu40;
+		}
+
+		public void setMenu40(List<Item> menu40) {
+			this.menu40 = menu40;
+		}
+
+		public List<Item> getMenu41() {
+			return menu41;
+		}
+
+		public void setMenu41(List<Item> menu41) {
+			this.menu41 = menu41;
+		}
+
+		public List<Item> getMenu42() {
+			return menu42;
+		}
+
+		public void setMenu42(List<Item> menu42) {
+			this.menu42 = menu42;
+		}
+
+		public List<Item> getMenu43() {
+			return menu43;
+		}
+
+		public void setMenu43(List<Item> menu43) {
+			this.menu43 = menu43;
+		}
+
+		public List<Item> getMenu44() {
+			return menu44;
+		}
+
+		public void setMenu44(List<Item> menu44) {
+			this.menu44 = menu44;
+		}
+
+		public List<Item> getMenu45() {
+			return menu45;
+		}
+
+		public void setMenu45(List<Item> menu45) {
+			this.menu45 = menu45;
+		}
+
+		public List<Item> getMenu46() {
+			return menu46;
+		}
+
+		public void setMenu46(List<Item> menu46) {
+			this.menu46 = menu46;
+		}
+
+		public List<Item> getMenu47() {
+			return menu47;
+		}
+
+		public void setMenu47(List<Item> menu47) {
+			this.menu47 = menu47;
+		}
+
+		public List<Item> getMenu48() {
+			return menu48;
+		}
+
+		public void setMenu48(List<Item> menu48) {
+			this.menu48 = menu48;
+		}
+
+		public List<Item> getMenu49() {
+			return menu49;
+		}
+
+		public void setMenu49(List<Item> menu49) {
+			this.menu49 = menu49;
+		}
+
+		public List<Item> getMenu50() {
+			return menu50;
+		}
+
+		public void setMenu50(List<Item> menu50) {
+			this.menu50 = menu50;
+		}
+
+		public List<Item> getMenu51() {
+			return menu51;
+		}
+
+		public void setMenu51(List<Item> menu51) {
+			this.menu51 = menu51;
+		}
+
+		public List<Item> getMenu52() {
+			return menu52;
+		}
+
+		public void setMenu52(List<Item> menu52) {
+			this.menu52 = menu52;
+		}
+
+		public List<Item> getMenu53() {
+			return menu53;
+		}
+
+		public void setMenu53(List<Item> menu53) {
+			this.menu53 = menu53;
+		}
+
+		public List<Item> getMenu54() {
+			return menu54;
+		}
+
+		public void setMenu54(List<Item> menu54) {
+			this.menu54 = menu54;
+		}
+
+		public List<Item> getMenu55() {
+			return menu55;
+		}
+
+		public void setMenu55(List<Item> menu55) {
+			this.menu55 = menu55;
+		}
+
+		public List<Item> getMenu56() {
+			return menu56;
+		}
+
+		public void setMenu56(List<Item> menu56) {
+			this.menu56 = menu56;
+		}
+
+		public List<Item> getMenu57() {
+			return menu57;
+		}
+
+		public void setMenu57(List<Item> menu57) {
+			this.menu57 = menu57;
+		}
+
+		public List<Item> getMenu58() {
+			return menu58;
+		}
+
+		public void setMenu58(List<Item> menu58) {
+			this.menu58 = menu58;
+		}
+
+		public List<Item> getMenu59() {
+			return menu59;
+		}
+
+		public void setMenu59(List<Item> menu59) {
+			this.menu59 = menu59;
+		}
+
+		public List<Item> getMenu60() {
+			return menu60;
+		}
+
+		public void setMenu60(List<Item> menu60) {
+			this.menu60 = menu60;
 		}
 	}
 

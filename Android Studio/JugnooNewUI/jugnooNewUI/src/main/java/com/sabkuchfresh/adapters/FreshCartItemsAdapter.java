@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.FlurryEventLogger;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.retrofit.model.SubItem;
+import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.Picasso;
 
@@ -27,6 +28,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -46,6 +48,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 	private Callback callback;
 	private boolean checkForCouponApplied;
 	private int appType;
+	private UserCheckoutResponse.SubscriptionInfo subscription;
 
 	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, String categoryName, boolean checkForCouponApplied,
 								 Callback callback) {
@@ -58,14 +61,15 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
 	}
 
-	public synchronized void setResults(ArrayList<SubItem> subItems) {
+	public synchronized void setResults(ArrayList<SubItem> subItems, UserCheckoutResponse.SubscriptionInfo subscription) {
 		this.subItems = subItems;
+		this.subscription = subscription;
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return subItems == null ? 0 : subItems.size();
+		return subItems == null ? 0 : (subscription != null ? subItems.size()+1 : subItems.size());
 	}
 
 	@Override
@@ -102,7 +106,16 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		MainViewHolder mHolder = ((MainViewHolder) holder);
-		final SubItem subItem = subItems.get(position);
+		SubItem subItem;
+		if(position == subItems.size()){
+			subItem = new SubItem();
+			subItem.setSubItemName(subscription.getDescription());
+			subItem.setPrice((double)subscription.getPrice());
+			subItem.setSubItemQuantitySelected(1);
+		} else {
+			subItem = subItems.get(position);
+		}
+
 
 		mHolder.textViewItemName.setText(subItem.getSubItemName());
 		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
@@ -116,16 +129,25 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		}
 
 		try {
-			if (!TextUtils.isEmpty(subItem.getSubItemImage())) {
-				mHolder.imageViewItemImage.setVisibility(View.VISIBLE);
-				Picasso.with(context).load(subItem.getSubItemImage())
+			if(position == subItems.size()){
+				Picasso.with(context).load(R.drawable.star)
 						.placeholder(R.drawable.ic_fresh_item_placeholder)
 						.fit()
 						.centerCrop()
 						.error(R.drawable.ic_fresh_item_placeholder)
 						.into(mHolder.imageViewItemImage);
 			} else {
-				mHolder.imageViewItemImage.setVisibility(View.GONE);
+				if (!TextUtils.isEmpty(subItem.getSubItemImage())) {
+					mHolder.imageViewItemImage.setVisibility(View.VISIBLE);
+					Picasso.with(context).load(subItem.getSubItemImage())
+							.placeholder(R.drawable.ic_fresh_item_placeholder)
+							.fit()
+							.centerCrop()
+							.error(R.drawable.ic_fresh_item_placeholder)
+							.into(mHolder.imageViewItemImage);
+				} else {
+					mHolder.imageViewItemImage.setVisibility(View.GONE);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -217,23 +239,31 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 	}
 
 	private void doMinus(int pos){
-		if(callback.checkForMinus(pos, subItems.get(pos))) {
-			FlurryEventLogger.event(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
-			subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
-					subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
-			callback.onMinusClicked(pos, subItems.get(pos));
+		if(subscription != null && pos > subItems.size()-1){
+			callback.deleteStarSubscription();
+		} else {
+			if (callback.checkForMinus(pos, subItems.get(pos))) {
+				FlurryEventLogger.event(categoryName, FlurryEventNames.DELETE_PRODUCT, subItems.get(pos).getSubItemName());
+				subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
+						subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
+				callback.onMinusClicked(pos, subItems.get(pos));
 
-			notifyDataSetChanged();
-		} else{
-			callback.minusNotDone(pos, subItems.get(pos));
+				notifyDataSetChanged();
+			} else {
+				callback.minusNotDone(pos, subItems.get(pos));
+			}
 		}
 	}
 
 	private void doPlus(int pos){
-		if(subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-			subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+		if(subscription != null && pos > subItems.size()-1){
+			Utils.showToast(context, context.getResources().getString(R.string.no_more_than_star, 1));
 		} else {
-			Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
+			if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
+				subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+			} else {
+				Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
+			}
 		}
 
 		callback.onPlusClicked(pos, subItems.get(pos));
@@ -269,6 +299,7 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		void onMinusClicked(int position, SubItem subItem);
 		boolean checkForMinus(int position, SubItem subItem);
 		void minusNotDone(int position, SubItem subItem);
+		void deleteStarSubscription();
 		PromoCoupon getSelectedCoupon();
 		void removeCoupon();
 	}

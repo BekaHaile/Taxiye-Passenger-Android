@@ -35,7 +35,6 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -116,7 +115,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 					public void onClick(int position, HistoryResponse.Datum historyData) {
 						try {
 							if (historyData.getProductType() == ProductType.AUTO.getOrdinal()) {
-								if (AppStatus.getInstance(activity).isOnline(activity)) {
+								if (MyApplication.getInstance().isOnline()) {
 									if (activity instanceof RideTransactionsActivity) {
 										new TransactionUtils().openRideSummaryFragmentWithRideCancelledFlag(activity, ((RideTransactionsActivity) activity).getContainer(),
 												historyData.getEngagementId(), historyData.getIsCancelledRide() == 1, historyData.getAutosStatus());
@@ -223,7 +222,7 @@ public class RideTransactionsFragment extends Fragment implements FlurryEventNam
 	public void getRecentRidesAPI(final Activity activity, final boolean refresh) {
 		try {
 			DialogPopup.dismissLoadingDialog();
-			if(AppStatus.getInstance(activity).isOnline(activity)) {
+			if(MyApplication.getInstance().isOnline()) {
 
 				if(refresh){
 					rideInfosList.clear();

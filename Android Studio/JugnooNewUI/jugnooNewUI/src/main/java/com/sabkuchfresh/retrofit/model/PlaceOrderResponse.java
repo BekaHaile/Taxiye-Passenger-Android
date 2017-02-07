@@ -4,6 +4,10 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.jugnoo.pay.models.SendMoneyResponse;
 
+import java.util.List;
+
+import product.clicklabs.jugnoo.datastructure.SubscriptionData;
+
 /**
  * Created by shankar on 4/11/16.
  */
@@ -38,6 +42,10 @@ public class PlaceOrderResponse {
 	@SerializedName("referral_popup_content")
 	@Expose
 	private ReferralPopupContent referralPopupContent;
+
+	@SerializedName("subscription_data")
+	@Expose
+	private SubscriptionDataPlaceOrder subscriptionDataPlaceOrder;
 
 	/**
 	 *
@@ -171,6 +179,16 @@ public class PlaceOrderResponse {
 		this.referralPopupContent = referralPopupContent;
 	}
 
+
+
+	public SubscriptionDataPlaceOrder getSubscriptionDataPlaceOrder() {
+		return subscriptionDataPlaceOrder;
+	}
+
+	public void setSubscriptionDataPlaceOrder(SubscriptionDataPlaceOrder subscriptionDataPlaceOrder) {
+		this.subscriptionDataPlaceOrder = subscriptionDataPlaceOrder;
+	}
+
 	public class SubscriptionMessage {
 
 		@SerializedName("heading")
@@ -281,6 +299,43 @@ public class PlaceOrderResponse {
 		public void setShown(Integer shown) {
 			this.shown = shown;
 		}
+	}
+
+	public class SubscriptionDataPlaceOrder {
+		@SerializedName("cancellation_charges_popup_text_line1")
+		@Expose
+		private String cancellationChargesPopupTextLine1;
+		@SerializedName("cancellation_charges_popup_text_line2")
+		@Expose
+		private String cancellationChargesPopupTextLine2;
+		@SerializedName("user_subscriptions")
+		@Expose
+		private List<SubscriptionData.UserSubscription> userSubscriptions = null;
+
+		public List<SubscriptionData.UserSubscription> getUserSubscriptions() {
+			return userSubscriptions;
+		}
+
+		public void setUserSubscriptions(List<SubscriptionData.UserSubscription> userSubscriptions) {
+			this.userSubscriptions = userSubscriptions;
+		}
+
+		public String getCancellationChargesPopupTextLine1() {
+			return cancellationChargesPopupTextLine1;
+		}
+
+		public void setCancellationChargesPopupTextLine1(String cancellationChargesPopupTextLine1) {
+			this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
+		}
+
+		public String getCancellationChargesPopupTextLine2() {
+			return cancellationChargesPopupTextLine2;
+		}
+
+		public void setCancellationChargesPopupTextLine2(String cancellationChargesPopupTextLine2) {
+			this.cancellationChargesPopupTextLine2 = cancellationChargesPopupTextLine2;
+		}
+
 	}
 
 }

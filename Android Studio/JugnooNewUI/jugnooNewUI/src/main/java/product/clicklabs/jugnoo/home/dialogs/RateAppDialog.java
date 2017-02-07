@@ -16,14 +16,14 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.AppRatingTypeValue;
+import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import retrofit.RetrofitError;
@@ -129,7 +129,7 @@ public class RateAppDialog {
 
 	private void acceptAppRatingRequestAPI(AppRatingTypeValue ratingFlag) {
 		try {
-			if (AppStatus.getInstance(activity).isOnline(activity)) {
+			if (MyApplication.getInstance().isOnline()) {
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_RATING_FLAG, String.valueOf(ratingFlag.getOrdinal()));
@@ -160,7 +160,7 @@ public class RateAppDialog {
 
 	public void thumbsUpClickedAPI() {
 		try {
-			if (AppStatus.getInstance(activity).isOnline(activity)) {
+			if (MyApplication.getInstance().isOnline()) {
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 

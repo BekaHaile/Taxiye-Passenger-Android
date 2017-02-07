@@ -26,7 +26,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -191,7 +190,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 
 
     public void updateUserProfileAPI(final Activity activity, final String updatedField, String accessToken) {
-        if(AppStatus.getInstance(activity).isOnline(activity)) {
+        if(MyApplication.getInstance().isOnline()) {
 
             DialogPopup.showLoadingDialog(activity, "Updating...");
 

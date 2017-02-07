@@ -7,7 +7,7 @@
     android:layout_marginLeft="@dimen/px_20"
     android:layout_marginRight="@dimen/px_20"
     android:layout_marginTop="@dimen/px_20"
-    android:visibility="visible"
+    android:visibility="gone"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="@dimen/px_4">
 

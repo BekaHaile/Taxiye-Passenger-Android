@@ -78,7 +78,7 @@ public class UserData {
 	private ArrayList<SearchResult> searchResultsAdditional = new ArrayList<>();
 	private ArrayList<FetchUserAddressResponse.Address> pointsOfInterestAddresses = new ArrayList<>();
 
-	private int showHomeScreen, showSubscriptionData;
+	private int showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled;
 	private SubscriptionData subscriptionData;
 
 
@@ -98,7 +98,8 @@ public class UserData {
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled, int payEnabled,
 					int inviteFriendButton, String defaultClientId,
-					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData){
+					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
+					int slideCheckoutPayEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -172,6 +173,7 @@ public class UserData {
 
 		this.showHomeScreen = showHomeScreen;
 		this.showSubscriptionData = showSubscriptionData;
+		this.slideCheckoutPayEnabled = slideCheckoutPayEnabled;
 	}
 
 	private void checkUserImage(){
@@ -948,7 +950,13 @@ public class UserData {
 		this.pointsOfInterestAddresses = pointsOfInterestAddresses;
 	}
 
+	public int getSlideCheckoutPayEnabled() {
+		return slideCheckoutPayEnabled;
+	}
 
+	public void setSlideCheckoutPayEnabled(int slideCheckoutPayEnabled) {
+		this.slideCheckoutPayEnabled = slideCheckoutPayEnabled;
+	}
 
 	//	"meals_enabled": 1,
 //			"fresh_enabled": 1,

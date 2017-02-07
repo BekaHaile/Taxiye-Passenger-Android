@@ -30,6 +30,9 @@
             android:textColorHint="@color/text_color_hint"
             android:textSize="@dimen/text_size_32"
             android:textCursorDrawable="@drawable/cursor_black"
+            android:maxLines="1"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
             />
 
     </android.support.v7.widget.CardView>

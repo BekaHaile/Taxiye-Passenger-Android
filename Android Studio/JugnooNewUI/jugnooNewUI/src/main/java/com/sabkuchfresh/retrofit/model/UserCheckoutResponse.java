@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 
@@ -42,6 +43,18 @@ public class UserCheckoutResponse{
 	@SerializedName("cityId")
 	@Expose
 	private Integer cityId;
+	@SerializedName("subscription_info")
+	@Expose
+	private SubscriptionInfo subscriptionInfo;
+	@SerializedName("show_star_subscriptions")
+	@Expose
+	private Integer showStarSubscriptions;
+	@SerializedName("star_subscription_title")
+	@Expose
+	private String starSubscriptionTitle;
+	@SerializedName("star_subscription_text")
+	@Expose
+	private String starSubscriptionText;
 
 	/**
 	 *
@@ -147,6 +160,40 @@ public class UserCheckoutResponse{
 
 	public void setCityId(Integer cityId) {
 		this.cityId = cityId;
+	}
+
+	public SubscriptionInfo getSubscriptionInfo() {
+		return subscriptionInfo;
+	}
+
+	public void setSubscriptionInfo(SubscriptionInfo subscriptionInfo) {
+		this.subscriptionInfo = subscriptionInfo;
+	}
+
+	public Integer getShowStarSubscriptions() {
+		if(showStarSubscriptions == null)
+			showStarSubscriptions = 0;
+		return showStarSubscriptions;
+	}
+
+	public void setShowStarSubscriptions(Integer showStarSubscriptions) {
+		this.showStarSubscriptions = showStarSubscriptions;
+	}
+
+	public String getStarSubscriptionText() {
+		return starSubscriptionText;
+	}
+
+	public void setStarSubscriptionText(String starSubscriptionText) {
+		this.starSubscriptionText = starSubscriptionText;
+	}
+
+	public String getStarSubscriptionTitle() {
+		return starSubscriptionTitle;
+	}
+
+	public void setStarSubscriptionTitle(String starSubscriptionTitle) {
+		this.starSubscriptionTitle = starSubscriptionTitle;
 	}
 
 	public class Subscription {
@@ -376,6 +423,131 @@ public class UserCheckoutResponse{
 		@Override
 		public boolean equals(Object o) {
 			return (o instanceof CartItem) && ((CartItem)o).getSubItemId().equals(subItemId);
+		}
+	}
+
+	public class SubscriptionInfo {
+
+		@SerializedName("subscription_id")
+		@Expose
+		private Integer subscriptionId;
+		@SerializedName("discount")
+		@Expose
+		private Integer discount;
+		@SerializedName("discount_is_percent")
+		@Expose
+		private Integer discountIsPercent;
+		@SerializedName("minimum_order_amount")
+		@Expose
+		private Integer minimumOrderAmount;
+		@SerializedName("delivery_charges")
+		@Expose
+		private Integer deliveryCharges;
+		@SerializedName("cashback")
+		@Expose
+		private Integer cashback;
+		@SerializedName("cashback_is_percent")
+		@Expose
+		private Integer cashbackIsPercent;
+		@SerializedName("cashback_text")
+		@Expose
+		private String cashbackText;
+		@SerializedName("price")
+		@Expose
+		private Integer price;
+		@SerializedName("plan_string")
+		@Expose
+		private String planString;
+		@SerializedName("description")
+		@Expose
+		private String description;
+
+		public Integer getSubscriptionId() {
+			return subscriptionId;
+		}
+
+		public void setSubscriptionId(Integer subscriptionId) {
+			this.subscriptionId = subscriptionId;
+		}
+
+		public Integer getDiscount() {
+			return discount;
+		}
+
+		public void setDiscount(Integer discount) {
+			this.discount = discount;
+		}
+
+		public Integer getDiscountIsPercent() {
+			return discountIsPercent;
+		}
+
+		public void setDiscountIsPercent(Integer discountIsPercent) {
+			this.discountIsPercent = discountIsPercent;
+		}
+
+		public Integer getMinimumOrderAmount() {
+			return minimumOrderAmount;
+		}
+
+		public void setMinimumOrderAmount(Integer minimumOrderAmount) {
+			this.minimumOrderAmount = minimumOrderAmount;
+		}
+
+		public Integer getDeliveryCharges() {
+			return deliveryCharges;
+		}
+
+		public void setDeliveryCharges(Integer deliveryCharges) {
+			this.deliveryCharges = deliveryCharges;
+		}
+
+		public Integer getCashback() {
+			return cashback;
+		}
+
+		public void setCashback(Integer cashback) {
+			this.cashback = cashback;
+		}
+
+		public Integer getCashbackIsPercent() {
+			return cashbackIsPercent;
+		}
+
+		public void setCashbackIsPercent(Integer cashbackIsPercent) {
+			this.cashbackIsPercent = cashbackIsPercent;
+		}
+
+		public String getCashbackText() {
+			return cashbackText;
+		}
+
+		public void setCashbackText(String cashbackText) {
+			this.cashbackText = cashbackText;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public String getPlanString() {
+			return planString;
+		}
+
+		public void setPlanString(String planString) {
+			this.planString = planString;
+		}
+
+		public Integer getPrice() {
+			return price;
+		}
+
+		public void setPrice(Integer price) {
+			this.price = price;
 		}
 	}
 }

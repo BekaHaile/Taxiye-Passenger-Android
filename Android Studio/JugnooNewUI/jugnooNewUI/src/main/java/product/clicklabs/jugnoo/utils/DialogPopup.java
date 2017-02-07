@@ -25,9 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -402,9 +399,15 @@ public class DialogPopup {
 		}catch(Exception e){
 		}
 	}
-	
+
 	public static void alertPopupWithListener(Activity activity, String title, String message, String buttonText,
-											  final View.OnClickListener onClickListener, boolean newInstance) {
+											  final View.OnClickListener onClickListener, boolean newInstance){
+		alertPopupWithListener(activity, title, message, buttonText, onClickListener, newInstance, false);
+	}
+
+	public static void alertPopupWithListener(Activity activity, String title, String message, String buttonText,
+											  final View.OnClickListener onClickListener, boolean newInstance,
+											  boolean showTitle) {
 		try {
 			if(ifOtherDialog(activity, message, onClickListener, null, false)) {
 				dismissAlertPopup();
@@ -444,7 +447,7 @@ public class DialogPopup {
 				textHead.setText(title);
 				textMessage.setText(message);
 
-				textHead.setVisibility(View.GONE);
+				textHead.setVisibility(showTitle ? View.VISIBLE : View.GONE);
 
 				Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
 				btnOk.setTypeface(Fonts.mavenRegular(activity));

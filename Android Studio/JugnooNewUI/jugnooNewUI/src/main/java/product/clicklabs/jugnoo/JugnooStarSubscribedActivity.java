@@ -3,9 +3,6 @@ package product.clicklabs.jugnoo;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
@@ -31,7 +28,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -192,7 +188,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
 
     private void apiCancelSubscription() {
         try {
-            if (AppStatus.getInstance(JugnooStarSubscribedActivity.this).isOnline(JugnooStarSubscribedActivity.this)) {
+            if (MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(JugnooStarSubscribedActivity.this, getResources().getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -311,7 +307,7 @@ public class JugnooStarSubscribedActivity extends BaseActivity implements View.O
 
     private void apiFetchTotalSavings() {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
                 llSavingsValue.removeAllViews();
                 llSavingsValue.addView(progressWheel);
                 progressWheel.spin();

@@ -27,7 +27,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -266,7 +265,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
      */
     public void getFareDetailsAsync(final Activity activity) {
 		try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 if (helpSection != null) {
                     apiCalling = true;
                     //                    DialogPopup.showLoadingDialog(activity, "Loading...");

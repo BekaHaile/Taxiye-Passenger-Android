@@ -50,4 +50,9 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tvScroll"
+        android:layout_width="1px"
+        android:layout_height="1px"/>
+
 </LinearLayout>

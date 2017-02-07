@@ -33,13 +33,13 @@ import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import retrofit.RetrofitError;
@@ -166,32 +166,6 @@ public class FreshSearchFragment extends Fragment {
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
-		/*activity.getTopBar().etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-				try {
-					if (s.length() > 0) {
-						new SubItemsSearchAsync().execute(s.toString());
-					} else {
-						clearArrays();
-						freshCategoryItemsAdapter.notifyDataSetChanged();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-        });*/
-
 		activity.getTopBar().etSearch.setText("");
 
 		activity.getTopBar().ivSearchCross.setOnClickListener(new View.OnClickListener() {
@@ -225,8 +199,9 @@ public class FreshSearchFragment extends Fragment {
 				if(activity.getProductsResponse() != null
 						&& activity.getProductsResponse().getCategories() != null) {
 					String token = params[0];
-					subItemsInSearch.clear();
+
 					if(!token.equalsIgnoreCase(tokenSearched)) {
+						subItemsInSearch.clear();
 						if(token.length() == 1 && token.length() > tokenSearched.length()) {
 							searchFromStart(token);
 						}
@@ -379,7 +354,7 @@ public class FreshSearchFragment extends Fragment {
 	public void searchFreshItemsAutoComplete(final String searchText) {
 		try {
 			if(!refreshingAutoComplete) {
-				if (AppStatus.getInstance(activity).isOnline(activity)) {
+				if (MyApplication.getInstance().isOnline()) {
 						HashMap<String, String> params = new HashMap<>();
 						params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 						params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
@@ -387,7 +362,7 @@ public class FreshSearchFragment extends Fragment {
 						params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
 						params.put(Constants.KEY_CITY_ID, String.valueOf(cityId));
 						params.put(Constants.INTERATED, "1");
-						params.put(Constants.KEY_SEARCH_TEXT, searchText);
+						params.put(Constants.KEY_SEARCH_STRING, searchText);
 						params.put(Constants.KEY_SUPER_CATEGORY_ID, String.valueOf(superCategoryId));
 
 						refreshingAutoComplete = true;

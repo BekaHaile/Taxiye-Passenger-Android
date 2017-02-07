@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -350,7 +349,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	
 
 	public void verifyOtpPhoneNoChange(final Activity activity, String phoneNo, String otp) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			
@@ -462,7 +461,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	 * ASync for initiating OTP Call from server
 	 */
 	public void initiateOTPCallAsync(final Activity activity, String phoneNo) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 			
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 			

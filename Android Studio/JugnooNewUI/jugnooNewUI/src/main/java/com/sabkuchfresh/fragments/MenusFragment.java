@@ -25,8 +25,8 @@ import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.FlurryEventNames;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
@@ -49,9 +49,9 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -81,6 +81,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     PushDialog pushDialog;
     private boolean resumed = false, searchOpened = false;
+    private KeyboardLayoutListener keyboardLayoutListener;
 
     public MenusFragment() {
     }
@@ -143,7 +144,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
             @Override
             public void onNotify(int count) {
-      /*          textViewNoMenus.setVisibility(count > 0 || vendors.size() == 0 ? View.GONE : View.VISIBLE);*/
+                if(count == 0){
+                    recyclerViewRestaurant.smoothScrollToPosition(0);
+                }
             }
         });
 
@@ -151,19 +154,22 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
 
+
+
         try {
             if(Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        activity.openFeedback();
+
+                     activity.openFeedback();
                     }
                 }, 300);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         try {
             if(Data.userData.getPromoSuccess() == 0) {
                 showPromoFailedAtSignupDialog();
@@ -192,6 +198,28 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                 activity.getTopBar().etSearch.setText("");
             }
         });
+
+        keyboardLayoutListener = new KeyboardLayoutListener(llRoot,
+                (TextView) rootView.findViewById(R.id.tvScroll), new KeyboardLayoutListener.KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+                if(activity.getTopFragment() instanceof MenusFragment) {
+                    activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void keyBoardClosed() {
+                if(activity.getTopFragment() instanceof MenusFragment) {
+                    if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                        activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+        keyboardLayoutListener.setResizeTextView(false);
+
+        llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
         return rootView;
     }
@@ -249,7 +277,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     public void getAllMenus(final boolean loader, final LatLng latLng) {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 ProgressDialog progressDialog = null;
                 if (loader)
                     progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
@@ -284,7 +312,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
                                     menusRestaurantAdapter.setList(vendors);
                                     menusRestaurantAdapter.applyFilter();
-                                    activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
+                                    if(activity.getTopFragment() instanceof MenusFragment) {
+                                        activity.getTopBar().ivFilterApplied.setVisibility(menusRestaurantAdapter.filterApplied() ? View.VISIBLE : View.GONE);
+                                    }
                                     relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                             && menusResponse.getVendors().size() == 0) ? View.VISIBLE : View.GONE);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
@@ -293,6 +323,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
                                         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
                                         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                                     }
+                                    recyclerViewRestaurant.smoothScrollToPosition(0);
                                 } else {
                                     DialogPopup.alertPopup(activity, "", message);
                                 }
@@ -357,7 +388,7 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
 
     public void getVendorMenu(final MenusResponse.Vendor vendor) {
         try {
-            if(AppStatus.getInstance(activity).isOnline(activity)) {
+            if(MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
@@ -413,6 +444,8 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
     private void retryDialogVendorData(DialogErrorType dialogErrorType, final MenusResponse.Vendor vendor){
@@ -469,6 +502,9 @@ public class MenusFragment extends Fragment implements FlurryEventNames, SwipeRe
            searchOpened = false;
            activity.getTopBar().etSearch.setText("");
            activity.fragmentUISetup(this);
+           if(keyboardLayoutListener.getKeyBoardState() == 1){
+               activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+           }
        } else {
            searchOpened = true;
            if(clearEt) {

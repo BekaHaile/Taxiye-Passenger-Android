@@ -22,7 +22,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
@@ -204,7 +203,7 @@ public class SupportRideIssuesFragment extends Fragment implements FlurryEventNa
 				cardViewRecycler.setVisibility(View.VISIBLE);
 				setRideData();
 				if(items == null && datum != null){
-					items = Database2.getInstance(activity).getSupportDataItems(datum.getSupportCategory());
+					items = MyApplication.getInstance().getDatabase2().getSupportDataItems(datum.getSupportCategory());
 					if(!Prefs.with(activity).getString(Constants.KEY_SP_TRANSACTION_SUPPORT_PANEL_VERSION, "-1").equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
 						linearLayoutRideShortInfo.setVisibility(View.GONE);
 						cardViewRecycler.setVisibility(View.GONE);

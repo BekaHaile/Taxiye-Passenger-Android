@@ -73,7 +73,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -507,7 +506,7 @@ public class MainActivity extends BaseActivity {
 
 
     private void callVerifyUserApi(final VerifyRegisterResponse verifyRegisterResponse) {
-        if(AppStatus.getInstance(this).isOnline(this)) {
+        if(MyApplication.getInstance().isOnline()) {
             CallProgressWheel.showLoadingDialog(this, AppConstant.PLEASE);
             VerifyUserRequest request = new VerifyUserRequest();
             request.setDeviceToken(MyApplication.getInstance().getDeviceToken());
@@ -590,7 +589,7 @@ public class MainActivity extends BaseActivity {
 
     public void apiFetchPayData() {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
                 CallProgressWheel.showLoadingDialog(this, "Loading...");
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -796,7 +795,7 @@ public class MainActivity extends BaseActivity {
 
     private void apiChangeMPIN() {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
 				CallProgressWheel.showLoadingDialog(this, getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -915,7 +914,7 @@ public class MainActivity extends BaseActivity {
 
     private void apiResetAccount() {
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
 				CallProgressWheel.showLoadingDialog(this, getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -978,7 +977,7 @@ public class MainActivity extends BaseActivity {
 
     private void apiAccountManagement(){
         try {
-            if (AppStatus.getInstance(this).isOnline(this)) {
+            if (MyApplication.getInstance().isOnline()) {
                 CallProgressWheel.showLoadingDialog(MainActivity.this, getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
 

@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.models.PokestopInfo;
@@ -22,7 +22,6 @@ import product.clicklabs.jugnoo.home.models.PokestopTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -51,12 +50,12 @@ public class PokestopHelper {
         try {
             if (Prefs.with(context).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1
                     && Prefs.with(context).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
-                long updatedTimestamp = Database2.getInstance(context).getPokestopDataUpdatedTimestamp(cityId);
+                long updatedTimestamp = MyApplication.getInstance().getDatabase2().getPokestopDataUpdatedTimestamp(cityId);
                 if((System.currentTimeMillis() - updatedTimestamp) > Constants.DAY_MILLIS) {
                     findPokeStop(latLngMapCenter, cityId);
                 } else{
                     if(pokestopInfos.size() == 0 || cityIdOfData != cityId){
-                        FindPokestopResponse findPokestopResponse = Database2.getInstance(context).getPokestopData(cityId);
+                        FindPokestopResponse findPokestopResponse = MyApplication.getInstance().getDatabase2().getPokestopData(cityId);
                         showPokestopData((ArrayList<PokestopInfo>) findPokestopResponse.getPokestops(), cityId);
                     }
                 }
@@ -74,7 +73,7 @@ public class PokestopHelper {
      */
     private void findPokeStop(LatLng latLngMapCenter, final int cityId) {
         try {
-            if (AppStatus.getInstance(context).isOnline(context)) {
+            if (MyApplication.getInstance().isOnline()) {
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_MAP_CENTER_LATITUDE, String.valueOf(latLngMapCenter.latitude));
@@ -98,7 +97,7 @@ public class PokestopHelper {
                         try {
                             if(findPokestopResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
                                 showPokestopData((ArrayList<PokestopInfo>) findPokestopResponse.getPokestops(), cityId);
-                                Database2.getInstance(context).insertUpdatePokestopData(cityId, responseStr);
+                                MyApplication.getInstance().getDatabase2().insertUpdatePokestopData(cityId, responseStr);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
