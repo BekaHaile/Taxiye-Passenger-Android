@@ -117,8 +117,6 @@ import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database;
-import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
@@ -192,7 +190,6 @@ import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -227,7 +224,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, LocationUpdate, FlurryEventNames,
+public class HomeActivity extends BaseFragmentActivity implements AppInterruptHandler, FlurryEventNames,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, FirebaseEvents, View.OnClickListener {
 
@@ -393,7 +390,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
     PushDialog pushDialog;
 
-    LocationFetcher highAccuracyLF = null, highSpeedAccuracyLF = null;
+    LocationFetcher highSpeedAccuracyLF = null;
 
     PromoCoupon promoCouponSelectedForRide;
 
@@ -1648,7 +1645,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     //textViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.fade_in));
 
                     //setZeroRatingView();
-                    if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+                    if (MyApplication.getInstance().isOnline()) {
 						Bundle bundle = new Bundle();
 						MyApplication.getInstance().logEvent(FirebaseEvents.TRANSACTION+"_"+ FirebaseEvents.RIDE_COMPLETED+"_"
 								+FirebaseEvents.RATING_5, bundle);
@@ -2053,7 +2050,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
         try {
-            AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
+            AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
                     "947755540", "cZEMCIHV0GgQlLT2wwM", "50.00", false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -2559,7 +2556,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try{
             try {
                 if(map != null) {
-                    if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+                    if (MyApplication.getInstance().isOnline()) {
                         FlurryEventLogger.event(HomeActivity.this, AUTO_RIDE_ICON);
                         FlurryEventLogger.event(HomeActivity.this, CLICKS_ON_GET_A_RIDE);
 
@@ -2801,7 +2798,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         passengerMainLayout.setVisibility(View.VISIBLE);
 
-        Database2.getInstance(HomeActivity.this).close();
+        MyApplication.getInstance().getDatabase2().close();
 
     }
 
@@ -2856,7 +2853,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
                         // delete the RidePath Table from Phone Database :)
-                        Database2.getInstance(HomeActivity.this).deleteRidePathTable();
+                        MyApplication.getInstance().getDatabase2().deleteRidePathTable();
                         //fabViewTest.setRelativeLayoutFABVisibility(mode);
                         Log.d("RidePath DB", "Deleted");
 
@@ -2890,7 +2887,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                         Data.autoData.setAssignedDriverInfo(null);
 
-                        Database2.getInstance(HomeActivity.this).deleteRidePathTable();
+                        MyApplication.getInstance().getDatabase2().deleteRidePathTable();
 
 
                         clearMap();
@@ -3162,7 +3159,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             } else{
                                 driverLocationMarker.setRotation((float)Data.autoData.getAssignedDriverInfo().getBearing());
                             }
-                            Database2.getInstance(this).insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
+                            MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
                                     Data.autoData.getAssignedDriverInfo().latLng,
                                     driverLocationMarker.getRotation(),
                                     TrackingLogModeValue.RESET.getOrdinal(),
@@ -3235,7 +3232,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             if(Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0){
                                 driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
                             }
-                            Database2.getInstance(this).insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
+                            MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
                                     Data.autoData.getAssignedDriverInfo().latLng,
                                     driverLocationMarker.getRotation(),
                                     TrackingLogModeValue.RESET.getOrdinal(),
@@ -4133,7 +4130,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                    if (MyApplication.getInstance().isOnline()) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCR pop up", "yes");
                                         bundle = new Bundle();
                                         MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCR_POP_UP+"_"+YES, bundle);
@@ -4170,7 +4167,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }, new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                    if (MyApplication.getInstance().isOnline()) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCR pop up", "no thanks");
                                         bundle = new Bundle();
                                         MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCR_POP_UP+"_"+NO_THANKS, bundle);
@@ -4216,7 +4213,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                    if(MyApplication.getInstance().isOnline()) {
 
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCD pop up", "yes");
                                         bundle = new Bundle();
@@ -4255,7 +4252,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                             }, new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+                                    if(MyApplication.getInstance().isOnline()) {
                                         FlurryEventLogger.eventGA(CAMPAIGNS, "CBCD pop up", "no thanks");
                                         bundle = new Bundle();
                                         MyApplication.getInstance().logEvent(FirebaseEvents.FB_CAMPAIGNS+"_"+CBCD_POP_UP+"_"+NO_THANKS, bundle);
@@ -4435,12 +4432,12 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
             Utils.hideSoftKeyboard(this, editTextRSFeedback);
 
             try {
-                AdWordsConversionReporter.registerReferrer(this.getApplicationContext(), this.getIntent().getData());
+                AdWordsConversionReporter.registerReferrer(MyApplication.getInstance(), this.getIntent().getData());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                AdWordsAutomatedUsageReporter.enableAutomatedUsageReporting(this, GOOGLE_ADWORD_CONVERSION_ID);
+                AdWordsAutomatedUsageReporter.enableAutomatedUsageReporting(MyApplication.getInstance(), GOOGLE_ADWORD_CONVERSION_ID);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -4517,7 +4514,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         @Override
         protected String doInBackground(String... params) {
             try {
-                ArrayList<NotificationData> notificationDatas = Database2.getInstance(HomeActivity.this).getAllNotification();
+                ArrayList<NotificationData> notificationDatas = MyApplication.getInstance().getDatabase2().getAllNotification();
                 if(notificationDatas.size() == 0) {
                     Prefs.with(HomeActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
                 }
@@ -4775,8 +4772,6 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         try {
 
             GCMIntentService.clearNotifications(HomeActivity.this);
-
-            destroyFusedLocationFetchers();
 
             ASSL.closeActivity(drawerLayout);
             cancelTimerUpdateDrivers();
@@ -5430,7 +5425,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
      * ASync for cancelCustomerRequestAsync from server
      */
     public void cancelCustomerRequestAsync(final Activity activity) {
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+        if (MyApplication.getInstance().isOnline()) {
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
@@ -5613,7 +5608,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
         if (!checkIfUserDataNull(activity)) {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -5687,7 +5682,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
     public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng, final ProgressWheel progressWheel, final boolean zoomAfterDropSet, final String address) {
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+        if (MyApplication.getInstance().isOnline()) {
 
             progressWheel.setVisibility(View.VISIBLE);
 
@@ -5779,7 +5774,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 @Override
                 public void run() {
                     try {
-                        if (AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)
+                        if (MyApplication.getInstance().isOnline()
                                 && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
                                 && (Data.userData != null)
                                 && (Data.autoData.getAssignedDriverInfo() != null)
@@ -5823,7 +5818,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             if(MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng , driverCurrentLatLng) > 5) {
                                                 Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
                                                 Data.autoData.getAssignedDriverInfo().setEta(eta);
-                                                Database2.getInstance(HomeActivity.this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
+                                                MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
                                                 HomeActivity.this.runOnUiThread(new Runnable() {
 
                                                     @Override
@@ -5951,7 +5946,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         long startTime = System.currentTimeMillis();
                         HashMap<String, String> nameValuePairs = new HashMap<>();
                         nameValuePairs.put("last_sent_max_id", "" +
-                                Database2.getInstance(HomeActivity.this).getLastRowIdInRideInfo());
+                                MyApplication.getInstance().getDatabase2().getLastRowIdInRideInfo());
                         nameValuePairs.put("engagement_id", Data.autoData.getcEngagementId());
                         nameValuePairs.put("access_token", Data.userData.accessToken);
 
@@ -5997,7 +5992,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                             }
                                             plotPolylineInRideDriverPath();
 
-                                            try { Database2.getInstance(HomeActivity.this).createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
+                                            try { MyApplication.getInstance().getDatabase2().createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -6033,7 +6028,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         }
         if(polylineOptionsInRideDriverPath.size() == 0) {
             try {
-                ArrayList<RidePath> ridePathsList = Database2.getInstance(HomeActivity.this).getRidePathInfo();
+                ArrayList<RidePath> ridePathsList = MyApplication.getInstance().getDatabase2().getRidePathInfo();
                 for (RidePath ridePath : ridePathsList) {
                     PolylineOptions polylineOptions = new PolylineOptions();
                     polylineOptions.width(ASSL.Xscale() * 7);
@@ -6133,7 +6128,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                         }
                     });
                     try {
-                        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext()) && Data.autoData.getDropLatLng() != null && lastLatLng != null && toShowPathToDrop()) {
+                        if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && lastLatLng != null && toShowPathToDrop()) {
                             Response response = RestClient.getGoogleApiService().getDirections(lastLatLng.latitude + "," + lastLatLng.longitude,
                                     Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -6328,7 +6323,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
     private boolean requestRideDriverCheck(){
-        if(AppStatus.getInstance(HomeActivity.this).isOnline(HomeActivity.this)) {
+        if(MyApplication.getInstance().isOnline()) {
             Bundle bundle = new Bundle();
             MyApplication.getInstance().logEvent(TRANSACTION+"_"+FirebaseEvents.HOME_SCREEN+"_"
                     +DIFFERENT_PICKUP_LOCATION_POPUP+"_"+OK, bundle);
@@ -6647,7 +6642,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled));
 
-            Database2.getInstance(this).insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
+            MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
 
             if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
                 passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
@@ -6687,8 +6682,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         editor.commit();
 
-        Database.getInstance(this).deleteSavedPath();
-        Database.getInstance(this).close();
+        MyApplication.getInstance().getDatabase().deleteSavedPath();
+        MyApplication.getInstance().getDatabase().close();
 
     }
 
@@ -6706,8 +6701,8 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
         editor.commit();
 
-        Database.getInstance(this).deleteSavedPath();
-        Database.getInstance(this).close();
+        MyApplication.getInstance().getDatabase().deleteSavedPath();
+        MyApplication.getInstance().getDatabase().close();
 
     }
 
@@ -6870,11 +6865,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void initializeFusedLocationFetchers() {
         destroyHighAccuracyFusedLocationFetcher();
-        if (highAccuracyLF == null) {
-            highAccuracyLF = new LocationFetcher(HomeActivity.this, LOCATION_UPDATE_TIME_PERIOD);
-        } else{
-            highAccuracyLF.connect();
-        }
+        MyApplication.getInstance().getLocationFetcher().connect(locationUpdateMain, LOCATION_UPDATE_TIME_PERIOD);
         initializeHighSpeedAccuracyFusedLocationFetcher();
     }
 
@@ -6882,29 +6873,30 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
         destroyHighSpeedAccuracyFusedLocationFetcher();
         if(checkForInitialMyLocationButtonClick()) {
             if (highSpeedAccuracyLF == null) {
-                highSpeedAccuracyLF = new LocationFetcher(HomeActivity.this, new LocationUpdate() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-                        try {
-                            if (checkForInitialMyLocationButtonClick()) {
-                                LatLng lastMapCentre = map.getCameraPosition().target;
-                                LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                                if(MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), MAP_ANIMATE_DURATION, null);
-                                }
-							} else {
-								destroyHighSpeedAccuracyFusedLocationFetcher();
-							}
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, 5000);
-            } else {
-                highSpeedAccuracyLF.connect();
+                highSpeedAccuracyLF = new LocationFetcher(MyApplication.getInstance());
             }
+            highSpeedAccuracyLF.connect(highSpeedLU, 5000);
         }
     }
+    private LocationUpdate highSpeedLU = new LocationUpdate() {
+        @Override
+        public void onLocationChanged(Location location) {
+            try {
+                if (checkForInitialMyLocationButtonClick()) {
+                    LatLng lastMapCentre = map.getCameraPosition().target;
+                    LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
+                    if(MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
+                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), MAP_ANIMATE_DURATION, null);
+                    }
+                } else {
+                    destroyHighSpeedAccuracyFusedLocationFetcher();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 
     private boolean checkForInitialMyLocationButtonClick(){
         return PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupScreenOpened
@@ -6920,9 +6912,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     public void destroyHighAccuracyFusedLocationFetcher() {
         try {
-            if (highAccuracyLF != null) {
-                highAccuracyLF.destroy();
-            }
+            MyApplication.getInstance().getLocationFetcher().destroy();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6938,43 +6928,46 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     }
 
 
-    @Override
-    public synchronized void onLocationChanged(Location location) {
-        try {
-            Data.latitude = location.getLatitude();
-            Data.longitude = location.getLongitude();
-            if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
-                HomeActivity.myLocation = location;
-            }
-            checkForMyLocationButtonVisibility();
-
-            if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){
-                Data.autoData.setFarAwayCity("");
-                mapTouched = true;
-                zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
-            }
-            zoomedToMyLocation = true;
-
-
-            boolean cached = false;
+    private LocationUpdate locationUpdateMain = new LocationUpdate() {
+        @Override
+        public synchronized void onLocationChanged(Location location) {
             try {
-                if (myLocation != null) {
-                    Bundle bundle = myLocation.getExtras();
-                    cached = bundle.getBoolean("cached");
+                Data.latitude = location.getLatitude();
+                Data.longitude = location.getLongitude();
+                if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
+                    HomeActivity.myLocation = location;
                 }
-            } catch (Exception e) {
+                checkForMyLocationButtonVisibility();
+
+                if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){
+                    Data.autoData.setFarAwayCity("");
+                    mapTouched = true;
+                    zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
+                }
+                zoomedToMyLocation = true;
+
+
+                boolean cached = false;
+                try {
+                    if (myLocation != null) {
+                        Bundle bundle = myLocation.getExtras();
+                        cached = bundle.getBoolean("cached");
+                    }
+                } catch (Exception e) {
 //				e.printStackTrace();
-            }
-            if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
-                    && relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
-                locationGotNow();
-            }
+                }
+                if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
+                        && relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
+                    locationGotNow();
+                }
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
+    };
+
 
     private void locationGotNow(){
         textViewInitialSearch.setText("");
@@ -7088,7 +7081,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                 }
 
 
-                                String links = Database2.getInstance(HomeActivity.this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+                                String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
                                 if(links != null){
                                     if(!"[]".equalsIgnoreCase(links)) {
                                         nameValuePairs.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -7184,7 +7177,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                                                     // Add this code to the event you'd like to track in your app.
                                                     // See code examples and learn how to add advanced features like app deep links at:
                                                     //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
-                                                    AdWordsConversionReporter.reportWithConversionId(HomeActivity.this.getApplicationContext(),
+                                                    AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
                                                             GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
                                                     specialPickupScreenOpened = false;
@@ -7452,7 +7445,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 // Add this code to the event you'd like to track in your app.
                 // See code examples and learn how to add advanced features like app deep links at:
                 //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
-                AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
+                AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
                         GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -7461,7 +7454,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
 
             try {
-                AdWordsConversionReporter.reportWithConversionId(this.getApplicationContext(),
+                AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
                         "947755540", "BS6QCL3P0GgQlLT2wwM", "0.00", false);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -8159,7 +8152,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
 
     private void uploadContactsApi(final boolean fromLogin){
         HashMap<String, String> params = new HashMap<>();
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+        if (MyApplication.getInstance().isOnline()) {
 
             DialogPopup.showLoadingDialog(this, "Loading...");
             params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -8231,7 +8224,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
                 }
             });
 
-            Database2.getInstance(activity).insertPendingAPICall(activity,
+            MyApplication.getInstance().getDatabase2().insertPendingAPICall(activity,
                     PendingCall.SKIP_RATING_BY_CUSTOMER.getPath(), params);
 
             try { Data.autoData.getDriverInfos().clear(); } catch (Exception e) { e.printStackTrace(); }
@@ -8248,7 +8241,7 @@ public class HomeActivity extends BaseFragmentActivity implements AppInterruptHa
     public void submitFeedbackToDriverAsync(final Activity activity, final String engagementId, final String ratingReceiverId,
                                             final int givenRating, final String feedbackText, final String feedbackReasons) {
         try {
-            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 //DialogPopup.showLoadingDialog(activity, "Loading...");
 

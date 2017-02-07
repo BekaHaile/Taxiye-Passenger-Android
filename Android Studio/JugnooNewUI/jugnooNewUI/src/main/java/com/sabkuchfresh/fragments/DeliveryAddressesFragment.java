@@ -55,7 +55,6 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -189,8 +188,10 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
                 public void onEditClick(SearchResult searchResult) {
                     goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, true);
                 }
-            }, true, true);
+            }, false, true);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
+            imageViewEditHome.setVisibility(View.GONE);
+            imageViewEditWork.setVisibility(View.GONE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -522,7 +523,7 @@ public class DeliveryAddressesFragment extends Fragment implements FreshAddressA
 
     private void fillAddressDetails(final LatLng latLng) {
         try {
-            if (AppStatus.getInstance(getActivity()).isOnline(getActivity())) {
+            if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(getActivity(), "Loading...");
                 final Map<String, String> params = new HashMap<String, String>(6);
 

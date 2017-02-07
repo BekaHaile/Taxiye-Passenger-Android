@@ -83,7 +83,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
@@ -107,7 +106,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class SplashNewActivity extends BaseActivity implements LocationUpdate, FlurryEventNames, Constants, FirebaseEvents {
+public class SplashNewActivity extends BaseActivity implements FlurryEventNames, Constants, FirebaseEvents {
 
 	//adding drop location
 
@@ -236,7 +235,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 						}
 						String link = referringParams.optString("link", "");
 						if (!"".equalsIgnoreCase(link)) {
-							Database2.getInstance(SplashNewActivity.this).insertLink(link);
+							MyApplication.getInstance().getDatabase2().insertLink(link);
 						}
 
 						// deep link data: {"deepindex":"0","$identity_id":"176950378011563091","$one_time_use":false,"referring_user_identifier":"f2","source":"android",
@@ -371,9 +370,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			holdForBranch = false;
 			clickCount = 0;
 
-			if (locationFetcher == null) {
-				locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
-			}
 
 			linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 			textViewScroll = (TextView) findViewById(R.id.textViewScroll);
@@ -408,7 +404,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			//buttonLogin.startAnimation(scale);
 
 
-			String[] emails = Database.getInstance(this).getEmails();
+			String[] emails = MyApplication.getInstance().getDatabase().getEmails();
 			ArrayAdapter<String> adapter;
 			if (emails == null) {
 				emails = new String[]{};
@@ -739,7 +735,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			buttonFacebookLogin.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if (AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
+					if (MyApplication.getInstance().isOnline()) {
 						signUpBy = "facebook";
 						FlurryEventLogger.event(LOGIN_VIA_FACEBOOK);
 						Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
@@ -769,7 +765,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 			buttonGoogleLogin.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					if(AppStatus.getInstance(SplashNewActivity.this).isOnline(SplashNewActivity.this)) {
+					if(MyApplication.getInstance().isOnline()) {
 					FlurryEventLogger.event(LOGIN_VIA_GOOGLE);
 						signUpBy = "google";
                         Bundle bundle = new Bundle();
@@ -1380,10 +1376,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	};
 
 	public void getDeviceToken() {
-		boolean mockLocationEnabled = false;
-		if (locationFetcher != null) {
-			mockLocationEnabled = Utils.mockLocationEnabled(locationFetcher.getLocationUnchecked());
-		}
+		boolean mockLocationEnabled = Utils.mockLocationEnabled(MyApplication.getInstance().getLocationFetcher().getLocationUnchecked());
 		if (mockLocationEnabled) {
 			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
 					getResources().getString(R.string.disable_mock_location),
@@ -1391,9 +1384,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 						@Override
 						public void onClick(View v) {
-							if (locationFetcher != null) {
-								locationFetcher.destroy();
-							}
+							MyApplication.getInstance().getLocationFetcher().destroy();
 							startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
 							finish();
 						}
@@ -1481,17 +1472,12 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	private LocationFetcher locationFetcher = null;
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 
-		if (locationFetcher == null) {
-			locationFetcher = new LocationFetcher(SplashNewActivity.this, 1000);
-		} else{
-			locationFetcher.connect();
-		}
+		MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 1000);
 
 		retryAccessTokenLogin();
 		resumed = true;
@@ -1516,9 +1502,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	@Override
 	protected void onPause() {
 		try {
-			if(locationFetcher != null) {
-				locationFetcher.destroy();
-			}
+			MyApplication.getInstance().getLocationFetcher().destroy();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1565,10 +1549,10 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
 		if (!"".equalsIgnoreCase(pair.first)) {
 			String accessToken = pair.first;
-			if (locationFetcher != null) {
-				Data.loginLatitude = locationFetcher.getLatitude();
-				Data.loginLongitude = locationFetcher.getLongitude();
-			}
+
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+
 			getApiLoginUsingAccessToken().hit(accessToken, Data.loginLatitude, Data.loginLongitude, null,
 					false, new ApiLoginUsingAccessToken.Callback() {
 				@Override
@@ -1601,7 +1585,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 					});
 
 		} else {
-			if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+			if (MyApplication.getInstance().isOnline()) {
 				changeUIState(State.SPLASH_LS);
 				getAllowedAuthChannels(SplashNewActivity.this);
 			} else {
@@ -1612,7 +1596,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 	public void getAllowedAuthChannels(Activity activity){
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 
 			//DialogPopup.showLoadingDialogDownwards(activity, "Loading...");
 			HashMap<String, String> params = new HashMap<>();
@@ -1846,21 +1830,30 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		}
 	}
 
-	public static boolean checkIfTrivialAPIErrors(Activity activity, JSONObject jObj) {
+	public static boolean checkIfTrivialAPIErrors(Activity activity, JSONObject jObj){
 		try {
-			int flag = jObj.getInt("flag");
+			int flag = jObj.getInt(KEY_FLAG);
+			String error = jObj.optString(KEY_ERROR);
+			String message = jObj.optString(KEY_MESSAGE);
+			return checkIfTrivialAPIErrors(activity, flag, error, message);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static boolean checkIfTrivialAPIErrors(Activity activity, int flag, String error, String message) {
+		try {
 			if (ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal() == flag) {
 				DialogPopup.dismissLoadingDialog();
 				HomeActivity.logoutUser(activity);
 				return true;
 			} else if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
 				DialogPopup.dismissLoadingDialog();
-				String errorMessage = jObj.getString("error");
-				DialogPopup.alertPopup(activity, "", errorMessage);
+				DialogPopup.alertPopup(activity, "", error);
 				return true;
 			} else if (ApiResponseFlags.SHOW_MESSAGE.getOrdinal() == flag) {
 				DialogPopup.dismissLoadingDialog();
-				String message = jObj.getString("message");
 				DialogPopup.alertPopup(activity, "", message);
 				return true;
 			} else {
@@ -2066,11 +2059,6 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 
-	@Override
-	public void onLocationChanged(Location location) {
-		Data.loginLatitude = location.getLatitude();
-		Data.loginLongitude = location.getLongitude();
-	}
 
 
 	private void showLocationEnableDialog() {
@@ -2210,16 +2198,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	 * ASync for login from server
 	 */
 	public void sendLoginValues(final Activity activity, final String emailId, String password, final boolean isPhoneNumber) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (locationFetcher != null) {
-				Data.loginLatitude = locationFetcher.getLatitude();
-				Data.loginLongitude = locationFetcher.getLongitude();
-			}
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
 			if (isPhoneNumber) {
 				params.put("phone_no", emailId);
@@ -2242,7 +2228,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -2297,7 +2283,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									FlurryEventLogger.eventGA(REVENUE + SLASH + ACTIVATION + SLASH + RETENTION, "Login Page", "Login");
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
-									Database.getInstance(SplashNewActivity.this).insertEmail(emailId);
+									MyApplication.getInstance().getDatabase().insertEmail(emailId);
 									DialogPopup.dismissLoadingDialog();
 								}
 							} else {
@@ -2331,16 +2317,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 	public void sendFacebookLoginValues(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (locationFetcher != null) {
-				Data.loginLatitude = locationFetcher.getLatitude();
-				Data.loginLongitude = locationFetcher.getLongitude();
-			}
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
 
 			params.put("user_fb_id", Data.facebookUserData.fbId);
@@ -2364,7 +2348,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -2418,7 +2402,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 											loginResponse, LoginVia.FACEBOOK, new LatLng(Data.loginLatitude, Data.loginLongitude));
 
 
-									Database.getInstance(SplashNewActivity.this).insertEmail(Data.facebookUserData.userEmail);
+									MyApplication.getInstance().getDatabase().insertEmail(Data.facebookUserData.userEmail);
 								}
 								DialogPopup.showLoadingDialog(activity, "Loading...");
 							} else {
@@ -2452,16 +2436,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 	}
 
 	public void sendGoogleLoginValues(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 			resetFlags();
 			DialogPopup.showLoadingDialog(activity, "Loading...");
 
 			HashMap<String, String> params = new HashMap<>();
 
-			if (locationFetcher != null) {
-				Data.loginLatitude = locationFetcher.getLatitude();
-				Data.loginLongitude = locationFetcher.getLongitude();
-			}
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
@@ -2480,7 +2462,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 				params.put("device_rooted", "0");
 			}
 			params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-			String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+			String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
 			if(links != null){
 				if(!"[]".equalsIgnoreCase(links)) {
 					params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -2536,7 +2518,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 									FlurryEventLogger.eventGA(REVENUE+SLASH+ACTIVATION+SLASH+RETENTION, "Login Page", "Login with Google");
 									loginDataFetched = true;
 
-									Database.getInstance(SplashNewActivity.this).insertEmail(Data.googleSignInAccount.getEmail());
+									MyApplication.getInstance().getDatabase().insertEmail(Data.googleSignInAccount.getEmail());
 								}
 							}
 							else{
@@ -2887,16 +2869,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
      */
     public void sendSignupValues(final Activity activity, final String name, final String referralCode, final String emailId, final String phoneNo,
                                  final String password, final int linkedWallet) {
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+        if (MyApplication.getInstance().isOnline()) {
             resetFlags();
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
             HashMap<String, String> params = new HashMap<>();
 
-            if (locationFetcher != null) {
-                Data.loginLatitude = locationFetcher.getLatitude();
-                Data.loginLongitude = locationFetcher.getLongitude();
-            }
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
             params.put("user_name", name);
             params.put("phone_no", phoneNo);
@@ -2926,7 +2906,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 params.put("device_rooted", "0");
             }
             params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-            String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+            String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
             if (links != null) {
                 if (!"[]".equalsIgnoreCase(links)) {
                     params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -3011,16 +2991,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
      */
     public void sendFacebookSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password
             , final int linkedWallet) {
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+        if (MyApplication.getInstance().isOnline()) {
             resetFlags();
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
             HashMap<String, String> params = new HashMap<>();
 
-            if (locationFetcher != null) {
-                Data.loginLatitude = locationFetcher.getLatitude();
-                Data.loginLongitude = locationFetcher.getLongitude();
-            }
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
             params.put("user_fb_id", Data.facebookUserData.fbId);
             params.put("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
@@ -3051,7 +3029,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 params.put("device_rooted", "0");
             }
             params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-            String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+            String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
             if (links != null) {
                 if (!"[]".equalsIgnoreCase(links)) {
                     params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -3129,16 +3107,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
      * ASync for login from server
      */
     public void sendGoogleSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password, final int linkedWallet) {
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+        if (MyApplication.getInstance().isOnline()) {
             resetFlags();
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
             HashMap<String, String> params = new HashMap<>();
 
-            if (locationFetcher != null) {
-                Data.loginLatitude = locationFetcher.getLatitude();
-                Data.loginLongitude = locationFetcher.getLongitude();
-            }
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
             params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
@@ -3165,7 +3141,7 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                 params.put("device_rooted", "0");
             }
             params.put(KEY_SOURCE, JSONParser.getAppSource(this));
-            String links = Database2.getInstance(this).getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
+            String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
             if (links != null) {
                 if (!"[]".equalsIgnoreCase(links)) {
                     params.put(KEY_BRANCH_REFERRING_LINKS, links);
@@ -3294,16 +3270,14 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 
 
     public void verifyOtpViaEmail(final Activity activity, final String email, final String phoneNo, String otp) {
-        if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+        if (MyApplication.getInstance().isOnline()) {
 
             final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, "Loading...");
 
             HashMap<String, String> params = new HashMap<>();
 
-            if (locationFetcher != null) {
-                Data.loginLatitude = locationFetcher.getLatitude();
-                Data.loginLongitude = locationFetcher.getLongitude();
-            }
+			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
+			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
             params.put("email", email);
             params.put("password", "");
@@ -3348,8 +3322,8 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
                                 if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
                                     new JSONParser().parseAccessTokenLoginData(activity, jsonString,
                                             loginResponse, LoginVia.EMAIL_OTP, new LatLng(Data.loginLatitude, Data.loginLongitude));
-                                    Database.getInstance(activity).insertEmail(email);
-                                    Database.getInstance(activity).close();
+                                    MyApplication.getInstance().getDatabase().insertEmail(email);
+                                    MyApplication.getInstance().getDatabase().close();
                                     loginDataFetched = true;
                                 }
                             } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
@@ -3493,5 +3467,13 @@ public class SplashNewActivity extends BaseActivity implements LocationUpdate, F
 		unSelected2.setImageResource(R.drawable.ic_radio_button_normal);
 		unSelected3.setImageResource(R.drawable.ic_radio_button_normal);
 	}
+
+	private LocationUpdate locationUpdate = new LocationUpdate() {
+		@Override
+		public void onLocationChanged(Location location) {
+			Data.loginLatitude = location.getLatitude();
+			Data.loginLongitude = location.getLongitude();
+		}
+	};
 
 }

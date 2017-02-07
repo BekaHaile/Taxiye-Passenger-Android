@@ -36,7 +36,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -308,7 +307,7 @@ public class AddWalletFragment extends Fragment {
 
 	public void generateOTP(final boolean retry) {
 		try {
-			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
+			if(MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -384,7 +383,7 @@ public class AddWalletFragment extends Fragment {
 
 	private void sendOTP(final String otp) {
 		try {
-			if(AppStatus.getInstance(paymentActivity).isOnline(paymentActivity)) {
+			if(MyApplication.getInstance().isOnline()) {
 				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);

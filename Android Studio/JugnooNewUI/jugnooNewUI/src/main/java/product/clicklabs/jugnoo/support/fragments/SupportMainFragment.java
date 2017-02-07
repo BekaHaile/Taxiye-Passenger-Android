@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -33,7 +32,6 @@ import product.clicklabs.jugnoo.support.adapters.SupportFAQItemsAdapter;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.support.models.SupportCategory;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -169,12 +167,12 @@ public class SupportMainFragment extends Fragment implements FlurryEventNames, C
 		try {
 			String savedSupportVersion = Prefs.with(activity).getString(Constants.KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, "-1");
 			if(savedSupportVersion.equalsIgnoreCase(Data.userData.getInAppSupportPanelVersion())){
-				ArrayList<ShowPanelResponse.Item> menu = Database2.getInstance(activity)
+				ArrayList<ShowPanelResponse.Item> menu = MyApplication.getInstance().getDatabase2()
 						.getSupportDataItems(SupportCategory.MAIN_MENU.getOrdinal());
 				showPanelSuccess(menu);
 			}
 			else {
-				if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+				if (!HomeActivity.checkIfUserDataNull(activity) && MyApplication.getInstance().isOnline()) {
 					DialogPopup.showLoadingDialog(activity, "");
 
 					HashMap<String, String> params = new HashMap<>();

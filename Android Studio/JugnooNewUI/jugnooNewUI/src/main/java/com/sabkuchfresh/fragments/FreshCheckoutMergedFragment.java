@@ -1,26 +1,15 @@
 package com.sabkuchfresh.fragments;
 
-import android.animation.ArgbEvaluator;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.RectShape;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -45,7 +34,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.facebook.appevents.AppEventsConstants;
@@ -95,7 +83,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.JSONParser;
-import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -115,11 +102,9 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
-import product.clicklabs.jugnoo.utils.Font;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
@@ -131,7 +116,6 @@ import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import product.clicklabs.jugnoo.widgets.MySpinner;
 import product.clicklabs.jugnoo.widgets.SwipeButton.SwipeButton;
-import product.clicklabs.jugnoo.widgets.SwipeButton.SwipeButtonCustomItems;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -1312,7 +1296,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     public void placeOrderApi() {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 productList.clear();
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
@@ -1925,7 +1909,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     public void getCheckoutDataAPI(SubscriptionData.Subscription subscription) {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
@@ -2552,7 +2536,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements FlurryEvent
 
     public void apiPlaceOrderPayCallback(final MessageRequest message){
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, "");
                 HashMap<String, String> params = new HashMap<>();
 

@@ -364,7 +364,7 @@ public class JSONParser implements Constants {
             String feedbackDeliveryDate = jMealsData.optString(KEY_FEEDBACK_DATE, "");
             int feedbackViewType = jMealsData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             String rideEndGoodFeedbackText = jMealsData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
-            JSONArray negativeFeedbackReasons = jMealsData.optJSONArray("negative_feedback_reasons");
+            JSONArray negativeFeedbackReasons = jMealsData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
             String feedbackOrderItems = jMealsData.optString("feedback_order_items", "");
 
             Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText, negativeFeedbackReasons
@@ -400,7 +400,7 @@ public class JSONParser implements Constants {
             int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             int isFatafatEnabled = jFatafatData.optInt(KEY_FATAFAT_ENABLED, 1);
             String rideEndGoodFeedbackText = jFatafatData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
-            JSONArray negativeFeedbackReasons = jFatafatData.optJSONArray("negative_feedback_reasons");
+            JSONArray negativeFeedbackReasons = jFatafatData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
 
             PopupData popupData = null;
             try {
@@ -473,7 +473,7 @@ public class JSONParser implements Constants {
             int feedbackViewType = jGroceryData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             int isFatafatEnabled = jGroceryData.optInt(KEY_FATAFAT_ENABLED, 1);
             String rideEndGoodFeedbackText = jGroceryData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
-            JSONArray negativeFeedbackReasons = jGroceryData.optJSONArray("negative_feedback_reasons");
+            JSONArray negativeFeedbackReasons = jGroceryData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
 
             PopupData popupData = null;
             try {
@@ -546,7 +546,7 @@ public class JSONParser implements Constants {
             int feedbackViewType = jMenusData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             int isFatafatEnabled = jMenusData.optInt(KEY_FATAFAT_ENABLED, 1);
             String rideEndGoodFeedbackText = jMenusData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
-            JSONArray negativeFeedbackReasons = jMenusData.optJSONArray("negative_feedback_reasons");
+            JSONArray negativeFeedbackReasons = jMenusData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
 
             PopupData popupData = null;
             try {
@@ -1338,8 +1338,8 @@ public class JSONParser implements Constants {
 
         editor.commit();
 
-        Database.getInstance(context).deleteSavedPath();
-        Database.getInstance(context).close();
+        MyApplication.getInstance().getDatabase().deleteSavedPath();
+        MyApplication.getInstance().getDatabase().close();
     }
 
 

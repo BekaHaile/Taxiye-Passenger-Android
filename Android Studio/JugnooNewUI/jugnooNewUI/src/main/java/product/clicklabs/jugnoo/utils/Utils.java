@@ -67,6 +67,7 @@ import java.util.zip.GZIPOutputStream;
 import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
@@ -249,11 +250,11 @@ public class Utils {
 
 	public static void showToast(Context context, String string){
 		try {
-			if(Data.toast != null){
-                Data.toast.cancel();
+			if(MyApplication.getInstance().getToast() != null){
+				MyApplication.getInstance().getToast().cancel();
             }
-			Data.toast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
-			Data.toast.show();
+			MyApplication.getInstance().setToast(Toast.makeText(context, string, Toast.LENGTH_SHORT));
+			MyApplication.getInstance().getToast().show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

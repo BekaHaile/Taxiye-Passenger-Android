@@ -6,7 +6,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.MyApplication;
 
 public class DeviceTokenGenerator {
 
@@ -17,7 +17,7 @@ public class DeviceTokenGenerator {
     }
 
     public void generateDeviceToken(final Context context, final IDeviceTokenReceiver deviceTokenReceiver) {
-        if (AppStatus.getInstance(context).isOnline(context)) {
+        if (MyApplication.getInstance().isOnline()) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {

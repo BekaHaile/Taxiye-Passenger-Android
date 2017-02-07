@@ -15,12 +15,12 @@ import com.sabkuchfresh.home.FreshActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeSwitcherActivity;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.apis.ApiUpdateClientId;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -82,7 +82,7 @@ public class AppSwitcher {
 	public void switchApp(final Activity activity, final String clientId, final Uri data, final LatLng latLng, final Bundle bundle,
 						  final boolean clearActivityStack, final boolean openHomeSwitcher, final boolean slowTransition){
 		try {
-			if (AppStatus.getInstance(activity).isOnline(activity)) {
+			if (MyApplication.getInstance().isOnline()) {
 				final Intent intent = new Intent();
 				if(clearActivityStack) {
 					//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

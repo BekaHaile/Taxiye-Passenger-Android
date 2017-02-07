@@ -29,6 +29,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -43,7 +44,6 @@ import product.clicklabs.jugnoo.promotion.adapters.PromotionsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -248,7 +248,7 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 	public void getCouponsAndPromotions(final Activity activity) {
 		try {
 			if(!HomeActivity.checkIfUserDataNull(activity)) {
-				if (AppStatus.getInstance(activity).isOnline(activity)) {
+				if (MyApplication.getInstance().isOnline()) {
 					DialogPopup.showLoadingDialog(activity, "Loading...");
 
 					HashMap<String, String> params = new HashMap<>();
@@ -374,7 +374,7 @@ public class PromotionsFragment extends Fragment implements FlurryEventNames, Co
 	public void applyPromoCodeAPI(final Activity activity, final String promoCode) {
 		try {
 			if(!HomeActivity.checkIfUserDataNull(activity)) {
-				if (AppStatus.getInstance(activity).isOnline(activity)) {
+				if (MyApplication.getInstance().isOnline()) {
 					DialogPopup.showLoadingDialog(activity, "Loading...");
 
 					HashMap<String, String> params = new HashMap<>();

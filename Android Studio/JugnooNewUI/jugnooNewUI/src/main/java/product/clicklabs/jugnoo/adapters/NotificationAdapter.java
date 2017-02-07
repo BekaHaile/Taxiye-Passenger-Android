@@ -34,7 +34,6 @@ import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
@@ -227,7 +226,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 activity.startActivity(intent);
             }
             else if(AppLinkIndex.PROMOTIONS.getOrdinal() == deepInt){
-                if(AppStatus.getInstance(activity).isOnline(activity)) {
+                if(MyApplication.getInstance().isOnline()) {
                     intent.setClass(activity, PromotionActivity.class);
                     activity.startActivity(intent);
                 } else {

@@ -50,7 +50,6 @@ import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -575,7 +574,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Data.latitude = currLatLng.latitude;
                     Data.longitude = currLatLng.longitude;
                 }
-                if (AppStatus.getInstance(activity).isOnline(activity)) {
+                if (MyApplication.getInstance().isOnline()) {
                     activity.startActivity(new Intent(activity, PromotionActivity.class));
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     FlurryEventLogger.event(activity, FlurryEventNames.CLICKS_ON_PROMOTIONS_SCREEN);

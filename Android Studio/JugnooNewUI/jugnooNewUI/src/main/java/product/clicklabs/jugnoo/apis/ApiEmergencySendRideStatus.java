@@ -12,6 +12,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -20,7 +21,6 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -47,7 +47,7 @@ public class ApiEmergencySendRideStatus {
 
 	public void emergencySendRideStatusMessage(String engagementId, ArrayList<String> selectedContacts) {
 		try {
-			if(AppStatus.getInstance(activity).isOnline(activity)) {
+			if(MyApplication.getInstance().isOnline()) {
 
 				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 

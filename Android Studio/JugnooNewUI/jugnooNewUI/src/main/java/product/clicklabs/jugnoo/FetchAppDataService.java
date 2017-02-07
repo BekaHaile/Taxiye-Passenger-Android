@@ -17,7 +17,6 @@ import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
@@ -58,7 +57,7 @@ public class FetchAppDataService extends IntentService implements Constants {
 
 	public void fetchAppList(final Context context, final String accessToken, final long timeToSave) {
 		try {
-			if (AppStatus.getInstance(context).isOnline(context)) {
+			if (MyApplication.getInstance().isOnline()) {
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(KEY_ACCESS_TOKEN, accessToken);
@@ -99,7 +98,7 @@ public class FetchAppDataService extends IntentService implements Constants {
 
 	public void returnAppList(final Context context, String accessToken, String appPackagesStr, final long timeToSave) {
 		try {
-			if (AppStatus.getInstance(context).isOnline(context)) {
+			if (MyApplication.getInstance().isOnline()) {
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put("access_token", accessToken);

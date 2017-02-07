@@ -6,7 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -39,23 +39,12 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		this.context = context;
 	}
 
-	public LocationFetcher(LocationUpdate locationUpdate, long requestInterval) {
+	public synchronized void connect(LocationUpdate locationUpdate, long requestInterval){
 		this.locationUpdate = locationUpdate;
-		this.context = (Context) locationUpdate;
 		this.requestInterval = requestInterval;
-		connect();
-	}
-
-	public LocationFetcher(Context context, LocationUpdate locationUpdate, long requestInterval){
-		this.locationUpdate = locationUpdate;
-		this.context = context;
-		this.requestInterval = requestInterval;
-		connect();
-	}
-	
-	public synchronized void connect(){
 		destroy();
-		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+		GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+		int resp = googleApiAvailability.isGooglePlayServicesAvailable(context);
 		if(resp == ConnectionResult.SUCCESS){														// google play services working
 			buildGoogleApiClient(context);
 		}
@@ -153,10 +142,10 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 		return null;
 	}
 	
-	
 
-	
-	
+
+
+
 	public synchronized void destroy(){
 		try{
 			this.location = null;
@@ -174,7 +163,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 			Log.e("e", "=" + e.toString());
 		}
 	}
-	
+
 
 	private synchronized void startRequest(){
 		try {
@@ -223,6 +212,7 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 	@Override
 	public void onLocationChanged(Location location) {
 		try{
+			Log.i(TAG, "onLocationChanged>"+location);
 			locationUnchecked = location;
 			if(location != null && !Utils.mockLocationEnabled(location)) {
 				this.location = location;

@@ -498,6 +498,7 @@ public interface Constants {
 	String KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE = "ride_end_good_feedback_view_type";
 	String KEY_RIDE_END_GOOD_FEEDBACK_TEXT = "ride_end_good_feedback_text";
 	String KEY_RATE_APP = "rate_app";
+	String KEY_NEGATIVE_FEEDBACK_REASONS = "negative_feedback_reasons";
 
 	String KEY_PICKUP_LOCATION_ADDRESS = "pickup_location_address";
 	String KEY_DROP_LOCATION_ADDRESS = "drop_location_address";
@@ -556,6 +557,8 @@ public interface Constants {
 	String KEY_RESTAURANT_NAME = "restaurant_name";
 	String KEY_RESTAURANT_DATA = "restaurant_data";
 	String KEY_USER_SELECTED_SLOT = "user_selected_slot";
+	String KEY_RESTAURANT_ADDRESS = "restaurant_address";
+	String KEY_RESTAURANT_PHONE = "restaurant_phone";
 
 	String KEY_ITEM_ID = "item_id";
 	String SP_FRESH_LAST_ADDRESS_OBJ = "sp_fresh_last_address_obj";
@@ -594,7 +597,7 @@ public interface Constants {
 	String KEY_CUSTOMISATIONS = "customisations";
 	String KEY_SUPER_CATEGORY_ID = "super_category_id";
 	String KEY_SUPER_CATEGORY = "super_category";
-	String KEY_SEARCH_TEXT = "search_string";
+	String KEY_SEARCH_STRING = "search_string";
 	String SP_MENUS_FILTER_SORT_BY = "sp_menus_filter_sort_by";
 	String SP_MENUS_FILTER_MIN_ORDER = "sp_menus_filter_min_order";
 	String SP_MENUS_FILTER_DELIVERY_TIME = "sp_menus_filter_delivery_time";
@@ -606,4 +609,7 @@ public interface Constants {
 	String SLIDE_CHECKOUT_PAY_ENABLED = "slide_checkout_pay_enabled";
 	String KEY_SUBSCRIPTION_INFO = "subscription_info";
 	String KEY_SUBSCRIPTION_ID = "subscription_id";
+	String KEY_SEARCH_TEXT = "search_text";
+	String KEY_EMPTY_CART = "empty_cart";
+	String FEEDBACK_TITLE = "feedback_title";
 }

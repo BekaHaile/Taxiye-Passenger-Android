@@ -2,6 +2,7 @@ package com.sabkuchfresh.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -32,27 +33,27 @@ import product.clicklabs.jugnoo.utils.Prefs;
 @SuppressLint("ValidFragment")
 public class MenusCategoryItemsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-	private LinearLayout llRoot;
+    private LinearLayout llRoot;
 
-	private RecyclerView recyclerViewCategoryItems;
-	private MenusCategoryItemsAdapter menusCategoryItemsAdapter;
+    private RecyclerView recyclerViewCategoryItems;
+    private MenusCategoryItemsAdapter menusCategoryItemsAdapter;
 
-	private View rootView;
+    private View rootView;
     private FreshActivity activity;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-	private ImageView noMealsView;
+    private ImageView noMealsView;
 
 
     protected Bus mBus;
 
-	public static MenusCategoryItemsFragment newInstance(int position, int isVendorMenu){
-		MenusCategoryItemsFragment frag = new MenusCategoryItemsFragment();
-		Bundle bundle = new Bundle();
-		bundle.putInt(Constants.KEY_CATEGORY_POSITION, position);
-		bundle.putInt(Constants.KEY_IS_VENDOR_MENU, isVendorMenu);
-		frag.setArguments(bundle);
-		return frag;
-	}
+    public static MenusCategoryItemsFragment newInstance(int position, int isVendorMenu) {
+        MenusCategoryItemsFragment frag = new MenusCategoryItemsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(Constants.KEY_CATEGORY_POSITION, position);
+        bundle.putInt(Constants.KEY_IS_VENDOR_MENU, isVendorMenu);
+        frag.setArguments(bundle);
+        return frag;
+    }
 
 
     @Override
@@ -71,102 +72,116 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_category_items, container, false);
 
-		try {
-			Bundle bundle = getArguments();
-			if(bundle.containsKey(Constants.KEY_CATEGORY_POSITION)) {
-				int position = bundle.getInt(Constants.KEY_CATEGORY_POSITION);
+        try {
+            Bundle bundle = getArguments();
+            if (bundle.containsKey(Constants.KEY_CATEGORY_POSITION)) {
+                int position = bundle.getInt(Constants.KEY_CATEGORY_POSITION);
 
-				activity = (FreshActivity) getActivity();
+                activity = (FreshActivity) getActivity();
                 mBus = (activity).getBus();
-				llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
-				try {
-					if (llRoot != null) {
-						new ASSL(activity, llRoot, 1134, 720, false);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+                llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
+                try {
+                    if (llRoot != null) {
+                        new ASSL(activity, llRoot, 1134, 720, false);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-				noMealsView = (ImageView) rootView.findViewById(R.id.noMealsView);
-				noMealsView.setVisibility(View.GONE);
+                noMealsView = (ImageView) rootView.findViewById(R.id.noMealsView);
+                noMealsView.setVisibility(View.GONE);
 
-				recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
-				recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
-				recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
-				recyclerViewCategoryItems.setHasFixedSize(false);
+                recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
+                recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
+                recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
+                recyclerViewCategoryItems.setHasFixedSize(false);
 
+
+                /**
+                 Edited by Parminder Singh on 2/1/17 at 7:48 PM
+                 This is done to avoid a state where user scrolls up immediately before the collapse bar settles hence giving weird behavioud
+                 **/
+
+                recyclerViewCategoryItems.setNestedScrollingEnabled(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerViewCategoryItems.setNestedScrollingEnabled(true);
+                    }
+                }, 1000);
                 mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
                 mSwipeRefreshLayout.setOnRefreshListener(this);
                 mSwipeRefreshLayout.setColorSchemeResources(R.color.white);
                 mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.theme_color);
                 mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
 
-				int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-				if(type == AppConstant.ApplicationType.MENUS) {
-					mSwipeRefreshLayout.setEnabled(false);
-				} else {
-					mSwipeRefreshLayout.setEnabled(true);
-				}
+                int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
+                if (type == AppConstant.ApplicationType.MENUS) {
+                    mSwipeRefreshLayout.setEnabled(false);
+                } else {
+                    mSwipeRefreshLayout.setEnabled(true);
+                }
 
-				menusCategoryItemsAdapter = new MenusCategoryItemsAdapter(activity, position,
-						activity.getMenuProductsResponse().getCategories().get(position),
-						new MenusCategoryItemsAdapter.Callback() {
-							@Override
-							public boolean checkForAdd(int position, Item item, MenusCategoryItemsAdapter.CallbackCheckForAdd callbackCheckForAdd) {
-								return activity.checkForAdd(position, item, callbackCheckForAdd);
-							}
+                menusCategoryItemsAdapter = new MenusCategoryItemsAdapter(activity, position,
+                        activity.getMenuProductsResponse().getCategories().get(position),
+                        new MenusCategoryItemsAdapter.Callback() {
+                            @Override
+                            public boolean checkForAdd(int position, Item item, MenusCategoryItemsAdapter.CallbackCheckForAdd callbackCheckForAdd) {
+                                return activity.checkForAdd(position, item, callbackCheckForAdd);
+                            }
 
-							@Override
-							public void onPlusClicked(int position, Item item) {
-								activity.updateCartValuesGetTotalPrice();
-							}
+                            @Override
+                            public void onPlusClicked(int position, Item item) {
+                                activity.updateCartValuesGetTotalPrice();
+                            }
 
-							@Override
-							public void onMinusClicked(int position, Item item) {
-								activity.updateCartValuesGetTotalPrice();
-							}
+                            @Override
+                            public void onMinusClicked(int position, Item item) {
+                                activity.updateCartValuesGetTotalPrice();
+                            }
 
-							@Override
-							public void onMinusFailed(int position, Item item) {
-								DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-										activity.getString(R.string.you_have_to_decrease_quantity_from_checkout),
-										activity.getString(R.string.view_cart), activity.getString(R.string.cancel),
-										new View.OnClickListener() {
-											@Override
-											public void onClick(View v) {
-												activity.getTopBar().getLlCartContainer().performClick();
-											}
-										}, new View.OnClickListener() {
-											@Override
-											public void onClick(View v) {
+                            @Override
+                            public void onMinusFailed(int position, Item item) {
+                                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+                                        activity.getString(R.string.you_have_to_decrease_quantity_from_checkout),
+                                        activity.getString(R.string.view_cart), activity.getString(R.string.cancel),
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                activity.getTopBar().getLlCartContainer().performClick();
+                                            }
+                                        }, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
 
-											}
-										}, true, false);
-							}
-						});
-				recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+                                            }
+                                        }, true, false);
+                            }
+                        });
+                recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
 
-
-		return rootView;
-	}
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+        return rootView;
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
         ASSL.closeActivity(llRoot);
         System.gc();
-	}
+    }
 
     /**
      * Method used to update list data
      */
     public void updateDetail() {
-		menusCategoryItemsAdapter.notifyDataSetChanged();
+        menusCategoryItemsAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -176,7 +191,7 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
 
     @Subscribe
     public void updateSwipe(SwipeCheckout swipe) {
-        if(swipe.flag == 1) {
+        if (swipe.flag == 1) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
     }

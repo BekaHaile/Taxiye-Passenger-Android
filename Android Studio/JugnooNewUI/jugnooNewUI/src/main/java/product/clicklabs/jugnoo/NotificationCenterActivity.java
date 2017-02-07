@@ -24,7 +24,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -117,7 +116,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
     }
 
     private void loadListFromDB() {
-        ArrayList<NotificationData> notificationDatas = Database2.getInstance(NotificationCenterActivity.this).getAllNotification();
+        ArrayList<NotificationData> notificationDatas = MyApplication.getInstance().getDatabase2().getAllNotification();
         Prefs.with(NotificationCenterActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
         if (notificationDatas.size() > 0) {
             linearLayoutNoNotifications.setVisibility(View.GONE);
@@ -174,7 +173,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
 
     private void getNotificationInboxApi(final boolean refresh) {
         try {
-            if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+            if (MyApplication.getInstance().isOnline()) {
                 if(!swipeRefreshLayout.isRefreshing()) {
                     DialogPopup.showLoadingDialog(NotificationCenterActivity.this, "Loading...");
                 }

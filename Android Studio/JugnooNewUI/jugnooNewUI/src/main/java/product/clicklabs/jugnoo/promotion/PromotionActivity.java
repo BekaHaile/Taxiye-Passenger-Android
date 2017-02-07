@@ -44,7 +44,6 @@ import product.clicklabs.jugnoo.promotion.adapters.PromotionsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -300,7 +299,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     public void getCouponsAndPromotions(final Activity activity) {
         try {
             if(!HomeActivity.checkIfUserDataNull(activity)) {
-                if (AppStatus.getInstance(activity).isOnline(activity)) {
+                if (MyApplication.getInstance().isOnline()) {
                     DialogPopup.showLoadingDialog(activity, "Loading...");
 
                     HashMap<String, String> params = new HashMap<>();
@@ -456,7 +455,7 @@ public class PromotionActivity extends BaseActivity implements Constants, Flurry
     public void applyPromoCodeAPI(final Activity activity, final String promoCode) {
         try {
             if(!HomeActivity.checkIfUserDataNull(activity)) {
-                if (AppStatus.getInstance(activity).isOnline(activity)) {
+                if (MyApplication.getInstance().isOnline()) {
                     DialogPopup.showLoadingDialog(activity, "Loading...");
 
                     HashMap<String, String> params = new HashMap<>();

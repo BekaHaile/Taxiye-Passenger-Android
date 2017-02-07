@@ -11,7 +11,6 @@ import product.clicklabs.jugnoo.datastructure.PendingCall;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.client.Response;
@@ -31,13 +30,13 @@ public class PushPendingCallsReceiver extends BroadcastReceiver {
                     @Override
                     public void run() {
                         try {
-                            ArrayList<PendingAPICall> pendingAPICalls = Database2.getInstance(context).getAllPendingAPICalls();
+                            ArrayList<PendingAPICall> pendingAPICalls = MyApplication.getInstance().getDatabase2().getAllPendingAPICalls();
                             for(PendingAPICall pendingAPICall : pendingAPICalls){
                                 Log.e(TAG, "pendingAPICall=" + pendingAPICall);
                                 startAPI(context, pendingAPICall);
                             }
 
-                            int pendingApisCount = Database2.getInstance(context).getAllPendingAPICallsCount();
+                            int pendingApisCount = MyApplication.getInstance().getDatabase2().getAllPendingAPICallsCount();
                             if(pendingApisCount > 0){
                                 // continue next time
                                 int lastCount = Prefs.with(context).getInt(SPLabels.PENDING_CALLS_RETRY_COUNT, 0);
@@ -70,9 +69,9 @@ public class PushPendingCallsReceiver extends BroadcastReceiver {
 
 
     public void startAPI(Context context, PendingAPICall pendingAPICall) {
-        if (AppStatus.getInstance(context).isOnline(context)) {
+        if (MyApplication.getInstance().isOnline()) {
             try {
-                if (AppStatus.getInstance(context).isOnline(context)) {
+                if (MyApplication.getInstance().isOnline()) {
                     Response response = null;
                     if(PendingCall.EMERGENCY_ALERT.getPath().equalsIgnoreCase(pendingAPICall.url)){
                         response = RestClient.getApiService().emergencyAlertSync(pendingAPICall.nameValuePairs);
@@ -82,7 +81,7 @@ public class PushPendingCallsReceiver extends BroadcastReceiver {
                     }
                     Log.e(TAG, "response="+response);
                     if(response != null){
-                        Database2.getInstance(context).deletePendingAPICall(pendingAPICall.id);
+                        MyApplication.getInstance().getDatabase2().deletePendingAPICall(pendingAPICall.id);
                         Log.e(TAG, "response to string=" + new String(((TypedByteArray)response.getBody()).getBytes()));
                     }
                 }

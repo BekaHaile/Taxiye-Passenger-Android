@@ -44,7 +44,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -568,7 +567,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     }
 
     private void apiPurchaseSubscription() {
-        if (AppStatus.getInstance(activity).isOnline(activity)) {
+        if (MyApplication.getInstance().isOnline()) {
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);

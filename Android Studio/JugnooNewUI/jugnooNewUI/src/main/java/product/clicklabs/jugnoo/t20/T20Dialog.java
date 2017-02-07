@@ -18,13 +18,13 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Database2;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -32,7 +32,6 @@ import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.t20.models.Selection;
 import product.clicklabs.jugnoo.t20.models.T20DataType;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -202,7 +201,7 @@ public class T20Dialog {
 
 
 	private void submitSelectedTeam() {
-		if (!HomeActivity.checkIfUserDataNull(activity) && AppStatus.getInstance(activity).isOnline(activity)) {
+		if (!HomeActivity.checkIfUserDataNull(activity) && MyApplication.getInstance().isOnline()) {
 			DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
@@ -224,9 +223,9 @@ public class T20Dialog {
 						String message = JSONParser.getServerMessage(jObj);
 						if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 
-							List<Selection> selections = Database2.getInstance(activity).getT20DataItems(T20DataType.SELECTION.getOrdinal());
+							List<Selection> selections = MyApplication.getInstance().getDatabase2().getT20DataItems(T20DataType.SELECTION.getOrdinal());
 							selections.add(new Selection(schedule.getScheduleId(), schedule.getSelectedTeamId()));
-							Database2.getInstance(activity).insertUpdateT20Data(T20DataType.SELECTION.getOrdinal(), selections);
+							MyApplication.getInstance().getDatabase2().insertUpdateT20Data(T20DataType.SELECTION.getOrdinal(), selections);
 
 							dialog.dismiss();
 							if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode){

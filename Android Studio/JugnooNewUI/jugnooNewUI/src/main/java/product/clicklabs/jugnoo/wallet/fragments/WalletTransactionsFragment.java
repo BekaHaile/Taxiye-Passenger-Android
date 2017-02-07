@@ -23,6 +23,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
@@ -33,7 +34,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -196,7 +196,7 @@ public class WalletTransactionsFragment extends Fragment implements FlurryEventN
 	}
 	
 	public void getTransactionInfoAsync(final Activity activity) {
-		if (AppStatus.getInstance(activity).isOnline(activity)) {
+		if (MyApplication.getInstance().isOnline()) {
 			imageViewJugnooAnimation.setVisibility(View.VISIBLE);
 			jugnooAnimation.start();
 			callRefreshAPI(activity);

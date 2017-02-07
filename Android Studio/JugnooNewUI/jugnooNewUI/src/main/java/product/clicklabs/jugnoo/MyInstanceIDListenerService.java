@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.client.Response;
@@ -64,7 +63,7 @@ public class MyInstanceIDListenerService extends FirebaseInstanceIdService {
 
     public void refreshDeviceToken(final Context activity, String refreshedToken, String accessToken) {
         try {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 final HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
                 params.put(Constants.KEY_DEVICE_TOKEN, refreshedToken);

@@ -42,7 +42,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -836,7 +835,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 	public void updateUserProfileAPI(final Activity activity, final String updatedName,
                                      final String updatedEmail, final String updatedPhone,
                                      final boolean phoneUpdated) {
-		if(AppStatus.getInstance(activity).isOnline(activity)) {
+		if(MyApplication.getInstance().isOnline()) {
 
 			DialogPopup.showLoadingDialog(activity, "Updating...");
 
@@ -910,7 +909,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
 	public void reloadProfileAPI(final Activity activity) {
         if(!HomeActivity.checkIfUserDataNull(activity)) {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -960,7 +959,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
 
 	public void sendEmailVerifyLink(final Activity activity) {
-		if(AppStatus.getInstance(activity).isOnline(activity)) {
+		if(MyApplication.getInstance().isOnline()) {
 
 			DialogPopup.showLoadingDialog(activity, "Updating...");
 
@@ -1012,7 +1011,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
 
 	void logoutAsync(final Activity activity) {
-		if (AppStatus.getInstance(getApplicationContext()).isOnline(getApplicationContext())) {
+		if (MyApplication.getInstance().isOnline()) {
 
 			DialogPopup.showLoadingDialog(activity, "Please Wait ...");
 
@@ -1114,7 +1113,7 @@ public class AccountActivity extends BaseFragmentActivity implements FlurryEvent
 
 
     public void updateUserProfileChangePasswordAPI(final Activity activity, final String oldPassword, final String newPassword) {
-        if(AppStatus.getInstance(activity).isOnline(activity)) {
+        if(MyApplication.getInstance().isOnline()) {
 
             DialogPopup.showLoadingDialog(activity, "Updating...");
 

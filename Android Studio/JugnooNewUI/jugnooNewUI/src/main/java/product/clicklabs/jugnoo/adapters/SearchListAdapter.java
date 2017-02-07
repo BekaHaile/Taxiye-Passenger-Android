@@ -33,13 +33,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -388,7 +388,7 @@ public class SearchListAdapter extends BaseAdapter{
 			@Override
 			public void run() {
 				if ((searchResultsForSearch.size()) == 0 && (editTextForSearch.getText().toString().trim().length() > 0)) {
-                    if(AppStatus.getInstance(context).isOnline(context)) {
+                    if(MyApplication.getInstance().isOnline()) {
                         searchResultsForSearch.add(new SearchResult(context.getResources()
                                 .getString(R.string.no_results_found), "", "", 0, 0));
                     } else{

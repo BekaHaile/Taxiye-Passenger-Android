@@ -14,6 +14,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -21,7 +22,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -48,7 +48,7 @@ public class ApiFareEstimate {
 
     public void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled, final boolean callFareEstimate, final Region region) {
         try {
-            if (AppStatus.getInstance(context).isOnline(context)) {
+            if (MyApplication.getInstance().isOnline()) {
                 if (sourceLatLng != null && destLatLng != null) {
                     DialogPopup.showLoadingDialog(context, "Loading...");
                     RestClient.getGoogleApiService().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
@@ -128,7 +128,7 @@ public class ApiFareEstimate {
      */
     public void getFareEstimate(final Activity activity, final LatLng sourceLatLng, final LatLng desLatLng, final double distanceValue, final double timeValue, final int isPooled, final Region region) {
         if (!HomeActivity.checkIfUserDataNull(activity)) {
-            if (AppStatus.getInstance(activity).isOnline(activity)) {
+            if (MyApplication.getInstance().isOnline()) {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("access_token", Data.userData.accessToken);
                 params.put("start_latitude", "" + sourceLatLng.latitude);

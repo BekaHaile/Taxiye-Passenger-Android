@@ -27,7 +27,6 @@ import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FirebaseEvents;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
@@ -97,7 +96,7 @@ public class ReferralsFragment extends Fragment implements FirebaseEvents{
 		tvMoreSharingOptions.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(AppStatus.getInstance(activity).isOnline(activity)) {
+				if(MyApplication.getInstance().isOnline()) {
 					FlurryEventLogger.eventGA(Constants.REFERRAL, "invite friends pop up", "invite friends");
 					ReferralActions.openGenericShareIntent(activity, activity.getCallbackManager());
 					try {

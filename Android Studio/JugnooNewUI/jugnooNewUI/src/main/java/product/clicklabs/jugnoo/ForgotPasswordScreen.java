@@ -26,7 +26,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.AppStatus;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FlurryEventLogger;
 import product.clicklabs.jugnoo.utils.FlurryEventNames;
@@ -211,7 +210,7 @@ public class ForgotPasswordScreen extends BaseActivity implements FlurryEventNam
      * ASync for register from server
      */
     public void forgotPasswordAsync(final Activity activity, final String email, boolean isPhoneNumber) {
-        if (AppStatus.getInstance(activity).isOnline(activity)) {
+        if (MyApplication.getInstance().isOnline()) {
 
             DialogPopup.showLoadingDialog(activity, "Loading...");
 
