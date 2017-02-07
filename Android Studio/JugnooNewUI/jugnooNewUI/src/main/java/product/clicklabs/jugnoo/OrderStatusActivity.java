@@ -758,7 +758,8 @@ public class OrderStatusActivity extends Fragment implements View.OnClickListene
 */
 
 
-            if(historyResponse.getData().get(0).getJugnooDeducted()>0 || historyResponse.getData().get(0).getDiscount() > 0)
+            if(historyResponse.getData().get(0).getJugnooDeducted()>0 || historyResponse.getData().get(0).getDiscount() > 0
+                    || (historyResponse.getData().get(0).getWalletDeducted() != null && historyResponse.getData().get(0).getWalletDeducted() > 0))
             {
                 rlAmountPayable.setVisibility(View.VISIBLE);
                 tvAmountPayableVal.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(historyResponse.getData().get(0).getOrderAmount())));
